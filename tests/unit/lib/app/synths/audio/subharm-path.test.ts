@@ -52,7 +52,6 @@ function subharm(over: Partial<SubharmParams> = {}): SubharmParams {
     tempo: 10,
     play: false,
     eg: 'on',
-    press: { reset: 0, next: 0, trigger: 0 },
     ...over,
   };
 }
@@ -343,7 +342,7 @@ describe('transport', () => {
     const t = rig(p);
     t.run(Math.round(SR * 0.05), []);
     expect(t.core.stages()[0]).toBe(2);
-    t.core.set({ ...p, press: { ...p.press, reset: 1 } });
+    t.core.press('reset');
     t.run(1, []);
     expect(t.core.stages()).toEqual([0, 0]);
     // the next clock plays step 1 again rather than leaving it
@@ -355,23 +354,25 @@ describe('transport', () => {
     const stopped = { ...p, play: false };
     const t = rig(stopped);
     t.run(10, []);
-    t.core.set({ ...stopped, press: { ...stopped.press, next: 1 } });
+    t.core.press('next');
     const r = t.run(100, ['sbhTrig']);
     expect(t.core.stages()).toEqual([1, 1]);
     expect(edges(r.sbhTrig)).toHaveLength(0);
   });
 
-  it('reads a press count that changes with the rest of the patch as a load, not a press', () => {
+  it('presses only on press(): a new patch with the same buttons, or any settings, presses nothing', () => {
     const stopped = { ...p, play: false, eg: 'off' as const };
-    const t = rig({ ...stopped, press: { reset: 0, next: 1, trigger: 1 } });
+    const t = rig(stopped);
     t.run(10, []);
-    // a sound loads: its buttons are back at 0 and a knob moved with them
-    t.core.set({ ...stopped, tempo: 3, press: { reset: 0, next: 0, trigger: 0 } });
+    // a sound loads, a lane moves a knob: settings alone never press
+    t.core.set({ ...stopped, tempo: 3 });
+    t.core.set({ ...stopped, tempo: 4 });
     const r = t.run(100, ['sbhTrig']);
     expect(t.core.stages()).toEqual([0, 0]);
     expect(edges(r.sbhTrig)).toHaveLength(0);
-    // and the next click on its own is a press again
-    t.core.set({ ...stopped, tempo: 3, press: { reset: 0, next: 1, trigger: 0 } });
+    // one click is one press, taken once
+    t.core.press('next');
+    t.run(10, []);
     t.run(10, []);
     expect(t.core.stages()).toEqual([1, 1]);
   });
@@ -443,17 +444,15 @@ describe('transport', () => {
     expect(edges(t.run(100, ['sbhSeq1Clk']).sbhSeq1Clk)).toHaveLength(1);
   });
 
-  it('after off(), a returning patch syncs its buttons rather than reading them as presses', () => {
+  it('drops a press made while the Subharmonicon is off, and one pending when it goes', () => {
     const t = rig({ ...p, play: false });
     t.run(10, []);
-    t.core.set({ ...p, play: false, press: { reset: 0, next: 3, trigger: 3 } });
-    // past TRIGGER OUT's 1 ms pulse
-    t.run(100, []);
-    expect(t.core.stages()).toEqual([1, 1]);
+    t.core.press('next');
     t.core.off();
-    t.core.set({ ...p, play: false, press: { reset: 0, next: 0, trigger: 0 } });
+    t.core.press('trigger');
+    t.core.set({ ...p, play: false });
     const r = t.run(100, ['sbhTrig']);
-    // back on step 1, and no NEXT read from the counters' mismatch (that would show step 2)
+    // still on step 1, and no TRIGGER fired from before the set
     expect(t.core.stages()).toEqual([0, 0]);
     expect(edges(r.sbhTrig)).toHaveLength(0);
   });
@@ -501,7 +500,7 @@ describe('envelope gates', () => {
     const t = rig({ ...p, eg: 'held', play: false });
     const r = t.run(100, ['sbhEg1', 'sbhEg2']);
     expect(r.sbhEg1.every((x) => x === 1) && r.sbhEg2.every((x) => x === 1)).toBe(true);
-    t.core.set({ ...p, eg: 'held', play: false, press: { ...p.press, trigger: 1 } });
+    t.core.press('trigger');
     expect(edges(t.run(100, ['sbhTrig']).sbhTrig)).toHaveLength(0);
   });
 
@@ -509,7 +508,7 @@ describe('envelope gates', () => {
     const q = { ...p, eg: 'off' as const, play: false };
     const t = rig(q);
     t.run(10, []);
-    t.core.set({ ...q, press: { ...q.press, trigger: 1 } });
+    t.core.press('trigger');
     const r = t.run(SR / 10, ['sbhEg1', 'sbhTrig']);
     expect(edges(r.sbhEg1)).toHaveLength(1);
     expect(r.sbhTrig.filter((x) => x > 0).length).toBe(Math.round(0.001 * SR));
@@ -580,6 +579,16 @@ describe('in the voice', () => {
     const ratio = at(12) / at(0);
     expect(ratio).toBeGreaterThan(1.95);
     expect(ratio).toBeLessThan(2.05);
+  });
+
+  it('takes a press message from the page: TRIGGER fires the envelopes with no key', () => {
+    const quiet = render(params(sounding), { events: [], len: SR / 10 }).out;
+    expect(rms(quiet)).toBe(0);
+    const pressed = render(params(sounding), {
+      events: [[100, { type: 'press', name: 'trigger' }]],
+      len: SR / 10,
+    }).out;
+    expect(rms(pressed, 0, SR / 20)).toBeGreaterThan(0.05);
   });
 
   it('is silent until a key is played while stopped, then sounds the key', () => {

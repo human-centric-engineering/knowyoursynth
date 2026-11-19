@@ -232,6 +232,9 @@ voice's place in `solar.voices` (`sol3`, `solG3`), and `audio/solar-core.ts` doc
 filter, envelopes and VCA, and a clock divided by four rhythm generators into two 4-step sequencers. It writes the
 envelopes' gates as signals `sbhEg1` / `sbhEg2`, so a definition normals `gate1` / `gate2` to them, gives both
 envelopes `free` and leaves `osc` empty; its `sbh*` signals and destinations are documented in `audio/subharm-core.ts`.
+RESET, NEXT and TRIGGER are not settings: a `button` with `press` (and `ui: true`) holds no value, and each click sends
+the engine a `{ type: 'press', name }` message. A press carried in the settings would fire again whenever a sound
+loads, an undo lands or a lane moves the panel.
 `layer`, `ringMod` and `tremolo` are poly only: `layer` gives every note a second voice with
 its own settings, so `poly.voices` counts notes; with `layer.split` a key below the split plays
 only the layer and one at or above it only the top-level settings. A `common` LFO keeps one phase

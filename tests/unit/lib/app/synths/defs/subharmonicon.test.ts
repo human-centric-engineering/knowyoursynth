@@ -62,7 +62,6 @@ describe('Subharmonicon toEngine at the init patch', () => {
       logic: 'or',
       play: false,
       eg: 'on',
-      press: { reset: 0, next: 0, trigger: 0 },
     });
     expect(s.tempo).toBeCloseTo(exp(0.36, 0.333, 50), 9);
   });
@@ -118,6 +117,15 @@ describe('Subharmonicon knob ranges', () => {
     expect(at({ 'seq1.assign_osc': true, 'seq1.assign_sub1': true })).toBe('+12 st');
     // an octave of step lowers a sub's divisor by 1.5
     expect(at({ 'seq1.assign_sub1': true })).toBe('divisor −1.5');
+    // QUANTIZE snaps the step before it moves a divisor: a quarter of a semitone is no step at all
+    expect(
+      c.fmt(0.1, {
+        ...subharmonicon.init,
+        'seq1.assign_sub1': true,
+        'seq.oct': 1,
+        'vco.quantize': '8-ET',
+      })
+    ).toBe('divisor ±0');
     expect(c.fmt(-5, { ...subharmonicon.init, 'seq1.assign_sub2': true, 'seq.oct': 1 })).toBe(
       'divisor +1.5'
     );
@@ -194,13 +202,19 @@ describe('Subharmonicon switches and buttons', () => {
     expect(sh({ 'transport.play': true }).play).toBe(true);
   });
 
-  it('turns each click of RESET, NEXT and TRIGGER into a change of its press count', () => {
-    const a = sh().press;
-    const b = sh({ 'transport.reset': true, 'transport.trigger': true }).press;
-    expect(b.reset).not.toBe(a.reset);
-    expect(b.trigger).not.toBe(a.trigger);
-    expect(b.next).toBe(a.next);
-    expect(sh({ 'transport.next': true }).press.next).not.toBe(a.next);
+  it('makes RESET, NEXT and TRIGGER momentary: each sends a press and holds no setting', () => {
+    const presses = subharmonicon.controls.flatMap((c) =>
+      c.type === 'button' && c.press ? [[c.id, c.press, c.ui]] : []
+    );
+    expect(presses).toEqual([
+      ['transport.reset', 'reset', true],
+      ['transport.next', 'next', true],
+      ['transport.trigger', 'trigger', true],
+    ]);
+    // nothing about them reaches the engine's settings, so a patch can never press one
+    expect(
+      run({ 'transport.reset': true, 'transport.next': true, 'transport.trigger': true })
+    ).toEqual(run());
   });
 });
 

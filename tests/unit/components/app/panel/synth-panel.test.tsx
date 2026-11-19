@@ -626,6 +626,38 @@ describe('SynthPanel touch plates and marks', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('sends a momentary button’s press on each click, never a change to the patch', () => {
+    const withPress: SynthDef = {
+      ...modelD,
+      controls: [
+        ...modelD.controls,
+        {
+          id: 'transport.next',
+          type: 'button',
+          x: 40,
+          y: 40,
+          w: 30,
+          h: 20,
+          press: 'next',
+          kind: 'bool',
+          def: false,
+          ui: true,
+          module: 'mod',
+          label: 'NEXT',
+          help: 'Steps the sequencers.',
+        },
+      ],
+    };
+    const onPress = vi.fn();
+    const onChange = vi.fn();
+    render(<SynthPanel {...props({ def: withPress, onPress, onChange })} />);
+    const next = screen.getByRole('button', { name: 'NEXT' });
+    fireEvent.click(next);
+    fireEvent.click(next);
+    expect(onPress.mock.calls).toEqual([['next'], ['next']]);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('lets a plate’s note go once, however many release events follow', () => {
     const onNote = vi.fn();
     render(<SynthPanel {...props({ def: withPlate, onNote })} />);

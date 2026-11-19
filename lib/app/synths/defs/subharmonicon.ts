@@ -15,7 +15,7 @@
  * do on the hardware.
  *
  * SUB FREQ and RHYTHM are sixteen-position knobs, 16 fully left to 1 fully right, as the panel turns. RESET, NEXT and
- * TRIGGER are pressed by clicking: each click is one press (the engine counts a change of the value as a press).
+ * TRIGGER are momentary (`ButtonControl.press`): each click sends the engine one press, and they hold no setting.
  * Held QUANTIZE and SEQ OCT, Fine Tune, Rhythm Generator Logic (OR always, here) and the MIDI settings are drawn or
  * described but not modelled.
  *
@@ -37,6 +37,7 @@ import type {
   LitWhen,
   OutputJack,
   SubharmParams,
+  SubharmPress,
   SynthDef,
   TextDecor,
   ViewRect,
@@ -171,7 +172,7 @@ const button = (
   caption: string,
   rest: Common &
     (
-      | { kind: 'bool'; def: boolean }
+      | { kind: 'bool'; def: boolean; press?: SubharmPress }
       | { kind: 'enum'; def: string | number; options: { v: string | number; label: string }[] }
     ),
   lamp = true
@@ -237,7 +238,9 @@ const ONE_SEQ = (s: 1 | 2): void => {
           (!!values?.[`seq${s}.assign_sub1`] || !!values?.[`seq${s}.assign_sub2`]);
         if (!subsOnly) return fmtSemi(oct * 12);
         // unrounded: the core rounds the knob's divisor and the step together
-        const d = -Math.round(DIV_PER_VOLT * oct * 10) / 10;
+        const set = values?.['vco.quantize'];
+        const st = quantize(oct * 12, isQuantize(set) ? set : 'off') / 12;
+        const d = -Math.round(DIV_PER_VOLT * st * 10) / 10;
         return `divisor ${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d)}`;
       },
       help: `Step ${i + 1} of Sequencer ${s}: how far this step moves what the SEQ ${s} ASSIGN buttons choose, up to the right or down to the left, within the SEQ OCT range. At the centre the step changes nothing. The readout is the step’s pitch before QUANTIZE snaps it, or, with only the subs assigned, how far it moves their divisors (a step to the right lowers them, so the subs climb).`,
@@ -288,7 +291,9 @@ button(
     module: 'mod',
     kind: 'bool',
     def: false,
-    help: 'Sends both sequencers back to step 1 and the rhythm generators to the downbeat, so the polyrhythm starts again from the top. Each click is one press. On the hardware holding it holds step 1; here a gate at the RESET input does that.',
+    ui: true,
+    press: 'reset',
+    help: 'Sends both sequencers back to step 1 and the rhythm generators to the downbeat, so the polyrhythm starts again from the top. Each click is one press; it holds no setting, so loading a sound never presses it. On the hardware holding it holds step 1; here a gate at the RESET input does that.',
   },
   false
 );
@@ -315,7 +320,9 @@ button(
     module: 'mod',
     kind: 'bool',
     def: false,
-    help: 'Moves both sequencers on one step without triggering the envelopes, to tune a sequence step by step while it is stopped. Each click is one press.',
+    ui: true,
+    press: 'next',
+    help: 'Moves both sequencers on one step without triggering the envelopes, to tune a sequence step by step while it is stopped. Each click is one press; it holds no setting, so loading a sound never presses it.',
   },
   false
 );
@@ -336,7 +343,9 @@ button(
     module: 'env',
     kind: 'bool',
     def: false,
-    help: 'Fires both envelopes once, as a step does with EG on; a press during an envelope’s attack is ignored, and with EG held it does nothing. Each click is one press. On the hardware, with EG off, holding it holds the envelopes open like a gate.',
+    ui: true,
+    press: 'trigger',
+    help: 'Fires both envelopes once, as a step does with EG on; a press during an envelope’s attack is ignored, and with EG held it does nothing. Each click is one press; it holds no setting, so loading a sound never presses it. On the hardware, with EG off, holding it holds the envelopes open like a gate.',
   },
   false
 );
@@ -936,12 +945,6 @@ function toEngine(v: ControlValues): EngineParams {
     tempo: tempoHz(num(v, 'clock.tempo')),
     play: !!v['transport.play'],
     eg: eg === 'off' || eg === 'held' ? eg : 'on',
-    // a click changes the value, and the engine reads a change as a press
-    press: {
-      reset: v['transport.reset'] ? 1 : 0,
-      next: v['transport.next'] ? 1 : 0,
-      trigger: v['transport.trigger'] ? 1 : 0,
-    },
   };
   // attack, then decay; a gate held past the attack holds the peak, and the decay runs once it falls
   const env = (eg: 'vcf_eg' | 'vca_eg') => {

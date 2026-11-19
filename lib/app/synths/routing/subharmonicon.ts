@@ -96,13 +96,8 @@ export const routing: SynthRouting = {
       name: 'Transport and EG triggering',
       module: 'mod',
       symbol: 'util',
-      controls: [
-        'transport.play',
-        'transport.reset',
-        'transport.next',
-        'transport.trigger',
-        'transport.eg',
-      ],
+      // RESET, NEXT and TRIGGER are momentary presses, not settings, so only PLAY and EG are listed
+      controls: ['transport.play', 'transport.eg'],
       description:
         'PLAY, RESET, NEXT and TRIGGER. It turns sequencer steps (with EG on), TRIGGER and the keys into triggers for both envelopes, also sent to TRIGGER OUT.',
       specs: [{ label: 'TRIGGER OUT', value: '1 ms, 5 V' }],

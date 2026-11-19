@@ -262,7 +262,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -291,7 +290,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -316,7 +314,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -341,7 +338,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -366,7 +362,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -391,7 +386,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -416,7 +410,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -441,7 +434,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -466,7 +458,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -491,7 +482,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -516,7 +506,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -541,7 +530,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -566,7 +554,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -591,7 +578,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -616,7 +602,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -641,7 +626,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -666,7 +650,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -691,7 +674,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -716,7 +698,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -741,7 +722,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -766,7 +746,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -791,7 +770,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -816,7 +794,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -841,7 +818,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -866,7 +842,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -891,7 +866,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -916,7 +890,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -941,7 +914,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -966,7 +938,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -991,7 +962,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1016,7 +986,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1041,7 +1010,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1066,7 +1034,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1091,7 +1058,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 16, "seq1": false, "seq2": false },
@@ -1116,7 +1082,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 15, "seq1": false, "seq2": false },
@@ -1141,7 +1106,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 14, "seq1": false, "seq2": false },
@@ -1166,7 +1130,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 13, "seq1": false, "seq2": false },
@@ -1191,7 +1154,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 12, "seq1": false, "seq2": false },
@@ -1216,7 +1178,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 11, "seq1": false, "seq2": false },
@@ -1241,7 +1202,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 10, "seq1": false, "seq2": false },
@@ -1266,7 +1226,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 9, "seq1": false, "seq2": false },
@@ -1291,7 +1250,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 8, "seq1": false, "seq2": false },
@@ -1316,7 +1274,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 7, "seq1": false, "seq2": false },
@@ -1341,7 +1298,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 6, "seq1": false, "seq2": false },
@@ -1366,7 +1322,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 5, "seq1": false, "seq2": false },
@@ -1391,7 +1346,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 4, "seq1": false, "seq2": false },
@@ -1416,7 +1370,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 3, "seq1": false, "seq2": false },
@@ -1441,7 +1394,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 2, "seq1": false, "seq2": false },
@@ -1466,7 +1418,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": true, "seq2": false },
@@ -1491,7 +1442,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": true },
@@ -1516,7 +1466,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1541,7 +1490,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1566,7 +1514,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1591,7 +1538,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1616,7 +1562,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1641,7 +1586,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1666,7 +1610,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1691,7 +1634,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1716,7 +1658,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1741,7 +1682,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1766,7 +1706,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1791,7 +1730,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1816,7 +1754,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1841,7 +1778,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1866,7 +1802,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1891,7 +1826,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1916,7 +1850,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1941,7 +1874,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1966,7 +1898,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -1991,7 +1922,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2016,7 +1946,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2041,7 +1970,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2066,7 +1994,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2091,7 +2018,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2116,7 +2042,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2141,7 +2066,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2166,7 +2090,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2191,7 +2114,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2216,7 +2138,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2241,7 +2162,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2266,7 +2186,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2291,7 +2210,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2316,7 +2234,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2341,7 +2258,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2366,7 +2282,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2391,7 +2306,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2416,7 +2330,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2441,7 +2354,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2466,7 +2378,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2491,7 +2402,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2516,7 +2426,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2541,7 +2450,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2566,7 +2474,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2591,7 +2498,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2616,7 +2522,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2641,7 +2546,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2666,7 +2570,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2691,7 +2594,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2716,7 +2618,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2741,7 +2642,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2766,7 +2666,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2791,7 +2690,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2816,7 +2714,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2841,7 +2738,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2866,7 +2762,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2891,7 +2786,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2910,38 +2804,13 @@
         ]
       }
     },
-    "transport.reset=true": {
-      "subharm": {
-        "eg": "on",
-        "logic": "or",
-        "oct": 2,
-        "play": false,
-        "press": { "next": 0, "reset": 1, "trigger": 0 },
-        "quantize": "off",
-        "rhythm": [
-          { "div": 1, "seq1": false, "seq2": false },
-          { "div": 2, "seq1": false, "seq2": false },
-          { "div": 3, "seq1": false, "seq2": false },
-          { "div": 4, "seq1": false, "seq2": false }
-        ],
-        "seq": [
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
-        ],
-        "tempo": 2.0229889520376196,
-        "vco": [
-          { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
-          { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
-        ]
-      }
-    },
+    "transport.reset=true": {},
     "transport.eg=\"off\"": {
       "subharm": {
         "eg": "off",
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2966,7 +2835,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -2985,38 +2853,13 @@
         ]
       }
     },
-    "transport.next=true": {
-      "subharm": {
-        "eg": "on",
-        "logic": "or",
-        "oct": 2,
-        "play": false,
-        "press": { "next": 1, "reset": 0, "trigger": 0 },
-        "quantize": "off",
-        "rhythm": [
-          { "div": 1, "seq1": false, "seq2": false },
-          { "div": 2, "seq1": false, "seq2": false },
-          { "div": 3, "seq1": false, "seq2": false },
-          { "div": 4, "seq1": false, "seq2": false }
-        ],
-        "seq": [
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
-        ],
-        "tempo": 2.0229889520376196,
-        "vco": [
-          { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
-          { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
-        ]
-      }
-    },
+    "transport.next=true": {},
     "transport.play=true": {
       "subharm": {
         "eg": "on",
         "logic": "or",
         "oct": 2,
         "play": true,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3035,38 +2878,13 @@
         ]
       }
     },
-    "transport.trigger=true": {
-      "subharm": {
-        "eg": "on",
-        "logic": "or",
-        "oct": 2,
-        "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 1 },
-        "quantize": "off",
-        "rhythm": [
-          { "div": 1, "seq1": false, "seq2": false },
-          { "div": 2, "seq1": false, "seq2": false },
-          { "div": 3, "seq1": false, "seq2": false },
-          { "div": 4, "seq1": false, "seq2": false }
-        ],
-        "seq": [
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
-        ],
-        "tempo": 2.0229889520376196,
-        "vco": [
-          { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
-          { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
-        ]
-      }
-    },
+    "transport.trigger=true": {},
     "vco1.freq=2.5": {
       "subharm": {
         "eg": "on",
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3091,7 +2909,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3116,7 +2933,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3141,7 +2957,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3166,7 +2981,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3191,7 +3005,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3216,7 +3029,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3241,7 +3053,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3266,7 +3077,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3291,7 +3101,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3316,7 +3125,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3341,7 +3149,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3366,7 +3173,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3391,7 +3197,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3416,7 +3221,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3441,7 +3245,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3466,7 +3269,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3491,7 +3293,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3516,7 +3317,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3541,7 +3341,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3566,7 +3365,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3591,7 +3389,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3616,7 +3413,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3641,7 +3437,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3666,7 +3461,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3691,7 +3485,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3716,7 +3509,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3741,7 +3533,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3766,7 +3557,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3791,7 +3581,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3816,7 +3605,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3841,7 +3629,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3866,7 +3653,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3891,7 +3677,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3916,7 +3701,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3941,7 +3725,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3966,7 +3749,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -3991,7 +3773,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4016,7 +3797,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4041,7 +3821,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4066,7 +3845,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4091,7 +3869,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4116,7 +3893,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4141,7 +3917,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4166,7 +3941,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4191,7 +3965,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4216,7 +3989,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4241,7 +4013,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4266,7 +4037,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4291,7 +4061,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4316,7 +4085,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4341,7 +4109,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4366,7 +4133,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4391,7 +4157,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4416,7 +4181,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4441,7 +4205,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4466,7 +4229,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4491,7 +4253,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4516,7 +4277,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4541,7 +4301,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4566,7 +4325,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4591,7 +4349,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4616,7 +4373,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4641,7 +4397,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4666,7 +4421,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4691,7 +4445,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4716,7 +4469,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4741,7 +4493,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4766,7 +4517,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4791,7 +4541,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4816,7 +4565,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4841,7 +4589,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4866,7 +4613,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4891,7 +4637,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4916,7 +4661,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4941,7 +4685,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4966,7 +4709,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -4991,7 +4733,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5016,7 +4757,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5041,7 +4781,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5066,7 +4805,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5091,7 +4829,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5116,7 +4853,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5141,7 +4877,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5166,7 +4901,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5191,7 +4925,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5216,7 +4949,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5241,7 +4973,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5266,7 +4997,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5291,7 +5021,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5316,7 +5045,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5341,7 +5069,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5366,7 +5093,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5391,7 +5117,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5416,7 +5141,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5441,7 +5165,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5466,7 +5189,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5491,7 +5213,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5516,7 +5237,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5541,7 +5261,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5566,7 +5285,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5591,7 +5309,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5616,7 +5333,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5641,7 +5357,6 @@
         "logic": "or",
         "oct": 5,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5666,7 +5381,6 @@
         "logic": "or",
         "oct": 1,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5691,7 +5405,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "12-ET",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5716,7 +5429,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "8-ET",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5741,7 +5453,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "12-JI",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -5766,7 +5477,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "8-JI",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6020,7 +5730,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6045,7 +5754,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6070,7 +5778,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6095,7 +5802,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6120,7 +5826,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6145,7 +5850,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6170,7 +5874,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6195,7 +5898,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6220,7 +5922,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6245,7 +5946,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6270,7 +5970,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6295,7 +5994,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6320,7 +6018,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6345,7 +6042,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6370,7 +6066,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6395,7 +6090,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6420,7 +6114,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6445,7 +6138,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6470,7 +6162,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6495,7 +6186,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6520,7 +6210,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6545,7 +6234,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6570,7 +6258,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6595,7 +6282,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6620,7 +6306,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6645,7 +6330,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6670,7 +6354,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6695,7 +6378,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6720,7 +6402,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6745,7 +6426,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6770,7 +6450,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6795,7 +6474,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -6820,7 +6498,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 16, "seq1": false, "seq2": false },
@@ -6845,7 +6522,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 15, "seq1": false, "seq2": false },
@@ -6870,7 +6546,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 14, "seq1": false, "seq2": false },
@@ -6895,7 +6570,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 13, "seq1": false, "seq2": false },
@@ -6920,7 +6594,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 12, "seq1": false, "seq2": false },
@@ -6945,7 +6618,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 11, "seq1": false, "seq2": false },
@@ -6970,7 +6642,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 10, "seq1": false, "seq2": false },
@@ -6995,7 +6666,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 9, "seq1": false, "seq2": false },
@@ -7020,7 +6690,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 8, "seq1": false, "seq2": false },
@@ -7045,7 +6714,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 7, "seq1": false, "seq2": false },
@@ -7070,7 +6738,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 6, "seq1": false, "seq2": false },
@@ -7095,7 +6762,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 5, "seq1": false, "seq2": false },
@@ -7120,7 +6786,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 4, "seq1": false, "seq2": false },
@@ -7145,7 +6810,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 3, "seq1": false, "seq2": false },
@@ -7170,7 +6834,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 2, "seq1": false, "seq2": false },
@@ -7195,7 +6858,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": true, "seq2": false },
@@ -7220,7 +6882,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": true },
@@ -7245,7 +6906,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7270,7 +6930,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7295,7 +6954,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7320,7 +6978,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7345,7 +7002,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7370,7 +7026,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7395,7 +7050,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7420,7 +7074,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7445,7 +7098,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7470,7 +7122,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7495,7 +7146,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7520,7 +7170,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7545,7 +7194,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7570,7 +7218,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7595,7 +7242,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7620,7 +7266,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7645,7 +7290,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7670,7 +7314,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7695,7 +7338,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7720,7 +7362,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7745,7 +7386,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7770,7 +7410,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7795,7 +7434,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7820,7 +7458,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7845,7 +7482,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7870,7 +7506,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7895,7 +7530,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7920,7 +7554,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7945,7 +7578,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7970,7 +7602,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -7995,7 +7626,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8020,7 +7650,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8045,7 +7674,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8070,7 +7698,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8095,7 +7722,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8120,7 +7746,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8145,7 +7770,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8170,7 +7794,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8195,7 +7818,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8220,7 +7842,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8245,7 +7866,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8270,7 +7890,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8295,7 +7914,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8320,7 +7938,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8345,7 +7962,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8370,7 +7986,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8395,7 +8010,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8420,7 +8034,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8445,7 +8058,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8470,7 +8082,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8495,7 +8106,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8520,7 +8130,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8545,7 +8154,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8570,7 +8178,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8595,7 +8202,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8620,7 +8226,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8639,38 +8244,13 @@
         ]
       }
     },
-    "patched:* transport.reset=true": {
-      "subharm": {
-        "eg": "on",
-        "logic": "or",
-        "oct": 2,
-        "play": false,
-        "press": { "next": 0, "reset": 1, "trigger": 0 },
-        "quantize": "off",
-        "rhythm": [
-          { "div": 1, "seq1": false, "seq2": false },
-          { "div": 2, "seq1": false, "seq2": false },
-          { "div": 3, "seq1": false, "seq2": false },
-          { "div": 4, "seq1": false, "seq2": false }
-        ],
-        "seq": [
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
-        ],
-        "tempo": 2.0229889520376196,
-        "vco": [
-          { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
-          { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
-        ]
-      }
-    },
+    "patched:* transport.reset=true": {},
     "patched:* transport.eg=\"off\"": {
       "subharm": {
         "eg": "off",
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8695,7 +8275,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8714,38 +8293,13 @@
         ]
       }
     },
-    "patched:* transport.next=true": {
-      "subharm": {
-        "eg": "on",
-        "logic": "or",
-        "oct": 2,
-        "play": false,
-        "press": { "next": 1, "reset": 0, "trigger": 0 },
-        "quantize": "off",
-        "rhythm": [
-          { "div": 1, "seq1": false, "seq2": false },
-          { "div": 2, "seq1": false, "seq2": false },
-          { "div": 3, "seq1": false, "seq2": false },
-          { "div": 4, "seq1": false, "seq2": false }
-        ],
-        "seq": [
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
-        ],
-        "tempo": 2.0229889520376196,
-        "vco": [
-          { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
-          { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
-        ]
-      }
-    },
+    "patched:* transport.next=true": {},
     "patched:* transport.play=true": {
       "subharm": {
         "eg": "on",
         "logic": "or",
         "oct": 2,
         "play": true,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8764,38 +8318,13 @@
         ]
       }
     },
-    "patched:* transport.trigger=true": {
-      "subharm": {
-        "eg": "on",
-        "logic": "or",
-        "oct": 2,
-        "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 1 },
-        "quantize": "off",
-        "rhythm": [
-          { "div": 1, "seq1": false, "seq2": false },
-          { "div": 2, "seq1": false, "seq2": false },
-          { "div": 3, "seq1": false, "seq2": false },
-          { "div": 4, "seq1": false, "seq2": false }
-        ],
-        "seq": [
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
-          { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
-        ],
-        "tempo": 2.0229889520376196,
-        "vco": [
-          { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
-          { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
-        ]
-      }
-    },
+    "patched:* transport.trigger=true": {},
     "patched:* vco1.freq=2.5": {
       "subharm": {
         "eg": "on",
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8820,7 +8349,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8845,7 +8373,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8870,7 +8397,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8895,7 +8421,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8920,7 +8445,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8945,7 +8469,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8970,7 +8493,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -8995,7 +8517,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9020,7 +8541,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9045,7 +8565,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9070,7 +8589,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9095,7 +8613,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9120,7 +8637,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9145,7 +8661,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9170,7 +8685,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9195,7 +8709,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9220,7 +8733,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9245,7 +8757,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9270,7 +8781,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9295,7 +8805,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9320,7 +8829,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9345,7 +8853,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9370,7 +8877,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9395,7 +8901,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9420,7 +8925,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9445,7 +8949,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9470,7 +8973,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9495,7 +8997,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9520,7 +9021,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9545,7 +9045,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9570,7 +9069,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9595,7 +9093,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9620,7 +9117,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9645,7 +9141,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9670,7 +9165,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9695,7 +9189,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9720,7 +9213,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9745,7 +9237,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9770,7 +9261,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9795,7 +9285,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9820,7 +9309,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9845,7 +9333,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9870,7 +9357,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9895,7 +9381,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9920,7 +9405,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9945,7 +9429,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9970,7 +9453,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -9995,7 +9477,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10020,7 +9501,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10045,7 +9525,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10070,7 +9549,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10095,7 +9573,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10120,7 +9597,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10145,7 +9621,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10170,7 +9645,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10195,7 +9669,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10220,7 +9693,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10245,7 +9717,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10270,7 +9741,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10295,7 +9765,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10320,7 +9789,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10345,7 +9813,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10370,7 +9837,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10395,7 +9861,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10420,7 +9885,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10445,7 +9909,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10470,7 +9933,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10495,7 +9957,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10520,7 +9981,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10545,7 +10005,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10570,7 +10029,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10595,7 +10053,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10620,7 +10077,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10645,7 +10101,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10670,7 +10125,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10695,7 +10149,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10720,7 +10173,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10745,7 +10197,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10770,7 +10221,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10795,7 +10245,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10820,7 +10269,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10845,7 +10293,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10870,7 +10317,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10895,7 +10341,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10920,7 +10365,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10945,7 +10389,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10970,7 +10413,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -10995,7 +10437,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11020,7 +10461,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11045,7 +10485,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11070,7 +10509,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11095,7 +10533,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11120,7 +10557,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11145,7 +10581,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11170,7 +10605,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11195,7 +10629,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11220,7 +10653,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11245,7 +10677,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11270,7 +10701,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11295,7 +10725,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11320,7 +10749,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11345,7 +10773,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11370,7 +10797,6 @@
         "logic": "or",
         "oct": 5,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11395,7 +10821,6 @@
         "logic": "or",
         "oct": 1,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "off",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11420,7 +10845,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "12-ET",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11445,7 +10869,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "8-ET",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11470,7 +10893,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "12-JI",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },
@@ -11495,7 +10917,6 @@
         "logic": "or",
         "oct": 2,
         "play": false,
-        "press": { "next": 0, "reset": 0, "trigger": 0 },
         "quantize": "8-JI",
         "rhythm": [
           { "div": 1, "seq1": false, "seq2": false },

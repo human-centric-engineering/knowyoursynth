@@ -555,6 +555,11 @@ export type ButtonControl = ControlCommon & {
    * clear plate over its decor. It holds no value (give it `ui: true`).
    */
   note?: number;
+  /**
+   * A momentary button (the Subharmonicon's RESET, NEXT and TRIGGER): each click tells the engine `press` once. It
+   * holds no value (give it `ui: true`), so loading a patch, undoing or a lane never presses it.
+   */
+  press?: SubharmPress;
 } & (BoolValue | EnumValue);
 
 /** Fader colours. `led` colours the lamp in the cap; `cap` replaces the lamp cap with a round coloured one. */
@@ -2290,6 +2295,9 @@ export interface SubharmRhythm {
   seq2: boolean;
 }
 
+/** A momentary button the engine is told about when it is clicked (`ButtonControl.press`, `SynthMessage` `press`). */
+export type SubharmPress = 'reset' | 'next' | 'trigger';
+
 /**
  * The Moog Subharmonicon's sources and sequencers (see `audio/subharm-core.ts`): two VCOs, each with two subs at its
  * frequency divided by 1..16, mixed in place of the fixed voice's oscillators into its own filter, envelopes and VCA;
@@ -2313,11 +2321,6 @@ export interface SubharmParams {
   play: boolean;
   /** EG: steps do not trigger the envelopes, they do, or the envelopes are held open. */
   eg: 'off' | 'on' | 'held';
-  /**
-   * RESET, NEXT and TRIGGER: a change of the number is a press, when it is the only change; one that comes with any
-   * other change of these settings is a patch loading, and presses nothing.
-   */
-  press: { reset: number; next: number; trigger: number };
   /** Held QUANTIZE: the SEQ outputs are not quantised (the VCOs still are). */
   seqOutRaw?: boolean;
   /** Held SEQ OCT: the SEQ outputs always span ±5 (the VCOs still follow SEQ OCT). */
