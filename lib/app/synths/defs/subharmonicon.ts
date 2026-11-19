@@ -76,6 +76,9 @@ const decayS = (v: number): number => expMap(clamp(v, 0, 10) / 10, 0.005, 10);
 const tempoHz = (v: number): number => expMap(clamp(v, 0, 10) / 10, 0.333, 50);
 /** The mixer levels: straight 0..1 (the core's mixer overdrives near the top of the six together). */
 const mixLevel = (v: number): number => clamp(v, 0, 10) / 10;
+/** A QUANTIZE setting the engine knows. */
+const isQuantize = (x: unknown): x is SubharmParams['quantize'] =>
+  x === 'off' || x === '12-ET' || x === '8-ET' || x === '12-JI' || x === '8-JI';
 /** The sixteen positions of a SUB FREQ or RHYTHM knob, 16 fully left to 1 fully right. */
 const DIVISORS = Array.from({ length: 16 }, (_, i) => 16 - i);
 
@@ -346,7 +349,8 @@ const VCO = (n: 1 | 2): void => {
     module: 'osc',
     label: `VCO ${n} FREQ`,
     fmt: (v, values) => {
-      const q = (values?.['vco.quantize'] ?? 'off') as SubharmParams['quantize'];
+      const set = values?.['vco.quantize'];
+      const q = isQuantize(set) ? set : 'off';
       const hz = C4_HZ * Math.pow(2, quantize(freqSemi(v), q) / 12);
       return `${noteName(hz)} · ${fmtHz(hz)}`;
     },
@@ -879,8 +883,6 @@ const areas: Area[] = [
 ];
 
 // ── Engine mapping ─────────────────────────────────────────────────────────
-const isQuantize = (x: unknown): x is SubharmParams['quantize'] =>
-  x === 'off' || x === '12-ET' || x === '8-ET' || x === '12-JI' || x === '8-JI';
 
 function toEngine(v: ControlValues): EngineParams {
   const vco = (n: 1 | 2): SubharmParams['vco'][number] => {
