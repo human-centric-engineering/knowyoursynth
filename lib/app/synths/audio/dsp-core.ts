@@ -37,6 +37,7 @@ import {
   type MoogMeters,
 } from '@/lib/app/synths/audio/moog-core';
 import { createSolar, SOLAR_SIGNALS, SOLAR_DESTS } from '@/lib/app/synths/audio/solar-core';
+import { createSubharm, SUBHARM_SIGNALS, SUBHARM_DESTS } from '@/lib/app/synths/audio/subharm-core';
 import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
   withPatterns,
@@ -93,8 +94,10 @@ export interface MeterEvent {
   oscLv?: number[];
   /** Bit k: voice k is sounding (poly and dual). */
   voices?: number;
-  /** The Easel's sequencer stage, or the 960's (0-based). */
+  /** The Easel's sequencer stage, or the 960's, or the Subharmonicon's Sequencer 1 (0-based). */
   seq?: number;
+  /** The Subharmonicon's Sequencer 2 stage (0-based). */
+  seq2?: number;
   /** The Easel's pulser ramp. */
   pulser?: number;
   /** The SOLAR 42N's light on each voice's photosensor, 0..1. */
@@ -393,6 +396,7 @@ export const SIGNALS: string[] = [
   'eon',
   ...MOOG_SIGNALS,
   ...SOLAR_SIGNALS,
+  ...SUBHARM_SIGNALS,
 ];
 export const DESTS: string[] = [
   'pitchAll',
@@ -484,6 +488,7 @@ export const DESTS: string[] = [
   'env1Rate',
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
+  ...SUBHARM_DESTS,
 ];
 
 /** Audio path and gates the voice always has unless a SynthDef's `normals` or a cable overrides them. */
@@ -912,6 +917,9 @@ function createVoice(
   const moog = createMoog(sr, S, SI, DI, (d) => ev(d), cabled);
   // Elta Music SOLAR 42 (EngineParams `solar`): eight voices, a stereo mixer, a dual filter and an effector, see solar-core.ts.
   const solar = createSolar(sr, S, SI, DI, (d) => ev(d), cabled);
+  // Moog Subharmonicon (EngineParams `subharm`): two VCOs and four subs in place of the oscillators, and its rhythm
+  // generators and sequencers, see subharm-core.ts.
+  const subharm = createSubharm(sr, S, SI, DI, (d) => ev(d), cabled);
   // phrase player
   let phrase: VoicePhrase | null = null,
     phrasePos = 0,
@@ -991,6 +999,7 @@ function createVoice(
     compile();
     if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)));
     if (p.solar) solar.set(p.solar);
+    if (p.subharm) subharm.set(p.subharm, [p.env1.a, p.env2.a]);
     nOsc = Math.min(4, p.osc.length);
     for (let i = 0; i < 4; i++) {
       const o = osc[i];
@@ -2640,6 +2649,8 @@ function createVoice(
             (k < 2 ? Math.max(0, o.level + ev(DI.lvl1 + k)) : o.level) *
             (assign && o.kbd ? slotG[k] : 1);
         }
+        // the Subharmonicon's six sources take the oscillators' place (its definition gives no `osc`)
+        if (p.subharm) mixSum += subharm.step(note, gate > 0, hitKey);
         S[SI.oscMix] = mixSum;
 
         // ── noise & mixer ──
@@ -2978,6 +2989,7 @@ function createVoice(
           // each 921, 911 and 902 on its own, so the routing view lights a module with its own signal
           ...(P.moog ? { moog: moog.meters() } : null),
           ...(P.solar ? { seq: solar.seqStage(), eyes: solar.eyes() } : null),
+          ...(P.subharm ? { seq: subharm.stages()[0], seq2: subharm.stages()[1] } : null),
         });
       overloadPeak = 0;
     }

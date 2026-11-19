@@ -2259,6 +2259,68 @@ export interface SolarFxKnob {
   v: number;
 }
 
+/** One of the Subharmonicon's two VCOs with its two subharmonic oscillators (`SubharmParams.vco`). */
+export interface SubharmVco {
+  /** FREQ: semitones above middle C (MIDI 60), 0..48 (C4 to C8). Snapped to the scale while QUANTIZE is on. */
+  freq: number;
+  /** WAVE: square on the VCO and its subs; a pulse whose width SUB 1's saw moves, with saw subs; saw on all three. */
+  wave: 'square' | 'pwm' | 'saw';
+  /** SUB 1 and SUB 2 FREQ: the divisors, 1..16 (rounded to a whole number). */
+  div: [number, number];
+  /** Mixer levels 0..1: the VCO, SUB 1, SUB 2. */
+  level: [number, number, number];
+}
+
+/** One of the Subharmonicon's two 4-step sequencers (`SubharmParams.seq`). */
+export interface SubharmSeq {
+  /** STEP 1–4, −1..1 (centre none): a share of the SEQ OCT range. */
+  steps: [number, number, number, number];
+  /** ASSIGN: the step moves the VCO's pitch (its subs follow), SUB 1's divisor, SUB 2's divisor. */
+  assign: [boolean, boolean, boolean];
+}
+
+/** One of the Subharmonicon's four rhythm generators (`SubharmParams.rhythm`). */
+export interface SubharmRhythm {
+  /** RHYTHM: the clock divisor, 1..16 (rounded to a whole number). */
+  div: number;
+  /** SEQ 1 / SEQ 2: the sequencers it advances. */
+  seq1: boolean;
+  seq2: boolean;
+}
+
+/**
+ * The Moog Subharmonicon's sources and sequencers (see `audio/subharm-core.ts`): two VCOs, each with two subs at its
+ * frequency divided by 1..16, mixed in place of the fixed voice's oscillators into its own filter, envelopes and VCA;
+ * a clock divided by four rhythm generators, which advance two 4-step sequencers through OR or XOR. The core writes
+ * the gates for the two envelopes as signals `sbhEg1` / `sbhEg2`, so a definition normals `gate1` / `gate2` to them,
+ * gives both envelopes `free` (only those gates restart them, not a key) and leaves `osc` empty.
+ */
+export interface SubharmParams {
+  vco: [SubharmVco, SubharmVco];
+  seq: [SubharmSeq, SubharmSeq];
+  rhythm: [SubharmRhythm, SubharmRhythm, SubharmRhythm, SubharmRhythm];
+  /** QUANTIZE, shared by both VCOs and both sequencers; the scales are rooted on C. */
+  quantize: 'off' | '12-ET' | '8-ET' | '12-JI' | '8-JI';
+  /** SEQ OCT: a step at full turn moves the pitch this many octaves. */
+  oct: 1 | 2 | 5;
+  /** Rhythm Generator Logic: a sequencer advances when any of its rhythms fires, or when exactly one does. */
+  logic: 'or' | 'xor';
+  /** TEMPO, Hz (0.333..50): one clock per beat. */
+  tempo: number;
+  /** PLAY: the clock, rhythm generators and sequencers run. */
+  play: boolean;
+  /** EG: steps do not trigger the envelopes, they do, or the envelopes are held open. */
+  eg: 'off' | 'on' | 'held';
+  /** RESET, NEXT and TRIGGER: a change of the number is a press. */
+  press: { reset: number; next: number; trigger: number };
+  /** Held QUANTIZE: the SEQ outputs are not quantised (the VCOs still are). */
+  seqOutRaw?: boolean;
+  /** Held SEQ OCT: the SEQ outputs always span ±5 (the VCOs still follow SEQ OCT). */
+  seqOutFull?: boolean;
+  /** Fine Tune, cents (±50). */
+  fine?: number;
+}
+
 /**
  * The Elta Music SOLAR 42's own sound path, run in place of the fixed voice: eight voices of three kinds, each with
  * its own gate and envelope, a ten-channel stereo mixer, a dual 12 dB filter (left and right) and a stereo effector.
@@ -2421,6 +2483,8 @@ export interface EngineParams {
   moog?: MoogParams;
   /** The SOLAR 42's sound path, in place of the fixed voice (see `audio/solar-core.ts`). */
   solar?: SolarParams;
+  /** The Subharmonicon's VCOs, subs, rhythm generators and sequencers, in place of `osc` (see `audio/subharm-core.ts`). */
+  subharm?: SubharmParams;
   /** Set by the app after `toEngine()`, from the cables (`cablesToEngine()`). Not returned by a definition. */
   cables?: EngineCable[];
   /** Set by the app after `toEngine()`: the mod wheel. Not returned by a definition. */
