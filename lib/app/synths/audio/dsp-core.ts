@@ -919,7 +919,15 @@ function createVoice(
   const solar = createSolar(sr, S, SI, DI, (d) => ev(d), cabled);
   // Moog Subharmonicon (EngineParams `subharm`): two VCOs and four subs in place of the oscillators, and its rhythm
   // generators and sequencers, see subharm-core.ts.
-  const subharm = createSubharm(sr, S, SI, DI, (d) => ev(d), cabled);
+  const subharm = createSubharm(
+    sr,
+    S,
+    SI,
+    DI,
+    (d) => ev(d),
+    cabled,
+    (k) => env[k].rA
+  );
   // phrase player
   let phrase: VoicePhrase | null = null,
     phrasePos = 0,
@@ -2650,7 +2658,8 @@ function createVoice(
             (assign && o.kbd ? slotG[k] : 1);
         }
         // the Subharmonicon's six sources take the oscillators' place (its definition gives no `osc`)
-        if (p.subharm) mixSum += subharm.step(note, gate > 0, hitKey);
+        if (p.subharm)
+          mixSum += subharm.step(note + pmAll + (p.tune || 0) + vOff + drift, gate > 0, hitKey);
         S[SI.oscMix] = mixSum;
 
         // ── noise & mixer ──
@@ -2989,7 +2998,7 @@ function createVoice(
           // each 921, 911 and 902 on its own, so the routing view lights a module with its own signal
           ...(P.moog ? { moog: moog.meters() } : null),
           ...(P.solar ? { seq: solar.seqStage(), eyes: solar.eyes() } : null),
-          ...(P.subharm ? { seq: subharm.stages()[0], seq2: subharm.stages()[1] } : null),
+          ...(P.subharm ? (([seq, seq2]) => ({ seq, seq2 }))(subharm.stages()) : null),
         });
       overloadPeak = 0;
     }

@@ -64,7 +64,17 @@ function rig(p: SubharmParams, attack: [number, number] = [0.001, 0.001]) {
   const S = new Float64Array(SUBHARM_SIGNALS.length);
   const dv = new Float64Array(SUBHARM_DESTS.length);
   const cab = new Uint8Array(SUBHARM_DESTS.length);
-  const core = createSubharm(SR, S, SI, DI, (d) => dv[d], cab);
+  // each envelope's attack-rate multiplier (its env1Rate / env2Rate CV), settable
+  const rate = [1, 1];
+  const core = createSubharm(
+    SR,
+    S,
+    SI,
+    DI,
+    (d) => dv[d],
+    cab,
+    (k) => rate[k]
+  );
   core.set(p, attack);
   /** Run `n` samples, recording the named signals. */
   const run = (n: number, names: string[], note = 60, keyGate = false) => {
@@ -80,7 +90,7 @@ function rig(p: SubharmParams, attack: [number, number] = [0.001, 0.001]) {
     dv[DI[name]] = v;
     cab[DI[name]] = cabled ? 1 : 0;
   };
-  return { core, S, SI, run, input };
+  return { core, S, SI, run, input, rate };
 }
 
 /** Where a wave falls sharply through zero: a saw's reset or a square's falling edge (smoothed over a sample or two). */
@@ -369,6 +379,29 @@ describe('transport', () => {
     expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(0);
   });
 
+  it('ignores the panel PLAY while a cable is in PLAY', () => {
+    const t = rig({ ...p, play: false });
+    t.input('sbhPlay', 0);
+    t.run(10, []);
+    t.core.set({ ...p, play: true }, [0.001, 0.001]);
+    expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(0);
+  });
+
+  it('sizes the SEQ CLK pulse to half an incoming clock faster than TEMPO', () => {
+    // TEMPO 0.5 Hz would give the 10 ms cap; the CLOCK input runs every 200 samples
+    const t = rig({ ...p, tempo: 0.5 });
+    const hi: number[] = [];
+    for (let i = 0; i < 2000; i++) {
+      t.input('sbhClkIn', i % 200 < 20 ? 1 : 0);
+      t.core.step(60, false, false);
+      hi.push(t.S[t.SI.sbhSeq1Clk]);
+    }
+    // after the first two edges give a period: 100-sample pulses, low between them
+    const pulse = hi.slice(1000, 1200);
+    expect(pulse.filter((x) => x > 0).length).toBe(100);
+    expect(edges(Float64Array.from(hi.slice(400)))).toHaveLength(8);
+  });
+
   it('follows the CLOCK input in place of TEMPO', () => {
     const t = rig(p);
     // seven pulses in 0.2 s, where TEMPO alone would step ten times
@@ -422,6 +455,14 @@ describe('envelope gates', () => {
     expect(edges(r.sbhEg2)).toHaveLength(15);
   });
 
+  it('ignores a trigger only for the attack as its rate CV runs it', () => {
+    // a 100 ms attack at twice the rate lasts 50 ms: gates at 0, 60, 120, 180 and 240 ms
+    const t = rig(p, [0.1, 0.001]);
+    t.rate[0] = 2;
+    const r = t.run(Math.round(SR * 0.3), ['sbhEg1']);
+    expect(edges(r.sbhEg1).map((i) => Math.round((i / SR) * 1000))).toEqual([0, 60, 120, 180, 240]);
+  });
+
   it('holds both gates while a key is held', () => {
     const r = rig({ ...p, play: false }).run(1000, ['sbhEg1', 'sbhEg2'], 60, true);
     expect(r.sbhEg1.every((x) => x === 1)).toBe(true);
@@ -455,6 +496,22 @@ describe('in the voice', () => {
     expect(rms(out, 0, SR / 20)).toBeGreaterThan(0.05);
     // the decay after the first step's short gate
     expect(rms(out, SR / 4, SR / 2)).toBeLessThan(rms(out, 0, SR / 20) / 10);
+  });
+
+  it('follows the voice’s tune (and so its bend and transpose) on both VCOs', () => {
+    const one = withVco(withVco({ ...subharm(), eg: 'held' }, 0, { level: [0.8, 0, 0] }), 1, {
+      level: [0, 0, 0],
+    });
+    const up = (x: Float32Array) => {
+      let n = 0;
+      for (let i = 1; i < x.length; i++) if (x[i - 1] < 0 && x[i] >= 0) n++;
+      return n;
+    };
+    const at = (tune: number) =>
+      up(render({ ...params(one), tune }, { events: [], len: SR }).out.slice(SR / 10));
+    const ratio = at(12) / at(0);
+    expect(ratio).toBeGreaterThan(1.95);
+    expect(ratio).toBeLessThan(2.05);
   });
 
   it('is silent until a key is played while stopped, then sounds the key', () => {
