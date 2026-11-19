@@ -1432,6 +1432,23 @@ svg .kys-hit:focus-visible {
   font-weight: 600;
   letter-spacing: 0;
 }
+/* The head packs to what fits on one line of it (`useTopFit`): closer, then the toggles' icons without their words. */
+.kys-rail.is-top[data-fit~='short'] {
+  column-gap: 10px;
+}
+.kys-rail.is-top[data-fit~='short'] .kys-rail-group + .kys-rail-group {
+  padding-left: 8px;
+}
+.kys-rail.is-top[data-fit~='short'] .kys-rail-end > .kys-rail-group,
+.kys-rail.is-top[data-fit~='short'] .kys-rail-history {
+  padding-right: 6px;
+}
+.kys-rail.is-top[data-fit~='icons'] .kys-layer-word {
+  display: none;
+}
+.kys-rail.is-top[data-fit~='icons'] .kys-layer {
+  padding: 0 7px;
+}
 /* A finger needs a bigger target than a pointer. */
 @media (pointer: coarse) {
   .kys-rail .kys-layer,

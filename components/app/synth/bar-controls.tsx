@@ -100,10 +100,13 @@ export function PanelSwitch({
   title,
   on,
   tone = 'view',
+  fitted = false,
   onClick,
 }: {
   label: string;
   short: string;
+  /** Its short name is chosen by the rail it sits on (`data-fit`, see `useTopFit`), not by the screen's width. */
+  fitted?: boolean;
   title: string;
   on: boolean;
   tone?: keyof typeof TONES;
@@ -119,8 +122,8 @@ export function PanelSwitch({
       onClick={onClick}
       className={`rounded-md border px-2 py-1.5 font-semibold sm:px-2.5 ${on ? onCls : offCls}`}
     >
-      <span className="xl:hidden">{short}</span>
-      <span className="hidden xl:inline">{label}</span>
+      <span className={fitted ? 'kys-name-short' : 'xl:hidden'}>{short}</span>
+      <span className={fitted ? 'kys-name-long' : 'hidden xl:inline'}>{label}</span>
     </button>
   );
 }

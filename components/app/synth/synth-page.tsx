@@ -142,7 +142,12 @@ import {
   useKeepCentre,
 } from '@/components/app/synth/panel-zoom';
 import { PlayerTip, PlayerTips, TipSide } from '@/components/app/synth/player-tip';
-import { LayerToggle, PlayerSettings, useFootFit } from '@/components/app/synth/player-tools';
+import {
+  LayerToggle,
+  PlayerSettings,
+  useFootFit,
+  useTopFit,
+} from '@/components/app/synth/player-tools';
 import { RoutingView } from '@/components/app/synth/routing-view';
 import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
 import { getSynthRouting } from '@/lib/app/synths/routing';
@@ -2394,6 +2399,7 @@ function Synth({
     };
   // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
   const footRef = useFootFit(!!ownLayout || !!synthDef.translation);
+  const topRef = useTopFit();
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
@@ -2693,6 +2699,7 @@ function Synth({
                     {/* Its tips open below it, over the panel: above it is the page's header (t-279). */}
                     <TipSide side="bottom">
                       <div
+                        ref={topRef}
                         className={`kys-rail is-top mx-auto ${view.outline ? 'is-outline' : ''} ${lightFace ? 'is-light' : ''}`}
                         style={railStyle}
                       >
@@ -2702,6 +2709,7 @@ function Synth({
                         {routing && (
                           <div role="group" aria-label="Signal" className="kys-rail-group">
                             <LayerToggle
+                              keepShort
                               ref={routingToggleRef}
                               label="Signal diagram"
                               short="Diagram"
@@ -2711,6 +2719,7 @@ function Synth({
                               onClick={() => flipPanel(!routingOn)}
                             />
                             <LayerToggle
+                              keepShort
                               label="Live signal"
                               short="Live signal"
                               icon={<Activity size={17} aria-hidden="true" />}
@@ -2731,6 +2740,7 @@ function Synth({
                           {/* Dim unused (t-279) sits with Sensitive, after the rule: both mark the panel's face as it is
                           set, still, where Signal's two show the sound moving. Turning it on turns the face up. */}
                           <LayerToggle
+                            keepShort
                             label="Dim unused parts"
                             short="Dim unused"
                             icon={<EyeOff size={17} aria-hidden="true" />}
@@ -2742,6 +2752,7 @@ function Synth({
                             }}
                           />
                           <LayerToggle
+                            keepShort
                             label="Show sensitive controls"
                             short="Sensitive"
                             icon={<Flame size={17} aria-hidden="true" />}
@@ -2786,6 +2797,7 @@ function Synth({
                           >
                             {!small && (
                               <LayerToggle
+                                keepShort
                                 label="Inspector"
                                 short="Inspect"
                                 icon={<ScanSearch size={17} aria-hidden="true" />}
@@ -2795,6 +2807,7 @@ function Synth({
                               />
                             )}
                             <LayerToggle
+                              keepShort
                               label="Explain sections"
                               short="Sections"
                               icon={<Shapes size={17} aria-hidden="true" />}
@@ -2811,6 +2824,7 @@ function Synth({
                           <PanelSwitch
                             label="Orientation tour"
                             short="Tour"
+                            fitted
                             tone="start"
                             on={tourOn}
                             title={`A guided walk round the ${def.name}: what its words mean, then every section in the order the sound passes through it. It changes nothing on the panel.`}

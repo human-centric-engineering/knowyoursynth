@@ -64,7 +64,7 @@ export function LayerToggle({
         className={`kys-layer ${on ? 'is-on' : ''} ${filled ? 'is-filled' : ''} ${hoverFill ? 'is-hover-fill' : ''}`}
       >
         {icon}
-        <span className={keepShort ? undefined : 'lg:max-xl:hidden'}>{short}</span>
+        <span className={`kys-layer-word ${keepShort ? '' : 'lg:max-xl:hidden'}`}>{short}</span>
         {children}
         {/* Open, it says a press closes it. */}
         {on && <X size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />}
@@ -318,6 +318,49 @@ export function useFootFit(fourSettings: boolean) {
       ro.disconnect();
     };
   }, [fourSettings]);
+  return ref;
+}
+
+/**
+ * How close the panel's top rail packs, from what fits on one line of it: like the foot rail it is as wide as the
+ * panel, not the screen, so a breakpoint cannot say. Each step is tried in turn until every button sits on one line:
+ * `short` (the rail closer together, the tour's short name), then `icons` (the toggles' icons and LEDs without their
+ * words; each keeps its name in its tooltip). If it still does not fit, it wraps. Written as `data-fit`, as the foot's.
+ * The rail and its parts are observed, so a part coming or going (the inspector, Signal) measures it again.
+ */
+export function useTopFit() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const rail = ref.current;
+    if (!rail || typeof ResizeObserver === 'undefined') return undefined;
+    const oneLine = () => {
+      const mids = Array.from(rail.querySelectorAll('button'), (b) => {
+        const r = b.getBoundingClientRect();
+        return r.top + r.height / 2;
+      });
+      return mids.length === 0 || Math.max(...mids) - Math.min(...mids) < 8;
+    };
+    const measure = () => {
+      delete rail.dataset.fit;
+      for (const fit of ['short', 'short icons']) {
+        if (oneLine()) return;
+        rail.dataset.fit = fit;
+      }
+    };
+    measure();
+    // On the next frame, as the foot's: its height changes with what it writes (see `useFootFit`).
+    let frame = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
+    ro.observe(rail);
+    for (const part of Array.from(rail.children)) ro.observe(part);
+    return () => {
+      cancelAnimationFrame(frame);
+      ro.disconnect();
+    };
+  }, []);
   return ref;
 }
 
