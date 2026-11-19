@@ -73,9 +73,9 @@ function rig(p: SubharmParams, attack: [number, number] = [0.001, 0.001]) {
     DI,
     (d) => dv[d],
     cab,
-    (k) => rate[k]
+    (k) => attack[k] / rate[k]
   );
-  core.set(p, attack);
+  core.set(p);
   /** Run `n` samples, recording the named signals. */
   const run = (n: number, names: string[], note = 60, keyGate = false) => {
     const rec: Record<string, Float64Array> = {};
@@ -343,7 +343,7 @@ describe('transport', () => {
     const t = rig(p);
     t.run(Math.round(SR * 0.05), []);
     expect(t.core.stages()[0]).toBe(2);
-    t.core.set({ ...p, press: { ...p.press, reset: 1 } }, [0.001, 0.001]);
+    t.core.set({ ...p, press: { ...p.press, reset: 1 } });
     t.run(1, []);
     expect(t.core.stages()).toEqual([0, 0]);
     // the next clock plays step 1 again rather than leaving it
@@ -355,7 +355,7 @@ describe('transport', () => {
     const stopped = { ...p, play: false };
     const t = rig(stopped);
     t.run(10, []);
-    t.core.set({ ...stopped, press: { ...stopped.press, next: 1 } }, [0.001, 0.001]);
+    t.core.set({ ...stopped, press: { ...stopped.press, next: 1 } });
     const r = t.run(100, ['sbhTrig']);
     expect(t.core.stages()).toEqual([1, 1]);
     expect(edges(r.sbhTrig)).toHaveLength(0);
@@ -383,8 +383,45 @@ describe('transport', () => {
     const t = rig({ ...p, play: false });
     t.input('sbhPlay', 0);
     t.run(10, []);
-    t.core.set({ ...p, play: true }, [0.001, 0.001]);
+    t.core.set({ ...p, play: true });
     expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(0);
+  });
+
+  it('hands the transport back to the panel PLAY when the cable is pulled', () => {
+    // the cable started the clock with PLAY unlit; pulling it stops the clock
+    const t = rig({ ...p, play: false });
+    t.input('sbhPlay', 1);
+    expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(5);
+    t.input('sbhPlay', 1, false);
+    expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(0);
+    // plugged in again already high, it starts the clock
+    t.input('sbhPlay', 1);
+    expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(5);
+  });
+
+  it('takes a new cable at CLOCK’s first edge even if the old one was left high', () => {
+    const t = rig(p);
+    t.input('sbhClkIn', 1);
+    t.run(100, []);
+    t.input('sbhClkIn', 0, false);
+    t.run(10, []);
+    // a new cable, high from its first sample: that is an edge, so a step
+    t.input('sbhClkIn', 1);
+    expect(edges(t.run(100, ['sbhSeq1Clk']).sbhSeq1Clk)).toHaveLength(1);
+  });
+
+  it('after off(), a returning patch syncs its buttons rather than reading them as presses', () => {
+    const t = rig({ ...p, play: false });
+    t.run(10, []);
+    t.core.set({ ...p, play: false, press: { reset: 0, next: 3, trigger: 3 } });
+    // past TRIGGER OUT's 1 ms pulse
+    t.run(100, []);
+    expect(t.core.stages()).toEqual([1, 1]);
+    t.core.off();
+    t.core.set({ ...p, play: false, press: { reset: 0, next: 0, trigger: 0 } });
+    const r = t.run(100, ['sbhTrig']);
+    expect(t.core.stages()).toEqual([1, 1]);
+    expect(edges(r.sbhTrig)).toHaveLength(0);
   });
 
   it('sizes the SEQ CLK pulse to half an incoming clock faster than TEMPO', () => {
@@ -430,18 +467,15 @@ describe('envelope gates', () => {
     const t = rig({ ...p, eg: 'held', play: false });
     const r = t.run(100, ['sbhEg1', 'sbhEg2']);
     expect(r.sbhEg1.every((x) => x === 1) && r.sbhEg2.every((x) => x === 1)).toBe(true);
-    t.core.set(
-      { ...p, eg: 'held', play: false, press: { ...p.press, trigger: 1 } },
-      [0.001, 0.001]
-    );
+    t.core.set({ ...p, eg: 'held', play: false, press: { ...p.press, trigger: 1 } });
     expect(edges(t.run(100, ['sbhTrig']).sbhTrig)).toHaveLength(0);
   });
 
   it('TRIGGER opens the gates with EG off, and sends a 1 ms pulse at TRIGGER OUT', () => {
     const q = { ...p, eg: 'off' as const, play: false };
-    const t = rig(q, [0.05, 0.05]);
+    const t = rig(q);
     t.run(10, []);
-    t.core.set({ ...q, press: { ...q.press, trigger: 1 } }, [0.05, 0.05]);
+    t.core.set({ ...q, press: { ...q.press, trigger: 1 } });
     const r = t.run(SR / 10, ['sbhEg1', 'sbhTrig']);
     expect(edges(r.sbhEg1)).toHaveLength(1);
     expect(r.sbhTrig.filter((x) => x > 0).length).toBe(Math.round(0.001 * SR));

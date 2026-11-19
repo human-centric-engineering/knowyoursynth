@@ -124,8 +124,10 @@ export function quantize(semi: number, q: SubharmParams['quantize']): number {
 
 /** What `createSubharm` hands back to the voice. */
 export interface Subharm {
-  /** The settings, with each envelope's attack in seconds (a trigger is ignored while it runs). */
-  set: (p: SubharmParams, attack: [number, number]) => void;
+  /** The settings. */
+  set: (p: SubharmParams) => void;
+  /** The voice has left the Subharmonicon: the next `set` starts afresh (counters synced, a lit PLAY ticks at once). */
+  off: () => void;
   /**
    * One sample: the played note (MIDI, with the voice's bend, tune, transpose and drift already added), whether a key
    * is held, whether a key was just struck. Returns the mix.
@@ -151,9 +153,9 @@ const divisor = (x: number): number => clamp(Math.round(Number.isFinite(x) ? x :
 
 /**
  * `S` / `SI` / `DI` / `ev` / `cabled` are the voice's signal array, the name → index maps, its routing evaluator and the
- * cabled-destination flags (see dsp-core.ts), shared so cables between the Subharmonicon's jacks just work. `atkRate`
- * is envelope `k`'s attack-rate multiplier this sample (its `env1Rate` / `env2Rate` CV), so a trigger is ignored for
- * the attack as it actually runs.
+ * cabled-destination flags (see dsp-core.ts), shared so cables between the Subharmonicon's jacks just work.
+ * `attackS` is how long envelope `k`'s attack (with any delay before it) runs now, in seconds, after its key follow
+ * and its rate CV: a trigger is ignored for that long.
  */
 export function createSubharm(
   sr: number,
@@ -162,7 +164,7 @@ export function createSubharm(
   DI: Record<string, number>,
   ev: (d: number) => number,
   cabled: Uint8Array,
-  atkRate: (k: number) => number
+  attackS: (k: number) => number
 ): Subharm {
   const sm = 1 - Math.exp(-1 / (0.004 * sr));
   const OUT = [
@@ -178,7 +180,6 @@ export function createSubharm(
     EG_OUT = [SI.sbhEg1, SI.sbhEg2];
 
   let P: SubharmParams | null = null;
-  let atk: [number, number] = [0.001, 0.001];
   // per VCO: its phase, its count of whole cycles, the last SUB 1 saw (its PWM normal), the smoothed mixer levels
   const ph = [0, 0],
     cyc = [0, 0],
@@ -194,6 +195,9 @@ export function createSubharm(
     playPrev = false,
     resetPrev = false,
     trigInPrev = false,
+    // whether PLAY and CLOCK were cabled last sample, so a plug or unplug is seen
+    playCab = false,
+    clkCab = false,
     // samples since the last rising edge at CLOCK, and the period between the last two (sizes SEQ CLK's pulses)
     extSince = -1,
     extPeriod = 0,
@@ -209,7 +213,10 @@ export function createSubharm(
     egPrev = [false, false],
     egDrop = [false, false];
 
-  function set(p: SubharmParams, attack: [number, number]) {
+  // which rhythm generators fired on this clock (kept, so a tick allocates nothing)
+  const fired = [false, false, false, false];
+
+  function set(p: SubharmParams) {
     const first = !P;
     // a cable in PLAY overrides the panel's PLAY
     if ((first || p.play !== P!.play) && !cabled[DI.sbhPlay]) {
@@ -224,7 +231,10 @@ export function createSubharm(
       for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) lvl[k][j] = p.vco[k].level[j];
     }
     P = p;
-    atk = attack;
+  }
+
+  function off() {
+    P = null;
   }
 
   function reset() {
@@ -233,10 +243,9 @@ export function createSubharm(
     armed[0] = armed[1] = true;
   }
 
-  /** The step's offset in octaves: its share of SEQ OCT, snapped (as semitones above C) while QUANTIZE is on. */
-  function stepOct(p: SubharmParams, s: number, q: SubharmParams['quantize'], oct: number): number {
-    const v = clamp(p.seq[s].steps[stage[s]] || 0, -1, 1) * oct;
-    return quantize(12 * v, q) / 12;
+  /** The step's share of SEQ OCT, in semitones, unquantised. */
+  function stepSemi(p: SubharmParams, s: number, oct: number): number {
+    return clamp(p.seq[s].steps[stage[s]] || 0, -1, 1) * oct * 12;
   }
 
   function step(note: number, keyGate: boolean, keyHit: boolean): number {
@@ -244,7 +253,17 @@ export function createSubharm(
     const p = P;
 
     // ── transport ──
-    if (cabled[DI.sbhPlay]) {
+    const pc = !!cabled[DI.sbhPlay];
+    if (pc !== playCab) {
+      playCab = pc;
+      // a fresh cable starts on its first high; an unplugged one hands the transport back to the panel PLAY
+      playPrev = false;
+      if (!pc) {
+        running = p.play;
+        if (running) clkPh = 1;
+      }
+    }
+    if (pc) {
       const g = ev(DI.sbhPlay) > 0.5;
       if (g && !playPrev) {
         running = true;
@@ -252,17 +271,24 @@ export function createSubharm(
       } else if (!g && playPrev) running = false;
       playPrev = g;
     }
-    const rIn = ev(DI.sbhReset) > 0.5;
     // a gate at RESET holds the sequencers where they are; NEXT still moves them
-    const hold = rIn;
-    if ((rIn && !resetPrev) || p.press.reset !== last.reset) reset();
-    resetPrev = rIn;
+    const hold = ev(DI.sbhReset) > 0.5;
+    if ((hold && !resetPrev) || p.press.reset !== last.reset) reset();
+    resetPrev = hold;
     last.reset = p.press.reset;
 
     // ── clock and rhythm generators ──
     let tick = false,
       clkHi = false;
-    if (cabled[DI.sbhClkIn]) {
+    const cc = !!cabled[DI.sbhClkIn];
+    if (cc !== clkCab) {
+      // a new cable at CLOCK measures its own period and edges
+      clkCab = cc;
+      clkPrev = false;
+      extSince = -1;
+      extPeriod = 0;
+    }
+    if (cc) {
       const c = ev(DI.sbhClkIn) > 0.5;
       if (c && !clkPrev) {
         // -1 until the first edge: one edge alone gives no period
@@ -285,15 +311,11 @@ export function createSubharm(
 
     let egHit = false;
     if (tick) {
-      const fired = D_R.map(
-        (d, r) => count % divisor(p.rhythm[r].div - DIV_PER_VOLT * ev(d)) === 0
-      );
+      for (let r = 0; r < 4; r++)
+        fired[r] = count % divisor(p.rhythm[r].div - DIV_PER_VOLT * ev(D_R[r])) === 0;
       count = (count + 1) % CYCLE_WRAP;
       // half the clock's period: the incoming clock's while CLOCK is cabled (once it has two edges), else TEMPO's
-      const half =
-        cabled[DI.sbhClkIn] && extPeriod > 0
-          ? 0.5 * extPeriod
-          : (0.5 * sr) / clamp(p.tempo, 0.01, 1000);
+      const half = cc && extPeriod > 0 ? 0.5 * extPeriod : (0.5 * sr) / clamp(p.tempo, 0.01, 1000);
       const clkLen = Math.min(SEQ_CLK_MAX_S * sr, half);
       for (let s = 0; s < 2; s++) {
         let n = 0;
@@ -334,8 +356,7 @@ export function createSubharm(
     if (trigOut > 0) trigOut--;
     for (let k = 0; k < 2; k++) {
       if (egHit && egCnt[k] <= 0) {
-        const rA = atkRate(k);
-        egCnt[k] = Math.round(Math.max(0.004, (atk[k] / (rA > 0 ? rA : 1)) * 1.05) * sr);
+        egCnt[k] = Math.round(Math.max(0.004, attackS(k) * 1.05) * sr);
         // a gate already high drops for a sample, so the envelope sees a new one and starts again
         if (egPrev[k]) egDrop[k] = true;
       }
@@ -353,7 +374,7 @@ export function createSubharm(
     const q = p.quantize;
     for (let s = 0; s < 2; s++) {
       const outOct = p.seqOutFull ? 5 : p.oct;
-      S[SEQ_OUT[s]] = stepOct(p, s, p.seqOutRaw ? 'off' : q, outOct);
+      S[SEQ_OUT[s]] = quantize(stepSemi(p, s, outOct), p.seqOutRaw ? 'off' : q) / 12;
     }
 
     // ── the six sources ──
@@ -362,8 +383,9 @@ export function createSubharm(
     for (let k = 0; k < 2; k++) {
       const vc = p.vco[k],
         sq = p.seq[k];
-      const st = stepOct(p, k, q, p.oct);
-      const raw = clamp(p.seq[k].steps[stage[k]] || 0, -1, 1) * p.oct * 12;
+      const raw = stepSemi(p, k, p.oct);
+      // the step alone, snapped, in octaves (volts) for the divisors
+      const st = quantize(raw, q) / 12;
       const panel = quantize(vc.freq + (sq.assign[0] ? raw : 0), q);
       // VCO 1's input is normalled to VCO 2's
       const cv = k === 1 && !cabled[D_P[1]] ? ev(D_P[0]) : ev(D_P[k]);
@@ -419,5 +441,5 @@ export function createSubharm(
     return mix;
   }
 
-  return { set, step, stages: () => [stage[0], stage[1]] };
+  return { set, off, step, stages: () => [stage[0], stage[1]] };
 }

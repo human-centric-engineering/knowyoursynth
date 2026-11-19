@@ -926,7 +926,8 @@ function createVoice(
     DI,
     (d) => ev(d),
     cabled,
-    (k) => env[k].rA
+    // the attack as the envelope runs it: after key follow and the rate CV, with any delay before it
+    (k) => env[k].dlyN / sr + env[k].a / (env[k].rA > 0 ? env[k].rA : 1)
   );
   // phrase player
   let phrase: VoicePhrase | null = null,
@@ -1007,7 +1008,8 @@ function createVoice(
     compile();
     if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)));
     if (p.solar) solar.set(p.solar);
-    if (p.subharm) subharm.set(p.subharm, [p.env1.a, p.env2.a]);
+    if (p.subharm) subharm.set(p.subharm);
+    else subharm.off();
     nOsc = Math.min(4, p.osc.length);
     for (let i = 0; i < 4; i++) {
       const o = osc[i];
