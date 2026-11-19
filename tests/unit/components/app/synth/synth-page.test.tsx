@@ -443,6 +443,36 @@ describe('SynthPage layout', () => {
     expect(names.indexOf('Orientation tour') - names.indexOf('Explain sections')).toBe(1);
   });
 
+  it('puts the layers and the settings in a dropdown each on a phone, and keeps history, the tour and help on the rail (t-286)', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)' || query === '(max-width: 639px)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    const head = button('Layers over the panel').closest('.kys-rail');
+    if (!head) throw new Error('the layers menu is on the head rail');
+    expect(head).toHaveClass('is-top');
+    const names = Array.from(head.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    expect(names).toEqual([
+      'Layers over the panel',
+      'Undo',
+      'Redo',
+      'Orientation tour',
+      'How to use the panel',
+    ]);
+    expect(button('Panel settings').closest('.kys-rail')).toHaveClass('is-foot');
+    expect(screen.queryByRole('group', { name: 'Panel settings' })).toBeNull();
+    // Zoom stays on the foot, beside the menu.
+    expect(button('Zoom in').closest('.kys-rail')).toHaveClass('is-foot');
+  });
+
   it("draws the panel's rails in its faceplate's colour and ink, and in the outline's paper and ink", () => {
     if (!def) throw new Error('model-d is not registered');
     page();

@@ -286,6 +286,11 @@ icons` (the toggles' icons and LEDs without their words, which stay in their too
   Layout and Labels, whose choices say it, their tip then hanging from the whole setting), Zoom's name goes and the search
   narrows, each step at a wider rail when there is a Layout or Labels setting. On a phone the search keeps a line of its
   own. Zoom is not on the foot while the routing view shows, which is at no zoom.
+  On a phone (`PHONE_QUERY`, under 640 px; t-286) each rail puts its line in one dropdown: the head's layers in a
+  View menu (`RailMenu`: checkable items by their full names, its LED lit while any is on), Undo, Redo, the tour and help
+  staying on the rail; the foot's settings in a Display menu (`PlayerSettings` with `menu`: a radio group per
+  setting), Zoom and the search staying on the rail. The menus' items are drawn only while open, so nothing is on the
+  page twice.
 - **Dim unused** and **Live signal** (`f-live-panel` t-150; a Signal menu of modes until t-279, now two toggles
   of their own: Live signal in the head rail's Signal group beside Diagram, Dim unused after the rule beside
   Sensitive) are the patch's signal on the panel's face. Either

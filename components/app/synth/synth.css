@@ -1456,6 +1456,28 @@ svg .kys-hit:focus-visible {
 .kys-rail.is-top[data-fit~='icons'] .kys-layer {
   padding: 0 7px;
 }
+/* On a phone each rail's toggles or settings are one dropdown (t-286): a key in the rail's print with a chevron, and
+   the menu in the rail's lettering. The settings' key has no LED: it is never on, only open. */
+.kys-rail .kys-rail-menu-trigger svg:last-child {
+  opacity: 0.7;
+}
+.kys-rail .kys-layer.is-plain::before {
+  display: none;
+}
+.kys-rail .kys-rail-menu-trigger[data-state='open'] {
+  color: var(--rail-on);
+  background: color-mix(in srgb, var(--rail-print, #ece9e2) 10%, transparent);
+}
+.kys-rail-menu {
+  min-width: 13rem;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  letter-spacing: 0.04em;
+}
+.kys-rail-menu [role='menuitemcheckbox'],
+.kys-rail-menu [role='menuitemradio'] {
+  min-height: 40px;
+  font-size: 15px;
+}
 /* A finger needs a bigger target than a pointer. */
 @media (pointer: coarse) {
   .kys-rail .kys-layer,

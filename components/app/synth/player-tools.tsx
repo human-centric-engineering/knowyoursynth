@@ -12,13 +12,25 @@
  *   Long, the magnifier and the hover help, each named in the panel's lettering with an LED by each choice, lit
  *   for the one in use, as a hardware selector shows its position. What each does is on hover.
  *
+ * - `RailMenu` and `PlayerSettings`' `menu`: on a phone each rail's toggles or settings are one dropdown (t-286).
+ *
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
 import { useEffect, useId, useRef } from 'react';
 import type { CSSProperties, ReactNode, Ref } from 'react';
-import { X } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export function LayerToggle({
   label,
@@ -92,6 +104,21 @@ const LAYOUT_SETTING = {
   },
 } as const;
 
+/** A setting's value: one of its choices. */
+type Choice = string | number | boolean;
+interface SettingSpec {
+  at: number;
+  name: string;
+  short?: string;
+  drop?: boolean;
+  help: string;
+  /** The choices' accessible group name. */
+  label: string;
+  options: [Choice, string][];
+  value: Choice;
+  onChange: (v: Choice) => void;
+}
+
 export function PlayerSettings({
   view,
   onView,
@@ -103,6 +130,7 @@ export function PlayerSettings({
   language,
   english = false,
   onEnglish,
+  menu = false,
 }: {
   view: PanelView;
   onView: (v: PanelView) => void;
@@ -116,105 +144,211 @@ export function PlayerSettings({
   onZoom: (z: 0 | 2 | 3) => void;
   tipsOn: boolean;
   onTips: (on: boolean) => void;
+  /** All in one dropdown, as on a phone (t-286), not a line of LEDs. */
+  menu?: boolean;
 }) {
+  const settings: SettingSpec[] = [
+    {
+      at: 0,
+      name: 'Drawn as',
+      drop: true,
+      help: 'Hardware is the faceplate; Outline is a plain diagram, easier to read.',
+      label: 'Panel view',
+      options: [
+        [false, 'Hardware'],
+        [true, 'Outline'],
+      ],
+      value: view.outline,
+      onChange: (outline) => onView({ ...view, outline: outline === true }),
+    },
+  ];
+  if (language && onEnglish)
+    settings.push({
+      at: 1,
+      name: 'Labels',
+      drop: true,
+      help: `The panel is printed in ${language}. English reprints every label on it in English; the names in the cards and the search are English either way.`,
+      label: 'Panel labels',
+      options: [
+        [false, language],
+        [true, 'English'],
+      ],
+      value: english,
+      onChange: (on) => onEnglish(on === true),
+    });
+  if (layout)
+    settings.push({
+      at: 1,
+      name: 'Layout',
+      drop: true,
+      help: LAYOUT_SETTING[layout].help,
+      label: 'Panel layout',
+      options: [
+        [false, LAYOUT_SETTING[layout].own],
+        [true, LAYOUT_SETTING[layout].full],
+      ],
+      value: view.long,
+      onChange: (long) => onView({ ...view, long: long === true }),
+    });
+  settings.push(
+    {
+      at: 2,
+      name: 'Magnifier',
+      short: 'Lens',
+      help: 'A lens that follows the pointer over the panel.',
+      label: 'Magnifier',
+      options: [
+        [0, 'Off'],
+        [2, '2×'],
+        [3, '3×'],
+      ],
+      value: zoom,
+      onChange: (z) => onZoom(z === 2 || z === 3 ? z : 0),
+    },
+    {
+      at: 3,
+      name: 'Hover help',
+      short: 'Tips',
+      help: 'The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it.',
+      label: 'Hover help',
+      options: [
+        [true, 'On'],
+        [false, 'Off'],
+      ],
+      value: tipsOn,
+      onChange: (on) => onTips(on === true),
+    }
+  );
+  if (menu) return <SettingsMenu settings={settings} />;
   return (
     <div role="group" aria-label="Panel settings" className="kys-settings">
-      <Setting
-        at={0}
-        name="Drawn as"
-        drop
-        help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
-      >
-        {(d) => (
-          <LedSelect
-            describedBy={d}
-            label="Panel view"
-            options={[
-              [false, 'Hardware'],
-              [true, 'Outline'],
-            ]}
-            value={view.outline}
-            onChange={(outline) => onView({ ...view, outline })}
-          />
-        )}
-      </Setting>
-      {language && onEnglish && (
+      {settings.map((st) => (
         <Setting
-          at={1}
-          name="Labels"
-          drop
-          help={`The panel is printed in ${language}. English reprints every label on it in English; the names in the cards and the search are English either way.`}
+          key={st.label}
+          at={st.at}
+          name={st.name}
+          short={st.short}
+          drop={st.drop}
+          help={st.help}
         >
           {(d) => (
             <LedSelect
               describedBy={d}
-              label="Panel labels"
-              options={[
-                [false, language],
-                [true, 'English'],
-              ]}
-              value={english}
-              onChange={onEnglish}
+              label={st.label}
+              options={st.options}
+              value={st.value}
+              onChange={st.onChange}
             />
           )}
         </Setting>
-      )}
-      {layout && (
-        <Setting at={1} name="Layout" drop help={LAYOUT_SETTING[layout].help}>
-          {(d) => (
-            <LedSelect
-              describedBy={d}
-              label="Panel layout"
-              options={[
-                [false, LAYOUT_SETTING[layout].own],
-                [true, LAYOUT_SETTING[layout].full],
-              ]}
-              value={view.long}
-              onChange={(long) => onView({ ...view, long })}
-            />
-          )}
-        </Setting>
-      )}
-      <Setting
-        at={2}
-        name="Magnifier"
-        short="Lens"
-        help="A lens that follows the pointer over the panel."
-      >
-        {(d) => (
-          <LedSelect
-            describedBy={d}
-            label="Magnifier"
-            options={[
-              [0, 'Off'],
-              [2, '2×'],
-              [3, '3×'],
-            ]}
-            value={zoom}
-            onChange={(z) => onZoom(z === 2 || z === 3 ? z : 0)}
-          />
-        )}
-      </Setting>
-      <Setting
-        at={3}
-        name="Hover help"
-        short="Tips"
-        help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
-      >
-        {(d) => (
-          <LedSelect
-            describedBy={d}
-            label="Hover help"
-            options={[
-              [true, 'On'],
-              [false, 'Off'],
-            ]}
-            value={tipsOn}
-            onChange={onTips}
-          />
-        )}
-      </Setting>
+      ))}
     </div>
+  );
+}
+
+/**
+ * The foot's settings as one dropdown, on a phone (t-286): each setting a named group of choices, the one in use
+ * marked. A choice is picked by its place in the setting's list, so a choice's value can be any of a string, a number
+ * or a flag.
+ */
+function SettingsMenu({ settings }: { settings: SettingSpec[] }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className="kys-layer kys-rail-menu-trigger is-plain"
+          aria-label="Panel settings"
+        >
+          <SlidersHorizontal size={16} aria-hidden="true" />
+          <span>Display</span>
+          <ChevronDown size={14} aria-hidden="true" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="kys-rail-menu">
+        {settings.map((st, i) => (
+          <div key={st.label}>
+            {i > 0 && <DropdownMenuSeparator />}
+            <DropdownMenuLabel>{st.name}</DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              aria-label={st.label}
+              value={String(st.options.findIndex(([v]) => v === st.value))}
+              onValueChange={(at) => {
+                const picked = st.options[Number(at)];
+                if (picked) st.onChange(picked[0]);
+              }}
+            >
+              {st.options.map(([, word], j) => (
+                <DropdownMenuRadioItem key={word} value={String(j)}>
+                  {word}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </div>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+/** One layer in the head's dropdown (`RailMenu`). */
+export interface RailMenuItem {
+  label: string;
+  icon: ReactNode;
+  on: boolean;
+  onClick: () => void;
+}
+
+/**
+ * The head's layers as one dropdown, on a phone (t-286): a key with its LED lit while any of them is on, opening onto
+ * each layer by its full name, ticked while it is over the panel. Groups are ruled off from each other; an empty
+ * group (Signal, on a synth with no routing) is left out.
+ */
+export function RailMenu({
+  label,
+  short,
+  icon,
+  groups,
+}: {
+  label: string;
+  short: string;
+  icon: ReactNode;
+  groups: RailMenuItem[][];
+}) {
+  const shown = groups.filter((g) => g.length > 0);
+  const anyOn = shown.some((g) => g.some((item) => item.on));
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className={`kys-layer kys-rail-menu-trigger ${anyOn ? 'is-on' : ''}`}
+          aria-label={label}
+        >
+          {icon}
+          <span>{short}</span>
+          <ChevronDown size={14} aria-hidden="true" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="kys-rail-menu">
+        {shown.map((g, i) => (
+          <div key={g[0].label}>
+            {i > 0 && <DropdownMenuSeparator />}
+            {g.map((item) => (
+              <DropdownMenuCheckboxItem
+                key={item.label}
+                checked={item.on}
+                onCheckedChange={item.onClick}
+                onSelect={(e) => e.preventDefault()}
+              >
+                <span className="mr-2 inline-flex">{item.icon}</span>
+                {item.label}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </div>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

@@ -93,6 +93,7 @@ import {
   Columns4,
   EyeOff,
   Flame,
+  Layers,
   Piano,
   Play,
   Redo2,
@@ -145,6 +146,7 @@ import { PlayerTip, PlayerTips, TipSide } from '@/components/app/synth/player-ti
 import {
   LayerToggle,
   PlayerSettings,
+  RailMenu,
   useFootFit,
   useTopFit,
 } from '@/components/app/synth/player-tools';
@@ -164,7 +166,12 @@ import {
   Wordmark,
 } from '@/components/app/synth/player';
 import type { PanelScale } from '@/components/app/synth/panel-zoom';
-import { RotatePrompt, SMALL_QUERY, useMediaQuery } from '@/components/app/synth/rotate-prompt';
+import {
+  PHONE_QUERY,
+  RotatePrompt,
+  SMALL_QUERY,
+  useMediaQuery,
+} from '@/components/app/synth/rotate-prompt';
 import { revealOnPanel } from '@/components/app/synth/reveal';
 import { BottomSheet, HALF_HEIGHT, type SheetSnap } from '@/components/app/ui/bottom-sheet';
 import { KeptSlot, useKeptNode } from '@/components/app/ui/kept';
@@ -2400,6 +2407,25 @@ function Synth({
   // A fourth setting (Layout on a modular, Labels on a translated panel) needs the wider breakpoints
   const footRef = useFootFit(!!ownLayout || !!synthDef.translation);
   const topRef = useTopFit();
+  // On a phone the head's layers and the foot's settings each go into one dropdown (t-286): the rails are too narrow
+  // for them in a line, and an icon alone tells a finger nothing, with no hover to name it.
+  const phone = useMediaQuery(PHONE_QUERY);
+  const toggleDiagram = () => flipPanel(!routingOn);
+  const toggleLive = () => {
+    if (!liveOn && routingOn) flipPanel(false);
+    setLiveOn(liveOn ? false : 'on');
+  };
+  const toggleDim = () => {
+    if (!dimOn && routingOn) flipPanel(false);
+    setDimOn(!dimOn);
+  };
+  const toggleHeat = () => setHeatOn(!heatOn);
+  const toggleSections = () => {
+    setAreasOn(!areasOn);
+    setTourOn(false);
+    findStore.set(null);
+    focusStore.set((f) => (f && f.kind === 'area' ? null : f));
+  };
   // The Sound Design strip and the lesson card are of the faceplate too, in its colours (t-201).
   const face = useMemo(() => faceRoles(plate, plate2, print), [plate, plate2, print]);
   const panelTaps = small
@@ -2706,61 +2732,105 @@ function Synth({
                         {/* Signal (t-279): two ways to see where the sound goes, side by side with no rule between
                         them. The diagram is the panel's back and Live signal is on its face, so turning Live signal on
                         turns the face up. A synth with no routing has neither. */}
-                        {routing && (
-                          <div role="group" aria-label="Signal" className="kys-rail-group">
-                            <LayerToggle
-                              keepShort
-                              ref={routingToggleRef}
-                              label="Signal diagram"
-                              short="Diagram"
-                              icon={<Waypoints size={17} aria-hidden="true" />}
-                              on={routingOn}
-                              title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
-                              onClick={() => flipPanel(!routingOn)}
-                            />
-                            <LayerToggle
-                              keepShort
-                              label="Live signal"
-                              short="Live signal"
-                              icon={<Activity size={17} aria-hidden="true" />}
-                              on={liveOn}
-                              title="Light each part the patch uses as signal goes through it, with a line from each part to the next: audio heavy, control light, gate dotted. It needs a sound to show anything: play a note on the Piano or a MIDI keyboard, or start a Sequencer pattern."
-                              onClick={() => {
-                                if (!liveOn && routingOn) flipPanel(false);
-                                setLiveOn(liveOn ? false : 'on');
-                              }}
-                            />
-                          </div>
-                        )}
-                        <div
-                          role="group"
-                          aria-label="Layers over the panel"
-                          className="kys-rail-group"
-                        >
-                          {/* Dim unused (t-279) sits with Sensitive, after the rule: both mark the panel's face as it is
+                        {phone ? (
+                          <RailMenu
+                            label="Layers over the panel"
+                            short="View"
+                            icon={<Layers size={17} aria-hidden="true" />}
+                            groups={[
+                              routing
+                                ? [
+                                    {
+                                      label: 'Signal diagram',
+                                      icon: <Waypoints size={16} aria-hidden="true" />,
+                                      on: routingOn,
+                                      onClick: toggleDiagram,
+                                    },
+                                    {
+                                      label: 'Live signal',
+                                      icon: <Activity size={16} aria-hidden="true" />,
+                                      on: liveOn,
+                                      onClick: toggleLive,
+                                    },
+                                  ]
+                                : [],
+                              [
+                                {
+                                  label: 'Dim unused parts',
+                                  icon: <EyeOff size={16} aria-hidden="true" />,
+                                  on: dimOn,
+                                  onClick: toggleDim,
+                                },
+                                {
+                                  label: 'Show sensitive controls',
+                                  icon: <Flame size={16} aria-hidden="true" />,
+                                  on: heatOn,
+                                  onClick: toggleHeat,
+                                },
+                              ],
+                              [
+                                {
+                                  label: 'Explain sections',
+                                  icon: <Shapes size={16} aria-hidden="true" />,
+                                  on: areasOn,
+                                  onClick: toggleSections,
+                                },
+                              ],
+                            ]}
+                          />
+                        ) : (
+                          <>
+                            {routing && (
+                              <div role="group" aria-label="Signal" className="kys-rail-group">
+                                <LayerToggle
+                                  keepShort
+                                  ref={routingToggleRef}
+                                  label="Signal diagram"
+                                  short="Diagram"
+                                  icon={<Waypoints size={17} aria-hidden="true" />}
+                                  on={routingOn}
+                                  title="Turn the panel over to see how its parts are wired, as a block diagram. What the patch uses is drawn solid, and lights as signal goes through it."
+                                  onClick={toggleDiagram}
+                                />
+                                <LayerToggle
+                                  keepShort
+                                  label="Live signal"
+                                  short="Live signal"
+                                  icon={<Activity size={17} aria-hidden="true" />}
+                                  on={liveOn}
+                                  title="Light each part the patch uses as signal goes through it, with a line from each part to the next: audio heavy, control light, gate dotted. It needs a sound to show anything: play a note on the Piano or a MIDI keyboard, or start a Sequencer pattern."
+                                  onClick={toggleLive}
+                                />
+                              </div>
+                            )}
+                            <div
+                              role="group"
+                              aria-label="Layers over the panel"
+                              className="kys-rail-group"
+                            >
+                              {/* Dim unused (t-279) sits with Sensitive, after the rule: both mark the panel's face as it is
                           set, still, where Signal's two show the sound moving. Turning it on turns the face up. */}
-                          <LayerToggle
-                            keepShort
-                            label="Dim unused parts"
-                            short="Dim unused"
-                            icon={<EyeOff size={17} aria-hidden="true" />}
-                            on={dimOn}
-                            title="Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in."
-                            onClick={() => {
-                              if (!dimOn && routingOn) flipPanel(false);
-                              setDimOn(!dimOn);
-                            }}
-                          />
-                          <LayerToggle
-                            keepShort
-                            label="Show sensitive controls"
-                            short="Sensitive"
-                            icon={<Flame size={17} aria-hidden="true" />}
-                            on={heatOn}
-                            title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
-                            onClick={() => setHeatOn(!heatOn)}
-                          />
-                        </div>
+                              <LayerToggle
+                                keepShort
+                                label="Dim unused parts"
+                                short="Dim unused"
+                                icon={<EyeOff size={17} aria-hidden="true" />}
+                                on={dimOn}
+                                title="Darken every part of the panel the patch does not use as it is set now. Point at a dark control to see what would bring it in."
+                                onClick={toggleDim}
+                              />
+                              <LayerToggle
+                                keepShort
+                                label="Show sensitive controls"
+                                short="Sensitive"
+                                icon={<Flame size={17} aria-hidden="true" />}
+                                on={heatOn}
+                                title="Put a glow behind the controls where a small move changes the sound most. The bigger and stronger the glow, the more effect. The three strongest are numbered."
+                                onClick={toggleHeat}
+                              />
+                            </div>
+                          </>
+                        )}
                         <div className="kys-rail-end">
                           {/* Undo and Redo, on the panel's own rail: they take back what was done to it. */}
                           <span role="group" aria-label="History" className="kys-rail-history">
@@ -2790,37 +2860,34 @@ function Synth({
                               </button>
                             </PlayerTip>
                           </span>
-                          <div
-                            role="group"
-                            aria-label="Inspect and explain"
-                            className="kys-rail-group"
-                          >
-                            {!small && (
+                          {!phone && (
+                            <div
+                              role="group"
+                              aria-label="Inspect and explain"
+                              className="kys-rail-group"
+                            >
+                              {!small && (
+                                <LayerToggle
+                                  keepShort
+                                  label="Inspector"
+                                  short="Inspect"
+                                  icon={<ScanSearch size={17} aria-hidden="true" />}
+                                  on={card === 'inspector'}
+                                  title="Open the inspector over the panel: what the control under the pointer does, and its value."
+                                  onClick={() => openSection('inspector')}
+                                />
+                              )}
                               <LayerToggle
                                 keepShort
-                                label="Inspector"
-                                short="Inspect"
-                                icon={<ScanSearch size={17} aria-hidden="true" />}
-                                on={card === 'inspector'}
-                                title="Open the inspector over the panel: what the control under the pointer does, and its value."
-                                onClick={() => openSection('inspector')}
+                                label="Explain sections"
+                                short="Sections"
+                                icon={<Shapes size={17} aria-hidden="true" />}
+                                on={areasOn}
+                                title="Colour in every named part of the panel, and explain what it does when you point at it."
+                                onClick={toggleSections}
                               />
-                            )}
-                            <LayerToggle
-                              keepShort
-                              label="Explain sections"
-                              short="Sections"
-                              icon={<Shapes size={17} aria-hidden="true" />}
-                              on={areasOn}
-                              title="Colour in every named part of the panel, and explain what it does when you point at it."
-                              onClick={() => {
-                                setAreasOn(!areasOn);
-                                setTourOn(false);
-                                findStore.set(null);
-                                focusStore.set((f) => (f && f.kind === 'area' ? null : f));
-                              }}
-                            />
-                          </div>
+                            </div>
+                          )}
                           <PanelSwitch
                             label="Orientation tour"
                             short="Tour"
@@ -2917,6 +2984,7 @@ function Synth({
                       style={railStyle}
                     >
                       <PlayerSettings
+                        menu={phone}
                         view={view}
                         onView={setView}
                         layout={ownLayout}
