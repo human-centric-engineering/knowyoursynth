@@ -3048,6 +3048,8 @@ function createVoice(
     (held.length === 0 &&
       !P.trig.drone &&
       !P.vca.bias &&
+      // a running Subharmonicon clock opens its own gates, so its voice must keep stepping
+      !(P.subharm && subharm.running()) &&
       env[vcaEnvIdx()].stage === 0 &&
       vcaGain < 1e-6);
   /** Copy the signals this voice's cross-module cables read from the other voice (`peer` = its signal array). */

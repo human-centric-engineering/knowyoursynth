@@ -128,6 +128,8 @@ export interface Subharm {
   set: (p: SubharmParams) => void;
   /** The voice has left the Subharmonicon: the next `set` starts afresh (counters synced, a lit PLAY ticks at once). */
   off: () => void;
+  /** Whether the clock is running (a running clock opens its own gates, so the voice is never idle). */
+  running: () => boolean;
   /**
    * One sample: the played note (MIDI, with the voice's bend, tune, transpose and drift already added), whether a key
    * is held, whether a key was just struck. Returns the mix.
@@ -235,6 +237,18 @@ export function createSubharm(
 
   function off() {
     P = null;
+    reset();
+    running = false;
+    clkPh = 0;
+    trigOut = 0;
+    playCab = clkCab = false;
+    playPrev = clkPrev = resetPrev = trigInPrev = false;
+    extSince = -1;
+    extPeriod = 0;
+    for (let k = 0; k < 2; k++) {
+      seqClk[k] = egCnt[k] = 0;
+      egPrev[k] = egDrop[k] = false;
+    }
   }
 
   function reset() {
@@ -256,8 +270,9 @@ export function createSubharm(
     const pc = !!cabled[DI.sbhPlay];
     if (pc !== playCab) {
       playCab = pc;
-      // a fresh cable starts on its first high; an unplugged one hands the transport back to the panel PLAY
-      playPrev = false;
+      // a fresh cable takes over from where the transport is (so one already low stops it, one high starts it); an
+      // unplugged one hands the transport back to the panel PLAY
+      playPrev = running;
       if (!pc) {
         running = p.play;
         if (running) clkPh = 1;
@@ -293,7 +308,8 @@ export function createSubharm(
       if (c && !clkPrev) {
         // -1 until the first edge: one edge alone gives no period
         if (extSince >= 0) extPeriod = extSince;
-        extSince = 0;
+        // the edge's own sample counts, so the next edge reads the whole period
+        extSince = 1;
       } else if (extSince >= 0) extSince++;
       tick = running && c && !clkPrev;
       clkHi = c;
@@ -441,5 +457,5 @@ export function createSubharm(
     return mix;
   }
 
-  return { set, off, step, stages: () => [stage[0], stage[1]] };
+  return { set, off, step, running: () => running, stages: () => [stage[0], stage[1]] };
 }

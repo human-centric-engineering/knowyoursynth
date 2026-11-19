@@ -399,6 +399,24 @@ describe('transport', () => {
     expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(5);
   });
 
+  it('a cable plugged into PLAY low stops a clock the panel PLAY started', () => {
+    const t = rig(p);
+    expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(5);
+    t.input('sbhPlay', 0);
+    expect(edges(t.run(SR / 10, ['sbhClock']).sbhClock)).toHaveLength(0);
+    expect(t.core.running()).toBe(false);
+  });
+
+  it('off() starts the sequencers again from step 1', () => {
+    const t = rig(p);
+    t.run(Math.round(SR * 0.05), []);
+    expect(t.core.stages()[0]).toBe(2);
+    t.core.off();
+    t.core.set(p);
+    t.run(1, []);
+    expect(t.core.stages()).toEqual([0, 0]);
+  });
+
   it('takes a new cable at CLOCK’s first edge even if the old one was left high', () => {
     const t = rig(p);
     t.input('sbhClkIn', 1);
@@ -420,7 +438,8 @@ describe('transport', () => {
     t.core.off();
     t.core.set({ ...p, play: false, press: { reset: 0, next: 0, trigger: 0 } });
     const r = t.run(100, ['sbhTrig']);
-    expect(t.core.stages()).toEqual([1, 1]);
+    // back on step 1, and no NEXT read from the counters' mismatch (that would show step 2)
+    expect(t.core.stages()).toEqual([0, 0]);
     expect(edges(r.sbhTrig)).toHaveLength(0);
   });
 
