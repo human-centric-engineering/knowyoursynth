@@ -1192,14 +1192,14 @@
         {
           "title": "Step the divisors",
           "module": "mod",
-          "why": "Sequencer 1 moves both subs’ divisors; a step turned right lowers them, so the sub climbs.\n- SEQ OCT ±1\n- SEQ 1 ASSIGN SUB 1 lit\n- SEQ 1 ASSIGN SUB 2 lit\n- SEQ 1 STEP 2 1.7 · +4.1 st\n- SEQ 1 STEP 3 3.4 · +8.2 st\n- SEQ 1 STEP 4 -1.7 · -4.1 st\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- TEMPO 5.5 · 315 BPM\n- PLAY lit\n- Listen for: an arpeggio jumping between undertones, always in tune with itself.",
+          "why": "Sequencer 1 moves both subs’ divisors; a step turned right lowers them, so the sub climbs.\n- SEQ OCT ±2\n- SEQ 1 ASSIGN SUB 1 lit\n- SEQ 1 ASSIGN SUB 2 lit\n- SEQ 1 STEP 2 1.67 · divisor −1\n- SEQ 1 STEP 3 3.33 · divisor −2\n- SEQ 1 STEP 4 -1.67 · divisor +1\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- TEMPO 5.5 · 315 BPM\n- PLAY lit\n- Listen for: an arpeggio jumping between undertones, always in tune with itself.",
           "set": {
-            "seq.oct": 1,
+            "seq.oct": 2,
             "seq1.assign_sub1": true,
             "seq1.assign_sub2": true,
-            "seq1.step2": 1.7,
-            "seq1.step3": 3.4,
-            "seq1.step4": -1.7,
+            "seq1.step2": 1.67,
+            "seq1.step3": 3.33,
+            "seq1.step4": -1.67,
             "rhythm1.seq1": true,
             "rhythm3.seq1": true,
             "clock.tempo": 5.5,
@@ -1219,8 +1219,8 @@
         },
         {
           "id": "seq.oct",
-          "try": "Set SEQ OCT to ±2",
-          "hear": "Wider leaps between undertones."
+          "try": "Set SEQ OCT to ±5",
+          "hear": "Wider leaps, further down and up the undertones."
         }
       ]
     },

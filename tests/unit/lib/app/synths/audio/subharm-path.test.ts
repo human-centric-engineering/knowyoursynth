@@ -361,6 +361,21 @@ describe('transport', () => {
     expect(edges(r.sbhTrig)).toHaveLength(0);
   });
 
+  it('reads a press count that changes with the rest of the patch as a load, not a press', () => {
+    const stopped = { ...p, play: false, eg: 'off' as const };
+    const t = rig({ ...stopped, press: { reset: 0, next: 1, trigger: 1 } });
+    t.run(10, []);
+    // a sound loads: its buttons are back at 0 and a knob moved with them
+    t.core.set({ ...stopped, tempo: 3, press: { reset: 0, next: 0, trigger: 0 } });
+    const r = t.run(100, ['sbhTrig']);
+    expect(t.core.stages()).toEqual([0, 0]);
+    expect(edges(r.sbhTrig)).toHaveLength(0);
+    // and the next click on its own is a press again
+    t.core.set({ ...stopped, tempo: 3, press: { reset: 0, next: 1, trigger: 0 } });
+    t.run(10, []);
+    expect(t.core.stages()).toEqual([1, 1]);
+  });
+
   it('a gate at RESET holds step 1 while the rhythms still trigger the envelopes', () => {
     const t = rig(p);
     t.input('sbhReset', 1);

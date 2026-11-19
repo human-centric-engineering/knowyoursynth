@@ -2313,7 +2313,10 @@ export interface SubharmParams {
   play: boolean;
   /** EG: steps do not trigger the envelopes, they do, or the envelopes are held open. */
   eg: 'off' | 'on' | 'held';
-  /** RESET, NEXT and TRIGGER: a change of the number is a press. */
+  /**
+   * RESET, NEXT and TRIGGER: a change of the number is a press, when it is the only change; one that comes with any
+   * other change of these settings is a patch loading, and presses nothing.
+   */
   press: { reset: number; next: number; trigger: number };
   /** Held QUANTIZE: the SEQ outputs are not quantised (the VCOs still are). */
   seqOutRaw?: boolean;

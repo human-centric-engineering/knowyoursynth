@@ -47,7 +47,7 @@ const vco = (n: 1 | 2) => ({
   name: `VCO ${n}`,
   module: 'osc' as const,
   controls: [`vco${n}.freq`, `vco${n}.wave`, ...(n === 1 ? ['vco.quantize'] : [])],
-  description: `An analogue VCO over four octaves, C4 to C8 from the knob, optionally quantised. WAVE gives square, a pulse moved by SUB 1’s sawtooth, or sawtooth, on it and its subs.`,
+  description: `An analogue VCO over four octaves, C4 to C8 from the knob, optionally quantised. WAVE gives square on it and its subs, a pulse moved by SUB 1’s sawtooth with sawtooth subs, or sawtooth on all three.`,
   specs: [
     { label: 'Range', value: '262 Hz to 4,186 Hz from the knob' },
     { label: 'Waves', value: 'Square, PWM pulse, sawtooth' },

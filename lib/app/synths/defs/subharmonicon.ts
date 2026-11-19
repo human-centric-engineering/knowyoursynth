@@ -41,7 +41,7 @@ import type {
   TextDecor,
   ViewRect,
 } from '@/lib/app/synths/contract';
-import { quantize } from '@/lib/app/synths/audio/subharm-core';
+import { DIV_PER_VOLT, quantize } from '@/lib/app/synths/audio/subharm-core';
 import { num } from '@/lib/app/synths/lib/def-kit';
 import {
   clamp,
@@ -229,8 +229,18 @@ const ONE_SEQ = (s: 1 | 2): void => {
       def: 0,
       label: `STEP ${i + 1}`,
       name: `SEQ ${s} STEP ${i + 1}`,
-      fmt: (v, values) => fmtSemi((clamp(v, -5, 5) / 5) * 12 * Number(values?.['seq.oct'] ?? 2)),
-      help: `Step ${i + 1} of Sequencer ${s}: how far this step moves what the SEQ ${s} ASSIGN buttons choose, up to the right or down to the left, within the SEQ OCT range. At the centre the step changes nothing. The readout is the step’s pitch before QUANTIZE snaps it.`,
+      fmt: (v, values) => {
+        const oct = (clamp(v, -5, 5) / 5) * Number(values?.['seq.oct'] ?? 2);
+        // with only the subs assigned, the step moves their divisors, not a pitch
+        const subsOnly =
+          !values?.[`seq${s}.assign_osc`] &&
+          (!!values?.[`seq${s}.assign_sub1`] || !!values?.[`seq${s}.assign_sub2`]);
+        if (!subsOnly) return fmtSemi(oct * 12);
+        // unrounded: the core rounds the knob's divisor and the step together
+        const d = -Math.round(DIV_PER_VOLT * oct * 10) / 10;
+        return `divisor ${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d)}`;
+      },
+      help: `Step ${i + 1} of Sequencer ${s}: how far this step moves what the SEQ ${s} ASSIGN buttons choose, up to the right or down to the left, within the SEQ OCT range. At the centre the step changes nothing. The readout is the step’s pitch before QUANTIZE snaps it, or, with only the subs assigned, how far it moves their divisors (a step to the right lowers them, so the subs climb).`,
     });
     led(x + 1, 318 + top, s === 1 ? { seq: i } : { seq2: i });
   });

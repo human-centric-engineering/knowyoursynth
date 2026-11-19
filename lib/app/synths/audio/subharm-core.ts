@@ -151,6 +151,8 @@ const blep = (t: number, dt: number): number => {
   return 0;
 };
 const clamp = (x: number, lo: number, hi: number): number => (x < lo ? lo : x > hi ? hi : x);
+/** The settings with the press counts left out, to tell a click (only a count changes) from a patch load. */
+const withoutPress = (p: SubharmParams): string => JSON.stringify({ ...p, press: null });
 const divisor = (x: number): number => clamp(Math.round(Number.isFinite(x) ? x : 1), 1, 16);
 
 /**
@@ -226,12 +228,15 @@ export function createSubharm(
       // a start ticks at once, so the first step plays from the start
       if (running) clkPh = 1;
     }
-    if (first) {
+    // A press is a change of its count alone (one click). When anything else changed with it, a patch was loaded:
+    // its button values are the patch's, not a click, so the counts are taken as they are and nothing is pressed.
+    if (first || withoutPress(p) !== withoutPress(P!)) {
       last.reset = p.press.reset;
       last.next = p.press.next;
       last.trigger = p.press.trigger;
-      for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) lvl[k][j] = p.vco[k].level[j];
     }
+    if (first)
+      for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) lvl[k][j] = p.vco[k].level[j];
     P = p;
   }
 

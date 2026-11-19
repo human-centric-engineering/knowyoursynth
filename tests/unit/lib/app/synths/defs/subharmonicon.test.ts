@@ -109,6 +109,20 @@ describe('Subharmonicon knob ranges', () => {
     ]);
   });
 
+  it('reads a STEP as its pitch, or as the divisor change with only the subs assigned', () => {
+    const c = subharmonicon.controls.find((x) => x.id === 'seq1.step2');
+    if (!c || c.kind !== 'cont' || !c.fmt) throw new Error('no STEP readout');
+    const at = (over: ControlValues) => c.fmt?.(2.5, { ...subharmonicon.init, ...over });
+    // half a turn at ±2 is an octave
+    expect(at({})).toBe('+12 st');
+    expect(at({ 'seq1.assign_osc': true, 'seq1.assign_sub1': true })).toBe('+12 st');
+    // an octave of step lowers a sub's divisor by 1.5
+    expect(at({ 'seq1.assign_sub1': true })).toBe('divisor −1.5');
+    expect(c.fmt(-5, { ...subharmonicon.init, 'seq1.assign_sub2': true, 'seq.oct': 1 })).toBe(
+      'divisor +1.5'
+    );
+  });
+
   it('maps CUTOFF, ATTACK, DECAY and TEMPO onto the spec’s ranges', () => {
     expect(run({ 'vcf.cutoff': 0 }).filter.cutoff).toBeCloseTo(20, 9);
     expect(run({ 'vcf.cutoff': 5 }).filter.cutoff).toBeCloseTo(exp(0.5, 20, 20000), 9);
