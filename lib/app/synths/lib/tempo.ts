@@ -5,7 +5,7 @@
 import type { ControlValues, SynthDef } from '@/lib/app/synths/contract';
 
 /** The tempo control's value for a riff's `bpm`: where a sound puts it. */
-export function tempoValueFor(def: Pick<SynthDef, 'tempoMap'>, bpm: number): number {
+export function tempoValueFor(def: Pick<SynthDef, 'tempo' | 'tempoMap'>, bpm: number): number {
   return def.tempoMap ? def.tempoMap.fromBpm(bpm) : bpm;
 }
 
