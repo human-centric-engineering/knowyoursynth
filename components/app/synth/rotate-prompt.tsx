@@ -11,6 +11,8 @@ import { readStored, STORAGE_KEYS, writeStored } from '@/components/app/synth/st
 
 /** Narrower than a landscape tablet. */
 export const SMALL_QUERY = '(max-width: 1023px)';
+/** A phone's width: the panel's rails put their toggles and settings in a dropdown each (t-286). */
+export const PHONE_QUERY = '(max-width: 639px)';
 /**
  * A tablet held upright: portrait, too wide to be a phone, and with a touch screen (a tall, narrow desktop window is not
  * one). Any pointer, not just the main one: a tablet with a trackpad attached is still a tablet.

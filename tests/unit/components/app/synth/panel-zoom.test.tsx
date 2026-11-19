@@ -29,7 +29,7 @@ describe('panelRailStyle', () => {
 });
 
 describe('panelFrameStyle', () => {
-  it('fits a drawn panel to the scroller, up to 1560 px, with no minimum width', () => {
+  it('fits a drawn panel to the scroller, up to 1560 px, with no floor where there is no panel to measure', () => {
     expect(panelFrameStyle(null, 1)).toEqual({
       width: 'calc(1 * min(100%, var(--kys-fit-max, 1560px)))',
     });
@@ -39,14 +39,24 @@ describe('panelFrameStyle', () => {
     // The height is the screen's less what the page puts above and below the panel; a 4:1 panel is 4 times as wide.
     expect(panelFrameStyle({ w: 4000, h: 1000 }, 1)).toEqual({
       width:
-        'calc(1 * min(100%, min(var(--kys-fit-max, 1560px), max(1100px, calc((100vh - var(--kys-fit-chrome, 18vh)) * 4.0000)))))',
+        'calc(1 * max(min(100%, min(var(--kys-fit-max, 1560px), max(1100px, calc((100vh - var(--kys-fit-chrome, 18vh)) * 4.0000)))), min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * 4.0000))))',
     });
+  });
+
+  it('on a phone or tablet, draws it no narrower than --kys-fit-min, or than fills the height, whichever is less', () => {
+    // --kys-fit-min is unset (0) on a desktop, so the floor changes nothing there; synth.css sets it on small screens.
+    expect(panelFrameStyle({ w: 4000, h: 1000 }, 1).width).toContain(
+      'max(min(100%, min(var(--kys-fit-max, 1560px)'
+    );
+    expect(panelFrameStyle({ w: 4000, h: 1000 }, 1).width).toContain(
+      `, min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * 4.0000))))`
+    );
   });
 
   it('multiplies the fitted width by the scale', () => {
     expect(panelFrameStyle(null, 2).width).toBe('calc(2 * min(100%, var(--kys-fit-max, 1560px)))');
     expect(panelFrameStyle({ w: 4000, h: 1000 }, 0.9).width).toBe(
-      'calc(0.9 * min(100%, min(var(--kys-fit-max, 1560px), max(1100px, calc((100vh - var(--kys-fit-chrome, 18vh)) * 4.0000)))))'
+      'calc(0.9 * max(min(100%, min(var(--kys-fit-max, 1560px), max(1100px, calc((100vh - var(--kys-fit-chrome, 18vh)) * 4.0000)))), min(var(--kys-fit-min, 0px), calc((100svh - var(--kys-fit-chrome, 18vh)) * 4.0000))))'
     );
   });
 });

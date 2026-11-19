@@ -271,8 +271,10 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   `--rail-face`, `--rail-face2` and `--rail-print`), or the outline drawing's paper and ink. The
   head (`.is-top`) carries Signal (Diagram and Live signal, with no rule between them, t-279; only on a synth with a
   routing), then after a rule Dim unused and Sensitive, at the left, and at the right Undo and
-  Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon (with its word from `xl` up and below `lg`) and an LED
-  lit while it is over the panel. The head's tips open below it, over the panel, not up into the page's header
+  Redo, the inspector, Sections, then the tour and its help (t-276); each layer is its icon, with its word, and an LED
+  lit while it is over the panel. The head stays on one row as long as it can (t-284): `useTopFit` tries `data-fit`
+  steps until every button sits on one line, `short` (closer together, the tour's short name "Tour") then `short
+icons` (the toggles' icons and LEDs without their words, which stay in their tooltips), and wraps only past that. The head's tips open below it, over the panel, not up into the page's header
   (`TipSide` in `player-tip.tsx`, t-279). The foot (`.is-foot`) carries how the panel is drawn (Hardware or
   Outline; Layout, on a synth with a layout of its own (below): Modular or Long, or Compact or Full; and on a panel printed in another language, its Labels in that language or
   English, `kys.english`, kept in this browser), the magnifier and Hover help (the card that pops up when you point at a
@@ -284,6 +286,11 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   Layout and Labels, whose choices say it, their tip then hanging from the whole setting), Zoom's name goes and the search
   narrows, each step at a wider rail when there is a Layout or Labels setting. On a phone the search keeps a line of its
   own. Zoom is not on the foot while the routing view shows, which is at no zoom.
+  On a phone (`PHONE_QUERY`, under 640 px; t-286) each rail puts its line in one dropdown: the head's layers in a
+  View menu ("View layers over the panel", `RailMenu`: checkable items by their full names, each with what it does under it, its LED lit while any is on), Undo, Redo, the tour and help
+  staying on the rail; the foot's settings in a Display menu ("Display settings", `PlayerSettings` with `menu`: a radio group per
+  setting), Zoom and the search staying on the rail. The menus' items are drawn only while open, so nothing is on the
+  page twice, and into the full-screen player while it is full screen (the body is not drawn then).
 - **Dim unused** and **Live signal** (`f-live-panel` t-150; a Signal menu of modes until t-279, now two toggles
   of their own: Live signal in the head rail's Signal group beside Diagram, Dim unused after the rule beside
   Sensitive) are the patch's signal on the panel's face. Either
@@ -541,7 +548,12 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
   controls themselves are `touch-action: none`. The magnifier lens is a separate control and is
   kept. A synth with its own layout is capped at a width that fits the height left between the
   header and the dock, but never below 1100 px (or the page's width): a tall panel such as the
-  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. From
+  2600 is drawn at a working size and the page scrolls, rather than shrinking it to fit. On a screen under 1100 px (a phone, a tablet
+  held upright, a narrow window) the fitted panel is drawn no narrower than `--kys-fit-min` (1600 px), or than fills
+  the screen's height if that is less, and is swiped or scrolled sideways (t-285, t-287); a landscape tablet and a
+  desktop fit as before. On a phone the bar's tools are one row, each an icon over a short caption (`.kys-bar-tools`),
+  and an open sequencer keeps a 760 px working width, its rack's face scrolling sideways between the ears, sixteen
+  steps to a row (t-287). From
   `lg` up the header over the panel is one row that never wraps.
 - **Under 1024 px a note sits above the panel.** It tells a tablet held upright (portrait, at
   least 600 px wide, with a touch screen) to turn sideways. Anything else under 1024 px is told the panel is made for a

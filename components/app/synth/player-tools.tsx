@@ -12,13 +12,25 @@
  *   Long, the magnifier and the hover help, each named in the panel's lettering with an LED by each choice, lit
  *   for the one in use, as a hardware selector shows its position. What each does is on hover.
  *
+ * - `RailMenu` and `PlayerSettings`' `menu`: on a phone each rail's toggles or settings are one dropdown (t-286).
+ *
  * The page owns every state these show; each is told what is true and calls back to change it.
  */
 
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import type { CSSProperties, ReactNode, Ref } from 'react';
-import { X } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { PlayerTip } from '@/components/app/synth/player-tip';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export function LayerToggle({
   label,
@@ -35,7 +47,7 @@ export function LayerToggle({
 }: {
   /** The accessible name, which the page's tests and a screen reader use. */
   label: string;
-  /** The word on the bar from `xl` up. */
+  /** Its word on the bar. On the panel's head rail the rail's fit (`useTopFit`, `data-fit`) says whether it shows. */
   short: string;
   /** What it does, in its tooltip. */
   title: string;
@@ -43,7 +55,8 @@ export function LayerToggle({
   on: boolean;
   /** What it controls is switched on (the effects, say), whether or not it is open: the button is filled. */
   filled?: boolean;
-  /** Its word is on show at every width, not only from `xl` up and below `lg`. */
+  /** No breakpoint hides its word (elsewhere it goes between `lg` and `xl`). The head rail's toggles all pass it: their
+   * words go by the rail's own fit (`.kys-layer-word`), not the screen's width. */
   keepShort?: boolean;
   /** Filled with the accent on hover, as a filled button is: for a button that invites a click (Ask AI). */
   hoverFill?: boolean;
@@ -64,7 +77,7 @@ export function LayerToggle({
         className={`kys-layer ${on ? 'is-on' : ''} ${filled ? 'is-filled' : ''} ${hoverFill ? 'is-hover-fill' : ''}`}
       >
         {icon}
-        <span className={keepShort ? undefined : 'lg:max-xl:hidden'}>{short}</span>
+        <span className={`kys-layer-word ${keepShort ? '' : 'lg:max-xl:hidden'}`}>{short}</span>
         {children}
         {/* Open, it says a press closes it. */}
         {on && <X size={13} strokeWidth={2.5} aria-hidden="true" className="kys-layer-x" />}
@@ -92,6 +105,21 @@ const LAYOUT_SETTING = {
   },
 } as const;
 
+/** A setting's value: one of its choices. */
+type Choice = string | number | boolean;
+interface SettingSpec {
+  at: number;
+  name: string;
+  short?: string;
+  drop?: boolean;
+  help: string;
+  /** The choices' accessible group name. */
+  label: string;
+  options: [Choice, string][];
+  value: Choice;
+  onChange: (v: Choice) => void;
+}
+
 export function PlayerSettings({
   view,
   onView,
@@ -103,6 +131,7 @@ export function PlayerSettings({
   language,
   english = false,
   onEnglish,
+  menu = false,
 }: {
   view: PanelView;
   onView: (v: PanelView) => void;
@@ -116,105 +145,276 @@ export function PlayerSettings({
   onZoom: (z: 0 | 2 | 3) => void;
   tipsOn: boolean;
   onTips: (on: boolean) => void;
+  /** All in one dropdown, as on a phone (t-286), not a line of LEDs. */
+  menu?: boolean;
 }) {
+  const settings: SettingSpec[] = [
+    {
+      at: 0,
+      name: 'Drawn as',
+      drop: true,
+      help: 'Hardware is the faceplate; Outline is a plain diagram, easier to read.',
+      label: 'Panel view',
+      options: [
+        [false, 'Hardware'],
+        [true, 'Outline'],
+      ],
+      value: view.outline,
+      onChange: (outline) => onView({ ...view, outline: outline === true }),
+    },
+  ];
+  if (language && onEnglish)
+    settings.push({
+      at: 1,
+      name: 'Labels',
+      drop: true,
+      help: `The panel is printed in ${language}. English reprints every label on it in English; the names in the cards and the search are English either way.`,
+      label: 'Panel labels',
+      options: [
+        [false, language],
+        [true, 'English'],
+      ],
+      value: english,
+      onChange: (on) => onEnglish(on === true),
+    });
+  if (layout)
+    settings.push({
+      at: 1,
+      name: 'Layout',
+      drop: true,
+      help: LAYOUT_SETTING[layout].help,
+      label: 'Panel layout',
+      options: [
+        [false, LAYOUT_SETTING[layout].own],
+        [true, LAYOUT_SETTING[layout].full],
+      ],
+      value: view.long,
+      onChange: (long) => onView({ ...view, long: long === true }),
+    });
+  settings.push(
+    {
+      at: 2,
+      name: 'Magnifier',
+      short: 'Lens',
+      help: 'A lens that follows the pointer over the panel.',
+      label: 'Magnifier',
+      options: [
+        [0, 'Off'],
+        [2, '2×'],
+        [3, '3×'],
+      ],
+      value: zoom,
+      onChange: (z) => onZoom(z === 2 || z === 3 ? z : 0),
+    },
+    {
+      at: 3,
+      name: 'Hover help',
+      short: 'Tips',
+      help: 'The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it.',
+      label: 'Hover help',
+      options: [
+        [true, 'On'],
+        [false, 'Off'],
+      ],
+      value: tipsOn,
+      onChange: (on) => onTips(on === true),
+    }
+  );
+  if (menu) return <SettingsMenu settings={settings} />;
   return (
     <div role="group" aria-label="Panel settings" className="kys-settings">
-      <Setting
-        at={0}
-        name="Drawn as"
-        drop
-        help="Hardware is the faceplate; Outline is a plain diagram, easier to read."
-      >
-        {(d) => (
-          <LedSelect
-            describedBy={d}
-            label="Panel view"
-            options={[
-              [false, 'Hardware'],
-              [true, 'Outline'],
-            ]}
-            value={view.outline}
-            onChange={(outline) => onView({ ...view, outline })}
-          />
-        )}
-      </Setting>
-      {language && onEnglish && (
+      {settings.map((st) => (
         <Setting
-          at={1}
-          name="Labels"
-          drop
-          help={`The panel is printed in ${language}. English reprints every label on it in English; the names in the cards and the search are English either way.`}
+          key={st.label}
+          at={st.at}
+          name={st.name}
+          short={st.short}
+          drop={st.drop}
+          help={st.help}
         >
           {(d) => (
             <LedSelect
               describedBy={d}
-              label="Panel labels"
-              options={[
-                [false, language],
-                [true, 'English'],
-              ]}
-              value={english}
-              onChange={onEnglish}
+              label={st.label}
+              options={st.options}
+              value={st.value}
+              onChange={st.onChange}
             />
           )}
         </Setting>
-      )}
-      {layout && (
-        <Setting at={1} name="Layout" drop help={LAYOUT_SETTING[layout].help}>
-          {(d) => (
-            <LedSelect
-              describedBy={d}
-              label="Panel layout"
-              options={[
-                [false, LAYOUT_SETTING[layout].own],
-                [true, LAYOUT_SETTING[layout].full],
-              ]}
-              value={view.long}
-              onChange={(long) => onView({ ...view, long })}
-            />
-          )}
-        </Setting>
-      )}
-      <Setting
-        at={2}
-        name="Magnifier"
-        short="Lens"
-        help="A lens that follows the pointer over the panel."
-      >
-        {(d) => (
-          <LedSelect
-            describedBy={d}
-            label="Magnifier"
-            options={[
-              [0, 'Off'],
-              [2, '2×'],
-              [3, '3×'],
-            ]}
-            value={zoom}
-            onChange={(z) => onZoom(z === 2 || z === 3 ? z : 0)}
-          />
-        )}
-      </Setting>
-      <Setting
-        at={3}
-        name="Hover help"
-        short="Tips"
-        help="The card that pops up when you point at a knob, switch, jack or cable. The Inspector always explains it."
-      >
-        {(d) => (
-          <LedSelect
-            describedBy={d}
-            label="Hover help"
-            options={[
-              [true, 'On'],
-              [false, 'Off'],
-            ]}
-            value={tipsOn}
-            onChange={onTips}
-          />
-        )}
-      </Setting>
+      ))}
     </div>
+  );
+}
+
+/**
+ * The foot's settings as one dropdown, on a phone (t-286): each setting a named group of choices, the one in use
+ * marked. A choice is picked by its place in the setting's list, so a choice's value can be any of a string, a number
+ * or a flag.
+ */
+function SettingsMenu({ settings }: { settings: SettingSpec[] }) {
+  // Held here, so the menu renders again as it opens and finds the full-screen player, if one is showing.
+  const [open, setOpen] = useState(false);
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          className="kys-layer kys-rail-menu-trigger is-plain"
+          aria-label="Display settings"
+        >
+          <SlidersHorizontal size={16} aria-hidden="true" />
+          <span>Display</span>
+          <ChevronDown size={14} aria-hidden="true" />
+        </button>
+      </DropdownMenuTrigger>
+      <MenuContent>
+        {settings.map((st, i) => (
+          <SettingsMenuGroup key={st.label} setting={st} first={i === 0} />
+        ))}
+      </MenuContent>
+    </DropdownMenu>
+  );
+}
+
+/** One setting in the Display menu: its name, its choices, and what it does, read with them as their description. */
+function SettingsMenuGroup({ setting: st, first }: { setting: SettingSpec; first: boolean }) {
+  const helpId = useId();
+  const nameId = useId();
+  return (
+    <div>
+      {!first && <DropdownMenuSeparator />}
+      <DropdownMenuLabel id={nameId}>{st.name}</DropdownMenuLabel>
+      <span id={helpId} className="sr-only">
+        {st.help}
+      </span>
+      <DropdownMenuRadioGroup
+        aria-labelledby={nameId}
+        aria-describedby={helpId}
+        value={String(st.options.findIndex(([v]) => v === st.value))}
+        onValueChange={(at) => {
+          const picked = st.options[Number(at)];
+          if (picked) st.onChange(picked[0]);
+        }}
+      >
+        {st.options.map(([, word], j) => (
+          <DropdownMenuRadioItem key={word} value={String(j)}>
+            {word}
+          </DropdownMenuRadioItem>
+        ))}
+      </DropdownMenuRadioGroup>
+    </div>
+  );
+}
+
+/**
+ * A rail menu's content, in the rail's lettering. The shared `DropdownMenuContent` always portals to the body, which is
+ * not drawn while the player is full screen: this one portals into the full-screen element while there is one, so the
+ * menu shows over it.
+ */
+function MenuContent({ children }: { children: ReactNode }) {
+  const container =
+    typeof document === 'undefined' ? undefined : (document.fullscreenElement ?? undefined);
+  return (
+    <DropdownMenuPrimitive.Portal container={container}>
+      <DropdownMenuPrimitive.Content
+        align="start"
+        sideOffset={4}
+        className="kys-rail-menu bg-popover text-popover-foreground z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto rounded-md border p-1 shadow-md"
+      >
+        {children}
+      </DropdownMenuPrimitive.Content>
+    </DropdownMenuPrimitive.Portal>
+  );
+}
+
+/** One layer in the head's dropdown (`RailMenu`). */
+export interface RailMenuItem {
+  label: string;
+  icon: ReactNode;
+  on: boolean;
+  onClick: () => void;
+  /** What it does, under its name: what the toggle's tooltip says on a wider screen. */
+  help: string;
+  /** Picking it closes the menu, for one that changes the whole view under it (Signal diagram). */
+  closes?: boolean;
+}
+
+/**
+ * The head's layers as one dropdown, on a phone (t-286): a key with its LED lit while any of them is on, opening onto
+ * each layer by its full name, ticked while it is over the panel. Groups are ruled off from each other; an empty
+ * group (Signal, on a synth with no routing) is left out.
+ */
+export function RailMenu({
+  label,
+  short,
+  icon,
+  groups,
+  ref,
+}: {
+  /** The accessible name, which starts with the visible word (`short`), so a voice command can name it. */
+  label: string;
+  short: string;
+  icon: ReactNode;
+  groups: RailMenuItem[][];
+  /** The key, where focus goes back to once the routing view it opened closes. */
+  ref?: Ref<HTMLButtonElement>;
+}) {
+  const shown = groups.filter((g) => g.length > 0);
+  const anyOn = shown.some((g) => g.some((item) => item.on));
+  const [open, setOpen] = useState(false);
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          ref={ref}
+          type="button"
+          className={`kys-layer kys-rail-menu-trigger ${anyOn ? 'is-on' : ''}`}
+          aria-label={label}
+        >
+          {icon}
+          <span>{short}</span>
+          <ChevronDown size={14} aria-hidden="true" />
+        </button>
+      </DropdownMenuTrigger>
+      <MenuContent>
+        {shown.map((g, i) => (
+          <div key={g[0].label}>
+            {i > 0 && <DropdownMenuSeparator />}
+            {g.map((item) => (
+              <RailMenuEntry key={item.label} item={item} />
+            ))}
+          </div>
+        ))}
+      </MenuContent>
+    </DropdownMenu>
+  );
+}
+
+/**
+ * One layer in the View menu: its icon and name, and under them what it does, which is its description, not part of
+ * its name. It stays open when picked, for the next.
+ */
+function RailMenuEntry({ item }: { item: RailMenuItem }) {
+  const helpId = useId();
+  return (
+    <DropdownMenuCheckboxItem
+      checked={item.on}
+      onCheckedChange={item.onClick}
+      onSelect={(e) => {
+        if (!item.closes) e.preventDefault();
+      }}
+      aria-describedby={helpId}
+      className="items-start"
+    >
+      <span className="mt-0.5 mr-2 inline-flex">{item.icon}</span>
+      <span className="flex flex-col">
+        {item.label}
+        <span id={helpId} aria-hidden="true" className="kys-rail-menu-help">
+          {item.help}
+        </span>
+      </span>
+    </DropdownMenuCheckboxItem>
   );
 }
 
@@ -318,6 +518,64 @@ export function useFootFit(fourSettings: boolean) {
       ro.disconnect();
     };
   }, [fourSettings]);
+  return ref;
+}
+
+/**
+ * How close the panel's top rail packs, from what fits on one line of it: like the foot rail it is as wide as the
+ * panel, not the screen, so a breakpoint cannot say. Each step is tried in turn until every button sits on one line:
+ * `short` (the rail closer together, the tour's short name), then `icons` (the toggles' icons and LEDs without their
+ * words; each keeps its name in its tooltip). If it still does not fit, it wraps. Written as `data-fit`, as the foot's.
+ * The rail and its parts are observed, so a part coming or going (the inspector, Signal) measures it again.
+ */
+export function useTopFit() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const rail = ref.current;
+    if (!rail || typeof ResizeObserver === 'undefined') return undefined;
+    const oneLine = () => {
+      // A button not drawn (`display: none`) has no box, and would read as sitting at the top.
+      const mids = Array.from(rail.querySelectorAll('button'), (b) => b.getBoundingClientRect())
+        .filter((r) => r.width > 0 && r.height > 0)
+        .map((r) => r.top + r.height / 2);
+      return mids.length === 0 || Math.max(...mids) - Math.min(...mids) < 8;
+    };
+    const measure = () => {
+      delete rail.dataset.fit;
+      for (const fit of ['short', 'short icons']) {
+        if (oneLine()) return;
+        rail.dataset.fit = fit;
+      }
+    };
+    measure();
+    // On the next frame, as the foot's: its height changes with what it writes (see `useFootFit`).
+    let frame = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
+    const observeParts = () => {
+      for (const part of Array.from(rail.children)) ro.observe(part);
+    };
+    ro.observe(rail);
+    observeParts();
+    // A part that comes later (the phone's menu once the page knows it is on a phone, the inspector as the screen
+    // widens) is observed too, and the rail measured again with it.
+    const mo = new MutationObserver((records) => {
+      for (const r of records)
+        for (const gone of Array.from(r.removedNodes))
+          if (gone instanceof Element) ro.unobserve(gone);
+      observeParts();
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
+    mo.observe(rail, { childList: true, subtree: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      ro.disconnect();
+      mo.disconnect();
+    };
+  }, []);
   return ref;
 }
 

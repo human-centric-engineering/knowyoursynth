@@ -8,10 +8,13 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import {
+  PHONE_QUERY,
   PORTRAIT_TABLET_QUERY,
   RotatePrompt,
   SMALL_QUERY,
+  useMediaQuery,
 } from '@/components/app/synth/rotate-prompt';
 import { STORAGE_KEYS } from '@/components/app/synth/storage';
 
@@ -155,5 +158,32 @@ describe('RotatePrompt', () => {
     screenWith({ [SMALL_QUERY]: true, [PORTRAIT_TABLET_QUERY]: false });
     render(<RotatePrompt />);
     expect(screen.getByRole('note')).toBeTruthy();
+  });
+});
+
+describe('useMediaQuery', () => {
+  function Probe({ query }: { query: string }) {
+    return <span data-testid="probe">{String(useMediaQuery(query))}</span>;
+  }
+
+  it('reads false, and listens to nothing, where there is no matchMedia', () => {
+    vi.stubGlobal('matchMedia', undefined);
+    const { unmount } = render(<Probe query={PHONE_QUERY} />);
+    expect(screen.getByTestId('probe').textContent).toBe('false');
+    expect(() => unmount()).not.toThrow();
+    vi.unstubAllGlobals();
+  });
+
+  it('reads false on the server, whatever the screen', () => {
+    screenWith({ [PHONE_QUERY]: true });
+    expect(renderToString(<Probe query={PHONE_QUERY} />)).toContain('false');
+  });
+
+  it('stops listening for a dismissal in another tab once the note goes', () => {
+    screenWith({ [SMALL_QUERY]: true, [PORTRAIT_TABLET_QUERY]: false });
+    const remove = vi.spyOn(window, 'removeEventListener');
+    const { unmount } = render(<RotatePrompt />);
+    unmount();
+    expect(remove).toHaveBeenCalledWith('storage', expect.any(Function));
   });
 });

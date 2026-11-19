@@ -370,8 +370,10 @@ describe('SynthPage layout', () => {
   it('fits the panel to the page, and zooms it in its scroller with the controls still live', () => {
     page();
     const frame = screen.getByTestId('panel-frame');
-    // The width the screen gives it, capped at 1560px and by the screen's height (see `panelFrameStyle`), times the scale.
-    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
+    // The width the screen gives it, capped at 1560px and by the screen's height, with a floor on a phone or tablet (see `panelFrameStyle`), times the scale.
+    expect(frame.style.width).toMatch(
+      /^calc\(1 \* max\(min\(100%, min\(var\(--kys-fit-max, 1560px\), /
+    );
     expect(frame.className).not.toContain('min-w-');
     // On the panel's foot rail, with how it is drawn, not in the bar (t-209).
     expect(button('Zoom in').closest('.kys-rail')).toHaveClass('is-foot');
@@ -380,7 +382,7 @@ describe('SynthPage layout', () => {
     fireEvent.click(button('Zoom in'));
     fireEvent.click(button('Zoom in'));
     expect(frame.style.width).toMatch(
-      /^calc\(1\.2 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /
+      /^calc\(1\.2 \* max\(min\(100%, min\(var\(--kys-fit-max, 1560px\), /
     );
 
     // Laid out bigger, not magnified: a knob still turns from the keyboard.
@@ -391,7 +393,9 @@ describe('SynthPage layout', () => {
     expect(cutoff.getAttribute('aria-valuenow')).not.toBe(before);
 
     fireEvent.click(button('Fit the panel to the page'));
-    expect(frame.style.width).toMatch(/^calc\(1 \* min\(100%, min\(var\(--kys-fit-max, 1560px\), /);
+    expect(frame.style.width).toMatch(
+      /^calc\(1 \* max\(min\(100%, min\(var\(--kys-fit-max, 1560px\), /
+    );
   });
 
   it('orders the top rail: routing and the layers at the left, the inspector and Explain sections beside the tour', () => {
@@ -437,6 +441,36 @@ describe('SynthPage layout', () => {
     expect(names).not.toContain('Inspector');
     expect(names.indexOf('Explain sections') - names.indexOf('Redo')).toBe(1);
     expect(names.indexOf('Orientation tour') - names.indexOf('Explain sections')).toBe(1);
+  });
+
+  it('puts the layers and the settings in a dropdown each on a phone, and keeps history, the tour and help on the rail (t-286)', () => {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: query === '(max-width: 1023px)' || query === '(max-width: 639px)',
+          media: query,
+          addEventListener: () => undefined,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList
+    );
+    page();
+    const head = button('View layers over the panel').closest('.kys-rail');
+    if (!head) throw new Error('the layers menu is on the head rail');
+    expect(head).toHaveClass('is-top');
+    const names = Array.from(head.querySelectorAll('button[aria-label]'), (b) =>
+      b.getAttribute('aria-label')
+    );
+    expect(names).toEqual([
+      'View layers over the panel',
+      'Undo',
+      'Redo',
+      'Orientation tour',
+      'How to use the panel',
+    ]);
+    expect(button('Display settings').closest('.kys-rail')).toHaveClass('is-foot');
+    expect(screen.queryByRole('group', { name: 'Panel settings' })).toBeNull();
+    // Zoom stays on the foot, beside the menu.
+    expect(button('Zoom in').closest('.kys-rail')).toHaveClass('is-foot');
   });
 
   it("draws the panel's rails in its faceplate's colour and ink, and in the outline's paper and ink", () => {

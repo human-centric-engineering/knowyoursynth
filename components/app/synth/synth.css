@@ -169,6 +169,15 @@ svg .kys-hit:focus-visible {
     0 0 0 1px rgb(0 0 0 / 0.08),
     0 40px 80px -40px rgb(20 28 40 / 0.3);
 }
+/* On a phone or tablet the fitted panel is drawn at a working size and swiped sideways, not squeezed to the screen's
+   width (`panelFrameStyle`): on any screen narrower than 1100px (a phone, a tablet held upright, a narrow window). It
+   is drawn up to 1600px wide, as tall as fills the screen's height if that is less, and swiped or scrolled sideways. A
+   landscape tablet and a desktop fit as before. */
+@media (max-width: 1099px) {
+  .kys-instrument {
+    --kys-fit-min: 1600px;
+  }
+}
 .kys-player:fullscreen {
   overflow-y: auto;
   border-radius: 0;
@@ -1431,6 +1440,81 @@ svg .kys-hit:focus-visible {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
+}
+/* The head packs to what fits on one line of it (`useTopFit`): closer, then the toggles' icons without their words. */
+.kys-rail.is-top[data-fit~='short'] {
+  column-gap: 10px;
+}
+.kys-rail.is-top[data-fit~='short'] .kys-rail-group + .kys-rail-group {
+  padding-left: 8px;
+}
+.kys-rail.is-top[data-fit~='short'] .kys-rail-end > .kys-rail-group,
+.kys-rail.is-top[data-fit~='short'] .kys-rail-history {
+  padding-right: 6px;
+}
+.kys-rail.is-top[data-fit~='icons'] .kys-layer-word {
+  display: none;
+}
+.kys-rail.is-top[data-fit~='icons'] .kys-layer {
+  padding: 0 7px;
+}
+/* On a phone each rail's toggles or settings are one dropdown (t-286): a key in the rail's print with a chevron, and
+   the menu in the rail's lettering. The settings' key has no LED: it is never on, only open. */
+.kys-rail .kys-rail-menu-trigger svg:last-child {
+  opacity: 0.7;
+}
+.kys-rail .kys-layer.is-plain::before {
+  display: none;
+}
+.kys-rail .kys-rail-menu-trigger[data-state='open'] {
+  color: var(--rail-on);
+  background: color-mix(in srgb, var(--rail-print, #ece9e2) 10%, transparent);
+}
+.kys-rail-menu {
+  min-width: 13rem;
+  font-family: 'Barlow Semi Condensed', 'Arial Narrow', Arial, sans-serif;
+  letter-spacing: 0.04em;
+}
+.kys-rail-menu-help {
+  margin-top: 1px;
+  font-size: 12.5px;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--color-muted-foreground);
+}
+.kys-rail-menu [role='menuitemcheckbox'],
+.kys-rail-menu [role='menuitemradio'] {
+  min-height: 40px;
+  font-size: 15px;
+}
+/* The bar's tools on a phone (t-287): one row, each an icon over a short caption, as a phone's tab bar, rather than
+   rows of one or two. It scrolls sideways if a synth adds more than fit. */
+@media (max-width: 639px) {
+  .kys-bar-tools {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 2px;
+    overflow-x: auto;
+  }
+  .kys-bar-tools > .flex-1 {
+    display: none;
+  }
+  .kys-bar-tools > .kys-autohide {
+    flex-wrap: nowrap;
+    gap: 2px;
+  }
+  .kys-bar-tools :is(.kys-layer, .kys-bar-mute) {
+    flex-direction: column;
+    gap: 3px;
+    height: auto;
+    min-height: 52px;
+    min-width: 52px;
+    padding: 6px 6px 5px;
+    border-radius: 10px;
+    font-size: 11px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
 }
 /* A finger needs a bigger target than a pointer. */
 @media (pointer: coarse) {
@@ -3051,6 +3135,21 @@ svg .kys-hit:focus-visible {
 @media (max-width: 700px) {
   .kys-seq-keys {
     grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
+/* On a narrow screen the rack's face keeps a working width and scrolls sideways between its ears, as a wide module
+   would in a narrow rack (t-287): the steps stay sixteen to a row, big enough to tap, rather than squeezed. */
+@media (max-width: 767px) {
+  .kys-rack-face {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+  .kys-rack-face > * {
+    min-width: 760px;
+  }
+  .kys-rack .kys-seq-keys,
+  .kys-rack .kys-seq-lane-cells {
+    grid-template-columns: repeat(16, minmax(0, 1fr));
   }
 }
 /* A gap after every fourth key, as a hardware sequencer groups its beats. */
