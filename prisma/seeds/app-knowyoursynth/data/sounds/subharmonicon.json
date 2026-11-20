@@ -183,7 +183,7 @@
       "tags": ["seq", "patch", "rhythm"],
       "level": 3,
       "blurb": "A rhythm thrown like a coin: VCO 2 at audio rate in RHYTHM 1, so each clock lands on a different divisor.",
-      "how": "A RHYTHM input is read at each clock. Feed it VCO 2 at audio rate and it reads wherever VCO 2’s wave happens to be: a different divisor on every sixteenth, from ÷1 to ÷11. Whether Rhythm 1 fires is a coin toss, weighted towards yes, so the melody plays a rhythm that keeps changing and almost never repeats. VCO 2’s FREQ is the coin: move it and the rhythm changes.",
+      "how": "A RHYTHM input is read at each clock. Feed it VCO 2 at audio rate and it reads wherever VCO 2’s wave happens to be: a different divisor on every sixteenth, from ÷1 to about ÷10. Whether Rhythm 1 fires is a coin toss, a little better than even, so the melody plays a rhythm that keeps changing and almost never repeats. VCO 2’s FREQ is the coin: it sits between notes, with QUANTIZE off, so its cycles never line up with the clock; move it and the rhythm changes.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -193,7 +193,7 @@
         {
           "title": "One voice",
           "module": "osc",
-          "why": "VCO 1 square at C4 with its octave sub; VCO 2 silent, at G4.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key held, a hollow square.",
+          "why": "VCO 1 square at C4 with its octave sub; VCO 2 silent, just under G4.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- VCO 2 FREQ 1.45 · G4 · 391 Hz\n- Listen for: with a key held, a hollow square.",
           "set": {
             "vco1.wave": "square",
             "sub11.div": 2,
@@ -201,33 +201,32 @@
             "mix.vco1": 4,
             "mix.sub11": 3,
             "mix.sub12": 0,
-            "vco2.freq": 1.46,
             "mix.vco2": 0,
             "mix.sub21": 0,
-            "mix.sub22": 0
+            "mix.sub22": 0,
+            "vco2.freq": 1.45
           }
         },
         {
           "title": "A rhythm to throw",
           "module": "mod",
-          "why": "Rhythm 1 at ÷4 on Sequencer 1.\n- RHYTHM 1 ÷4\n- RHYTHM 1 SEQ 1 lit\n- Listen for: nothing until it plays.",
+          "why": "Rhythm 1 at ÷3 on Sequencer 1.\n- RHYTHM 1 ÷3\n- RHYTHM 1 SEQ 1 lit\n- Listen for: nothing until it plays.",
           "set": {
-            "rhythm1.div": 4,
+            "rhythm1.div": 3,
             "rhythm1.seq1": true
           }
         },
         {
           "title": "The coin",
           "module": "mod",
-          "why": "VCO 2 OUT into RHYTHM 1’s input: ±5 V moves the divisor seven either way of ÷4, a new one each clock.\n- Patch VCO 2 OUT to RHYTHM 1 input\n- Listen for: still waiting.",
+          "why": "VCO 2 OUT into RHYTHM 1’s input: ±5 V moves the divisor up to seven either way of ÷3, a new one each clock.\n- Patch VCO 2 OUT to RHYTHM 1 input\n- Listen for: still waiting.",
           "cables": [["j.vco2_out", "j.rhythm1_in"]]
         },
         {
           "title": "The notes",
           "module": "mod",
-          "why": "12-ET at ±1: Sequencer 1 C, E♭, G, B♭.\n- QUANTIZE 12-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.92 · +7 st\n- SEQ 1 STEP 4 4.17 · +10 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "why": "QUANTIZE off, so VCO 2 stays between notes; at ±1 Sequencer 1 C, E♭, G, B♭, each set to within a cent.\n- SEQ OCT ±1\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.92 · +7 st\n- SEQ 1 STEP 4 4.17 · +10 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
           "set": {
-            "vco.quantize": "12-ET",
             "seq.oct": 1,
             "seq1.step2": 1.25,
             "seq1.step3": 2.92,
@@ -256,7 +255,7 @@
       "tweaks": [
         {
           "id": "vco2.freq",
-          "try": "Turn VCO 2 FREQ to 3",
+          "try": "Turn VCO 2 FREQ to 2.95",
           "hear": "A new throw of the coin: another rhythm, just as restless."
         },
         {
@@ -598,7 +597,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 rises once about every two seconds, a bar at this tempo.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 rises once about every two seconds, a bar at this tempo.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -1504,7 +1503,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 rises once every two seconds or so.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 rises once every two seconds or so.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -4142,7 +4141,7 @@
       "tags": ["seq", "patch", "transposed"],
       "level": 3,
       "blurb": "A melody whose bass moves by its own intervals: SEQ 1 OUT patched back into VCO 1 SUB.",
-      "how": "Sequencer 1 moves VCO 1, and its subs follow, so the bass usually moves with the melody. Patch SEQ 1 OUT into VCO 1’s SUB input too and each step also lowers the divisors: as the melody climbs by fourths, SUB 1 takes a different path below it, from C1 to an E♭ two octaves under the top note. The key line moves the whole figure.",
+      "how": "Sequencer 1 moves VCO 1, and its subs follow, so the bass usually moves with the melody. Patch SEQ 1 OUT into VCO 1’s SUB input too and each step also lowers the divisors: as the melody climbs by fourths, SUB 1 takes a different path below it, from C2 up to an A♭ two octaves and a fifth under the top note. The key line moves the whole figure.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -5289,7 +5288,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 1 at ÷2 runs at about 4 Hz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 1 at ÷2 runs at about 4 Hz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -5873,7 +5872,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. On square, its SUB 2 at ÷16 is high for a second and low for a second.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 WAVE Square\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. On square, its SUB 2 at ÷16 is high for a second and low for a second.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 WAVE Square\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -6168,7 +6167,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. On square, its SUB 2 at ÷8 is high for half a second, low for half a second.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 WAVE Square\n- VCO 2 SUB 2 FREQ ÷8\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. On square, its SUB 2 at ÷8 is high for half a second, low for half a second.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 WAVE Square\n- VCO 2 SUB 2 FREQ ÷8\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -6577,7 +6576,7 @@
         {
           "title": "The notes around it",
           "module": "mod",
-          "why": "8-ET at ±1: Sequencer 1 D, E, F♯, D an octave below.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 0.83 · +2 st\n- SEQ 1 STEP 3 1.67 · +4 st\n- SEQ 1 STEP 4 -5 · -12 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "why": "8-ET at ±1: Sequencer 1 D, E, G, D an octave below.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 0.83 · +2 st\n- SEQ 1 STEP 3 1.67 · +4 st\n- SEQ 1 STEP 4 -5 · -12 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
           "set": {
             "vco.quantize": "8-ET",
             "seq.oct": 1,
@@ -7265,7 +7264,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 ramps up about once a bar at this tempo.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 ramps up about once a bar at this tempo.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -7313,7 +7312,7 @@
         {
           "id": "rhythm1.div",
           "try": "Turn RHYTHM 1 to ÷12",
-          "hear": "The roll spends longer slow and only blurs at the very top."
+          "hear": "The roll never gets faster than one hit every five sixteenths: a slow, lumbering build."
         }
       ]
     },
@@ -7782,7 +7781,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷4 runs at about 2 Hz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷4\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷4 runs at about 2 Hz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷4\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -9405,7 +9404,7 @@
         {
           "title": "VCO 2 as a slow wave",
           "module": "osc",
-          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 runs at about half a hertz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 runs at about half a hertz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
           "set": {
             "seq.oct": 5,
             "seq2.step1": -5,
@@ -10317,7 +10316,7 @@
         {
           "title": "One voice",
           "module": "osc",
-          "why": "VCO 1 sawtooth at C4 with its octave sub; VCO 2 silent, so the feedback moves VCO 1 alone.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key held, a saw.",
+          "why": "VCO 1 sawtooth at C4 with its octave sub; VCO 2 silent, so only VCO 1’s howl is heard, though the cable moves both.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key held, a saw.",
           "set": {
             "sub11.div": 2,
             "sub12.div": 3,

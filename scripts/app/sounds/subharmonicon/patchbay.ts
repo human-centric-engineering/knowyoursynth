@@ -34,7 +34,7 @@ export interface Insert {
 const LFO_SET: ControlValues = { 'seq.oct': 5, ...seq(2, [-5, -5, -5, -5], {}) };
 const LFO_CABLE: CablePair = ['j.seq2_out', 'j.vco2_in'];
 const LFO_WHY =
-  'SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice.';
+  'SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice.';
 
 export const PATCHBAY: Insert[] = [
   // ── polyrhythm ──
@@ -49,39 +49,39 @@ export const PATCHBAY: Insert[] = [
       level: 3,
       blurb:
         'A rhythm thrown like a coin: VCO 2 at audio rate in RHYTHM 1, so each clock lands on a different divisor.',
-      how: 'A RHYTHM input is read at each clock. Feed it VCO 2 at audio rate and it reads wherever VCO 2’s wave happens to be: a different divisor on every sixteenth, from ÷1 to ÷11. Whether Rhythm 1 fires is a coin toss, weighted towards yes, so the melody plays a rhythm that keeps changing and almost never repeats. VCO 2’s FREQ is the coin: move it and the rhythm changes.',
+      how: 'A RHYTHM input is read at each clock. Feed it VCO 2 at audio rate and it reads wherever VCO 2’s wave happens to be: a different divisor on every sixteenth, from ÷1 to about ÷10. Whether Rhythm 1 fires is a coin toss, a little better than even, so the melody plays a rhythm that keeps changing and almost never repeats. VCO 2’s FREQ is the coin: it sits between notes, with QUANTIZE off, so its cycles never line up with the clock; move it and the rhythm changes.',
       bpm: 112,
       steps: [
         {
           title: 'One voice',
           module: 'osc',
-          why: 'VCO 1 square at C4 with its octave sub; VCO 2 silent, at G4.',
+          why: 'VCO 1 square at C4 with its octave sub; VCO 2 silent, just under G4.',
           set: {
             ...vco(1, { wave: 'square', subs: [2, 3], levels: [4, 3, 0] }),
-            ...vco(2, { note: 'G4', levels: [0, 0, 0] }),
+            ...vco(2, { levels: [0, 0, 0] }),
+            'vco2.freq': 1.45,
           },
           listen: 'with a key held, a hollow square.',
         },
         {
           title: 'A rhythm to throw',
           module: 'mod',
-          why: 'Rhythm 1 at ÷4 on Sequencer 1.',
-          set: rhythms({ 1: [4, true, false] }),
+          why: 'Rhythm 1 at ÷3 on Sequencer 1.',
+          set: rhythms({ 1: [3, true, false] }),
           listen: 'nothing until it plays.',
         },
         {
           title: 'The coin',
           module: 'mod',
-          why: 'VCO 2 OUT into RHYTHM 1’s input: ±5 V moves the divisor seven either way of ÷4, a new one each clock.',
+          why: 'VCO 2 OUT into RHYTHM 1’s input: ±5 V moves the divisor up to seven either way of ÷3, a new one each clock.',
           cables: [['j.vco2_out', 'j.rhythm1_in']],
           listen: 'still waiting.',
         },
         {
           title: 'The notes',
           module: 'mod',
-          why: '12-ET at ±1: Sequencer 1 C, E♭, G, B♭.',
+          why: 'QUANTIZE off, so VCO 2 stays between notes; at ±1 Sequencer 1 C, E♭, G, B♭, each set to within a cent.',
           set: {
-            'vco.quantize': '12-ET',
             'seq.oct': 1,
             ...seq(1, [0, step(3), step(7), step(10)]),
           },
@@ -103,7 +103,7 @@ export const PATCHBAY: Insert[] = [
       tweaks: [
         {
           id: 'vco2.freq',
-          try: 'Turn VCO 2 FREQ to 3',
+          try: 'Turn VCO 2 FREQ to 2.95',
           hear: 'A new throw of the coin: another rhythm, just as restless.',
         },
         {
@@ -896,7 +896,7 @@ export const PATCHBAY: Insert[] = [
       level: 3,
       blurb:
         'A melody whose bass moves by its own intervals: SEQ 1 OUT patched back into VCO 1 SUB.',
-      how: 'Sequencer 1 moves VCO 1, and its subs follow, so the bass usually moves with the melody. Patch SEQ 1 OUT into VCO 1’s SUB input too and each step also lowers the divisors: as the melody climbs by fourths, SUB 1 takes a different path below it, from C1 to an E♭ two octaves under the top note. The key line moves the whole figure.',
+      how: 'Sequencer 1 moves VCO 1, and its subs follow, so the bass usually moves with the melody. Patch SEQ 1 OUT into VCO 1’s SUB input too and each step also lowers the divisors: as the melody climbs by fourths, SUB 1 takes a different path below it, from C2 up to an A♭ two octaves and a fifth under the top note. The key line moves the whole figure.',
       bpm: 112,
       riff: keyLine(['C4', 'Bb3', 'Ab3', 'Bb3'], 4),
       steps: [
@@ -1357,7 +1357,7 @@ export const PATCHBAY: Insert[] = [
         {
           title: 'The notes around it',
           module: 'mod',
-          why: '8-ET at ±1: Sequencer 1 D, E, F♯, D an octave below.',
+          why: '8-ET at ±1: Sequencer 1 D, E, G, D an octave below.',
           set: {
             'vco.quantize': '8-ET',
             'seq.oct': 1,
@@ -1533,7 +1533,7 @@ export const PATCHBAY: Insert[] = [
         {
           id: 'rhythm1.div',
           try: 'Turn RHYTHM 1 to ÷12',
-          hear: 'The roll spends longer slow and only blurs at the very top.',
+          hear: 'The roll never gets faster than one hit every five sixteenths: a slow, lumbering build.',
         },
       ],
     },
@@ -2118,7 +2118,7 @@ export const PATCHBAY: Insert[] = [
         {
           title: 'One voice',
           module: 'osc',
-          why: 'VCO 1 sawtooth at C4 with its octave sub; VCO 2 silent, so the feedback moves VCO 1 alone.',
+          why: 'VCO 1 sawtooth at C4 with its octave sub; VCO 2 silent, so only VCO 1’s howl is heard, though the cable moves both.',
           set: vco(1, { subs: [2, 3], levels: [4, 3, 0] }),
           listen: 'with a key held, a saw.',
         },
