@@ -11300,7 +11300,7 @@
         {
           "title": "A plucked fade",
           "module": "amp",
-          "why": "The loudness envelope turns each note into a plucked string that dies away.\n- ATTACK 2 ms: instant, like a pluck.\n- DECAY 1.6 s, SUSTAIN 0: about a second and a half to fade to silence even while held. This is how long each string rings.\n- RELEASE 920 ms: if you let go early the note still rings on a little.\n- Retrigger on: RETRIG restarts both envelopes on every key, so every note gets its own twang.\n- Listen for: plucked notes with a quick twang, in the style of a koto.",
+          "why": "The loudness envelope turns each note into a plucked string that dies away.\n- ATTACK 2 ms: instant, like a pluck.\n- DECAY 1.6 s, SUSTAIN 0: about a second and a half to fade to silence even while held. This is how long each string rings.\n- RELEASE 920 ms: if you let go early the note still rings on a little.\n- Retrigger on: RETRIG restarts both envelopes on every key, so every note gets its own twang.\n- Listen for: plucked notes with a quick twang, like a koto.",
           "set": {
             "aenv.attack": 0,
             "aenv.decay": 7.5,
@@ -11543,7 +11543,7 @@
         {
           "title": "AUTO glide and RETRIG",
           "module": "glide",
-          "why": "AUTO glide adds a quick slide only between overlapping notes, so the riff chooses which octave jumps spring up.\n- RATE 1.8 (97 ms): a slide of about 100 ms, the length of the slide on the octave jumps.\n- Glide mode AUTO: slides only when a new note starts before the last is let go. In the riff the note before each jump up an octave is held just long enough to overlap.\n- Retrigger on: keeps the “bup” on every note, slid or not.\n- Listen for: the octave jumps spring up with a quick slide, while the other notes land cleanly, in the style of Kraftwerk’s cycling bass.",
+          "why": "AUTO glide adds a quick slide only between overlapping notes, so the riff chooses which octave jumps spring up.\n- RATE 1.8 (97 ms): a slide of about 100 ms, the length of the slide on the octave jumps.\n- Glide mode AUTO: slides only when a new note starts before the last is let go. In the riff the note before each jump up an octave is held just long enough to overlap.\n- Retrigger on: keeps the “bup” on every note, slid or not.\n- Listen for: the octave jumps spring up with a quick slide, while the other notes land cleanly, the way Kraftwerk’s basslines cycle.",
           "set": {
             "glide.rate": 1.8,
             "glide.mode": "auto",
@@ -11668,7 +11668,7 @@
         {
           "title": "AUTO glide, RETRIG off",
           "module": "glide",
-          "why": "AUTO glide with RETRIG off gives the line its mix of dipping attacks and smooth slides.\n- RATE 3 (270 ms): a slide of about a quarter of a second.\n- Glide mode AUTO: only overlapping notes slide.\n- Retrigger off: overlapped notes do not restart the envelopes, so they slide without a dip.\n- Listen for: in the riff the second note runs into the third and the sixth into the seventh. Those slide smoothly with no dip, while the detached notes dip, in the style of Bernie Worrell’s squiggly leads.",
+          "why": "AUTO glide with RETRIG off gives the line its mix of dipping attacks and smooth slides.\n- RATE 3 (270 ms): a slide of about a quarter of a second.\n- Glide mode AUTO: only overlapping notes slide.\n- Retrigger off: overlapped notes do not restart the envelopes, so they slide without a dip.\n- Listen for: in the riff the second note runs into the third and the sixth into the seventh. Those slide smoothly with no dip, while the detached notes dip, as in Bernie Worrell’s squiggly Minimoog leads.",
           "set": {
             "glide.rate": 3,
             "glide.mode": "auto",

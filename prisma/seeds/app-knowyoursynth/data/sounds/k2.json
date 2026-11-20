@@ -8902,7 +8902,7 @@
       "tags": ["lead", "ambient", "gentle", "00s"],
       "level": 1,
       "blurb": "A warm, slow-swelling note that slides into each new pitch and fades out over several seconds, like a pedal steel played with a volume pedal.",
-      "how": "Two sawtooths at the same octave, a few cents apart, beat slowly for warmth, and the low-pass takes off the top so nothing is sharp. Envelope 2 has an attack of about a second, so each note swells in rather than being plucked, and a long release lets it fade. PORTAMENTO makes the pitch slide from note to note like a steel bar moving along the strings, and a slight vibrato keeps held notes alive. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths at the same octave, a few cents apart, beat slowly for warmth, and the low-pass takes off the top so nothing is sharp. Envelope 2 has an attack of about a second, so each note swells in rather than being plucked, and a long release lets it fade. PORTAMENTO makes the pitch slide from note to note like a steel bar moving along the strings, and a slight vibrato keeps held notes alive.",
       "phrase": {
         "bpm": 58,
         "loop": true,
@@ -10507,7 +10507,7 @@
       "tags": ["lead", "krautrock", "horror", "00s"],
       "level": 2,
       "blurb": "A dark, repeating lead with a pulsing filter, like a horror-film score played by a krautrock band.",
-      "how": "A sawtooth through a resonant low-pass that the modulation generator’s square output opens and closes in time, so each held note pulses. The melody is a slow, minor figure over that pulse. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth through a resonant low-pass that the modulation generator’s square output opens and closes in time, so each held note pulses. The melody is a slow, minor figure over that pulse.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -10587,7 +10587,7 @@
       "tags": ["seq", "berlin school", "ambient", "70s"],
       "level": 2,
       "blurb": "A rippling sixteenth-note sequence whose filter opens and closes over many bars, slow as a tide.",
-      "how": "A pulse wave through a resonant low-pass, each note plucked by envelope 2. A very slow triangle from the modulation generator moves the cutoff over about seven seconds, so the sequence keeps changing colour while the notes stay the same. This describes the style of playing, not the exact sound on the record.",
+      "how": "A pulse wave through a resonant low-pass, each note plucked by envelope 2. A very slow triangle from the modulation generator moves the cutoff over about seven seconds, so the sequence keeps changing colour while the notes stay the same.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -11401,7 +11401,7 @@
       "tags": ["pad", "ambient", "gentle", "soft", "80s"],
       "level": 2,
       "blurb": "A slow, haunting swell that blooms out of silence and fades away, like a voice heard across water.",
-      "how": "Two sawtooths an octave apart, slightly detuned, through a low-pass kept warm. Envelope 2 takes nearly two seconds to swell in and fades over several more, so the notes rise out of nothing. The high-pass and low-pass together leave a soft band, and a slow MG on the low-pass makes it breathe. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths an octave apart, slightly detuned, through a low-pass kept warm. Envelope 2 takes nearly two seconds to swell in and fades over several more, so the notes rise out of nothing. The high-pass and low-pass together leave a soft band, and a slow MG on the low-pass makes it breathe.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -11807,7 +11807,7 @@
       "tags": ["wind", "gentle", "soft", "soundtrack", "90s"],
       "level": 2,
       "blurb": "A light, breathy flute that plays a simple, sunny melody, with a little air on every note.",
-      "how": "Oscillator 1 on its noise position gives the breath; Oscillator 2’s square, filtered soft, gives the tone. The high-pass keeps the noise light, so it sits on top of the note like air across a mouthpiece. A slight vibrato makes it sound played. This describes the style of playing, not the exact sound on the record.",
+      "how": "Oscillator 1 on its noise position gives the breath; Oscillator 2’s square, filtered soft, gives the tone. The high-pass keeps the noise light, so it sits on top of the note like air across a mouthpiece. A slight vibrato makes it sound played.",
       "phrase": {
         "bpm": 108,
         "loop": true,
@@ -11979,7 +11979,7 @@
       "tags": ["keys", "lo-fi", "hip hop", "gentle", "00s"],
       "level": 1,
       "blurb": "A soft, round electric-piano-like tone playing a lazy, jazzy line.",
-      "how": "A triangle with a quiet square an octave up, plucked softly by the filter, with a medium decay. The result is somewhere between a Rhodes and a vibraphone, warm and unhurried. This describes the style of playing, not the exact sound on the record.",
+      "how": "A triangle with a quiet square an octave up, plucked softly by the filter, with a medium decay. The result is somewhere between a Rhodes and a vibraphone, warm and unhurried.",
       "phrase": {
         "bpm": 88,
         "loop": true,
@@ -12312,7 +12312,7 @@
       "tags": ["pad", "ambient", "dream pop", "soft", "00s"],
       "level": 1,
       "blurb": "A dim, foggy pad that drifts in under a lullaby, all softness and no edges.",
-      "how": "A square and a triangle through a low-pass turned well down, with a slow swell and a long fade. Most of the sound is removed: what is left is warm, muffled and far away. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square and a triangle through a low-pass turned well down, with a slow swell and a long fade. Most of the sound is removed: what is left is warm, muffled and far away.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -12459,7 +12459,7 @@
       "tags": ["perc", "industrial", "metallic", "80s"],
       "level": 2,
       "blurb": "Harsh, clanging hits like struck sheet metal, each at a different, unmusical pitch.",
-      "how": "The ring position multiplies the two oscillators at an awkward ratio, giving clangorous partials that belong to no scale. FILTER 2 and a high-pass peak make them harsh, and a short envelope makes each a hit. This describes the style of playing, not the exact sound on the record.",
+      "how": "The ring position multiplies the two oscillators at an awkward ratio, giving clangorous partials that belong to no scale. FILTER 2 and a high-pass peak make them harsh, and a short envelope makes each a hit.",
       "phrase": {
         "bpm": 110,
         "loop": true,
@@ -13144,7 +13144,7 @@
       "tags": ["pluck", "african", "world", "gentle", "80s"],
       "level": 1,
       "blurb": "A soft, woody thumb piano playing a gentle, circling pattern.",
-      "how": "A sanza, or thumb piano, is a row of tuned metal tongues plucked with the thumbs. A triangle with a touch of ring modulation gives the soft, slightly metallic tone, and a short pluck with a little ring after gives the tongue’s twang. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sanza, or thumb piano, is a row of tuned metal tongues plucked with the thumbs. A triangle with a touch of ring modulation gives the soft, slightly metallic tone, and a short pluck with a little ring after gives the tongue’s twang.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -13325,7 +13325,7 @@
       "tags": ["lead", "no wave", "noise rock", "80s"],
       "level": 3,
       "blurb": "A roaring, tremolo-picked fifth that feeds back into a howl, like a wall of electric guitars.",
-      "how": "Two sawtooths a fifth apart are a power chord. The output fed back into EXT SIGNAL IN overdrives the filters, and the peaked low-pass picks out a ringing overtone that sings above the roar. Fast repeated notes are the tremolo picking. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths a fifth apart are a power chord. The output fed back into EXT SIGNAL IN overdrives the filters, and the peaked low-pass picks out a ringing overtone that sings above the roar. Fast repeated notes are the tremolo picking.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -13416,7 +13416,7 @@
       "tags": ["lead", "soul jazz", "funk", "70s"],
       "level": 1,
       "blurb": "A soft, flute-like synth playing a bluesy line with a gentle vibrato.",
-      "how": "A triangle with a little square, through a soft low-pass, with a vibrato from the modulation generator. Early-70s soul jazz often put a synth or a flute on the hook; this is between the two. This describes the style of playing, not the exact sound on the record.",
+      "how": "A triangle with a little square, through a soft low-pass, with a vibrato from the modulation generator. Early-70s soul jazz often put a synth or a flute on the hook; this is between the two.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -13736,7 +13736,7 @@
       "tags": ["keys", "reggae", "organ", "60s"],
       "level": 1,
       "blurb": "A bouncing, hollow organ “bubble”, the shuffling eighth-note pattern under a reggae groove.",
-      "how": "The bubble is an organ part that bounces between low and high notes in eighths. Two squares an octave apart sound like drawbar organ, with no filter movement and a quick cut-off between notes, so it bounces rather than drones. This describes the style of playing, not the exact sound on the record.",
+      "how": "The bubble is an organ part that bounces between low and high notes in eighths. Two squares an octave apart sound like drawbar organ, with no filter movement and a quick cut-off between notes, so it bounces rather than drones.",
       "phrase": {
         "bpm": 76,
         "loop": true,

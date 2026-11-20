@@ -89,7 +89,7 @@ model SynthSound {
   /// The definition version the sound was made on.
   definitionVersion Int
   name              String
-  /// `In the style of <artist> — "<work>"`.
+  /// One line on what the sound is like; credits a person or work only for a sound they made (see `.context/app/synths.md`).
   ref               String
   artist            String
   /// First tag is the category.
@@ -745,7 +745,7 @@ model UserSound {
   /// The credit, as the library sound read when it was copied, so it survives that sound being renamed or removed.
   sourceSlug        String?
   sourceName        String?
-  /// `In the style of <artist> — "<work>"`.
+  /// One line on what the sound is like; credits a person or work only for a sound they made (see `.context/app/synths.md`).
   sourceRef         String?
   /// The shared sound it was copied from (`f-sharing` h1). Null for anything else, and once that sound is deleted or
   /// its owner erased. The credit is read through it while that sound is published, never kept, so it cannot outlive

@@ -8559,7 +8559,7 @@
       "tags": ["bass", "funk", "p-funk", "70s"],
       "level": 3,
       "blurb": "A rubbery funk bass whose filter opens wider the harder each note hits, like a bass through an envelope-filter pedal.",
-      "how": "An envelope-filter pedal follows how loud the bass is and opens a filter with it. The 2600 has the parts: the VCA’s output patched into the PREAMP INPUT, and the ENV FOLLOWER OUTPUT patched into the filter’s ADSR control jack, which takes the ADSR’s place. Each note’s own loudness now opens the resonant filter, and the “wow” follows the playing. This describes the style of playing, not the exact sound on the record.",
+      "how": "An envelope-filter pedal follows how loud the bass is and opens a filter with it. The 2600 has the parts: the VCA’s output patched into the PREAMP INPUT, and the ENV FOLLOWER OUTPUT patched into the filter’s ADSR control jack, which takes the ADSR’s place. Each note’s own loudness now opens the resonant filter, and the “wow” follows the playing.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -8651,7 +8651,7 @@
       "tags": ["bass", "jazz-funk", "soul", "70s"],
       "level": 1,
       "blurb": "A warm, round synth bass with a little bite, bouncing through a sunny jazz-funk groove.",
-      "how": "VCO 3’s sawtooth through a filter that is mostly closed, opened a little on each note. The bass sits low and round, the way late-70s jazz-funk records doubled or replaced the bass guitar. This describes the style of playing, not the exact sound on the record.",
+      "how": "VCO 3’s sawtooth through a filter that is mostly closed, opened a little on each note. The bass sits low and round, the way late-70s jazz-funk records doubled or replaced the bass guitar.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -10833,7 +10833,7 @@
       "tags": ["seq", "ambient", "gentle", "soft", "70s"],
       "level": 2,
       "blurb": "A soft, flowing sequence of rounded triangle tones that ripple gently into one another.",
-      "how": "VCO 2’s triangle, patched into the filter in place of its pulse, gives a soft, flute-like tone. A short pluck and a long release let each note ring under the next, and the reverb blurs them into a flowing ripple. This describes the style of playing, not the exact sound on the record.",
+      "how": "VCO 2’s triangle, patched into the filter in place of its pulse, gives a soft, flute-like tone. A short pluck and a long release let each note ring under the next, and the reverb blurs them into a flowing ripple.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -11009,7 +11009,7 @@
       "tags": ["keys", "ambient", "gentle", "soft", "80s"],
       "level": 3,
       "blurb": "Two soft triangle voices moving together in thirds, gentle as drifting cloud.",
-      "how": "In DUO mode the 2600 plays two held keys: the lower through the keyboard CV, the higher at UPPER VOICE. VCO 3 plays the lower note and VCO 2, patched from UPPER VOICE, the higher. Both are swapped to their triangle outputs, so the pair is soft and round. This describes the style of playing, not the exact sound on the record.",
+      "how": "In DUO mode the 2600 plays two held keys: the lower through the keyboard CV, the higher at UPPER VOICE. VCO 3 plays the lower note and VCO 2, patched from UPPER VOICE, the higher. Both are swapped to their triangle outputs, so the pair is soft and round.",
       "phrase": {
         "bpm": 66,
         "loop": true,
@@ -11276,7 +11276,7 @@
       "tags": ["keys", "harmonium", "dark", "drone", "60s"],
       "level": 2,
       "blurb": "A cold, reedy harmonium tone with a breath of air in it, playing a slow, solemn line.",
-      "how": "Two narrow pulses an octave apart make the reedy tone of a pump organ, and a little noise through the filter is the wheeze of its bellows. A slow attack lets each note breathe in. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two narrow pulses an octave apart make the reedy tone of a pump organ, and a little noise through the filter is the wheeze of its bellows. A slow attack lets each note breathe in.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -11768,7 +11768,7 @@
       "tags": ["keys", "funk", "soul", "70s"],
       "level": 1,
       "blurb": "A snappy, nasal clavinet-like tone for a choppy funk riff.",
-      "how": "A clavinet is a struck string with a pickup: nasal, percussive and short. A narrow pulse through a resonant filter that the ADSR flicks open and shuts gives the same snap. This describes the style of playing, not the exact sound on the record.",
+      "how": "A clavinet is a struck string with a pickup: nasal, percussive and short. A narrow pulse through a resonant filter that the ADSR flicks open and shuts gives the same snap.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -11842,7 +11842,7 @@
       "tags": ["keys", "exotica", "mallets", "50s"],
       "level": 2,
       "blurb": "A warm, woody marimba playing a lazy tropical line.",
-      "how": "A marimba bar rings with its note and a bright overtone about two octaves up. VCO 3’s triangle, patched into the filter, is the note; VCO 2’s sine two octaves above, kept quiet, is the overtone. A short, falling envelope with a little reverb makes it woody. This describes the style of playing, not the exact sound on the record.",
+      "how": "A marimba bar rings with its note and a bright overtone about two octaves up. VCO 3’s triangle, patched into the filter, is the note; VCO 2’s sine two octaves above, kept quiet, is the overtone. A short, falling envelope with a little reverb makes it woody.",
       "phrase": {
         "bpm": 92,
         "loop": true,
@@ -12973,7 +12973,7 @@
       "tags": ["seq", "krautrock", "motorik", "70s"],
       "level": 1,
       "blurb": "A bright, chiming eighth-note figure that rides a steady motorik beat with joy.",
-      "how": "A sawtooth with a pulse an octave above, plucked bright. The figure is simple and major, repeated over and over, which is the point of motorik music: forward motion without hurry. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth with a pulse an octave above, plucked bright. The figure is simple and major, repeated over and over, which is the point of motorik music: forward motion without hurry.",
       "phrase": {
         "bpm": 132,
         "loop": true,

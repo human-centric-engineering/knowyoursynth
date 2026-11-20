@@ -2699,7 +2699,7 @@
       "tags": ["bass", "drum and bass", "jungle", "90s"],
       "level": 2,
       "blurb": "A deep, rolling sub bass whose filter breathes slowly under fast breakbeats.",
-      "how": "A square low down through a low-pass, with the control oscillator on a slow sine moving the cutoff through FILTER CONTROL. Long notes and slow movement against fast drums. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square low down through a low-pass, with the control oscillator on a slow sine moving the cutoff through FILTER CONTROL. Long notes and slow movement against fast drums.",
       "phrase": {
         "bpm": 170,
         "loop": true,
@@ -5826,7 +5826,7 @@
       "tags": ["seq", "wonky", "maximalist", "10s"],
       "level": 2,
       "blurb": "A bright, sliding, slightly drunk sequence, glossy and maximal.",
-      "how": "Two sawtooths an octave apart, with a short GLIDE so every step slides, and a quick vibrato. Wonky electronica liked its synths bent out of shape. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths an octave apart, with a short GLIDE so every step slides, and a quick vibrato. Wonky electronica liked its synths bent out of shape.",
       "phrase": {
         "bpm": 140,
         "loop": true,
@@ -6479,7 +6479,7 @@
       "tags": ["seq", "uk bass", "dark", "10s"],
       "level": 2,
       "blurb": "A dark, sparse, hypnotic figure in a band-pass, cold and eerie.",
-      "how": "ENH through a narrow band-pass that the control envelope opens slightly, so each note pops out of the dark and falls back. Sparse and spacious. This describes the style of playing, not the exact sound on the record.",
+      "how": "ENH through a narrow band-pass that the control envelope opens slightly, so each note pops out of the dark and falls back. Sparse and spacious.",
       "phrase": {
         "bpm": 130,
         "loop": true,
@@ -10221,7 +10221,7 @@
       "artist": "Northumbrian smallpipes",
       "tags": ["wind", "english", "folk", "drone"],
       "level": 2,
-      "blurb": "A sweet, reedy chanter with a harmony under it, in the spirit of the bagpipe of the English north-east.",
+      "blurb": "A sweet, reedy chanter with a harmony under it, like the smallpipes of the English north-east.",
       "how": "The smallpipes are quiet, sweet bagpipes with drones. The WASP has one note at a time, so OSC 2 stands in for the drone: set a fifth up and an octave down, it follows every note a fourth below, a reedy harmony under the chanter, which is a narrow pulse on OSC 1.",
       "phrase": {
         "bpm": 108,

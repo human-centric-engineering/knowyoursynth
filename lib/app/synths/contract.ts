@@ -1145,7 +1145,10 @@ export interface PresetTweak {
 export interface Preset {
   id: string;
   name: string;
-  /** `In the style of <artist> — "<work>"`. Never a claim to be the exact patch. */
+  /**
+   * One line on what the sound is like, crediting a person or work only when the patch's sound is the one they made
+   * (`.context/app/synths.md`). Never "In the style of…", never a claim to be the exact patch.
+   */
   ref: string;
   artist: string;
   /** First tag is the category ({@link PRESET_CATEGORIES}). */

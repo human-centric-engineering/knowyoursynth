@@ -156,7 +156,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
 │ │ harmonics strip · keyboard │ scope · [Harmonics] MIDI · rack  │ │               │        │
 │ └───────────────────────────────────────────────────────────────┘ │               │        │
 │ [<name>                ▾] [mine] 3 controls moved                │
-│ IN THE STYLE OF… · blurb                                          │               │        │
+│ ref · blurb                                                       │               │        │
 │ Save / Save as / Rename / Share …                                 └───────────────┘        │
 └─────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -201,7 +201,7 @@ BeatBreaker's drummer player is the precedent (`components/app/studio/player/` t
   its name under the panel from t-207 until then, where it is now only named, "Patch: …"), boxed as a select at Play's
   height (the caret in its own segment; on a phone it takes the row's room beside Play): it opens the library as a drawer down the left of the screen (`SoundsDrawer`,
   rendered in the player outside its stage, so it stacks over the dock), or the Library sheet below `lg`, and puts
-  focus in its search. Its "In the style of…" is its tooltip. The Default patch is first in the library; the bar has
+  focus in its search. Its ref is its tooltip. The Default patch is first in the library; the bar has
   no button of its own for it (t-208).
 - **The foot of the player is the Play deck**: the bar, the piano and scope, and MIDI, where the
   synth is played from (owner ruling, 2026-11-07). **Play is its biggest control** (`PlayButton`, t-210), after the patch picker, outside the

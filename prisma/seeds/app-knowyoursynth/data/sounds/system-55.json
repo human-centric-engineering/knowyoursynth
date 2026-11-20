@@ -5154,8 +5154,8 @@
     {
       "id": "s55-oldfield-fifteen",
       "name": "Fifteen-Step Ostinato",
-      "ref": "In the spirit of Mike Oldfield — “Tubular Bells”, 1973",
-      "artist": "Mike Oldfield",
+      "ref": "A chiming minor ostinato of eight steps then seven, forever tumbling over the bar line",
+      "artist": "Progressive rock ostinato",
       "tags": ["seq", "prog", "odd-meter", "ostinato"],
       "level": 3,
       "blurb": "A chiming A-minor ostinato that loops in fifteen steps, eight then seven, so it keeps tumbling over the bar line.",
@@ -6348,7 +6348,7 @@
     {
       "id": "s55-haack-wavetable",
       "name": "Knob-Drawn Wave Bass",
-      "ref": "In the spirit of Bruce Haack — “The Electric Lucifer”, 1970",
+      "ref": "A growling bass whose wave is drawn by the sequencer’s knobs, as Bruce Haack built sounds on “The Electric Lucifer”",
       "artist": "Bruce Haack",
       "tags": ["bass", "experimental", "wavetable", "keyboard"],
       "level": 3,

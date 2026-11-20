@@ -3228,7 +3228,7 @@
       "tags": ["bass", "space disco", "dark", "70s"],
       "level": 2,
       "blurb": "A dark, hollow disco bass with a slow, eerie wobble, as if the dancefloor were haunted.",
-      "how": "A square through a dark filter, with the LFO set to a slow triangle at a small LFO VOLUME. The LFO always moves the pitch through VOLUME, so a little of it gives a slow, uneasy waver. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square through a dark filter, with the LFO set to a slow triangle at a small LFO VOLUME. The LFO always moves the pitch through VOLUME, so a little of it gives a slow, uneasy waver.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -3309,7 +3309,7 @@
       "tags": ["bass", "boogie", "disco", "80s"],
       "level": 3,
       "blurb": "A funky bass whose tone changes shape on every note, from a buzzy pulse to a soft triangle.",
-      "how": "The Kobol can move a VCO’s waveform with a voltage. ADS 2, patched into VCO 1’s WAVEFORM jack, pushes the shape along the knob’s path at the start of each note and lets it fall back. With the knob at triangle, every note starts buzzy and settles soft, a change of tone made without the filter. This describes the style of playing, not the exact sound on the record.",
+      "how": "The Kobol can move a VCO’s waveform with a voltage. ADS 2, patched into VCO 1’s WAVEFORM jack, pushes the shape along the knob’s path at the start of each note and lets it fall back. With the knob at triangle, every note starts buzzy and settles soft, a change of tone made without the filter.",
       "phrase": {
         "bpm": 116,
         "loop": true,
@@ -3478,7 +3478,7 @@
       "tags": ["bass", "nu-disco", "funk", "10s"],
       "level": 1,
       "blurb": "A warm, rubbery disco bass with octave jumps, sunny and loose.",
-      "how": "A sawtooth plucked by ADS 2 through a resonant filter. The octave jumps in the riff are the disco part; the rubbery squelch is the funk. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth plucked by ADS 2 through a resonant filter. The octave jumps in the riff are the disco part; the rubbery squelch is the funk.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -3784,7 +3784,7 @@
       "tags": ["bass", "minimal techno", "detroit", "90s"],
       "level": 1,
       "blurb": "A short, dry, hypnotic bass blip, repeated with tiny changes.",
-      "how": "Minimal techno strips a track to a few short elements. A triangle that ADS 2 lights up briefly, with ADS 1 cut short, gives a dry, rubbery blip that sits in a groove without filling it. This describes the style of playing, not the exact sound on the record.",
+      "how": "Minimal techno strips a track to a few short elements. A triangle that ADS 2 lights up briefly, with ADS 1 cut short, gives a dry, rubbery blip that sits in a groove without filling it.",
       "phrase": {
         "bpm": 130,
         "loop": true,
@@ -3926,7 +3926,7 @@
       "tags": ["lead", "french pop", "synth-pop", "00s"],
       "level": 1,
       "blurb": "A soft, sweet lead with a gentle vibrato, like a falsetto voice.",
-      "how": "VCO 1 between triangle and sawtooth is soft but not dull. A gentle vibrato from the LFO and a slight swell make it sing. This describes the style of playing, not the exact sound on the record.",
+      "how": "VCO 1 between triangle and sawtooth is soft but not dull. A gentle vibrato from the LFO and a slight swell make it sing.",
       "phrase": {
         "bpm": 108,
         "loop": true,
@@ -4157,7 +4157,7 @@
       "tags": ["lead", "electronic", "sci-fi", "70s"],
       "level": 2,
       "blurb": "A dark, slow lead whose filter swells open on each note, mysterious and wide.",
-      "how": "Two VCOs a fifth apart, the 24 dB filter closed down, and ADS 2 with a slow attack opening it over half a second. The fifth gives an ancient, open sound. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two VCOs a fifth apart, the 24 dB filter closed down, and ADS 2 with a slow attack opening it over half a second. The fifth gives an ancient, open sound.",
       "phrase": {
         "bpm": 80,
         "loop": true,
@@ -4544,7 +4544,7 @@
       "tags": ["lead", "modern funk", "boogie", "00s"],
       "level": 1,
       "blurb": "A warm, smooth square lead with a lazy vibrato, for a late-night funk jam.",
-      "how": "A square, filtered warm, with a soft start and a gentle vibrato. Modern funk borrows the 80s boogie sound and slows it down. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square, filtered warm, with a soft start and a gentle vibrato. Modern funk borrows the 80s boogie sound and slows it down.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -4626,7 +4626,7 @@
       "tags": ["lead", "synth-pop", "space disco", "80s"],
       "level": 1,
       "blurb": "A bright, heroic sawtooth lead with a touch of detune, for a big European synth anthem.",
-      "how": "Two sawtooths a little apart and an octave apart, through an open filter, with a gentle vibrato. Big and simple. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths a little apart and an octave apart, through an open filter, with a gentle vibrato. Big and simple.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -4706,7 +4706,7 @@
       "tags": ["brass", "funk", "boogie", "80s"],
       "level": 1,
       "blurb": "A fat, punchy synth-brass stab that swells open on each hit.",
-      "how": "Two detuned sawtooths through a filter that ADS 2 opens over a moment, the way a brass section speaks. Early-80s funk replaced its horn sections with sounds like this. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two detuned sawtooths through a filter that ADS 2 opens over a moment, the way a brass section speaks. Early-80s funk replaced its horn sections with sounds like this.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -4777,7 +4777,7 @@
       "tags": ["brass", "soundtrack", "tv", "60s"],
       "level": 2,
       "blurb": "A blaring, menacing brass blast with a rasp in it, like a trombone played hard.",
-      "how": "A bright brass tone from two sawtooths and a filter that opens slowly. The LFO, at about thirty times a second, is too fast to hear as a wobble: a little of it on the pitch roughens the tone into a rasp, like brass played hard. This describes the style of playing, not the exact sound on the record.",
+      "how": "A bright brass tone from two sawtooths and a filter that opens slowly. The LFO, at about thirty times a second, is too fast to hear as a wobble: a little of it on the pitch roughens the tone into a rasp, like brass played hard.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -5024,7 +5024,7 @@
       "tags": ["wind", "smooth jazz", "sax", "80s"],
       "level": 2,
       "blurb": "A warm, reedy sax line with breath on the attack and a lazy vibrato.",
-      "how": "A saxophone is a reed into a cone: bright, nasal and breathy. A narrow pulse through a filter that ADS 2 opens on each note gives the reed; noise patched into VCF AUDIO IN gives the breath; and a slow vibrato makes it sing. This describes the style of playing, not the exact sound on the record.",
+      "how": "A saxophone is a reed into a cone: bright, nasal and breathy. A narrow pulse through a filter that ADS 2 opens on each note gives the reed; noise patched into VCF AUDIO IN gives the breath; and a slow vibrato makes it sing.",
       "phrase": {
         "bpm": 88,
         "loop": true,
@@ -5995,7 +5995,7 @@
       "tags": ["pad", "synth-pop", "dark", "soft", "80s"],
       "level": 1,
       "blurb": "A cool, dusky pad that moves through minor chords, intimate and melancholy.",
-      "how": "Two squares a hair apart, filtered low, with a moderate swell. The minor movement and the soft, hollow tone carry the mood. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two squares a hair apart, filtered low, with a moderate swell. The minor movement and the soft, hollow tone carry the mood.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -6804,7 +6804,7 @@
       "tags": ["keys", "ethio-jazz", "organ", "80s"],
       "level": 2,
       "blurb": "A bright, reedy organ tone playing a winding melody in an Ethiopian pentatonic mode.",
-      "how": "DECAY OFF turns ADS 1 into an organ’s on-off gate. A square with a pulse an octave up gives the reedy tone, and a slight vibrato keeps it alive. The melody uses the tizita mode. This describes the style of playing, not the exact sound on the record.",
+      "how": "DECAY OFF turns ADS 1 into an organ’s on-off gate. A square with a pulse an octave up gives the reedy tone, and a slight vibrato keeps it alive. The melody uses the tizita mode.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -6886,7 +6886,7 @@
       "tags": ["keys", "space age pop", "lounge", "60s"],
       "level": 1,
       "blurb": "A bright, bouncy keyboard tone with a quick tremolo, playing a cheeky lounge line.",
-      "how": "A square and a triangle, plucked short, with a quick vibrato from the LFO. Space-age pop of the late 50s and early 60s loved bright, novel keyboard tones. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square and a triangle, plucked short, with a quick vibrato from the LFO. Space-age pop of the late 50s and early 60s loved bright, novel keyboard tones.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -7272,7 +7272,7 @@
       "tags": ["keys", "baroque pop", "harpsichord", "60s"],
       "level": 1,
       "blurb": "A bright, plucked harpsichord tone for a wistful 60s pop song.",
-      "how": "A harpsichord plucks its strings: bright, jangling and quick to die. A narrow pulse and a sawtooth an octave up, plucked by ADS 1 with nothing held. This describes the style of playing, not the exact sound on the record.",
+      "how": "A harpsichord plucks its strings: bright, jangling and quick to die. A narrow pulse and a sawtooth an octave up, plucked by ADS 1 with nothing held.",
       "phrase": {
         "bpm": 100,
         "loop": true,
@@ -7427,7 +7427,7 @@
       "tags": ["pluck", "jazz", "harp", "gentle", "60s"],
       "level": 1,
       "blurb": "A warm, ringing harp plucking a soulful, flowing line.",
-      "how": "A harp string is plucked and rings long and soft. A soft ramp through a filter that ADS 2 plucks, with ADS 1 falling slowly to nothing, gives the round, ringing note. This describes the style of playing, not the exact sound on the record.",
+      "how": "A harp string is plucked and rings long and soft. A soft ramp through a filter that ADS 2 plucks, with ADS 1 falling slowly to nothing, gives the round, ringing note.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -8461,7 +8461,7 @@
       "tags": ["seq", "minimal wave", "french", "80s"],
       "level": 1,
       "blurb": "A cool, melancholy eighth-note sequence on a thin pulse, from a French bedroom studio.",
-      "how": "A narrow pulse, plucked short with no filter movement, playing a plain minor figure. Minimal wave made a virtue of how little the gear could do. This describes the style of playing, not the exact sound on the record.",
+      "how": "A narrow pulse, plucked short with no filter movement, playing a plain minor figure. Minimal wave made a virtue of how little the gear could do.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -9224,7 +9224,7 @@
       "tags": ["lead", "cumbia", "psychedelic", "70s"],
       "level": 2,
       "blurb": "A wobbly, twangy lead playing a swaying minor melody, like a guitar through a cheap phaser.",
-      "how": "Peruvian chicha put electric guitars through effects over a cumbia beat. A pulse whose width the LFO sways, with a wide vibrato, gives the wobbly, phased twang. This describes the style of playing, not the exact sound on the record.",
+      "how": "Peruvian chicha put electric guitars through effects over a cumbia beat. A pulse whose width the LFO sways, with a wide vibrato, gives the wobbly, phased twang.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -10055,7 +10055,7 @@
       "tags": ["perc", "disco", "philly soul", "70s"],
       "level": 2,
       "blurb": "Crisp, ticking hi-hats with an open hat on the off-beat, the shimmer of early disco.",
-      "how": "A hi-hat is a burst of bright noise. White noise patched into the filter, with the VCOs off, cut very short by ADS 1, is a closed hat; the riff’s longer note on each off-beat is the open hat. This describes the style of playing, not the exact sound on the record.",
+      "how": "A hi-hat is a burst of bright noise. White noise patched into the filter, with the VCOs off, cut very short by ADS 1, is a closed hat; the riff’s longer note on each off-beat is the open hat.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -10442,7 +10442,7 @@
       "tags": ["brass", "city pop", "japanese", "80s"],
       "level": 1,
       "blurb": "Bright, punchy synth-brass stabs with a slight swell, sunny and slick.",
-      "how": "Two detuned sawtooths through a filter that ADS 2 opens with a slight rise. Japanese city pop polished American funk and soul into something glossy. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two detuned sawtooths through a filter that ADS 2 opens with a slight rise. Japanese city pop polished American funk and soul into something glossy.",
       "phrase": {
         "bpm": 128,
         "loop": true,
@@ -10515,7 +10515,7 @@
       "tags": ["bass", "city pop", "japanese", "80s"],
       "level": 1,
       "blurb": "A smooth, round, funky bass with octave pops, the bounce under 80s Japanese pop.",
-      "how": "A soft ramp and a square an octave down through a warm filter, with a gentle pluck from ADS 2. The octave pops are the funk. This describes the style of playing, not the exact sound on the record.",
+      "how": "A soft ramp and a square an octave down through a warm filter, with a gentle pluck from ADS 2. The octave pops are the funk.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -10812,7 +10812,7 @@
       "tags": ["keys", "dream pop", "organ", "soft", "10s"],
       "level": 1,
       "blurb": "A hazy, wobbly organ playing slow chords of single notes, warm and wistful.",
-      "how": "Beach House build songs on cheap organs and drum machines. A square with a triangle an octave down, with DECAY OFF for the organ gate, and VCO 2 alone wobbling with VCO 1 MOD OFF, for a warm, slightly wonky drone. This describes the style of playing, not the exact sound on the record.",
+      "how": "Beach House build songs on cheap organs and drum machines. A square with a triangle an octave down, with DECAY OFF for the organ gate, and VCO 2 alone wobbling with VCO 1 MOD OFF, for a warm, slightly wonky drone.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -10960,7 +10960,7 @@
       "tags": ["lead", "trip hop", "downtempo", "soft", "90s"],
       "level": 2,
       "blurb": "A soft, eerie, sliding whistle lead with a slow vibrato, floating over a slow beat.",
-      "how": "The filter near self-oscillation, tracking the keys, gives a soft whistle; a quiet triangle under it keeps it warm. A slow vibrato from the LFO gives it a theremin-like waver. This describes the style of playing, not the exact sound on the record.",
+      "how": "The filter near self-oscillation, tracking the keys, gives a soft whistle; a quiet triangle under it keeps it warm. A slow vibrato from the LFO gives it a theremin-like waver.",
       "phrase": {
         "bpm": 80,
         "loop": true,
@@ -11029,7 +11029,7 @@
       "tags": ["lead", "jazz fusion", "prog", "70s"],
       "level": 2,
       "blurb": "A fast, biting, synced lead tearing through a busy fusion line.",
-      "how": "VCO 2 synced to VCO 1 for a hard edge, with ADS 2 patched into VCO 2’s FREQ jack so each note starts with a tearing sweep. A busy line of sixteenths. This describes the style of playing, not the exact sound on the record.",
+      "how": "VCO 2 synced to VCO 1 for a hard edge, with ADS 2 patched into VCO 2’s FREQ jack so each note starts with a tearing sweep. A busy line of sixteenths.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -11430,7 +11430,7 @@
       "tags": ["pluck", "afrobeats", "nigerian", "10s"],
       "level": 1,
       "blurb": "A soft, bright pluck bouncing through a lilting, syncopated afrobeats figure.",
-      "how": "A soft ramp with a quiet square an octave up, plucked short by ADS 2, playing a figure that leans on the off-beats. Afrobeats grooves sway rather than drive. This describes the style of playing, not the exact sound on the record.",
+      "how": "A soft ramp with a quiet square an octave up, plucked short by ADS 2, playing a figure that leans on the off-beats. Afrobeats grooves sway rather than drive.",
       "phrase": {
         "bpm": 100,
         "loop": true,
