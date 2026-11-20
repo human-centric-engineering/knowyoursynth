@@ -9,9 +9,10 @@
  * admin's pattern (edited, or made a default) is left alone.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
+import { z } from 'zod';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { compileLoop, seededRng, SLIDE_OVERLAP } from '@/lib/app/sequencer/compile';
@@ -87,6 +88,23 @@ describe('the research batches', () => {
     ];
     expect(named.filter((s) => !sounds.has(s))).toEqual([]);
   });
+
+  /**
+   * The artist a sound had when the batches researched it, for each sound whose credit was later moved to a genre
+   * because the patch never made that artist's sound (`f-honest-attributions` t-294). The batch still looked at it
+   * under that artist, so it stays on that batch's roster.
+   */
+  const researchedAs = z
+    .record(z.string(), z.string())
+    .parse(
+      JSON.parse(
+        readFileSync(
+          resolve(process.cwd(), 'tests/fixtures/patterns/research-time-artists.json'),
+          'utf8'
+        )
+      )
+    );
+  const artistOf = (key: string, artist: string) => researchedAs[key] ?? artist;
 
   /**
    * Each batch's artists and how many of their sounds the catalogue holds now. A task that adds
@@ -491,7 +509,7 @@ describe('the research batches', () => {
     '%s looks at every sound by %j exactly once: one or more patterns, or a reason it has none',
     (task, artists, count) => {
       const roster = [...sounds]
-        .filter(([, s]) => artists.includes(s.artist))
+        .filter(([k, s]) => artists.includes(artistOf(k, s.artist)))
         .map(([k]) => k)
         .sort();
       expect(roster.length).toBe(count);
