@@ -43,7 +43,7 @@
     "items": [
       {
         "title": "What is not modelled",
-        "text": "Holding QUANTIZE or SEQ OCT to decouple the SEQ outputs; Fine Tune; Rhythm Generator Logic, which is set over MIDI on the hardware and is always OR here; holding RESET to hold step 1 (a gate at the RESET input does it) and holding TRIGGER as a gate with EG off; MIDI clock, MIDI CCs, note priority, the MIDI channel and transport settings."
+        "text": "Holding QUANTIZE or SEQ OCT to decouple the SEQ outputs; Fine Tune; Rhythm Generator Logic, which is set over MIDI on the hardware and is always OR here; holding RESET to hold step 1 (a gate at the RESET input does it) and holding TRIGGER as a gate with EG off; MIDI CCs, note priority, the MIDI channel and transport settings. MIDI clock is the app’s own: Play on the bar clocks the sequencers at four clocks a beat, as a MIDI clock would, and TEMPO sets the bar’s tempo."
       },
       {
         "title": "The app’s readings of the manual",
@@ -51,7 +51,7 @@
       },
       {
         "title": "What the sources leave open",
-        "text": "How MIDI notes gate the envelopes, and whether they reach both VCOs, are not described: here a key gates both envelopes and plays on both VCOs. XOR with three or more rhythms on one sequencer is not stated. The pitch bend range is not published."
+        "text": "How MIDI notes gate the envelopes, and whether they reach both VCOs, are not described: here a key plays on both VCOs, gates both envelopes while the sequencers are stopped, and while they run never holds the envelopes open, firing them only with EG off. XOR with three or more rhythms on one sequencer is not stated. The pitch bend range is not published."
       }
     ]
   }
