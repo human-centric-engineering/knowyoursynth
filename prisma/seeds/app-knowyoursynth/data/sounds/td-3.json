@@ -5,7 +5,7 @@
     {
       "id": "td-first-squelch",
       "name": "First Squelch",
-      "ref": "In the style of Phuture — \"Acid Tracks\"",
+      "ref": "A buzzy sawtooth that squelches on every note, the sound Phuture set loose on \"Acid Tracks\"",
       "artist": "Phuture",
       "tags": ["bass", "acid", "house", "80s"],
       "level": 1,
@@ -93,7 +93,7 @@
     {
       "id": "td-distorted-acid",
       "name": "Distorted Acid",
-      "ref": "In the style of Josh Wink — \"Higher State of Consciousness\"",
+      "ref": "Josh Wink’s \"Higher State of Consciousness\" turned up: an overdriven acid line screaming at full resonance",
       "artist": "Josh Wink",
       "tags": ["bass", "acid", "techno", "90s"],
       "level": 2,
@@ -169,7 +169,7 @@
     {
       "id": "td-round-bass",
       "name": "Round Pop Bass",
-      "ref": "In the style of 1980s synth pop bass lines",
+      "ref": "A soft, rounded square bass with a gentle thump at the front, built for 1980s synth pop",
       "artist": "Various",
       "tags": ["bass", "pop", "80s"],
       "level": 1,
@@ -303,7 +303,7 @@
     {
       "id": "td-rolling-sixteenths",
       "name": "Rolling Sixteenths",
-      "ref": "In the style of Hardfloor — \"Acperience 1\"",
+      "ref": "Sixteen notes a bar rolling round one low root, the way Hardfloor’s \"Acperience 1\" never lets up",
       "artist": "Hardfloor",
       "tags": ["bass", "acid", "trance", "90s"],
       "level": 1,
@@ -402,7 +402,7 @@
     {
       "id": "td-acid-techno",
       "name": "Hard Acid Techno",
-      "ref": "In the style of Chris Liberator and 1990s London acid techno",
+      "ref": "Hard, fast and clipped nearly flat, with accents that scream: London acid techno as Chris Liberator plays it",
       "artist": "Chris Liberator",
       "tags": ["bass", "acid", "techno", "90s"],
       "level": 2,
@@ -485,7 +485,7 @@
     {
       "id": "td-rave-fuzz",
       "name": "Rave Fuzz Bass",
-      "ref": "In the style of early 1990s UK rave bass (Altern-8)",
+      "ref": "A dark, thick fuzz bass that groans down and back up, from the early UK rave of Altern-8",
       "artist": "Altern-8",
       "tags": ["bass", "rave", "hardcore", "90s"],
       "level": 2,
@@ -561,7 +561,7 @@
     {
       "id": "td-electro-funk",
       "name": "Electro Funk Bass",
-      "ref": "In the style of 1980s electro-funk bass lines",
+      "ref": "Short, clean, off-beat bass notes with a quick bow, where the gaps carry the 1980s electro-funk groove",
       "artist": "Various",
       "tags": ["bass", "electro", "funk", "80s"],
       "level": 1,
@@ -648,7 +648,7 @@
     {
       "id": "td-square-line",
       "name": "Square Acid Line",
-      "ref": "In the style of Fatboy Slim — \"Everybody Needs a 303\"",
+      "ref": "Hollow, rubbery square-wave acid with a little grit, as on Fatboy Slim’s \"Everybody Needs a 303\"",
       "artist": "Fatboy Slim",
       "tags": ["bass", "acid", "big beat", "90s"],
       "level": 1,
@@ -726,7 +726,7 @@
     {
       "id": "td-high-lead",
       "name": "Distorted High Lead",
-      "ref": "In the style of Daft Punk — \"Da Funk\"",
+      "ref": "The 303 lifted out of the bass and distorted into a hard, singing riff, the trick behind Daft Punk’s \"Da Funk\"",
       "artist": "Daft Punk",
       "tags": ["lead", "acid", "house", "90s"],
       "level": 2,
@@ -812,7 +812,7 @@
     {
       "id": "td-dub-acid",
       "name": "Slow Dub Acid",
-      "ref": "In the style of slow, dub-influenced acid",
+      "ref": "Sparse notes that each wow open and take over a second to close, acid slowed to dub’s pace",
       "artist": "Various",
       "tags": ["bass", "acid", "dub", "downtempo"],
       "level": 2,
@@ -889,7 +889,7 @@
     {
       "id": "td-res-zaps",
       "name": "Resonance Zaps",
-      "ref": "In the style of the zaps and whistles in early acid house",
+      "ref": "A self-whistling filter fired down in falling laser zaps, sprinkled over early acid house tracks",
       "artist": "Various",
       "tags": ["fx", "acid", "house", "80s"],
       "level": 3,
@@ -963,7 +963,7 @@
     {
       "id": "td-slow-chord-arp",
       "name": "Slow Chord Arpeggio",
-      "ref": "In the style of slow acid arpeggios in ambient electronica",
+      "ref": "A slow arpeggio over two seventh chords, each note opening softly, for ambient electronica",
       "artist": "Various",
       "tags": ["seq", "ambient", "chill", "downtempo"],
       "level": 1,
@@ -1046,7 +1046,7 @@
     {
       "id": "td-tape-square-arp",
       "name": "Tape-Warm Square Arpeggio",
-      "ref": "In the style of lo-fi and chillout electronica",
+      "ref": "Round square-wave notes bending between steps, slightly saturated as if played off a warm tape",
       "artist": "Various",
       "tags": ["seq", "ambient", "lo-fi", "chill"],
       "level": 2,
@@ -1146,7 +1146,7 @@
     {
       "id": "td-trip-hop-squelch",
       "name": "Trip-Hop Squelch",
-      "ref": "In the style of 1990s trip-hop and downtempo",
+      "ref": "Slow, lonely squelches at 88 BPM, with room between them for a dusty trip-hop break",
       "artist": "Various",
       "tags": ["bass", "acid", "trip-hop", "downtempo"],
       "level": 2,
@@ -1228,7 +1228,7 @@
     {
       "id": "td-res-bells",
       "name": "Resonant Bell Arpeggio",
-      "ref": "In the style of slow 1990s ambient techno",
+      "ref": "Each note struck like a glass bell as the ringing filter falls away, for slow 1990s ambient techno",
       "artist": "Various",
       "tags": ["seq", "ambient", "techno", "90s"],
       "level": 3,
@@ -1305,7 +1305,7 @@
     {
       "id": "td-country-two-step",
       "name": "Country Two-Step Acid",
-      "ref": "In the style of Alabama 3 — \"Ain’t Goin’ to Goa\"",
+      "ref": "Root and fifth rocking like a country bass, but squelching, as on Alabama 3’s \"Ain’t Goin’ to Goa\"",
       "artist": "Alabama 3",
       "tags": ["bass", "acid", "country", "90s"],
       "level": 1,
@@ -1388,7 +1388,7 @@
     {
       "id": "td-dirty-blues",
       "name": "Dirty Blues Shuffle",
-      "ref": "In the style of Alabama 3 — \"Woke Up This Morning\"",
+      "ref": "Alabama 3’s \"Woke Up This Morning\" gone dirty: a shuffled, overdriven riff sliding up into the root",
       "artist": "Alabama 3",
       "tags": ["bass", "acid", "blues", "90s"],
       "level": 2,
@@ -1472,7 +1472,7 @@
     {
       "id": "td-gospel-call",
       "name": "Gospel Call and Response",
-      "ref": "In the style of Alabama 3 — \"Power in the Blood\"",
+      "ref": "Call on F, answer on B flat, octave pick-ups between: gospel bass with the gentle squelch Alabama 3 favour",
       "artist": "Alabama 3",
       "tags": ["bass", "acid", "gospel", "00s"],
       "level": 2,
@@ -1550,7 +1550,7 @@
     {
       "id": "td-swamp-burn",
       "name": "Swamp Slow Burn",
-      "ref": "In the style of Alabama 3’s slow swamp-blues grooves",
+      "ref": "A slow, dirty swamp-blues crawl that lets the acid creep in by hand, the slow-burning end of Alabama 3",
       "artist": "Alabama 3",
       "tags": ["bass", "acid", "blues", "downtempo"],
       "level": 3,
@@ -1633,7 +1633,7 @@
     {
       "id": "td-rollin-scratchin",
       "name": "Rollin’ Distortion",
-      "ref": "In the style of Daft Punk — “Rollin’ & Scratchin’”",
+      "ref": "One note driven into a roaring, tearing distortion, the brutal 303 of Daft Punk’s “Rollin’ & Scratchin’”",
       "artist": "Daft Punk",
       "tags": ["bass", "acid", "french house", "techno", "90s"],
       "level": 2,
@@ -1722,7 +1722,7 @@
     {
       "id": "td-london-acid-city",
       "name": "London Acid City",
-      "ref": "In the style of Lochi",
+      "ref": "A fast, rough acid riff with a growl of drive, in the London acid techno lineage of Lochi",
       "artist": "Lochi",
       "tags": ["bass", "acid", "acid techno", "90s"],
       "level": 2,
@@ -1804,7 +1804,7 @@
     {
       "id": "td-free-party",
       "name": "Free Party Tekno",
-      "ref": "In the style of Spiral Tribe",
+      "ref": "A short, distorted acid loop that pounds on for days, as Spiral Tribe’s free-party rigs ran them",
       "artist": "Spiral Tribe",
       "tags": ["bass", "acid", "tekno", "free party", "90s"],
       "level": 2,
@@ -1886,7 +1886,7 @@
     {
       "id": "td-gabber-acid",
       "name": "Gabber Acid",
-      "ref": "In the style of 1990s Rotterdam gabber",
+      "ref": "An acid line at nearly 180 BPM with the drive full on and the tone bright: Rotterdam gabber",
       "artist": "Gabber",
       "tags": ["bass", "acid", "gabber", "hardcore", "90s"],
       "level": 2,
@@ -1968,7 +1968,7 @@
     {
       "id": "td-gabber-kick",
       "name": "Distorted Kick",
-      "ref": "In the style of hardcore and gabber kick drums",
+      "ref": "A booming kick pushed so hard into distortion that it turns into a tuned roar, as gabber kicks do",
       "artist": "Gabber",
       "tags": ["perc", "gabber", "hardcore", "techno"],
       "level": 2,
@@ -2029,7 +2029,7 @@
     {
       "id": "td-industrial-grind",
       "name": "Industrial Grind",
-      "ref": "In the style of 1980s industrial music",
+      "ref": "A square-wave sequence grinding away like a factory machine, for 1980s industrial music",
       "artist": "Industrial",
       "tags": ["bass", "industrial", "ebm", "80s"],
       "level": 2,
@@ -2099,7 +2099,7 @@
     {
       "id": "td-body-music",
       "name": "Body Music Stomp",
-      "ref": "In the style of Nitzer Ebb",
+      "ref": "A militant sequenced bass that stomps on every beat, with Nitzer Ebb’s gritty body-music edge",
       "artist": "Nitzer Ebb",
       "tags": ["bass", "ebm", "industrial", "80s"],
       "level": 2,
@@ -2181,7 +2181,7 @@
     {
       "id": "td-leave-home",
       "name": "Leave Home Fuzz",
-      "ref": "In the style of The Chemical Brothers — “Leave Home”",
+      "ref": "The Chemical Brothers’ “Leave Home” fuzz: a heavy acid line that swaggers on lazy slides",
       "artist": "The Chemical Brothers",
       "tags": ["bass", "big beat", "acid", "90s"],
       "level": 2,
@@ -2252,7 +2252,7 @@
     {
       "id": "td-digital-hardcore",
       "name": "Digital Hardcore",
-      "ref": "In the style of Atari Teenage Riot",
+      "ref": "Atari Teenage Riot’s punk-techno fury: a fast, furious riff run through full distortion",
       "artist": "Atari Teenage Riot",
       "tags": ["bass", "digital hardcore", "punk", "90s"],
       "level": 2,
@@ -2324,7 +2324,7 @@
     {
       "id": "td-breakcore",
       "name": "Breakcore Shred",
-      "ref": "In the style of breakcore",
+      "ref": "Ratcheting, wildly leaping and shredded by distortion at 190 BPM, made for breakcore’s chaos",
       "artist": "Breakcore",
       "tags": ["bass", "breakcore", "hardcore", "00s"],
       "level": 3,
@@ -2404,12 +2404,12 @@
     {
       "id": "td-fuzz-bass-60s",
       "name": "Sixties Fuzz Bass",
-      "ref": "In the style of The Beatles — “Think for Yourself”",
-      "artist": "The Beatles",
+      "ref": "A round bass tone pushed into a raspy, mid-heavy fuzz box, as psychedelic rock used it in the mid-1960s",
+      "artist": "1960s psychedelic rock",
       "tags": ["bass", "rock", "psychedelic", "60s"],
       "level": 2,
       "blurb": "A buzzing, raspy 1960s fuzz bass line.",
-      "how": "In 1965 Paul McCartney doubled a bass line through a fuzz box, and the sound became a psychedelic staple. A round tone into a raspy, mid-heavy fuzz.",
+      "how": "In the mid-1960s rock bassists began doubling lines through fuzz boxes, and the sound became a psychedelic staple. A round tone into a raspy, mid-heavy fuzz.",
       "phrase": {
         "bpm": 124,
         "loop": true,
@@ -2471,8 +2471,8 @@
     {
       "id": "td-stoner-riff",
       "name": "Desert Riff",
-      "ref": "In the style of Kyuss",
-      "artist": "Kyuss",
+      "ref": "Tuned down and fed through huge, dark drive: a synth stand-in for a fuzzed desert-rock guitar riff",
+      "artist": "Stoner rock",
       "tags": ["bass", "stoner rock", "rock", "90s"],
       "level": 2,
       "blurb": "A slow, heavy, fuzzed-out desert-rock riff tuned way down.",
@@ -2549,8 +2549,8 @@
     {
       "id": "td-doom-drone",
       "name": "Doom Drone",
-      "ref": "In the style of Sunn O)))",
-      "artist": "Sunn O)))",
+      "ref": "Very low notes held as long as they last, crushed by drive until you feel them in your chest",
+      "artist": "Drone metal",
       "tags": ["drone", "doom", "drone metal", "00s"],
       "level": 2,
       "blurb": "An enormously slow, low, distorted drone that you feel in your chest.",
@@ -2611,7 +2611,7 @@
     {
       "id": "td-thrash-chug",
       "name": "Thrash Chug",
-      "ref": "In the style of 1980s thrash metal",
+      "ref": "Fast, muted chugs on a low E that mimic a palm-muted thrash metal guitar",
       "artist": "Thrash metal",
       "tags": ["bass", "metal", "thrash", "80s"],
       "level": 2,
@@ -2693,7 +2693,7 @@
     {
       "id": "td-garage-fuzz",
       "name": "Garage Fuzz Riff",
-      "ref": "In the style of 1960s garage rock",
+      "ref": "A snotty square-wave riff through bright fuzz, like a cheap 1960s garage-band guitar",
       "artist": "Garage rock",
       "tags": ["lead", "garage rock", "rock", "60s"],
       "level": 1,
@@ -2760,8 +2760,8 @@
     {
       "id": "td-blues-harp",
       "name": "Amplified Blues Harp",
-      "ref": "In the style of Little Walter",
-      "artist": "Little Walter",
+      "ref": "A nasal square bending through a small amp that breaks up, like a Chicago blues harmonica",
+      "artist": "Chicago blues harmonica",
       "tags": ["wind", "blues", "chicago blues", "50s"],
       "level": 3,
       "blurb": "A gritty, wailing harmonica blown through a small, overdriven amp.",
@@ -2830,8 +2830,8 @@
     {
       "id": "td-fuzz-solo",
       "name": "Fuzz Solo",
-      "ref": "In the style of Jimi Hendrix",
-      "artist": "Jimi Hendrix",
+      "ref": "Long notes that bend and sustain through heavy fuzz, a synth take on a 1960s rock guitar solo",
+      "artist": "Psychedelic rock guitar",
       "tags": ["lead", "rock", "psychedelic", "60s"],
       "level": 3,
       "blurb": "A wild, bending, sustaining fuzz-guitar solo.",
@@ -2897,7 +2897,7 @@
     {
       "id": "td-hardcore-rave",
       "name": "Breakbeat Hardcore Stab",
-      "ref": "In the style of early-1990s breakbeat hardcore",
+      "ref": "A pumping, distorted riff that leaps in octave stabs, out of 1991–92 UK breakbeat hardcore",
       "artist": "Breakbeat hardcore",
       "tags": ["bass", "hardcore", "rave", "90s"],
       "level": 2,
@@ -2965,7 +2965,7 @@
     {
       "id": "td-full-on-psy",
       "name": "Full-On Gallop",
-      "ref": "In the style of full-on psytrance",
+      "ref": "Three tight, gritty bass notes rolling after every kick to make the full-on psytrance gallop",
       "artist": "Psytrance",
       "tags": ["bass", "psytrance", "trance", "00s"],
       "level": 2,
@@ -3039,7 +3039,7 @@
     {
       "id": "td-dark-psy",
       "name": "Darkpsy Twister",
-      "ref": "In the style of dark psytrance",
+      "ref": "Chromatic runs twisting at over 150 BPM with a gritty, resonant bite, for night-time dark psytrance",
       "artist": "Dark psytrance",
       "tags": ["lead", "psytrance", "dark", "00s"],
       "level": 3,
@@ -3121,7 +3121,7 @@
     {
       "id": "td-boys-noize",
       "name": "Electro House Acid",
-      "ref": "In the style of Boys Noize",
+      "ref": "Brash, distorted acid with big octave leaps, as Boys Noize brought it back to late-2000s electro house",
       "artist": "Boys Noize",
       "tags": ["bass", "electro house", "acid", "00s"],
       "level": 2,
@@ -3193,7 +3193,7 @@
     {
       "id": "td-justice-bass",
       "name": "Cross Fuzz",
-      "ref": "In the style of Justice",
+      "ref": "Justice’s idea of synth bass: square wave, filthy drive and a riff that pumps like stadium rock",
       "artist": "Justice",
       "tags": ["bass", "electro house", "french house", "00s"],
       "level": 2,
@@ -3262,7 +3262,7 @@
     {
       "id": "td-acid-breaks",
       "name": "Acid Breaks",
-      "ref": "In the style of late-1990s acid breaks",
+      "ref": "A funky, gritty acid line riding a breakbeat at about 130 BPM, late-1990s acid breaks",
       "artist": "Acid breaks",
       "tags": ["bass", "acid", "breakbeat", "breaks", "90s"],
       "level": 2,
@@ -3333,7 +3333,7 @@
     {
       "id": "td-industrial-techno",
       "name": "Warehouse Rumble",
-      "ref": "In the style of 2010s industrial techno",
+      "ref": "Dark, heavily driven offbeat notes that decay into a rumble after each kick, for industrial techno",
       "artist": "Industrial techno",
       "tags": ["bass", "techno", "industrial", "10s"],
       "level": 2,
@@ -3399,7 +3399,7 @@
     {
       "id": "td-squelch-scream-lead",
       "name": "Screaming Acid Lead",
-      "ref": "In the style of 1990s acid trance",
+      "ref": "An octave up and screaming through bright distortion, the acid lead that cut through 1990s acid trance",
       "artist": "Acid trance",
       "tags": ["lead", "acid", "trance", "90s"],
       "level": 2,
@@ -3491,7 +3491,7 @@
     {
       "id": "td-baile-funk",
       "name": "Baile Funk Boom",
-      "ref": "In the style of Rio funk carioca",
+      "ref": "Booming, closed-filter square bass that bounces on the tamborzão beat of Rio’s funk carioca",
       "artist": "Funk carioca",
       "tags": ["bass", "baile funk", "brazilian", "00s"],
       "level": 1,
@@ -3552,7 +3552,7 @@
     {
       "id": "td-kuduro",
       "name": "Kuduro Pulse",
-      "ref": "In the style of Angolan kuduro",
+      "ref": "Short, gritty stabs scattered across a fast syncopated grid, for Angolan kuduro",
       "artist": "Kuduro",
       "tags": ["bass", "kuduro", "african", "00s"],
       "level": 2,
@@ -3617,7 +3617,7 @@
     {
       "id": "td-gqom",
       "name": "Gqom Thud",
-      "ref": "In the style of Durban gqom",
+      "ref": "Heavy, distorted low thuds set off the usual four-on-the-floor, with Durban gqom’s dark space",
       "artist": "Gqom",
       "tags": ["bass", "gqom", "african", "10s"],
       "level": 2,
@@ -3674,7 +3674,7 @@
     {
       "id": "td-ghetto-house",
       "name": "Ghetto House Jack",
-      "ref": "In the style of DJ Funk",
+      "ref": "DJ Funk’s Chicago ghetto house: a hard, raw, slightly distorted loop under chanted vocals",
       "artist": "DJ Funk",
       "tags": ["bass", "ghetto house", "house", "90s"],
       "level": 2,
@@ -3739,13 +3739,13 @@
     },
     {
       "id": "td-bootsy-fuzz",
-      "name": "Space Bass",
-      "ref": "In the style of Bootsy Collins",
-      "artist": "Bootsy Collins",
+      "name": "Envelope Funk Bass",
+      "ref": "Every note goes “bwow” through a wide envelope and fuzz, like a 1970s P-Funk bass on an envelope filter",
+      "artist": "P-Funk bass",
       "tags": ["bass", "funk", "p-funk", "70s"],
       "level": 2,
       "blurb": "A rubbery, envelope-filtered, fuzzed funk bass.",
-      "how": "Bootsy ran his bass through an envelope filter and fuzz, so every note went “bwow”. A wide envelope with resonance and a little fuzz on the TD-3 gets there.",
+      "how": "P-Funk bassists ran the bass through an envelope filter and fuzz, so every note went “bwow”. A wide envelope with resonance and a little fuzz on the TD-3 gets there.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -3804,7 +3804,7 @@
     {
       "id": "td-g-funk-whine",
       "name": "G-Funk Whine",
-      "ref": "In the style of Dr. Dre — The Chronic",
+      "ref": "The thin, high, swooping whine that sings over the grooves of Dr. Dre’s The Chronic",
       "artist": "Dr. Dre",
       "tags": ["lead", "g-funk", "hip hop", "90s"],
       "level": 2,
@@ -3866,7 +3866,7 @@
     {
       "id": "td-dancehall-riddim",
       "name": "Dancehall Riddim",
-      "ref": "In the style of 1990s dancehall",
+      "ref": "A deep, punchy, short square bass repeating under a 1990s digital dancehall riddim",
       "artist": "Dancehall",
       "tags": ["bass", "dancehall", "reggae", "90s"],
       "level": 1,
@@ -3926,7 +3926,7 @@
     {
       "id": "td-tubby-dub",
       "name": "Dub Plate Weight",
-      "ref": "In the style of King Tubby",
+      "ref": "Round, low and stripped of its top, gently saturated as if the desk ran hot, as King Tubby pushed dub bass",
       "artist": "King Tubby",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 2,
@@ -3991,8 +3991,8 @@
     {
       "id": "td-steppers",
       "name": "Steppers Dub",
-      "ref": "In the style of Jah Shaka",
-      "artist": "Jah Shaka",
+      "ref": "A deep, rolling bass in militant eighths, driving forward over a kick on every beat in UK steppers",
+      "artist": "UK steppers dub",
       "tags": ["bass", "dub", "steppers", "80s"],
       "level": 2,
       "blurb": "A driving, militant UK steppers bass line in eighths.",
@@ -4057,12 +4057,12 @@
     {
       "id": "td-can-groove",
       "name": "Krautrock Groove",
-      "ref": "In the style of Holger Czukay of Can",
-      "artist": "Can",
+      "ref": "Two or three notes looped for minutes in a warm, slightly dirty tone: the hypnotic krautrock bass groove",
+      "artist": "Krautrock",
       "tags": ["bass", "krautrock", "rock", "70s"],
       "level": 2,
       "blurb": "A hypnotic, minimal, slightly dirty bass groove that never changes.",
-      "how": "Can’s bass lines locked into minimal, hypnotic grooves for many minutes. Two or three notes, a warm tone and a little dirt.",
+      "how": "Krautrock bass lines locked into minimal, hypnotic grooves for many minutes. Two or three notes, a warm tone and a little dirt.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -4124,12 +4124,12 @@
     {
       "id": "td-space-rock",
       "name": "Space Rock Overload",
-      "ref": "In the style of Hawkwind",
-      "artist": "Hawkwind",
+      "ref": "A sawtooth bass galloping in loud, distorted eighths, played like a 1970s space-rock rhythm guitar",
+      "artist": "Space rock",
       "tags": ["bass", "space rock", "rock", "70s"],
       "level": 2,
       "blurb": "A loud, overdriven, galloping bass played like a rhythm guitar.",
-      "how": "Lemmy played bass in Hawkwind like a rhythm guitar: loud, distorted and galloping. A saw into heavy drive with driving eighths.",
+      "how": "Space-rock bass was played like a rhythm guitar: loud, distorted and galloping. A saw into heavy drive with driving eighths.",
       "phrase": {
         "bpm": 150,
         "loop": true,
@@ -4206,7 +4206,7 @@
     {
       "id": "td-shoegaze",
       "name": "Shoegaze Haze",
-      "ref": "In the style of 1990s shoegaze",
+      "ref": "Long, soft notes buried in dark fuzz and nudged out of tune, a blurry shoegaze wall",
       "artist": "Shoegaze",
       "tags": ["drone", "shoegaze", "dream pop", "90s"],
       "level": 2,
@@ -4268,7 +4268,7 @@
     {
       "id": "td-new-rave",
       "name": "New Rave Riff",
-      "ref": "In the style of mid-2000s new rave",
+      "ref": "A distorted synth bass played like a punk riff, for mid-2000s new rave’s indie-dance crossover",
       "artist": "New rave",
       "tags": ["bass", "new rave", "indie", "00s"],
       "level": 1,
@@ -4350,7 +4350,7 @@
     {
       "id": "td-liquid-roller",
       "name": "Liquid Roller",
-      "ref": "In the style of liquid drum and bass",
+      "ref": "Long, round, warm sub notes moving through soulful chords under fast liquid drum and bass breaks",
       "artist": "Liquid drum and bass",
       "tags": ["bass", "drum and bass", "liquid", "00s"],
       "level": 2,
@@ -4407,7 +4407,7 @@
     {
       "id": "td-jump-up",
       "name": "Jump-Up Wobble",
-      "ref": "In the style of jump-up drum and bass",
+      "ref": "Ratchets and accents that fake a wobble, giving the cheeky, bouncing bass of jump-up drum and bass",
       "artist": "Jump-up",
       "tags": ["bass", "drum and bass", "jump up", "00s"],
       "level": 3,
@@ -4485,7 +4485,7 @@
     {
       "id": "td-electro-boogie",
       "name": "Electro Boogie",
-      "ref": "In the style of early-1980s boogie",
+      "ref": "A fat, round synth bass with a quick bow, slinking through early-1980s post-disco boogie",
       "artist": "Boogie",
       "tags": ["bass", "boogie", "funk", "80s"],
       "level": 2,
@@ -4549,7 +4549,7 @@
     {
       "id": "td-uk-funky",
       "name": "UK Funky Bounce",
-      "ref": "In the style of UK funky",
+      "ref": "Bouncy, percussive off-beat bass with light grit, for the soca-tinged house of UK funky",
       "artist": "UK funky",
       "tags": ["bass", "uk funky", "house", "00s"],
       "level": 2,
@@ -4611,7 +4611,7 @@
     {
       "id": "td-zapp-bass",
       "name": "Synth-Funk Bass",
-      "ref": "In the style of Zapp",
+      "ref": "Fat and rubbery, sliding between notes like the Ohio synth-funk bass of Zapp",
       "artist": "Zapp",
       "tags": ["bass", "funk", "synth-funk", "80s"],
       "level": 2,
@@ -4677,8 +4677,8 @@
     {
       "id": "td-post-punk-drive",
       "name": "Post-Punk Drive",
-      "ref": "In the style of Killing Joke",
-      "artist": "Killing Joke",
+      "ref": "Relentless distorted eighths with a dirty middle, driving the song as early-1980s post-punk bass did",
+      "artist": "Post-punk",
       "tags": ["bass", "post-punk", "rock", "80s"],
       "level": 1,
       "blurb": "A hard, driving, distorted bass in relentless eighths.",
@@ -4759,7 +4759,7 @@
     {
       "id": "td-acid-dub",
       "name": "Acid Dub",
-      "ref": "In the style of 1990s acid dub",
+      "ref": "The 303 slowed to dub tempo, with warm drive, low notes and plenty of rests: 1990s acid dub",
       "artist": "Acid dub",
       "tags": ["bass", "acid", "dub", "90s"],
       "level": 2,
@@ -4819,7 +4819,7 @@
     {
       "id": "td-detroit-techno-bass",
       "name": "Detroit Pulse",
-      "ref": "In the style of Underground Resistance",
+      "ref": "Underground Resistance’s Detroit drive: a short, tough, repeating line with a hint of grit",
       "artist": "Underground Resistance",
       "tags": ["bass", "techno", "detroit", "90s"],
       "level": 2,
@@ -4883,7 +4883,7 @@
     {
       "id": "td-nu-disco",
       "name": "Nu-Disco Bass",
-      "ref": "In the style of 2010s nu-disco",
+      "ref": "Octaves bouncing in sixteenths with a warm tape grit, the disco bass that 2010s nu-disco revived",
       "artist": "Nu-disco",
       "tags": ["bass", "nu-disco", "disco", "10s"],
       "level": 1,
@@ -4955,7 +4955,7 @@
     {
       "id": "td-ragga-sub",
       "name": "Ragga Jungle Sub",
-      "ref": "In the style of 1990s ragga jungle",
+      "ref": "Dancehall bass lines at half time, sliding deep under 160 BPM breaks in 1990s ragga jungle",
       "artist": "Ragga jungle",
       "tags": ["bass", "jungle", "drum and bass", "90s"],
       "level": 2,
@@ -5012,7 +5012,7 @@
     {
       "id": "td-electro-funk-acid",
       "name": "Planet Rock Pulse",
-      "ref": "In the style of early-1980s New York electro",
+      "ref": "Cold, syncopated sequenced bass with a quick bow, made for an 808 and early-1980s New York electro",
       "artist": "Electro",
       "tags": ["bass", "electro", "hip hop", "80s"],
       "level": 2,
@@ -5074,7 +5074,7 @@
     {
       "id": "td-cumbia-villera",
       "name": "Digital Cumbia",
-      "ref": "In the style of digital cumbia",
+      "ref": "A buzzing, gritty synth bass for cumbia slowed right down by digital cumbia producers",
       "artist": "Digital cumbia",
       "tags": ["bass", "cumbia", "latin", "10s"],
       "level": 1,
@@ -5140,8 +5140,8 @@
     {
       "id": "td-feedback-howl",
       "name": "Feedback Howl",
-      "ref": "In the style of Sonic Youth",
-      "artist": "Sonic Youth",
+      "ref": "High notes held into full drive and resonance until they howl like a guitar amp feeding back",
+      "artist": "Noise rock",
       "tags": ["fx", "noise rock", "rock", "80s"],
       "level": 2,
       "blurb": "A howling, screaming wall of guitar-amp feedback.",
@@ -5197,7 +5197,7 @@
     {
       "id": "td-harsh-noise",
       "name": "Harsh Noise",
-      "ref": "In the style of Merzbow",
+      "ref": "Ratchets leaping across the range at full resonance and drive: harsh noise of the Merzbow school",
       "artist": "Merzbow",
       "tags": ["fx", "noise", "experimental", "90s"],
       "level": 3,
@@ -5299,7 +5299,7 @@
     {
       "id": "td-glitch-stutter",
       "name": "Glitch Stutter",
-      "ref": "In the style of late-1990s glitch",
+      "ref": "Tiny clicks and blips stuttering like a skipping CD, made of very short ratcheted notes",
       "artist": "Glitch",
       "tags": ["fx", "glitch", "idm", "90s"],
       "level": 3,
@@ -5386,7 +5386,7 @@
     {
       "id": "td-sid-lead",
       "name": "SID Lead",
-      "ref": "In the style of Rob Hubbard",
+      "ref": "Rob Hubbard’s Commodore 64 sound: a buzzing chip lead with chords played as fast arpeggios",
       "artist": "Rob Hubbard",
       "tags": ["lead", "chiptune", "game", "80s"],
       "level": 3,
@@ -5476,7 +5476,7 @@
     {
       "id": "td-explosion",
       "name": "Explosion",
-      "ref": "In the style of 1980s arcade sound effects",
+      "ref": "A low note thumped into full, dark drive so it booms and crunches like an arcade explosion",
       "artist": "Arcade games",
       "tags": ["fx", "game", "explosion"],
       "level": 2,
@@ -5529,7 +5529,7 @@
     {
       "id": "td-engine-rev",
       "name": "Engine Rev",
-      "ref": "In the style of film sound effects",
+      "ref": "Low buzzing notes sliding up and down through a nasal filter, a motorbike revving",
       "artist": "Sound effects",
       "tags": ["fx", "engine", "film"],
       "level": 2,
@@ -5587,7 +5587,7 @@
     {
       "id": "td-helicopter",
       "name": "Helicopter",
-      "ref": "In the style of film sound effects",
+      "ref": "Fast ratchets of a very low note, thudding like helicopter blades passing overhead",
       "artist": "Sound effects",
       "tags": ["fx", "film"],
       "level": 2,
@@ -5701,7 +5701,7 @@
     {
       "id": "td-industrial-klaxon",
       "name": "Factory Klaxon",
-      "ref": "In the style of industrial music",
+      "ref": "Two distorted notes a minor third apart, blaring like a factory warning alarm",
       "artist": "Industrial",
       "tags": ["fx", "industrial", "alarm"],
       "level": 1,
@@ -5755,7 +5755,7 @@
     {
       "id": "td-talking-filter",
       "name": "Talking Acid",
-      "ref": "In the style of acid house",
+      "ref": "A resonant filter sweep that seems to talk, saying “wah-wow-yow” in an acid house line",
       "artist": "Acid house",
       "tags": ["bass", "acid", "house"],
       "level": 2,
@@ -5821,7 +5821,7 @@
     {
       "id": "td-rumble-kick",
       "name": "Rumble Kick",
-      "ref": "In the style of 2010s Berlin techno",
+      "ref": "A fast-thumping low note with a long, dark, distorted tail, the rumble under Berlin techno kicks",
       "artist": "Techno",
       "tags": ["perc", "techno", "10s"],
       "level": 2,
@@ -5880,7 +5880,7 @@
     {
       "id": "td-hard-techno-kick",
       "name": "Hard Techno Kick",
-      "ref": "In the style of 2020s hard techno",
+      "ref": "A short, punchy kick with bright overdrive, for hard techno at 150 BPM",
       "artist": "Hard techno",
       "tags": ["perc", "techno", "hard techno", "20s"],
       "level": 2,
@@ -5939,7 +5939,7 @@
     {
       "id": "td-zap-snare",
       "name": "Zap Snare",
-      "ref": "In the style of 1980s electro",
+      "ref": "A fast resonant sweep that zaps on two and four, like an early-1980s electro drum-machine snare",
       "artist": "Electro",
       "tags": ["perc", "electro", "80s"],
       "level": 2,
@@ -5996,12 +5996,12 @@
     {
       "id": "td-metal-hit",
       "name": "Metal Percussion",
-      "ref": "In the style of Einstürzende Neubauten",
-      "artist": "Einstürzende Neubauten",
+      "ref": "High, resonant clanks driven bright, like scrap steel struck as industrial percussion",
+      "artist": "Industrial percussion",
       "tags": ["perc", "industrial", "experimental", "80s"],
       "level": 2,
       "blurb": "Clanging, distorted hits like steel struck in a factory.",
-      "how": "Einstürzende Neubauten made percussion from scrap metal. High, resonant clanks with a short decay into bright drive.",
+      "how": "Early-1980s industrial bands made percussion from scrap metal. High, resonant clanks with a short decay into bright drive.",
       "phrase": {
         "bpm": 110,
         "loop": true,
@@ -6058,7 +6058,7 @@
     {
       "id": "td-sub-drop",
       "name": "Sub Drop",
-      "ref": "In the style of bass-music sound design",
+      "ref": "A low note sliding an octave or more into the sub, the bass-music cue that the beat is about to drop",
       "artist": "Bass music",
       "tags": ["fx", "dubstep", "bass music"],
       "level": 1,
@@ -6110,7 +6110,7 @@
     {
       "id": "td-riser",
       "name": "Riser",
-      "ref": "In the style of EDM build-ups",
+      "ref": "A sweep sliding up two octaves and brightening as it climbs, the EDM build-up before the drop",
       "artist": "EDM",
       "tags": ["fx", "edm", "build-up"],
       "level": 1,
@@ -6171,7 +6171,7 @@
     {
       "id": "td-rave-siren",
       "name": "Rave Siren",
-      "ref": "In the style of early-1990s rave",
+      "ref": "A bright, distorted high note wailing up and down like a siren over an early-1990s rave",
       "artist": "Rave",
       "tags": ["fx", "rave", "siren", "90s"],
       "level": 1,
@@ -6229,7 +6229,7 @@
     {
       "id": "td-bomb-drop",
       "name": "Bomb Drop",
-      "ref": "In the style of cartoon sound effects",
+      "ref": "A long falling whistle that lands in a crunching boom, the cartoon bomb drop",
       "artist": "Cartoon sound effects",
       "tags": ["fx", "cartoon"],
       "level": 2,
@@ -6282,7 +6282,7 @@
     {
       "id": "td-geiger",
       "name": "Geiger Counter",
-      "ref": "In the style of science-fiction sound effects",
+      "ref": "Random clicks bunching into bursts and thinning out, like a Geiger counter in a sci-fi film",
       "artist": "Sound effects",
       "tags": ["fx", "sci-fi"],
       "level": 2,
@@ -6352,12 +6352,12 @@
     {
       "id": "td-tremolo-pick",
       "name": "Tremolo Picking",
-      "ref": "In the style of Dick Dale — “Misirlou”",
-      "artist": "Dick Dale",
+      "ref": "A blur of tiny repeats on every long note, a synth take on fast-picked 1960s surf guitar",
+      "artist": "Surf rock",
       "tags": ["lead", "surf", "rock", "60s"],
       "level": 3,
       "blurb": "A frantic, tremolo-picked surf guitar line in an exotic scale.",
-      "how": "Dick Dale picked each note as fast as he could, so a long note became a blur of tiny repeats. Ratchets do that on the TD-3, in the Phrygian dominant scale of “Misirlou”, with a little drive for the amp.",
+      "how": "Surf guitarists picked each note as fast as they could, so a long note became a blur of tiny repeats. Ratchets do that on the TD-3, in the Phrygian dominant scale surf borrowed from Eastern Mediterranean tunes, with a little drive for the amp.",
       "phrase": {
         "bpm": 170,
         "loop": true,
@@ -6532,7 +6532,7 @@
     {
       "id": "td-spy-twang",
       "name": "Spy Twang",
-      "ref": "In the style of 1960s spy-film themes",
+      "ref": "A low, twangy square riff that sneaks around like a 1960s spy-film baritone guitar",
       "artist": "Spy films",
       "tags": ["lead", "film", "surf", "60s"],
       "level": 2,
@@ -6602,12 +6602,12 @@
     {
       "id": "td-western-whistle",
       "name": "Western Whistle",
-      "ref": "In the style of Ennio Morricone",
-      "artist": "Ennio Morricone",
+      "ref": "A pure, soft square high up with notes left hanging, like a lone whistler in a 1960s Western score",
+      "artist": "Spaghetti Western scores",
       "tags": ["lead", "film", "western", "60s"],
       "level": 2,
       "blurb": "A lonely, whistled melody across a desert.",
-      "how": "Morricone’s Western scores often put a lone whistler over the orchestra. A pure square, high up and soft, with a long decay so the notes hang.",
+      "how": "Italian Western scores of the 1960s often put a lone whistler over the orchestra. A pure square, high up and soft, with a long decay so the notes hang.",
       "phrase": {
         "bpm": 88,
         "loop": true,
@@ -6661,7 +6661,7 @@
     {
       "id": "td-dial-up",
       "name": "Dial-Up Modem",
-      "ref": "In the style of 1990s dial-up modems",
+      "ref": "The squealing tones and crunching screech of a 1990s dial-up modem shaking hands",
       "artist": "Dial-up modems",
       "tags": ["fx", "retro", "90s"],
       "level": 2,
@@ -6797,7 +6797,7 @@
     {
       "id": "td-boss-battle",
       "name": "Boss Battle",
-      "ref": "In the style of 16-bit video game music",
+      "ref": "Urgent minor-key sixteenths with a crunchy tone, for a 16-bit video game boss fight",
       "artist": "Video game music",
       "tags": ["lead", "game", "chiptune", "90s"],
       "level": 2,
@@ -6879,7 +6879,7 @@
     {
       "id": "td-flying-saucer",
       "name": "Flying Saucer",
-      "ref": "In the style of 1950s science-fiction films",
+      "ref": "Slow slides through a near-whistling filter, the wobbling whine of a 1950s film flying saucer",
       "artist": "Science-fiction films",
       "tags": ["fx", "sci-fi", "film", "50s"],
       "level": 2,
@@ -6942,7 +6942,7 @@
     {
       "id": "td-oxygene-sequence",
       "name": "Oxygène Sequence",
-      "ref": "In the style of Jean-Michel Jarre — Oxygène",
+      "ref": "Jean-Michel Jarre’s Oxygène in miniature: a soft, rippling square sequence with a warm tape glow",
       "artist": "Jean-Michel Jarre",
       "tags": ["seq", "electronic", "ambient", "70s"],
       "level": 2,
@@ -7026,7 +7026,7 @@
     {
       "id": "td-chillwave",
       "name": "Chillwave Haze",
-      "ref": "In the style of Washed Out",
+      "ref": "A soft melody nudged flat and warmed by low drive, as hazy as Washed Out’s chillwave",
       "artist": "Washed Out",
       "tags": ["lead", "chillwave", "dream pop", "10s"],
       "level": 2,
@@ -7095,8 +7095,8 @@
     {
       "id": "td-dream-pop-bass",
       "name": "Dream Pop Bass",
-      "ref": "In the style of Cocteau Twins",
-      "artist": "Cocteau Twins",
+      "ref": "A high, soft, melodic bass with a glow of resonance, floating under a dream-pop shimmer",
+      "artist": "Dream pop",
       "tags": ["bass", "dream pop", "80s"],
       "level": 2,
       "blurb": "A melodic, chorused-sounding bass line floating under a shimmering wash.",
@@ -7154,7 +7154,7 @@
     {
       "id": "td-tape-arp",
       "name": "Warm Tape Arpeggio",
-      "ref": "In the style of lo-fi electronica",
+      "ref": "A dusty minor-ninth arpeggio through a gently driven tape, for lo-fi electronica",
       "artist": "Lo-fi electronica",
       "tags": ["seq", "lo-fi", "chill-out", "arpeggio"],
       "level": 1,
@@ -7268,7 +7268,7 @@
     {
       "id": "td-pentatonic-pluck",
       "name": "Pentatonic Pluck",
-      "ref": "In the style of ambient electronica",
+      "ref": "Soft, resonant plucks wandering a pentatonic scale where no note can clash, for ambient electronica",
       "artist": "Ambient electronica",
       "tags": ["pluck", "ambient", "chill-out"],
       "level": 1,
@@ -7318,12 +7318,12 @@
     {
       "id": "td-cosmic-harp",
       "name": "Cosmic Harp",
-      "ref": "In the style of Alice Coltrane",
-      "artist": "Alice Coltrane",
+      "ref": "Bright plucks rising and falling in fast scale runs, like a harp’s glissandi in spiritual jazz",
+      "artist": "Spiritual jazz",
       "tags": ["pluck", "spiritual jazz", "jazz", "arpeggio", "70s"],
       "level": 2,
       "blurb": "Shimmering harp glissandi rising and falling like waves.",
-      "how": "Alice Coltrane played the harp in sweeping glissandi over drones. Fast up-and-down arpeggios through a scale, a bright pluck and a long ring.",
+      "how": "Spiritual jazz harpists played sweeping glissandi over drones. Fast up-and-down arpeggios through a scale, a bright pluck and a long ring.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7429,8 +7429,8 @@
     {
       "id": "td-sitar-yaman",
       "name": "Sitar in Yaman",
-      "ref": "In the style of Ravi Shankar",
-      "artist": "Ravi Shankar",
+      "ref": "Buzzing, bending notes in raga Yaman, with slides standing in for a sitar’s meend",
+      "artist": "Hindustani classical music",
       "tags": ["lead", "indian", "classical", "raga"],
       "level": 3,
       "blurb": "A buzzing, bending melody in raga Yaman, like a sitar.",
@@ -7498,7 +7498,7 @@
     {
       "id": "td-erhu",
       "name": "Erhu Melody",
-      "ref": "In the style of Chinese erhu music",
+      "ref": "Long notes sliding through a pentatonic scale in a nasal, bowed tone, like a Chinese erhu",
       "artist": "Chinese traditional music",
       "tags": ["strings", "chinese", "traditional"],
       "level": 2,
@@ -7560,7 +7560,7 @@
     {
       "id": "td-shakuhachi",
       "name": "Shakuhachi",
-      "ref": "In the style of shakuhachi honkyoku",
+      "ref": "Slow, breathy phrases that bend and fade into long silences, like a shakuhachi playing honkyoku",
       "artist": "Japanese traditional music",
       "tags": ["wind", "japanese", "traditional", "ambient"],
       "level": 2,
@@ -7615,7 +7615,7 @@
     {
       "id": "td-pan-flute",
       "name": "Andean Pan Flute",
-      "ref": "In the style of Andean music",
+      "ref": "A hollow, breathy square in a lilting tune, like the siku pan flute of the high Andes",
       "artist": "Andean music",
       "tags": ["wind", "andean", "folk", "traditional"],
       "level": 1,
@@ -7668,7 +7668,7 @@
     {
       "id": "td-slow-air",
       "name": "Irish Slow Air",
-      "ref": "In the style of Irish slow airs",
+      "ref": "Long, mournful notes with quick grace notes before some, like an Irish slow air on the low whistle",
       "artist": "Irish traditional music",
       "tags": ["wind", "irish", "folk", "traditional"],
       "level": 2,
@@ -7937,13 +7937,13 @@
     },
     {
       "id": "td-moonlight",
-      "name": "Moonlight Triplets",
-      "ref": "In the style of Beethoven’s “Moonlight” Sonata",
-      "artist": "Ludwig van Beethoven",
+      "name": "Hushed Triplets",
+      "ref": "Slow, hushed triplets rising through C sharp minor in a soft, round tone that rings on",
+      "artist": "Romantic piano music",
       "tags": ["seq", "classical", "romantic", "arpeggio"],
       "level": 2,
-      "blurb": "Slow, hushed rising triplets in C sharp minor, like the “Moonlight” Sonata.",
-      "how": "The first movement of the “Moonlight” Sonata is built on quiet rising triplets in C sharp minor. A soft, round tone and a long ring.",
+      "blurb": "Slow, hushed rising triplets in C sharp minor, like a quiet Romantic piano piece.",
+      "how": "Quiet Romantic piano pieces are often built on gently rising triplets. A soft, round tone and a long ring.",
       "phrase": {
         "bpm": 56,
         "loop": true,
@@ -8167,12 +8167,12 @@
     {
       "id": "td-bumblebee",
       "name": "Bumblebee",
-      "ref": "In the style of Rimsky-Korsakov — “Flight of the Bumblebee”",
-      "artist": "Nikolai Rimsky-Korsakov",
+      "ref": "Constant chromatic sixteenths on a buzzy sawtooth, darting about like a bee in a Romantic showpiece",
+      "artist": "Romantic orchestral music",
       "tags": ["lead", "classical", "romantic"],
       "level": 3,
       "blurb": "A buzzing, frantic chromatic run, like a bee darting about.",
-      "how": "“Flight of the Bumblebee” buzzes in constant chromatic sixteenths. A buzzy saw with a short decay keeps every note clear at speed.",
+      "how": "A virtuoso showpiece can buzz in constant chromatic sixteenths. A buzzy saw with a short decay keeps every note clear at speed.",
       "phrase": {
         "bpm": 150,
         "loop": true,
@@ -8265,12 +8265,12 @@
     {
       "id": "td-habanera",
       "name": "Habanera",
-      "ref": "In the style of Bizet — Carmen, “Habanera”",
-      "artist": "Georges Bizet",
+      "ref": "A sultry line that slinks down by semitones over the dotted rhythm of the habanera",
+      "artist": "Habanera",
       "tags": ["lead", "classical", "opera", "latin"],
       "level": 2,
       "blurb": "A sultry, slinking melody that steps down the chromatic scale.",
-      "how": "The Habanera slinks down by semitones over a dotted habanera rhythm, the short notes pulling into the long ones.",
+      "how": "This habanera slinks down by semitones over a dotted habanera rhythm, the short notes pulling into the long ones.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -8316,19 +8316,19 @@
         {
           "id": "osc.wave",
           "try": "Switch to Square",
-          "hear": "A woodier, clarinet-like Habanera."
+          "hear": "A woodier, clarinet-like habanera."
         }
       ]
     },
     {
       "id": "td-air-bass",
       "name": "Air Bass",
-      "ref": "In the style of Bach’s “Air” from the Orchestral Suite No. 3",
-      "artist": "Johann Sebastian Bach",
+      "ref": "A slow Baroque walking bass, stepping gently down in soft octave leaps that ring on",
+      "artist": "Baroque music",
       "tags": ["bass", "baroque", "classical"],
       "level": 2,
       "blurb": "A slow walking bass in octaves, stepping gently down.",
-      "how": "The “Air” floats over a bass that walks down in octave leaps. Soft, round eighths with a long ring.",
+      "how": "A slow Baroque air floats over a bass that walks down in octave leaps. Soft, round eighths with a long ring.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -8607,13 +8607,13 @@
     },
     {
       "id": "td-winter-strings",
-      "name": "Winter Shivers",
-      "ref": "In the style of Vivaldi — “Winter”",
-      "artist": "Antonio Vivaldi",
+      "name": "Shivering Strings",
+      "ref": "Fast, shivering repeated notes in a bowed tone that pile up chromatically, like Baroque strings in the cold",
+      "artist": "Baroque strings",
       "tags": ["strings", "baroque", "classical"],
       "level": 2,
-      "blurb": "Shivering, repeated string notes building chromatically, like Vivaldi’s winter.",
-      "how": "“Winter” opens with shivering repeated notes that pile up chromatically. Fast repeated eighths with a bowed tone, stepping up.",
+      "blurb": "Shivering, repeated string notes building chromatically, like strings in the cold.",
+      "how": "Baroque strings can shiver with repeated notes that pile up chromatically. Fast repeated eighths with a bowed tone, stepping up.",
       "phrase": {
         "bpm": 100,
         "loop": true,
@@ -8695,7 +8695,7 @@
     {
       "id": "td-pastoral-flute",
       "name": "Pastoral Morning",
-      "ref": "In the style of late-Romantic pastoral music",
+      "ref": "A soft, rocking six-eight tune with long notes, like a shepherd’s flute in late-Romantic pastoral music",
       "artist": "Romantic era",
       "tags": ["wind", "classical", "romantic", "ambient"],
       "level": 1,
@@ -8757,7 +8757,7 @@
     {
       "id": "td-mbaqanga-bass",
       "name": "Mbaqanga Bass",
-      "ref": "In the style of South African mbaqanga",
+      "ref": "A busy, bouncing township bass that runs all over the neck, the second melody of South African mbaqanga",
       "artist": "Mbaqanga",
       "tags": ["bass", "mbaqanga", "african", "70s"],
       "level": 2,
@@ -8826,7 +8826,7 @@
     {
       "id": "td-planetary-assault",
       "name": "Planetary Assault",
-      "ref": "In the style of Luke Slater",
+      "ref": "A short, relentless, hard-edged loop like the functional techno of Luke Slater’s Planetary Assault Systems",
       "artist": "Luke Slater",
       "tags": ["bass", "techno", "90s"],
       "level": 2,
@@ -8896,7 +8896,7 @@
     {
       "id": "td-surgeon",
       "name": "Birmingham Hammer",
-      "ref": "In the style of Surgeon",
+      "ref": "Short, raw stabs with a bright, abrasive edge: Birmingham techno the way Surgeon hammers it",
       "artist": "Surgeon",
       "tags": ["bass", "techno", "hard techno", "90s"],
       "level": 2,
@@ -8958,7 +8958,7 @@
     {
       "id": "td-red-techno",
       "name": "Red Techno",
-      "ref": "In the style of Dave Clarke",
+      "ref": "Tight, funky acid with punchy accents and grit, for hard mixing like Dave Clarke’s “Red” records",
       "artist": "Dave Clarke",
       "tags": ["bass", "techno", "acid", "90s"],
       "level": 2,
@@ -9026,7 +9026,7 @@
     {
       "id": "td-analogue-bubblebath",
       "name": "Analogue Bubblebath",
-      "ref": "In the style of Aphex Twin — “Analogue Bubblebath”",
+      "ref": "Acid made gentle and warm as bathwater, the bubbling sequence of Aphex Twin’s “Analogue Bubblebath”",
       "artist": "Aphex Twin",
       "tags": ["seq", "acid", "ambient techno", "idm", "90s"],
       "level": 2,
@@ -9105,7 +9105,7 @@
     {
       "id": "td-acid-revival",
       "name": "Acid Revival",
-      "ref": "In the style of 2010s acid house revival",
+      "ref": "Slides and accents with a crisp, clean bite: the 303 as 2010s acid house revivalists produced it",
       "artist": "Acid house revival",
       "tags": ["bass", "acid", "house", "10s"],
       "level": 2,
@@ -9180,7 +9180,7 @@
     {
       "id": "td-hard-trance",
       "name": "Hard Trance Drive",
-      "ref": "In the style of late-1990s hard trance",
+      "ref": "Offbeat rolls of distorted bass at speed, driving late-1990s hard trance",
       "artist": "Hard trance",
       "tags": ["bass", "trance", "hard trance", "90s"],
       "level": 2,
@@ -9254,7 +9254,7 @@
     {
       "id": "td-goa-astral",
       "name": "Astral Lead",
-      "ref": "In the style of Astral Projection",
+      "ref": "A squelchy lead twisting through a Phrygian scale an octave up, like Astral Projection’s Goa trance",
       "artist": "Astral Projection",
       "tags": ["lead", "goa trance", "trance", "90s"],
       "level": 3,
@@ -9344,7 +9344,7 @@
     {
       "id": "td-freestyle",
       "name": "Freestyle Bass",
-      "ref": "In the style of 1980s Latin freestyle",
+      "ref": "A round, punchy synth bass with a quick bow under electro beats and 1980s Latin freestyle pop",
       "artist": "Freestyle",
       "tags": ["bass", "freestyle", "latin", "80s"],
       "level": 1,
@@ -9410,7 +9410,7 @@
     {
       "id": "td-suicide-pulse",
       "name": "Ghost Rider Pulse",
-      "ref": "In the style of Suicide",
+      "ref": "One note pounded in eighths through a cheap, distorted amp, like Martin Rev’s keyboards in Suicide",
       "artist": "Suicide",
       "tags": ["bass", "synth punk", "proto-punk", "70s"],
       "level": 2,
@@ -9492,7 +9492,7 @@
     {
       "id": "td-coldwave",
       "name": "Coldwave Line",
-      "ref": "In the style of early-1980s French coldwave",
+      "ref": "A plain, minimal bass line in a cold, melancholy tone, from early-1980s French coldwave",
       "artist": "Coldwave",
       "tags": ["bass", "coldwave", "minimal wave", "80s"],
       "level": 1,
@@ -9547,7 +9547,7 @@
     {
       "id": "td-hyperpop",
       "name": "Hyperpop Crunch",
-      "ref": "In the style of 2010s hyperpop",
+      "ref": "Tuned up, driven flat out and bouncing, a deliberately overblown bass for 2010s hyperpop",
       "artist": "Hyperpop",
       "tags": ["bass", "hyperpop", "pop", "10s"],
       "level": 2,
@@ -9624,7 +9624,7 @@
     {
       "id": "td-trap-metal",
       "name": "Trap Metal 808",
-      "ref": "In the style of trap metal",
+      "ref": "Long, low, sliding 808-style notes driven until they roar like guitars, for trap metal",
       "artist": "Trap metal",
       "tags": ["bass", "trap", "metal", "10s"],
       "level": 2,
@@ -9681,7 +9681,7 @@
     {
       "id": "td-phonk-bass",
       "name": "Drift Phonk Bass",
-      "ref": "In the style of drift phonk",
+      "ref": "A sliding, darkly distorted 808 that thumps under drift phonk’s cowbell melodies",
       "artist": "Phonk",
       "tags": ["bass", "phonk", "hip hop", "20s"],
       "level": 2,
@@ -9742,7 +9742,7 @@
     {
       "id": "td-early-dubstep",
       "name": "Halftime Sub",
-      "ref": "In the style of mid-2000s South London dubstep",
+      "ref": "A deep halftime sub with a hint of growl, from the dark, spacious early days of South London dubstep",
       "artist": "Dubstep",
       "tags": ["bass", "dubstep", "uk bass", "00s"],
       "level": 2,
@@ -9797,7 +9797,7 @@
     {
       "id": "td-bassline-house",
       "name": "Bassline Bounce",
-      "ref": "In the style of 2000s UK bassline",
+      "ref": "A bouncy, warbling bass that takes the lead in octave jumps, as in northern English bassline house",
       "artist": "Bassline",
       "tags": ["bass", "bassline", "uk garage", "00s"],
       "level": 2,
@@ -9865,7 +9865,7 @@
     {
       "id": "td-speed-garage",
       "name": "Speed Garage Wob",
-      "ref": "In the style of late-1990s speed garage",
+      "ref": "A deep, bowed, filthy bass dropping in between the beats, the late-1990s speed garage wob",
       "artist": "Speed garage",
       "tags": ["bass", "speed garage", "uk garage", "90s"],
       "level": 2,
@@ -9921,7 +9921,7 @@
     {
       "id": "td-nu-skool-breaks",
       "name": "Nu Skool Breaks",
-      "ref": "In the style of early-2000s nu skool breaks",
+      "ref": "Chunky, gnarly mid-range bass with a bit of squelch, riding early-2000s nu skool breaks",
       "artist": "Breakbeat",
       "tags": ["bass", "breakbeat", "breaks", "00s"],
       "level": 2,
@@ -9985,7 +9985,7 @@
     {
       "id": "td-electro-industrial",
       "name": "Electro-Industrial",
-      "ref": "In the style of Skinny Puppy",
+      "ref": "A dark sequenced bass ground through abrasive drive, as Skinny Puppy ran theirs",
       "artist": "Skinny Puppy",
       "tags": ["bass", "electro-industrial", "industrial", "80s"],
       "level": 2,
@@ -10057,7 +10057,7 @@
     {
       "id": "td-chicago-blues",
       "name": "Electric Blues Riff",
-      "ref": "In the style of Chicago electric blues",
+      "ref": "A swaggering stop-time riff through a warm, cranked amp, like a Chicago electric blues guitar",
       "artist": "Chicago blues",
       "tags": ["lead", "blues", "chicago blues", "50s"],
       "level": 2,
@@ -10117,7 +10117,7 @@
     {
       "id": "td-funk-rock",
       "name": "Funk-Rock Slap",
-      "ref": "In the style of 1990s funk rock",
+      "ref": "Thumb-slapped low notes, popped octaves and ghost notes: a synth take on 1990s funk-rock slap bass",
       "artist": "Funk rock",
       "tags": ["bass", "funk rock", "rock", "90s"],
       "level": 2,
@@ -10192,7 +10192,7 @@
     {
       "id": "td-grunge",
       "name": "Grunge Riff",
-      "ref": "In the style of early-1990s grunge",
+      "ref": "Tuned two semitones down into heavy, dark drive for a sludgy, drop-D grunge guitar riff",
       "artist": "Grunge",
       "tags": ["lead", "grunge", "rock", "90s"],
       "level": 2,
@@ -10267,7 +10267,7 @@
     {
       "id": "td-math-rock",
       "name": "Math Rock in Seven",
-      "ref": "In the style of math rock",
+      "ref": "An intricate, clean-plucked riff counting seven eighths to the bar, like a tapped math-rock guitar",
       "artist": "Math rock",
       "tags": ["lead", "math rock", "rock", "00s"],
       "level": 3,
@@ -10342,7 +10342,7 @@
     {
       "id": "td-two-tone-ska",
       "name": "Two-Tone Ska Bass",
-      "ref": "In the style of 1970s and 80s 2 Tone ska",
+      "ref": "A round, plucky bass walking up and down on every beat under the offbeat skank of 2 Tone ska",
       "artist": "2 Tone ska",
       "tags": ["bass", "ska", "2 tone", "80s"],
       "level": 1,
@@ -10413,7 +10413,7 @@
     {
       "id": "td-northern-soul",
       "name": "Northern Soul Stomp",
-      "ref": "In the style of Northern soul",
+      "ref": "A fast bass driving on every beat with walking pick-ups, the stomp of a Northern soul floor-filler",
       "artist": "Northern soul",
       "tags": ["bass", "soul", "northern soul", "60s"],
       "level": 2,
@@ -10473,7 +10473,7 @@
     {
       "id": "td-ambient-drone",
       "name": "Fifths Drone",
-      "ref": "In the style of ambient drone music",
+      "ref": "A root and a fifth trading slowly in a soft, warm tone, as calm as ambient drone gets",
       "artist": "Ambient drone",
       "tags": ["drone", "ambient", "meditation"],
       "level": 1,
@@ -10527,7 +10527,7 @@
     {
       "id": "td-film-ostinato",
       "name": "Film-Score Ostinato",
-      "ref": "In the style of 2010s blockbuster film scores",
+      "ref": "Low, accented sixteenths with a dark, gritty tone, the ostinato that drives a blockbuster chase",
       "artist": "Film scoring",
       "tags": ["seq", "film", "cinematic", "10s"],
       "level": 2,
@@ -10609,7 +10609,7 @@
     {
       "id": "td-survive-arp",
       "name": "Upside-Down Arpeggio",
-      "ref": "In the style of S U R V I V E",
+      "ref": "A brooding minor arpeggio pulsing in warm, gritty sixteenths, the sequenced synth dread of S U R V I V E",
       "artist": "S U R V I V E",
       "tags": ["seq", "synthwave", "film", "tv", "arpeggio", "10s"],
       "level": 2,
@@ -10723,7 +10723,7 @@
     {
       "id": "td-sunset-acid",
       "name": "Sunset Acid",
-      "ref": "In the style of Balearic acid",
+      "ref": "Slow, accent-free acid with warm drive and slides, for a Balearic sunset set",
       "artist": "Balearic",
       "tags": ["bass", "acid", "balearic", "chill-out"],
       "level": 1,
@@ -10786,7 +10786,7 @@
     {
       "id": "td-silver-apples",
       "name": "Oscillator Pulse",
-      "ref": "In the style of Silver Apples",
+      "ref": "A buzzing, slightly distorted pulse repeating like the hand-played oscillators of Silver Apples",
       "artist": "Silver Apples",
       "tags": ["seq", "psychedelic", "proto-electronic", "60s"],
       "level": 2,
@@ -10868,7 +10868,7 @@
     {
       "id": "td-acid-waltz",
       "name": "Acid Waltz",
-      "ref": "In the style of melodic acid",
+      "ref": "The 303 in three-four: a gentle, lilting melody with soft slides and a warm squelch",
       "artist": "Melodic acid",
       "tags": ["lead", "acid", "waltz", "chill-out"],
       "level": 2,
