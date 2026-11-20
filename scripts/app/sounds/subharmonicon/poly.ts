@@ -10,7 +10,7 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-two-against-three',
     name: 'Two Against Three',
-    ref: 'In the style of West African cross-rhythm',
+    ref: 'Two tunes woven on twos and threes, the cross-rhythm at the heart of West African drumming',
     artist: 'West African drumming',
     tags: ['seq', 'polyrhythm'],
     level: 1,
@@ -85,8 +85,8 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-three-against-four',
     name: 'Three Against Four',
-    ref: 'In the style of Steve Reich’s interlocking pulses',
-    artist: 'Steve Reich',
+    ref: 'A bright minor arpeggio against a falling line, three against four, slowly phasing against the bar',
+    artist: 'Minimalism',
     tags: ['seq', 'polyrhythm', 'minimal'],
     level: 2,
     blurb:
@@ -158,7 +158,7 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-four-against-five',
     name: 'Four Against Five',
-    ref: 'In the style of a gamelan’s interlocking metallophones',
+    ref: 'Ringing just-tuned bell tones, five against four, interlocking like gamelan metallophones',
     artist: 'Gamelan',
     tags: ['seq', 'polyrhythm', 'bell'],
     level: 2,
@@ -232,8 +232,8 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-five-against-seven',
     name: 'Five Against Seven',
-    ref: 'In the style of Conlon Nancarrow’s player-piano canons',
-    artist: 'Conlon Nancarrow',
+    ref: 'Woody marimba lines in five against seven, a cycle far too long for the ear to count',
+    artist: 'Player-piano canons',
     tags: ['seq', 'polyrhythm'],
     level: 3,
     blurb:
@@ -305,7 +305,7 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-rhythmicon-ratios',
     name: 'Rhythmicon Ratios',
-    ref: 'In the style of Henry Cowell’s Rhythmicon',
+    ref: 'The overtone series played as rhythm, 2:3:4:5, as Henry Cowell’s electronic Rhythmicon did',
     artist: 'Henry Cowell',
     tags: ['seq', 'polyrhythm', 'rhythmicon'],
     level: 3,
@@ -382,7 +382,7 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-hemiola-bass',
     name: 'Hemiola Bass',
-    ref: 'In the style of Afro-Cuban bembé',
+    ref: 'A low bass on threes arguing with a high answer on twos, the hemiola of Afro-Cuban bembé',
     artist: 'Afro-Cuban music',
     tags: ['bass', 'polyrhythm'],
     level: 2,
@@ -457,8 +457,8 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-never-twice',
     name: 'Never Twice',
-    ref: 'In the style of Brian Eno’s generative ambient',
-    artist: 'Brian Eno',
+    ref: 'Soft chimes on four prime-ish rhythms that never line up twice in a listening: generative ambient',
+    artist: 'Generative ambient',
     tags: ['seq', 'ambient', 'polyrhythm'],
     level: 2,
     blurb:
@@ -535,7 +535,7 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-downbeat-boom',
     name: 'Downbeat Boom',
-    ref: 'In the style of Basic Channel dub techno',
+    ref: 'Dub chords on dotted eighths over a sub that moves once a bar, Basic Channel’s dub techno in outline',
     artist: 'Basic Channel',
     tags: ['seq', 'polyrhythm', 'techno'],
     level: 2,
@@ -608,7 +608,7 @@ export const POLY: SoundSpec[] = [
   {
     id: 'shc-twelve-over-sixteen',
     name: 'Twelve Over Sixteen',
-    ref: 'In the style of Aphex Twin’s shifting acid lines',
+    ref: 'Aphex Twin’s slippery acid lines: a resonant four-note figure starting a beat earlier every bar',
     artist: 'Aphex Twin',
     tags: ['seq', 'polyrhythm', 'acid'],
     level: 2,

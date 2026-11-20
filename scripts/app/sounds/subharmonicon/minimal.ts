@@ -9,8 +9,8 @@ export const MINIMAL: SoundSpec[] = [
   {
     id: 'shc-clapping-ratios',
     name: 'Clapping Ratios',
-    ref: 'In the style of Steve Reich’s Clapping Music',
-    artist: 'Steve Reich',
+    ref: 'Two dry, clap-like voices interlocking on threes and fours in a twelve-beat pattern',
+    artist: 'Minimalism',
     tags: ['perc', 'minimal', 'polyrhythm'],
     level: 2,
     blurb:
@@ -74,7 +74,7 @@ export const MINIMAL: SoundSpec[] = [
   {
     id: 'shc-glass-arpeggios',
     name: 'Glass Arpeggios',
-    ref: 'In the style of Philip Glass’s organ arpeggios',
+    ref: 'Rolling organ arpeggios, three notes against two, as Philip Glass’s ensemble keyboards play them',
     artist: 'Philip Glass',
     tags: ['seq', 'minimal', 'arpeggio'],
     level: 2,
@@ -147,9 +147,9 @@ export const MINIMAL: SoundSpec[] = [
   },
   {
     id: 'shc-in-c-cells',
-    name: 'In C Cells',
-    ref: 'In the style of Terry Riley’s In C',
-    artist: 'Terry Riley',
+    name: 'Pulse and Cells',
+    ref: 'A bright pulse on high C with a short melodic cell drifting against it, a minimalist process',
+    artist: 'Minimalism',
     tags: ['seq', 'minimal'],
     level: 2,
     blurb: 'A bright eighth-note pulse on high C and a short melodic cell drifting against it.',
@@ -215,8 +215,8 @@ export const MINIMAL: SoundSpec[] = [
   {
     id: 'shc-additive-process',
     name: 'Additive Process',
-    ref: 'In the style of Frederic Rzewski’s Les Moutons de Panurge',
-    artist: 'Frederic Rzewski',
+    ref: 'One melody read at two speeds at once by the same notes, a process you can hear unfold',
+    artist: 'Process music',
     tags: ['seq', 'minimal'],
     level: 3,
     blurb:
@@ -287,7 +287,7 @@ export const MINIMAL: SoundSpec[] = [
   {
     id: 'shc-kotekan',
     name: 'Kotekan',
-    ref: 'In the style of Balinese gamelan gong kebyar',
+    ref: 'Two bright metallophone parts meshing into one glittering line: the kotekan of Balinese gong kebyar',
     artist: 'Gamelan gong kebyar',
     tags: ['seq', 'bell', 'interlock'],
     level: 3,
@@ -359,7 +359,7 @@ export const MINIMAL: SoundSpec[] = [
   {
     id: 'shc-gong-cycle',
     name: 'Gong Cycle',
-    ref: 'In the style of Javanese gamelan’s colotomic structure',
+    ref: 'A great gong each bar and smaller ones on the half and quarter, time nested as Javanese gamelan marks it',
     artist: 'Javanese gamelan',
     tags: ['perc', 'bell', 'gamelan'],
     level: 3,

@@ -226,8 +226,8 @@
     {
       "id": "wasp-random-bleeps",
       "name": "Random Bleeps",
-      "ref": "In the style of late-70s sci-fi computer sounds",
-      "artist": "Classic technique",
+      "ref": "A held note broken into random, ringing blips, like a late-1970s film computer at work",
+      "artist": "1970s sci-fi soundtracks",
       "tags": ["fx", "sci-fi", "random"],
       "level": 2,
       "blurb": "A held note turns into a stream of random, resonant blips.",
@@ -409,8 +409,8 @@
     {
       "id": "wasp-acid-squelch",
       "name": "Squelch Bass",
-      "ref": "In the style of late-80s acid house bass lines",
-      "artist": "Classic technique",
+      "ref": "One sawtooth with the resonance near the top, so every note squelches as in late-1980s acid house",
+      "artist": "Acid house",
       "tags": ["bass", "acid", "resonant"],
       "level": 2,
       "blurb": "A single sawtooth with a high Q, so every note squelches.",
@@ -905,7 +905,7 @@
     {
       "id": "wasp-dream-riff",
       "name": "Minor Riff",
-      "ref": "In the style of early-80s synth-pop riffs — Eurythmics, \"Sweet Dreams (Are Made of This)\"",
+      "ref": "The buzzy minor riff that leaps octaves through Eurythmics’ \"Sweet Dreams (Are Made of This)\"",
       "artist": "Eurythmics",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -977,7 +977,7 @@
     {
       "id": "wasp-pop-wobble",
       "name": "Wonky Pop Line",
-      "ref": "In the style of Metronomy, \"Holiday\"",
+      "ref": "A thin, reedy line that sways slightly out of tune and slides about, as on Metronomy’s \"Holiday\"",
       "artist": "Metronomy",
       "tags": ["lead", "indie", "wobble"],
       "level": 2,
@@ -1057,7 +1057,7 @@
     {
       "id": "wasp-rave-stab",
       "name": "Rave Stab",
-      "ref": "In the style of Orbital, Wonky",
+      "ref": "A short, punchy two-note stab with a resonant snap, the kind Orbital fire across Wonky",
       "artist": "Orbital",
       "tags": ["pluck", "rave", "stab"],
       "level": 2,
@@ -1130,7 +1130,7 @@
     {
       "id": "wasp-cold-machine",
       "name": "Machine Bass",
-      "ref": "In the style of John Foxx, Metamatic",
+      "ref": "Stiff, dry bass notes all cut to the same length: John Foxx’s machine sound on Metamatic",
       "artist": "John Foxx",
       "tags": ["bass", "minimal", "late-70s"],
       "level": 1,
@@ -1692,7 +1692,7 @@
     {
       "id": "wasp-filter-house-bass",
       "name": "Rubber Filter Bass",
-      "ref": "In the style of Daft Punk — \"Revolution 909\"",
+      "ref": "A rubbery bass that wahs on every note under a slow filter sweep, the pulse of Daft Punk’s \"Revolution 909\"",
       "artist": "Daft Punk",
       "tags": ["bass", "filter house", "90s"],
       "level": 2,
@@ -1792,7 +1792,7 @@
     {
       "id": "wasp-boing-hits",
       "name": "Boing and Thud Hits",
-      "ref": "In the style of Kraftwerk — \"Boing Boom Tschak\"",
+      "ref": "Kraftwerk’s \"Boing Boom Tschak\" from one patch: low thuds and ringing, falling boings",
       "artist": "Kraftwerk",
       "tags": ["perc", "electro", "resonant"],
       "level": 3,
@@ -1877,8 +1877,8 @@
     {
       "id": "wasp-sliding-funk-bass",
       "name": "Sliding Funk Bass",
-      "ref": "In the style of Talking Heads — \"Slippery People\" (Stop Making Sense)",
-      "artist": "Bernie Worrell",
+      "ref": "A rubbery, squelchy bass whose octave jumps become swoops, for a loose 1980s funk groove",
+      "artist": "1980s funk",
       "tags": ["bass", "funk", "new wave", "80s"],
       "level": 2,
       "blurb": "A rubbery, squelchy bass that slides up and down between notes, for a loose funk groove.",
@@ -1970,8 +1970,8 @@
     {
       "id": "wasp-warbling-lurch-bass",
       "name": "Warbling Lurch Bass",
-      "ref": "In the style of Brian Eno — \"The Fat Lady of Limbourg\" (Taking Tiger Mountain (By Strategy))",
-      "artist": "Brian Eno",
+      "ref": "A murky, honking bass that lurches and warps as if played from stretched tape",
+      "artist": "1970s art rock",
       "tags": ["bass", "art rock", "treated", "70s"],
       "level": 2,
       "blurb": "A slow, murky, lurching bass line with an unsteady pitch, as if played from a stretched tape.",
@@ -2070,8 +2070,8 @@
     {
       "id": "wasp-steel-swell",
       "name": "Steel Swell",
-      "ref": "In the style of Daniel Lanois — \"Aquatic\" (Flesh and Machine)",
-      "artist": "Daniel Lanois",
+      "ref": "Notes that swell in on a volume pedal and bend into pitch, wavering like an ambient pedal steel",
+      "artist": "Ambient pedal steel",
       "tags": ["lead", "ambient", "pedal steel"],
       "level": 2,
       "blurb": "Slow, bending swells, like a pedal steel played with a volume pedal, with a gentle wavering underneath.",
@@ -2163,12 +2163,12 @@
     {
       "id": "wasp-video-killed-bass",
       "name": "Bouncy New-Wave Bass",
-      "ref": "In the style of The Buggles — \"Video Killed the Radio Star\" (The Age of Plastic, 1979)",
-      "artist": "The Buggles",
+      "ref": "A bright, plucked bass pushing a cheerful late-1970s new-wave pop song along",
+      "artist": "Late-1970s new wave",
       "tags": ["bass", "new wave", "synth-pop", "70s"],
       "level": 1,
       "blurb": "A bright, bouncy bass with a quick pluck, pushing a cheerful pop song along.",
-      "how": "A sawtooth an octave down through the low-pass filter, which the control envelope flicks open on each note. The WASP’s digital oscillators have a hard, buzzy edge that cuts through a mix. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth an octave down through the low-pass filter, which the control envelope flicks open on each note. The WASP’s digital oscillators have a hard, buzzy edge that cuts through a mix.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -2235,7 +2235,7 @@
     {
       "id": "wasp-pop-muzik-bass",
       "name": "Robotic Disco Bass",
-      "ref": "In the style of M — \"Pop Muzik\" (New York • London • Paris • Munich, 1979)",
+      "ref": "Clipped, robotic square-wave notes with gaps that matter, the jerky bass of M’s \"Pop Muzik\"",
       "artist": "M",
       "tags": ["bass", "new wave", "disco", "70s"],
       "level": 1,
@@ -2308,7 +2308,7 @@
     {
       "id": "wasp-fade-to-grey-pulse-bass",
       "name": "Cold Pulse Bass",
-      "ref": "In the style of Visage — \"Fade to Grey\" (Visage, 1980)",
+      "ref": "A cold eighth-note bass rocking between two notes, as on Visage’s \"Fade to Grey\"",
       "artist": "Visage",
       "tags": ["bass", "new romantic", "synth-pop", "80s"],
       "level": 1,
@@ -2381,7 +2381,7 @@
     {
       "id": "wasp-temptation-octave-bass",
       "name": "Synth-Pop Octave Bass",
-      "ref": "In the style of Heaven 17 — \"Temptation\" (The Luxury Gap, 1983)",
+      "ref": "Heaven 17’s \"Temptation\" rides a bass like this: bright sawtooths jumping octaves on the eighths",
       "artist": "Heaven 17",
       "tags": ["bass", "synth-pop", "sophisti-pop", "80s"],
       "level": 1,
@@ -2455,7 +2455,7 @@
     {
       "id": "wasp-beat-dis-hip-house-bass",
       "name": "Sample-Age Square Bass",
-      "ref": "In the style of Bomb the Bass — \"Beat Dis\" (1987)",
+      "ref": "A punchy, hollow square bass with a thick edge, the backbone of Bomb the Bass’s \"Beat Dis\"",
       "artist": "Bomb the Bass",
       "tags": ["bass", "hip house", "uk", "80s"],
       "level": 1,
@@ -2538,7 +2538,7 @@
     {
       "id": "wasp-theme-from-sexpress-bass",
       "name": "Acid-House Pop Bass",
-      "ref": "In the style of S’Express — \"Theme from S’Express\" (1988)",
+      "ref": "A squelching, resonant bass bouncing through the acid-pop of S’Express’s \"Theme from S’Express\"",
       "artist": "S’Express",
       "tags": ["bass", "acid", "house", "80s"],
       "level": 2,
@@ -2611,7 +2611,7 @@
     {
       "id": "wasp-what-time-is-love-stab-bass",
       "name": "Stadium-House Bass",
-      "ref": "In the style of The KLF — \"What Time Is Love?\" (1988)",
+      "ref": "A hard, buzzing riff, simple and huge, made to fill a field as The KLF’s \"What Time Is Love?\" did",
       "artist": "The KLF",
       "tags": ["bass", "rave", "stadium house", "80s"],
       "level": 1,
@@ -2694,7 +2694,7 @@
     {
       "id": "wasp-timeless-dnb-bass",
       "name": "Rolling Drum-and-Bass Sub",
-      "ref": "In the style of Goldie — Timeless (1995)",
+      "ref": "A deep sub whose filter breathes slowly under fast breakbeats, the low end of Goldie’s Timeless",
       "artist": "Goldie",
       "tags": ["bass", "drum and bass", "jungle", "90s"],
       "level": 2,
@@ -2770,7 +2770,7 @@
     {
       "id": "wasp-original-nuttah-reese",
       "name": "Jungle Reese Bass",
-      "ref": "In the style of Shy FX & UK Apachi — \"Original Nuttah\" (1994)",
+      "ref": "Two detuned sawtooths churning against each other: the Reese growl of Shy FX’s \"Original Nuttah\"",
       "artist": "Shy FX",
       "tags": ["bass", "jungle", "drum and bass", "90s"],
       "level": 1,
@@ -2837,7 +2837,7 @@
     {
       "id": "wasp-midnight-request-wobble",
       "name": "Early Dubstep Wobble",
-      "ref": "In the style of Skream — \"Midnight Request Line\" (2005)",
+      "ref": "A steady filter wobble with a vocal \"wub\", the early-dubstep bass of Skream’s \"Midnight Request Line\"",
       "artist": "Skream",
       "tags": ["bass", "dubstep", "wobble", "00s"],
       "level": 2,
@@ -2914,12 +2914,12 @@
     {
       "id": "wasp-garage-sub-bass",
       "name": "Two-Step Garage Bass",
-      "ref": "In the style of UK garage",
+      "ref": "A round, bouncy bass on the off-beats, skipping through a shuffling UK garage two-step",
       "artist": "UK garage",
       "tags": ["bass", "uk garage", "2-step", "90s"],
       "level": 1,
       "blurb": "A round, bouncy bass skipping through a shuffling two-step beat.",
-      "how": "A square with a sawtooth an octave up, filtered warm, with short notes on the off-beats. UK garage basses bounced and skipped. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square with a sawtooth an octave up, filtered warm, with short notes on the off-beats. UK garage basses bounced and skipped.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -2988,7 +2988,7 @@
     {
       "id": "wasp-hi-tech-jazz-bass",
       "name": "Detroit-Jazz Bass",
-      "ref": "In the style of Galaxy 2 Galaxy — \"Hi-Tech Jazz\" (1993)",
+      "ref": "A warm synth bass that walks like a jazz player, under Galaxy 2 Galaxy’s \"Hi-Tech Jazz\"",
       "artist": "Galaxy 2 Galaxy",
       "tags": ["bass", "detroit techno", "jazz", "90s"],
       "level": 1,
@@ -3062,7 +3062,7 @@
     {
       "id": "wasp-ebeneezer-goode-rave-bass",
       "name": "Rave-Pop Bass",
-      "ref": "In the style of The Shamen — \"Ebeneezer Goode\" (Boss Drum, 1992)",
+      "ref": "A cheeky, rubbery rave bass bouncing in octaves, as on The Shamen’s \"Ebeneezer Goode\"",
       "artist": "The Shamen",
       "tags": ["bass", "rave", "pop", "90s"],
       "level": 1,
@@ -3135,7 +3135,7 @@
     {
       "id": "wasp-latch-garage-house-bass",
       "name": "Future-Garage House Bass",
-      "ref": "In the style of Disclosure — \"Latch\" (Settle, 2013)",
+      "ref": "A warm, organ-like bass swinging on a syncopated line, the bottom of Disclosure’s \"Latch\"",
       "artist": "Disclosure",
       "tags": ["bass", "uk garage", "deep house", "10s"],
       "level": 1,
@@ -3209,7 +3209,7 @@
     {
       "id": "wasp-glide-funk-bass",
       "name": "Sliding Boogie Bass",
-      "ref": "In the style of Imagination — \"Just an Illusion\" (In the Heat of the Night, 1982)",
+      "ref": "A smooth square bass that slinks from note to note, the British boogie of Imagination’s \"Just an Illusion\"",
       "artist": "Imagination",
       "tags": ["bass", "boogie", "britfunk", "80s"],
       "level": 2,
@@ -3287,7 +3287,7 @@
     {
       "id": "wasp-random-step-bass",
       "name": "Random-Filter Bassline",
-      "ref": "In the style of Cabaret Voltaire — \"Sensoria\" (Micro-Phonies, 1984)",
+      "ref": "A nervous bass whose filter jumps to a new random colour each beat, close to Cabaret Voltaire’s \"Sensoria\"",
       "artist": "Cabaret Voltaire",
       "tags": ["bass", "industrial", "electro", "80s"],
       "level": 2,
@@ -3378,7 +3378,7 @@
     {
       "id": "wasp-notch-phase-bass",
       "name": "Hollow Notch Bass",
-      "ref": "In the style of Leftfield — \"Release the Pressure\" (Leftism, 1995)",
+      "ref": "Deep, dubby bass with a hollow notch phasing slowly through it, as on Leftfield’s \"Release the Pressure\"",
       "artist": "Leftfield",
       "tags": ["bass", "progressive house", "dub", "90s"],
       "level": 2,
@@ -3455,12 +3455,12 @@
     {
       "id": "wasp-shack-up-funk-bass",
       "name": "Sequenced Post-Punk Bass",
-      "ref": "In the style of A Certain Ratio — \"Shack Up\" (1980)",
-      "artist": "A Certain Ratio",
+      "ref": "Short, hard, dry bass notes on a tight funk line: post-punk that wants to be funk",
+      "artist": "Post-punk funk",
       "tags": ["bass", "post-punk", "funk", "80s"],
       "level": 1,
       "blurb": "A dry, funky bass of short, hard notes, the post-punk band trying to be a funk band.",
-      "how": "A square cut short, with a sharp pluck from the control envelope, on a tight funk line. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square cut short, with a sharp pluck from the control envelope, on a tight funk line.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -3530,7 +3530,7 @@
     {
       "id": "wasp-glitch-noise-mod-bass",
       "name": "Gritty Noise-Mod Bass",
-      "ref": "In the style of early-1990s Warp Records electronica",
+      "ref": "A bass shaken by fast random noise until it crackles, a rough edge early Warp records loved",
       "artist": "Warp Records electronica",
       "tags": ["bass", "idm", "gritty", "90s"],
       "level": 2,
@@ -3610,7 +3610,7 @@
     {
       "id": "wasp-repeat-pulse-bass",
       "name": "Self-Repeating Bass Pulse",
-      "ref": "In the style of Sweet Exorcist — \"Testone\" (1990)",
+      "ref": "One held key pulsing by itself in a steady stream, the bleep-and-bass of Sweet Exorcist’s \"Testone\"",
       "artist": "Sweet Exorcist",
       "tags": ["bass", "bleep techno", "techno", "90s"],
       "level": 2,
@@ -3676,12 +3676,12 @@
     {
       "id": "wasp-pulse-width-funk-bass",
       "name": "Thin-Pulse Funk Bass",
-      "ref": "In the style of Linx — \"Intuition\" (Intuition, 1981)",
-      "artist": "Linx",
+      "ref": "A nasal, snappy thin-pulse bass slapping through an early-1980s Britfunk groove",
+      "artist": "Britfunk",
       "tags": ["bass", "britfunk", "funk", "80s"],
       "level": 1,
       "blurb": "A nasal, snappy synth bass with a thin pulse wave, slapping through a Britfunk groove.",
-      "how": "OSC 1’s square narrowed to a thin pulse with PULSE WIDTH, through a filter the control envelope snaps open. This describes the style of playing, not the exact sound on the record.",
+      "how": "OSC 1’s square narrowed to a thin pulse with PULSE WIDTH, through a filter the control envelope snaps open.",
       "phrase": {
         "bpm": 116,
         "loop": true,
@@ -3749,7 +3749,7 @@
     {
       "id": "wasp-pressure-feedback-bass",
       "name": "Overdriven Breakbeat Bass",
-      "ref": "In the style of Altern-8 — \"Activ-8 (Come with Me)\" (1991)",
+      "ref": "A snarling riff overdriven by its own feedback, the hardcore dirt of Altern-8’s \"Activ-8 (Come with Me)\"",
       "artist": "Altern-8",
       "tags": ["bass", "hardcore", "rave", "90s"],
       "level": 2,
@@ -3830,12 +3830,12 @@
     {
       "id": "wasp-video-games-lead",
       "name": "Digital Fifths Lead",
-      "ref": "In the style of A Flock of Seagulls — \"I Ran (So Far Away)\" (A Flock of Seagulls, 1982)",
-      "artist": "A Flock of Seagulls",
+      "ref": "Open fifths ringing bright with a quick vibrato, soaring over an early-1980s new-wave band",
+      "artist": "Early-1980s new wave",
       "tags": ["lead", "new wave", "synth-pop", "80s"],
       "level": 1,
       "blurb": "A bright, ringing lead of two oscillators a fifth apart, soaring over a new-wave guitar.",
-      "how": "OSC 2 tuned a fifth above OSC 1 makes every key an open fifth. Bright and a little filtered, with a quick vibrato from the control oscillator. This describes the style of playing, not the exact sound on the record.",
+      "how": "OSC 2 tuned a fifth above OSC 1 makes every key an open fifth. Bright and a little filtered, with a quick vibrato from the control oscillator.",
       "phrase": {
         "bpm": 144,
         "loop": true,
@@ -3910,7 +3910,7 @@
     {
       "id": "wasp-living-on-the-ceiling-lead",
       "name": "Bright Synth-Pop Hook",
-      "ref": "In the style of Blancmange — \"Living on the Ceiling\" (Happy Families, 1982)",
+      "ref": "A bright, piercing square lead for a catchy, slightly exotic hook like Blancmange’s \"Living on the Ceiling\"",
       "artist": "Blancmange",
       "tags": ["lead", "synth-pop", "new wave", "80s"],
       "level": 1,
@@ -3994,7 +3994,7 @@
     {
       "id": "wasp-tomorrows-world-glide-lead",
       "name": "Gliding Theme-Tune Lead",
-      "ref": "In the style of 1970s British television theme tunes",
+      "ref": "A bright, gliding lead with a wide vibrato, the sound of the future in 1970s British TV themes",
       "artist": "1970s British TV themes",
       "tags": ["lead", "tv", "retro", "70s"],
       "level": 1,
@@ -4075,7 +4075,7 @@
     {
       "id": "wasp-blakes-7-scifi-lead",
       "name": "Space-Opera Theme Lead",
-      "ref": "In the style of Dudley Simpson — Blake’s 7 (1978)",
+      "ref": "Brassy notes that start dark and bloom a moment later, heroic as Dudley Simpson’s Blake’s 7 theme",
       "artist": "Dudley Simpson",
       "tags": ["lead", "tv", "sci-fi", "70s"],
       "level": 2,
@@ -4147,7 +4147,7 @@
     {
       "id": "wasp-band-pass-telephone-lead",
       "name": "Telephone Band-Pass Lead",
-      "ref": "In the style of Martin Rushent — The League Unlimited Orchestra, Love and Dancing (1982)",
+      "ref": "A thin, nasal lead like a voice down the phone, the band-pass trick of Martin Rushent’s Love and Dancing",
       "artist": "Martin Rushent",
       "tags": ["lead", "synth-pop", "band-pass", "80s"],
       "level": 1,
@@ -4218,7 +4218,7 @@
     {
       "id": "wasp-hi-pass-whistle-lead",
       "name": "Thin High-Pass Whistle",
-      "ref": "In the style of Section 25 — \"Looking from a Hilltop\" (From the Hip, 1984)",
+      "ref": "A square stripped of its body by the high-pass until it whistles, as on Section 25’s \"Looking from a Hilltop\"",
       "artist": "Section 25",
       "tags": ["lead", "synth-pop", "post-punk", "80s"],
       "level": 1,
@@ -4286,7 +4286,7 @@
     {
       "id": "wasp-fm-growl-lead",
       "name": "Audio-Rate Growl Lead",
-      "ref": "In the style of Shut Up and Dance — \"£10 to Get In\" (1989)",
+      "ref": "Pitch shaken at audio rate until it clangs and growls, a sound Shut Up and Dance put on \"£10 to Get In\"",
       "artist": "Shut Up and Dance",
       "tags": ["lead", "breakbeat", "hardcore", "80s"],
       "level": 2,
@@ -4364,12 +4364,12 @@
     {
       "id": "wasp-hold-me-now-mallet-lead",
       "name": "Soft Mallet Lead",
-      "ref": "In the style of Thompson Twins — \"Hold Me Now\" (Into the Gap, 1983)",
-      "artist": "Thompson Twins",
+      "ref": "A soft, warm, marimba-like pluck bouncing gently through mid-1980s synth-pop",
+      "artist": "1980s synth-pop",
       "tags": ["lead", "synth-pop", "mallets", "80s"],
       "level": 1,
       "blurb": "A soft, plucked, marimba-like lead, warm and gently bouncing.",
-      "how": "A square with a sawtooth an octave up, plucked by the control envelope through a low-pass, and cut short by the VCA envelope. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square with a sawtooth an octave up, plucked by the control envelope through a low-pass, and cut short by the VCA envelope.",
       "phrase": {
         "bpm": 108,
         "loop": true,
@@ -4441,12 +4441,12 @@
     {
       "id": "wasp-look-of-love-string-lead",
       "name": "Glossy String Lead",
-      "ref": "In the style of ABC — \"The Look of Love\" (The Lexicon of Love, 1982)",
-      "artist": "ABC",
+      "ref": "A glossy, swelling string-like lead with vibrato for a sweeping early-1980s pop hook",
+      "artist": "1980s new pop",
       "tags": ["lead", "new romantic", "synth-pop", "80s"],
       "level": 1,
       "blurb": "A bright, glossy lead with a bowed swell and vibrato, playing a sweeping pop hook.",
-      "how": "Two sawtooths a hair apart through a soft filter, with a short swell and a vibrato from the control oscillator. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths a hair apart through a soft filter, with a short swell and a vibrato from the control oscillator.",
       "phrase": {
         "bpm": 124,
         "loop": true,
@@ -4516,12 +4516,12 @@
     {
       "id": "wasp-party-fears-two-lead",
       "name": "Swooping Art-Pop Lead",
-      "ref": "In the style of Associates — \"Party Fears Two\" (Sulk, 1982)",
-      "artist": "Associates",
+      "ref": "A big, theatrical lead that swoops into every note with a wide vibrato, for grand 1980s art pop",
+      "artist": "1980s art pop",
       "tags": ["lead", "art pop", "new wave", "80s"],
       "level": 2,
       "blurb": "A big, swooping, dramatic lead that slides into its notes.",
-      "how": "ENH through a fairly open filter, with a long GLIDE so each leap swoops, and a wide vibrato. Theatrical and grand. This describes the style of playing, not the exact sound on the record.",
+      "how": "ENH through a fairly open filter, with a long GLIDE so each leap swoops, and a wide vibrato. Theatrical and grand.",
       "phrase": {
         "bpm": 116,
         "loop": true,
@@ -4597,7 +4597,7 @@
     {
       "id": "wasp-wishful-thinking-soft-lead",
       "name": "Gentle Square Lead",
-      "ref": "In the style of China Crisis — \"Wishful Thinking\" (Working with Fire and Steel, 1983)",
+      "ref": "A soft square that swells in gently like a voice humming, close to China Crisis’s \"Wishful Thinking\"",
       "artist": "China Crisis",
       "tags": ["lead", "synth-pop", "gentle", "soft", "80s"],
       "level": 1,
@@ -4670,7 +4670,7 @@
     {
       "id": "wasp-its-my-life-flutter-lead",
       "name": "Fluttering-Filter Lead",
-      "ref": "In the style of Talk Talk — \"It’s My Life\" (It’s My Life, 1984)",
+      "ref": "Each held note’s filter flutters open and shut on its own, a Talk Talk \"It’s My Life\" colour",
       "artist": "Talk Talk",
       "tags": ["lead", "synth-pop", "art pop", "80s"],
       "level": 2,
@@ -4740,7 +4740,7 @@
     {
       "id": "wasp-always-something-bell-lead",
       "name": "Bell-Like Synth Hook",
-      "ref": "In the style of Naked Eyes — \"Always Something There to Remind Me\" (Burning Bridges, 1983)",
+      "ref": "A struck bell tone left to ring, for the hook of Naked Eyes’ \"Always Something There to Remind Me\"",
       "artist": "Naked Eyes",
       "tags": ["lead", "synth-pop", "bell", "80s"],
       "level": 1,
@@ -4813,7 +4813,7 @@
     {
       "id": "wasp-einstein-a-go-go-lead",
       "name": "Electro-Pop Brass Lead",
-      "ref": "In the style of Landscape — \"Einstein a Go-Go\" (From the Tea-Rooms of Mars…, 1981)",
+      "ref": "A punchy, brassy lead that speaks with a slight rise, blasting the hook of Landscape’s \"Einstein a Go-Go\"",
       "artist": "Landscape",
       "tags": ["lead", "synth-pop", "new wave", "80s"],
       "level": 1,
@@ -4888,12 +4888,12 @@
     {
       "id": "wasp-too-shy-fretless-lead",
       "name": "Fretless-Style Synth Lead",
-      "ref": "In the style of Kajagoogoo — \"Too Shy\" (White Feathers, 1983)",
-      "artist": "Kajagoogoo",
+      "ref": "A round, singing lead that slides between notes like a fretless bass played high",
+      "artist": "1980s new romantic",
       "tags": ["lead", "synth-pop", "new romantic", "80s"],
       "level": 2,
       "blurb": "A smooth, sliding lead with a round, fretless-bass-like tone, singing high.",
-      "how": "A square through a warm filter with a short glide: the slides between notes sound like a fretless instrument. A slight vibrato makes it sing. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square through a warm filter with a short glide: the slides between notes sound like a fretless instrument. A slight vibrato makes it sing.",
       "phrase": {
         "bpm": 116,
         "loop": true,
@@ -4971,7 +4971,7 @@
     {
       "id": "wasp-over-and-over-lead",
       "name": "Indie-Electro Stab Lead",
-      "ref": "In the style of Hot Chip — \"Over and Over\" (The Warning, 2006)",
+      "ref": "A bright, wonky band-passed stab repeating one short figure, as in Hot Chip’s \"Over and Over\"",
       "artist": "Hot Chip",
       "tags": ["lead", "indie electronic", "synth-pop", "00s"],
       "level": 1,
@@ -5041,7 +5041,7 @@
     {
       "id": "wasp-french-disko-organ-lead",
       "name": "Motorik Organ Lead",
-      "ref": "In the style of Stereolab — \"French Disko\" (1993)",
+      "ref": "Two squares like cheap combo-organ drawbars pounding a motorik figure, the drive of Stereolab’s \"French Disko\"",
       "artist": "Stereolab",
       "tags": ["lead", "indie", "motorik", "organ", "90s"],
       "level": 1,
@@ -5112,7 +5112,7 @@
     {
       "id": "wasp-slam-dnb-lead",
       "name": "Drum-and-Bass Riff Lead",
-      "ref": "In the style of Pendulum — \"Slam\" (Hold Your Colour, 2005)",
+      "ref": "A distorted power-chord riff hammered over fast drum and bass, as on Pendulum’s \"Slam\"",
       "artist": "Pendulum",
       "tags": ["lead", "drum and bass", "rock", "00s"],
       "level": 2,
@@ -5192,7 +5192,7 @@
     {
       "id": "wasp-so-u-kno-pitched-lead",
       "name": "Breakbeat Rave Lead",
-      "ref": "In the style of Overmono — \"So U Kno\" (2021)",
+      "ref": "A soft, bright, slightly sad rave-revival figure, close to Overmono’s \"So U Kno\"",
       "artist": "Overmono",
       "tags": ["lead", "uk bass", "breakbeat", "20s"],
       "level": 1,
@@ -5266,12 +5266,12 @@
     {
       "id": "wasp-sing-it-back-lead",
       "name": "Disco-House Hook Lead",
-      "ref": "In the style of Moloko — \"Sing It Back\" (I Am Not a Doctor, 1998)",
-      "artist": "Moloko",
+      "ref": "A funky hook that says \"wah\" on every note, for late-1990s disco house",
+      "artist": "Late-1990s disco house",
       "tags": ["lead", "house", "disco", "90s"],
       "level": 1,
       "blurb": "A funky, wah-like synth hook that opens on every note.",
-      "how": "A sawtooth through a resonant low-pass that the control envelope opens with a short attack, so every note says “wah”. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth through a resonant low-pass that the control envelope opens with a short attack, so every note says “wah”.",
       "phrase": {
         "bpm": 124,
         "loop": true,
@@ -5337,12 +5337,12 @@
     {
       "id": "wasp-nice-weather-gentle-lead",
       "name": "Sunny Whistled Lead",
-      "ref": "In the style of Lemon Jelly — \"Nice Weather for Ducks\" (Lost Horizons, 2002)",
-      "artist": "Lemon Jelly",
+      "ref": "A soft, flute-like square with a lazy vibrato, like someone whistling on a sunny afternoon",
+      "artist": "2000s downtempo",
       "tags": ["lead", "downtempo", "gentle", "soft", "00s"],
       "level": 1,
       "blurb": "A soft, whistled lead with a lazy vibrato, cheerful and sunny.",
-      "how": "A square filtered down to a soft, flute-like tone, with a slow swell and a lazy vibrato. Like whistling on a sunny day. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square filtered down to a soft, flute-like tone, with a slow swell and a lazy vibrato. Like whistling on a sunny day.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -5412,12 +5412,12 @@
     {
       "id": "wasp-red-alert-house-seq",
       "name": "Rough House Sequence",
-      "ref": "In the style of Basement Jaxx — \"Red Alert\" (Remedy, 1999)",
-      "artist": "Basement Jaxx",
+      "ref": "A buzzing sixteenth-note figure with a gritty edge, bouncing through a late-1990s house party",
+      "artist": "Late-1990s house",
       "tags": ["seq", "house", "garage", "90s"],
       "level": 1,
       "blurb": "A punchy, buzzing sixteenth-note figure with a rough edge, bouncing through a party record.",
-      "how": "ENH through a resonant filter plucked by the control envelope, with a little EXT feedback for grit. This describes the style of playing, not the exact sound on the record.",
+      "how": "ENH through a resonant filter plucked by the control envelope, with a little EXT feedback for grit.",
       "phrase": {
         "bpm": 126,
         "loop": true,
@@ -5494,12 +5494,12 @@
     {
       "id": "wasp-little-fluffy-clouds-arp",
       "name": "Ambient-House Arpeggio",
-      "ref": "In the style of The Orb — \"Little Fluffy Clouds\" (1990)",
-      "artist": "The Orb",
+      "ref": "Soft plucked tones rippling up and down a chord over a laid-back beat, the drift of ambient house",
+      "artist": "Ambient house",
       "tags": ["seq", "ambient house", "gentle", "soft", "90s"],
       "level": 1,
       "blurb": "A bright, rippling, dreamy arpeggio of soft plucked tones, floating over a laid-back beat.",
-      "how": "A square with a quiet sawtooth an octave up, plucked soft and ringing a little, runs up and down a chord. Ambient house slowed dance music down until it drifted. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square with a quiet sawtooth an octave up, plucked soft and ringing a little, runs up and down a chord. Ambient house slowed dance music down until it drifted.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -5577,7 +5577,7 @@
     {
       "id": "wasp-something-good-rave-seq",
       "name": "Rave Anthem Sequence",
-      "ref": "In the style of Utah Saints — \"Something Good\" (1992)",
+      "ref": "Pounding bright sixteenths made to make a crowd jump, as on Utah Saints’ \"Something Good\"",
       "artist": "Utah Saints",
       "tags": ["seq", "rave", "techno", "90s"],
       "level": 1,
@@ -5659,12 +5659,12 @@
     {
       "id": "wasp-ragga-tip-stab-seq",
       "name": "Ragga Jungle Stab",
-      "ref": "In the style of SL2 — \"On a Ragga Tip\" (1992)",
-      "artist": "SL2",
+      "ref": "Short, bouncy stabs skanking on the off-beats, sunny and hard at once, for early-1990s ragga jungle",
+      "artist": "Ragga jungle",
       "tags": ["seq", "breakbeat hardcore", "ragga", "90s"],
       "level": 1,
       "blurb": "A bouncy, skanking stab figure on the off-beats, sunny and hard at once.",
-      "how": "A square and a sawtooth a fourth apart, cut very short, skanking on the off-beats like a reggae guitar. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square and a sawtooth a fourth apart, cut very short, skanking on the off-beats like a reggae guitar.",
       "phrase": {
         "bpm": 140,
         "loop": true,
@@ -5729,7 +5729,7 @@
     {
       "id": "wasp-nuits-sonores-seq",
       "name": "Jazzy Electronic Sequence",
-      "ref": "In the style of Floating Points — \"Nuits Sonores\" (2014)",
+      "ref": "A warm, rippling sequence that breathes over several bars, Floating Points’ \"Nuits Sonores\" in miniature",
       "artist": "Floating Points",
       "tags": ["seq", "electronic", "jazz", "10s"],
       "level": 2,
@@ -5821,7 +5821,7 @@
     {
       "id": "wasp-all-nite-wonky-seq",
       "name": "Wonky Bright Sequence",
-      "ref": "In the style of Rustie — Glass Swords (2011)",
+      "ref": "Glossy, maximal steps that slide drunkenly into each other, the wonky synths of Rustie’s Glass Swords",
       "artist": "Rustie",
       "tags": ["seq", "wonky", "maximalist", "10s"],
       "level": 2,
@@ -5912,7 +5912,7 @@
     {
       "id": "wasp-hyph-mngo-seq",
       "name": "Post-Dubstep Shimmer Sequence",
-      "ref": "In the style of Joy Orbison — \"Hyph Mngo\" (2009)",
+      "ref": "A shimmering, euphoric-yet-wistful plucked figure, the post-dubstep glow of Joy Orbison’s \"Hyph Mngo\"",
       "artist": "Joy Orbison",
       "tags": ["seq", "uk bass", "garage", "00s"],
       "level": 2,
@@ -5984,7 +5984,7 @@
     {
       "id": "wasp-nineteen-sequenced-stab",
       "name": "Electro-Funk Stab Sequence",
-      "ref": "In the style of Paul Hardcastle — \"19\" (1985)",
+      "ref": "Short, hard-plucked stabs on a syncopated sixteenth-note line, the electro-funk of Paul Hardcastle’s \"19\"",
       "artist": "Paul Hardcastle",
       "tags": ["seq", "electro", "funk", "80s"],
       "level": 1,
@@ -6059,7 +6059,7 @@
     {
       "id": "wasp-oh-lamour-pop-arp",
       "name": "Bright Pop Arpeggio",
-      "ref": "In the style of Erasure — \"Oh L’amour\" (Wonderland, 1986)",
+      "ref": "Vince Clarke’s sparkle on Erasure’s \"Oh L’amour\": a bright, exact, bouncing arpeggio",
       "artist": "Vince Clarke",
       "tags": ["seq", "synth-pop", "bright", "80s"],
       "level": 1,
@@ -6142,7 +6142,7 @@
     {
       "id": "wasp-international-minimal-seq",
       "name": "Bedroom Minimal-Synth Sequence",
-      "ref": "In the style of Thomas Leer — \"International\" (The Scale of Ten, 1985)",
+      "ref": "Cool, dry thin pulses repeating a minor figure, the bedroom-studio sound of Thomas Leer’s \"International\"",
       "artist": "Thomas Leer",
       "tags": ["seq", "minimal synth", "synth-pop", "80s"],
       "level": 1,
@@ -6220,7 +6220,7 @@
     {
       "id": "wasp-elite-micro-game-seq",
       "name": "8-Bit Micro Sequence",
-      "ref": "In the style of early-1980s British home-computer game music",
+      "ref": "Plinky, buzzy square-wave runs and arpeggios, like a game loading on an early-1980s British home computer",
       "artist": "British home-computer games",
       "tags": ["seq", "games", "retro", "80s"],
       "level": 1,
@@ -6298,7 +6298,7 @@
     {
       "id": "wasp-paralysis-cold-seq",
       "name": "Cold DIY Sequence",
-      "ref": "In the style of Robert Rental — \"Paralysis\" (1978)",
+      "ref": "A cold, nervous homemade sequence whose filter changes colour at random, as on Robert Rental’s \"Paralysis\"",
       "artist": "Robert Rental",
       "tags": ["seq", "minimal synth", "post-punk", "70s"],
       "level": 2,
@@ -6389,7 +6389,7 @@
     {
       "id": "wasp-voodoo-ray-acid-seq",
       "name": "Manchester Acid Sequence",
-      "ref": "In the style of A Guy Called Gerald — \"Voodoo Ray\" (1988)",
+      "ref": "Rubbery acid squelch opening and closing over bars, the pull of \"Voodoo Ray\" by A Guy Called Gerald",
       "artist": "A Guy Called Gerald",
       "tags": ["seq", "acid", "house", "80s"],
       "level": 2,
@@ -6474,7 +6474,7 @@
     {
       "id": "wasp-black-sun-dark-seq",
       "name": "Dark Bass-Music Sequence",
-      "ref": "In the style of Kode9 — Black Sun (2011)",
+      "ref": "Sparse notes popping out of a dark band-pass and falling back, eerie as Kode9’s Black Sun",
       "artist": "Kode9",
       "tags": ["seq", "uk bass", "dark", "10s"],
       "level": 2,
@@ -6545,7 +6545,7 @@
     {
       "id": "wasp-tinseltown-night-pad",
       "name": "Rain-Slicked City Pad",
-      "ref": "In the style of The Blue Nile — \"Tinseltown in the Rain\" (A Walk Across the Rooftops, 1984)",
+      "ref": "A soft, glowing pad like streetlights on wet pavement, from The Blue Nile’s \"Tinseltown in the Rain\"",
       "artist": "The Blue Nile",
       "tags": ["pad", "sophisti-pop", "gentle", "soft", "80s"],
       "level": 1,
@@ -6612,7 +6612,7 @@
     {
       "id": "wasp-kingdom-notch-pad",
       "name": "Pastoral Notch Pad",
-      "ref": "In the style of Ultramarine — \"Kingdom\" (United Kingdoms, 1993)",
+      "ref": "A warm, open pad with a phaser-like notch swirling slowly through it, Ultramarine’s pastoral \"Kingdom\"",
       "artist": "Ultramarine",
       "tags": ["pad", "ambient house", "pastoral", "soft", "90s"],
       "level": 2,
@@ -6691,8 +6691,8 @@
     {
       "id": "wasp-climactic-phase-shimmer",
       "name": "Shoegaze-Techno Shimmer",
-      "ref": "In the style of Seefeel — \"Climactic Phase No. 3\" (Quique, 1993)",
-      "artist": "Seefeel",
+      "ref": "A hazy, fluttering pad that never quite sits still, from the place where 1990s shoegaze met ambient techno",
+      "artist": "1990s ambient techno",
       "tags": ["pad", "ambient techno", "shimmer", "soft", "90s"],
       "level": 2,
       "blurb": "A shimmering, fluttering pad that never quite sits still, hazy and hypnotic.",
@@ -6759,7 +6759,7 @@
     {
       "id": "wasp-flying-high-ambient-pad",
       "name": "Chill-Out Room Pad",
-      "ref": "In the style of The Irresistible Force — \"Flying High\" (1992)",
+      "ref": "A soft root and fifth drifting slowly, for the chill-out room of The Irresistible Force’s \"Flying High\"",
       "artist": "The Irresistible Force",
       "tags": ["pad", "ambient", "chill-out", "calm", "90s"],
       "level": 1,
@@ -6829,7 +6829,7 @@
     {
       "id": "wasp-water-from-a-vine-leaf-pad",
       "name": "Sweeping Band Pad",
-      "ref": "In the style of William Orbit — \"Water from a Vine Leaf\" (Strange Cargo III, 1993)",
+      "ref": "A band of brightness drifting through a pad like a vowel, as in William Orbit’s \"Water from a Vine Leaf\"",
       "artist": "William Orbit",
       "tags": ["pad", "ambient", "electronic", "soft", "90s"],
       "level": 2,
@@ -6908,12 +6908,12 @@
     {
       "id": "wasp-ecstasy-symphony-drone",
       "name": "Space-Rock Organ Drone",
-      "ref": "In the style of Spacemen 3 — \"Ecstasy Symphony\" (Playing with Fire, 1989)",
-      "artist": "Spacemen 3",
+      "ref": "A buzzing fifth held forever and wavering slowly, like an organ left on at a space-rock gig",
+      "artist": "Space rock",
       "tags": ["drone", "space rock", "psychedelic", "calm", "80s"],
       "level": 1,
       "blurb": "A long, hypnotic, buzzing drone of a fifth that wavers slowly, like an organ left on.",
-      "how": "Two sawtooths a fifth apart, held, with a little EXT feedback for warmth and a slow sine on the pitch. Spacemen 3 built songs from one or two chords held forever.",
+      "how": "Two sawtooths a fifth apart, held, with a little EXT feedback for warmth and a slow sine on the pitch. Space rock built whole songs from one or two chords held forever.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -6975,7 +6975,7 @@
     {
       "id": "wasp-missing-melancholy-pad",
       "name": "Melancholy House Pad",
-      "ref": "In the style of Everything but the Girl — \"Missing\" (Amplified Heart, 1994)",
+      "ref": "Sad, warm chords swelling under a quick house beat, as on Everything but the Girl’s \"Missing\"",
       "artist": "Everything but the Girl",
       "tags": ["pad", "house", "melancholy", "soft", "90s"],
       "level": 1,
@@ -7043,7 +7043,7 @@
     {
       "id": "wasp-arthur-glassy-pad",
       "name": "Glassy Techno Pad",
-      "ref": "In the style of Kelly Lee Owens — \"Arthur\" (Kelly Lee Owens, 2017)",
+      "ref": "A clear, glassy pad thinned by the high-pass so it glows rather than warms, as on Kelly Lee Owens’s \"Arthur\"",
       "artist": "Kelly Lee Owens",
       "tags": ["pad", "electronic", "dreamy", "soft", "10s"],
       "level": 1,
@@ -7111,7 +7111,7 @@
     {
       "id": "wasp-envelopes-filter-delay-pad",
       "name": "Late-Blooming Pad",
-      "ref": "In the style of Leon Vynehall — Nothing Is Still (2018)",
+      "ref": "Chords that start dark and bloom well after they begin, like the slow pads of Leon Vynehall’s Nothing Is Still",
       "artist": "Leon Vynehall",
       "tags": ["pad", "ambient", "cinematic", "soft", "10s"],
       "level": 2,
@@ -7181,12 +7181,12 @@
     {
       "id": "wasp-hex-post-rock-pad",
       "name": "Post-Rock Murmur Pad",
-      "ref": "In the style of Bark Psychosis — Hex (1994)",
-      "artist": "Bark Psychosis",
+      "ref": "A dark, hushed pad with a breath of noise, for the quiet rooms of early-1990s post-rock",
+      "artist": "Post-rock",
       "tags": ["pad", "post-rock", "dark", "soft", "90s"],
       "level": 1,
       "blurb": "A dark, murmuring pad with a breath of noise, hushed and intimate.",
-      "how": "A soft square with a little noise in the mix, through a low, warm filter, with a slow swell. Post-rock made rooms out of quiet. This describes the style of playing, not the exact sound on the record.",
+      "how": "A soft square with a little noise in the mix, through a low, warm filter, with a slow swell. Post-rock made rooms out of quiet.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7246,12 +7246,12 @@
     {
       "id": "wasp-lazy-bed-jazz-keys",
       "name": "Jazz-Pop Synth Keys",
-      "ref": "In the style of Matt Bianco — \"Get Out of Your Lazy Bed\" (Whose Side Are You On?, 1984)",
-      "artist": "Matt Bianco",
+      "ref": "Bright little major-third chords stabbing a Latin-tinged line, for 1980s British jazz-pop",
+      "artist": "1980s jazz-pop",
       "tags": ["keys", "jazz-pop", "latin", "80s"],
       "level": 1,
       "blurb": "Bright, bouncing synth keys stabbing a jazzy, Latin-tinged line.",
-      "how": "OSC 2 a major third above OSC 1 makes each key a little chord. Plucked bright and short. This describes the style of playing, not the exact sound on the record.",
+      "how": "OSC 2 a major third above OSC 1 makes each key a little chord. Plucked bright and short.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -7321,12 +7321,12 @@
     {
       "id": "wasp-ghost-town-organ",
       "name": "Eerie Ska Organ",
-      "ref": "In the style of The Specials — \"Ghost Town\" (1981)",
-      "artist": "The Specials",
+      "ref": "A wobbling, haunted organ figure over an empty street, the eerie side of 2 Tone ska",
+      "artist": "2 Tone ska",
       "tags": ["keys", "ska", "2 tone", "organ", "80s"],
       "level": 2,
       "blurb": "A wobbling, eerie organ playing a slow, minor figure over an empty street.",
-      "how": "Two squares an octave apart like organ drawbars, with full sustain so notes start and stop dead, and a slow, wide vibrato that makes the organ sound haunted. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two squares an octave apart like organ drawbars, with full sustain so notes start and stop dead, and a slow, wide vibrato that makes the organ sound haunted.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -7403,12 +7403,12 @@
     {
       "id": "wasp-whiter-shade-church-organ",
       "name": "Baroque Rock Organ",
-      "ref": "In the style of Procol Harum — \"A Whiter Shade of Pale\" (1967)",
-      "artist": "Procol Harum",
+      "ref": "A stately, swelling organ for slow descending lines, the sound of late-1960s baroque rock",
+      "artist": "1960s baroque rock",
       "tags": ["keys", "baroque rock", "organ", "60s"],
       "level": 1,
       "blurb": "A stately, swelling organ playing a slow, descending baroque-style line.",
-      "how": "Two squares an octave apart for the drawbars, a gentle swell like an organ’s expression pedal, and a slight vibrato for the rotating speaker. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two squares an octave apart for the drawbars, a gentle swell like an organ’s expression pedal, and a slight vibrato for the rotating speaker.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7479,12 +7479,12 @@
     {
       "id": "wasp-cool-for-cats-synth-keys",
       "name": "Cheeky Pub-Rock Synth",
-      "ref": "In the style of Squeeze — \"Cool for Cats\" (Cool for Cats, 1979)",
-      "artist": "Squeeze",
+      "ref": "A cheap, buzzy synth line bouncing on a late-1970s new-wave beat",
+      "artist": "Late-1970s new wave",
       "tags": ["keys", "new wave", "pub rock", "70s"],
       "level": 1,
       "blurb": "A bright, cheeky, buzzy synth line bouncing on a new-wave beat.",
-      "how": "A sawtooth plucked bright and short, playing a cheeky, bouncing figure. Late-70s new wave loved a cheap, buzzy keyboard. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth plucked bright and short, playing a cheeky, bouncing figure. Late-70s new wave loved a cheap, buzzy keyboard.",
       "phrase": {
         "bpm": 140,
         "loop": true,
@@ -7638,8 +7638,8 @@
     {
       "id": "wasp-crystal-silence-vibes",
       "name": "Jazz Vibraphone",
-      "ref": "In the style of Gary Burton — Crystal Silence (with Chick Corea, 1973)",
-      "artist": "Gary Burton",
+      "ref": "A soft, ringing vibraphone with a slow motor shimmer, for a calm jazz ballad",
+      "artist": "Jazz vibraphone",
       "tags": ["keys", "jazz", "vibes", "gentle", "70s"],
       "level": 2,
       "blurb": "A soft, ringing vibraphone tone with a slow shimmer, playing a calm jazz line.",
@@ -7712,12 +7712,12 @@
     {
       "id": "wasp-expansions-electric-piano",
       "name": "Cosmic Jazz Electric Piano",
-      "ref": "In the style of Lonnie Liston Smith — \"Expansions\" (Expansions, 1975)",
-      "artist": "Lonnie Liston Smith",
+      "ref": "A warm electric piano with a bell-touched tine, floating through 1970s spiritual jazz",
+      "artist": "1970s spiritual jazz",
       "tags": ["keys", "jazz-funk", "electric piano", "70s"],
       "level": 2,
       "blurb": "A warm, bell-touched electric-piano tone playing a spiritual, floating line.",
-      "how": "A square with a quiet square two octaves up for the tine’s bell, plucked softly by the control envelope and left to ring with a little held. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square with a quiet square two octaves up for the tine’s bell, plucked softly by the control envelope and left to ring with a little held.",
       "phrase": {
         "bpm": 108,
         "loop": true,
@@ -7788,12 +7788,12 @@
     {
       "id": "wasp-rhythm-stick-clavinet",
       "name": "Funky Band-Pass Clav",
-      "ref": "In the style of Ian Dury & the Blockheads — \"Hit Me with Your Rhythm Stick\" (1978)",
-      "artist": "Ian Dury & the Blockheads",
+      "ref": "A snappy, nasal band-pass pluck standing in for a funk clavinet’s choppy riff",
+      "artist": "1970s funk clavinet",
       "tags": ["keys", "funk", "new wave", "70s"],
       "level": 1,
       "blurb": "A snappy, nasal clavinet-like tone for a choppy funk riff.",
-      "how": "A narrow pulse through a band-pass, plucked by the control envelope and cut short, gives the nasal snap of a clavinet. This describes the style of playing, not the exact sound on the record.",
+      "how": "A narrow pulse through a band-pass, plucked by the control envelope and cut short, gives the nasal snap of a clavinet.",
       "phrase": {
         "bpm": 128,
         "loop": true,
@@ -7865,7 +7865,7 @@
     {
       "id": "wasp-trip-ii-the-moon-stab",
       "name": "Hardcore Rave Stab",
-      "ref": "In the style of Acen — \"Trip II the Moon\" (1992)",
+      "ref": "A huge, bright fifth slammed on the off-beats of a breakbeat, the hardcore stab of Acen’s \"Trip II the Moon\"",
       "artist": "Acen",
       "tags": ["keys", "hardcore", "rave", "90s"],
       "level": 1,
@@ -7936,7 +7936,7 @@
     {
       "id": "wasp-da-da-da-toy-keys",
       "name": "Toy-Keyboard Minimalism",
-      "ref": "In the style of Trio — \"Da Da Da\" (Trio, 1982)",
+      "ref": "A tiny, deadpan thin-pulse figure, as if from the pocket Casio that carries Trio’s \"Da Da Da\"",
       "artist": "Trio",
       "tags": ["keys", "neue deutsche welle", "minimal", "80s"],
       "level": 1,
@@ -8005,7 +8005,7 @@
     {
       "id": "wasp-welsh-telyn-harp",
       "name": "Welsh Harp",
-      "ref": "In the style of the Welsh triple harp (telyn deires)",
+      "ref": "A bright, ringing plucked string for a flowing folk tune on the Welsh triple harp (telyn deires)",
       "artist": "Welsh harp",
       "tags": ["pluck", "welsh", "folk", "gentle"],
       "level": 1,
@@ -8086,12 +8086,12 @@
     {
       "id": "wasp-dowland-lute",
       "name": "Renaissance Lute",
-      "ref": "In the style of John Dowland’s lute music",
-      "artist": "John Dowland",
+      "ref": "Warm gut strings plucked by fingers and quick to die, for a melancholy Elizabethan lute air",
+      "artist": "Renaissance lute",
       "tags": ["pluck", "renaissance", "classical", "gentle"],
       "level": 1,
       "blurb": "A soft, woody plucked lute playing a melancholy Elizabethan line.",
-      "how": "A lute is gut strings plucked by fingers: warm, woody and quick to die. A sawtooth through a low-pass plucked by the control envelope, with a short, falling VCA envelope. The line is in the style of Dowland’s melancholy pieces, not his notes.",
+      "how": "A lute is gut strings plucked by fingers: warm, woody and quick to die. A sawtooth through a low-pass plucked by the control envelope, with a short, falling VCA envelope.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -8160,7 +8160,7 @@
     {
       "id": "wasp-irish-bouzouki",
       "name": "Irish Bouzouki",
-      "ref": "In the style of the Irish bouzouki",
+      "ref": "Paired metal strings, some in octaves, jangling through a lilting figure on the Irish bouzouki",
       "artist": "Irish bouzouki",
       "tags": ["pluck", "irish", "folk", "bright"],
       "level": 1,
@@ -8236,8 +8236,8 @@
     {
       "id": "wasp-sketch-for-summer-harmonics",
       "name": "Chiming Guitar Harmonics",
-      "ref": "In the style of The Durutti Column — \"Sketch for Summer\" (The Return of the Durutti Column, 1980)",
-      "artist": "The Durutti Column",
+      "ref": "Soft, high chimes like guitar harmonics, delicate and summery, from post-punk’s gentler edge",
+      "artist": "Post-punk guitar",
       "tags": ["pluck", "post-punk", "gentle", "soft", "80s"],
       "level": 1,
       "blurb": "Soft, chiming, bell-like plucks like guitar harmonics, delicate and summery.",
@@ -8309,12 +8309,12 @@
     {
       "id": "wasp-cleaning-windows-ukulele",
       "name": "Banjolele Strum",
-      "ref": "In the style of George Formby — \"When I’m Cleaning Windows\" (1936)",
-      "artist": "George Formby",
+      "ref": "A bright, plinky, cheeky banjolele strum bouncing along like a 1930s music-hall turn",
+      "artist": "1930s music hall",
       "tags": ["pluck", "music hall", "british", "30s"],
       "level": 1,
       "blurb": "A bright, plinky, cheeky ukulele-banjo strum, bouncing along.",
-      "how": "The banjolele is a ukulele with a banjo’s drum body: bright, plinky and short. A square narrowed to a thin pulse, plucked very short through a band-pass, plays a quick, bouncy strum. This describes the style of playing, not the exact sound on the record.",
+      "how": "The banjolele is a ukulele with a banjo’s drum body: bright, plinky and short. A square narrowed to a thin pulse, plucked very short through a band-pass, plays a quick, bouncy strum.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -8387,12 +8387,12 @@
     {
       "id": "wasp-pink-moon-folk-pluck",
       "name": "Fingerpicked Folk Pluck",
-      "ref": "In the style of Nick Drake — \"Pink Moon\" (Pink Moon, 1972)",
-      "artist": "Nick Drake",
+      "ref": "A soft, intimate fingerpicked pattern, warm and a little sad, from English folk guitar",
+      "artist": "English folk",
       "tags": ["pluck", "folk", "gentle", "soft", "70s"],
       "level": 1,
       "blurb": "A soft, intimate, fingerpicked line, warm and a little sad.",
-      "how": "A sawtooth softened by the low-pass and plucked by the control envelope, with a medium ring. A simple, rolling fingerpicked pattern. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth softened by the low-pass and plucked by the control envelope, with a medium ring. A simple, rolling fingerpicked pattern.",
       "phrase": {
         "bpm": 108,
         "loop": true,
@@ -8467,12 +8467,12 @@
     {
       "id": "wasp-turnmills-warm-pluck",
       "name": "Warm Downtempo Pluck",
-      "ref": "In the style of Maribou State — \"Turnmills\" (Portraits, 2015)",
-      "artist": "Maribou State",
+      "ref": "A warm, soft pluck rolling gently through a sunny downtempo groove",
+      "artist": "Downtempo",
       "tags": ["pluck", "downtempo", "warm", "gentle", "10s"],
       "level": 1,
       "blurb": "A warm, soft pluck playing a gently rolling figure, sunny and relaxed.",
-      "how": "A square and a sawtooth an octave apart, plucked soft, with a medium ring. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square and a sawtooth an octave apart, plucked soft, with a medium ring.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -8541,12 +8541,12 @@
     {
       "id": "wasp-ambivalence-avenue-pluck",
       "name": "Wobbly Tape Pluck",
-      "ref": "In the style of Bibio — Ambivalence Avenue (2009)",
-      "artist": "Bibio",
+      "ref": "A warm pluck whose pitch wavers slowly, like a guitar played back from a worn cassette",
+      "artist": "Lo-fi folktronica",
       "tags": ["pluck", "folktronica", "lo-fi", "gentle", "00s"],
       "level": 2,
       "blurb": "A warm, plucked tone with a slow pitch wobble, like a guitar on a worn cassette.",
-      "how": "A soft pluck with a slow sine from the control oscillator bending the pitch a little, the way stretched tape wavers. This describes the style of playing, not the exact sound on the record.",
+      "how": "A soft pluck with a slow sine from the control oscillator bending the pitch a little, the way stretched tape wavers.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -8632,7 +8632,7 @@
     {
       "id": "wasp-wildfire-pluck",
       "name": "Future-Bass Pluck",
-      "ref": "In the style of SBTRKT — \"Wildfire\" (SBTRKT, 2011)",
+      "ref": "A short, round pluck skipping over a syncopated beat, the bounce of SBTRKT’s \"Wildfire\"",
       "artist": "SBTRKT",
       "tags": ["pluck", "uk bass", "future garage", "10s"],
       "level": 1,
@@ -8704,7 +8704,7 @@
     {
       "id": "wasp-recovery-rippling-pluck",
       "name": "Rippling Electronic Pluck",
-      "ref": "In the style of Rival Consoles — \"Recovery\" (Howl, 2015)",
+      "ref": "A soft pluck whose ripple brightens and dims as the figure repeats, as on Rival Consoles’ \"Recovery\"",
       "artist": "Rival Consoles",
       "tags": ["pluck", "electronic", "cinematic", "gentle", "10s"],
       "level": 2,
@@ -8796,7 +8796,7 @@
     {
       "id": "wasp-andromeda-computer-chatter",
       "name": "Mainframe Chatter",
-      "ref": "In the style of Gil Mellé — The Andromeda Strain (1971)",
+      "ref": "Random pitches chattering a dozen times a second, the mainframe of Gil Mellé’s The Andromeda Strain score",
       "artist": "Gil Mellé",
       "tags": ["fx", "soundtrack", "sci-fi", "70s"],
       "level": 2,
@@ -8868,7 +8868,7 @@
     {
       "id": "wasp-defender-laser-zaps",
       "name": "Arcade Laser Zaps",
-      "ref": "In the style of early-1980s arcade shooters",
+      "ref": "Laser zaps falling and firing again for as long as a key is held, straight from early-1980s arcade shooters",
       "artist": "Arcade shooters",
       "tags": ["fx", "games", "laser", "80s"],
       "level": 2,
@@ -8942,7 +8942,7 @@
     {
       "id": "wasp-air-raid-siren",
       "name": "Air-Raid Siren",
-      "ref": "In the style of wartime air-raid sirens",
+      "ref": "A slow, rough-edged wail rising and falling over an octave, the wartime air-raid siren",
       "artist": "Air-raid sirens",
       "tags": ["fx", "siren", "wartime", "40s"],
       "level": 1,
@@ -9015,7 +9015,7 @@
     {
       "id": "wasp-rainfall-patter",
       "name": "Rain on a Window",
-      "ref": "In the style of field recordings of rain",
+      "ref": "Noise chopped into tiny bursts at random pitches: soft rain pattering on a window",
       "artist": "Rainfall",
       "tags": ["fx", "nature", "rain", "calm"],
       "level": 2,
@@ -9087,7 +9087,7 @@
     {
       "id": "wasp-steam-train-chuff",
       "name": "Steam Locomotive",
-      "ref": "In the style of steam railway recordings",
+      "ref": "Repeating bursts of noise that puff rather than hiss, the chuff of a steam engine pulling away",
       "artist": "Steam locomotives",
       "tags": ["fx", "railway", "retro", "rhythm"],
       "level": 2,
@@ -9151,7 +9151,7 @@
     {
       "id": "wasp-numbers-station",
       "name": "Shortwave Numbers Station",
-      "ref": "In the style of shortwave numbers stations",
+      "ref": "A thin tone drifting in and out of static, eerie as a shortwave numbers station",
       "artist": "Numbers stations",
       "tags": ["fx", "radio", "eerie", "cold war"],
       "level": 2,
@@ -9227,8 +9227,8 @@
     {
       "id": "wasp-first-cuckoo-call",
       "name": "Cuckoo Call",
-      "ref": "In the style of Frederick Delius — On Hearing the First Cuckoo in Spring (1912)",
-      "artist": "Frederick Delius",
+      "ref": "A soft, hollow call falling a third, a cuckoo heard across an English pastoral landscape",
+      "artist": "English pastoral music",
       "tags": ["fx", "nature", "pastoral", "gentle"],
       "level": 1,
       "blurb": "A soft, hollow, two-note bird call falling a third, like a cuckoo in an English wood.",
@@ -9293,7 +9293,7 @@
     {
       "id": "wasp-quatermass-eerie-hover",
       "name": "Eerie Alien Hover",
-      "ref": "In the style of Tristram Cary — Quatermass and the Pit (1967)",
+      "ref": "A low, warbling, hollowed-out hum, menacing as Tristram Cary’s electronic score for Quatermass and the Pit",
       "artist": "Tristram Cary",
       "tags": ["fx", "soundtrack", "horror", "60s"],
       "level": 2,
@@ -9368,8 +9368,8 @@
     {
       "id": "wasp-thunderbirds-explosion",
       "name": "Model-Shot Explosion",
-      "ref": "In the style of Barry Gray — Thunderbirds (1965)",
-      "artist": "Barry Gray",
+      "ref": "A deep explosion that bursts bright and darkens as it dies, for a 1960s TV model shot",
+      "artist": "1960s TV sound effects",
       "tags": ["fx", "tv", "explosion", "60s"],
       "level": 1,
       "blurb": "A deep, rumbling explosion that bursts bright and darkens as it dies.",
@@ -9435,7 +9435,7 @@
     {
       "id": "wasp-zx-tape-loading",
       "name": "Tape-Loading Screech",
-      "ref": "In the style of 1980s home computers loading from cassette",
+      "ref": "Data as sound: the ragged screech of an 1980s home computer loading a game from cassette",
       "artist": "Home-computer tape loading",
       "tags": ["fx", "retro", "computer", "80s"],
       "level": 2,
@@ -9511,8 +9511,8 @@
     {
       "id": "wasp-sapphire-steel-metallic-ring",
       "name": "Haunted Metallic Ring",
-      "ref": "In the style of Cyril Ornadel — Sapphire & Steel (1979)",
-      "artist": "Cyril Ornadel",
+      "ref": "A cold, metallic ring that swells out of nowhere, eerie enough for 1970s TV science fiction",
+      "artist": "1970s TV sci-fi",
       "tags": ["fx", "tv", "eerie", "70s"],
       "level": 2,
       "blurb": "A cold, metallic, ringing tone that swells in, as if time itself were wrong.",
@@ -9585,7 +9585,7 @@
     {
       "id": "wasp-hardcore-kick",
       "name": "Breakbeat-Hardcore Kick",
-      "ref": "In the style of UK breakbeat hardcore",
+      "ref": "A click on top and a boom underneath, the kick of UK breakbeat hardcore",
       "artist": "UK hardcore",
       "tags": ["perc", "hardcore", "drums", "90s"],
       "level": 2,
@@ -9654,7 +9654,7 @@
     {
       "id": "wasp-hi-nrg-snare",
       "name": "Hi-NRG Snare",
-      "ref": "In the style of Stock Aitken Waterman productions",
+      "ref": "A bright, snappy backbeat crack, the drum-machine snare under Stock Aitken Waterman hits",
       "artist": "Stock Aitken Waterman",
       "tags": ["perc", "hi-nrg", "pop", "80s"],
       "level": 2,
@@ -9722,12 +9722,12 @@
     {
       "id": "wasp-mighty-real-hihats",
       "name": "Disco Hi-Hats",
-      "ref": "In the style of Sylvester — \"You Make Me Feel (Mighty Real)\" (Step II, 1978)",
-      "artist": "Sylvester",
+      "ref": "Crisp ticking hats with a sizzling open hat on every off-beat, the drive of late-1970s Hi-NRG disco",
+      "artist": "Hi-NRG disco",
       "tags": ["perc", "disco", "hi-nrg", "70s"],
       "level": 1,
       "blurb": "Crisp, ticking hi-hats with a sizzling open hat on every off-beat.",
-      "how": "Noise through the high-pass, very short for a closed hat, a little longer on the off-beats for the open hat. This describes the style of playing, not the exact sound on the record.",
+      "how": "Noise through the high-pass, very short for a closed hat, a little longer on the off-beats for the open hat.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -9795,7 +9795,7 @@
     {
       "id": "wasp-samba-shaker",
       "name": "Samba Shaker",
-      "ref": "In the style of samba percussion",
+      "ref": "A steady sixteenth-note swish from one held key, like a samba shaker",
       "artist": "Samba",
       "tags": ["perc", "samba", "brazilian", "shaker"],
       "level": 2,
@@ -9856,12 +9856,12 @@
     {
       "id": "wasp-apache-bongos",
       "name": "Breakbeat Bongos",
-      "ref": "In the style of Incredible Bongo Band — \"Apache\" (Bongo Rock, 1973)",
-      "artist": "Incredible Bongo Band",
+      "ref": "Two ringing pitched drums, high and low, in a driving funk pattern beloved of breakbeat diggers",
+      "artist": "Breakbeat funk",
       "tags": ["perc", "funk", "bongos", "70s"],
       "level": 2,
       "blurb": "Two pitched, ringing drum hits, high and low, in a driving funk pattern.",
-      "how": "A drum skin rings at a pitch when struck. A narrow band-pass with high Q pinged by a short envelope gives that ring, over a short tone. The riff plays the high and low drums. This describes the style of playing, not the exact sound on the record.",
+      "how": "A drum skin rings at a pitch when struck. A narrow band-pass with high Q pinged by a short envelope gives that ring, over a short tone. The riff plays the high and low drums.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -9929,12 +9929,12 @@
     {
       "id": "wasp-mars-timpani-ostinato",
       "name": "War-March Timpani",
-      "ref": "In the style of Gustav Holst — \"Mars, the Bringer of War\" (The Planets, 1916)",
-      "artist": "Gustav Holst",
+      "ref": "A menacing kettledrum rhythm in five, rolling and pounding like orchestral timpani",
+      "artist": "Orchestral timpani",
       "tags": ["perc", "orchestral", "classical", "timpani"],
       "level": 2,
       "blurb": "A menacing timpani rhythm in five, rolling and pounding.",
-      "how": "Timpani are tuned kettledrums: a low boom with a roll. A low tone with noise, struck by a short envelope, plays a pounding rhythm in five, in the style of Holst’s Mars rather than its notes.",
+      "how": "Timpani are tuned kettledrums: a low boom with a roll. A low tone with noise, struck by a short envelope, plays a pounding rhythm in five.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -10003,12 +10003,12 @@
     {
       "id": "wasp-anvil-chorus-clang",
       "name": "Anvil Strike",
-      "ref": "In the style of Giuseppe Verdi — the Anvil Chorus (Il trovatore, 1853)",
-      "artist": "Giuseppe Verdi",
+      "ref": "A bright, pure clang of hammer on anvil, struck in rhythm as opera stages have done",
+      "artist": "Opera",
       "tags": ["perc", "orchestral", "metallic", "classical"],
       "level": 2,
       "blurb": "A bright, ringing hammer on an anvil, clanging in rhythm.",
-      "how": "An anvil rings at a high, pure pitch when struck. A narrow band-pass with high Q, pinged hard over a buzzy tone, gives the clang. In the style of Verdi’s anvils, not his notes.",
+      "how": "An anvil rings at a high, pure pitch when struck. A narrow band-pass with high Q, pinged hard over a buzzy tone, gives the clang.",
       "phrase": {
         "bpm": 100,
         "loop": true,
@@ -10069,7 +10069,7 @@
     {
       "id": "wasp-two-tone-rimshot",
       "name": "Ska Rimshot",
-      "ref": "In the style of 2 Tone ska",
+      "ref": "A dry, cracking rimshot on the off-beats, the skank of a 2 Tone ska record",
       "artist": "2 Tone ska",
       "tags": ["perc", "ska", "drums", "80s"],
       "level": 1,
@@ -10138,7 +10138,7 @@
     {
       "id": "wasp-tin-whistle-reel",
       "name": "Tin Whistle",
-      "ref": "In the style of the Irish tin whistle",
+      "ref": "A bright, breathy little pipe dancing through a quick reel, the Irish tin whistle",
       "artist": "Irish tin whistle",
       "tags": ["wind", "irish", "folk", "bright"],
       "level": 1,
@@ -10217,7 +10217,7 @@
     {
       "id": "wasp-smallpipes-drone",
       "name": "Northumbrian Smallpipes",
-      "ref": "In the style of the Northumbrian smallpipes",
+      "ref": "A sweet, reedy chanter with a harmony following beneath, after the Northumbrian smallpipes",
       "artist": "Northumbrian smallpipes",
       "tags": ["wind", "english", "folk", "drone"],
       "level": 2,
@@ -10292,7 +10292,7 @@
     {
       "id": "wasp-budrio-ocarina",
       "name": "Ocarina",
-      "ref": "In the style of the Italian ocarina of Budrio",
+      "ref": "Purer and rounder than a flute, the soft clay voice of the ocarina of Budrio",
       "artist": "Ocarina",
       "tags": ["wind", "italian", "folk", "gentle"],
       "level": 1,
@@ -10365,12 +10365,12 @@
     {
       "id": "wasp-sorcerers-apprentice-bassoon",
       "name": "Comic Bassoon",
-      "ref": "In the style of Paul Dukas — The Sorcerer’s Apprentice (1897)",
-      "artist": "Paul Dukas",
+      "ref": "A buzzy, staccato double reed marching cheekily up and down, the comic orchestral bassoon",
+      "artist": "Orchestral woodwind",
       "tags": ["wind", "orchestral", "classical", "bassoon"],
       "level": 2,
       "blurb": "A reedy, staccato bassoon marching cheekily up and down, a little comic.",
-      "how": "The bassoon is a low, buzzy double reed. A narrow pulse an octave down through a band-pass gives its nasal buzz; short notes make it march. In the style of Dukas, not his notes.",
+      "how": "The bassoon is a low, buzzy double reed. A narrow pulse an octave down through a band-pass gives its nasal buzz; short notes make it march.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -10434,12 +10434,12 @@
     {
       "id": "wasp-toots-harmonica",
       "name": "Jazz Harmonica",
-      "ref": "In the style of Toots Thielemans — \"Bluesette\" (1962)",
-      "artist": "Toots Thielemans",
+      "ref": "A wailing, nasal harmonica with a quick vibrato and little bends into notes, for jazz",
+      "artist": "Jazz harmonica",
       "tags": ["wind", "jazz", "harmonica", "60s"],
       "level": 2,
       "blurb": "A reedy, wailing harmonica with a quick vibrato and a little bend into notes.",
-      "how": "A harmonica’s free reeds buzz bright and nasal. ENH through a band-pass, a quick vibrato, and a short GLIDE for the bends between notes. This describes the style of playing, not the exact sound on the record.",
+      "how": "A harmonica’s free reeds buzz bright and nasal. ENH through a band-pass, a quick vibrato, and a short GLIDE for the bends between notes.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -10517,8 +10517,8 @@
     {
       "id": "wasp-brass-band-cornet",
       "name": "Brass-Band Cornet",
-      "ref": "In the style of the Brighouse and Rastrick Brass Band",
-      "artist": "Brighouse and Rastrick Brass Band",
+      "ref": "A warm, mellow cornet with a gentle vibrato, the lead voice of a British brass band",
+      "artist": "British brass bands",
       "tags": ["brass", "brass band", "british", "cornet"],
       "level": 2,
       "blurb": "A warm, mellow cornet with a gentle vibrato, playing a stately melody.",
@@ -10593,7 +10593,7 @@
     {
       "id": "wasp-oompah-tuba",
       "name": "Oompah Tuba",
-      "ref": "In the style of German oompah bands",
+      "ref": "Root and fifth on the beat, oom-pah: the round, bouncing tuba of a German oompah band",
       "artist": "Oompah bands",
       "tags": ["brass", "oompah", "folk", "tuba"],
       "level": 1,
@@ -10666,7 +10666,7 @@
     {
       "id": "wasp-close-to-the-edit-hit",
       "name": "Orchestra-Hit Blast",
-      "ref": "In the style of Art of Noise — \"Close (to the Edit)\" (Who’s Afraid of the Art of Noise?, 1984)",
+      "ref": "A huge, noisy fifth fired like the sampled orchestra hit of Art of Noise’s \"Close (to the Edit)\"",
       "artist": "Art of Noise",
       "tags": ["brass", "synth-pop", "hit", "80s"],
       "level": 2,
@@ -10740,12 +10740,12 @@
     {
       "id": "wasp-csardas-violin",
       "name": "Gypsy-Style Violin",
-      "ref": "In the style of Vittorio Monti — Csárdás (1904)",
-      "artist": "Vittorio Monti",
+      "ref": "A passionate violin with a wide vibrato and slides, for a slow, soulful csárdás",
+      "artist": "Hungarian csárdás",
       "tags": ["strings", "csardas", "violin", "classical"],
       "level": 2,
       "blurb": "A passionate, singing violin with a wide vibrato and slides, slow and soulful.",
-      "how": "A sawtooth through a soft filter, with a bowed swell, a wide vibrato and a short glide for the slides. In the style of Monti’s showpiece, not its notes.",
+      "how": "A sawtooth through a soft filter, with a bowed swell, a wide vibrato and a short glide for the slides.",
       "phrase": {
         "bpm": 66,
         "loop": true,
@@ -10819,12 +10819,12 @@
     {
       "id": "wasp-elgar-cello",
       "name": "Elegiac Cello",
-      "ref": "In the style of Edward Elgar — Cello Concerto in E minor (1919)",
-      "artist": "Edward Elgar",
+      "ref": "A dark, rich, slowly bowed cello line, sorrowful in the English Romantic way",
+      "artist": "Romantic cello",
       "tags": ["strings", "orchestral", "cello", "classical"],
       "level": 2,
       "blurb": "A dark, rich, elegiac cello line, slow and sorrowful.",
-      "how": "A cello is a deep, rich bowed string. ENH an octave down, softened by the low-pass, with a slow bow and a gentle vibrato. In the style of Elgar’s concerto, not its notes.",
+      "how": "A cello is a deep, rich bowed string. ENH an octave down, softened by the low-pass, with a slow bow and a gentle vibrato.",
       "phrase": {
         "bpm": 54,
         "loop": true,
@@ -10893,12 +10893,12 @@
     {
       "id": "wasp-mingus-walking-bass",
       "name": "Walking Jazz Bass",
-      "ref": "In the style of Charles Mingus — \"Haitian Fight Song\" (The Clown, 1957)",
-      "artist": "Charles Mingus",
+      "ref": "A woody plucked double bass walking quarter notes up and down, the engine of a jazz band",
+      "artist": "Jazz double bass",
       "tags": ["strings", "jazz", "double bass", "50s"],
       "level": 1,
       "blurb": "A woody, plucked double bass walking quarter notes up and down.",
-      "how": "A plucked double bass is round and woody, with a quick thump and a short ring. A square through a low-pass plucked by the control envelope, with a medium decay, walks the line. This describes the style of playing, not the exact sound on the record.",
+      "how": "A plucked double bass is round and woody, with a quick thump and a short ring. A square through a low-pass plucked by the control envelope, with a medium decay, walks the line.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -11046,7 +11046,7 @@
     {
       "id": "wasp-sakura-pulsing-lullaby",
       "name": "Pulsing Lullaby Pad",
-      "ref": "In the style of Susumu Yokota — Sakura (2000)",
+      "ref": "Each held note breathing in and out by itself about once a second, as in Susumu Yokota’s Sakura",
       "artist": "Susumu Yokota",
       "tags": ["pad", "ambient", "gentle", "calm", "00s"],
       "level": 2,
@@ -11112,12 +11112,12 @@
     {
       "id": "wasp-la-mer-sea-swell",
       "name": "Impressionist Sea Swell",
-      "ref": "In the style of Claude Debussy — La Mer (1905)",
-      "artist": "Claude Debussy",
+      "ref": "A soft fifth with a breath of noise whose colour rises and falls like waves under a calm sky",
+      "artist": "Impressionist orchestral",
       "tags": ["pad", "impressionist", "sea", "calm"],
       "level": 2,
       "blurb": "A held chord of sea and tone, swelling and falling like waves under a calm sky.",
-      "how": "A soft fifth with a breath of noise, through a band-pass that a slow sine sweeps up and down: the colour rises and falls like waves. In the spirit of Debussy’s sea, not his notes.",
+      "how": "A soft fifth with a breath of noise, through a band-pass that a slow sine sweeps up and down: the colour rises and falls like waves.",
       "phrase": {
         "bpm": 54,
         "loop": true,

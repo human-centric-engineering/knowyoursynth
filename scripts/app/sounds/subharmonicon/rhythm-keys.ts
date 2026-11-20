@@ -22,7 +22,7 @@ export const RHYTHM_KEYS: SoundSpec[] = [
   {
     id: 'shc-your-rhythm-its-notes',
     name: 'Your Rhythm, Its Notes',
-    ref: 'In the style of a funk guitar’s sixteenth-note riff',
+    ref: 'A syncopated sixteenth-note riff whose pitches the hidden sequencers choose, like a funk guitar part',
     artist: 'Funk',
     tags: ['seq', 'generative'],
     level: 2,
@@ -91,7 +91,7 @@ export const RHYTHM_KEYS: SoundSpec[] = [
   {
     id: 'shc-offbeat-skank',
     name: 'Offbeat Skank',
-    ref: 'In the style of a reggae organ skank',
+    ref: 'Chords chopped on every offbeat while the sequencers change them below, a reggae organ skank',
     artist: 'Reggae',
     tags: ['keys', 'reggae', 'generative'],
     level: 2,
@@ -158,7 +158,7 @@ export const RHYTHM_KEYS: SoundSpec[] = [
   {
     id: 'shc-clave-melody',
     name: 'Clave Melody',
-    ref: 'In the style of son clave',
+    ref: 'The five strokes of the 3–2 son clave turned into a melody by a sequence running beneath',
     artist: 'Cuban son',
     tags: ['seq', 'generative', 'latin'],
     level: 2,
@@ -224,7 +224,7 @@ export const RHYTHM_KEYS: SoundSpec[] = [
   {
     id: 'shc-bassline-generator',
     name: 'Bassline Generator',
-    ref: 'In the style of Chicago house basslines',
+    ref: 'A Chicago house bass rhythm that grows new octaves and fifths every time round',
     artist: 'Chicago house',
     tags: ['bass', 'generative'],
     level: 2,

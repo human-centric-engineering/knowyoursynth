@@ -5,7 +5,7 @@
     {
       "id": "shc-first-sequence",
       "name": "First Polyrhythm",
-      "ref": "In the style of the manual’s guided start, “Exploring your Subharmonicon”",
+      "ref": "The manual’s guided start, “Exploring your Subharmonicon”: four notes stepped two against three",
       "artist": "Moog Music",
       "tags": ["seq", "polyrhythm"],
       "level": 1,
@@ -76,7 +76,7 @@
     {
       "id": "shc-two-against-three",
       "name": "Two Against Three",
-      "ref": "In the style of West African cross-rhythm",
+      "ref": "Two tunes woven on twos and threes, the cross-rhythm at the heart of West African drumming",
       "artist": "West African drumming",
       "tags": ["seq", "polyrhythm"],
       "level": 1,
@@ -178,7 +178,7 @@
     {
       "id": "shc-coin-toss-rhythm",
       "name": "Coin-Toss Rhythm",
-      "ref": "In the style of a Buchla random-voltage rhythm",
+      "ref": "A melody that fires or skips at random on each clock, thrown like a Buchla random-voltage rhythm",
       "artist": "West Coast synthesis",
       "tags": ["seq", "patch", "rhythm"],
       "level": 3,
@@ -268,8 +268,8 @@
     {
       "id": "shc-three-against-four",
       "name": "Three Against Four",
-      "ref": "In the style of Steve Reich’s interlocking pulses",
-      "artist": "Steve Reich",
+      "ref": "A bright minor arpeggio against a falling line, three against four, slowly phasing against the bar",
+      "artist": "Minimalism",
       "tags": ["seq", "polyrhythm", "minimal"],
       "level": 2,
       "blurb": "A minor arpeggio on dotted eighths against a falling line on quarters, coming round every three beats.",
@@ -365,7 +365,7 @@
     {
       "id": "shc-four-against-five",
       "name": "Four Against Five",
-      "ref": "In the style of a gamelan’s interlocking metallophones",
+      "ref": "Ringing just-tuned bell tones, five against four, interlocking like gamelan metallophones",
       "artist": "Gamelan",
       "tags": ["seq", "polyrhythm", "bell"],
       "level": 2,
@@ -467,8 +467,8 @@
     {
       "id": "shc-five-against-seven",
       "name": "Five Against Seven",
-      "ref": "In the style of Conlon Nancarrow’s player-piano canons",
-      "artist": "Conlon Nancarrow",
+      "ref": "Woody marimba lines in five against seven, a cycle far too long for the ear to count",
+      "artist": "Player-piano canons",
       "tags": ["seq", "polyrhythm"],
       "level": 3,
       "blurb": "Woody marimba notes, five against seven: a cycle of thirty-five sixteenths that no ear can count.",
@@ -568,8 +568,8 @@
     {
       "id": "shc-accelerando",
       "name": "Accelerando",
-      "ref": "In the style of Conlon Nancarrow’s tempo canons",
-      "artist": "Conlon Nancarrow",
+      "ref": "A melody that speeds up through every bar over a steady beat, a tempo canon in miniature",
+      "artist": "Player-piano canons",
       "tags": ["seq", "patch", "rhythm"],
       "level": 3,
       "blurb": "A melody that speeds up through every bar over a steady beat: a slow wave patched into RHYTHM 1.",
@@ -666,7 +666,7 @@
     {
       "id": "shc-rhythmicon-ratios",
       "name": "Rhythmicon Ratios",
-      "ref": "In the style of Henry Cowell’s Rhythmicon",
+      "ref": "The overtone series played as rhythm, 2:3:4:5, as Henry Cowell’s electronic Rhythmicon did",
       "artist": "Henry Cowell",
       "tags": ["seq", "polyrhythm", "rhythmicon"],
       "level": 3,
@@ -773,7 +773,7 @@
     {
       "id": "shc-hemiola-bass",
       "name": "Hemiola Bass",
-      "ref": "In the style of Afro-Cuban bembé",
+      "ref": "A low bass on threes arguing with a high answer on twos, the hemiola of Afro-Cuban bembé",
       "artist": "Afro-Cuban music",
       "tags": ["bass", "polyrhythm"],
       "level": 2,
@@ -872,8 +872,8 @@
     {
       "id": "shc-never-twice",
       "name": "Never Twice",
-      "ref": "In the style of Brian Eno’s generative ambient",
-      "artist": "Brian Eno",
+      "ref": "Soft chimes on four prime-ish rhythms that never line up twice in a listening: generative ambient",
+      "artist": "Generative ambient",
       "tags": ["seq", "ambient", "polyrhythm"],
       "level": 2,
       "blurb": "Soft chimes on rhythms of 7, 9, 11 and 13: a cycle of thousands of sixteenths that never repeats in a listening.",
@@ -979,7 +979,7 @@
     {
       "id": "shc-feedback-rhythms",
       "name": "Feedback Rhythms",
-      "ref": "In the style of generative music",
+      "ref": "Two melodies setting each other’s pace, so the music keeps writing itself as generative music does",
       "artist": "Generative music",
       "tags": ["seq", "patch", "rhythm"],
       "level": 3,
@@ -1081,7 +1081,7 @@
     {
       "id": "shc-downbeat-boom",
       "name": "Downbeat Boom",
-      "ref": "In the style of Basic Channel dub techno",
+      "ref": "Dub chords on dotted eighths over a sub that moves once a bar, Basic Channel’s dub techno in outline",
       "artist": "Basic Channel",
       "tags": ["seq", "polyrhythm", "techno"],
       "level": 2,
@@ -1180,7 +1180,7 @@
     {
       "id": "shc-twelve-over-sixteen",
       "name": "Twelve Over Sixteen",
-      "ref": "In the style of Aphex Twin’s shifting acid lines",
+      "ref": "Aphex Twin’s slippery acid lines: a resonant four-note figure starting a beat earlier every bar",
       "artist": "Aphex Twin",
       "tags": ["seq", "polyrhythm", "acid"],
       "level": 2,
@@ -1275,7 +1275,7 @@
     {
       "id": "shc-undertone-arpeggio",
       "name": "Undertone Arpeggio",
-      "ref": "In the style of Oskar Sala’s Mixtur-Trautonium studies",
+      "ref": "Arpeggios climbing the undertone series while the oscillators stand still, Oskar Sala’s Mixtur-Trautonium idea",
       "artist": "Oskar Sala",
       "tags": ["seq", "undertones", "arpeggio"],
       "level": 2,
@@ -1375,8 +1375,8 @@
     {
       "id": "shc-falling-divisors",
       "name": "Falling Divisors",
-      "ref": "In the style of Harry Partch’s just intonation",
-      "artist": "Harry Partch",
+      "ref": "Pairs of notes sliding down the undertone series together, each interval shrinking as it falls",
+      "artist": "Just intonation",
       "tags": ["seq", "undertones"],
       "level": 3,
       "blurb": "Dyads sliding down the undertone series together, over a slow bass on VCO 2.",
@@ -1475,8 +1475,8 @@
     {
       "id": "shc-undertone-staircase",
       "name": "Undertone Staircase",
-      "ref": "In the style of Harry Partch’s undertone scales",
-      "artist": "Harry Partch",
+      "ref": "Subs climbing the undertone series one divisor at a time and falling back, a just-intonation staircase",
+      "artist": "Just intonation",
       "tags": ["seq", "patch", "undertones"],
       "level": 3,
       "blurb": "The subs climb the undertone series step by step, again and again: a slow wave in VCO 1 SUB.",
@@ -1567,7 +1567,7 @@
     {
       "id": "shc-undertone-drone-melody",
       "name": "Undertone Drone Melody",
-      "ref": "In the style of a hurdy-gurdy",
+      "ref": "An unbroken drone whose middle voice sings a slow undertone tune, like the strings of a hurdy-gurdy",
       "artist": "Hurdy-gurdy",
       "tags": ["drone", "undertones"],
       "level": 2,
@@ -1658,8 +1658,8 @@
     {
       "id": "shc-two-undertone-lines",
       "name": "Two Undertone Lines",
-      "ref": "In the style of a two-part invention",
-      "artist": "Johann Sebastian Bach",
+      "ref": "Two independent voices on their own rhythms, a two-part invention sung in the undertone series",
+      "artist": "Baroque counterpoint",
       "tags": ["seq", "undertones", "counterpoint"],
       "level": 3,
       "blurb": "Counterpoint in the undertone series: each VCO’s SUB 2 sings its own line, on its own rhythm.",
@@ -1759,7 +1759,7 @@
     {
       "id": "shc-divisor-bells",
       "name": "Divisor Bells",
-      "ref": "In the style of English change ringing",
+      "ref": "A peal on running sixteenths as the subs ring the changes, like the bells of an English church tower",
       "artist": "Change ringing",
       "tags": ["seq", "bell", "undertones"],
       "level": 2,
@@ -1861,7 +1861,7 @@
     {
       "id": "shc-undertone-zap",
       "name": "Undertone Zap",
-      "ref": "In the style of a chiptune arpeggio",
+      "ref": "Each note tumbling down the undertones as it fades, a quick falling run like a chiptune arpeggio",
       "artist": "Chiptune",
       "tags": ["pluck", "patch", "undertones"],
       "level": 2,
@@ -1948,8 +1948,8 @@
     {
       "id": "shc-undertone-bass-walk",
       "name": "Undertone Bass Walk",
-      "ref": "In the style of a dub bass line",
-      "artist": "King Tubby",
+      "ref": "A deep, round bass walking through the minor-sounding undertones of C, heavy enough for dub",
+      "artist": "Dub reggae",
       "tags": ["bass", "undertones"],
       "level": 2,
       "blurb": "A deep bass that walks through the undertones of C: ÷4, ÷5, ÷6, ÷3.",
@@ -2037,7 +2037,7 @@
     {
       "id": "shc-undertone-chorale",
       "name": "Undertone Chorale",
-      "ref": "In the style of a Lutheran chorale",
+      "ref": "Slow, breathing chords voice-led by whole divisors: a Lutheran chorale sung in the undertone series",
       "artist": "Chorale",
       "tags": ["pad", "undertones"],
       "level": 2,
@@ -2140,7 +2140,7 @@
     {
       "id": "shc-four-divisor-chords",
       "name": "Four-Divisor Chords",
-      "ref": "In the style of ambient chord changes",
+      "ref": "Four notes of undertone harmony changing together once a bar from a single cable, for slow ambient chords",
       "artist": "Ambient music",
       "tags": ["pad", "patch", "undertones"],
       "level": 3,
@@ -2233,7 +2233,7 @@
     {
       "id": "shc-mixtur-fanfare",
       "name": "Mixtur Fanfare",
-      "ref": "In the style of Oskar Sala’s fanfares",
+      "ref": "A brassy fanfare in parallel undertone chords, the Mixtur sound of Oskar Sala’s Trautonium",
       "artist": "Oskar Sala",
       "tags": ["brass", "undertones", "seq"],
       "level": 3,
@@ -2331,7 +2331,7 @@
     {
       "id": "shc-undertone-organ",
       "name": "Undertone Organ",
-      "ref": "In the style of a chapel organ’s foundation stops",
+      "ref": "A plain, hollow square-wave organ whose lower stops are its own subs, like a chapel’s foundation stops",
       "artist": "Church organ",
       "tags": ["keys", "organ", "undertones"],
       "level": 1,
@@ -2401,7 +2401,7 @@
     {
       "id": "shc-mixtur-minor",
       "name": "Mixtur Minor",
-      "ref": "In the style of Oskar Sala’s Mixtur-Trautonium",
+      "ref": "Every key a high note over a minor chord of undertones, as Oskar Sala’s Mixtur-Trautonium voiced it",
       "artist": "Oskar Sala",
       "tags": ["keys", "trautonium", "undertones"],
       "level": 2,
@@ -2471,7 +2471,7 @@
     {
       "id": "shc-trautonium-lead",
       "name": "Trautonium Lead",
-      "ref": "In the style of Oskar Sala’s Trautonium solos",
+      "ref": "Oskar Sala’s Trautonium voice: a reedy, singing saw lead with two oscillators drifting a hair apart",
       "artist": "Oskar Sala",
       "tags": ["lead", "trautonium"],
       "level": 2,
@@ -2541,7 +2541,7 @@
     {
       "id": "shc-audio-pwm-lead",
       "name": "Audio-Rate PWM Lead",
-      "ref": "In the style of a 1970s progressive-rock synth lead",
+      "ref": "A nasal, vowel-like buzzing lead that keeps its tone up and down the keys, for a 1970s prog-rock solo",
       "artist": "Progressive rock",
       "tags": ["lead", "patch", "pwm"],
       "level": 2,
@@ -2613,7 +2613,7 @@
     {
       "id": "shc-sub-stack-bass",
       "name": "Sub Stack Bass",
-      "ref": "In the style of a Minimoog-era funk bass",
+      "ref": "A round, punchy bass two octaves below the keys, built from the subs for Minimoog-era funk",
       "artist": "Funk",
       "tags": ["bass", "undertones"],
       "level": 1,
@@ -2680,7 +2680,7 @@
     {
       "id": "shc-feedback-snarl",
       "name": "Feedback Snarl",
-      "ref": "In the style of a distorted industrial bass",
+      "ref": "A bass that bites itself, its own output driving the filter into a distorted industrial growl",
       "artist": "Industrial music",
       "tags": ["bass", "patch"],
       "level": 2,
@@ -2751,7 +2751,7 @@
     {
       "id": "shc-fifth-root-bass",
       "name": "Fifth-Root Bass",
-      "ref": "In the style of a doom-metal bass tone",
+      "ref": "A heavy saw bass whose real root lies a fifth below the key, for slow, crushing doom metal",
       "artist": "Doom metal",
       "tags": ["bass", "undertones"],
       "level": 2,
@@ -2816,8 +2816,8 @@
     {
       "id": "shc-hollow-fourths",
       "name": "Hollow Fourths",
-      "ref": "In the style of quartal jazz voicings",
-      "artist": "McCoy Tyner",
+      "ref": "Open, unresolved stacks of fourths plucked from square waves, the quartal chords of modal jazz piano",
+      "artist": "Modal jazz",
       "tags": ["pluck", "fourths"],
       "level": 1,
       "blurb": "A plucked chord of stacked fourths from two square VCOs and their octave subs.",
@@ -2887,7 +2887,7 @@
     {
       "id": "shc-bowed-undertones",
       "name": "Bowed Undertones",
-      "ref": "In the style of a slow string section",
+      "ref": "Two undertone stacks locking into one slow, bowed chord, like a string section easing in",
       "artist": "String orchestra",
       "tags": ["strings", "undertones", "pad"],
       "level": 2,
@@ -2958,8 +2958,8 @@
     {
       "id": "shc-undertone-bloom",
       "name": "Undertone Bloom",
-      "ref": "In the style of Gérard Grisey’s spectral music",
-      "artist": "Gérard Grisey",
+      "ref": "A pad whose upper chord climbs the undertone series as it swells, harmony grown from one note’s spectrum",
+      "artist": "Spectral music",
       "tags": ["pad", "patch", "undertones"],
       "level": 2,
       "blurb": "A pad whose upper chord climbs the undertone series as it swells: the VCA EG into VCO 2 SUB.",
@@ -3037,7 +3037,7 @@
     {
       "id": "shc-undertone-brass",
       "name": "Undertone Brass",
-      "ref": "In the style of a 1970s synth brass section",
+      "ref": "Blaring saw brass with trombones an octave and a twelfth below, a 1970s synth brass section",
       "artist": "Synth brass",
       "tags": ["brass"],
       "level": 2,
@@ -3104,7 +3104,7 @@
     {
       "id": "shc-glass-divisions",
       "name": "Glass Divisions",
-      "ref": "In the style of a glass harmonica",
+      "ref": "Glassy struck tones with strange, out-of-tune undertones ringing beneath, like a glass harmonica",
       "artist": "Glass harmonica",
       "tags": ["pluck", "bell", "undertones"],
       "level": 2,
@@ -3171,7 +3171,7 @@
     {
       "id": "shc-filter-fm-piano",
       "name": "Filter-FM Piano",
-      "ref": "In the style of a 1980s metallic electric piano",
+      "ref": "A bright, clanging electric piano with a metallic tine, the digital EP of 1980s pop",
       "artist": "1980s pop",
       "tags": ["keys", "patch"],
       "level": 2,
@@ -3245,7 +3245,7 @@
     {
       "id": "shc-blue-seventh",
       "name": "Blue Seventh",
-      "ref": "In the style of a blues harmonica bend",
+      "ref": "A biting lead with a septimal blue note beneath, flatter than any piano key, like a bent blues harp",
       "artist": "Blues",
       "tags": ["lead", "undertones", "blues"],
       "level": 3,
@@ -3313,7 +3313,7 @@
     {
       "id": "shc-pulse-choir",
       "name": "Pulse Choir",
-      "ref": "In the style of a vocoder choir pad",
+      "ref": "A breathy, vowel-rich pad of two self-modulated pulse waves: a vocoder choir for space disco",
       "artist": "Space disco",
       "tags": ["pad", "pwm"],
       "level": 2,
@@ -3382,7 +3382,7 @@
     {
       "id": "shc-nasal-clav",
       "name": "Nasal Clav",
-      "ref": "In the style of a funk clavinet",
+      "ref": "A pluck that starts thin and nasal and then rounds off, like the strike of a funk clavinet",
       "artist": "Funk",
       "tags": ["keys", "patch", "pwm"],
       "level": 2,
@@ -3455,7 +3455,7 @@
     {
       "id": "shc-unison-sub-bass",
       "name": "Unison Sub Bass",
-      "ref": "In the style of a modern film-score sub bass",
+      "ref": "A fat bass beating slowly under every note, the rolling sub of a modern film score",
       "artist": "Film score",
       "tags": ["bass"],
       "level": 2,
@@ -3526,7 +3526,7 @@
     {
       "id": "shc-thirteen-gong",
       "name": "Thirteen Gong",
-      "ref": "In the style of a Javanese gong",
+      "ref": "A long, clangorous gong from the eleventh and thirteenth undertones, blooming like a Javanese gong",
       "artist": "Gamelan",
       "tags": ["perc", "bell", "undertones"],
       "level": 3,
@@ -3595,7 +3595,7 @@
     {
       "id": "shc-pipe-mixture",
       "name": "Pipe Mixture",
-      "ref": "In the style of a Baroque organ’s mixture stop",
+      "ref": "A bright organ chorus of fifths and octaves, a Baroque mixture stop built downwards",
       "artist": "Baroque organ",
       "tags": ["keys", "organ", "undertones"],
       "level": 3,
@@ -3670,7 +3670,7 @@
     {
       "id": "shc-berlin-transposed",
       "name": "Berlin Transposed",
-      "ref": "In the style of Tangerine Dream’s Phaedra sequences",
+      "ref": "A pumping eighth-note bass sequence moved a bar at a time from the keys, as Tangerine Dream played Phaedra",
       "artist": "Tangerine Dream",
       "tags": ["bass", "sequence", "berlin school"],
       "level": 2,
@@ -3761,7 +3761,7 @@
     {
       "id": "shc-rubycon-pulse",
       "name": "Rubycon Pulse",
-      "ref": "In the style of Tangerine Dream’s Rubycon",
+      "ref": "Tangerine Dream’s Rubycon machinery: a sixteenth-note pulse and a slower counter-line changing chord as one",
       "artist": "Tangerine Dream",
       "tags": ["seq", "sequence", "berlin school"],
       "level": 3,
@@ -3863,7 +3863,7 @@
     {
       "id": "shc-trance-gate",
       "name": "Trance Gate",
-      "ref": "In the style of a 1990s trance gate",
+      "ref": "A chord chopped into sixteenths by the clock itself: the gated pad of 1990s trance",
       "artist": "Trance",
       "tags": ["pad", "patch", "transposed"],
       "level": 2,
@@ -3946,7 +3946,7 @@
     {
       "id": "shc-schulze-drift",
       "name": "Schulze Drift",
-      "ref": "In the style of Klaus Schulze’s Moondawn",
+      "ref": "A hypnotic minor arpeggio drifting over slow chords for bars on end, like Klaus Schulze’s Moondawn",
       "artist": "Klaus Schulze",
       "tags": ["seq", "sequence", "berlin school"],
       "level": 2,
@@ -4046,7 +4046,7 @@
     {
       "id": "shc-octave-bounce",
       "name": "Octave Bounce",
-      "ref": "In the style of Giorgio Moroder’s I Feel Love",
+      "ref": "The root-and-octave sixteenth bass that Giorgio Moroder set bouncing under “I Feel Love”",
       "artist": "Giorgio Moroder",
       "tags": ["bass", "sequence", "disco"],
       "level": 1,
@@ -4136,7 +4136,7 @@
     {
       "id": "shc-counter-bass",
       "name": "Counter-Bass",
-      "ref": "In the style of a Berlin-school sequence",
+      "ref": "A climbing melody whose bass takes its own path below, a Berlin School sequence with a mind of its own",
       "artist": "Berlin school",
       "tags": ["seq", "patch", "transposed"],
       "level": 3,
@@ -4219,7 +4219,7 @@
     {
       "id": "shc-oxygene-arp",
       "name": "Oxygène Arpeggio",
-      "ref": "In the style of Jean-Michel Jarre’s Oxygène",
+      "ref": "Soft square-wave arpeggios rippling in parallel octaves over slow minor chords, as on Jarre’s Oxygène",
       "artist": "Jean-Michel Jarre",
       "tags": ["seq", "arpeggio"],
       "level": 2,
@@ -4322,7 +4322,7 @@
     {
       "id": "shc-night-drive",
       "name": "Night Drive",
-      "ref": "In the style of Kavinsky’s Nightcall",
+      "ref": "Dark, resonant synthwave eighths with an octave kick, the moody drive of Kavinsky’s “Nightcall”",
       "artist": "Kavinsky",
       "tags": ["bass", "synthwave"],
       "level": 1,
@@ -4413,8 +4413,8 @@
     {
       "id": "shc-motorik",
       "name": "Motorik",
-      "ref": "In the style of Neu!’s Hallogallo",
-      "artist": "Neu!",
+      "ref": "A relentless eighth-note figure over a drone, rocking between two chords: the motorik groove of krautrock",
+      "artist": "Krautrock",
       "tags": ["seq", "krautrock"],
       "level": 2,
       "blurb": "A relentless eighth-note figure and a droning counter-voice, moving between two chords forever.",
@@ -4514,7 +4514,7 @@
     {
       "id": "shc-clock-pump",
       "name": "Clock Pump",
-      "ref": "In the style of a French house filter",
+      "ref": "A bass whose filter flaps open on every sixteenth, the pumping filter of French house",
       "artist": "French house",
       "tags": ["bass", "patch", "transposed"],
       "level": 2,
@@ -4592,7 +4592,7 @@
     {
       "id": "shc-trans-europe",
       "name": "Trans-Europe",
-      "ref": "In the style of Kraftwerk’s Trans-Europe Express",
+      "ref": "Kraftwerk’s “Trans-Europe Express” rattles like this: clanking squares, three against four",
       "artist": "Kraftwerk",
       "tags": ["seq", "electro"],
       "level": 2,
@@ -4695,7 +4695,7 @@
     {
       "id": "shc-just-fifths-drone",
       "name": "Just Fifths Drone",
-      "ref": "In the style of a tanpura drone",
+      "ref": "A still, glowing drone on a pure fifth, its upper string moving between Pa and Ma like a tanpura",
       "artist": "Hindustani classical music",
       "tags": ["drone", "just intonation"],
       "level": 1,
@@ -4777,8 +4777,8 @@
     {
       "id": "shc-pure-major-chimes",
       "name": "Pure Major Chimes",
-      "ref": "In the style of Terry Riley’s just-intonation keyboard music",
-      "artist": "Terry Riley",
+      "ref": "Chiming major-seventh arpeggios in just intonation, every pair of notes landing pure",
+      "artist": "Just intonation",
       "tags": ["seq", "just intonation", "bell"],
       "level": 2,
       "blurb": "Chiming major-seventh arpeggios in just C major, eighths against dotted eighths.",
@@ -4879,7 +4879,7 @@
     {
       "id": "shc-just-thirds-pulse",
       "name": "Just Thirds Pulse",
-      "ref": "In the style of La Monte Young’s tuned sustained tones",
+      "ref": "Two saws a beatless major third apart, pulsing in parallel through a mode, for just-tuned drone music",
       "artist": "Drone music",
       "tags": ["seq", "just intonation"],
       "level": 2,
@@ -4978,8 +4978,8 @@
     {
       "id": "shc-width-sequencer",
       "name": "Width Sequencer",
-      "ref": "In the style of La Monte Young’s just-tuned drones",
-      "artist": "La Monte Young",
+      "ref": "A just fifth whose upper voice changes vowel on every step, the timbre moving while the tuning holds",
+      "artist": "Just-intonation drones",
       "tags": ["drone", "patch", "just intonation", "pwm"],
       "level": 3,
       "blurb": "A just fifth whose upper voice changes vowel on every step: SEQ 2 OUT patched into VCO 2 PWM.",
@@ -5065,8 +5065,8 @@
     {
       "id": "shc-augmentation-canon",
       "name": "Augmentation Canon",
-      "ref": "In the style of a Bach augmentation canon",
-      "artist": "Johann Sebastian Bach",
+      "ref": "One four-note theme played against itself at half speed, an octave lower: a canon by augmentation",
+      "artist": "Baroque counterpoint",
       "tags": ["seq", "just intonation", "counterpoint"],
       "level": 3,
       "blurb": "One four-note theme on both sequencers, one twice as slow as the other: a canon by augmentation.",
@@ -5163,8 +5163,8 @@
     {
       "id": "shc-just-organum",
       "name": "Just Organum",
-      "ref": "In the style of Pérotin’s organum",
-      "artist": "Pérotin",
+      "ref": "A chant in pure parallel fifths over a long held note, as sung at Notre-Dame around 1200",
+      "artist": "Medieval organum",
       "tags": ["seq", "just intonation", "drone"],
       "level": 2,
       "blurb": "A melody in pure parallel fifths over a held drone, as at Notre-Dame around 1200.",
@@ -5259,7 +5259,7 @@
     {
       "id": "shc-leslie-chorale",
       "name": "Leslie Chorale",
-      "ref": "In the style of a gospel organ through a rotating speaker",
+      "ref": "Just-tuned organ chords throbbing as if through a rotating speaker, for gospel",
       "artist": "Gospel organ",
       "tags": ["keys", "patch", "just intonation"],
       "level": 3,
@@ -5350,8 +5350,8 @@
     {
       "id": "shc-just-minor-cycle",
       "name": "Just Minor Cycle",
-      "ref": "In the style of Ben Johnston’s just-intonation quartets",
-      "artist": "Ben Johnston",
+      "ref": "A dark minor figure in 5-limit just tuning, its pure intervals colliding three against two",
+      "artist": "Just intonation",
       "tags": ["seq", "just intonation"],
       "level": 3,
       "blurb": "A minor-key figure in 5-limit just tuning, three against two, with its own pure, dark colour.",
@@ -5446,8 +5446,8 @@
     {
       "id": "shc-beatless-pad",
       "name": "Beatless Pad",
-      "ref": "In the style of Stars of the Lid",
-      "artist": "Stars of the Lid",
+      "ref": "A slow held pad whose chords are tuned so pure they never shimmer, for still ambient drone",
+      "artist": "Ambient drone",
       "tags": ["pad", "just intonation"],
       "level": 2,
       "blurb": "A slow, held pad whose chords change twice a bar, every one of them perfectly still.",
@@ -5542,8 +5542,8 @@
     {
       "id": "shc-clapping-ratios",
       "name": "Clapping Ratios",
-      "ref": "In the style of Steve Reich’s Clapping Music",
-      "artist": "Steve Reich",
+      "ref": "Two dry, clap-like voices interlocking on threes and fours in a twelve-beat pattern",
+      "artist": "Minimalism",
       "tags": ["perc", "minimal", "polyrhythm"],
       "level": 2,
       "blurb": "Two dry, clap-like voices on interlocking pulses of three and four plus two: a twelve-beat pattern.",
@@ -5645,7 +5645,7 @@
     {
       "id": "shc-glass-arpeggios",
       "name": "Glass Arpeggios",
-      "ref": "In the style of Philip Glass’s organ arpeggios",
+      "ref": "Rolling organ arpeggios, three notes against two, as Philip Glass’s ensemble keyboards play them",
       "artist": "Philip Glass",
       "tags": ["seq", "minimal", "arpeggio"],
       "level": 2,
@@ -5747,9 +5747,9 @@
     },
     {
       "id": "shc-in-c-cells",
-      "name": "In C Cells",
-      "ref": "In the style of Terry Riley’s In C",
-      "artist": "Terry Riley",
+      "name": "Pulse and Cells",
+      "ref": "A bright pulse on high C with a short melodic cell drifting against it, a minimalist process",
+      "artist": "Minimalism",
       "tags": ["seq", "minimal"],
       "level": 2,
       "blurb": "A bright eighth-note pulse on high C and a short melodic cell drifting against it.",
@@ -5843,7 +5843,7 @@
     {
       "id": "shc-hold-and-release",
       "name": "Hold and Release",
-      "ref": "In the style of minimalist pulse music",
+      "ref": "A melody that stalls on one repeated note, then runs free, for minimalist pulse music",
       "artist": "Minimalism",
       "tags": ["seq", "patch"],
       "level": 3,
@@ -5937,8 +5937,8 @@
     {
       "id": "shc-additive-process",
       "name": "Additive Process",
-      "ref": "In the style of Frederic Rzewski’s Les Moutons de Panurge",
-      "artist": "Frederic Rzewski",
+      "ref": "One melody read at two speeds at once by the same notes, a process you can hear unfold",
+      "artist": "Process music",
       "tags": ["seq", "minimal"],
       "level": 3,
       "blurb": "One melody, read at two speeds at once by the same notes: a process you can hear unfold.",
@@ -6038,7 +6038,7 @@
     {
       "id": "shc-kotekan",
       "name": "Kotekan",
-      "ref": "In the style of Balinese gamelan gong kebyar",
+      "ref": "Two bright metallophone parts meshing into one glittering line: the kotekan of Balinese gong kebyar",
       "artist": "Gamelan gong kebyar",
       "tags": ["seq", "bell", "interlock"],
       "level": 3,
@@ -6140,7 +6140,7 @@
     {
       "id": "shc-stop-start",
       "name": "Stop-Start",
-      "ref": "In the style of a stop-time break",
+      "ref": "A sequence that stops dead on a held note and picks up where it left off, a jazz stop-time break",
       "artist": "Jazz",
       "tags": ["seq", "patch"],
       "level": 3,
@@ -6231,7 +6231,7 @@
     {
       "id": "shc-gong-cycle",
       "name": "Gong Cycle",
-      "ref": "In the style of Javanese gamelan’s colotomic structure",
+      "ref": "A great gong each bar and smaller ones on the half and quarter, time nested as Javanese gamelan marks it",
       "artist": "Javanese gamelan",
       "tags": ["perc", "bell", "gamelan"],
       "level": 3,
@@ -6331,7 +6331,7 @@
     {
       "id": "shc-your-rhythm-its-notes",
       "name": "Your Rhythm, Its Notes",
-      "ref": "In the style of a funk guitar’s sixteenth-note riff",
+      "ref": "A syncopated sixteenth-note riff whose pitches the hidden sequencers choose, like a funk guitar part",
       "artist": "Funk",
       "tags": ["seq", "generative"],
       "level": 2,
@@ -6431,7 +6431,7 @@
     {
       "id": "shc-offbeat-skank",
       "name": "Offbeat Skank",
-      "ref": "In the style of a reggae organ skank",
+      "ref": "Chords chopped on every offbeat while the sequencers change them below, a reggae organ skank",
       "artist": "Reggae",
       "tags": ["keys", "reggae", "generative"],
       "level": 2,
@@ -6528,7 +6528,7 @@
     {
       "id": "shc-ornamented-reel",
       "name": "Ornamented Reel",
-      "ref": "In the style of the ornaments of Irish traditional music",
+      "ref": "Every note flicked through a quick run of grace notes, the cuts and rolls of Irish traditional music",
       "artist": "Irish traditional music",
       "tags": ["lead", "patch", "rhythm"],
       "level": 3,
@@ -6629,7 +6629,7 @@
     {
       "id": "shc-clave-melody",
       "name": "Clave Melody",
-      "ref": "In the style of son clave",
+      "ref": "The five strokes of the 3–2 son clave turned into a melody by a sequence running beneath",
       "artist": "Cuban son",
       "tags": ["seq", "generative", "latin"],
       "level": 2,
@@ -6727,7 +6727,7 @@
     {
       "id": "shc-bassline-generator",
       "name": "Bassline Generator",
-      "ref": "In the style of Chicago house basslines",
+      "ref": "A Chicago house bass rhythm that grows new octaves and fifths every time round",
       "artist": "Chicago house",
       "tags": ["bass", "generative"],
       "level": 2,
@@ -6817,7 +6817,7 @@
     {
       "id": "shc-zap-kick",
       "name": "Zap Kick",
-      "ref": "In the style of an electro kick drum",
+      "ref": "A four-on-the-floor kick zapping down from high into the sub, the electro drum-machine kick",
       "artist": "Electro",
       "tags": ["perc", "drums", "patch"],
       "level": 2,
@@ -6898,7 +6898,7 @@
     {
       "id": "shc-fm-snare",
       "name": "FM Snare",
-      "ref": "In the style of a 1980s drum-machine snare",
+      "ref": "A noisy snare spray from a synth with no noise source, close to a 1980s drum-machine snare",
       "artist": "Electro",
       "tags": ["perc", "patch"],
       "level": 2,
@@ -6972,7 +6972,7 @@
     {
       "id": "shc-electro-toms",
       "name": "Electro Toms",
-      "ref": "In the style of the Roland TR-808’s toms",
+      "ref": "Falling, tuned toms rolling round the kit, the TR-808 toms that tumble through Afrika Bambaataa’s electro",
       "artist": "Afrika Bambaataa",
       "tags": ["perc", "drums", "patch"],
       "level": 2,
@@ -7059,7 +7059,7 @@
     {
       "id": "shc-pinged-log-drum",
       "name": "Pinged Log Drum",
-      "ref": "In the style of a slit log drum",
+      "ref": "A filter rung like hollow wood and tuned to four pitches by a sequencer, like a slit log drum",
       "artist": "Slit drum",
       "tags": ["perc", "patch"],
       "level": 3,
@@ -7140,7 +7140,7 @@
     {
       "id": "shc-metal-hats",
       "name": "Metal Hats",
-      "ref": "In the style of a cymbal’s chatter",
+      "ref": "Metallic hi-hat ticks on every sixteenth from high undertone clusters, chattering like a jazz cymbal",
       "artist": "Jazz drumming",
       "tags": ["perc", "drums"],
       "level": 2,
@@ -7226,7 +7226,7 @@
     {
       "id": "shc-build-up-roll",
       "name": "Build-Up Roll",
-      "ref": "In the style of a dance-music build-up",
+      "ref": "A tom roll that speeds up into a blur every bar: the dance-music build-up into the drop",
       "artist": "Electronic dance music",
       "tags": ["perc", "patch", "rhythm"],
       "level": 3,
@@ -7319,7 +7319,7 @@
     {
       "id": "shc-woodblocks",
       "name": "Woodblocks",
-      "ref": "In the style of Leroy Anderson’s woodblock writing",
+      "ref": "Two tuned woodblocks a fifth apart knocking three against two, hollow and dry, from the orchestra’s percussion",
       "artist": "Orchestral percussion",
       "tags": ["perc"],
       "level": 1,
@@ -7399,7 +7399,7 @@
     {
       "id": "shc-drum-circle",
       "name": "Drum Circle",
-      "ref": "In the style of a djembe circle",
+      "ref": "Bass, tone and slap on four interlocking divisions from one voice, a djembe circle in full swing",
       "artist": "West African drumming",
       "tags": ["perc", "drums", "polyrhythm"],
       "level": 2,
@@ -7500,7 +7500,7 @@
     {
       "id": "shc-accent-pattern",
       "name": "Accent Pattern",
-      "ref": "In the style of West African drumming",
+      "ref": "Two drums from one voice, one with a slap on its attack, interlocking as in West African drumming",
       "artist": "West African drumming",
       "tags": ["perc", "patch", "rhythm"],
       "level": 3,
@@ -7586,8 +7586,8 @@
     {
       "id": "shc-tabla-bols",
       "name": "Tabla Bols",
-      "ref": "In the style of tabla in teental",
-      "artist": "Zakir Hussain",
+      "ref": "Ringing dayan strokes over a deep bayan boom, talking like tabla in teental",
+      "artist": "Hindustani tabla",
       "tags": ["perc", "drums"],
       "level": 2,
       "blurb": "Ringing, talking drum strokes: a resonant dayan tone and a deep bayan from the subs.",
@@ -7669,7 +7669,7 @@
     {
       "id": "shc-throat-singing",
       "name": "Throat Singing",
-      "ref": "In the style of Tuvan khoomei",
+      "ref": "A low drone with a whistling overtone melody picked out above it, like Tuvan khoomei",
       "artist": "Tuvan throat singing",
       "tags": ["drone", "patch", "overtones"],
       "level": 3,
@@ -7745,7 +7745,7 @@
     {
       "id": "shc-didgeridoo",
       "name": "Didgeridoo",
-      "ref": "In the style of a didgeridoo drone",
+      "ref": "A low, buzzing drone whose resonance wah-wahs in rhythm, like a didgeridoo",
       "artist": "Yolŋu music",
       "tags": ["drone", "patch"],
       "level": 2,
@@ -7828,7 +7828,7 @@
     {
       "id": "shc-pipes-and-drones",
       "name": "Pipes and Drones",
-      "ref": "In the style of the Highland bagpipe",
+      "ref": "A reedy chanter tune over drones an octave and a twelfth below: the Highland bagpipe",
       "artist": "Highland bagpipe",
       "tags": ["drone", "lead"],
       "level": 2,
@@ -7923,7 +7923,7 @@
     {
       "id": "shc-shruti-breath",
       "name": "Shruti Breath",
-      "ref": "In the style of a shruti box",
+      "ref": "A reed drone on Sa and Pa that swells once a bar, as a shruti box’s bellows push",
       "artist": "Indian classical music",
       "tags": ["drone", "pad"],
       "level": 1,
@@ -8008,7 +8008,7 @@
     {
       "id": "shc-beating-unison",
       "name": "Beating Unison",
-      "ref": "In the style of Éliane Radigue’s slow drones",
+      "ref": "One held drone with slow waves rolling through it at several speeds, Éliane Radigue’s territory",
       "artist": "Éliane Radigue",
       "tags": ["drone", "ambient"],
       "level": 2,
@@ -8077,7 +8077,7 @@
     {
       "id": "shc-timbre-sequence",
       "name": "Timbre Sequence",
-      "ref": "In the style of Morton Subotnick’s timbral sequences",
+      "ref": "One held note whose tone changes on every step, timbre sequenced as Morton Subotnick sequenced it",
       "artist": "Morton Subotnick",
       "tags": ["drone", "patch"],
       "level": 3,
@@ -8164,7 +8164,7 @@
     {
       "id": "shc-deep-space-hum",
       "name": "Deep Space Hum",
-      "ref": "In the style of Louis and Bebe Barron’s Forbidden Planet",
+      "ref": "A huge sub-bass hum fluttering like distant machinery: the Barrons’ Forbidden Planet in miniature",
       "artist": "Louis and Bebe Barron",
       "tags": ["drone", "fx"],
       "level": 2,
@@ -8250,7 +8250,7 @@
     {
       "id": "shc-filter-steps-drone",
       "name": "Filter Steps",
-      "ref": "In the style of minimalist drone music",
+      "ref": "A held chord whose colour steps in rhythm while its notes stay put, for minimalist drone music",
       "artist": "Drone music",
       "tags": ["drone", "patch"],
       "level": 2,
@@ -8333,7 +8333,7 @@
     {
       "id": "shc-pedal-point",
       "name": "Pedal Point",
-      "ref": "In the style of a cathedral organ’s pedal point",
+      "ref": "A low C held for ever beneath slowly moving chords, the pedal point of a cathedral organ",
       "artist": "Cathedral organ",
       "tags": ["drone", "organ"],
       "level": 2,
@@ -8425,7 +8425,7 @@
     {
       "id": "shc-feedback-pwm-drone",
       "name": "Feedback PWM Drone",
-      "ref": "In the style of Éliane Radigue’s feedback drones",
+      "ref": "A drone that churns as its own output moves its pulse width, close to Éliane Radigue’s feedback drones",
       "artist": "Éliane Radigue",
       "tags": ["drone", "patch", "pwm"],
       "level": 2,
@@ -8499,7 +8499,7 @@
     {
       "id": "shc-bouncing-ball",
       "name": "Bouncing Ball",
-      "ref": "In the style of a bouncing ball",
+      "ref": "Notes coming fast after each strike and slowing as they fade, like a ball bouncing to rest",
       "artist": "Sound effects",
       "tags": ["fx", "patch", "rhythm"],
       "level": 2,
@@ -8589,7 +8589,7 @@
     {
       "id": "shc-rhythm-sequencer",
       "name": "Rhythm Sequencer",
-      "ref": "In the style of Autechre’s shifting rhythms",
+      "ref": "A melody whose rhythm itself changes speed every beat, the restless, shifting pulse of Autechre",
       "artist": "Autechre",
       "tags": ["seq", "patch", "rhythm"],
       "level": 3,
@@ -8681,7 +8681,7 @@
     {
       "id": "shc-seven-step-loop",
       "name": "Seven-Step Loop",
-      "ref": "In the style of Moog’s DFAM patches",
+      "ref": "A four-step sequencer cut short into a seven-note loop in 7/16, a reset trick from Moog’s DFAM",
       "artist": "Moog DFAM",
       "tags": ["seq", "patch"],
       "level": 3,
@@ -8774,7 +8774,7 @@
     {
       "id": "shc-hidden-sequence",
       "name": "Hidden Sequence",
-      "ref": "In the style of a sample-and-hold melody",
+      "ref": "One sequencer moves the pitch unheard while the other picks the moments, a sample-and-hold melody",
       "artist": "Modular synthesis",
       "tags": ["seq", "patch"],
       "level": 3,
@@ -8864,7 +8864,7 @@
     {
       "id": "shc-self-listening-rhythm",
       "name": "Self-Listening Rhythm",
-      "ref": "In the style of a self-patched modular",
+      "ref": "A rhythm thrown about by its own output, the pattern-making of a self-patched modular",
       "artist": "Modular synthesis",
       "tags": ["seq", "patch", "rhythm"],
       "level": 3,
@@ -8961,7 +8961,7 @@
     {
       "id": "shc-crossed-sequencers",
       "name": "Crossed Sequencers",
-      "ref": "In the style of a Buchla-style sequential voltage source",
+      "ref": "Two four-step patterns summed into sixteen pairings, like a Buchla sequential voltage source",
       "artist": "West Coast synthesis",
       "tags": ["seq", "patch"],
       "level": 3,
@@ -9062,7 +9062,7 @@
     {
       "id": "shc-divider-chaos",
       "name": "Divider Chaos",
-      "ref": "In the style of circuit-bent electronics",
+      "ref": "Buzzing digital chaos as the divisors flip thousands of times a second, the sound of circuit bending",
       "artist": "Circuit bending",
       "tags": ["fx", "patch"],
       "level": 3,
@@ -9153,7 +9153,7 @@
     {
       "id": "shc-growl-bass",
       "name": "Growl Bass",
-      "ref": "In the style of a neurofunk bass",
+      "ref": "A snarling bass thick with filter-FM sidebands that follow the note, for neurofunk drum and bass",
       "artist": "Drum and bass",
       "tags": ["bass", "patch"],
       "level": 3,
@@ -9225,7 +9225,7 @@
     {
       "id": "shc-octave-flutter",
       "name": "Octave Flutter",
-      "ref": "In the style of an Italo-disco octave bass",
+      "ref": "A bass flipping between octaves twice every clock, the Italo disco bounce at double speed",
       "artist": "Italo disco",
       "tags": ["bass", "patch"],
       "level": 2,
@@ -9301,7 +9301,7 @@
     {
       "id": "shc-cross-pwm",
       "name": "Cross PWM",
-      "ref": "In the style of a chorus-laden 1980s pad",
+      "ref": "A swirling, chorused pulse-wave pad made with no LFO at all, a 1980s synth-pop wash",
       "artist": "Synth-pop",
       "tags": ["pad", "patch", "pwm"],
       "level": 2,
@@ -9375,7 +9375,7 @@
     {
       "id": "shc-slow-pwm-strings",
       "name": "Slow PWM Strings",
-      "ref": "In the style of a 1970s string machine",
+      "ref": "Lush strings shimmering as a slow wave sweeps every pulse width, like a 1970s string machine",
       "artist": "String synthesizers",
       "tags": ["strings", "patch", "pwm"],
       "level": 3,
@@ -9467,8 +9467,8 @@
     {
       "id": "shc-ring-tremolo",
       "name": "Ring Tremolo",
-      "ref": "In the style of a surf guitar’s tremolo",
-      "artist": "Dick Dale",
+      "ref": "A fast, pulsing tremolo locked to the note, quickening as you play higher, like a surf-guitar amp",
+      "artist": "Surf guitar",
       "tags": ["keys", "patch"],
       "level": 2,
       "blurb": "A pulsing tremolo locked to the note’s own subharmonic: VCO 2’s deepest sub into the VCA.",
@@ -9541,7 +9541,7 @@
     {
       "id": "shc-trautonium-birds",
       "name": "Birds",
-      "ref": "In the style of Oskar Sala’s bird sounds for The Birds (1963)",
+      "ref": "Screeching, chattering cries on restless rhythms, a rough sketch of Oskar Sala’s birds for The Birds",
       "artist": "Oskar Sala",
       "tags": ["fx", "trautonium"],
       "level": 3,
@@ -9645,7 +9645,7 @@
     {
       "id": "shc-two-tone-siren",
       "name": "Two-Tone Siren",
-      "ref": "In the style of a European police siren",
+      "ref": "Two brassy tones a fourth apart swapping every beat without a break: a European police siren",
       "artist": "Sound effects",
       "tags": ["fx"],
       "level": 1,
@@ -9732,7 +9732,7 @@
     {
       "id": "shc-sonar",
       "name": "Sonar",
-      "ref": "In the style of a submarine’s sonar",
+      "ref": "A pure ping ringing out into the deep once a bar, with a faint return: submarine sonar",
       "artist": "Sound effects",
       "tags": ["fx"],
       "level": 1,
@@ -9811,7 +9811,7 @@
     {
       "id": "shc-cicadas",
       "name": "Cicadas",
-      "ref": "In the style of cicadas on a summer night",
+      "ref": "A buzzing, chirping swarm, the subs swept sixteen times a second: cicadas on a summer night",
       "artist": "Sound effects",
       "tags": ["fx", "patch"],
       "level": 2,
@@ -9893,7 +9893,7 @@
     {
       "id": "shc-bubbles",
       "name": "Bubbles",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "Rising, plopping bubbles from a pinged resonant filter, a BBC Radiophonic Workshop staple",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "patch"],
       "level": 2,
@@ -9977,7 +9977,7 @@
     {
       "id": "shc-laser-zaps",
       "name": "Laser Zaps",
-      "ref": "In the style of 1980s arcade sound effects",
+      "ref": "Pew-pew: pitches falling fast on dotted eighths, straight out of a 1980s arcade",
       "artist": "Arcade games",
       "tags": ["fx", "patch"],
       "level": 1,
@@ -10050,7 +10050,7 @@
     {
       "id": "shc-clockwork",
       "name": "Clockwork",
-      "ref": "In the style of a clock shop",
+      "ref": "Tick, tock and tiny gears at three rates at once, a clock shop on a quiet afternoon",
       "artist": "Sound effects",
       "tags": ["fx", "perc"],
       "level": 1,
@@ -10140,7 +10140,7 @@
     {
       "id": "shc-wobble-rates",
       "name": "Wobble Rates",
-      "ref": "In the style of dubstep wobble bass",
+      "ref": "A held bass whose filter wobbles at a new rate every beat, as a dubstep producer automates an LFO",
       "artist": "Dubstep",
       "tags": ["bass", "patch", "wobble"],
       "level": 3,
@@ -10224,7 +10224,7 @@
     {
       "id": "shc-geiger",
       "name": "Geiger Counter",
-      "ref": "In the style of a Geiger counter",
+      "ref": "Irregular clicks from four prime rhythms, random-sounding as a Geiger counter near something hot",
       "artist": "Sound effects",
       "tags": ["fx", "perc"],
       "level": 1,
@@ -10301,7 +10301,7 @@
     {
       "id": "shc-feedback-howl",
       "name": "Feedback Howl",
-      "ref": "In the style of Louis and Bebe Barron’s self-destructing circuits",
+      "ref": "Squeals and howls from a circuit fed its own pitch, like the Barrons’ overloading Forbidden Planet circuits",
       "artist": "Louis and Bebe Barron",
       "tags": ["fx", "patch"],
       "level": 3,
@@ -10373,7 +10373,7 @@
     {
       "id": "shc-robot-voice",
       "name": "Robot Voice",
-      "ref": "In the style of a 1950s film robot",
+      "ref": "A buzzing monotone that talks through shifting vowels, the voice of a 1950s film robot",
       "artist": "Sound effects",
       "tags": ["fx", "patch"],
       "level": 2,
@@ -10457,7 +10457,7 @@
     {
       "id": "shc-poly-rock",
       "name": "Poly Rock",
-      "ref": "In the style of the manual’s Poly Rock patch",
+      "ref": "Moog’s Poly Rock patch: sub chords stepped by both sequencers over a clock-driven drum pulse",
       "artist": "Moog Music",
       "tags": ["seq", "drums"],
       "level": 2,
@@ -10535,7 +10535,7 @@
     {
       "id": "shc-cloud-path",
       "name": "Cloud Path",
-      "ref": "In the style of the manual’s Cloud Path patch",
+      "ref": "Slow, soft chords from both sequencers and no cables at all, as the manual’s Cloud Path sets them",
       "artist": "Moog Music",
       "tags": ["pad", "ambient"],
       "level": 1,
@@ -10621,7 +10621,7 @@
     {
       "id": "shc-aquatic-chords",
       "name": "Aquatic Chords",
-      "ref": "In the style of the manual’s Aquatic Chords patch",
+      "ref": "Crossed sequencers and envelope-bent rhythms, from the manual’s Aquatic Chords patch sheet",
       "artist": "Moog Music",
       "tags": ["seq", "ambient"],
       "level": 3,
@@ -10714,7 +10714,7 @@
     {
       "id": "shc-mellow-harmonies",
       "name": "Mellow Harmonies",
-      "ref": "In the style of the manual’s Mellow Harmonies patch",
+      "ref": "The manual’s Mellow Harmonies: one sequencer sets the pulse width, the other plays the filter",
       "artist": "Moog Music",
       "tags": ["seq", "pad"],
       "level": 2,
@@ -10790,7 +10790,7 @@
     {
       "id": "shc-point-zero",
       "name": "Point Zero",
-      "ref": "In the style of the manual’s Point Zero patch",
+      "ref": "Sequencers rewriting their own rhythms while the clocks play filter and VCA: Moog’s Point Zero",
       "artist": "Moog Music",
       "tags": ["seq", "experimental"],
       "level": 3,
@@ -10879,7 +10879,7 @@
     {
       "id": "shc-three-hands",
       "name": "Three Hands on the Wheel",
-      "ref": "In the style of the manual’s Three Hands on the Wheel patch",
+      "ref": "Two lines that surge ahead on every note, from the manual’s Three Hands on the Wheel patch",
       "artist": "Moog Music",
       "tags": ["seq", "polyrhythm"],
       "level": 2,
@@ -10948,7 +10948,7 @@
     {
       "id": "shc-bateria",
       "name": "Bateria",
-      "ref": "In the style of the manual’s Bateria patch",
+      "ref": "A tuned kick drum built from the filter and envelopes, Moog’s Bateria patch from the manual",
       "artist": "Moog Music",
       "tags": ["perc", "drums"],
       "level": 2,
@@ -11020,7 +11020,7 @@
     {
       "id": "shc-spiral-ways",
       "name": "Spiral Ways",
-      "ref": "In the style of the manual’s Spiral Ways patch",
+      "ref": "Chords with a fifth and a major third in the subs, swelling open: the manual’s Spiral Ways",
       "artist": "Moog Music",
       "tags": ["seq", "pad"],
       "level": 2,
@@ -11095,7 +11095,7 @@
     {
       "id": "shc-star-gate",
       "name": "Star-Gate",
-      "ref": "In the style of the manual’s Star-Gate patch",
+      "ref": "High, glittering sequences with a restless third rhythm, from the manual’s Star-Gate patch sheet",
       "artist": "Moog Music",
       "tags": ["seq", "experimental"],
       "level": 3,

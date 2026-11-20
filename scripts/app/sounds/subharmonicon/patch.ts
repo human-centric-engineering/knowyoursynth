@@ -10,7 +10,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-bouncing-ball',
     name: 'Bouncing Ball',
-    ref: 'In the style of a bouncing ball',
+    ref: 'Notes coming fast after each strike and slowing as they fade, like a ball bouncing to rest',
     artist: 'Sound effects',
     tags: ['fx', 'patch', 'rhythm'],
     level: 2,
@@ -77,7 +77,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-rhythm-sequencer',
     name: 'Rhythm Sequencer',
-    ref: 'In the style of Autechre’s shifting rhythms',
+    ref: 'A melody whose rhythm itself changes speed every beat, the restless, shifting pulse of Autechre',
     artist: 'Autechre',
     tags: ['seq', 'patch', 'rhythm'],
     level: 3,
@@ -138,7 +138,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-seven-step-loop',
     name: 'Seven-Step Loop',
-    ref: 'In the style of Moog’s DFAM patches',
+    ref: 'A four-step sequencer cut short into a seven-note loop in 7/16, a reset trick from Moog’s DFAM',
     artist: 'Moog DFAM',
     tags: ['seq', 'patch'],
     level: 3,
@@ -203,7 +203,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-hidden-sequence',
     name: 'Hidden Sequence',
-    ref: 'In the style of a sample-and-hold melody',
+    ref: 'One sequencer moves the pitch unheard while the other picks the moments, a sample-and-hold melody',
     artist: 'Modular synthesis',
     tags: ['seq', 'patch'],
     level: 3,
@@ -269,7 +269,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-crossed-sequencers',
     name: 'Crossed Sequencers',
-    ref: 'In the style of a Buchla-style sequential voltage source',
+    ref: 'Two four-step patterns summed into sixteen pairings, like a Buchla sequential voltage source',
     artist: 'West Coast synthesis',
     tags: ['seq', 'patch'],
     level: 3,
@@ -344,7 +344,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-divider-chaos',
     name: 'Divider Chaos',
-    ref: 'In the style of circuit-bent electronics',
+    ref: 'Buzzing digital chaos as the divisors flip thousands of times a second, the sound of circuit bending',
     artist: 'Circuit bending',
     tags: ['fx', 'patch'],
     level: 3,
@@ -412,7 +412,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-growl-bass',
     name: 'Growl Bass',
-    ref: 'In the style of a neurofunk bass',
+    ref: 'A snarling bass thick with filter-FM sidebands that follow the note, for neurofunk drum and bass',
     artist: 'Drum and bass',
     tags: ['bass', 'patch'],
     level: 3,
@@ -466,7 +466,7 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-cross-pwm',
     name: 'Cross PWM',
-    ref: 'In the style of a chorus-laden 1980s pad',
+    ref: 'A swirling, chorused pulse-wave pad made with no LFO at all, a 1980s synth-pop wash',
     artist: 'Synth-pop',
     tags: ['pad', 'patch', 'pwm'],
     level: 2,
@@ -527,8 +527,8 @@ export const PATCH: SoundSpec[] = [
   {
     id: 'shc-ring-tremolo',
     name: 'Ring Tremolo',
-    ref: 'In the style of a surf guitar’s tremolo',
-    artist: 'Dick Dale',
+    ref: 'A fast, pulsing tremolo locked to the note, quickening as you play higher, like a surf-guitar amp',
+    artist: 'Surf guitar',
     tags: ['keys', 'patch'],
     level: 2,
     blurb:

@@ -9,7 +9,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-undertone-organ',
     name: 'Undertone Organ',
-    ref: 'In the style of a chapel organ’s foundation stops',
+    ref: 'A plain, hollow square-wave organ whose lower stops are its own subs, like a chapel’s foundation stops',
     artist: 'Church organ',
     tags: ['keys', 'organ', 'undertones'],
     level: 1,
@@ -67,7 +67,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-mixtur-minor',
     name: 'Mixtur Minor',
-    ref: 'In the style of Oskar Sala’s Mixtur-Trautonium',
+    ref: 'Every key a high note over a minor chord of undertones, as Oskar Sala’s Mixtur-Trautonium voiced it',
     artist: 'Oskar Sala',
     tags: ['keys', 'trautonium', 'undertones'],
     level: 2,
@@ -122,7 +122,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-trautonium-lead',
     name: 'Trautonium Lead',
-    ref: 'In the style of Oskar Sala’s Trautonium solos',
+    ref: 'Oskar Sala’s Trautonium voice: a reedy, singing saw lead with two oscillators drifting a hair apart',
     artist: 'Oskar Sala',
     tags: ['lead', 'trautonium'],
     level: 2,
@@ -176,7 +176,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-sub-stack-bass',
     name: 'Sub Stack Bass',
-    ref: 'In the style of a Minimoog-era funk bass',
+    ref: 'A round, punchy bass two octaves below the keys, built from the subs for Minimoog-era funk',
     artist: 'Funk',
     tags: ['bass', 'undertones'],
     level: 1,
@@ -229,7 +229,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-fifth-root-bass',
     name: 'Fifth-Root Bass',
-    ref: 'In the style of a doom-metal bass tone',
+    ref: 'A heavy saw bass whose real root lies a fifth below the key, for slow, crushing doom metal',
     artist: 'Doom metal',
     tags: ['bass', 'undertones'],
     level: 2,
@@ -279,8 +279,8 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-hollow-fourths',
     name: 'Hollow Fourths',
-    ref: 'In the style of quartal jazz voicings',
-    artist: 'McCoy Tyner',
+    ref: 'Open, unresolved stacks of fourths plucked from square waves, the quartal chords of modal jazz piano',
+    artist: 'Modal jazz',
     tags: ['pluck', 'fourths'],
     level: 1,
     blurb: 'A plucked chord of stacked fourths from two square VCOs and their octave subs.',
@@ -332,7 +332,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-bowed-undertones',
     name: 'Bowed Undertones',
-    ref: 'In the style of a slow string section',
+    ref: 'Two undertone stacks locking into one slow, bowed chord, like a string section easing in',
     artist: 'String orchestra',
     tags: ['strings', 'undertones', 'pad'],
     level: 2,
@@ -384,7 +384,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-undertone-brass',
     name: 'Undertone Brass',
-    ref: 'In the style of a 1970s synth brass section',
+    ref: 'Blaring saw brass with trombones an octave and a twelfth below, a 1970s synth brass section',
     artist: 'Synth brass',
     tags: ['brass'],
     level: 2,
@@ -430,7 +430,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-glass-divisions',
     name: 'Glass Divisions',
-    ref: 'In the style of a glass harmonica',
+    ref: 'Glassy struck tones with strange, out-of-tune undertones ringing beneath, like a glass harmonica',
     artist: 'Glass harmonica',
     tags: ['pluck', 'bell', 'undertones'],
     level: 2,
@@ -482,7 +482,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-blue-seventh',
     name: 'Blue Seventh',
-    ref: 'In the style of a blues harmonica bend',
+    ref: 'A biting lead with a septimal blue note beneath, flatter than any piano key, like a bent blues harp',
     artist: 'Blues',
     tags: ['lead', 'undertones', 'blues'],
     level: 3,
@@ -535,7 +535,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-pulse-choir',
     name: 'Pulse Choir',
-    ref: 'In the style of a vocoder choir pad',
+    ref: 'A breathy, vowel-rich pad of two self-modulated pulse waves: a vocoder choir for space disco',
     artist: 'Space disco',
     tags: ['pad', 'pwm'],
     level: 2,
@@ -587,7 +587,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-unison-sub-bass',
     name: 'Unison Sub Bass',
-    ref: 'In the style of a modern film-score sub bass',
+    ref: 'A fat bass beating slowly under every note, the rolling sub of a modern film score',
     artist: 'Film score',
     tags: ['bass'],
     level: 2,
@@ -643,7 +643,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-thirteen-gong',
     name: 'Thirteen Gong',
-    ref: 'In the style of a Javanese gong',
+    ref: 'A long, clangorous gong from the eleventh and thirteenth undertones, blooming like a Javanese gong',
     artist: 'Gamelan',
     tags: ['perc', 'bell', 'undertones'],
     level: 3,
@@ -693,7 +693,7 @@ export const KEYS: SoundSpec[] = [
   {
     id: 'shc-pipe-mixture',
     name: 'Pipe Mixture',
-    ref: 'In the style of a Baroque organ’s mixture stop',
+    ref: 'A bright organ chorus of fifths and octaves, a Baroque mixture stop built downwards',
     artist: 'Baroque organ',
     tags: ['keys', 'organ', 'undertones'],
     level: 3,
