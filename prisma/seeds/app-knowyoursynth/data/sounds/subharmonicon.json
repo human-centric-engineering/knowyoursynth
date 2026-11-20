@@ -176,6 +176,97 @@
       ]
     },
     {
+      "id": "shc-coin-toss-rhythm",
+      "name": "Coin-Toss Rhythm",
+      "ref": "In the style of a Buchla random-voltage rhythm",
+      "artist": "West Coast synthesis",
+      "tags": ["seq", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "A rhythm thrown like a coin: VCO 2 at audio rate in RHYTHM 1, so each clock lands on a different divisor.",
+      "how": "A RHYTHM input is read at each clock. Feed it VCO 2 at audio rate and it reads wherever VCO 2’s wave happens to be: a different divisor on every sixteenth, from ÷1 to ÷11. Whether Rhythm 1 fires is a coin toss, weighted towards yes, so the melody plays a rhythm that keeps changing and almost never repeats. VCO 2’s FREQ is the coin: move it and the rhythm changes.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "One voice",
+          "module": "osc",
+          "why": "VCO 1 square at C4 with its octave sub; VCO 2 silent, at G4.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key held, a hollow square.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 3,
+            "mix.sub12": 0,
+            "vco2.freq": 1.46,
+            "mix.vco2": 0,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "A rhythm to throw",
+          "module": "mod",
+          "why": "Rhythm 1 at ÷4 on Sequencer 1.\n- RHYTHM 1 ÷4\n- RHYTHM 1 SEQ 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm1.div": 4,
+            "rhythm1.seq1": true
+          }
+        },
+        {
+          "title": "The coin",
+          "module": "mod",
+          "why": "VCO 2 OUT into RHYTHM 1’s input: ±5 V moves the divisor seven either way of ÷4, a new one each clock.\n- Patch VCO 2 OUT to RHYTHM 1 input\n- Listen for: still waiting.",
+          "cables": [["j.vco2_out", "j.rhythm1_in"]]
+        },
+        {
+          "title": "The notes",
+          "module": "mod",
+          "why": "12-ET at ±1: Sequencer 1 C, E♭, G, B♭.\n- QUANTIZE 12-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 1.25 · +3 st\n- SEQ 1 STEP 3 2.92 · +7 st\n- SEQ 1 STEP 4 4.17 · +10 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "seq.oct": 1,
+            "seq1.step2": 1.25,
+            "seq1.step3": 2.92,
+            "seq1.step4": 4.17,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.6 · 480 Hz\n- RESONANCE 3\n- VCF EG AMT 2.4 · +3.8 oct\n- VCF DECAY 3.6 · 77 ms\n- VCA DECAY 4.2 · 120 ms\n- PLAY lit\n- Listen for: a four-note melody stuttering in bursts and gaps, never the same bar twice.",
+          "set": {
+            "vcf.cutoff": 4.6,
+            "vcf.resonance": 3,
+            "vcf_eg.amount": 2.4,
+            "vcf_eg.decay": 3.6,
+            "vca_eg.decay": 4.2,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: not heard; where its wave is at each clock decides whether a note plays.",
+        "rhythm1.div": "In this sound: the centre the coin throws around: lower is busier."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQ to 3",
+          "hear": "A new throw of the coin: another rhythm, just as restless."
+        },
+        {
+          "id": "rhythm1.div",
+          "try": "Turn RHYTHM 1 to ÷9",
+          "hear": "The coin falls on no more often: sparse notes with long gaps."
+        }
+      ]
+    },
+    {
       "id": "shc-three-against-four",
       "name": "Three Against Four",
       "ref": "In the style of Steve Reich’s interlocking pulses",
@@ -472,6 +563,104 @@
           "id": "rhythm3.seq1",
           "try": "Light RHYTHM 3 SEQ 1 (÷3)",
           "hear": "A third pulse joins Sequencer 1: busier, and the cycle grows to 105 sixteenths."
+        }
+      ]
+    },
+    {
+      "id": "shc-accelerando",
+      "name": "Accelerando",
+      "ref": "In the style of Conlon Nancarrow’s tempo canons",
+      "artist": "Conlon Nancarrow",
+      "tags": ["seq", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "A melody that speeds up through every bar over a steady beat: a slow wave patched into RHYTHM 1.",
+      "how": "Nancarrow wrote player-piano canons whose voices run at tempos that speed up against each other. Here VCO 2, slowed into an LFO by Sequencer 2’s steady −5 V, sends its deepest sub’s rising sawtooth into RHYTHM 1: the divisor falls from ÷16 to ÷1 over about two seconds, so Sequencer 1’s notes accelerate from a bar apart to sixteenths, then snap back. Rhythm 4 keeps the beat on Sequencer 2, which is held, so it fires the envelopes without moving anything.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "One voice",
+          "module": "osc",
+          "why": "VCO 1 square at C5 with its octave sub.\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key held, a bright, hollow tone.",
+          "set": {
+            "vco1.freq": 2.5,
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 2,
+            "mix.sub12": 0
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 rises once about every two seconds, a bar at this tempo.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "sub22.div": 16
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "The rhythm speeds up",
+          "module": "mod",
+          "why": "Rhythm 1 centred at ÷8 on Sequencer 1, and VCO 2 SUB 2 OUT into RHYTHM 1’s input; Rhythm 4 at ÷4 on Sequencer 2 keeps the beat.\n- RHYTHM 1 ÷8\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 4 SEQ 2 lit\n- Patch VCO 2 SUB 2 OUT to RHYTHM 1 input\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm1.div": 8,
+            "rhythm1.seq1": true,
+            "rhythm4.seq2": true
+          },
+          "cables": [["j.sub22_out", "j.rhythm1_in"]]
+        },
+        {
+          "title": "The notes",
+          "module": "mod",
+          "why": "12-ET; at SEQ OCT ±5 a small turn is a step: Sequencer 1 C, D, E, G.\n- QUANTIZE 12-ET\n- SEQ 1 STEP 2 0.17 · +2 st\n- SEQ 1 STEP 3 0.33 · +4 st\n- SEQ 1 STEP 4 0.58 · +7 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "seq1.step2": 0.17,
+            "seq1.step3": 0.33,
+            "seq1.step4": 0.58,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.8 · 551 Hz\n- RESONANCE 3\n- VCF EG AMT 2.4 · +3.8 oct\n- VCF DECAY 3.4 · 66 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Listen for: a beat on every crotchet, and over it a melody that rushes faster and faster, then starts slow again.",
+          "set": {
+            "vcf.cutoff": 4.8,
+            "vcf.resonance": 3,
+            "vcf_eg.amount": 2.4,
+            "vcf_eg.decay": 3.4,
+            "vca_eg.decay": 4,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: how often the melody speeds up; ÷16 is about a bar.",
+        "rhythm1.div": "In this sound: the middle of the rush.",
+        "vco2.freq": "In this sound: the slow wave’s rate, drifting against the beat."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷8",
+          "hear": "Two rushes a bar: a breathless, lurching melody."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Set VCO 2 WAVE to square",
+          "hear": "No rush between: the melody jumps from dead slow to sixteenths and back."
         }
       ]
     },
@@ -785,6 +974,108 @@
           "id": "vco.quantize",
           "try": "Set QUANTIZE to 12-JI",
           "hear": "Chromatic notes join: darker, less pastoral."
+        }
+      ]
+    },
+    {
+      "id": "shc-feedback-rhythms",
+      "name": "Feedback Rhythms",
+      "ref": "In the style of generative music",
+      "artist": "Generative music",
+      "tags": ["seq", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "Each sequencer’s notes set the other one’s rhythm: two melodies that drive each other’s pace.",
+      "how": "SEQ 1 OUT patched into RHYTHM 3, which drives Sequencer 2, and SEQ 2 OUT into RHYTHM 1, which drives Sequencer 1. A high note on one sequencer speeds the other up, a low one slows it, and the second’s new note changes the first’s pace in turn. Nothing is random, yet the loop takes a long time to come round.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two voices",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4 with its octave sub; VCO 2 square at G4 with SUB 2 at ÷4.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 2 WAVE Square\n- VCO 2 SUB 1 FREQ ÷2\n- VCO 2 SUB 2 FREQ ÷4\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 2\n- Listen for: with a key held, a fifth over a low root.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 2,
+            "mix.sub12": 0,
+            "vco2.freq": 1.46,
+            "vco2.wave": "square",
+            "sub21.div": 2,
+            "sub22.div": 4,
+            "mix.vco2": 3,
+            "mix.sub21": 0,
+            "mix.sub22": 2
+          }
+        },
+        {
+          "title": "Two rhythms",
+          "module": "mod",
+          "why": "Rhythm 1 at ÷4 on Sequencer 1, Rhythm 3 at ÷6 on Sequencer 2.\n- RHYTHM 1 ÷4\n- RHYTHM 1 SEQ 1 lit\n- RHYTHM 3 ÷6\n- RHYTHM 3 SEQ 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm1.div": 4,
+            "rhythm1.seq1": true,
+            "rhythm3.div": 6,
+            "rhythm3.seq2": true
+          }
+        },
+        {
+          "title": "Two melodies",
+          "module": "mod",
+          "why": "8-ET at SEQ OCT ±2: Sequencer 1 C, G, E an octave up, D below; Sequencer 2 on VCO 2, G, G an octave up, D an octave and a half up, G below.\n- QUANTIZE 8-ET\n- SEQ 1 STEP 2 1.46 · +7 st\n- SEQ 1 STEP 3 3.33 · +16 st\n- SEQ 1 STEP 4 -2.08 · -10 st\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 STEP 2 2.5 · +12 st\n- SEQ 2 STEP 3 3.96 · +19 st\n- SEQ 2 STEP 4 -2.5 · -12 st\n- SEQ 2 ASSIGN OSC 2 lit\n- Listen for: still waiting.",
+          "set": {
+            "vco.quantize": "8-ET",
+            "seq1.step2": 1.46,
+            "seq1.step3": 3.33,
+            "seq1.step4": -2.08,
+            "seq1.assign_osc": true,
+            "seq2.step2": 2.5,
+            "seq2.step3": 3.96,
+            "seq2.step4": -2.5,
+            "seq2.assign_osc": true
+          }
+        },
+        {
+          "title": "Cross the rhythms",
+          "module": "mod",
+          "why": "SEQ 1 OUT into RHYTHM 3’s input, SEQ 2 OUT into RHYTHM 1’s: each note moves the other sequencer’s divisor, up to three either way.\n- Patch SEQ 1 OUT to RHYTHM 3 input\n- Patch SEQ 2 OUT to RHYTHM 1 input\n- Listen for: still waiting.",
+          "cables": [
+            ["j.seq1_out", "j.rhythm3_in"],
+            ["j.seq2_out", "j.rhythm1_in"]
+          ]
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.6 · 480 Hz\n- RESONANCE 2.5\n- VCF EG AMT 2.4 · +3.8 oct\n- VCF DECAY 3.8 · 90 ms\n- VCA DECAY 4.6 · 160 ms\n- PLAY lit\n- Listen for: two lines pushing and holding each other back, the tempo of each changing with every note.",
+          "set": {
+            "vcf.cutoff": 4.6,
+            "vcf.resonance": 2.5,
+            "vcf_eg.amount": 2.4,
+            "vcf_eg.decay": 3.8,
+            "vca_eg.decay": 4.6,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "seq2.step3": "In this sound: the highest note on Sequencer 2, and Sequencer 1’s fastest pace.",
+        "rhythm1.div": "In this sound: Sequencer 1’s pace, before Sequencer 2 moves it.",
+        "rhythm3.div": "In this sound: Sequencer 2’s pace, before Sequencer 1 moves it."
+      },
+      "tweaks": [
+        {
+          "id": "seq2.step4",
+          "try": "Turn SEQ 2 STEP 4 to 0",
+          "hear": "Sequencer 1 loses its slowest beat: a busier, tighter loop."
+        },
+        {
+          "id": "rhythm3.div",
+          "try": "Turn RHYTHM 3 to ÷3",
+          "hear": "Sequencer 2 runs fast, so Sequencer 1’s pace changes almost every sixteenth."
         }
       ]
     },
@@ -1183,6 +1474,98 @@
       ]
     },
     {
+      "id": "shc-undertone-staircase",
+      "name": "Undertone Staircase",
+      "ref": "In the style of Harry Partch’s undertone scales",
+      "artist": "Harry Partch",
+      "tags": ["seq", "patch", "undertone"],
+      "level": 3,
+      "blurb": "The subs climb the undertone series step by step, again and again: a slow wave in VCO 1 SUB.",
+      "how": "Partch built his scales from the undertone series as well as the overtones. A sub plays it one divisor at a time; patch a slow rising wave into VCO 1’s SUB input and both subs climb it continuously, from ÷16 up towards the VCO’s own pitch, then fall back and climb again: a staircase of undertones, each tread a just interval. Sequencer 1 moves VCO 1 once a bar, so the staircase starts from a new root.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Subs centred",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C5, quiet, with its subs centred at ÷8 and ÷12 and loud.\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 SUB 1 FREQ ÷8\n- VCO 1 SUB 2 FREQ ÷12\n- VCO 1 LEVEL 2\n- VCO 1 SUB 1 LEVEL 5\n- VCO 1 SUB 2 LEVEL 4\n- Listen for: with a key held, a low chord under a quiet C5.",
+          "set": {
+            "vco1.freq": 2.5,
+            "sub11.div": 8,
+            "sub12.div": 12,
+            "mix.vco1": 2,
+            "mix.sub11": 5,
+            "mix.sub12": 4
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 rises once every two seconds or so.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "sub22.div": 16
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "Climb",
+          "module": "osc",
+          "why": "VCO 2 SUB 2 OUT into VCO 1’s SUB input: −5 to +5 V moves both divisors seven either way, high to low, so the pitch climbs.\n- Patch VCO 2 SUB 2 OUT to VCO 1 SUB input\n- Listen for: with a key held, the subs climbing a staircase and starting again.",
+          "cables": [["j.sub22_out", "j.vco1_sub_in"]]
+        },
+        {
+          "title": "A root a bar",
+          "module": "mod",
+          "why": "12-ET; Rhythm 4 at ÷16 on Sequencer 1, which moves VCO 1 to C, A♭, F, G below.\n- QUANTIZE 12-ET\n- RHYTHM 4 ÷16\n- RHYTHM 4 SEQ 1 lit\n- SEQ 1 STEP 2 -0.33 · -4 st\n- SEQ 1 STEP 3 -0.58 · -7 st\n- SEQ 1 STEP 4 -0.42 · -5 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "rhythm4.div": 16,
+            "rhythm4.seq1": true,
+            "seq1.step2": -0.33,
+            "seq1.step3": -0.58,
+            "seq1.step4": -0.42,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Hold and play",
+          "module": "filter",
+          "why": "A warm filter, EG held so the staircase never stops, and PLAY lit on the app’s clock.\n- CUTOFF 6 · 1.3 kHz\n- RESONANCE 2\n- EG Held\n- PLAY lit\n- Listen for: endless climbing undertones, from a new root each bar.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.resonance": 2,
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: how fast the staircase climbs.",
+        "sub11.div": "In this sound: the middle of SUB 1’s climb.",
+        "sub12.div": "In this sound: the middle of SUB 2’s climb, deeper, so it reaches less high."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷8",
+          "hear": "Twice as fast: a quick undertone run."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Set VCO 2 WAVE to square",
+          "hear": "No staircase: the subs jump between the top and the bottom."
+        }
+      ]
+    },
+    {
       "id": "shc-undertone-drone-melody",
       "name": "Undertone Drone Melody",
       "ref": "In the style of a hurdy-gurdy",
@@ -1477,6 +1860,93 @@
       ]
     },
     {
+      "id": "shc-undertone-zap",
+      "name": "Undertone Zap",
+      "ref": "In the style of a chiptune arpeggio",
+      "artist": "Chiptune",
+      "tags": ["pluck", "patch", "undertone"],
+      "level": 2,
+      "blurb": "Every note tumbles down the undertone series as it fades: the VCA EG patched into VCO 1 SUB.",
+      "how": "An envelope at a SUB input lowers the divisors while it is high. Patch the VCA EG there with the subs at ÷16 and ÷13: each note starts at ÷4 and ÷1, as high as the envelope can push them, and steps down the undertones as it decays, a quick falling run inside every note. Sequencer 1 plays a two-against-three melody on VCO 1.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Subs only",
+          "module": "osc",
+          "why": "VCO 1 square at C6, silent; SUB 1 at ÷16 loud, SUB 2 at ÷13 quieter.\n- VCO 1 FREQ 5 · C6 · 1.0 kHz\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷16\n- VCO 1 SUB 2 FREQ ÷13\n- VCO 1 LEVEL 0\n- VCO 1 SUB 1 LEVEL 5\n- VCO 1 SUB 2 LEVEL 3\n- Listen for: with a key held, a low square.",
+          "set": {
+            "vco1.freq": 5,
+            "vco1.wave": "square",
+            "sub11.div": 16,
+            "sub12.div": 13,
+            "mix.vco1": 0,
+            "mix.sub11": 5,
+            "mix.sub12": 3
+          }
+        },
+        {
+          "title": "Each note falls",
+          "module": "env",
+          "why": "VCA EG OUT into VCO 1’s SUB input: its 8 V lowers the divisors by twelve, so each note starts high and steps down as it fades.\n- CUTOFF 7 · 2.5 kHz\n- VCA DECAY 5 · 220 ms\n- Patch VCA EG OUT to VCO 1 SUB input\n- Listen for: with a key tapped, a note that tumbles down the undertones.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vca_eg.decay": 5
+          },
+          "cables": [["j.vca_eg_out", "j.vco1_sub_in"]]
+        },
+        {
+          "title": "Two against three",
+          "module": "mod",
+          "why": "Rhythm 2 at ÷2 and Rhythm 3 at ÷3, both on Sequencer 1.\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 3 SEQ 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm2.seq1": true,
+            "rhythm3.seq1": true
+          }
+        },
+        {
+          "title": "The notes",
+          "module": "mod",
+          "why": "12-ET at ±5: Sequencer 1 C, G, E♭, B♭ below.\n- SEQ OCT ±5\n- QUANTIZE 12-ET\n- SEQ 1 STEP 2 0.58 · +7 st\n- SEQ 1 STEP 3 0.25 · +3 st\n- SEQ 1 STEP 4 -0.17 · -2 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "set": {
+            "seq.oct": 5,
+            "vco.quantize": "12-ET",
+            "seq1.step2": 0.58,
+            "seq1.step3": 0.25,
+            "seq1.step4": -0.17,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Play",
+          "module": "mod",
+          "why": "PLAY lit, on the app’s clock.\n- PLAY lit\n- Listen for: a skittering melody, each note a little falling arpeggio.",
+          "set": {
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vca_eg.decay": "In this sound: how long each fall takes.",
+        "sub11.div": "In this sound: where SUB 1’s fall ends, two octaves under its first note."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 7",
+          "hear": "Long, slow tumbles that run into the next note."
+        },
+        {
+          "id": "sub11.div",
+          "try": "Turn VCO 1 SUB 1 FREQ to ÷10",
+          "hear": "A shorter fall: the run starts at the top and ends sooner."
+        }
+      ]
+    },
+    {
       "id": "shc-undertone-bass-walk",
       "name": "Undertone Bass Walk",
       "ref": "In the style of a dub bass line",
@@ -1665,6 +2135,99 @@
           "id": "rhythm2.div",
           "try": "Turn RHYTHM 2 to ÷12",
           "hear": "The lower pair changes off the bar line: the harmony gets restless."
+        }
+      ]
+    },
+    {
+      "id": "shc-four-divisor-chords",
+      "name": "Four-Divisor Chords",
+      "ref": "In the style of ambient chord changes",
+      "artist": "Ambient music",
+      "tags": ["pad", "patch", "undertone"],
+      "level": 3,
+      "blurb": "One sequencer changes all four subs at once: a chord progression from a single cable.",
+      "how": "Sequencer 2 assigned to VCO 2’s subs moves two divisors. Patch SEQ 2 OUT into VCO 1’s SUB input and it moves VCO 1’s two as well: four notes of undertone harmony changing together, once a bar. Sequencer 1, assigned to nothing, pulses the chords in quavers.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Four subs",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C5 with subs at ÷4 and ÷5; VCO 2 sawtooth at G4 with subs at ÷3 and ÷4. Only the subs sound.\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 SUB 1 FREQ ÷4\n- VCO 1 SUB 2 FREQ ÷5\n- VCO 1 LEVEL 0\n- VCO 1 SUB 1 LEVEL 4\n- VCO 1 SUB 2 LEVEL 3\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 2 SUB 1 FREQ ÷3\n- VCO 2 SUB 2 FREQ ÷4\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 4\n- VCO 2 SUB 2 LEVEL 3\n- Listen for: with a key held, a four-note chord.",
+          "set": {
+            "vco1.freq": 2.5,
+            "sub11.div": 4,
+            "sub12.div": 5,
+            "mix.vco1": 0,
+            "mix.sub11": 4,
+            "mix.sub12": 3,
+            "vco2.freq": 1.46,
+            "sub21.div": 3,
+            "sub22.div": 4,
+            "mix.vco2": 0,
+            "mix.sub21": 4,
+            "mix.sub22": 3
+          }
+        },
+        {
+          "title": "The changes",
+          "module": "mod",
+          "why": "SEQ OCT ±5 with Sequencer 2 on VCO 2’s subs: divisors as they are, two down, one up, one down.\n- SEQ OCT ±5\n- SEQ 2 STEP 2 -1.38 · divisor +2.1\n- SEQ 2 STEP 3 0.72 · divisor −1.1\n- SEQ 2 STEP 4 -0.72 · divisor +1.1\n- SEQ 2 ASSIGN SUB 1 lit\n- SEQ 2 ASSIGN SUB 2 lit\n- Listen for: still the first chord.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step2": -1.38,
+            "seq2.step3": 0.72,
+            "seq2.step4": -0.72,
+            "seq2.assign_sub1": true,
+            "seq2.assign_sub2": true
+          }
+        },
+        {
+          "title": "VCO 1’s subs follow",
+          "module": "osc",
+          "why": "SEQ 2 OUT into VCO 1’s SUB input: VCO 1’s divisors move with VCO 2’s.\n- Patch SEQ 2 OUT to VCO 1 SUB input\n- Listen for: still the first chord.",
+          "cables": [["j.seq2_out", "j.vco1_sub_in"]]
+        },
+        {
+          "title": "A chord a bar, pulsing",
+          "module": "mod",
+          "why": "Rhythm 4 at ÷16 on Sequencer 2, a chord a bar; Rhythm 2 at ÷2 on Sequencer 1, assigned to nothing, fires the envelopes in quavers.\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 4 ÷16\n- RHYTHM 4 SEQ 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm2.seq1": true,
+            "rhythm4.div": 16,
+            "rhythm4.seq2": true
+          }
+        },
+        {
+          "title": "Soften and play",
+          "module": "env",
+          "why": "A gentle attack and decay under a low filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.6 · 480 Hz\n- RESONANCE 1.5\n- VCA ATTACK 2 · 6 ms\n- VCA DECAY 5 · 220 ms\n- PLAY lit\n- Listen for: pulsing undertone chords, all four voices moving to a new one each bar.",
+          "set": {
+            "vcf.cutoff": 4.6,
+            "vcf.resonance": 1.5,
+            "vca_eg.attack": 2,
+            "vca_eg.decay": 5,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "seq2.step2": "In this sound: the darkest chord, every divisor two lower in pitch.",
+        "rhythm4.div": "In this sound: how long each chord lasts."
+      },
+      "tweaks": [
+        {
+          "id": "rhythm4.div",
+          "try": "Turn RHYTHM 4 to ÷8",
+          "hear": "A chord every half bar: a quicker progression."
+        },
+        {
+          "id": "seq2.step3",
+          "try": "Turn SEQ 2 STEP 3 to 2.05",
+          "hear": "The third chord lifts higher: three divisors up on every sub."
         }
       ]
     },
@@ -1977,6 +2540,78 @@
       ]
     },
     {
+      "id": "shc-audio-pwm-lead",
+      "name": "Audio-Rate PWM Lead",
+      "ref": "In the style of a 1970s progressive-rock synth lead",
+      "artist": "Progressive rock",
+      "tags": ["lead", "patch", "pwm"],
+      "level": 2,
+      "blurb": "A vocal, buzzing lead: silent VCO 1 a fifth up, patched into VCO 2’s PWM at audio rate.",
+      "how": "A pulse width swept at audio rate adds sidebands, as FM does. VCO 1 OUT into VCO 2’s PWM, with VCO 1 a fifth above and silent: VCO 2’s width moves three times for every two of its cycles, giving a nasal, vowel-like tone that stays the same up and down the keys, since both VCOs follow them. Detune VCO 1 and the tone starts to move.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.5],
+          [0.5, 63, 0.5],
+          [1, 67, 1],
+          [2, 65, 0.5],
+          [2.5, 63, 0.5],
+          [3, 60, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The voice",
+          "module": "osc",
+          "why": "VCO 2 square at C4, loud; VCO 1 out of the mix, at G4.\n- VCO 1 FREQ 1.46 · G4 · 392 Hz\n- VCO 1 LEVEL 0\n- VCO 1 SUB 1 LEVEL 0\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 6\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key, a plain square.",
+          "set": {
+            "vco1.freq": 1.46,
+            "mix.vco1": 0,
+            "mix.sub11": 0,
+            "mix.sub12": 0,
+            "vco2.wave": "square",
+            "mix.vco2": 6,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "Width at audio rate",
+          "module": "osc",
+          "why": "VCO 1 OUT into VCO 2’s PWM input.\n- Patch VCO 1 OUT to VCO 2 PWM input\n- Listen for: with a key, a buzzing, nasal tone.",
+          "cables": [["j.vco1_out", "j.vco2_pwm"]]
+        },
+        {
+          "title": "Lead shape",
+          "module": "filter",
+          "why": "The filter a little closed with some bite from the VCF EG, and a long VCA decay held by the key.\n- CUTOFF 6 · 1.3 kHz\n- RESONANCE 2\n- VCF EG AMT 1.5 · +2.4 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 6 · 480 ms\n- Listen for: with a key, a singing, reedy lead.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.resonance": 2,
+            "vcf_eg.amount": 1.5,
+            "vcf_eg.decay": 4,
+            "vca_eg.decay": 6
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: not heard; its interval to VCO 2 sets the tone."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.freq",
+          "try": "Turn VCO 1 FREQ to 1.6",
+          "hear": "VCO 1 just off the fifth: the tone churns and phases."
+        },
+        {
+          "id": "vco1.freq",
+          "try": "Turn VCO 1 FREQ to 2.5",
+          "hear": "An octave up: a thinner, cleaner tone."
+        }
+      ]
+    },
+    {
       "id": "shc-sub-stack-bass",
       "name": "Sub Stack Bass",
       "ref": "In the style of a Minimoog-era funk bass",
@@ -2040,6 +2675,77 @@
           "id": "sub11.div",
           "try": "Turn VCO 1 SUB 1 FREQ to ÷3",
           "hear": "A fifth inside the bass: thicker, more like a power chord."
+        }
+      ]
+    },
+    {
+      "id": "shc-feedback-snarl",
+      "name": "Feedback Snarl",
+      "ref": "In the style of a distorted industrial bass",
+      "artist": "Industrial music",
+      "tags": ["bass", "patch"],
+      "level": 2,
+      "blurb": "A bass that bites itself: VCA OUT patched back into CUTOFF.",
+      "how": "Patch the synth’s own output into CUTOFF and the filter opens on every peak of the sound passing through it: feedback filter FM, a growl that follows the note and grows with the level. VOLUME now sets how hard it snarls as well as how loud it is.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.4],
+          [0.5, 48, 0.2],
+          [0.75, 48, 0.2],
+          [1, 51, 0.4],
+          [2, 48, 0.4],
+          [2.5, 46, 0.4],
+          [3, 43, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A saw bass",
+          "module": "osc",
+          "why": "VCO 1 sawtooth with its octave sub.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 4\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key, a plain saw bass.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 4,
+            "mix.sub12": 0
+          }
+        },
+        {
+          "title": "A closed filter",
+          "module": "filter",
+          "why": "The filter low with an envelope and a little resonance.\n- CUTOFF 3.5 · 224 Hz\n- RESONANCE 3\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 5 · 220 ms\n- Listen for: with a key, a dark, plucked bass.",
+          "set": {
+            "vcf.cutoff": 3.5,
+            "vcf.resonance": 3,
+            "vcf_eg.amount": 2,
+            "vcf_eg.decay": 4,
+            "vca_eg.decay": 5
+          }
+        },
+        {
+          "title": "Feed it back",
+          "module": "filter",
+          "why": "VCA OUT into the CUTOFF input.\n- Patch VCA OUT to CUTOFF input\n- Listen for: with a key, a snarling, gritty bass.",
+          "cables": [["j.vca_out", "j.cutoff_in"]]
+        }
+      ],
+      "context": {
+        "vca.volume": "In this sound: the snarl’s depth as well as the level.",
+        "vcf.cutoff": "In this sound: where the snarl starts from."
+      },
+      "tweaks": [
+        {
+          "id": "vca.volume",
+          "try": "Turn VOLUME to 4",
+          "hear": "Quieter and cleaner: the feedback eases off."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 6",
+          "hear": "The snarl screams: a squealing, unstable growl."
         }
       ]
     },
@@ -2251,6 +2957,85 @@
       ]
     },
     {
+      "id": "shc-undertone-bloom",
+      "name": "Undertone Bloom",
+      "ref": "In the style of Gérard Grisey’s spectral music",
+      "artist": "Gérard Grisey",
+      "tags": ["pad", "patch", "undertone"],
+      "level": 2,
+      "blurb": "A pad whose upper chord climbs the undertone series as it swells: the VCA EG into VCO 2 SUB.",
+      "how": "Grisey’s spectral music builds harmony from the series of a single note. Here VCO 2’s subs, centred deep at ÷12 and ÷16, are pushed up the undertone series by the VCA EG on a slow attack: as each note swells the chord above it climbs, step by just step, and as the note is let go it sinks back. VCO 1 holds the root steady underneath.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 3.8],
+          [4, 56, 3.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A root",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4 with subs at ÷2 and ÷3.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 2\n- Listen for: with a key, a steady chord.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 3,
+            "mix.sub11": 2,
+            "mix.sub12": 2
+          }
+        },
+        {
+          "title": "A deep upper chord",
+          "module": "osc",
+          "why": "VCO 2 square at C5, silent, its subs at ÷12 and ÷16 in the mix.\n- VCO 2 FREQ 2.5 · C5 · 523 Hz\n- VCO 2 WAVE Square\n- VCO 2 SUB 1 FREQ ÷12\n- VCO 2 SUB 2 FREQ ÷16\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 3\n- VCO 2 SUB 2 LEVEL 3\n- Listen for: with a key, a low rumble added.",
+          "set": {
+            "vco2.freq": 2.5,
+            "vco2.wave": "square",
+            "sub21.div": 12,
+            "sub22.div": 16,
+            "mix.vco2": 0,
+            "mix.sub21": 3,
+            "mix.sub22": 3
+          }
+        },
+        {
+          "title": "A slow swell",
+          "module": "env",
+          "why": "A slow VCA attack and a long decay under a soft filter.\n- CUTOFF 5 · 632 Hz\n- RESONANCE 1.5\n- VCA ATTACK 6 · 250 ms\n- VCA DECAY 7 · 1.0 s\n- Listen for: with a key held, a slow swell.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.resonance": 1.5,
+            "vca_eg.attack": 6,
+            "vca_eg.decay": 7
+          }
+        },
+        {
+          "title": "Bloom",
+          "module": "osc",
+          "why": "VCA EG OUT into VCO 2’s SUB input: as the envelope rises, VCO 2’s divisors fall and its subs climb.\n- Patch VCA EG OUT to VCO 2 SUB input\n- Listen for: with a key held, the upper chord climbing as it swells, and sinking as you let go.",
+          "cables": [["j.vca_eg_out", "j.vco2_sub_in"]]
+        }
+      ],
+      "context": {
+        "vca_eg.attack": "In this sound: how slowly the chord climbs.",
+        "sub22.div": "In this sound: the deepest the bloom starts from."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.attack",
+          "try": "Turn VCA ATTACK to 3",
+          "hear": "A quick bloom: the chord races up as the note starts."
+        },
+        {
+          "id": "sub21.div",
+          "try": "Turn VCO 2 SUB 1 FREQ to ÷16",
+          "hear": "Both subs start deep: a longer, darker climb."
+        }
+      ]
+    },
+    {
       "id": "shc-undertone-brass",
       "name": "Undertone Brass",
       "ref": "In the style of a 1970s synth brass section",
@@ -2381,6 +3166,80 @@
           "id": "vca_eg.decay",
           "try": "Turn VCA DECAY to 9",
           "hear": "Notes ring into each other, a wash of glass."
+        }
+      ]
+    },
+    {
+      "id": "shc-filter-fm-piano",
+      "name": "Filter-FM Piano",
+      "ref": "In the style of a 1980s metallic electric piano",
+      "artist": "1980s pop",
+      "tags": ["keys", "patch"],
+      "level": 2,
+      "blurb": "A bright, clanging electric piano: silent VCO 2 a ninth up, shaking the filter at audio rate.",
+      "how": "VCO 2 OUT into CUTOFF opens and closes the filter at VCO 2’s pitch. At a ninth above VCO 1, a ratio that is not a whole number, that adds sidebands that clash a little with the note: the metallic tine of an electric piano. Both VCOs follow the keys, so the clang stays the same up and down.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.9],
+          [1, 67, 0.4],
+          [1.5, 72, 1.4],
+          [3, 71, 0.4],
+          [3.5, 67, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A soft tone",
+          "module": "osc",
+          "why": "VCO 1 square at C4 with its octave sub; VCO 2 silent at D5.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 5\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 2.92 · D5 · 588 Hz\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key, a hollow tone.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 5,
+            "mix.sub11": 2,
+            "mix.sub12": 0,
+            "vco2.freq": 2.92,
+            "mix.vco2": 0,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "A struck shape",
+          "module": "filter",
+          "why": "A low filter opened by the VCF EG, and a long VCA decay.\n- CUTOFF 4.4 · 418 Hz\n- RESONANCE 1\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 4 · 100 ms\n- VCA DECAY 6 · 480 ms\n- Listen for: with a key, a soft, plucked note.",
+          "set": {
+            "vcf.cutoff": 4.4,
+            "vcf.resonance": 1,
+            "vcf_eg.amount": 2,
+            "vcf_eg.decay": 4,
+            "vca_eg.decay": 6
+          }
+        },
+        {
+          "title": "The tine",
+          "module": "filter",
+          "why": "VCO 2 OUT into the CUTOFF input.\n- Patch VCO 2 OUT to CUTOFF input\n- Listen for: with a key, a bright, metallic clang that softens as it fades.",
+          "cables": [["j.vco2_out", "j.cutoff_in"]]
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: not heard; its interval to VCO 1 sets the clang.",
+        "vcf.cutoff": "In this sound: how much of the clang comes through."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQ to 2.5",
+          "hear": "An octave up, a whole-number ratio: a smoother, organ-like tone."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 6",
+          "hear": "A harsher, ringing bell."
         }
       ]
     },
@@ -2518,6 +3377,79 @@
           "id": "vco1.wave",
           "try": "Set VCO 1 WAVE to Square",
           "hear": "A plain square: the choir loses half its voices."
+        }
+      ]
+    },
+    {
+      "id": "shc-nasal-clav",
+      "name": "Nasal Clav",
+      "ref": "In the style of a funk clavinet",
+      "artist": "Funk",
+      "tags": ["keys", "patch", "pwm"],
+      "level": 2,
+      "blurb": "A pluck that starts thin and nasal and opens out: the VCA EG patched into VCO 1’s pulse width.",
+      "how": "A clavinet’s strike is thin and buzzy before it settles. VCA EG OUT into VCO 1 PWM pushes the width towards its thinnest at the peak of each note and lets it widen back to a square as it fades, so every note has a nasal bite that rounds off, faster on a short note than a long one.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.2],
+          [0.5, 60, 0.2],
+          [0.75, 63, 0.2],
+          [1, 65, 0.4],
+          [1.75, 60, 0.2],
+          [2, 58, 0.2],
+          [2.5, 60, 0.4],
+          [3.25, 55, 0.2],
+          [3.5, 58, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse",
+          "module": "osc",
+          "why": "VCO 1 square at C4 with its octave sub on square too.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 5\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key, a hollow square.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 5,
+            "mix.sub11": 2,
+            "mix.sub12": 0
+          }
+        },
+        {
+          "title": "A short pluck",
+          "module": "env",
+          "why": "A fairly open filter with a little VCF EG, and a short VCA decay.\n- CUTOFF 6.4 · 1.7 kHz\n- RESONANCE 2\n- VCF EG AMT 1.2 · +1.9 oct\n- VCF DECAY 3 · 49 ms\n- VCA DECAY 4 · 100 ms\n- Listen for: with a key, a short square pluck.",
+          "set": {
+            "vcf.cutoff": 6.4,
+            "vcf.resonance": 2,
+            "vcf_eg.amount": 1.2,
+            "vcf_eg.decay": 3,
+            "vca_eg.decay": 4
+          }
+        },
+        {
+          "title": "Thin at the strike",
+          "module": "osc",
+          "why": "VCA EG OUT into VCO 1’s PWM input: the width is thinnest at each note’s peak and widens as it fades.\n- Patch VCA EG OUT to VCO 1 PWM input\n- Listen for: with a key, a nasal, buzzing strike that rounds off.",
+          "cables": [["j.vca_eg_out", "j.vco1_pwm"]]
+        }
+      ],
+      "context": {
+        "vca_eg.decay": "In this sound: how quickly the bite rounds off."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 6",
+          "hear": "The nasal edge lingers: a slower, wah-like opening."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Set VCO 1 WAVE to saw",
+          "hear": "The cable has nothing to thin: a plain saw pluck."
         }
       ]
     },
@@ -2930,6 +3862,89 @@
       ]
     },
     {
+      "id": "shc-trance-gate",
+      "name": "Trance Gate",
+      "ref": "In the style of a 1990s trance gate",
+      "artist": "Trance",
+      "tags": ["pad", "patch", "transposed"],
+      "level": 2,
+      "blurb": "A chord chopped into sixteenths: CLOCK OUT patched into the VCA, while the keys change the chord.",
+      "how": "CLOCK OUT is high for the first half of every clock, a sixteenth here. Patch it into the VCA input with EG off and it opens the VCA for half of every sixteenth: the gated pad of 1990s trance, locked to the app’s clock. The key line changes the chord, and each change fires the envelopes, giving it a brighter edge.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 60, 4],
+          [4, 56, 4],
+          [8, 53, 4],
+          [12, 55, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A wide chord",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4 with subs at ÷2 and ÷3; VCO 2 sawtooth at E4 with its octave sub.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 3\n- VCO 2 FREQ 0.83 · E4 · 329 Hz\n- VCO 2 SUB 1 FREQ ÷2\n- VCO 2 SUB 2 FREQ ÷3\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 2\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key, a major chord.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 3,
+            "mix.sub11": 3,
+            "mix.sub12": 3,
+            "vco2.freq": 0.83,
+            "sub21.div": 2,
+            "sub22.div": 3,
+            "mix.vco2": 3,
+            "mix.sub21": 2,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "The gate",
+          "module": "amp",
+          "why": "CLOCK OUT into the VCA input: the VCA opens on the first half of every clock while the synth plays.\n- Patch CLOCK OUT to VCA input\n- Listen for: nothing until it plays.",
+          "cables": [["j.clock_out", "j.vca_in"]]
+        },
+        {
+          "title": "A brighter edge",
+          "module": "filter",
+          "why": "The filter a little closed, with an envelope each chord change opens, and a short VCA EG.\n- CUTOFF 5.6 · 957 Hz\n- RESONANCE 2\n- VCF EG AMT 1.6 · +2.6 oct\n- VCF DECAY 5 · 220 ms\n- VCA DECAY 1 · 11 ms\n- Listen for: with a key, a short chord.",
+          "set": {
+            "vcf.cutoff": 5.6,
+            "vcf.resonance": 2,
+            "vcf_eg.amount": 1.6,
+            "vcf_eg.decay": 5,
+            "vca_eg.decay": 1
+          }
+        },
+        {
+          "title": "EG off, play",
+          "module": "mod",
+          "why": "EG off, so only the keys fire the envelopes, and PLAY lit on the app’s clock.\n- EG Off\n- PLAY lit\n- Listen for: a chord chopped into sixteenths, moving to a new one each bar.",
+          "set": {
+            "transport.eg": "off",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "transport.eg": "In this sound: off, so the steps fire nothing and the gate is the clock alone.",
+        "vcf.cutoff": "In this sound: how bright the gated chord is."
+      },
+      "tweaks": [
+        {
+          "id": "vcf_eg.decay",
+          "try": "Turn VCF DECAY to 8",
+          "hear": "Each chord change opens a long, bright sweep over the gate."
+        },
+        {
+          "id": "transport.eg",
+          "try": "Set EG to held",
+          "hear": "The VCA is held open under the gate: the chopping is gone, a plain pad."
+        }
+      ]
+    },
+    {
       "id": "shc-schulze-drift",
       "name": "Schulze Drift",
       "ref": "In the style of Klaus Schulze’s Moondawn",
@@ -3116,6 +4131,89 @@
           "id": "vcf.resonance",
           "try": "Turn RESONANCE to 6",
           "hear": "A squelchy, rubbery bounce."
+        }
+      ]
+    },
+    {
+      "id": "shc-counter-bass",
+      "name": "Counter-Bass",
+      "ref": "In the style of a Berlin-school sequence",
+      "artist": "Berlin school",
+      "tags": ["seq", "patch", "transposed"],
+      "level": 3,
+      "blurb": "A melody whose bass moves by its own intervals: SEQ 1 OUT patched back into VCO 1 SUB.",
+      "how": "Sequencer 1 moves VCO 1, and its subs follow, so the bass usually moves with the melody. Patch SEQ 1 OUT into VCO 1’s SUB input too and each step also lowers the divisors: as the melody climbs by fourths, SUB 1 takes a different path below it, from C1 to an E♭ two octaves under the top note. The key line moves the whole figure.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 60, 4],
+          [4, 58, 4],
+          [8, 56, 4],
+          [12, 58, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Melody and subs",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C5 with subs at ÷8 and ÷4.\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 SUB 1 FREQ ÷8\n- VCO 1 SUB 2 FREQ ÷4\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 5\n- VCO 1 SUB 2 LEVEL 2\n- Listen for: with a key, a high note over a deep sub.",
+          "set": {
+            "vco1.freq": 2.5,
+            "sub11.div": 8,
+            "sub12.div": 4,
+            "mix.vco1": 3,
+            "mix.sub11": 5,
+            "mix.sub12": 2
+          }
+        },
+        {
+          "title": "Climbing fourths",
+          "module": "mod",
+          "why": "12-ET at ±2; Rhythm 2 at ÷2 on Sequencer 1, moving VCO 1 by 0, 5, 10 and 15 semitones.\n- QUANTIZE 12-ET\n- RHYTHM 2 SEQ 1 lit\n- SEQ 1 STEP 2 1.04 · +5 st\n- SEQ 1 STEP 3 2.08 · +10 st\n- SEQ 1 STEP 4 3.13 · +15 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "rhythm2.seq1": true,
+            "seq1.step2": 1.04,
+            "seq1.step3": 2.08,
+            "seq1.step4": 3.13,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "The bass moves on its own",
+          "module": "osc",
+          "why": "SEQ 1 OUT into VCO 1’s SUB input: each step lowers SUB 1’s divisor by up to two, to ÷8, ÷7, ÷7, ÷6.\n- Patch SEQ 1 OUT to VCO 1 SUB input\n- Listen for: still waiting.",
+          "cables": [["j.seq1_out", "j.vco1_sub_in"]]
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.4 · 418 Hz\n- RESONANCE 3\n- VCF EG AMT 2.6 · +4.2 oct\n- VCF DECAY 3.6 · 77 ms\n- VCA DECAY 4.4 · 140 ms\n- PLAY lit\n- Listen for: a climbing quaver figure whose bass takes its own path, moving with each bar’s key.",
+          "set": {
+            "vcf.cutoff": 4.4,
+            "vcf.resonance": 3,
+            "vcf_eg.amount": 2.6,
+            "vcf_eg.decay": 3.6,
+            "vca_eg.decay": 4.4,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub11.div": "In this sound: the bass’s starting divisor; the cable lowers it from here.",
+        "seq1.step4": "In this sound: the top of the figure and the sub’s highest note."
+      },
+      "tweaks": [
+        {
+          "id": "sub11.div",
+          "try": "Turn VCO 1 SUB 1 FREQ to ÷12",
+          "hear": "The bass sinks lower and its path shifts."
+        },
+        {
+          "id": "seq.oct",
+          "try": "Set SEQ OCT to ±5",
+          "hear": "Huge leaps, and the bass jumps through the undertones with them."
         }
       ]
     },
@@ -3411,6 +4509,84 @@
           "id": "vco2.wave",
           "try": "Set VCO 2 WAVE to Sawtooth",
           "hear": "The drone gets louder and brighter, like a fuzz guitar."
+        }
+      ]
+    },
+    {
+      "id": "shc-clock-pump",
+      "name": "Clock Pump",
+      "ref": "In the style of a French house filter",
+      "artist": "French house",
+      "tags": ["bass", "patch", "transposed"],
+      "level": 2,
+      "blurb": "A bass whose filter flaps open on every sixteenth: CLOCK OUT patched into CUTOFF.",
+      "how": "CLOCK OUT is +10 V for the first half of each clock. In the CUTOFF input that throws the filter wide open, then shuts it, every sixteenth: a pumping, filtered bass in time with the app’s clock. EG held keeps the note sounding; the key line changes it each bar.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [
+          [0, 60, 4],
+          [4, 60, 4],
+          [8, 63, 4],
+          [12, 65, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thick bass",
+          "module": "osc",
+          "why": "VCO 1 sawtooth with subs at ÷2 and ÷4; VCO 2 sawtooth a hair above.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷4\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 4\n- VCO 1 SUB 2 LEVEL 3\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- VCO 2 FREQ 0.03 · C4 · 264 Hz\n- Listen for: with a key, a thick, beating bass.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 4,
+            "mix.vco1": 3,
+            "mix.sub11": 4,
+            "mix.sub12": 3,
+            "mix.vco2": 3,
+            "mix.sub21": 0,
+            "mix.sub22": 0,
+            "vco2.freq": 0.03
+          }
+        },
+        {
+          "title": "A shut filter",
+          "module": "filter",
+          "why": "The filter nearly shut, with resonance.\n- CUTOFF 2 · 80 Hz\n- RESONANCE 4\n- Listen for: with a key, a muffled bass.",
+          "set": {
+            "vcf.cutoff": 2,
+            "vcf.resonance": 4
+          }
+        },
+        {
+          "title": "The pump",
+          "module": "filter",
+          "why": "CLOCK OUT into the CUTOFF input: the filter opens on the first half of every clock while the synth plays.\n- Patch CLOCK OUT to CUTOFF input\n- Listen for: nothing until it plays.",
+          "cables": [["j.clock_out", "j.cutoff_in"]]
+        },
+        {
+          "title": "Hold and play",
+          "module": "mod",
+          "why": "EG held, PLAY lit, on the app’s clock.\n- EG Held\n- PLAY lit\n- Listen for: a bass pumping bright and dark every sixteenth, a new note each bar.",
+          "set": {
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vcf.cutoff": "In this sound: the closed half of each sixteenth.",
+        "vcf.resonance": "In this sound: the squelch as the filter snaps shut."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 0",
+          "hear": "Silence between: a staccato, chopped bass."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 7",
+          "hear": "Each snap rings: an acid, chirping pump."
         }
       ]
     },
@@ -3801,6 +4977,93 @@
       ]
     },
     {
+      "id": "shc-width-sequencer",
+      "name": "Width Sequencer",
+      "ref": "In the style of La Monte Young’s just-tuned drones",
+      "artist": "La Monte Young",
+      "tags": ["drone", "patch", "just", "pwm"],
+      "level": 3,
+      "blurb": "A just fifth whose upper voice changes vowel on every step: SEQ 2 OUT patched into VCO 2 PWM.",
+      "how": "Young’s drones hold just intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A just fifth",
+          "module": "osc",
+          "why": "12-JI: VCO 1 sawtooth at C4 with its octave sub; VCO 2 square at G4, snapped to a pure 3:2.\n- QUANTIZE 12-JI\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 5\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key held, a pure, still fifth.",
+          "set": {
+            "vco.quantize": "12-JI",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 3,
+            "mix.sub11": 3,
+            "mix.sub12": 0,
+            "vco2.freq": 1.46,
+            "vco2.wave": "square",
+            "mix.vco2": 5,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "Four widths",
+          "module": "mod",
+          "why": "SEQ OCT ±5; Sequencer 2, assigned to nothing, at −4, 0, +3 and −2.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -4 · -48 st\n- SEQ 2 STEP 3 3 · +36 st\n- SEQ 2 STEP 4 -2 · -24 st\n- Listen for: still the same fifth.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -4,
+            "seq2.step3": 3,
+            "seq2.step4": -2
+          }
+        },
+        {
+          "title": "Into the width",
+          "module": "osc",
+          "why": "SEQ 2 OUT into VCO 2’s PWM input: −4 V is a thin pulse, 0 a square, +3 a pulse the other way.\n- Patch SEQ 2 OUT to VCO 2 PWM input\n- Listen for: with a key held, the upper voice turning thin and reedy.",
+          "cables": [["j.seq2_out", "j.vco2_pwm"]]
+        },
+        {
+          "title": "A step each beat",
+          "module": "mod",
+          "why": "Rhythm 4 at ÷4 on Sequencer 2.\n- RHYTHM 4 SEQ 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm4.seq2": true
+          }
+        },
+        {
+          "title": "Hold and play",
+          "module": "filter",
+          "why": "A warm filter, EG held, and PLAY lit on the app’s clock.\n- CUTOFF 6 · 1.3 kHz\n- RESONANCE 2\n- EG Held\n- PLAY lit\n- Listen for: a pure fifth whose top voice changes colour on every beat.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.resonance": 2,
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "seq2.step1": "In this sound: the thinnest, reediest width.",
+        "vco.quantize": "In this sound: 12-JI, so the fifth is pure and beatless."
+      },
+      "tweaks": [
+        {
+          "id": "rhythm4.div",
+          "try": "Turn RHYTHM 4 to ÷1",
+          "hear": "A vowel each sixteenth: a chattering, talking drone."
+        },
+        {
+          "id": "seq2.step3",
+          "try": "Turn SEQ 2 STEP 3 to 4.8",
+          "hear": "The third vowel thins almost to nothing: a quiet, buzzing beat in the pattern."
+        }
+      ]
+    },
+    {
       "id": "shc-augmentation-canon",
       "name": "Augmentation Canon",
       "ref": "In the style of a Bach augmentation canon",
@@ -3991,6 +5254,97 @@
           "id": "transport.eg",
           "try": "Set EG to on",
           "hear": "The voices are sung note by note and the drone breathes with them."
+        }
+      ]
+    },
+    {
+      "id": "shc-leslie-chorale",
+      "name": "Leslie Chorale",
+      "ref": "In the style of a gospel organ through a rotating speaker",
+      "artist": "Gospel organ",
+      "tags": ["keys", "patch", "just"],
+      "level": 3,
+      "blurb": "Just-tuned organ chords with a throbbing tremolo: a slowed VCO 2 patched into the VCA.",
+      "how": "A rotating speaker throbs the level and the tone. Here VCO 2, slowed by Sequencer 2’s steady −5 V, sends SUB 1 at about 4 Hz into the VCA input, a tremolo over a held organ: VCO 2 SUB 1 FREQ is the speed switch, ÷16 a slow chorale, ÷1 a fast tremolo. Sequencer 1 changes VCO 1’s two subs once a bar in 12-JI, so the chords are pure.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "An organ",
+          "module": "osc",
+          "why": "12-JI: VCO 1 sawtooth at C5, its subs at ÷2 and ÷3, all three in the mix.\n- QUANTIZE 12-JI\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 4\n- VCO 1 SUB 2 LEVEL 4\n- Listen for: with a key held, an open organ chord.",
+          "set": {
+            "vco.quantize": "12-JI",
+            "vco1.freq": 2.5,
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 3,
+            "mix.sub11": 4,
+            "mix.sub12": 4
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 1 at ÷2 runs at about 4 Hz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "The speaker",
+          "module": "amp",
+          "why": "VCO 2 SUB 1 OUT into the VCA input.\n- Patch VCO 2 SUB 1 OUT to VCA input\n- Listen for: with a key held, the organ throbbing.",
+          "cables": [["j.sub21_out", "j.vca_in"]]
+        },
+        {
+          "title": "A chord a bar",
+          "module": "mod",
+          "why": "Rhythm 4 at ÷16 on Sequencer 1, assigned to VCO 1’s subs: divisors as they are, one up, one down, two up.\n- RHYTHM 4 ÷16\n- RHYTHM 4 SEQ 1 lit\n- SEQ 1 STEP 2 -0.72 · divisor +1.1\n- SEQ 1 STEP 3 0.72 · divisor −1.1\n- SEQ 1 STEP 4 -1.38 · divisor +2.1\n- SEQ 1 ASSIGN SUB 1 lit\n- SEQ 1 ASSIGN SUB 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm4.div": 16,
+            "rhythm4.seq1": true,
+            "seq1.step2": -0.72,
+            "seq1.step3": 0.72,
+            "seq1.step4": -1.38,
+            "seq1.assign_sub1": true,
+            "seq1.assign_sub2": true
+          }
+        },
+        {
+          "title": "Hold and play",
+          "module": "filter",
+          "why": "A warm filter, EG held so the organ sustains, and PLAY lit on the app’s clock.\n- CUTOFF 6.4 · 1.7 kHz\n- RESONANCE 1\n- EG Held\n- PLAY lit\n- Listen for: a throbbing organ, a new pure chord each bar.",
+          "set": {
+            "vcf.cutoff": 6.4,
+            "vcf.resonance": 1,
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub21.div": "In this sound: the tremolo’s speed, like a rotating speaker’s switch.",
+        "vco2.freq": "In this sound: a finer speed control for the tremolo."
+      },
+      "tweaks": [
+        {
+          "id": "sub21.div",
+          "try": "Turn VCO 2 SUB 1 FREQ to ÷16",
+          "hear": "The slow chorale: a gentle swell every two seconds."
+        },
+        {
+          "id": "sub21.div",
+          "try": "Turn VCO 2 SUB 1 FREQ to ÷1",
+          "hear": "The fast tremolo: a quick, fluttering organ."
         }
       ]
     },
@@ -4488,6 +5842,100 @@
       ]
     },
     {
+      "id": "shc-hold-and-release",
+      "name": "Hold and Release",
+      "ref": "In the style of minimalist pulse music",
+      "artist": "Minimalism",
+      "tags": ["seq", "patch"],
+      "level": 3,
+      "blurb": "A melody that stalls on one repeated note, then runs: a slow square wave holding RESET.",
+      "how": "A gate held at RESET keeps both sequencers on step 1 while the envelopes go on firing. Patch a slowed VCO 2’s square sub there and for half of each cycle the melody stalls on its first note, repeating it, then is let go to run through its four steps. The wave is free-running, so the stall falls in a different place in each bar.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two voices",
+          "module": "osc",
+          "why": "VCO 1 square at C5 with subs at ÷2 and ÷3.\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 2\n- Listen for: with a key held, a bright chord.",
+          "set": {
+            "vco1.freq": 2.5,
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 2,
+            "mix.sub12": 2
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. On square, its SUB 2 at ÷16 is high for a second and low for a second.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 WAVE Square\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "vco2.wave": "square",
+            "sub22.div": 16
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "Hold the melody",
+          "module": "mod",
+          "why": "VCO 2 SUB 2 OUT into RESET: while it is high the sequencers stay on step 1.\n- Patch VCO 2 SUB 2 OUT to RESET input\n- Listen for: nothing until it plays.",
+          "cables": [["j.sub22_out", "j.reset_in"]]
+        },
+        {
+          "title": "The melody",
+          "module": "mod",
+          "why": "12-ET; Rhythm 2 at ÷2 on Sequencer 1: C, E♭, F, B♭.\n- QUANTIZE 12-ET\n- RHYTHM 2 SEQ 1 lit\n- SEQ 1 STEP 2 0.25 · +3 st\n- SEQ 1 STEP 3 0.42 · +5 st\n- SEQ 1 STEP 4 0.83 · +10 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "rhythm2.seq1": true,
+            "seq1.step2": 0.25,
+            "seq1.step3": 0.42,
+            "seq1.step4": 0.83,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.8 · 551 Hz\n- RESONANCE 2.5\n- VCF EG AMT 2.2 · +3.5 oct\n- VCF DECAY 3.4 · 66 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Listen for: repeated Cs in quavers, then the melody let loose, then Cs again.",
+          "set": {
+            "vcf.cutoff": 4.8,
+            "vcf.resonance": 2.5,
+            "vcf_eg.amount": 2.2,
+            "vcf_eg.decay": 3.4,
+            "vca_eg.decay": 4,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: how long the melody is held and let go.",
+        "seq1.step1": "In this sound: the note it stalls on."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷4",
+          "hear": "Quick stalls: the melody stutters, rarely getting past its second note."
+        },
+        {
+          "id": "seq1.step1",
+          "try": "Turn SEQ 1 STEP 1 to 0.58",
+          "hear": "It stalls on a G: the repeated note sits a fifth up."
+        }
+      ]
+    },
+    {
       "id": "shc-additive-process",
       "name": "Additive Process",
       "ref": "In the style of Frederic Rzewski’s Les Moutons de Panurge",
@@ -4687,6 +6135,97 @@
           "id": "rhythm2.seq2",
           "try": "Turn off RHYTHM 2 SEQ 2",
           "hear": "The second part thins out to dotted eighths."
+        }
+      ]
+    },
+    {
+      "id": "shc-stop-start",
+      "name": "Stop-Start",
+      "ref": "In the style of a stop-time break",
+      "artist": "Jazz",
+      "tags": ["seq", "patch"],
+      "level": 3,
+      "blurb": "A sequence that stops dead on a held note and picks up where it left off: a slow square wave in PLAY.",
+      "how": "A gate in the PLAY input runs the sequencers while it is high and stops them while it is low. Patch a slowed VCO 2’s square sub there and the melody runs for half a second, then halts on whatever note it reached, held by the key, then carries on from there. The stops fall freely against the beat, as a band’s stop-time break would if no one counted.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A voice",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4 with its octave sub.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key held, a saw.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 3,
+            "mix.sub12": 0
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. On square, its SUB 2 at ÷8 is high for half a second, low for half a second.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 WAVE Square\n- VCO 2 SUB 2 FREQ ÷8\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "vco2.wave": "square",
+            "sub22.div": 8
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "The run",
+          "module": "mod",
+          "why": "12-ET; Rhythm 1 at ÷1 on Sequencer 1: C, G, B♭, E♭ up an octave.\n- QUANTIZE 12-ET\n- RHYTHM 1 SEQ 1 lit\n- SEQ 1 STEP 2 0.58 · +7 st\n- SEQ 1 STEP 3 0.83 · +10 st\n- SEQ 1 STEP 4 1.25 · +15 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "rhythm1.seq1": true,
+            "seq1.step2": 0.58,
+            "seq1.step3": 0.83,
+            "seq1.step4": 1.25,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Stop and start",
+          "module": "mod",
+          "why": "VCO 2 SUB 2 OUT into the PLAY input: it starts the sequencers as it rises and stops them as it falls.\n- Patch VCO 2 SUB 2 OUT to PLAY input\n- Listen for: nothing until it plays.",
+          "cables": [["j.sub22_out", "j.play_in"]]
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit, so the app’s clock runs; the cable decides when the sequencers move.\n- CUTOFF 4.6 · 480 Hz\n- RESONANCE 3\n- VCF EG AMT 2.4 · +3.8 oct\n- VCF DECAY 3.4 · 66 ms\n- VCA DECAY 4 · 100 ms\n- PLAY lit\n- Listen for: a run of sixteenths that halts on a held note, then picks up again.",
+          "set": {
+            "vcf.cutoff": 4.6,
+            "vcf.resonance": 3,
+            "vcf_eg.amount": 2.4,
+            "vcf_eg.decay": 3.4,
+            "vca_eg.decay": 4,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: how long each run and each stop lasts."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷16",
+          "hear": "Longer runs and longer stops: a phrase, then a held note."
+        },
+        {
+          "id": "vco2.wave",
+          "try": "Set VCO 2 WAVE to saw",
+          "hear": "A sawtooth sub at the PLAY input: still a run and a stop, but with the stop drifting."
         }
       ]
     },
@@ -4988,6 +6527,107 @@
       ]
     },
     {
+      "id": "shc-ornamented-reel",
+      "name": "Ornamented Reel",
+      "ref": "In the style of the ornaments of Irish traditional music",
+      "artist": "Irish traditional music",
+      "tags": ["lead", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "Each note you play flicks through a quick run of grace notes: the VCF EG patched into RHYTHM 1.",
+      "how": "A fiddler or piper decorates a note with cuts and rolls, a flick of other notes around it. With EG off the riff fires the envelopes and Sequencer 1 picks the pitches. Patch VCF EG OUT into RHYTHM 1: at rest Rhythm 1 is slow, ÷13, but each note’s envelope drops it to ÷1, so Sequencer 1 races through its steps for a moment, a grace-note flurry, then slows as the envelope decays.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.25],
+          [0.5, 60, 0.25],
+          [0.75, 60, 0.25],
+          [1, 60, 0.4],
+          [1.5, 60, 0.25],
+          [2, 60, 0.25],
+          [2.5, 60, 0.25],
+          [2.75, 60, 0.25],
+          [3, 60, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A reedy voice",
+          "module": "osc",
+          "why": "VCO 1 square at D5 with its octave sub.\n- VCO 1 FREQ 2.92 · D5 · 588 Hz\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 5\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key, a reedy tone.",
+          "set": {
+            "vco1.freq": 2.92,
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 5,
+            "mix.sub11": 2,
+            "mix.sub12": 0
+          }
+        },
+        {
+          "title": "A slow rhythm",
+          "module": "mod",
+          "why": "Rhythm 1 at ÷13 on Sequencer 1.\n- RHYTHM 1 ÷13\n- RHYTHM 1 SEQ 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm1.div": 13,
+            "rhythm1.seq1": true
+          }
+        },
+        {
+          "title": "The notes around it",
+          "module": "mod",
+          "why": "8-ET at ±1: Sequencer 1 D, E, F♯, D an octave below.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 0.83 · +2 st\n- SEQ 1 STEP 3 1.67 · +4 st\n- SEQ 1 STEP 4 -5 · -12 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "set": {
+            "vco.quantize": "8-ET",
+            "seq.oct": 1,
+            "seq1.step2": 0.83,
+            "seq1.step3": 1.67,
+            "seq1.step4": -5,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "The flick",
+          "module": "env",
+          "why": "VCF EG OUT into RHYTHM 1’s input: a short VCF EG drops the divisor by up to twelve on every note.\n- CUTOFF 6.4 · 1.7 kHz\n- RESONANCE 1.5\n- VCF EG AMT 1 · +1.6 oct\n- VCF DECAY 2.4 · 31 ms\n- VCA DECAY 4.4 · 140 ms\n- Patch VCF EG OUT to RHYTHM 1 input\n- Listen for: nothing until it plays.",
+          "set": {
+            "vcf.cutoff": 6.4,
+            "vcf.resonance": 1.5,
+            "vcf_eg.amount": 1,
+            "vcf_eg.decay": 2.4,
+            "vca_eg.decay": 4.4
+          },
+          "cables": [["j.vcf_eg_out", "j.rhythm1_in"]]
+        },
+        {
+          "title": "EG off, play",
+          "module": "mod",
+          "why": "EG off, so the riff fires the envelopes, and PLAY lit on the app’s clock.\n- EG Off\n- PLAY lit\n- Listen for: a jigging rhythm, each note flicking through a run of grace notes.",
+          "set": {
+            "transport.eg": "off",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vcf_eg.decay": "In this sound: how long each flurry lasts.",
+        "rhythm1.div": "In this sound: how still the sequence stays between notes."
+      },
+      "tweaks": [
+        {
+          "id": "vcf_eg.decay",
+          "try": "Turn VCF DECAY to 5",
+          "hear": "Long flurries: every note becomes a run."
+        },
+        {
+          "id": "rhythm1.div",
+          "try": "Turn RHYTHM 1 to ÷16",
+          "hear": "Shorter, sparer ornaments: a flick on the strike only."
+        }
+      ]
+    },
+    {
       "id": "shc-clave-melody",
       "name": "Clave Melody",
       "ref": "In the style of son clave",
@@ -5257,6 +6897,80 @@
       ]
     },
     {
+      "id": "shc-fm-snare",
+      "name": "FM Snare",
+      "ref": "In the style of a 1980s drum-machine snare",
+      "artist": "Electro",
+      "tags": ["perc", "patch"],
+      "level": 2,
+      "blurb": "A snare from a synth with no noise: VCO 1 at audio rate in VCO 2’s pitch input breaks it into hiss.",
+      "how": "The Subharmonicon has no noise source, but a high VCO at a 1 V/octave input swings the other VCO five octaves up and down thousands of times a second, smearing it into a noise-like spray. VCO 1 OUT into VCO 2’s input, VCO 1 silent and high, VCO 2 heard with a short envelope: a crack of noisy tone, played on the backbeat by the keys.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [1, 60, 0.15],
+          [2.75, 60, 0.1],
+          [3, 60, 0.15]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two tones",
+          "module": "osc",
+          "why": "VCO 1 square at C7, silent; VCO 2 square at C5 with SUB 1 at ÷3.\n- VCO 1 FREQ 7.5 · C7 · 2.1 kHz\n- VCO 1 WAVE Square\n- VCO 1 LEVEL 0\n- VCO 1 SUB 1 LEVEL 0\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 2.5 · C5 · 523 Hz\n- VCO 2 WAVE Square\n- VCO 2 SUB 1 FREQ ÷3\n- VCO 2 SUB 2 FREQ ÷3\n- VCO 2 LEVEL 4\n- VCO 2 SUB 1 LEVEL 3\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key, a square chord.",
+          "set": {
+            "vco1.freq": 7.5,
+            "vco1.wave": "square",
+            "mix.vco1": 0,
+            "mix.sub11": 0,
+            "mix.sub12": 0,
+            "vco2.freq": 2.5,
+            "vco2.wave": "square",
+            "sub21.div": 3,
+            "sub22.div": 3,
+            "mix.vco2": 4,
+            "mix.sub21": 3,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "Smear it",
+          "module": "osc",
+          "why": "VCO 1 OUT into VCO 2’s input.\n- Patch VCO 1 OUT to VCO 2 input\n- Listen for: with a key, a harsh, hissing tone.",
+          "cables": [["j.vco1_out", "j.vco2_in"]]
+        },
+        {
+          "title": "A crack",
+          "module": "env",
+          "why": "An open filter snapped by the VCF EG, and a short VCA decay.\n- CUTOFF 7 · 2.5 kHz\n- RESONANCE 1\n- VCF EG AMT 2 · +3.2 oct\n- VCF DECAY 2 · 23 ms\n- VCA DECAY 2.6 · 36 ms\n- Listen for: with a key tapped, a snare-like crack.",
+          "set": {
+            "vcf.cutoff": 7,
+            "vcf.resonance": 1,
+            "vcf_eg.amount": 2,
+            "vcf_eg.decay": 2,
+            "vca_eg.decay": 2.6
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: not heard; how fine the hiss is.",
+        "vca_eg.decay": "In this sound: the snare’s length."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.freq",
+          "try": "Turn VCO 1 FREQ to 2.5",
+          "hear": "A slower swing: a ringing, metallic clank rather than a hiss."
+        },
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 4.5",
+          "hear": "A long, washy crash."
+        }
+      ]
+    },
+    {
       "id": "shc-electro-toms",
       "name": "Electro Toms",
       "ref": "In the style of the Roland TR-808’s toms",
@@ -5511,6 +7225,99 @@
       ]
     },
     {
+      "id": "shc-build-up-roll",
+      "name": "Build-Up Roll",
+      "ref": "In the style of a dance-music build-up",
+      "artist": "Electronic dance music",
+      "tags": ["perc", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "A tom roll that speeds up through every bar into a blur: a slow ramp patched into RHYTHM 1.",
+      "how": "A build-up rolls faster and faster into the drop. VCO 2, slowed by Sequencer 2’s steady −5 V, sends its deepest sub’s rising ramp into RHYTHM 1: about once a bar the divisor falls from ÷16 to ÷1, so the toms speed up from one a bar to sixteenths, then start again. The VCF EG into VCO 1’s input gives each hit a falling pitch.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A tom",
+          "module": "osc",
+          "why": "VCO 1 square at C4, quiet, with its subs at ÷2 and ÷4 loud.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷4\n- VCO 1 LEVEL 1\n- VCO 1 SUB 1 LEVEL 5\n- VCO 1 SUB 2 LEVEL 4\n- Listen for: with a key, a deep square.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 4,
+            "mix.vco1": 1,
+            "mix.sub11": 5,
+            "mix.sub12": 4
+          }
+        },
+        {
+          "title": "A falling pitch",
+          "module": "env",
+          "why": "VCF EG OUT into VCO 1’s input, with a short VCF decay, and a short VCA decay.\n- VCF DECAY 1.6 · 17 ms\n- VCA DECAY 3.4 · 66 ms\n- Patch VCF EG OUT to VCO 1 input\n- Listen for: with a key tapped, a zapping tom.",
+          "set": {
+            "vcf_eg.decay": 1.6,
+            "vca_eg.decay": 3.4
+          },
+          "cables": [["j.vcf_eg_out", "j.vco1_in"]]
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 ramps up about once a bar at this tempo.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "sub22.div": 16
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "Roll",
+          "module": "mod",
+          "why": "Rhythm 1 centred at ÷8 on Sequencer 1, and VCO 2 SUB 2 OUT into RHYTHM 1’s input; 12-ET, Sequencer 1 climbs C, D, E, G.\n- RHYTHM 1 ÷8\n- RHYTHM 1 SEQ 1 lit\n- QUANTIZE 12-ET\n- SEQ 1 STEP 2 0.17 · +2 st\n- SEQ 1 STEP 3 0.33 · +4 st\n- SEQ 1 STEP 4 0.58 · +7 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Patch VCO 2 SUB 2 OUT to RHYTHM 1 input\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm1.div": 8,
+            "rhythm1.seq1": true,
+            "vco.quantize": "12-ET",
+            "seq1.step2": 0.17,
+            "seq1.step3": 0.33,
+            "seq1.step4": 0.58,
+            "seq1.assign_osc": true
+          },
+          "cables": [["j.sub22_out", "j.rhythm1_in"]]
+        },
+        {
+          "title": "Play",
+          "module": "mod",
+          "why": "PLAY lit, on the app’s clock.\n- PLAY lit\n- Listen for: toms rolling faster and faster into a blur, then dropping back to slow.",
+          "set": {
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: how long each build-up takes.",
+        "vcf_eg.decay": "In this sound: the length of each tom’s pitch fall."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷8",
+          "hear": "Two build-ups a bar: frantic, short rolls."
+        },
+        {
+          "id": "rhythm1.div",
+          "try": "Turn RHYTHM 1 to ÷12",
+          "hear": "The roll spends longer slow and only blurs at the very top."
+        }
+      ]
+    },
+    {
       "id": "shc-woodblocks",
       "name": "Woodblocks",
       "ref": "In the style of Leroy Anderson’s woodblock writing",
@@ -5692,6 +7499,92 @@
       ]
     },
     {
+      "id": "shc-accent-pattern",
+      "name": "Accent Pattern",
+      "ref": "In the style of West African drumming",
+      "artist": "West African drumming",
+      "tags": ["perc", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "Two drums from one voice, told apart by their attack: SEQ 2 CLK patched into CUTOFF for a slap.",
+      "how": "Both sequencers fire the same envelopes, so their notes would sound alike. Patch SEQ 2 CLK into CUTOFF and every note Sequencer 2 plays gets a 10 ms burst of open filter at its start, a slap, while Sequencer 1’s notes stay dull: two drums, quavers against dotted quavers, from one voice. A drummer gets the same two sounds from one drum with an open tone and a slap.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A drum",
+          "module": "osc",
+          "why": "VCO 1 square at C4, quiet, with its subs at ÷2 and ÷4 loud; VCO 2 square at G4.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷4\n- VCO 1 LEVEL 1\n- VCO 1 SUB 1 LEVEL 5\n- VCO 1 SUB 2 LEVEL 3\n- VCO 2 FREQ 1.46 · G4 · 392 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 2\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key, a deep, hollow fifth.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 4,
+            "mix.vco1": 1,
+            "mix.sub11": 5,
+            "mix.sub12": 3,
+            "vco2.freq": 1.46,
+            "vco2.wave": "square",
+            "mix.vco2": 2,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "A dull strike",
+          "module": "env",
+          "why": "A half-closed filter, VCF EG into VCO 1’s input for a quick pitch drop, and a short VCA decay.\n- CUTOFF 5 · 632 Hz\n- RESONANCE 1\n- VCF DECAY 1.2 · 12 ms\n- VCA DECAY 3.2 · 57 ms\n- Patch VCF EG OUT to VCO 1 input\n- Listen for: with a key tapped, a dull drum.",
+          "set": {
+            "vcf.cutoff": 5,
+            "vcf.resonance": 1,
+            "vcf_eg.decay": 1.2,
+            "vca_eg.decay": 3.2
+          },
+          "cables": [["j.vcf_eg_out", "j.vco1_in"]]
+        },
+        {
+          "title": "Two rhythms",
+          "module": "mod",
+          "why": "Rhythm 2 at ÷2 on Sequencer 1, Rhythm 3 at ÷3 on Sequencer 2.\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 3 SEQ 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm2.seq1": true,
+            "rhythm3.seq2": true
+          }
+        },
+        {
+          "title": "The slap",
+          "module": "filter",
+          "why": "SEQ 2 CLK into the CUTOFF input: a short pulse opens the filter at the start of every Sequencer 2 note.\n- Patch SEQ 2 CLK OUT to CUTOFF input\n- Listen for: nothing until it plays.",
+          "cables": [["j.seq2_clk", "j.cutoff_in"]]
+        },
+        {
+          "title": "Play",
+          "module": "mod",
+          "why": "PLAY lit, on the app’s clock.\n- PLAY lit\n- Listen for: dull quavers with slapped notes every three sixteenths across them.",
+          "set": {
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "rhythm3.div": "In this sound: where the slaps fall.",
+        "vcf.cutoff": "In this sound: how dull the open tones are, and so how much the slaps stand out."
+      },
+      "tweaks": [
+        {
+          "id": "rhythm3.div",
+          "try": "Turn RHYTHM 3 to ÷5",
+          "hear": "Slaps every five sixteenths: a longer, lopsided cycle."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 7",
+          "hear": "Every note bright: the slaps no longer stand out."
+        }
+      ]
+    },
+    {
       "id": "shc-tabla-bols",
       "name": "Tabla Bols",
       "ref": "In the style of tabla in teental",
@@ -5847,6 +7740,89 @@
           "id": "rhythm1.div",
           "try": "Turn RHYTHM 1 to ÷2",
           "hear": "The overtone melody twice as fast."
+        }
+      ]
+    },
+    {
+      "id": "shc-didgeridoo",
+      "name": "Didgeridoo",
+      "ref": "In the style of a didgeridoo drone",
+      "artist": "Yolŋu music",
+      "tags": ["drone", "patch"],
+      "level": 2,
+      "blurb": "A low, buzzing drone whose resonance wah-wahs: a slowed VCO 2 patched into CUTOFF.",
+      "how": "A didgeridoo player holds one low note and moves the mouth to sweep its formants. Here VCO 2, slowed by Sequencer 2’s steady −5 V, sends its SUB 2 at about 2 Hz into CUTOFF: the resonant filter sweeps up and down over a low drone of VCO 1’s subs, a rhythmic, vocal wah.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A low drone",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4, quiet; its subs at ÷4 and ÷2 loud.\n- VCO 1 SUB 1 FREQ ÷4\n- VCO 1 SUB 2 FREQ ÷2\n- VCO 1 LEVEL 1\n- VCO 1 SUB 1 LEVEL 6\n- VCO 1 SUB 2 LEVEL 2\n- Listen for: with a key held, a low, buzzing drone.",
+          "set": {
+            "sub11.div": 4,
+            "sub12.div": 2,
+            "mix.vco1": 1,
+            "mix.sub11": 6,
+            "mix.sub12": 2
+          }
+        },
+        {
+          "title": "A vocal filter",
+          "module": "filter",
+          "why": "The filter low with plenty of resonance.\n- CUTOFF 3 · 159 Hz\n- RESONANCE 6\n- Listen for: with a key held, a muffled, ringing drone.",
+          "set": {
+            "vcf.cutoff": 3,
+            "vcf.resonance": 6
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷4 runs at about 2 Hz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷4\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "sub22.div": 4
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "The mouth",
+          "module": "filter",
+          "why": "VCO 2 SUB 2 OUT into the CUTOFF input.\n- Patch VCO 2 SUB 2 OUT to CUTOFF input\n- Listen for: with a key held, the drone wah-wahing.",
+          "cables": [["j.sub22_out", "j.cutoff_in"]]
+        },
+        {
+          "title": "Hold",
+          "module": "mod",
+          "why": "EG held, so the drone sounds without a key; PLAY lit on the app’s clock.\n- EG Held\n- PLAY lit\n- Listen for: a low drone with a pulsing, vocal wah.",
+          "set": {
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: the speed of the wah.",
+        "vcf.resonance": "In this sound: how vocal the sweep is."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷12",
+          "hear": "A slow, breathing sweep."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 1.5",
+          "hear": "The sweep spends longer closed: a darker drone that only opens at the top."
         }
       ]
     },
@@ -6096,6 +8072,93 @@
           "id": "vco2.freq",
           "try": "Turn VCO 2 FREQ to 0.15",
           "hear": "Fast beating: a rough, chorused drone."
+        }
+      ]
+    },
+    {
+      "id": "shc-timbre-sequence",
+      "name": "Timbre Sequence",
+      "ref": "In the style of Morton Subotnick’s timbral sequences",
+      "artist": "Morton Subotnick",
+      "tags": ["drone", "patch"],
+      "level": 3,
+      "blurb": "One held note whose tone changes on every step: Sequencer 2 plays silent VCO 2, and VCO 2 plays the filter.",
+      "how": "Subotnick sequenced timbre as readily as pitch. Here VCO 1 holds a single drone while Sequencer 2 steps silent VCO 2 through four pitches; VCO 2 OUT into CUTOFF shakes the filter at whichever pitch it is on, so each step is a new tone, hollow, clanging, growling, bell-like, on the same note.",
+      "phrase": {
+        "bpm": 88,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A drone",
+          "module": "osc",
+          "why": "VCO 1 square at C4 with its octave sub; VCO 2 silent.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 5\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key held, a hollow drone.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 5,
+            "mix.sub11": 3,
+            "mix.sub12": 0,
+            "mix.vco2": 0,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "VCO 2 plays the filter",
+          "module": "filter",
+          "why": "VCO 2 OUT into the CUTOFF input, the filter low and resonant.\n- CUTOFF 4 · 317 Hz\n- RESONANCE 3\n- Patch VCO 2 OUT to CUTOFF input\n- Listen for: with a key held, a growling, buzzing drone.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf.resonance": 3
+          },
+          "cables": [["j.vco2_out", "j.cutoff_in"]]
+        },
+        {
+          "title": "Four tones",
+          "module": "mod",
+          "why": "QUANTIZE off at SEQ OCT ±2: Sequencer 2 moves VCO 2 to the unison, a little over a fifth, an octave and a third, and an uneven step below.\n- SEQ 2 STEP 2 1.5 · +7.2 st\n- SEQ 2 STEP 3 3.4 · +16.3 st\n- SEQ 2 STEP 4 -1.3 · -6.2 st\n- SEQ 2 ASSIGN OSC 2 lit\n- Listen for: still the first tone.",
+          "set": {
+            "seq2.step2": 1.5,
+            "seq2.step3": 3.4,
+            "seq2.step4": -1.3,
+            "seq2.assign_osc": true
+          }
+        },
+        {
+          "title": "A step each beat",
+          "module": "mod",
+          "why": "Rhythm 4 at ÷4 on Sequencer 2.\n- RHYTHM 4 SEQ 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm4.seq2": true
+          }
+        },
+        {
+          "title": "Hold and play",
+          "module": "mod",
+          "why": "EG held, PLAY lit, on the app’s clock.\n- EG Held\n- PLAY lit\n- Listen for: one note whose tone changes on every beat.",
+          "set": {
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "seq2.step3": "In this sound: the brightest, most clanging tone.",
+        "vcf.cutoff": "In this sound: how much the tones growl."
+      },
+      "tweaks": [
+        {
+          "id": "rhythm4.div",
+          "try": "Turn RHYTHM 4 to ÷1",
+          "hear": "A new tone every sixteenth: a chattering, talking drone."
+        },
+        {
+          "id": "vco.quantize",
+          "try": "Set QUANTIZE to 12-ET",
+          "hear": "VCO 2 lands on notes: smoother, more harmonic tones."
         }
       ]
     },
@@ -6357,6 +8420,80 @@
           "id": "sub12.div",
           "try": "Turn VCO 1 SUB 2 FREQ to ÷16",
           "hear": "The pedal drops another octave, to a 16 Hz rumble."
+        }
+      ]
+    },
+    {
+      "id": "shc-feedback-pwm-drone",
+      "name": "Feedback PWM Drone",
+      "ref": "In the style of Éliane Radigue’s feedback drones",
+      "artist": "Éliane Radigue",
+      "tags": ["drone", "patch", "pwm"],
+      "level": 2,
+      "blurb": "A drone that modulates itself: VCA OUT patched into VCO 1’s pulse width.",
+      "how": "Radigue built long drones from feedback. Patch the synth’s own output into VCO 1 PWM and the sound sets its own pulse width: the wave folds back on itself, and as VCO 2 beats slowly against VCO 1 the feedback churns, never quite settling. VOLUME is the depth of the feedback, so turning it down calms the drone as well as quietening it.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A pulse and a saw",
+          "module": "osc",
+          "why": "VCO 1 square at C4 with its octave sub; VCO 2 sawtooth just above.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 5\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- VCO 2 FREQ 0.02 · C4 · 263 Hz\n- Listen for: with a key held, a slowly beating tone.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 5,
+            "mix.sub11": 3,
+            "mix.sub12": 0,
+            "mix.vco2": 3,
+            "mix.sub21": 0,
+            "mix.sub22": 0,
+            "vco2.freq": 0.02
+          }
+        },
+        {
+          "title": "Feed it back",
+          "module": "osc",
+          "why": "VCA OUT into VCO 1’s PWM input.\n- Patch VCA OUT to VCO 1 PWM input\n- Listen for: with a key held, a churning, folded tone.",
+          "cables": [["j.vca_out", "j.vco1_pwm"]]
+        },
+        {
+          "title": "Soften",
+          "module": "filter",
+          "why": "A warm filter with a little resonance.\n- CUTOFF 5.6 · 957 Hz\n- RESONANCE 2\n- Listen for: with a key held, a darker churn.",
+          "set": {
+            "vcf.cutoff": 5.6,
+            "vcf.resonance": 2
+          }
+        },
+        {
+          "title": "Hold",
+          "module": "mod",
+          "why": "EG held, so the drone sounds without a key; PLAY lit on the app’s clock.\n- EG Held\n- PLAY lit\n- Listen for: a drone slowly churning through its own feedback.",
+          "set": {
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vca.volume": "In this sound: the feedback’s depth as well as the level.",
+        "vco2.freq": "In this sound: how fast the churn moves."
+      },
+      "tweaks": [
+        {
+          "id": "vca.volume",
+          "try": "Turn VOLUME to 4",
+          "hear": "Less feedback: a calmer, steadier tone."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQ to 0.1",
+          "hear": "A faster beat: the churn turns to a rapid flutter."
         }
       ]
     },
@@ -6726,6 +8863,103 @@
       ]
     },
     {
+      "id": "shc-self-listening-rhythm",
+      "name": "Self-Listening Rhythm",
+      "ref": "In the style of a self-patched modular",
+      "artist": "Modular synthesis",
+      "tags": ["seq", "patch", "rhythm"],
+      "level": 3,
+      "blurb": "A rhythm that listens to its own output: VCA OUT patched into RHYTHM 2.",
+      "how": "Between notes the output is silent and Rhythm 2 sits at its centre; while a note sounds, its wave lands somewhere different at each clock and throws Rhythm 2’s divisor about. So the notes set the next rhythm, and that rhythm the next notes: a pattern that grows out of the sound itself, busier when the notes ring long.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two voices",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4 with its octave sub; VCO 2 square at E♭4.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 2\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 0.63 · D♯4 · 312 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 3\n- VCO 2 SUB 1 LEVEL 0\n- VCO 2 SUB 2 LEVEL 0\n- Listen for: with a key held, a minor third.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 2,
+            "mix.sub12": 0,
+            "vco2.freq": 0.63,
+            "vco2.wave": "square",
+            "mix.vco2": 3,
+            "mix.sub21": 0,
+            "mix.sub22": 0
+          }
+        },
+        {
+          "title": "A rhythm at rest",
+          "module": "mod",
+          "why": "Rhythm 2 centred at ÷6 on both sequencers, and Rhythm 4 at ÷4 on Sequencer 1.\n- RHYTHM 2 ÷6\n- RHYTHM 2 SEQ 1 lit\n- RHYTHM 2 SEQ 2 lit\n- RHYTHM 4 SEQ 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm2.div": 6,
+            "rhythm2.seq1": true,
+            "rhythm2.seq2": true,
+            "rhythm4.seq1": true
+          }
+        },
+        {
+          "title": "Listen to itself",
+          "module": "mod",
+          "why": "VCA OUT into RHYTHM 2’s input.\n- Patch VCA OUT to RHYTHM 2 input\n- Listen for: still waiting.",
+          "cables": [["j.vca_out", "j.rhythm2_in"]]
+        },
+        {
+          "title": "The notes",
+          "module": "mod",
+          "why": "12-ET at ±1: Sequencer 1 C, G, F, B♭ below; Sequencer 2 E♭, F, B♭, G on VCO 2.\n- QUANTIZE 12-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 2.92 · +7 st\n- SEQ 1 STEP 3 2.08 · +5 st\n- SEQ 1 STEP 4 -0.83 · -2 st\n- SEQ 1 ASSIGN OSC 1 lit\n- SEQ 2 STEP 2 0.83 · +2 st\n- SEQ 2 STEP 3 2.92 · +7 st\n- SEQ 2 STEP 4 1.67 · +4 st\n- SEQ 2 ASSIGN OSC 2 lit\n- Listen for: still waiting.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "seq.oct": 1,
+            "seq1.step2": 2.92,
+            "seq1.step3": 2.08,
+            "seq1.step4": -0.83,
+            "seq1.assign_osc": true,
+            "seq2.step2": 0.83,
+            "seq2.step3": 2.92,
+            "seq2.step4": 1.67,
+            "seq2.assign_osc": true
+          }
+        },
+        {
+          "title": "Pluck and play",
+          "module": "filter",
+          "why": "A plucked filter, then PLAY lit on the app’s clock.\n- CUTOFF 4.8 · 551 Hz\n- RESONANCE 2.5\n- VCF EG AMT 2.2 · +3.5 oct\n- VCF DECAY 3.6 · 77 ms\n- VCA DECAY 4.6 · 160 ms\n- PLAY lit\n- Listen for: a steady beat with bursts of extra notes that come and go with the sound.",
+          "set": {
+            "vcf.cutoff": 4.8,
+            "vcf.resonance": 2.5,
+            "vcf_eg.amount": 2.2,
+            "vcf_eg.decay": 3.6,
+            "vca_eg.decay": 4.6,
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vca_eg.decay": "In this sound: how long each note keeps throwing the rhythm about.",
+        "vca.volume": "In this sound: how far the output moves the rhythm."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 6",
+          "hear": "Notes ring longer, so the rhythm runs wild more of the time."
+        },
+        {
+          "id": "vca.volume",
+          "try": "Turn VOLUME to 3",
+          "hear": "Quieter, and calmer: the output barely moves the rhythm."
+        }
+      ]
+    },
+    {
       "id": "shc-crossed-sequencers",
       "name": "Crossed Sequencers",
       "ref": "In the style of a Buchla-style sequential voltage source",
@@ -6990,6 +9224,82 @@
       ]
     },
     {
+      "id": "shc-octave-flutter",
+      "name": "Octave Flutter",
+      "ref": "In the style of an Italo-disco octave bass",
+      "artist": "Italo disco",
+      "tags": ["bass", "patch"],
+      "level": 2,
+      "blurb": "A bass that flips between its sub and its own pitch on every clock: CLOCK OUT patched into VCO 1 SUB.",
+      "how": "Italo disco basses bounce between octaves in sixteenths. CLOCK OUT into VCO 1’s SUB input does it twice as fast: its +10 V lowers both divisors to ÷1 for the first half of every clock, so the subs play VCO 1’s own pitch, then drop back to ÷2 and ÷4 for the second half. Sequencer 1 moves the bass line a beat at a time.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Subs only",
+          "module": "osc",
+          "why": "VCO 1 square at C4, silent, its subs at ÷2 and ÷4 in the mix.\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷4\n- VCO 1 LEVEL 0\n- VCO 1 SUB 1 LEVEL 5\n- VCO 1 SUB 2 LEVEL 3\n- Listen for: with a key held, a deep, octave-doubled bass.",
+          "set": {
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 4,
+            "mix.vco1": 0,
+            "mix.sub11": 5,
+            "mix.sub12": 3
+          }
+        },
+        {
+          "title": "Flip on the clock",
+          "module": "osc",
+          "why": "CLOCK OUT into VCO 1’s SUB input: while the synth plays, the subs jump to VCO 1’s pitch for half of every clock.\n- Patch CLOCK OUT to VCO 1 SUB input\n- Listen for: nothing until it plays.",
+          "cables": [["j.clock_out", "j.vco1_sub_in"]]
+        },
+        {
+          "title": "A bass line",
+          "module": "mod",
+          "why": "12-ET at ±1; Rhythm 4 at ÷4 on Sequencer 1: C, C, E♭, F.\n- QUANTIZE 12-ET\n- SEQ OCT ±1\n- RHYTHM 4 SEQ 1 lit\n- SEQ 1 STEP 3 1.25 · +3 st\n- SEQ 1 STEP 4 2.08 · +5 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "vco.quantize": "12-ET",
+            "seq.oct": 1,
+            "rhythm4.seq1": true,
+            "seq1.step3": 1.25,
+            "seq1.step4": 2.08,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Hold and play",
+          "module": "filter",
+          "why": "A low, slightly resonant filter, EG held, and PLAY lit on the app’s clock.\n- CUTOFF 4.6 · 480 Hz\n- RESONANCE 2.5\n- EG Held\n- PLAY lit\n- Listen for: a fluttering octave bass, a new note on each beat.",
+          "set": {
+            "vcf.cutoff": 4.6,
+            "vcf.resonance": 2.5,
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub11.div": "In this sound: the low half of each flutter.",
+        "vcf.cutoff": "In this sound: how much of the top octave comes through."
+      },
+      "tweaks": [
+        {
+          "id": "sub11.div",
+          "try": "Turn VCO 1 SUB 1 FREQ to ÷3",
+          "hear": "The flutter jumps a twelfth: a wider, more electronic bounce."
+        },
+        {
+          "id": "transport.eg",
+          "try": "Set EG to on",
+          "hear": "Each beat is a plucked note, the flutter fading inside it."
+        }
+      ]
+    },
+    {
       "id": "shc-cross-pwm",
       "name": "Cross PWM",
       "ref": "In the style of a chorus-laden 1980s pad",
@@ -7060,6 +9370,98 @@
           "id": "vco2.freq",
           "try": "Turn VCO 2 FREQ to 0",
           "hear": "The sweep locks to the note: steady, with no drift."
+        }
+      ]
+    },
+    {
+      "id": "shc-slow-pwm-strings",
+      "name": "Slow PWM Strings",
+      "ref": "In the style of a 1970s string machine",
+      "artist": "String synthesizers",
+      "tags": ["strings", "patch", "pwm"],
+      "level": 3,
+      "blurb": "Lush, slowly moving strings: a slowed VCO 2 sweeping the pulse width of VCO 1 and both its subs.",
+      "how": "String machines got their shimmer from slow modulation. Here VCO 2, slowed by Sequencer 2’s steady −5 V, sends SUB 2 at about half a hertz into VCO 1 PWM: on square, VCO 1 and both its subs widen and narrow together, the whole chord shimmering. Sequencer 1 changes the chord’s divisors once a bar, and EG held sustains it.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A chord of pulses",
+          "module": "osc",
+          "why": "VCO 1 square at C5 with subs at ÷2 and ÷3, all three in the mix.\n- VCO 1 FREQ 2.5 · C5 · 523 Hz\n- VCO 1 WAVE Square\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 3\n- VCO 1 SUB 1 LEVEL 4\n- VCO 1 SUB 2 LEVEL 4\n- Listen for: with a key held, a hollow chord.",
+          "set": {
+            "vco1.freq": 2.5,
+            "vco1.wave": "square",
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 3,
+            "mix.sub11": 4,
+            "mix.sub12": 4
+          }
+        },
+        {
+          "title": "VCO 2 as a slow wave",
+          "module": "osc",
+          "why": "SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz, and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice. Its SUB 2 at ÷16 runs at about half a hertz.\n- SEQ OCT ±5\n- SEQ 2 STEP 1 -5 · -60 st\n- SEQ 2 STEP 2 -5 · -60 st\n- SEQ 2 STEP 3 -5 · -60 st\n- SEQ 2 STEP 4 -5 · -60 st\n- VCO 2 SUB 2 FREQ ÷16\n- Patch SEQ 2 OUT to VCO 2 input\n- Listen for: nothing new: VCO 2 is not heard.",
+          "set": {
+            "seq.oct": 5,
+            "seq2.step1": -5,
+            "seq2.step2": -5,
+            "seq2.step3": -5,
+            "seq2.step4": -5,
+            "sub22.div": 16
+          },
+          "cables": [["j.seq2_out", "j.vco2_in"]]
+        },
+        {
+          "title": "Shimmer",
+          "module": "osc",
+          "why": "VCO 2 SUB 2 OUT into VCO 1’s PWM input: the width of VCO 1 and its subs sweeps slowly.\n- Patch VCO 2 SUB 2 OUT to VCO 1 PWM input\n- Listen for: with a key held, the chord slowly shimmering.",
+          "cables": [["j.sub22_out", "j.vco1_pwm"]]
+        },
+        {
+          "title": "A chord a bar",
+          "module": "mod",
+          "why": "Rhythm 4 at ÷16 on Sequencer 1, assigned to VCO 1’s subs: divisors as they are, one up, one down, two up.\n- RHYTHM 4 ÷16\n- RHYTHM 4 SEQ 1 lit\n- SEQ 1 STEP 2 -0.72 · divisor +1.1\n- SEQ 1 STEP 3 0.72 · divisor −1.1\n- SEQ 1 STEP 4 -1.38 · divisor +2.1\n- SEQ 1 ASSIGN SUB 1 lit\n- SEQ 1 ASSIGN SUB 2 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "rhythm4.div": 16,
+            "rhythm4.seq1": true,
+            "seq1.step2": -0.72,
+            "seq1.step3": 0.72,
+            "seq1.step4": -1.38,
+            "seq1.assign_sub1": true,
+            "seq1.assign_sub2": true
+          }
+        },
+        {
+          "title": "Hold and play",
+          "module": "filter",
+          "why": "A soft filter, EG held so the strings sustain, then PLAY lit on the app’s clock.\n- CUTOFF 5.4 · 834 Hz\n- RESONANCE 1\n- EG Held\n- PLAY lit\n- Listen for: shimmering string chords, a new one each bar.",
+          "set": {
+            "vcf.cutoff": 5.4,
+            "vcf.resonance": 1,
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub22.div": "In this sound: the shimmer’s speed.",
+        "rhythm4.div": "In this sound: how long each chord lasts."
+      },
+      "tweaks": [
+        {
+          "id": "sub22.div",
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷4",
+          "hear": "A faster shimmer: closer to an ensemble chorus."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Set VCO 1 WAVE to saw",
+          "hear": "Saws have no width to move: plain, still strings."
         }
       ]
     },
@@ -7404,6 +9806,88 @@
           "id": "vca_eg.decay",
           "try": "Turn VCA DECAY to 6",
           "hear": "A short blip rather than a ring."
+        }
+      ]
+    },
+    {
+      "id": "shc-cicadas",
+      "name": "Cicadas",
+      "ref": "In the style of cicadas on a summer night",
+      "artist": "Sound effects",
+      "tags": ["fx", "patch"],
+      "level": 2,
+      "blurb": "A buzzing, chirping swarm: VCO 1’s deepest sub sweeps VCO 2’s divisors sixteen times a second.",
+      "how": "VCO 1 SUB 2 OUT, VCO 1 at C4 divided by 16, is a sawtooth at 16 Hz. Patched into VCO 2’s SUB input it sweeps VCO 2’s divisors through the whole undertone series sixteen times a second, a blur of chirps. Sequencer 1 moves VCO 1, so each step changes the chirp rate, like insects answering one another.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "High and silent",
+          "module": "osc",
+          "why": "VCO 2 square at C7, its subs centred at ÷8 and ÷12 in the mix; VCO 1 silent, its SUB 2 at ÷16.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷16\n- VCO 1 LEVEL 0\n- VCO 1 SUB 1 LEVEL 0\n- VCO 1 SUB 2 LEVEL 0\n- VCO 2 FREQ 7.5 · C7 · 2.1 kHz\n- VCO 2 WAVE Square\n- VCO 2 SUB 1 FREQ ÷8\n- VCO 2 SUB 2 FREQ ÷12\n- VCO 2 LEVEL 0\n- VCO 2 SUB 1 LEVEL 3\n- VCO 2 SUB 2 LEVEL 3\n- Listen for: with a key held, a high chord.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 16,
+            "mix.vco1": 0,
+            "mix.sub11": 0,
+            "mix.sub12": 0,
+            "vco2.freq": 7.5,
+            "vco2.wave": "square",
+            "sub21.div": 8,
+            "sub22.div": 12,
+            "mix.vco2": 0,
+            "mix.sub21": 3,
+            "mix.sub22": 3
+          }
+        },
+        {
+          "title": "The swarm",
+          "module": "osc",
+          "why": "VCO 1 SUB 2 OUT into VCO 2’s SUB input.\n- Patch VCO 1 SUB 2 OUT to VCO 2 SUB input\n- Listen for: with a key held, a buzzing, chirping blur.",
+          "cables": [["j.sub12_out", "j.vco2_sub_in"]]
+        },
+        {
+          "title": "Changing rates",
+          "module": "mod",
+          "why": "Rhythm 3 at ÷3 on Sequencer 1, moving VCO 1, and so the chirp rate, by uneven amounts at ±1.\n- SEQ OCT ±1\n- RHYTHM 3 SEQ 1 lit\n- SEQ 1 STEP 2 2.4 · +5.8 st\n- SEQ 1 STEP 3 -1.8 · -4.3 st\n- SEQ 1 STEP 4 4.1 · +9.8 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: nothing until it plays.",
+          "set": {
+            "seq.oct": 1,
+            "rhythm3.seq1": true,
+            "seq1.step2": 2.4,
+            "seq1.step3": -1.8,
+            "seq1.step4": 4.1,
+            "seq1.assign_osc": true
+          }
+        },
+        {
+          "title": "Thin it out",
+          "module": "filter",
+          "why": "A thin, resonant filter, EG held, and PLAY lit on the app’s clock.\n- CUTOFF 7.6 · 3.8 kHz\n- RESONANCE 4\n- EG Held\n- PLAY lit\n- Listen for: a swarm of chirps, its rate changing every three sixteenths.",
+          "set": {
+            "vcf.cutoff": 7.6,
+            "vcf.resonance": 4,
+            "transport.eg": "held",
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "sub12.div": "In this sound: not heard; the chirp rate, a sixteenth of VCO 1.",
+        "sub21.div": "In this sound: the middle of the swarm’s sweep."
+      },
+      "tweaks": [
+        {
+          "id": "sub12.div",
+          "try": "Turn VCO 1 SUB 2 FREQ to ÷4",
+          "hear": "Four times faster: the chirps melt into a buzzing whine."
+        },
+        {
+          "id": "vco1.wave",
+          "try": "Set VCO 1 WAVE to square",
+          "hear": "A square sweeps only two divisors: a fast two-note trill, like an alarm."
         }
       ]
     },
@@ -7812,6 +10296,78 @@
           "id": "vca_eg.decay",
           "try": "Turn VCA DECAY to 3",
           "hear": "Pops rather than clicks."
+        }
+      ]
+    },
+    {
+      "id": "shc-feedback-howl",
+      "name": "Feedback Howl",
+      "ref": "In the style of Louis and Bebe Barron’s self-destructing circuits",
+      "artist": "Louis and Bebe Barron",
+      "tags": ["fx", "patch"],
+      "level": 3,
+      "blurb": "Squeals and howls: the synth’s own output patched into its pitch.",
+      "how": "The Barrons built circuits for Forbidden Planet that howled and squealed as they overloaded. Patch VCA OUT into VCO 1’s input and the sound sets its own pitch: it shrieks upward, collapses, and starts again, never twice the same. VOLUME is the amount of feedback, so it decides how wild it gets.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "One voice",
+          "module": "osc",
+          "why": "VCO 1 sawtooth at C4 with its octave sub; VCO 2 silent, so the feedback moves VCO 1 alone.\n- VCO 1 SUB 1 FREQ ÷2\n- VCO 1 SUB 2 FREQ ÷3\n- VCO 1 LEVEL 4\n- VCO 1 SUB 1 LEVEL 3\n- VCO 1 SUB 2 LEVEL 0\n- Listen for: with a key held, a saw.",
+          "set": {
+            "sub11.div": 2,
+            "sub12.div": 3,
+            "mix.vco1": 4,
+            "mix.sub11": 3,
+            "mix.sub12": 0
+          }
+        },
+        {
+          "title": "Feed it back",
+          "module": "osc",
+          "why": "VCA OUT into VCO 1’s input.\n- Patch VCA OUT to VCO 1 input\n- Listen for: with a key held, a squealing, unstable howl.",
+          "cables": [["j.vca_out", "j.vco1_in"]]
+        },
+        {
+          "title": "Bursts",
+          "module": "env",
+          "why": "A resonant filter, a slow attack and a medium decay; Rhythm 4 at ÷4 on Sequencer 1, so a burst each beat.\n- CUTOFF 6 · 1.3 kHz\n- RESONANCE 4\n- VCA ATTACK 3 · 16 ms\n- VCA DECAY 5.6 · 350 ms\n- VOLUME 5\n- RHYTHM 4 SEQ 1 lit\n- Listen for: with a key, a howl that swells and dies.",
+          "set": {
+            "vcf.cutoff": 6,
+            "vcf.resonance": 4,
+            "vca_eg.attack": 3,
+            "vca_eg.decay": 5.6,
+            "vca.volume": 5,
+            "rhythm4.seq1": true
+          }
+        },
+        {
+          "title": "Play",
+          "module": "mod",
+          "why": "PLAY lit, on the app’s clock.\n- PLAY lit\n- Listen for: a burst of feedback on every beat, each one a different shriek.",
+          "set": {
+            "transport.play": true
+          }
+        }
+      ],
+      "context": {
+        "vca.volume": "In this sound: the feedback’s depth: how wild it howls.",
+        "vca_eg.attack": "In this sound: how each howl swells in."
+      },
+      "tweaks": [
+        {
+          "id": "vca.volume",
+          "try": "Turn VOLUME to 7",
+          "hear": "More feedback: harsher, screaming, more chaotic."
+        },
+        {
+          "id": "vca.volume",
+          "try": "Turn VOLUME to 2",
+          "hear": "Little feedback: a quiet note that only wavers."
         }
       ]
     },

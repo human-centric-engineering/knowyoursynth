@@ -402,6 +402,14 @@
     {
       "sound": "subharmonicon/shc-bubbles",
       "reason": "It names the Workshop’s style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1, Rhythm 2 steps Sequencer 1 and Rhythm 3 steps Sequencer 1 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-timbre-sequence",
+      "reason": "It names a way of working, not one work. The patch plays itself: Rhythm 4 steps Sequencer 2 on the app’s clock, from one held key, and the sequence moves the tone, not the pitch. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-feedback-howl",
+      "reason": "It names their overloading circuits, not one cue. The patch plays itself: Rhythm 4 fires a burst of feedback each beat on the app’s clock, from one held key. There is no part to write."
     }
   ],
   "patterns": [

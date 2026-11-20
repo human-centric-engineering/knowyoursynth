@@ -278,6 +278,14 @@
     {
       "sound": "subharmonicon/shc-beating-unison",
       "reason": "In the style of Éliane Radigue: it names no work. No rhythm drives anything: the drone is two VCOs a hair apart and their subs beating under one held key, which is all its riff is, so there is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-feedback-pwm-drone",
+      "reason": "It names a way of working, not one work. The patch is a held drone: EG held sounds it from one held key, and the feedback moves it. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-width-sequencer",
+      "reason": "It names his just-tuned drones, not one work. The patch plays itself: Rhythm 4 steps Sequencer 2 on the app’s clock, from one held key, and the fifth never moves. There is no part to write."
     }
   ],
   "patterns": [

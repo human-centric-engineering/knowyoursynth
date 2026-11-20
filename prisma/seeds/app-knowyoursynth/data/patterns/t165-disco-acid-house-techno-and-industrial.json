@@ -102,6 +102,10 @@
     {
       "sound": "subharmonicon/shc-electro-toms",
       "reason": "It names the drum machine’s toms, not one work, and the batch’s “Planet Rock” patterns are its bass, kick, snare and cowbell. The patch plays itself: Rhythm 1 steps Sequencer 1 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-fm-snare",
+      "reason": "It names a style, not one work, and the batch’s “Planet Rock” patterns are its bass, kick, snare and cowbell. The patch is a snare made from VCO 1 patched into VCO 2’s pitch, played on the backbeat by its riff; there is no part to write."
     }
   ],
   "patterns": [
