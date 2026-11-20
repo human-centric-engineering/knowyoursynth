@@ -218,6 +218,10 @@
     {
       "sound": "buchla-easel/easel-droid-chatter",
       "reason": "An effect: robot chatter the random source makes from a held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-night-drive",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “Nightcall: bass” would be played over again."
     }
   ],
   "patterns": [

@@ -370,6 +370,38 @@
     {
       "sound": "buchla-easel/easel-pulsing-mallets",
       "reason": "Its pulser re-strikes each held note in steady eighths, so the batch’s “Music for 18 Musicians: a marimba pattern” would be played over again; the held notes are the lesson’s own."
+    },
+    {
+      "sound": "subharmonicon/shc-three-against-four",
+      "reason": "It names a style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-schulze-drift",
+      "reason": "Names Moondawn, which no pattern in this batch has yet; and the patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, while its riff’s four held keys move the whole figure, so a written part would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-motorik",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “Hallogallo: the pulse” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-pure-major-chimes",
+      "reason": "It names a style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-clapping-ratios",
+      "reason": "The batch has no pattern from Clapping Music, though a transcription of it was found (see the Music for 18 Musicians notes); and the patch plays itself: Rhythm 1 steps Sequencer 1, Rhythm 2 steps Sequencer 2 and Rhythm 3 steps Sequencer 2 on the app’s clock, from one held key, so a written part would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-in-c-cells",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key, so the batch’s “In C: the pulse” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-deep-space-hum",
+      "reason": "The batch has no pattern from Forbidden Planet. The patch plays itself: Rhythm 1 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-bubbles",
+      "reason": "It names the Workshop’s style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1, Rhythm 2 steps Sequencer 1 and Rhythm 3 steps Sequencer 1 on the app’s clock, from one held key. There is no part to write."
     }
   ],
   "patterns": [
@@ -12576,7 +12608,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for this work was found on Songsterr or BitMIDI; there are transcriptions of Electric Counterpoint and Clapping Music, which no sound names. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI; there are transcriptions of Electric Counterpoint, which no sound names, and of Clapping Music, which `subharmonicon/shc-clapping-ratios` names but plays on its own sequencers. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01).",
         "listenedAt": null
       }
     },
@@ -14396,7 +14428,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "Nothing for this work was found on Songsterr or BitMIDI; there are transcriptions of Electric Counterpoint and Clapping Music, which no sound names. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:steve-reich/eighteen-marimba.",
+        "notes": "Nothing for this work was found on Songsterr or BitMIDI; there are transcriptions of Electric Counterpoint, which no sound names, and of Clapping Music, which `subharmonicon/shc-clapping-ratios` names but plays on its own sequencers. _In the style of_, a best guess: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02). Not checked by ear: the owner’s listen is the by-ear step (ruling, 2026-11-01). This copy is moved an octave down from researched:steve-reich/eighteen-marimba.",
         "listenedAt": null
       }
     },

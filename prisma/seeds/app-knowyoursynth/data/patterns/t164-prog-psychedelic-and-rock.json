@@ -134,6 +134,10 @@
     {
       "sound": "ems-vcs3/vcs3-space-rock-rasp",
       "reason": "Names “Silver Machine”, which no pattern in this batch has yet; the bass line is the lesson’s own, written to the style rather than taken from the record."
+    },
+    {
+      "sound": "subharmonicon/shc-ring-tremolo",
+      "reason": "In the style of a surf guitar’s tremolo: it names no work, and the batch’s “Misirlou: melody” is the tune itself rather than the tremolo the sound shows, so the riff is the lesson’s own."
     }
   ],
   "patterns": [

@@ -90,6 +90,18 @@
     {
       "sound": "system-55/s55-moroder-gallop",
       "reason": "The 960 sequencer plays the gallop from one held key, so the batch’s “Chase: bass” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-octave-bounce",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “I Feel Love: bass” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-zap-kick",
+      "reason": "It names a style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-electro-toms",
+      "reason": "It names the drum machine’s toms, not one work, and the batch’s “Planet Rock” patterns are its bass, kick, snare and cowbell. The patch plays itself: Rhythm 1 steps Sequencer 1 on the app’s clock, from one held key. There is no part to write."
     }
   ],
   "patterns": [

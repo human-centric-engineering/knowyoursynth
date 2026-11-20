@@ -258,6 +258,26 @@
     {
       "sound": "buchla-easel/easel-pearl-reverb-keys",
       "reason": "The batch has the work’s held chords (“The Pearl: chords for the falling notes”), not the single line this sound plays; the line is the lesson’s own, written to the style."
+    },
+    {
+      "sound": "subharmonicon/shc-two-undertone-lines",
+      "reason": "It names a form, not one work, and the batch’s Bach pattern is the Toccata in D minor. The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-augmentation-canon",
+      "reason": "It names a form, not one work, and the batch’s Bach pattern is the Toccata in D minor. The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-just-organum",
+      "reason": "The patch plays itself: Rhythm 1 steps both sequencers on the app’s clock, from one held key, so the batch’s “Viderunt omnes: drone and organum voice” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-beatless-pad",
+      "reason": "It names a style, not one work. The patch plays itself: Rhythm 1 steps both sequencers on the app’s clock, from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-beating-unison",
+      "reason": "In the style of Éliane Radigue: it names no work. No rhythm drives anything: the drone is two VCOs a hair apart and their subs beating under one held key, which is all its riff is, so there is no part to write."
     }
   ],
   "patterns": [

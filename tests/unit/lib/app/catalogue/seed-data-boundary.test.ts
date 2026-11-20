@@ -30,6 +30,8 @@ const ALLOWED = (path: string) =>
   path === 'scripts/soundkind-sweep.ts' ||
   // Dev-only: writes a database's links into the links seed data, which the seed then reads (t-199).
   path === 'scripts/app/export-links.ts' ||
+  // Dev-only: writes the Subharmonicon's sounds into their seed data file, which the seed then reads (t-289).
+  path === 'scripts/app/sounds/subharmonicon/write.ts' ||
   // Names the seed units as keys for Sunrise's capability parity test, and reads nothing (t-77).
   path === 'lib/app/capability-seed-pairs.ts';
 

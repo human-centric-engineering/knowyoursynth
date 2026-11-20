@@ -93,9 +93,9 @@ describe('the research batches', () => {
    * sounds by a batch's artist places each one (a pattern, or a reason it has none) and raises the count.
    */
   const rosters: [string, string[], number][] = [
-    ['t-127', ['Kraftwerk', 'Depeche Mode'], 65],
-    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 112],
-    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 107],
+    ['t-127', ['Kraftwerk', 'Depeche Mode'], 66],
+    ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 115],
+    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 108],
     [
       't-160',
       [
@@ -240,7 +240,7 @@ describe('the research batches', () => {
         'Walter Murch',
         'Yann Tiersen',
       ],
-      164,
+      165,
     ],
     [
       't-164',
@@ -289,7 +289,7 @@ describe('the research batches', () => {
         'Thom Yorke',
         'U2',
       ],
-      149,
+      150,
     ],
     [
       't-165',
@@ -332,7 +332,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      162,
+      165,
     ],
     [
       't-166',
@@ -373,7 +373,7 @@ describe('the research batches', () => {
         'Ulrich Schnauss',
         'Wiley',
       ],
-      171,
+      173,
     ],
     [
       't-167',
@@ -412,7 +412,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      193,
+      201,
     ],
     [
       't-168',
@@ -472,7 +472,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      231,
+      236,
     ],
   ];
 

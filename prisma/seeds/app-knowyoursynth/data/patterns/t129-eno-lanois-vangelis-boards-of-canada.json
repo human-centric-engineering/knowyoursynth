@@ -50,6 +50,10 @@
     {
       "sound": "polivoks/pv-tidal-swell",
       "reason": "Names “Music for Airports”, whose patterns in this batch are its figures, tones and chords; this sound’s repeating envelope makes the swells from one held note, so a written part would play over them."
+    },
+    {
+      "sound": "subharmonicon/shc-never-twice",
+      "reason": "It names a style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1, Rhythm 2 steps Sequencer 1, Rhythm 3 steps Sequencer 2 and Rhythm 4 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
     }
   ],
   "patterns": [
