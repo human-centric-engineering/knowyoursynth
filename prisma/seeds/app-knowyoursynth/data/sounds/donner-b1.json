@@ -5,7 +5,7 @@
     {
       "id": "b1-first-acid",
       "name": "First Acid",
-      "ref": "In the style of late 1980s Chicago acid house",
+      "ref": "A bare sawtooth squelching on every step and jumping out on the accents: late-1980s Chicago acid house",
       "artist": "Various",
       "tags": ["bass", "acid", "house", "80s"],
       "level": 1,
@@ -112,7 +112,7 @@
     {
       "id": "b1-saturated-acid",
       "name": "Saturated Acid",
-      "ref": "In the style of mid-1990s acid techno",
+      "ref": "Resonance driven into saturation until the squelch screams, as mid-1990s acid techno liked it",
       "artist": "Various",
       "tags": ["bass", "acid", "techno", "90s"],
       "level": 2,
@@ -209,7 +209,7 @@
     {
       "id": "b1-dub-echo",
       "name": "Dub Echo",
-      "ref": "In the style of slow, dub-influenced acid",
+      "ref": "A sparse, rubbery acid line slowed towards dub, with off-beat echoes thrown into the gaps",
       "artist": "Various",
       "tags": ["bass", "acid", "dub", "downtempo"],
       "level": 2,
@@ -289,7 +289,7 @@
     {
       "id": "b1-ratchet-roll",
       "name": "Ratchet Roll",
-      "ref": "In the style of modern acid techno",
+      "ref": "Steps that stutter two, three or four times inside their own length, the rolls of modern acid techno",
       "artist": "Various",
       "tags": ["bass", "acid", "techno", "10s"],
       "level": 2,
@@ -403,7 +403,7 @@
     {
       "id": "b1-square-bounce",
       "name": "Square Bounce",
-      "ref": "In the style of 1980s electro bass lines",
+      "ref": "Short, hollow square-wave notes with room to bounce, built for a 1980s electro groove",
       "artist": "Various",
       "tags": ["bass", "electro", "funk", "80s"],
       "level": 1,
@@ -479,7 +479,7 @@
     {
       "id": "b1-gliding-line",
       "name": "Gliding Line",
-      "ref": "In the style of early 1990s acid trance",
+      "ref": "Nearly every note slides into the next, one long singing breath of early-1990s acid trance",
       "artist": "Various",
       "tags": ["bass", "acid", "trance", "90s"],
       "level": 1,
@@ -566,7 +566,7 @@
     {
       "id": "b1-deep-sub",
       "name": "Deep Sub",
-      "ref": "In the style of deep house bass lines",
+      "ref": "Filter nearly shut and no squelch at all: a dark, round bass to sit under deep house",
       "artist": "Various",
       "tags": ["bass", "house", "deep"],
       "level": 1,
@@ -637,7 +637,7 @@
     {
       "id": "b1-acid-lead",
       "name": "Acid Lead",
-      "ref": "In the style of acid house leads",
+      "ref": "The acid voice lifted a fifth into a whistling, resonant house lead with echoes trailing it",
       "artist": "Various",
       "tags": ["lead", "acid", "house", "90s"],
       "level": 2,
@@ -714,7 +714,7 @@
     {
       "id": "b1-res-zaps",
       "name": "Resonant Zaps",
-      "ref": "In the style of the zaps and blips of early acid house",
+      "ref": "A ringing filter swept down in an instant, firing the laser zaps and blips of early acid house",
       "artist": "Various",
       "tags": ["fx", "acid", "house", "80s"],
       "level": 3,
@@ -898,8 +898,8 @@
     {
       "id": "b1-dotted-echo",
       "name": "Dotted-Eighth Echo",
-      "ref": "In the style of The Edge",
-      "artist": "The Edge",
+      "ref": "Plain eighths through a dotted-eighth delay, so the line gallops and chimes at twice the speed",
+      "artist": "1980s rock guitar",
       "tags": ["seq", "rock", "post-punk", "80s"],
       "level": 2,
       "blurb": "Plain eighth notes that the delay turns into a chiming, galloping sixteenth pattern.",
@@ -971,7 +971,7 @@
     {
       "id": "b1-black-ark",
       "name": "Black Ark Echo",
-      "ref": "In the style of Lee “Scratch” Perry",
+      "ref": "Lee “Scratch” Perry’s Black Ark in a bass: round, saturated, every note hanging in tape echo",
       "artist": "Lee “Scratch” Perry",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 2,
@@ -1044,9 +1044,9 @@
     },
     {
       "id": "b1-melodica-dub",
-      "name": "Far East Melodica",
-      "ref": "In the style of Augustus Pablo",
-      "artist": "Augustus Pablo",
+      "name": "Dub Melodica",
+      "ref": "A reedy, minor-key square floating in echo, like a melodica over a 1970s dub rhythm",
+      "artist": "Roots reggae melodica",
       "tags": ["lead", "dub", "reggae", "70s"],
       "level": 2,
       "blurb": "A reedy, minor-key melodica melody floating in echo.",
@@ -1108,7 +1108,7 @@
     {
       "id": "b1-e2-e4",
       "name": "E2-E4 Echo",
-      "ref": "In the style of Manuel Göttsching — E2-E4",
+      "ref": "Göttsching’s “E2-E4” in small: two chords rocking over a soft, steady pluck while echoes multiply",
       "artist": "Manuel Göttsching",
       "tags": ["seq", "krautrock", "ambient", "80s"],
       "level": 2,
@@ -1174,7 +1174,7 @@
     {
       "id": "b1-slapback",
       "name": "Slapback Rockabilly",
-      "ref": "In the style of 1950s Sun Records rockabilly",
+      "ref": "A walking bass with one quick tape slap behind each note, the echo Sun Records put on rockabilly",
       "artist": "Rockabilly",
       "tags": ["bass", "rockabilly", "rock and roll", "50s"],
       "level": 1,
@@ -1258,7 +1258,7 @@
     {
       "id": "b1-cave-drips",
       "name": "Cave Drips",
-      "ref": "In the style of ambient field recordings",
+      "ref": "Short resonant plips ringing round a long, high-feedback echo like water in a deep cave",
       "artist": "Ambient",
       "tags": ["fx", "ambient", "nature"],
       "level": 2,
@@ -1315,7 +1315,7 @@
     {
       "id": "b1-dub-techno-echo",
       "name": "Dub Techno Echo",
-      "ref": "In the style of Rhythm & Sound",
+      "ref": "One muffled stab a bar sinking into a feeding-back haze, the deep Berlin dub of Rhythm & Sound",
       "artist": "Rhythm & Sound",
       "tags": ["bass", "dub techno", "techno", "00s"],
       "level": 2,
@@ -1369,7 +1369,7 @@
     {
       "id": "b1-consumed",
       "name": "Consumed",
-      "ref": "In the style of Plastikman — Consumed",
+      "ref": "Plastikman’s “Consumed” as a bass line: slow, sparse low pulses swallowed by long echoes",
       "artist": "Plastikman",
       "tags": ["bass", "minimal", "techno", "dark", "90s"],
       "level": 2,
@@ -1423,7 +1423,7 @@
     {
       "id": "b1-starfield",
       "name": "Starfield",
-      "ref": "In the style of 1970s space ambient",
+      "ref": "Bright, short square bleeps scattered through many repeats, a twinkling sky from 1970s space ambient",
       "artist": "Space ambient",
       "tags": ["fx", "ambient", "space"],
       "level": 1,
@@ -1480,7 +1480,7 @@
     {
       "id": "b1-echo-throw",
       "name": "Echo Throw",
-      "ref": "In the style of dub sound-system echo throws",
+      "ref": "A single note thrown into the delay with the feedback pushed up until it swells and smears",
       "artist": "Dub",
       "tags": ["fx", "dub", "reggae"],
       "level": 2,
@@ -1535,7 +1535,7 @@
     {
       "id": "b1-harmonia",
       "name": "Harmonia Echo",
-      "ref": "In the style of Harmonia",
+      "ref": "A sweet, simple figure looping through a friendly echo, sunny as Harmonia’s mid-1970s records",
       "artist": "Harmonia",
       "tags": ["seq", "krautrock", "ambient", "70s"],
       "level": 2,
@@ -1601,8 +1601,8 @@
     {
       "id": "b1-durutti",
       "name": "Echoing Guitar",
-      "ref": "In the style of The Durutti Column",
-      "artist": "The Durutti Column",
+      "ref": "Delicate arpeggios through a dotted echo, close to a clean guitar ringing in a big, empty room",
+      "artist": "Post-punk guitar",
       "tags": ["pluck", "post-punk", "ambient", "80s"],
       "level": 2,
       "blurb": "Delicate, echoing, arpeggiated notes like a clean guitar in a big room.",
@@ -1667,7 +1667,7 @@
     {
       "id": "b1-rainbow-curved",
       "name": "Rainbow Echo",
-      "ref": "In the style of Terry Riley — A Rainbow in Curved Air",
+      "ref": "Fast Dorian patterns piling up in tape delay, the shimmering web of Terry Riley’s “A Rainbow in Curved Air”",
       "artist": "Terry Riley",
       "tags": ["seq", "minimalism", "psychedelic", "60s"],
       "level": 2,
@@ -1749,7 +1749,7 @@
     {
       "id": "b1-frippertronics",
       "name": "Tape Loop Swells",
-      "ref": "In the style of Fripp & Eno — (No Pussyfooting)",
+      "ref": "Long notes stacking in a feeding-back delay into a slowly shifting chord: Fripp & Eno’s tape-loop method",
       "artist": "Fripp & Eno",
       "tags": ["drone", "ambient", "experimental", "70s"],
       "level": 3,
@@ -1806,7 +1806,7 @@
     {
       "id": "b1-trance-pluck",
       "name": "Trance Pluck Echo",
-      "ref": "In the style of 2000s uplifting trance",
+      "ref": "A short, bright eighth-note riff with a sixteenth echo filling in, made for 2000s uplifting trance",
       "artist": "Uplifting trance",
       "tags": ["pluck", "trance", "00s"],
       "level": 2,
@@ -1872,7 +1872,7 @@
     {
       "id": "b1-lofi-echo-keys",
       "name": "Lo-Fi Echo Keys",
-      "ref": "In the style of lo-fi hip hop",
+      "ref": "Soft, round keys warmed by saturation and a dusty echo, ready to loop under a lo-fi hip hop beat",
       "artist": "Lo-fi hip hop",
       "tags": ["keys", "lo-fi", "hip hop", "chill-out"],
       "level": 1,
@@ -1932,7 +1932,7 @@
     {
       "id": "b1-saturated-lead",
       "name": "Saturated Acid Lead",
-      "ref": "In the style of acid techno",
+      "ref": "Pitched up a fifth and saturated until it squeals: an acid techno lead, thickened by a short echo",
       "artist": "Acid techno",
       "tags": ["lead", "acid", "techno"],
       "level": 2,
@@ -2025,7 +2025,7 @@
     {
       "id": "b1-saturated-funk",
       "name": "Saturated Funk",
-      "ref": "In the style of 1970s funk",
+      "ref": "A syncopated bass with a big envelope bow, saturated to punch like a 1970s funk bass amp",
       "artist": "Funk",
       "tags": ["bass", "funk", "70s"],
       "level": 2,
@@ -2090,7 +2090,7 @@
     {
       "id": "b1-soul-tape-bass",
       "name": "Tape Soul Bass",
-      "ref": "In the style of early-1970s soul",
+      "ref": "Warm, round and melodic, softened by saturation the way tape rounded off early-1970s soul bass",
       "artist": "Soul",
       "tags": ["bass", "soul", "70s"],
       "level": 1,
@@ -2155,7 +2155,7 @@
     {
       "id": "b1-dub-bass-echo",
       "name": "Dub Bass Echo",
-      "ref": "In the style of 1970s roots dub",
+      "ref": "A deep roots dub bass line with its echoes kept low and far behind it in the mix",
       "artist": "Dub",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 2,
@@ -2217,7 +2217,7 @@
     {
       "id": "b1-raindrop-echo",
       "name": "Raindrops on a Pond",
-      "ref": "In the style of ambient electronica",
+      "ref": "Soft resonant drops on a pentatonic scale, each one rippling outwards through a gentle echo",
       "artist": "Ambient electronica",
       "tags": ["pluck", "ambient", "chill-out"],
       "level": 1,
@@ -2275,7 +2275,7 @@
     {
       "id": "b1-sunrise-echo",
       "name": "Sunrise Echoes",
-      "ref": "In the style of 1990s ambient techno",
+      "ref": "A slow major arpeggio blooming into dotted echoes, morning music from 1990s ambient techno",
       "artist": "Ambient techno",
       "tags": ["seq", "ambient", "chill-out", "arpeggio"],
       "level": 1,
@@ -2357,7 +2357,7 @@
     {
       "id": "b1-acid-echo",
       "name": "Echoing Acid",
-      "ref": "In the style of 1990s acid techno",
+      "ref": "A squelching 1990s acid line whose dotted echoes slip ghost notes between the real ones",
       "artist": "Acid techno",
       "tags": ["bass", "acid", "techno", "90s"],
       "level": 2,
@@ -2426,7 +2426,7 @@
     {
       "id": "b1-siren-echo",
       "name": "Siren into Echo",
-      "ref": "In the style of dub sound systems",
+      "ref": "A swooping sound-system siren chased round the room by its own repeats",
       "artist": "Dub",
       "tags": ["fx", "dub", "siren"],
       "level": 2,
@@ -2483,7 +2483,7 @@
     {
       "id": "b1-flutter-echo",
       "name": "Flutter Echo",
-      "ref": "In the style of tape-delay sound design",
+      "ref": "Delay at its shortest with the feedback high, so notes blur into a metallic, fluttering buzz",
       "artist": "Sound design",
       "tags": ["fx", "experimental"],
       "level": 2,
@@ -2543,7 +2543,7 @@
     {
       "id": "b1-space-echo-lead",
       "name": "Space Echo Lead",
-      "ref": "In the style of 1970s space rock",
+      "ref": "A saturated lead that slides and sings through a long, repeating echo, drifting off into 1970s space rock",
       "artist": "Space rock",
       "tags": ["lead", "space rock", "psychedelic", "70s"],
       "level": 2,
@@ -2606,7 +2606,7 @@
     {
       "id": "b1-dub-chord-melodica",
       "name": "Rockers Skank",
-      "ref": "In the style of 1970s rockers reggae",
+      "ref": "One short chop on every “and” with an echo bouncing after it: the offbeat skank of rockers reggae",
       "artist": "Rockers reggae",
       "tags": ["keys", "reggae", "rockers", "70s"],
       "level": 1,
@@ -2664,7 +2664,7 @@
     {
       "id": "b1-carl-craig",
       "name": "Detroit Dream",
-      "ref": "In the style of Carl Craig",
+      "ref": "Soft, resonant sequences drifting on echo, from the cosmic, dreamy side of Carl Craig’s Detroit techno",
       "artist": "Carl Craig",
       "tags": ["seq", "techno", "detroit", "90s"],
       "level": 2,
@@ -2732,7 +2732,7 @@
     {
       "id": "b1-rhythim",
       "name": "Rhythim Sequence",
-      "ref": "In the style of Rhythim Is Rhythim",
+      "ref": "Bright, urgent minor-key sixteenths with an emotional pull, the drive of Derrick May’s Rhythim Is Rhythim",
       "artist": "Derrick May",
       "tags": ["seq", "techno", "detroit", "80s"],
       "level": 2,
@@ -2814,7 +2814,7 @@
     {
       "id": "b1-model-500",
       "name": "Model 500 Electro",
-      "ref": "In the style of Model 500",
+      "ref": "Clipped, syncopated and robotic with a short echo: Juan Atkins’s Model 500 electro bass",
       "artist": "Juan Atkins",
       "tags": ["bass", "electro", "detroit", "80s"],
       "level": 2,
@@ -2877,7 +2877,7 @@
     {
       "id": "b1-numbers",
       "name": "Numbers Blips",
-      "ref": "In the style of Kraftwerk — “Numbers”",
+      "ref": "Hard, very short clicks and blips locked into a machine rhythm, the way Kraftwerk built “Numbers”",
       "artist": "Kraftwerk",
       "tags": ["perc", "electro", "synth-pop", "80s"],
       "level": 2,
@@ -2934,7 +2934,7 @@
     {
       "id": "b1-ymo",
       "name": "Tokyo Sequence",
-      "ref": "In the style of Yellow Magic Orchestra",
+      "ref": "Bright square waves galloping through a pentatonic figure, with Yellow Magic Orchestra’s bounce",
       "artist": "Yellow Magic Orchestra",
       "tags": ["seq", "synth-pop", "techno-pop", "70s"],
       "level": 2,
@@ -2997,7 +2997,7 @@
     {
       "id": "b1-sakamoto",
       "name": "Pentatonic Reverie",
-      "ref": "In the style of Ryuichi Sakamoto",
+      "ref": "A delicate, bell-like pentatonic tune with plenty of air, near Sakamoto’s “Merry Christmas Mr. Lawrence”",
       "artist": "Ryuichi Sakamoto",
       "tags": ["lead", "ambient", "film", "japanese"],
       "level": 2,
@@ -3058,9 +3058,9 @@
     },
     {
       "id": "b1-hisaishi",
-      "name": "Ghibli Waltz",
-      "ref": "In the style of Joe Hisaishi",
-      "artist": "Joe Hisaishi",
+      "name": "Nostalgic Waltz",
+      "ref": "A soft, singing lead in three with a gentle echo, warm and wistful as an animated film theme",
+      "artist": "Animated film scores",
       "tags": ["lead", "film", "anime", "waltz"],
       "level": 2,
       "blurb": "A warm, nostalgic, sweeping waltz melody, like a Studio Ghibli score.",
@@ -3126,7 +3126,7 @@
     {
       "id": "b1-snowflakes",
       "name": "Snowflakes Dancing",
-      "ref": "In the style of Isao Tomita — Snowflakes Are Dancing",
+      "ref": "Tiny, high, crystalline plucks swirling in echo: Debussy by Moog, as on Tomita’s “Snowflakes Are Dancing”",
       "artist": "Isao Tomita",
       "tags": ["pluck", "classical", "electronic", "70s"],
       "level": 2,
@@ -3192,7 +3192,7 @@
     {
       "id": "b1-vangelis-triplets",
       "name": "Triumphant Triplets",
-      "ref": "In the style of Vangelis",
+      "ref": "Rolling triplet arpeggios rising under a big theme, a figure Vangelis returned to again and again",
       "artist": "Vangelis",
       "tags": ["seq", "film", "electronic", "arpeggio", "80s"],
       "level": 2,
@@ -3434,7 +3434,7 @@
     {
       "id": "b1-mad-professor",
       "name": "Ariwa Dub",
-      "ref": "In the style of Mad Professor",
+      "ref": "A rolling bass with echo on everything and a touch of tape grit, from Mad Professor’s Ariwa studio",
       "artist": "Mad Professor",
       "tags": ["bass", "dub", "uk dub", "80s"],
       "level": 2,
@@ -3501,7 +3501,7 @@
     {
       "id": "b1-scientist",
       "name": "Scientist Drop-Out",
-      "ref": "In the style of Scientist",
+      "ref": "The riff plays, then drops out for a bar while its echo carries on alone, as Scientist mixed dub",
       "artist": "Scientist",
       "tags": ["bass", "dub", "reggae", "80s"],
       "level": 2,
@@ -3560,7 +3560,7 @@
     {
       "id": "b1-dilla-bass",
       "name": "Behind-the-Beat Bass",
-      "ref": "In the style of J Dilla",
+      "ref": "A warm, lazy bass with notes landing just behind the grid, swaying drunk on a J Dilla beat",
       "artist": "J Dilla",
       "tags": ["bass", "hip hop", "neo soul", "00s"],
       "level": 3,
@@ -3619,7 +3619,7 @@
     {
       "id": "b1-teardrop",
       "name": "Dark Echo Bass",
-      "ref": "In the style of Massive Attack",
+      "ref": "Massive Attack’s dark, heavy space: a slow, low pulse trailed by a quiet shadow of echo",
       "artist": "Massive Attack",
       "tags": ["bass", "trip hop", "downtempo", "90s"],
       "level": 2,
@@ -3678,7 +3678,7 @@
     {
       "id": "b1-portishead",
       "name": "Spy Theremin",
-      "ref": "In the style of Portishead",
+      "ref": "An eerie theremin-like line sliding into every note, out of Portishead’s smoky trip-hop spy films",
       "artist": "Portishead",
       "tags": ["lead", "trip hop", "downtempo", "90s"],
       "level": 2,
@@ -3737,7 +3737,7 @@
     {
       "id": "b1-lofi-house",
       "name": "Lo-Fi House",
-      "ref": "In the style of late-2010s lo-fi house",
+      "ref": "A simple house bass run hot into saturation until it sounds a little broken: late-2010s lo-fi house",
       "artist": "Lo-fi house",
       "tags": ["bass", "lo-fi house", "house", "10s"],
       "level": 1,
@@ -3794,7 +3794,7 @@
     {
       "id": "b1-afro-house",
       "name": "Afro House Groove",
-      "ref": "In the style of Afro house",
+      "ref": "A deep, syncopated bass with a short echo, rolling along with the hand drums of Afro house",
       "artist": "Afro house",
       "tags": ["bass", "afro house", "house", "10s"],
       "level": 2,
@@ -3856,7 +3856,7 @@
     {
       "id": "b1-bedroom-acid",
       "name": "Bedroom Acid",
-      "ref": "In the style of 2020s bedroom acid",
+      "ref": "A loose, wonky acid jam with grit and a short echo, what cheap 303 clones play in 2020s bedrooms",
       "artist": "Bedroom acid",
       "tags": ["bass", "acid", "20s"],
       "level": 1,
@@ -3929,7 +3929,7 @@
     {
       "id": "b1-outrun",
       "name": "Outrun Bass",
-      "ref": "In the style of 2010s outrun",
+      "ref": "Driving eighths doubled into sixteenths by an echo, for a night drive through 2010s outrun synthwave",
       "artist": "Outrun",
       "tags": ["bass", "synthwave", "outrun", "10s"],
       "level": 1,
@@ -3995,7 +3995,7 @@
     {
       "id": "b1-minimal-dub",
       "name": "Minimal Dub Click",
-      "ref": "In the style of minimal dub",
+      "ref": "Tiny, clicky notes smeared by a long, feeding-back echo into a minimal dub haze",
       "artist": "Minimal dub",
       "tags": ["bass", "minimal", "dub techno", "00s"],
       "level": 2,
@@ -4050,7 +4050,7 @@
     {
       "id": "b1-deep-tech",
       "name": "Deep Tech Roll",
-      "ref": "In the style of 2010s deep tech",
+      "ref": "A low, bouncy, lightly saturated line rolling in the dark ground between deep house and techno",
       "artist": "Deep tech",
       "tags": ["bass", "deep tech", "house", "10s"],
       "level": 1,
@@ -4113,7 +4113,7 @@
     {
       "id": "b1-electro-echo",
       "name": "Electro Echo Bass",
-      "ref": "In the style of 1980s Miami electro",
+      "ref": "Booming bass that leaps an octave, its echo catching each jump: 1980s Miami electro",
       "artist": "Miami electro",
       "tags": ["bass", "electro", "miami bass", "80s"],
       "level": 2,
@@ -4175,7 +4175,7 @@
     {
       "id": "b1-ambient-pulse",
       "name": "Night Pulse",
-      "ref": "In the style of ambient techno",
+      "ref": "One soft note on each beat echoing into the space between, a slow heartbeat for ambient techno",
       "artist": "Ambient techno",
       "tags": ["seq", "ambient", "ambient techno"],
       "level": 1,
@@ -4233,7 +4233,7 @@
     {
       "id": "b1-orb-drift",
       "name": "Ultraworld Drift",
-      "ref": "In the style of The Orb",
+      "ref": "Slow, warm dub bass drifting beneath floating textures, as in The Orb’s ambient house",
       "artist": "The Orb",
       "tags": ["bass", "ambient house", "dub", "90s"],
       "level": 2,
@@ -4293,7 +4293,7 @@
     {
       "id": "b1-global-comm",
       "name": "Ambient Pulse Bloom",
-      "ref": "In the style of Global Communication",
+      "ref": "Resonant pulses that swell and fade in long echoes, blooming slowly like Global Communication’s “76:14”",
       "artist": "Global Communication",
       "tags": ["seq", "ambient", "ambient techno", "90s"],
       "level": 2,
@@ -4351,7 +4351,7 @@
     {
       "id": "b1-halcyon-arp",
       "name": "Halcyon Arpeggio",
-      "ref": "In the style of Orbital",
+      "ref": "A soft, hopeful square arpeggio that ripples on and on, the gentle side of Orbital’s “Halcyon”",
       "artist": "Orbital",
       "tags": ["seq", "techno", "trance", "arpeggio", "90s"],
       "level": 2,
@@ -4465,7 +4465,7 @@
     {
       "id": "b1-underworld",
       "name": "Rolling Lager Line",
-      "ref": "In the style of Underworld",
+      "ref": "Underworld’s relentless build: gritty sixteenths with shifting accents, a touch of saturation and echo",
       "artist": "Underworld",
       "tags": ["bass", "techno", "progressive", "90s"],
       "level": 2,
@@ -4550,7 +4550,7 @@
     {
       "id": "b1-leftfield",
       "name": "Dub House Weight",
-      "ref": "In the style of Leftfield",
+      "ref": "Heavy, syncopated house bass with dub echoes rolling behind, the weight Leftfield brought to the floor",
       "artist": "Leftfield",
       "tags": ["bass", "progressive house", "dub", "90s"],
       "level": 2,
@@ -4613,7 +4613,7 @@
     {
       "id": "b1-fsol",
       "name": "Papua Pulse",
-      "ref": "In the style of The Future Sound of London",
+      "ref": "A slow, deep, hypnotic pulse in long echoes, the low end beneath The Future Sound of London’s dreamscapes",
       "artist": "The Future Sound of London",
       "tags": ["bass", "ambient techno", "breakbeat", "90s"],
       "level": 2,
@@ -4675,7 +4675,7 @@
     {
       "id": "b1-plaid",
       "name": "Melodic IDM",
-      "ref": "In the style of Plaid",
+      "ref": "Intricate, skipping, bell-like sequences, playful and melodic in Plaid’s 1990s IDM way",
       "artist": "Plaid",
       "tags": ["seq", "idm", "electronica", "90s"],
       "level": 3,
@@ -4744,7 +4744,7 @@
     {
       "id": "b1-autechre",
       "name": "Incunabula Drift",
-      "ref": "In the style of early Autechre",
+      "ref": "A cold, resonant sequence turning slowly over itself in echo, melancholy as Autechre’s “Incunabula”",
       "artist": "Autechre",
       "tags": ["seq", "idm", "electronica", "90s"],
       "level": 3,
@@ -4810,8 +4810,8 @@
     {
       "id": "b1-squarepusher",
       "name": "Jazz Bass Runs",
-      "ref": "In the style of Squarepusher",
-      "artist": "Squarepusher",
+      "ref": "Fast, fluid chromatic runs with a plucky tone: a synth stand-in for virtuoso jazz-fusion bass guitar",
+      "artist": "Jazz-fusion bass",
       "tags": ["bass", "drill and bass", "jazz", "90s"],
       "level": 3,
       "blurb": "Fast, fluid, jazzy bass runs that dart up and down the scale.",
@@ -4891,8 +4891,8 @@
     {
       "id": "b1-bonobo",
       "name": "Downtempo Pluck",
-      "ref": "In the style of Bonobo",
-      "artist": "Bonobo",
+      "ref": "A warm, harp-like plucked melody with echoes, laid over a relaxed downtempo groove",
+      "artist": "Downtempo",
       "tags": ["pluck", "downtempo", "chill-out", "10s"],
       "level": 1,
       "blurb": "A warm, organic, plucked melody over a laid-back groove.",
@@ -4960,8 +4960,8 @@
     {
       "id": "b1-tycho",
       "name": "Sunlit Melody",
-      "ref": "In the style of Tycho",
-      "artist": "Tycho",
+      "ref": "A soft, sunlit lead with tape warmth and echo, nostalgic as a drive along the coast",
+      "artist": "2010s chill-out electronica",
       "tags": ["lead", "chill-out", "electronica", "10s"],
       "level": 1,
       "blurb": "A warm, sunlit, nostalgic melody, like a drive along the coast.",
@@ -5025,7 +5025,7 @@
     {
       "id": "b1-jon-hopkins",
       "name": "Emotional Pulse",
-      "ref": "In the style of Jon Hopkins",
+      "ref": "A deep, heavily saturated low pulse that builds slowly, as in Jon Hopkins’s “Open Eye Signal”",
       "artist": "Jon Hopkins",
       "tags": ["bass", "electronica", "techno", "10s"],
       "level": 2,
@@ -5094,8 +5094,8 @@
     {
       "id": "b1-four-tet",
       "name": "Folktronica Pluck",
-      "ref": "In the style of Four Tet",
-      "artist": "Four Tet",
+      "ref": "A delicate plucked loop with a short echo, like the cut-up harp and guitar of 2000s folktronica",
+      "artist": "Folktronica",
       "tags": ["pluck", "folktronica", "electronica", "00s"],
       "level": 2,
       "blurb": "A delicate, plucked, harp-like pattern with a homemade warmth.",
@@ -5168,7 +5168,7 @@
     {
       "id": "b1-caribou",
       "name": "Psychedelic Pulse",
-      "ref": "In the style of Caribou",
+      "ref": "Warm, saturated, pulsing riffs with a psychedelic echo, where Caribou meets the dance floor",
       "artist": "Caribou",
       "tags": ["seq", "electronica", "psychedelic", "10s"],
       "level": 2,
@@ -5253,7 +5253,7 @@
     {
       "id": "b1-burial",
       "name": "Night Bus Sub",
-      "ref": "In the style of Burial",
+      "ref": "Burial’s night bus in sound: a dark, warm, saturated sub under a skittering, rainy 2-step",
       "artist": "Burial",
       "tags": ["bass", "uk garage", "dubstep", "00s"],
       "level": 2,
@@ -5312,8 +5312,8 @@
     {
       "id": "b1-kiasmos",
       "name": "Minimal Felt Pulse",
-      "ref": "In the style of Kiasmos",
-      "artist": "Kiasmos",
+      "ref": "A soft, felted pulse with echo, like muted piano drifting over a quiet minimal-techno beat",
+      "artist": "Minimal electronica",
       "tags": ["seq", "minimal", "electronica", "ambient", "10s"],
       "level": 2,
       "blurb": "A soft, felted, minimal pulse full of quiet emotion.",
@@ -5377,9 +5377,9 @@
     },
     {
       "id": "b1-air-moon",
-      "name": "Moon Safari Bass",
-      "ref": "In the style of Air — Moon Safari",
-      "artist": "Air",
+      "name": "French Lounge Bass",
+      "ref": "A warm, round, melodic bass with gentle saturation, from a hazy late-1990s French lounge",
+      "artist": "French downtempo",
       "tags": ["bass", "downtempo", "french", "90s"],
       "level": 1,
       "blurb": "A warm, round, retro bass line from a hazy French lounge.",
@@ -5440,7 +5440,7 @@
     {
       "id": "b1-prog-house",
       "name": "Progressive Roll",
-      "ref": "In the style of 1990s progressive house",
+      "ref": "Offbeat notes rolled along by a short echo, the hypnotic engine of a 1990s progressive house track",
       "artist": "Progressive house",
       "tags": ["bass", "progressive house", "house", "90s"],
       "level": 1,
@@ -5502,7 +5502,7 @@
     {
       "id": "b1-tech-house",
       "name": "Tech House Groove",
-      "ref": "In the style of 2010s tech house",
+      "ref": "Low, tight, syncopated and rubbery, a bass that bounces under 2010s tech house drums",
       "artist": "Tech house",
       "tags": ["bass", "tech house", "house", "10s"],
       "level": 1,
@@ -5565,7 +5565,7 @@
     {
       "id": "b1-melodic-techno",
       "name": "Melodic Techno Arp",
-      "ref": "In the style of 2010s melodic techno",
+      "ref": "A dark minor arpeggio rolling through long echoes, with the brooding pull of 2010s melodic techno",
       "artist": "Melodic techno",
       "tags": ["seq", "melodic techno", "techno", "arpeggio", "10s"],
       "level": 2,
@@ -5679,7 +5679,7 @@
     {
       "id": "b1-trance-gate",
       "name": "Trance Gate",
-      "ref": "In the style of late-1990s trance",
+      "ref": "A chord chopped into stuttering sixteenths one note at a time, standing in for a late-1990s trance gate",
       "artist": "Trance",
       "tags": ["seq", "trance", "90s"],
       "level": 2,
@@ -5749,7 +5749,7 @@
     {
       "id": "b1-music-box-acid",
       "name": "Music Box Acid",
-      "ref": "In the style of 1980s Chicago acid at the Music Box",
+      "ref": "Raw, loud and jacking, pushed hard by saturation: acid made for Ron Hardy’s Music Box in Chicago",
       "artist": "Chicago acid house",
       "tags": ["bass", "acid", "house", "80s"],
       "level": 2,
@@ -5823,7 +5823,7 @@
     {
       "id": "b1-bicep",
       "name": "Breakbeat Melancholy",
-      "ref": "In the style of Bicep",
+      "ref": "Bicep’s breakbeat melancholy: a soft, rolling, slightly saturated loop with an echo",
       "artist": "Bicep",
       "tags": ["seq", "breakbeat", "electronica", "10s"],
       "level": 2,
@@ -5892,8 +5892,8 @@
     {
       "id": "b1-nils-frahm",
       "name": "Felt Piano Pulse",
-      "ref": "In the style of Nils Frahm",
-      "artist": "Nils Frahm",
+      "ref": "A soft, round pulse cycling through a few notes, like a quietly repeated felt-piano figure",
+      "artist": "Neoclassical piano",
       "tags": ["keys", "neoclassical", "ambient", "10s"],
       "level": 2,
       "blurb": "A soft, repeating, felted piano-like pulse that slowly hypnotises.",
@@ -5974,7 +5974,7 @@
     {
       "id": "b1-sasha-digweed",
       "name": "Northern Exposure",
-      "ref": "In the style of Sasha & John Digweed",
+      "ref": "A filtered sequence unfolding slowly with echo, patient and deep enough for a Sasha & Digweed set",
       "artist": "Sasha & John Digweed",
       "tags": ["seq", "progressive house", "trance", "90s"],
       "level": 2,
@@ -6044,7 +6044,7 @@
     {
       "id": "b1-sat-808",
       "name": "Saturated 808",
-      "ref": "In the style of 2010s hip hop",
+      "ref": "A long sub saturated warmly so it carries on phones and laptops, the 808 of 2010s hip hop",
       "artist": "Hip hop",
       "tags": ["bass", "hip hop", "trap", "10s"],
       "level": 1,
@@ -6099,7 +6099,7 @@
     {
       "id": "b1-ambient-acid-echo",
       "name": "Acid Drift Echo",
-      "ref": "In the style of 1990s ambient acid",
+      "ref": "The 303 sound slowed and softened: gentle slides drifting through a long echo, 1990s ambient acid",
       "artist": "Ambient acid",
       "tags": ["bass", "acid", "ambient", "chill-out", "90s"],
       "level": 2,
@@ -6159,7 +6159,7 @@
     {
       "id": "b1-dub-techno-chord",
       "name": "Dub Chord Stab",
-      "ref": "In the style of Basic Channel",
+      "ref": "One muffled offbeat stab echoed into infinity, the whole of Basic Channel’s dub techno in a bar",
       "artist": "Basic Channel",
       "tags": ["keys", "dub techno", "techno", "90s"],
       "level": 2,
@@ -6215,8 +6215,8 @@
     {
       "id": "b1-krautrock-motorik",
       "name": "Motorik Echo",
-      "ref": "In the style of Michael Rother",
-      "artist": "Michael Rother",
+      "ref": "A bright figure driving forward on the motorik beat, its chiming echo close to 1970s krautrock guitar",
+      "artist": "Motorik krautrock",
       "tags": ["seq", "krautrock", "motorik", "70s"],
       "level": 1,
       "blurb": "A bright, endlessly driving motorik figure with a chiming echo.",
@@ -6355,8 +6355,8 @@
     {
       "id": "b1-celesta",
       "name": "Celesta Sparkle",
-      "ref": "In the style of Tchaikovsky’s celesta writing",
-      "artist": "Pyotr Ilyich Tchaikovsky",
+      "ref": "High, delicate plucks with a little echo, twinkling like the celesta in a romantic ballet score",
+      "artist": "Orchestral celesta",
       "tags": ["pluck", "classical", "romantic"],
       "level": 2,
       "blurb": "A twinkling, delicate, slightly mysterious celesta melody.",
@@ -6423,7 +6423,7 @@
     {
       "id": "b1-flamenco",
       "name": "Flamenco Rasgueado",
-      "ref": "In the style of flamenco guitar",
+      "ref": "A Phrygian descent with ratchets for the rasgueado strums, a fiery synth take on flamenco guitar",
       "artist": "Flamenco",
       "tags": ["pluck", "flamenco", "spanish", "traditional"],
       "level": 3,
@@ -6507,7 +6507,7 @@
     {
       "id": "b1-saz",
       "name": "Saz Melody",
-      "ref": "In the style of Turkish bağlama (saz)",
+      "ref": "A bright, twangy pluck winding through a Middle Eastern mode, like a Turkish bağlama",
       "artist": "Turkish folk music",
       "tags": ["pluck", "turkish", "folk", "traditional"],
       "level": 2,
@@ -6570,7 +6570,7 @@
     {
       "id": "b1-balalaika",
       "name": "Balalaika Tremolo",
-      "ref": "In the style of Russian balalaika",
+      "ref": "Ratchets for the fast tremolo strumming of a Russian balalaika on a minor-key folk tune",
       "artist": "Russian folk music",
       "tags": ["pluck", "russian", "folk", "traditional"],
       "level": 2,
@@ -6673,7 +6673,7 @@
     {
       "id": "b1-bouzouki",
       "name": "Bouzouki Tremolo",
-      "ref": "In the style of Greek bouzouki",
+      "ref": "Bright and metallic, with ratchets for the tremolo picking a Greek bouzouki puts on long notes",
       "artist": "Greek folk music",
       "tags": ["pluck", "greek", "folk", "traditional"],
       "level": 2,
@@ -6760,7 +6760,7 @@
     {
       "id": "b1-mandolin",
       "name": "Mandolin Serenade",
-      "ref": "In the style of Neapolitan mandolin",
+      "ref": "Sweet tremolo on the long notes of a serenade in three: the Neapolitan mandolin on a synth",
       "artist": "Neapolitan song",
       "tags": ["pluck", "italian", "folk", "traditional"],
       "level": 2,
@@ -6906,7 +6906,7 @@
     {
       "id": "b1-handpan",
       "name": "Handpan Meditation",
-      "ref": "In the style of handpan music",
+      "ref": "Soft, ringing, steel-like tones in a calm D minor scale, the sound of a handpan played by hand",
       "artist": "Handpan",
       "tags": ["perc", "handpan", "ambient", "meditation"],
       "level": 1,
@@ -6971,7 +6971,7 @@
     {
       "id": "b1-yangqin",
       "name": "Yangqin Ripples",
-      "ref": "In the style of Chinese yangqin",
+      "ref": "Fast pentatonic patterns with ratchet rolls, bright and rippling as a Chinese hammered yangqin",
       "artist": "Chinese traditional music",
       "tags": ["pluck", "chinese", "traditional"],
       "level": 2,
@@ -7047,7 +7047,7 @@
     {
       "id": "b1-cimbalom",
       "name": "Cimbalom Csárdás",
-      "ref": "In the style of Hungarian cimbalom",
+      "ref": "Fiery hammered runs in the Hungarian minor scale, a synth cimbalom tearing through a csárdás",
       "artist": "Hungarian folk music",
       "tags": ["pluck", "hungarian", "folk", "traditional"],
       "level": 3,
@@ -7116,8 +7116,8 @@
     {
       "id": "b1-santoor",
       "name": "Santoor Raga",
-      "ref": "In the style of Shivkumar Sharma",
-      "artist": "Shivkumar Sharma",
+      "ref": "Shimmering ratchet rolls on raga Bhupali’s five notes, the hammered santoor of Indian classical music",
+      "artist": "Hindustani santoor",
       "tags": ["pluck", "indian", "classical", "raga"],
       "level": 2,
       "blurb": "Shimmering hammered-string rolls in a calm evening raga.",
@@ -7196,8 +7196,8 @@
     {
       "id": "b1-kora",
       "name": "Kora Cascade",
-      "ref": "In the style of Toumani Diabaté",
-      "artist": "Toumani Diabaté",
+      "ref": "A soft pluck in an endless interlocking cascade, the two-handed patterns of the West African kora",
+      "artist": "Mandinka kora",
       "tags": ["pluck", "mandinka", "african", "traditional"],
       "level": 2,
       "blurb": "A cascading, interlocking harp pattern from West Africa.",
@@ -7267,7 +7267,7 @@
     {
       "id": "b1-glass-armonica",
       "name": "Glass Armonica",
-      "ref": "In the style of the glass armonica",
+      "ref": "Pure, soft, eerie tones fading slowly into a long echo, like a glass armonica’s spinning bowls",
       "artist": "Glass armonica",
       "tags": ["keys", "classical", "ambient"],
       "level": 2,
@@ -7324,7 +7324,7 @@
     {
       "id": "b1-ondes",
       "name": "Ondes Martenot",
-      "ref": "In the style of Olivier Messiaen’s ondes Martenot writing",
+      "ref": "A singing, otherworldly tone gliding between every note: the ondes Martenot of Messiaen’s “Turangalîla-Symphonie”",
       "artist": "Olivier Messiaen",
       "tags": ["lead", "classical", "modern"],
       "level": 2,
@@ -7381,8 +7381,8 @@
     {
       "id": "b1-vibraphone",
       "name": "Jazz Vibes",
-      "ref": "In the style of Milt Jackson",
-      "artist": "Milt Jackson",
+      "ref": "Soft, ringing notes in swung eighths, with a short echo for the motor shimmer of a 1950s jazz vibraphone",
+      "artist": "Cool jazz vibraphone",
       "tags": ["keys", "jazz", "vibraphone", "50s"],
       "level": 2,
       "blurb": "A cool, ringing, swinging vibraphone line.",
@@ -7457,7 +7457,7 @@
     {
       "id": "b1-steel-guitar",
       "name": "Hawaiian Steel",
-      "ref": "In the style of Hawaiian steel guitar",
+      "ref": "Sweet, singing notes that slide in as if under a steel bar: a synth Hawaiian steel guitar",
       "artist": "Hawaiian music",
       "tags": ["lead", "hawaiian", "steel guitar", "30s"],
       "level": 2,
@@ -7519,7 +7519,7 @@
     {
       "id": "b1-musette",
       "name": "Musette Waltz",
-      "ref": "In the style of French bal-musette",
+      "ref": "A reedy square lilting in three, the accordion waltz of a Parisian bal-musette",
       "artist": "Bal-musette",
       "tags": ["keys", "french", "accordion", "waltz"],
       "level": 2,
@@ -7590,7 +7590,7 @@
     {
       "id": "b1-sonar",
       "name": "Sonar Ping",
-      "ref": "In the style of submarine-film sound effects",
+      "ref": "A high, resonant ping coming back from far off through a long, decaying echo, straight from a submarine film",
       "artist": "Sound effects",
       "tags": ["fx", "film", "submarine"],
       "level": 1,
@@ -7643,7 +7643,7 @@
     {
       "id": "b1-space-station",
       "name": "Space Station",
-      "ref": "In the style of 1970s science-fiction television",
+      "ref": "Short, high beeps chattering in echo like the computers on a 1970s TV starship",
       "artist": "Science-fiction television",
       "tags": ["fx", "sci-fi", "tv", "70s"],
       "level": 2,
@@ -7704,7 +7704,7 @@
     {
       "id": "b1-ping-pong",
       "name": "Ping-Pong Ball",
-      "ref": "In the style of cartoon sound effects",
+      "ref": "A woody knock with the gaps shrinking, a cartoon ping-pong ball bouncing to rest",
       "artist": "Cartoon sound effects",
       "tags": ["fx", "cartoon"],
       "level": 2,
@@ -7752,7 +7752,7 @@
     {
       "id": "b1-raygun",
       "name": "Ray Gun",
-      "ref": "In the style of 1950s science-fiction films",
+      "ref": "Shortest decay, full DEPTH and a fast echo: a 1950s B-movie ray gun spiralling off with each shot",
       "artist": "Science-fiction films",
       "tags": ["fx", "sci-fi", "film", "50s"],
       "level": 2,
@@ -7808,7 +7808,7 @@
     {
       "id": "b1-church-bell",
       "name": "Great Bell",
-      "ref": "In the style of church bells",
+      "ref": "A low, resonant toll with the longest decay, echoing down the valley like a great church bell",
       "artist": "Church bells",
       "tags": ["perc", "bells", "traditional"],
       "level": 1,
@@ -7857,7 +7857,7 @@
     {
       "id": "b1-singing-bowl",
       "name": "Singing Bowl",
-      "ref": "In the style of Himalayan singing bowls",
+      "ref": "A pure strike that rings on and on, shimmering in a short echo like a Himalayan singing bowl",
       "artist": "Singing bowls",
       "tags": ["drone", "meditation", "ambient"],
       "level": 1,
@@ -7910,7 +7910,7 @@
     {
       "id": "b1-whale-song",
       "name": "Whale Song",
-      "ref": "In the style of humpback whale recordings",
+      "ref": "Slow slides between low and high notes in a long echo, the moaning call of a humpback whale",
       "artist": "Whale song",
       "tags": ["fx", "nature", "ambient"],
       "level": 2,
@@ -7968,7 +7968,7 @@
     {
       "id": "b1-wind-chimes",
       "name": "Wind Chimes",
-      "ref": "In the style of wind chimes",
+      "ref": "Random high pings on a pentatonic scale, tinkling like wind chimes in a light breeze",
       "artist": "Wind chimes",
       "tags": ["pluck", "ambient", "nature"],
       "level": 1,
@@ -8028,7 +8028,7 @@
     {
       "id": "b1-clock",
       "name": "Clockwork",
-      "ref": "In the style of clockwork sound effects",
+      "ref": "Two short, woody clicks at slightly different pitches, ticking and tocking twice a second",
       "artist": "Sound effects",
       "tags": ["perc", "clock", "fx"],
       "level": 1,
@@ -8075,7 +8075,7 @@
     {
       "id": "b1-typewriter",
       "name": "Typewriter",
-      "ref": "In the style of typewriter sound effects",
+      "ref": "Clicky notes at an uneven pace, then a bright ping for the typewriter’s carriage-return bell",
       "artist": "Sound effects",
       "tags": ["perc", "fx", "office"],
       "level": 2,
@@ -8127,7 +8127,7 @@
     {
       "id": "b1-hurdy-gurdy",
       "name": "Hurdy-Gurdy Dance",
-      "ref": "In the style of medieval hurdy-gurdy music",
+      "ref": "A resonant, saturated saw buzzing through a modal dance, nasal as a medieval hurdy-gurdy",
       "artist": "Medieval music",
       "tags": ["strings", "medieval", "folk", "traditional"],
       "level": 2,
@@ -8199,8 +8199,8 @@
     {
       "id": "b1-celtic-harp",
       "name": "Celtic Harp",
-      "ref": "In the style of Turlough O’Carolan",
-      "artist": "Turlough O’Carolan",
+      "ref": "A ringing pluck and gentle echo on a graceful tune in three, from the old Irish harping tradition",
+      "artist": "Irish harp music",
       "tags": ["pluck", "irish", "celtic", "traditional"],
       "level": 2,
       "blurb": "A graceful, ringing harp tune in three, in the old Irish style.",
@@ -8269,7 +8269,7 @@
     {
       "id": "b1-omd",
       "name": "Electric Pop Sequence",
-      "ref": "In the style of Orchestral Manoeuvres in the Dark",
+      "ref": "A bright square hook with a short echo, simple and catchy as OMD’s “Enola Gay”",
       "artist": "Orchestral Manoeuvres in the Dark",
       "tags": ["seq", "synth-pop", "new wave", "80s"],
       "level": 1,
@@ -8351,7 +8351,7 @@
     {
       "id": "b1-depeche",
       "name": "Basildon Sequence",
-      "ref": "In the style of Depeche Mode",
+      "ref": "Gritty, saturated and driving, a sequenced bass with the metallic edge of mid-1980s Depeche Mode",
       "artist": "Depeche Mode",
       "tags": ["bass", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -8432,7 +8432,7 @@
     {
       "id": "b1-blue-monday",
       "name": "Manchester Octaves",
-      "ref": "In the style of New Order",
+      "ref": "Pumping sixteenth-note octaves, the sequenced bass that drives New Order’s “Blue Monday”",
       "artist": "New Order",
       "tags": ["bass", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -8503,7 +8503,7 @@
     {
       "id": "b1-pet-shop",
       "name": "West End Bass",
-      "ref": "In the style of Pet Shop Boys",
+      "ref": "Pet Shop Boys’ glossy dance-pop in the bass: punchy, syncopated and sequenced",
       "artist": "Pet Shop Boys",
       "tags": ["bass", "synth-pop", "dance-pop", "80s"],
       "level": 1,
@@ -8560,7 +8560,7 @@
     {
       "id": "b1-sweet-dreams",
       "name": "Sweet Dreams Sequence",
-      "ref": "In the style of Eurythmics",
+      "ref": "A cool minor sixteenth riff rising and falling with a short echo, close to Eurythmics’ “Sweet Dreams”",
       "artist": "Eurythmics",
       "tags": ["bass", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -8642,7 +8642,7 @@
     {
       "id": "b1-numan",
       "name": "Cold Machine Riff",
-      "ref": "In the style of Gary Numan",
+      "ref": "A cold, heavy saw riff saturated like a rock guitar, Gary Numan’s “Cars” on one oscillator",
       "artist": "Gary Numan",
       "tags": ["lead", "synth-pop", "new wave", "70s"],
       "level": 2,
@@ -8709,7 +8709,7 @@
     {
       "id": "b1-human-league",
       "name": "Sheffield Synth-Pop",
-      "ref": "In the style of The Human League",
+      "ref": "A crisp square with a quick pluck, bouncing under early-1980s Human League synth-pop",
       "artist": "The Human League",
       "tags": ["bass", "synth-pop", "new wave", "80s"],
       "level": 1,
@@ -8764,7 +8764,7 @@
     {
       "id": "b1-autobahn",
       "name": "Autobahn Drive",
-      "ref": "In the style of Kraftwerk — Autobahn",
+      "ref": "Relaxed, round and cheerful, a bass that motors steadily along like Kraftwerk’s “Autobahn”",
       "artist": "Kraftwerk",
       "tags": ["bass", "krautrock", "electronic", "70s"],
       "level": 2,
@@ -8830,7 +8830,7 @@
     {
       "id": "b1-eurodance",
       "name": "Eurodance Bass",
-      "ref": "In the style of 1990s Eurodance",
+      "ref": "Short notes on every “and”, the pumping offbeat bass under a 1990s Eurodance chorus",
       "artist": "Eurodance",
       "tags": ["bass", "eurodance", "dance-pop", "90s"],
       "level": 1,
@@ -8877,7 +8877,7 @@
     {
       "id": "b1-eurobeat",
       "name": "Eurobeat Octaves",
-      "ref": "In the style of 1990s Eurobeat",
+      "ref": "Breakneck galloping octaves at around 155 BPM, built for Eurobeat’s racing-anime anthems",
       "artist": "Eurobeat",
       "tags": ["bass", "eurobeat", "dance", "90s"],
       "level": 2,
@@ -8958,7 +8958,7 @@
     {
       "id": "b1-game-boy",
       "name": "Pocket Chiptune",
-      "ref": "In the style of Game Boy chiptune",
+      "ref": "A cheerful open-filter square with a tiny echo, the way Game Boy chiptune fakes its reverb",
       "artist": "Chiptune",
       "tags": ["lead", "chiptune", "game"],
       "level": 2,
@@ -9031,7 +9031,7 @@
     {
       "id": "b1-overworld",
       "name": "Overworld Theme",
-      "ref": "In the style of 8-bit adventure-game music",
+      "ref": "A bold, punchy square-wave march for crossing the map in an 8-bit adventure game",
       "artist": "Video game music",
       "tags": ["lead", "game", "chiptune"],
       "level": 2,
@@ -9086,7 +9086,7 @@
     {
       "id": "b1-wah-echo",
       "name": "Wah Echo Funk",
-      "ref": "In the style of 1970s blaxploitation soundtracks",
+      "ref": "Short notes swept hard by the filter like scratchy wah guitar, echoing through a 1970s crime-film score",
       "artist": "Blaxploitation soundtracks",
       "tags": ["lead", "funk", "soul", "film", "70s"],
       "level": 2,
@@ -9163,7 +9163,7 @@
     {
       "id": "b1-afrobeats",
       "name": "Afrobeats Bass",
-      "ref": "In the style of 2010s Afrobeats",
+      "ref": "A warm, round, bouncy bass with plenty of syncopation, swaying under a 2010s Lagos Afrobeats groove",
       "artist": "Afrobeats",
       "tags": ["bass", "afrobeats", "african", "10s"],
       "level": 1,
@@ -9214,7 +9214,7 @@
     {
       "id": "b1-highlife",
       "name": "Highlife Guitar",
-      "ref": "In the style of Ghanaian highlife",
+      "ref": "A bright pluck going round a major-key cycle, like the sweet interlocking guitars of Ghanaian highlife",
       "artist": "Highlife",
       "tags": ["pluck", "highlife", "african", "60s"],
       "level": 2,
@@ -9285,7 +9285,7 @@
     {
       "id": "b1-soukous",
       "name": "Soukous Sebene",
-      "ref": "In the style of Congolese soukous",
+      "ref": "Fast, sparkling, cascading lines up high, the lead guitar of a Congolese soukous sebene",
       "artist": "Soukous",
       "tags": ["pluck", "soukous", "african", "80s"],
       "level": 3,
@@ -9367,7 +9367,7 @@
     {
       "id": "b1-samba",
       "name": "Samba Surdo Bass",
-      "ref": "In the style of Brazilian samba",
+      "ref": "Root and fifth bouncing on the surdo’s deep pulse, strongest on the second beat, as samba drives",
       "artist": "Samba",
       "tags": ["bass", "samba", "brazilian", "latin"],
       "level": 1,
@@ -9422,7 +9422,7 @@
     {
       "id": "b1-tango",
       "name": "Tango Marcato",
-      "ref": "In the style of Argentine tango",
+      "ref": "A punchy, saturated bass stomping marcato on every beat, with the dramatic pushes of Argentine tango",
       "artist": "Tango",
       "tags": ["bass", "tango", "argentine", "traditional"],
       "level": 2,
@@ -9488,7 +9488,7 @@
     {
       "id": "b1-second-line",
       "name": "Second Line Tuba",
-      "ref": "In the style of a New Orleans brass band",
+      "ref": "A brassy, saturated low line strutting with syncopation: the sousaphone of a New Orleans second line",
       "artist": "New Orleans brass band",
       "tags": ["brass", "new orleans", "jazz", "funk"],
       "level": 2,
@@ -9552,9 +9552,9 @@
     },
     {
       "id": "b1-continuo",
-      "name": "Handel Continuo",
-      "ref": "In the style of Handel’s basso continuo",
-      "artist": "George Frideric Handel",
+      "name": "Baroque Continuo",
+      "ref": "Steady eighths walking through the chords, like a harpsichord’s left hand holding up a baroque piece",
+      "artist": "Baroque continuo",
       "tags": ["bass", "baroque", "classical"],
       "level": 2,
       "blurb": "A steady, walking baroque bass line, like a harpsichord’s left hand.",
@@ -9623,7 +9623,7 @@
     {
       "id": "b1-stride",
       "name": "Stride Left Hand",
-      "ref": "In the style of 1920s stride piano",
+      "ref": "The oom-pah of 1920s stride piano: a low note, then a jump up an octave and a half",
       "artist": "Stride piano",
       "tags": ["keys", "jazz", "stride", "20s"],
       "level": 2,
@@ -9678,7 +9678,7 @@
     {
       "id": "b1-acid-jazz",
       "name": "Acid Jazz Bass",
-      "ref": "In the style of early-1990s acid jazz",
+      "ref": "A fluid, busy, syncopated line with a round tone, from early-1990s London acid jazz",
       "artist": "Acid jazz",
       "tags": ["bass", "acid jazz", "funk", "90s"],
       "level": 2,
@@ -9737,7 +9737,7 @@
     {
       "id": "b1-disco-echo",
       "name": "Disco Echo Octaves",
-      "ref": "In the style of late-1970s disco",
+      "ref": "Bouncing octaves in eighths, doubled to sixteenths by the echo, for a late-1970s disco floor",
       "artist": "Disco",
       "tags": ["bass", "disco", "70s"],
       "level": 1,
@@ -9803,7 +9803,7 @@
     {
       "id": "b1-moonrise-arp",
       "name": "Moonrise Arpeggio",
-      "ref": "In the style of ambient electronica",
+      "ref": "A soft minor-seventh arpeggio rising slowly, its dotted echoes rippling like moonlight on water",
       "artist": "Ambient electronica",
       "tags": ["seq", "ambient", "chill-out", "arpeggio"],
       "level": 1,
@@ -9885,7 +9885,7 @@
     {
       "id": "b1-lullaby-echo",
       "name": "Echoing Lullaby",
-      "ref": "In the style of lullabies",
+      "ref": "A soft, round tone rocking slowly in three with a gentle echo, a lullaby for the B1",
       "artist": "Lullaby",
       "tags": ["lead", "lullaby", "ambient"],
       "level": 1,
@@ -9948,7 +9948,7 @@
     {
       "id": "b1-aurora",
       "name": "Aurora",
-      "ref": "In the style of Nordic ambient music",
+      "ref": "Slow pentatonic notes with a glowing resonance and long echo, shifting like the northern lights",
       "artist": "Nordic ambient",
       "tags": ["lead", "ambient", "meditation"],
       "level": 1,
@@ -10005,7 +10005,7 @@
     {
       "id": "b1-tide",
       "name": "Tide",
-      "ref": "In the style of ambient music",
+      "ref": "Long, low notes rising and falling slowly while echoes wash back in, like the tide",
       "artist": "Ambient",
       "tags": ["bass", "ambient", "drone"],
       "level": 1,
@@ -10059,7 +10059,7 @@
     {
       "id": "b1-lantern",
       "name": "Paper Lantern",
-      "ref": "In the style of East Asian pentatonic melody",
+      "ref": "A warm, plucked melody on an East Asian pentatonic scale, glowing softly in a gentle echo",
       "artist": "Pentatonic folk melody",
       "tags": ["pluck", "ambient", "folk"],
       "level": 1,
@@ -10123,7 +10123,7 @@
     {
       "id": "b1-fireflies",
       "name": "Fireflies",
-      "ref": "In the style of ambient soundscapes",
+      "ref": "Soft, short, high blips winking on and off at random, each with a small echo",
       "artist": "Ambient",
       "tags": ["fx", "ambient", "nature"],
       "level": 1,
@@ -10182,7 +10182,7 @@
     {
       "id": "b1-dusk-swell",
       "name": "Dusk Swell",
-      "ref": "In the style of ambient drone music",
+      "ref": "Slow notes piling up in a feeding-back echo until a mono synth seems to hold a glowing chord",
       "artist": "Ambient drone",
       "tags": ["drone", "ambient", "meditation"],
       "level": 2,
@@ -10238,7 +10238,7 @@
     {
       "id": "b1-meadow",
       "name": "Meadow",
-      "ref": "In the style of English pastoral folk",
+      "ref": "A light tune rolling in six-eight, plucked like a lute, from the English pastoral folk tradition",
       "artist": "English pastoral folk",
       "tags": ["pluck", "folk", "pastoral"],
       "level": 1,

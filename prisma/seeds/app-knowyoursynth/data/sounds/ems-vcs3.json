@@ -716,7 +716,7 @@
     {
       "id": "vcs3-machine-throb",
       "name": "Machine Throb",
-      "ref": "In the style of Pink Floyd — \"Welcome to the Machine\"",
+      "ref": "A low, filtered drone throbbing on and off like the machinery in Pink Floyd’s “Welcome to the Machine”",
       "artist": "Pink Floyd",
       "tags": ["bass", "drone", "70s"],
       "level": 2,
@@ -813,7 +813,7 @@
     {
       "id": "vcs3-organ-chop",
       "name": "Pulsing Organ Filter",
-      "ref": "In the style of The Who — \"Won’t Get Fooled Again\"",
+      "ref": "Fast, even filter bursts on an organ-like tone: the VCS3 pulse of The Who’s “Won’t Get Fooled Again”",
       "artist": "The Who",
       "tags": ["keys", "filter", "70s"],
       "level": 3,
@@ -906,7 +906,7 @@
     {
       "id": "vcs3-silver-swoop",
       "name": "Space Swoops",
-      "ref": "In the style of Hawkwind — \"Silver Machine\"",
+      "ref": "Hawkwind’s “Silver Machine” whoosh: two oscillators swooping together through a wash of springs",
       "artist": "Hawkwind",
       "tags": ["fx", "space rock", "70s"],
       "level": 2,
@@ -995,7 +995,7 @@
     {
       "id": "vcs3-eno-treatment",
       "name": "Chattering Treatment",
-      "ref": "In the style of Roxy Music — \"Ladytron\"",
+      "ref": "A ring of oscillators chattering without ever repeating, close to Eno’s VCS3 treatments on “Ladytron”",
       "artist": "Brian Eno",
       "tags": ["fx", "experimental", "70s"],
       "level": 3,
@@ -1079,7 +1079,7 @@
     {
       "id": "vcs3-run-sequence",
       "name": "Running Sequence",
-      "ref": "In the style of Pink Floyd — \"On the Run\"",
+      "ref": "A fast line of short, bright, filtered blips racing along like Pink Floyd’s “On the Run”",
       "artist": "Pink Floyd",
       "tags": ["seq", "pluck", "70s"],
       "level": 2,
@@ -1170,7 +1170,7 @@
     {
       "id": "vcs3-oxygene-wind",
       "name": "Wind and Waves",
-      "ref": "In the style of Jean-Michel Jarre — Oxygène",
+      "ref": "Noise howling through a near-oscillating filter that rises and falls, the wind of Jarre’s “Oxygène”",
       "artist": "Jean-Michel Jarre",
       "tags": ["fx", "noise", "70s"],
       "level": 1,
@@ -1679,7 +1679,7 @@
     {
       "id": "vcs3-saucer",
       "name": "Flying Saucer",
-      "ref": "In the style of 1970s BBC Radiophonic Workshop sci-fi effects",
+      "ref": "A warbling sine that rises and sinks as the craft comes and goes, straight out of Radiophonic Workshop sci-fi",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "sci-fi", "filter"],
       "level": 2,
@@ -2191,7 +2191,7 @@
     {
       "id": "vcs3-bubbling",
       "name": "Bubbling Cross-Modulation",
-      "ref": "In the style of early-1970s space rock",
+      "ref": "Ringing bloops at shifting pitches from two oscillators bending each other, early-1970s space rock bubbling",
       "artist": "Various",
       "tags": ["fx", "modulation", "space rock"],
       "level": 3,
@@ -2646,7 +2646,7 @@
     {
       "id": "vcs3-berlin-ostinato",
       "name": "Berlin Ostinato Bass",
-      "ref": "In the style of Klaus Schulze — “Picture Music” (1975)",
+      "ref": "Klaus Schulze’s “Picture Music” in the bass: running sixteenths, plucked on every note, slowly swept",
       "artist": "Klaus Schulze",
       "tags": ["bass", "berlin school", "70s", "sequence"],
       "level": 2,
@@ -2762,7 +2762,7 @@
     {
       "id": "vcs3-fetus-decay-bass",
       "name": "Keys Set the Decay",
-      "ref": "In the style of Franco Battiato — “Fetus” (1972)",
+      "ref": "A breathy 7/8 pulse bass whose low notes ring on and high ones stop short, from Battiato’s VCS3 album “Fetus”",
       "artist": "Franco Battiato",
       "tags": ["bass", "italian", "experimental", "7/8"],
       "level": 2,
@@ -2861,7 +2861,7 @@
     {
       "id": "vcs3-rockers-sub",
       "name": "Two-Channel Dub Sub",
-      "ref": "In the style of King Tubby — 1970s dub mixes",
+      "ref": "A round sine sub split dry and deep on one side, a thin spring echo on the other, as King Tubby mixed bass",
       "artist": "King Tubby",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 2,
@@ -2961,7 +2961,7 @@
     {
       "id": "vcs3-joystick-acid",
       "name": "Joystick Acid Line",
-      "ref": "In the style of Ceephax Acid Crew — 2000s London acid",
+      "ref": "A squelching sixteenth acid line with the joystick as its cut-off, the raw 2000s London acid of Ceephax",
       "artist": "Ceephax Acid Crew",
       "tags": ["bass", "acid", "squelch", "2000s"],
       "level": 3,
@@ -3071,8 +3071,8 @@
     {
       "id": "vcs3-space-rock-rasp",
       "name": "Space Rock Rasp Bass",
-      "ref": "In the style of Hawkwind — “Silver Machine” (1972)",
-      "artist": "Hawkwind",
+      "ref": "A chugging, gritty eighth-note bass on E with a buzzing rasp in its tone, built to drive 1970s space rock",
+      "artist": "1970s space rock",
       "tags": ["bass", "space rock", "70s", "gritty"],
       "level": 2,
       "blurb": "A chugging, gritty eighth-note bass on E with a buzzing rasp in its tone.",
@@ -3165,7 +3165,7 @@
     {
       "id": "vcs3-hi-nrg-octaves",
       "name": "Hi-NRG Octave Bass",
-      "ref": "In the style of Patrick Cowley — “Menergy” (1981)",
+      "ref": "Bright, bouncing octaves riding a steady unfiltered sub, the sequenced pulse of Patrick Cowley’s “Menergy”",
       "artist": "Patrick Cowley",
       "tags": ["bass", "hi-nrg", "disco", "80s"],
       "level": 2,
@@ -3257,7 +3257,7 @@
     {
       "id": "vcs3-filter-sine-bass",
       "name": "Drooping Filter Bass",
-      "ref": "In the style of Piero Umiliani — 1970s Italian library music",
+      "ref": "The filter sings a round 6/8 sine bass, each note drooping as it dies, for Piero Umiliani’s electronic library music",
       "artist": "Piero Umiliani",
       "tags": ["bass", "library", "sine", "6/8"],
       "level": 3,
@@ -3355,7 +3355,7 @@
     {
       "id": "vcs3-ring-sub-octave",
       "name": "Ring-Mod Sub Octave",
-      "ref": "In the style of Throbbing Gristle — “Hot on the Heels of Love” (1979)",
+      "ref": "Throbbing Gristle’s cold disco in a bass: hollow, an octave below the keys, with a steely ring on top",
       "artist": "Throbbing Gristle",
       "tags": ["bass", "industrial", "ring mod", "70s"],
       "level": 2,
@@ -3449,7 +3449,7 @@
     {
       "id": "vcs3-minimal-thud",
       "name": "Minimal Thud Bass",
-      "ref": "In the style of Robert Hood — “Minimal Nation” (1994)",
+      "ref": "A short, dry off-beat thud of triangle and noise, the bare bones of Robert Hood’s “Minimal Nation”",
       "artist": "Robert Hood",
       "tags": ["bass", "minimal techno", "detroit", "90s"],
       "level": 2,
@@ -3537,7 +3537,7 @@
     {
       "id": "vcs3-self-clocked-ratchet",
       "name": "Self-Clocked Ratchets",
-      "ref": "In the style of Tangerine Dream — “Stratosfear” (1976)",
+      "ref": "Held beats stuttering into four quick plucks under a slow sweep, Tangerine Dream in their “Stratosfear” years",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "ratchet", "70s"],
       "level": 2,
@@ -3634,7 +3634,7 @@
     {
       "id": "vcs3-crystal-octave-arp",
       "name": "Oscillator 3 Octave Arpeggio",
-      "ref": "In the style of Tim Blake — “Crystal Machine” (1977)",
+      "ref": "A self-running octave arpeggio sparkling in the springs, as on Tim Blake’s “Crystal Machine”",
       "artist": "Tim Blake",
       "tags": ["seq", "space rock", "arpeggio", "70s"],
       "level": 3,
@@ -3745,7 +3745,7 @@
     {
       "id": "vcs3-stereo-bounce-arp",
       "name": "Stereo Bounce Arp",
-      "ref": "In the style of Harmonia — “Watussi” (1974)",
+      "ref": "A cheerful 6/8 arpeggio leaning from speaker to speaker, light on its feet as Harmonia’s “Watussi”",
       "artist": "Harmonia",
       "tags": ["seq", "krautrock", "stereo", "6/8"],
       "level": 2,
@@ -3847,7 +3847,7 @@
     {
       "id": "vcs3-spring-swept-arp",
       "name": "Spring-Swept Arpeggio",
-      "ref": "In the style of Ash Ra Tempel — “Sunrain” (1976)",
+      "ref": "Even sixteenths drifting from dry to drenched in springs and back, like Ash Ra Tempel’s “Sunrain”",
       "artist": "Ash Ra Tempel",
       "tags": ["seq", "krautrock", "reverb", "70s"],
       "level": 2,
@@ -3951,7 +3951,7 @@
     {
       "id": "vcs3-pinged-filter-arp",
       "name": "Pinged Filter Arpeggio",
-      "ref": "In the style of Edward Williams — “Life on Earth” (1979)",
+      "ref": "A ticking 5/4 arpeggio of struck, marimba-like filter rings, from Edward Williams’s “Life on Earth” score",
       "artist": "Edward Williams",
       "tags": ["seq", "soundtrack", "filter", "5/4"],
       "level": 3,
@@ -4040,7 +4040,7 @@
     {
       "id": "vcs3-seven-step-fifths",
       "name": "Seven-Step Fifths",
-      "ref": "In the style of Zanov — “Green Ice” (1977)",
+      "ref": "Zanov’s French space music in a 7/8 sequence: two plucked voices, the top flipping from fifth to octave",
       "artist": "Zanov",
       "tags": ["seq", "french", "space music", "7/8"],
       "level": 3,
@@ -4142,7 +4142,7 @@
     {
       "id": "vcs3-ring-techno-stabs",
       "name": "Ring-Mod Techno Stabs",
-      "ref": "In the style of Surgeon — 1990s Birmingham techno",
+      "ref": "Short, clanging ring-mod stabs in a syncopated sixteenth pattern, hard as Surgeon’s Birmingham techno",
       "artist": "Surgeon",
       "tags": ["seq", "techno", "ring mod", "90s"],
       "level": 2,
@@ -4233,7 +4233,7 @@
     {
       "id": "vcs3-glass-bell-arp",
       "name": "Glass Bell Arpeggio",
-      "ref": "In the style of Plaid — “Not for Threes” (1997)",
+      "ref": "A quick, glassy 5/8 arpeggio of in-tune bells shimmering in springs, Plaid’s “Not for Threes” IDM",
       "artist": "Plaid",
       "tags": ["seq", "idm", "ring mod", "bells"],
       "level": 2,
@@ -4334,7 +4334,7 @@
     {
       "id": "vcs3-dry-left-spring-right",
       "name": "Dry Left, Spring Right",
-      "ref": "In the style of Lazerhawk — “Redline” (2013)",
+      "ref": "Bright sixteenths, dry on the left and splashing in springs on the right, for Lazerhawk’s “Redline”",
       "artist": "Lazerhawk",
       "tags": ["seq", "synthwave", "stereo", "2010s"],
       "level": 2,
@@ -4441,7 +4441,7 @@
     {
       "id": "vcs3-dub-techno-stab",
       "name": "Dub-Techno Stab",
-      "ref": "In the style of Basic Channel — “Phylyps Trak” (1993)",
+      "ref": "A muffled two-note off-beat stab blooming into springs after each hit, as in Basic Channel’s “Phylyps Trak”",
       "artist": "Basic Channel",
       "tags": ["seq", "dub techno", "reverb", "90s"],
       "level": 3,
@@ -4540,7 +4540,7 @@
     {
       "id": "vcs3-horror-ostinato",
       "name": "Horror Ostinato",
-      "ref": "In the style of Fabio Frizzi — “Zombi 2” (1979)",
+      "ref": "A dark, creeping triplet ostinato wavering like warped tape, from the synth score of Frizzi’s “Zombi 2”",
       "artist": "Fabio Frizzi",
       "tags": ["seq", "horror", "italian", "soundtrack"],
       "level": 2,
@@ -4635,8 +4635,8 @@
     {
       "id": "vcs3-scooping-oboe-lead",
       "name": "Scooping Oboe Lead",
-      "ref": "In the style of Roxy Music — “Ladytron” (1972)",
-      "artist": "Roxy Music",
+      "ref": "A nasal, reedy lead that scoops up into each note and sags off at the end, like an oboe in 1970s art rock",
+      "artist": "1970s art rock",
       "tags": ["lead", "art rock", "glam", "70s"],
       "level": 2,
       "blurb": "A nasal, oboe-like lead that scoops up into each note and falls away at the end.",
@@ -4738,8 +4738,8 @@
     {
       "id": "vcs3-wet-tail-lead",
       "name": "Wet-Tail Glissando Lead",
-      "ref": "In the style of Steve Hillage — “Rainbow Dome Musick” (1979)",
-      "artist": "Steve Hillage",
+      "ref": "A soft, singing lead kept dry while held, opening into a cloud of springs every time a note lets go",
+      "artist": "Ambient space rock",
       "tags": ["lead", "ambient", "space rock", "reverb"],
       "level": 3,
       "blurb": "A soft, singing lead that is close and dry while a note is held and blooms into the springs when it is let go.",
@@ -4846,8 +4846,8 @@
     {
       "id": "vcs3-phrygian-wah-lead",
       "name": "Phrygian Wah Lead",
-      "ref": "In the style of Ozric Tentacles — “Jurassic Shift” (1993)",
-      "artist": "Ozric Tentacles",
+      "ref": "A squelchy, wah-swept lead running a bent, eastern phrygian riff in 7/8, for psychedelic festival rock",
+      "artist": "Psychedelic space rock",
       "tags": ["lead", "psychedelic", "space rock", "7/8"],
       "level": 2,
       "blurb": "A squelchy, wah-wah lead running an eastern-sounding phrygian riff in 7/8.",
@@ -4946,7 +4946,7 @@
     {
       "id": "vcs3-octave-lead-5-4",
       "name": "Octave Lead in Five",
-      "ref": "In the style of Le Orme — “Felona e Sorona” (1973)",
+      "ref": "A warm octave lead with one shared vibrato, singing Dorian 5/4 like Le Orme’s “Felona e Sorona”",
       "artist": "Le Orme",
       "tags": ["lead", "italian prog", "5/4", "70s"],
       "level": 2,
@@ -5046,7 +5046,7 @@
     {
       "id": "vcs3-quarter-tone-lead",
       "name": "Quarter-Tone Lead",
-      "ref": "In the style of Oneohtrix Point Never — “R Plus Seven” (2013)",
+      "ref": "A hollow, folded-sine lead that walks in quarter tones, uncanny as Oneohtrix Point Never’s “R Plus Seven”",
       "artist": "Oneohtrix Point Never",
       "tags": ["lead", "microtonal", "experimental", "2010s"],
       "level": 2,
@@ -5135,7 +5135,7 @@
     {
       "id": "vcs3-joystick-ring-lead",
       "name": "Ring Partner on the Stick",
-      "ref": "In the style of White Noise — “An Electric Storm” (1969)",
+      "ref": "A tune sounding through a clanging ring-mod halo, as strange as White Noise’s “An Electric Storm”",
       "artist": "White Noise",
       "tags": ["lead", "ring mod", "psychedelic", "60s"],
       "level": 2,
@@ -5226,7 +5226,7 @@
     {
       "id": "vcs3-radiophonic-wah-lead",
       "name": "Radiophonic Trembling Lead",
-      "ref": "In the style of Paddy Kingsland — “The Hitchhiker’s Guide to the Galaxy” radio series (1978)",
+      "ref": "A quirky lead that says “wow” on every note and trembles as it holds, Paddy Kingsland’s “Hitchhiker’s” sound",
       "artist": "Paddy Kingsland",
       "tags": ["lead", "radiophonic", "sci-fi", "70s"],
       "level": 3,
@@ -5329,8 +5329,8 @@
     {
       "id": "vcs3-parallel-fifths-lead",
       "name": "Parallel Fifths Lead",
-      "ref": "In the style of Curved Air — “Vivaldi” (1970)",
-      "artist": "Curved Air",
+      "ref": "A bright, fast 6/8 run in parallel fifths from a single key, with the medieval ring of early-1970s prog",
+      "artist": "Early-1970s prog rock",
       "tags": ["lead", "prog", "6/8", "70s"],
       "level": 1,
       "blurb": "A bright, fast 6/8 run in parallel fifths, two oscillators played from one key.",
@@ -5434,7 +5434,7 @@
     {
       "id": "vcs3-square-fm-lead",
       "name": "Square-Wave FM Lead",
-      "ref": "In the style of Add N to (X) — “Metal Fingers in My Body” (1999)",
+      "ref": "A hard, snarling square-wave FM lead stomping through a minor riff, as Add N to (X) played them",
       "artist": "Add N to (X)",
       "tags": ["lead", "electronica", "fm", "90s"],
       "level": 2,
@@ -5525,7 +5525,7 @@
     {
       "id": "vcs3-drifting-saw-lead",
       "name": "Drifting Saw Lead",
-      "ref": "In the style of Carpenter Brut — “Turbo Killer” (2016)",
+      "ref": "A thick saw lead whose two oscillators drift apart and back, darksynth as in Carpenter Brut’s “Turbo Killer”",
       "artist": "Carpenter Brut",
       "tags": ["lead", "synthwave", "darksynth", "2010s"],
       "level": 2,
@@ -5620,7 +5620,7 @@
     {
       "id": "vcs3-blooming-spring-pad",
       "name": "Blooming Spring Pad",
-      "ref": "In the style of Steve Roach — “Structures from Silence” (1984)",
+      "ref": "A slow, dark pad that swells in and blooms into springs as it lets go: Steve Roach’s “Structures from Silence”",
       "artist": "Steve Roach",
       "tags": ["pad", "ambient", "80s", "spring"],
       "level": 2,
@@ -5716,7 +5716,7 @@
     {
       "id": "vcs3-crystal-air-pad",
       "name": "Crystal Air Pad",
-      "ref": "In the style of Iasos — “Inter-Dimensional Music” (1975)",
+      "ref": "High notes half whistle, half breath, shimmering in springs: the 1970s synthesiser new age of Iasos",
       "artist": "Iasos",
       "tags": ["pad", "new age", "70s", "breathy"],
       "level": 2,
@@ -5811,9 +5811,9 @@
     },
     {
       "id": "vcs3-hosianna-choir-drone",
-      "name": "Hosianna Choir Drone",
-      "ref": "In the style of Popol Vuh — “Hosianna Mantra” (1972)",
-      "artist": "Popol Vuh",
+      "name": "Open-Fifth Choir Drone",
+      "ref": "A hollow, sung open fifth whose vowel slowly opens from oo to ah and closes again, like a distant choir",
+      "artist": "Krautrock",
       "tags": ["drone", "krautrock", "70s", "choir"],
       "level": 2,
       "blurb": "A hollow, sung open fifth whose vowel slowly opens from oo to ah and closes again.",
@@ -5907,8 +5907,8 @@
     {
       "id": "vcs3-breath-over-drone",
       "name": "Breath over the Drone",
-      "ref": "In the style of Deuter — “D” (1971)",
-      "artist": "Deuter",
+      "ref": "A low, folded sine drone on one side and a slow breath of wind gusting in and out on the other",
+      "artist": "Meditation music",
       "tags": ["drone", "meditation", "70s", "wind"],
       "level": 2,
       "blurb": "A low, folded sine drone on the left with a slow breath of wind gusting in and out on the right.",
@@ -6004,7 +6004,7 @@
     {
       "id": "vcs3-fluffy-cloud-tremolo",
       "name": "Fluffy Cloud Tremolo",
-      "ref": "In the style of The Orb — “Little Fluffy Clouds” (1990)",
+      "ref": "A warm open-fifth pad throbbing gently in time, the tremolo glow of The Orb’s “Little Fluffy Clouds”",
       "artist": "The Orb",
       "tags": ["pad", "ambient house", "90s", "tremolo"],
       "level": 2,
@@ -6097,8 +6097,8 @@
     {
       "id": "vcs3-tired-swells",
       "name": "Tired Swells",
-      "ref": "In the style of Stars of the Lid — “The Tired Sounds of Stars of the Lid” (2001)",
-      "artist": "Stars of the Lid",
+      "ref": "A slow, beating drone that swells and sinks by itself every seven seconds, like a bowed note rising and dying",
+      "artist": "Ambient drone",
       "tags": ["drone", "modern classical", "2000s", "swell"],
       "level": 2,
       "blurb": "A slow, beating drone that swells up and sinks away on its own every seven seconds, wide across both speakers.",
@@ -6189,8 +6189,8 @@
     {
       "id": "vcs3-drowned-haze",
       "name": "Drowned Haze",
-      "ref": "In the style of Grouper — “Dragging a Dead Deer Up a Hill” (2008)",
-      "artist": "Grouper",
+      "ref": "A soft, hissy melody sunk deep in the springs, its pitch sagging like a worn cassette",
+      "artist": "Lo-fi ambient",
       "tags": ["pad", "dream", "2000s", "lo-fi"],
       "level": 2,
       "blurb": "A soft, hissy melody sunk deep in the springs, wavering like a worn tape.",
@@ -6293,8 +6293,8 @@
     {
       "id": "vcs3-vowel-on-the-stick",
       "name": "Vowel on the Stick",
-      "ref": "In the style of Julianna Barwick — “The Magic Place” (2011)",
-      "artist": "Julianna Barwick",
+      "ref": "A slow, vibrato-laden swell that sings a vowel, held in place by wherever the joystick is left",
+      "artist": "Looped vocal ambient",
       "tags": ["pad", "vocal", "2010s", "swell"],
       "level": 3,
       "blurb": "A slow, vibrato-laden vocal swell in the springs, its vowel set by where the joystick is left.",
@@ -6404,7 +6404,7 @@
     {
       "id": "vcs3-cathedral-octave-pad",
       "name": "Cathedral Octave Pad",
-      "ref": "In the style of Constance Demby — “Novus Magnificat” (1986)",
+      "ref": "A broad, organ-like octave pad whose reverb tides from chapel to cathedral, Constance Demby’s “Novus Magnificat”",
       "artist": "Constance Demby",
       "tags": ["pad", "new age", "80s", "spring"],
       "level": 2,
@@ -6501,7 +6501,7 @@
     {
       "id": "vcs3-ducking-spring-chords",
       "name": "Ducking Spring Chords",
-      "ref": "In the style of Huerco S. — “For Those of You Who Have Never (And Also Those Who Have)” (2016)",
+      "ref": "Muffled fifth-chord stabs whose spring echo ducks under each hit and swells after, Huerco S.’s dub ambient",
       "artist": "Huerco S.",
       "tags": ["keys", "dub ambient", "2010s", "spring"],
       "level": 3,
@@ -6598,7 +6598,7 @@
     {
       "id": "vcs3-blue-veils-ring",
       "name": "Blue Veils Ring Drone",
-      "ref": "In the style of Delia Derbyshire — “Blue Veils and Golden Sands” (1967)",
+      "ref": "Two glassy inner tones sliding slowly past each other: Delia Derbyshire’s “Blue Veils and Golden Sands”",
       "artist": "Delia Derbyshire",
       "tags": ["drone", "radiophonic", "60s", "ring mod"],
       "level": 3,
@@ -6701,7 +6701,7 @@
     {
       "id": "vcs3-solaris-ocean",
       "name": "Solaris Ocean",
-      "ref": "In the style of Eduard Artemyev — “Solaris” (1972)",
+      "ref": "A cold, pure sine gliding slowly over a faint dark hiss, the sea of Eduard Artemyev’s “Solaris” score",
       "artist": "Eduard Artemyev",
       "tags": ["drone", "film score", "70s", "eerie"],
       "level": 2,
@@ -6788,7 +6788,7 @@
     {
       "id": "vcs3-unfolding-ring-drone",
       "name": "Unfolding Ring Drone",
-      "ref": "In the style of Michael Stearns — “Planetary Unfolding” (1981)",
+      "ref": "A deep D drone, its ring-mod halo bending out of tune and back, as on Stearns’s “Planetary Unfolding”",
       "artist": "Michael Stearns",
       "tags": ["drone", "space music", "80s", "ring mod"],
       "level": 3,
@@ -6883,9 +6883,9 @@
     },
     {
       "id": "vcs3-postcard-sine-keys",
-      "name": "Postcard Sine Keys",
-      "ref": "In the style of Hiroshi Yoshimura — “Music for Nine Post Cards” (1982)",
-      "artist": "Hiroshi Yoshimura",
+      "name": "Glassy Sine Keys",
+      "ref": "Sparse, soft, faintly glassy sine notes that ring a moment in a little spring, with room between them",
+      "artist": "Japanese environmental music",
       "tags": ["keys", "environmental", "80s", "soft"],
       "level": 1,
       "blurb": "Sparse, soft sine notes, faintly glassy, ringing for a second and a half in a little spring.",
@@ -6984,8 +6984,8 @@
     {
       "id": "vcs3-damper-on-the-stick",
       "name": "Damper on the Stick",
-      "ref": "In the style of Harold Budd — “The Pavilion of Dreams” (1978)",
-      "artist": "Harold Budd",
+      "ref": "Soft, felted keyboard notes washed in spring, the joystick held like a half-down sustain pedal",
+      "artist": "Ambient piano",
       "tags": ["keys", "ambient", "70s", "soft"],
       "level": 2,
       "blurb": "Soft, felted keyboard notes in a wash of spring, with the joystick held like a sustain pedal so they ring into each other.",
@@ -7087,7 +7087,7 @@
     {
       "id": "vcs3-notes-across-the-room",
       "name": "Notes Across the Room",
-      "ref": "In the style of Suzanne Ciani — “Seven Waves” (1982)",
+      "ref": "Bell-like broken chords walking left to right as they climb, the way Suzanne Ciani spreads “Seven Waves”",
       "artist": "Suzanne Ciani",
       "tags": ["pluck", "new age", "80s", "stereo"],
       "level": 2,
@@ -7184,7 +7184,7 @@
     {
       "id": "vcs3-noise-struck-mallet",
       "name": "Noise-Struck Mallet",
-      "ref": "In the style of Cluster — “Sowiesoso” (1976)",
+      "ref": "A soft, woody mallet tone struck from a puff of noise, lilting like Cluster’s “Sowiesoso”",
       "artist": "Cluster",
       "tags": ["keys", "kosmische", "70s", "mallet"],
       "level": 2,
@@ -7290,9 +7290,9 @@
     },
     {
       "id": "vcs3-still-way-chime",
-      "name": "Still Way Chime",
-      "ref": "In the style of Satoshi Ashikawa — “Still Way” (1982)",
-      "artist": "Satoshi Ashikawa",
+      "name": "Fading Ring Chime",
+      "ref": "Sparse ring-mod chimes whose bright edge fades before the tone, each one hanging in the springs",
+      "artist": "Japanese environmental music",
       "tags": ["perc", "environmental", "80s", "bell"],
       "level": 2,
       "blurb": "Sparse ring-modulated chimes whose bright edge fades faster than their tone, each one hanging in the springs.",
@@ -7403,7 +7403,7 @@
     {
       "id": "vcs3-self-ringing-chimes",
       "name": "Self-Ringing Wind Chimes",
-      "ref": "In the style of Pauline Anna Strom — “Trans-Millenia Consort” (1982)",
+      "ref": "Glass chimes striking themselves every second and a half at shifting pitches: Pauline Anna Strom’s new age",
       "artist": "Pauline Anna Strom",
       "tags": ["perc", "new age", "80s", "chimes"],
       "level": 2,
@@ -7495,8 +7495,8 @@
     {
       "id": "vcs3-just-third-keys",
       "name": "Just Third Keys",
-      "ref": "In the style of Hans-Joachim Roedelius — “Durch die Wüste” (1978)",
-      "artist": "Hans-Joachim Roedelius",
+      "ref": "A gentle keyboard tune where every key sounds a sweet, perfectly still just major third",
+      "artist": "Kosmische",
       "tags": ["keys", "kosmische", "70s", "just intonation"],
       "level": 1,
       "blurb": "A gentle keyboard tune where every key plays a sweet, perfectly still major third.",
@@ -7588,7 +7588,7 @@
     {
       "id": "vcs3-breathing-decay-arp",
       "name": "Breathing Decay Arpeggio",
-      "ref": "In the style of Yoshio Ojima — “Une Collection des Chaînons” (1988)",
+      "ref": "A soft mallet arpeggio breathing from staccato to legato and back, from Yoshio Ojima’s environmental music",
       "artist": "Yoshio Ojima",
       "tags": ["seq", "environmental", "80s", "arp"],
       "level": 2,
@@ -7694,8 +7694,8 @@
     {
       "id": "vcs3-glowing-peak-arp",
       "name": "Glowing Peak Arpeggio",
-      "ref": "In the style of Philip Glass — “Opening”, Glassworks (1982)",
-      "artist": "Philip Glass",
+      "ref": "Rolling A minor triplets, some notes glowing where they meet a fixed resonance: minimalist broken chords",
+      "artist": "Minimalism",
       "tags": ["seq", "minimalism", "80s", "arp"],
       "level": 2,
       "blurb": "Rolling triplet broken chords in A minor, some notes glowing brighter where they meet a fixed resonance.",
@@ -7797,7 +7797,7 @@
     {
       "id": "vcs3-wasteland-arp",
       "name": "Northern Wasteland Arp",
-      "ref": "In the style of Michael Hoenig — “Departure from the Northern Wasteland” (1978)",
+      "ref": "Bright and dry on the left, dark and echoing on the right: Michael Hoenig’s Berlin School arpeggio in two halves",
       "artist": "Michael Hoenig",
       "tags": ["seq", "berlin school", "70s", "arp"],
       "level": 3,
@@ -7908,7 +7908,7 @@
     {
       "id": "vcs3-pulses-wander-stereo",
       "name": "Pulses Wander the Stereo",
-      "ref": "In the style of Emily A. Sprague — “Water Memory” (2017)",
+      "ref": "Soft sine pulses repeating on each held note and drifting between speakers, Emily A. Sprague’s modular ambient",
       "artist": "Emily A. Sprague",
       "tags": ["seq", "modular ambient", "2010s", "pulse"],
       "level": 2,
@@ -8000,7 +8000,7 @@
     {
       "id": "vcs3-balearic-sunset-arp",
       "name": "Balearic Sunset Arp",
-      "ref": "In the style of Sueño Latino — “Sueño Latino” (1989)",
+      "ref": "A gentle plucked eighth-note arpeggio in E, half lost in springs, with the Balearic glow of “Sueño Latino”",
       "artist": "Sueño Latino",
       "tags": ["seq", "balearic", "80s", "arp"],
       "level": 2,
@@ -8115,7 +8115,7 @@
     {
       "id": "vcs3-riversong-lead",
       "name": "Riversong Lead",
-      "ref": "In the style of Tonto’s Expanding Head Band — “Riversong”, Zero Time (1971)",
+      "ref": "A warm, singing unison lead with a gentle vibrato, as on Tonto’s Expanding Head Band’s “Riversong”",
       "artist": "Tonto’s Expanding Head Band",
       "tags": ["lead", "electronic", "70s", "vibrato"],
       "level": 2,
@@ -8220,8 +8220,8 @@
     {
       "id": "vcs3-breathing-sine-flute",
       "name": "Breathing Sine Flute",
-      "ref": "In the style of Gigi Masin — “Wind” (1986)",
-      "artist": "Gigi Masin",
+      "ref": "A soft, breathy flute line sung by the filter’s own sine, with a gentle vibrato and a spring echo",
+      "artist": "1980s Italian ambient",
       "tags": ["lead", "ambient", "80s", "breathy"],
       "level": 2,
       "blurb": "A soft, breathy flute line played on the filter’s own sine, with a gentle vibrato and a spring echo.",
@@ -8321,8 +8321,8 @@
     {
       "id": "vcs3-stick-detuned-lead",
       "name": "Stick-Detuned Lead",
-      "ref": "In the style of Kruder & Dorfmeister — “The K&D Sessions” (1998)",
-      "artist": "Kruder & Dorfmeister",
+      "ref": "A smoky, mellow lead whose two oscillators beat slowly, detuned by a nudge of the joystick",
+      "artist": "Viennese downtempo",
       "tags": ["lead", "downtempo", "90s", "smooth"],
       "level": 2,
       "blurb": "A smoky, mellow downtempo lead whose two oscillators beat slowly, detuned by a joystick held just off centre.",
@@ -8430,7 +8430,7 @@
     {
       "id": "vcs3-spring-birdsong",
       "name": "Birdsong in the Springs",
-      "ref": "In the style of Beaver & Krause — “In a Wild Sanctuary” (1970)",
+      "ref": "Little falling chirps calling by themselves in the springs, the synthesised birds of Beaver & Krause",
       "artist": "Beaver & Krause",
       "tags": ["fx", "nature", "70s", "birdsong"],
       "level": 3,
@@ -8516,8 +8516,8 @@
     {
       "id": "vcs3-seven-key-zither",
       "name": "Seven-Key Zither",
-      "ref": "In the style of Laraaji — “Day of Radiance” (1980)",
-      "artist": "Laraaji",
+      "ref": "Bright, hammered zither cascades on an even seven-note scale, ringing on and on in the springs",
+      "artist": "Hammered zither",
       "tags": ["pluck", "new age", "80s", "microtonal"],
       "level": 2,
       "blurb": "Bright, hammered zither cascades in a seven-note scale that divides the octave evenly, ringing in the springs.",
@@ -8613,8 +8613,8 @@
     {
       "id": "vcs3-shakuhachi-breath",
       "name": "Shakuhachi Breath",
-      "ref": "In the style of Hozan Yamamoto — “Silver World” (1971)",
-      "artist": "Hozan Yamamoto",
+      "ref": "A breathy bamboo flute, half air and half tone, with a slow head-shake vibrato and a bend on the stick",
+      "artist": "Japanese shakuhachi",
       "tags": ["wind", "japanese", "jazz", "breathy"],
       "level": 3,
       "blurb": "A breathy bamboo flute, half air and half tone, with a slow head-shake vibrato and a bend under the stick.",
@@ -8724,8 +8724,8 @@
     {
       "id": "vcs3-andean-pan-pipes",
       "name": "Andean Pan Pipes",
-      "ref": "In the style of Los Kjarkas — “Llorando se fue” (1981)",
-      "artist": "Los Kjarkas",
+      "ref": "Hollow, chuffing pan-pipe notes blown in a quick huayno rhythm, each with a puff of air",
+      "artist": "Andean folk",
       "tags": ["wind", "andean", "folk", "breathy"],
       "level": 2,
       "blurb": "Hollow, chuffing pan-pipe notes in a quick huayno rhythm, each one blown with a puff of air.",
@@ -8832,8 +8832,8 @@
     {
       "id": "vcs3-chalumeau-clarinet",
       "name": "Chalumeau Clarinet",
-      "ref": "In the style of Acker Bilk — “Stranger on the Shore” (1961)",
-      "artist": "Acker Bilk",
+      "ref": "A warm, woody low clarinet with a broad, slow vibrato, singing in its chalumeau register",
+      "artist": "Easy-listening clarinet",
       "tags": ["wind", "easy listening", "60s", "reed"],
       "level": 2,
       "blurb": "A warm, woody low clarinet with a broad, slow vibrato, singing a lyrical tune.",
@@ -8945,8 +8945,8 @@
     {
       "id": "vcs3-highland-pipes",
       "name": "Highland Pipes and Drone",
-      "ref": "In the style of Gordon Duncan — “Just for Seumas” (1994)",
-      "artist": "Gordon Duncan",
+      "ref": "A nasal chanter marching with sharp grace notes over a reedy drone that never stops",
+      "artist": "Scottish Highland piping",
       "tags": ["wind", "celtic", "scottish", "drone"],
       "level": 3,
       "blurb": "A nasal pipe chanter playing a march with sharp grace notes, over a reedy drone that never stops.",
@@ -9042,8 +9042,8 @@
     {
       "id": "vcs3-trapezoid-horn-call",
       "name": "Trapezoid Horn Call",
-      "ref": "In the style of Dennis Brain — Mozart’s Horn Concertos (1953)",
-      "artist": "Dennis Brain",
+      "ref": "A round, mellow French horn sounding a six-eight hunting call, each note brightening as it is blown",
+      "artist": "Orchestral horn",
       "tags": ["brass", "classical", "50s", "horn"],
       "level": 2,
       "blurb": "A round, mellow French horn playing a hunting call in six-eight, each note opening brighter as it is blown.",
@@ -9155,8 +9155,8 @@
     {
       "id": "vcs3-harmon-mute-trumpet",
       "name": "Harmon Mute Trumpet",
-      "ref": "In the style of Miles Davis — “’Round About Midnight” (1957)",
-      "artist": "Miles Davis",
+      "ref": "Thin, buzzing and intimate, a Harmon-muted jazz trumpet with a small blat and a late vibrato",
+      "artist": "Cool jazz trumpet",
       "tags": ["brass", "jazz", "50s", "muted"],
       "level": 3,
       "blurb": "A thin, buzzing, intimate muted trumpet with a small blat on each note and a late shiver of vibrato.",
@@ -9263,8 +9263,8 @@
     {
       "id": "vcs3-balkan-tuba",
       "name": "Balkan Brass Tuba",
-      "ref": "In the style of Fanfare Ciocărlia — “Radio Pașcani” (1998)",
-      "artist": "Fanfare Ciocărlia",
+      "ref": "A fat, buzzing tuba bouncing through a fast Romanian two-step in short, round blurts",
+      "artist": "Balkan brass band",
       "tags": ["brass", "balkan", "90s", "bass"],
       "level": 2,
       "blurb": "A fat, buzzing tuba bouncing through a fast Romanian two-step, each note a short, round blurt.",
@@ -9350,8 +9350,8 @@
     {
       "id": "vcs3-echoing-cello",
       "name": "Echoing Cello",
-      "ref": "In the style of Arthur Russell — “World of Echo” (1986)",
-      "artist": "Arthur Russell",
+      "ref": "A grainy bowed cello line sung with vibrato into a deep, swimming echo",
+      "artist": "Experimental cello",
       "tags": ["strings", "avant-garde", "80s", "cello"],
       "level": 2,
       "blurb": "A bowed cello line, soft-edged and grainy with rosin, sung with vibrato into a deep, swimming echo.",
@@ -9456,9 +9456,9 @@
     },
     {
       "id": "vcs3-plink-plank-pizzicato",
-      "name": "Plink Plank Pizzicato",
-      "ref": "In the style of Leroy Anderson — “Plink, Plank, Plunk!” (1951)",
-      "artist": "Leroy Anderson",
+      "name": "Perky Pizzicato",
+      "ref": "Perky plucked strings, a short woody snap on every note, skipping round a D major tune",
+      "artist": "Light orchestral music",
       "tags": ["strings", "light orchestral", "50s", "pizzicato"],
       "level": 2,
       "blurb": "Perky plucked strings, a short woody snap on every note, skipping up and down a D major tune.",
@@ -9563,9 +9563,9 @@
     },
     {
       "id": "vcs3-shower-scene-stabs",
-      "name": "Shower-Scene Stabs",
-      "ref": "In the style of Bernard Herrmann — “Psycho” (1960)",
-      "artist": "Bernard Herrmann",
+      "name": "Shrieking String Stabs",
+      "ref": "Shrieking, sliding high-string stabs that repeat as long as a key is held: the horror-film scream",
+      "artist": "Horror film strings",
       "tags": ["strings", "film score", "60s", "horror"],
       "level": 2,
       "blurb": "Shrieking, sliding high-string stabs that repeat by themselves for as long as a key is held.",
@@ -9654,9 +9654,9 @@
     },
     {
       "id": "vcs3-koto-by-the-sea",
-      "name": "Koto by the Sea",
-      "ref": "In the style of Michio Miyagi — “Haru no Umi” (1929)",
-      "artist": "Michio Miyagi",
+      "name": "Hirajoshi Koto",
+      "ref": "Bright, nasal koto plucks in the hirajoshi scale, with a string press waiting on the joystick",
+      "artist": "Japanese koto",
       "tags": ["pluck", "japanese", "traditional", "zither"],
       "level": 3,
       "blurb": "Bright, nasal koto plucks in the hirajoshi scale, with a string press waiting on the joystick.",
@@ -9771,8 +9771,8 @@
     {
       "id": "vcs3-jawari-sitar",
       "name": "Jawari Buzz Sitar",
-      "ref": "In the style of Ravi Shankar — “Three Ragas” (1956)",
-      "artist": "Ravi Shankar",
+      "ref": "A buzzing sitar line whose bright overtone sweeps down after every pluck, over a steady drone",
+      "artist": "Hindustani sitar",
       "tags": ["pluck", "indian", "raga", "drone"],
       "level": 3,
       "blurb": "A buzzing, singing sitar line whose bright overtone sweeps down after every pluck, over a steady drone.",
@@ -9867,8 +9867,8 @@
     {
       "id": "vcs3-mbira-thumb-keys",
       "name": "Mbira Thumb Keys",
-      "ref": "In the style of Stella Chiweshe — “Ambuya?” (1987)",
-      "artist": "Stella Chiweshe",
+      "ref": "Soft, round thumb-piano notes rolling in a twelve-pulse cycle, with the faint bottle-cap rattle of a Shona mbira",
+      "artist": "Shona mbira",
       "tags": ["pluck", "zimbabwe", "mbira", "african"],
       "level": 3,
       "blurb": "Soft, round thumb-piano notes in a rolling twelve-pulse cycle, each with a faint rattle of bottle caps.",
@@ -9979,9 +9979,9 @@
     },
     {
       "id": "vcs3-six-marimbas",
-      "name": "Six Marimbas",
-      "ref": "In the style of Steve Reich — “Six Marimbas” (1986)",
-      "artist": "Steve Reich",
+      "name": "Rosewood Marimba",
+      "ref": "A warm, wooden marimba pattern pulsing in twelve, soft mallets on rosewood bars",
+      "artist": "Minimalist marimba",
       "tags": ["perc", "minimalism", "80s", "marimba"],
       "level": 2,
       "blurb": "A warm, wooden marimba pattern pulsing in twelve, soft mallets on rosewood bars.",
@@ -10082,8 +10082,8 @@
     {
       "id": "vcs3-calypso-steel-pan",
       "name": "Calypso Steel Pan",
-      "ref": "In the style of The Esso Trinidad Steel Band — “The Esso Trinidad Steel Band” (1971)",
-      "artist": "The Esso Trinidad Steel Band",
+      "ref": "Bright, singing steel-pan notes bouncing through a syncopated Trinidad calypso",
+      "artist": "Trinidad steel band",
       "tags": ["perc", "caribbean", "calypso", "70s"],
       "level": 2,
       "blurb": "Bright, singing steel-pan notes bouncing through a syncopated calypso tune.",
@@ -10187,7 +10187,7 @@
     {
       "id": "vcs3-kebyar-gong-chimes",
       "name": "Kebyar Gong Chimes",
-      "ref": "In the style of Balinese gong kebyar — “Music from the Morning of the World” (1967)",
+      "ref": "Fast interlocking bronze chimes, each shimmering against a mistuned twin, as in Balinese gong kebyar",
       "artist": "Balinese gamelan",
       "tags": ["perc", "gamelan", "indonesian", "metallic"],
       "level": 3,
@@ -10306,8 +10306,8 @@
     {
       "id": "vcs3-quilled-harpsichord",
       "name": "Quilled Harpsichord",
-      "ref": "In the style of Wanda Landowska — Bach’s “Goldberg Variations” (1933)",
-      "artist": "Wanda Landowska",
+      "ref": "A bright, jangling harpsichord running baroque sixteenths, its four-foot stop ringing an octave up",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "baroque", "classical", "plucked"],
       "level": 2,
       "blurb": "A bright, jangling harpsichord running baroque sixteenths, with a four-foot stop ringing an octave above.",
@@ -10417,9 +10417,9 @@
     },
     {
       "id": "vcs3-outa-space-clav",
-      "name": "Outa-Space Clav",
-      "ref": "In the style of Billy Preston — “Outa-Space” (1971)",
-      "artist": "Billy Preston",
+      "name": "Wah Clav Riff",
+      "ref": "A tight, quacking E minor clavinet riff, each note a percussive snap, with a wah on the joystick",
+      "artist": "1970s funk clavinet",
       "tags": ["keys", "funk", "70s", "clavinet"],
       "level": 2,
       "blurb": "A tight, quacking clavinet riff in E minor, every note a short percussive snap, with a wah on the joystick.",
@@ -10514,8 +10514,8 @@
     {
       "id": "vcs3-prairie-whistler",
       "name": "Prairie Whistler",
-      "ref": "In the style of Alessandro Alessandroni — the whistling on “For a Few Dollars More” (1965)",
-      "artist": "Alessandro Alessandroni",
+      "ref": "A lonely, pure whistled tune with a gentle vibrato, echoing across a spaghetti-western desert",
+      "artist": "Spaghetti western whistling",
       "tags": ["lead", "spaghetti western", "60s", "whistle"],
       "level": 2,
       "blurb": "A lonely, pure whistled tune with a gentle vibrato, echoing across a wide spring desert.",
@@ -10614,7 +10614,7 @@
     {
       "id": "vcs3-electro-boom-kick",
       "name": "Electro Boom Kick",
-      "ref": "In the style of Mantronix — “King of the Beats” (1988)",
+      "ref": "A deep, booming kick whose pitch falls on every hit, in broken electro patterns like Mantronix’s “King of the Beats”",
       "artist": "Mantronix",
       "tags": ["perc", "electro", "hip-hop", "kick"],
       "level": 2,
@@ -10707,7 +10707,7 @@
     {
       "id": "vcs3-noise-snare-ghosts",
       "name": "Noise Snare and Ghosts",
-      "ref": "In the style of Cybotron — “Clear” (1983)",
+      "ref": "A crisp electronic backbeat snare with lower ghost notes skittering round it, Cybotron’s “Clear” machine funk",
       "artist": "Cybotron",
       "tags": ["perc", "electro", "detroit", "80s"],
       "level": 2,
@@ -10807,7 +10807,7 @@
     {
       "id": "vcs3-rhythm-box-hats",
       "name": "Rhythm Box Hi-Hats",
-      "ref": "In the style of Shuggie Otis — “Inspiration Information” (1974)",
+      "ref": "Ticking closed hats and offbeat open ones, the rhythm-box tick under Shuggie Otis’s “Inspiration Information”",
       "artist": "Shuggie Otis",
       "tags": ["perc", "soul", "70s", "hi-hat"],
       "level": 2,
@@ -10900,7 +10900,7 @@
     {
       "id": "vcs3-fluttering-handclaps",
       "name": "Fluttering Handclaps",
-      "ref": "In the style of Shannon — “Let the Music Play” (1983)",
+      "ref": "Fluttering electronic claps on the backbeat, pickup roll and all, from Shannon’s “Let the Music Play”",
       "artist": "Shannon",
       "tags": ["perc", "freestyle", "80s", "clap"],
       "level": 3,
@@ -11004,8 +11004,8 @@
     {
       "id": "vcs3-conga-tumbao",
       "name": "Conga Tumbao",
-      "ref": "In the style of Mongo Santamaría — “Watermelon Man” (1963)",
-      "artist": "Mongo Santamaría",
+      "ref": "Ringing conga tones and sharp slaps in a tumbao, the skin sliding down a little on each open tone",
+      "artist": "Afro-Cuban conga",
       "tags": ["perc", "afro-cuban", "latin jazz", "60s"],
       "level": 3,
       "blurb": "Ringing conga tones and sharp slaps in a tumbao, the skin sliding down a little on each open tone.",
@@ -11102,8 +11102,8 @@
     {
       "id": "vcs3-tabla-teental",
       "name": "Tabla Teental",
-      "ref": "In the style of Zakir Hussain — “Making Music” (1987)",
-      "artist": "Zakir Hussain",
+      "ref": "Ringing, pitched tabla strokes through a sixteen-beat teental cycle, the bass drum gliding on the stick",
+      "artist": "Hindustani tabla",
       "tags": ["perc", "indian", "tabla", "80s"],
       "level": 3,
       "blurb": "A sixteen-beat teental cycle of ringing, pitched tabla strokes, with the bass drum’s glide on the stick.",
@@ -11204,8 +11204,8 @@
     {
       "id": "vcs3-afrobeat-cowbell",
       "name": "Afrobeat Cowbell",
-      "ref": "In the style of Tony Allen — with Fela Kuti and Africa 70, “Zombie” (1976)",
-      "artist": "Tony Allen",
+      "ref": "A clanking two-tone bell pattern, bright and dry, driving a 1970s Lagos Afrobeat groove",
+      "artist": "Afrobeat",
       "tags": ["perc", "afrobeat", "70s", "cowbell"],
       "level": 2,
       "blurb": "A clanking two-tone bell pattern, bright and dry, driving an Afrobeat groove.",
@@ -11288,9 +11288,9 @@
     },
     {
       "id": "vcs3-zarathustra-timpani",
-      "name": "Zarathustra Timpani",
-      "ref": "In the style of Richard Strauss — “Also sprach Zarathustra” (1896)",
-      "artist": "Richard Strauss",
+      "name": "Pounding Timpani",
+      "ref": "Booming kettledrums pounding an alternating C and G, then rolling up to one long, ringing hit",
+      "artist": "Orchestral timpani",
       "tags": ["perc", "classical", "orchestral", "timpani"],
       "level": 2,
       "blurb": "Booming kettledrums pounding the famous alternating C and G, rolling up to a long, ringing hit.",
@@ -11389,7 +11389,7 @@
     {
       "id": "vcs3-library-cymbal-swell",
       "name": "Library Cymbal Swell",
-      "ref": "In the style of 1970s KPM and De Wolfe library music",
+      "ref": "A rolled cymbal swelling out of nothing and washing away, the stock dramatic swell of 1970s library music",
       "artist": "1970s library music",
       "tags": ["perc", "library", "70s", "cymbal"],
       "level": 3,
@@ -11482,7 +11482,7 @@
     {
       "id": "vcs3-mikrophonie-tam-tam",
       "name": "Mikrophonie Tam-Tam",
-      "ref": "In the style of Karlheinz Stockhausen — “Mikrophonie I” (1964)",
+      "ref": "A huge, dark tam-tam blooming from a low throb into a roaring wash, as Stockhausen probed it in “Mikrophonie I”",
       "artist": "Karlheinz Stockhausen",
       "tags": ["perc", "avant-garde", "60s", "gong"],
       "level": 3,
@@ -11581,7 +11581,7 @@
     {
       "id": "vcs3-bossa-rhythm-box",
       "name": "Bossa Rhythm Box",
-      "ref": "In the style of Timmy Thomas — “Why Can’t We Live Together” (1972)",
+      "ref": "Booming drum hits and a brushed tick playing by themselves, the rhythm box of “Why Can’t We Live Together”",
       "artist": "Timmy Thomas",
       "tags": ["perc", "soul", "70s", "drum machine"],
       "level": 3,
@@ -11674,7 +11674,7 @@
     {
       "id": "vcs3-skaro-city-hum",
       "name": "Skaro City Hum",
-      "ref": "In the style of Tristram Cary — “The Daleks” (Doctor Who, 1963)",
+      "ref": "Two deep tones beating against a many-toothed growl, the grinding city hum of Tristram Cary’s “The Daleks”",
       "artist": "Tristram Cary",
       "tags": ["drone", "radiophonic", "60s", "sci-fi"],
       "level": 3,
@@ -11779,7 +11779,7 @@
     {
       "id": "vcs3-robot-intonation",
       "name": "Robot Intonation",
-      "ref": "In the style of Bruce Haack — “The Electric Lucifer” (1970)",
+      "ref": "A buzzing machine voice chattering in syllables and flipping vowels, Bruce Haack’s “The Electric Lucifer”",
       "artist": "Bruce Haack",
       "tags": ["fx", "robot", "70s", "voice"],
       "level": 3,
@@ -11879,7 +11879,7 @@
     {
       "id": "vcs3-time-ship-wheeze",
       "name": "Time-Ship Wheeze",
-      "ref": "In the style of Brian Hodgson — the TARDIS take-off, “Doctor Who” (1963)",
+      "ref": "A heaving, grinding wheeze rising and falling over swelling springs: Brian Hodgson’s TARDIS take-off",
       "artist": "Brian Hodgson",
       "tags": ["fx", "radiophonic", "60s", "sci-fi"],
       "level": 2,
@@ -11970,7 +11970,7 @@
     {
       "id": "vcs3-dying-circuits",
       "name": "Dying Circuits",
-      "ref": "In the style of Louis and Bebe Barron — “Forbidden Planet” (1956)",
+      "ref": "A whistling circuit that swoops and chirps on its own, alive like the Barrons’ “Forbidden Planet” score",
       "artist": "Louis and Bebe Barron",
       "tags": ["fx", "film score", "50s", "feedback"],
       "level": 3,
@@ -12072,7 +12072,7 @@
     {
       "id": "vcs3-invader-laser-zaps",
       "name": "Invader Laser Zaps",
-      "ref": "In the style of Tomohiro Nishikado — “Space Invaders” (1978)",
+      "ref": "Thin, bright zaps falling nearly two octaves in a blink, fired from the keys like the cannon in “Space Invaders”",
       "artist": "Tomohiro Nishikado",
       "tags": ["fx", "arcade", "70s", "laser"],
       "level": 1,
@@ -12162,7 +12162,7 @@
     {
       "id": "vcs3-red-alert-whoop",
       "name": "Red-Alert Whoop",
-      "ref": "In the style of Dick Mills — the BBC Radiophonic Workshop’s “Doctor Who” alarms (1970s)",
+      "ref": "A whooping siren on one side and a pulsing klaxon on the other, Dick Mills’s “Doctor Who” alarm for the BBC",
       "artist": "Dick Mills",
       "tags": ["fx", "radiophonic", "70s", "alarm"],
       "level": 2,
@@ -12252,7 +12252,7 @@
     {
       "id": "vcs3-deep-sea-sonar",
       "name": "Deep-Sea Sonar",
-      "ref": "In the style of Barry Gray — “Stingray” (1964)",
+      "ref": "A bright sonar ping every two seconds that blooms into a long underwater echo, as in Barry Gray’s “Stingray”",
       "artist": "Barry Gray",
       "tags": ["fx", "tv", "60s", "sonar"],
       "level": 2,
@@ -12338,7 +12338,7 @@
     {
       "id": "vcs3-theremin-wail",
       "name": "Theremin Wail",
-      "ref": "In the style of Samuel Hoffman — “The Day the Earth Stood Still” (1951)",
+      "ref": "A pure, wavering theremin wail, the stick as both hands: Samuel Hoffman on “The Day the Earth Stood Still”",
       "artist": "Samuel Hoffman",
       "tags": ["lead", "film score", "50s", "theremin"],
       "level": 2,
@@ -12445,7 +12445,7 @@
     {
       "id": "vcs3-transporter-shimmer",
       "name": "Transporter Shimmer",
-      "ref": "In the style of 1960s TV science fiction — the matter-transmitter beam",
+      "ref": "Fizzing, glassy tones that rise as the beam materialises and sink as it fades, from 1960s TV science fiction",
       "artist": "1960s TV science fiction",
       "tags": ["fx", "sci-fi", "60s", "shimmer"],
       "level": 3,
@@ -12547,7 +12547,7 @@
     {
       "id": "vcs3-steam-train",
       "name": "Steam Train",
-      "ref": "In the style of Pierre Schaeffer — “Étude aux chemins de fer” (1948)",
+      "ref": "Steam chuffing left, wheels clicking right, the stick as throttle: Schaeffer’s “Étude aux chemins de fer”",
       "artist": "Pierre Schaeffer",
       "tags": ["fx", "musique concrète", "40s", "machine"],
       "level": 3,
@@ -12645,7 +12645,7 @@
     {
       "id": "vcs3-autobahn-pass-by",
       "name": "Autobahn Pass-By",
-      "ref": "In the style of Kraftwerk — “Autobahn” (1974)",
+      "ref": "Cars roaring up out of nothing and dropping in pitch as they pass, the traffic of Kraftwerk’s “Autobahn”",
       "artist": "Kraftwerk",
       "tags": ["fx", "krautrock", "70s", "engine"],
       "level": 2,
@@ -12731,7 +12731,7 @@
     {
       "id": "vcs3-helicopter-blades",
       "name": "Helicopter Blades",
-      "ref": "In the style of Walter Murch — “Apocalypse Now” (1979)",
+      "ref": "Rotor roar chopped into blade thuds nine times a second, Walter Murch’s helicopters in “Apocalypse Now”",
       "artist": "Walter Murch",
       "tags": ["fx", "film sound", "70s", "machine"],
       "level": 2,
@@ -12829,7 +12829,7 @@
     {
       "id": "vcs3-thunder-in-the-springs",
       "name": "Thunder in the Springs",
-      "ref": "In the style of Tod Dockstader — “Apocalypse” (1961)",
+      "ref": "A crack of noise that slams the springs and rolls away in a booming rumble, as in Dockstader’s “Apocalypse”",
       "artist": "Tod Dockstader",
       "tags": ["fx", "tape music", "60s", "storm"],
       "level": 2,
@@ -12916,7 +12916,7 @@
     {
       "id": "vcs3-dripsody-drops",
       "name": "Dripsody Drops",
-      "ref": "In the style of Hugh Le Caine — “Dripsody” (1955)",
+      "ref": "Clean pitched drops, each a quick plink bending down into a cave, Hugh Le Caine’s “Dripsody” rebuilt in voltage",
       "artist": "Hugh Le Caine",
       "tags": ["perc", "tape music", "50s", "water"],
       "level": 3,
@@ -13033,7 +13033,7 @@
     {
       "id": "vcs3-night-crickets",
       "name": "Night Crickets",
-      "ref": "In the style of Luc Ferrari — “Presque rien no. 1” (1970)",
+      "ref": "A cricket trilling on one side and small waves on the other, a beach at night as in Luc Ferrari’s “Presque rien”",
       "artist": "Luc Ferrari",
       "tags": ["fx", "field recording", "70s", "insects"],
       "level": 2,
@@ -13121,7 +13121,7 @@
     {
       "id": "vcs3-slowed-bird-calls",
       "name": "Slowed Bird Calls",
-      "ref": "In the style of Basil Kirchin — “Worlds Within Worlds” (1971)",
+      "ref": "Low, hooting calls that warble like birdsong slowed to quarter speed, Basil Kirchin’s “Worlds Within Worlds”",
       "artist": "Basil Kirchin",
       "tags": ["fx", "library", "70s", "birds"],
       "level": 2,
@@ -13223,7 +13223,7 @@
     {
       "id": "vcs3-river-over-stones",
       "name": "River over Stones",
-      "ref": "In the style of Annea Lockwood — “A Sound Map of the Hudson River” (1989)",
+      "ref": "Water gurgling over stones on one side, the river’s rush on the other, as in Annea Lockwood’s Hudson sound map",
       "artist": "Annea Lockwood",
       "tags": ["fx", "field recording", "80s", "water"],
       "level": 3,
@@ -13316,7 +13316,7 @@
     {
       "id": "vcs3-ear-tones",
       "name": "Ear Tones",
-      "ref": "In the style of Maryanne Amacher — “Sound Characters (Making the Third Ear)” (1999)",
+      "ref": "Two piercing high tones, one per ear, and a low phantom tone sliding between them: Maryanne Amacher’s third ear",
       "artist": "Maryanne Amacher",
       "tags": ["drone", "avant-garde", "90s", "psychoacoustic"],
       "level": 2,
@@ -13399,7 +13399,7 @@
     {
       "id": "vcs3-adnos-feedback-drone",
       "name": "Adnos Feedback Drone",
-      "ref": "In the style of Éliane Radigue — “Adnos I” (1974)",
+      "ref": "A low, slowly beating drone gathering overtones as its own reverb feeds back, Éliane Radigue’s “Adnos I”",
       "artist": "Éliane Radigue",
       "tags": ["drone", "minimal", "70s", "feedback"],
       "level": 3,
@@ -13495,8 +13495,8 @@
     {
       "id": "vcs3-scraped-feedback",
       "name": "Scraped Feedback",
-      "ref": "In the style of AMM — “AMMMusic” (1967)",
-      "artist": "AMM",
+      "ref": "A scraping, rasping howl from two modules feeding each other, its grain steered by one hand",
+      "artist": "Free improvisation",
       "tags": ["fx", "free improvisation", "60s", "feedback"],
       "level": 3,
       "blurb": "A scraping, rasping howl made by a loop between two modules, its grain steered by one hand.",
@@ -13596,7 +13596,7 @@
     {
       "id": "vcs3-three-way-cross-mod",
       "name": "Three-Way Cross-Modulation",
-      "ref": "In the style of Musica Elettronica Viva — “Spacecraft” (1967)",
+      "ref": "Three oscillators in a modulation ring, buzzing, clanging, then chattering, as MEV’s “Spacecraft” did live",
       "artist": "Musica Elettronica Viva",
       "tags": ["fx", "free improvisation", "60s", "chaotic"],
       "level": 3,
@@ -13688,7 +13688,7 @@
     {
       "id": "vcs3-persepolis-glissandi",
       "name": "Persepolis Glissandi",
-      "ref": "In the style of Iannis Xenakis — “Persepolis” (1971)",
+      "ref": "A harsh, dense mass screaming up a huge glissando and sliding back, again and again: Xenakis’s “Persepolis”",
       "artist": "Iannis Xenakis",
       "tags": ["fx", "avant-garde", "70s", "glissando"],
       "level": 3,
@@ -13796,7 +13796,7 @@
     {
       "id": "vcs3-silver-apples-gesture",
       "name": "Breathing Pulse Gesture",
-      "ref": "In the style of Morton Subotnick — “Silver Apples of the Moon” (1967)",
+      "ref": "A stream of ringing ticks speeding up and slowing as if breathing, from Subotnick’s “Silver Apples of the Moon”",
       "artist": "Morton Subotnick",
       "tags": ["seq", "avant-garde", "60s", "gesture"],
       "level": 3,
@@ -13883,7 +13883,7 @@
     {
       "id": "vcs3-oscillations-throb",
       "name": "Oscillations Throb",
-      "ref": "In the style of Silver Apples — “Oscillations” (1968)",
+      "ref": "A twangy tune over a buzzing drone that throbs in quick, even beats, Silver Apples’ “Oscillations”",
       "artist": "Silver Apples",
       "tags": ["lead", "psychedelic", "60s", "stereo"],
       "level": 2,
@@ -13978,7 +13978,7 @@
     {
       "id": "vcs3-ring-mod-freak-out",
       "name": "Ring-Mod Fuzz Freak-Out",
-      "ref": "In the style of The United States of America — “The American Metaphysical Circus” (1968)",
+      "ref": "A snarling, clanging ring-mod fuzz lead, the psychedelic electronics of The United States of America",
       "artist": "The United States of America",
       "tags": ["lead", "psychedelic", "60s", "ring mod"],
       "level": 3,
@@ -14088,7 +14088,7 @@
     {
       "id": "vcs3-squealing-filter-fm",
       "name": "Squealing Filter FM",
-      "ref": "In the style of Allen Ravenstine — Pere Ubu, “The Modern Dance” (1978)",
+      "ref": "Sizzling, nasal notes diving from a shriek as they die: Allen Ravenstine’s synth in Pere Ubu",
       "artist": "Allen Ravenstine",
       "tags": ["fx", "post-punk", "70s", "squeal"],
       "level": 2,
@@ -14177,7 +14177,7 @@
     {
       "id": "vcs3-pulse-demon-wall",
       "name": "Pulse Demon Wall",
-      "ref": "In the style of Merzbow — “Pulse Demon” (1996)",
+      "ref": "A harsh wall of shredded, screaming noise seizing into feedback and pulsing like an engine: Merzbow’s “Pulse Demon”",
       "artist": "Merzbow",
       "tags": ["fx", "noise", "90s", "harsh"],
       "level": 3,
@@ -14276,8 +14276,8 @@
     {
       "id": "vcs3-metal-machine-clank",
       "name": "Metal Machine Clank",
-      "ref": "In the style of SPK — “Leichenschrei” (1982)",
-      "artist": "SPK",
+      "ref": "Clanging, inharmonic metal hits lurching long-short on their own, slammed into the springs: early-1980s industrial",
+      "artist": "Industrial",
       "tags": ["perc", "industrial", "80s", "metallic"],
       "level": 2,
       "blurb": "Clanging, inharmonic metal hits repeating on their own in a lurching long-short rhythm, slammed into the springs.",
@@ -14372,7 +14372,7 @@
     {
       "id": "vcs3-sine-data-clicks",
       "name": "Sine Data Clicks",
-      "ref": "In the style of Ryoji Ikeda — “+/−” (1996)",
+      "ref": "Tiny, piercing pips on one side and a dry click train on the other, stuttering like Ryoji Ikeda’s “+/−”",
       "artist": "Ryoji Ikeda",
       "tags": ["perc", "glitch", "90s", "minimal"],
       "level": 2,
@@ -14454,7 +14454,7 @@
     {
       "id": "vcs3-reverse-tape-swell",
       "name": "Reverse Tape Swell",
-      "ref": "In the style of Ron Geesin — “As He Stands” (1973)",
+      "ref": "Each note sucked in backwards from its own echo and stopped dead, Ron Geesin’s reversed tape on “As He Stands”",
       "artist": "Ron Geesin",
       "tags": ["pad", "tape music", "70s", "reverse"],
       "level": 2,
@@ -14548,7 +14548,7 @@
     {
       "id": "vcs3-struck-resonances",
       "name": "Struck Resonances",
-      "ref": "In the style of Bernard Parmegiani — “De Natura Sonorum” (1975)",
+      "ref": "Knocks ringing at keyed pitches and feeding back like struck metal, as in Parmegiani’s “De Natura Sonorum”",
       "artist": "Bernard Parmegiani",
       "tags": ["perc", "musique concrète", "70s", "resonant"],
       "level": 3,
