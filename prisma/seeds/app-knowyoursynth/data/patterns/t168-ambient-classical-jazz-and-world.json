@@ -281,7 +281,7 @@
     },
     {
       "sound": "subharmonicon/shc-feedback-pwm-drone",
-      "reason": "It names a way of working, not one work. The patch is a held drone: EG held sounds it from one held key, and the feedback moves it. There is no part to write."
+      "reason": "It names a way of working, not one work. The patch is a drone that sounds on its own with EG held, and the feedback moves it. There is no part to write."
     },
     {
       "sound": "subharmonicon/shc-width-sequencer",

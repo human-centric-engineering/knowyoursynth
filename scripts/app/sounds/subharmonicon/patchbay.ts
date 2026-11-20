@@ -29,12 +29,12 @@ export interface Insert {
 
 /**
  * VCO 2 slowed into an LFO: Sequencer 2, assigned to nothing, all four steps fully down at SEQ OCT ±5, puts −5 V on SEQ
- * 2 OUT; patched into VCO 2's input it drops VCO 2 five octaves, to about 8 Hz at FREQ 0, and its subs to half a hertz.
+ * 2 OUT; patched into VCO 2's input it drops VCO 2 five octaves, to about 8 Hz at FREQ 0, and its subs to between 4 Hz and half a hertz.
  */
 const LFO_SET: ControlValues = { 'seq.oct': 5, ...seq(2, [-5, -5, -5, -5], {}) };
 const LFO_CABLE: CablePair = ['j.seq2_out', 'j.vco2_in'];
 const LFO_WHY =
-  'SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs below a hertz. VCO 2 is not in the mix: it is a slow wave now, not a voice.';
+  'SEQ OCT ±5 and Sequencer 2’s steps fully down, assigned to nothing: SEQ 2 OUT is a steady −5 V. Patched into VCO 2’s input it drops VCO 2 five octaves, to about 8 Hz at the held C4 (a key transposes it, so another key moves the rate too), and its subs from about 4 Hz down to half a hertz, by their divisor. VCO 2 is not in the mix: it is a slow wave now, not a voice.';
 
 export const PATCHBAY: Insert[] = [
   // ── polyrhythm ──
@@ -223,7 +223,7 @@ export const PATCHBAY: Insert[] = [
         {
           title: 'Two melodies',
           module: 'mod',
-          why: '8-ET at SEQ OCT ±2: Sequencer 1 C, G, E an octave up, D below; Sequencer 2 on VCO 2, G, G an octave up, D an octave and a half up, G below.',
+          why: '8-ET at SEQ OCT ±2: Sequencer 1 C, G, E an octave up, D below; Sequencer 2 on VCO 2, G, G an octave up, D an octave and a fifth up, G below.',
           set: {
             'vco.quantize': '8-ET',
             ...seq(1, [0, step(7, 2), step(16, 2), step(-10, 2)]),
@@ -279,7 +279,7 @@ export const PATCHBAY: Insert[] = [
       name: 'Undertone Staircase',
       ref: 'In the style of Harry Partch’s undertone scales',
       artist: 'Harry Partch',
-      tags: ['seq', 'patch', 'undertone'],
+      tags: ['seq', 'patch', 'undertones'],
       level: 3,
       blurb:
         'The subs climb the undertone series step by step, again and again: a slow wave in VCO 1 SUB.',
@@ -353,7 +353,7 @@ export const PATCHBAY: Insert[] = [
       name: 'Undertone Zap',
       ref: 'In the style of a chiptune arpeggio',
       artist: 'Chiptune',
-      tags: ['pluck', 'patch', 'undertone'],
+      tags: ['pluck', 'patch', 'undertones'],
       level: 2,
       blurb:
         'Every note tumbles down the undertone series as it fades: the VCA EG patched into VCO 1 SUB.',
@@ -426,7 +426,7 @@ export const PATCHBAY: Insert[] = [
       name: 'Four-Divisor Chords',
       ref: 'In the style of ambient chord changes',
       artist: 'Ambient music',
-      tags: ['pad', 'patch', 'undertone'],
+      tags: ['pad', 'patch', 'undertones'],
       level: 3,
       blurb:
         'One sequencer changes all four subs at once: a chord progression from a single cable.',
@@ -630,7 +630,7 @@ export const PATCHBAY: Insert[] = [
       name: 'Undertone Bloom',
       ref: 'In the style of Gérard Grisey’s spectral music',
       artist: 'Gérard Grisey',
-      tags: ['pad', 'patch', 'undertone'],
+      tags: ['pad', 'patch', 'undertones'],
       level: 2,
       blurb:
         'A pad whose upper chord climbs the undertone series as it swells: the VCA EG into VCO 2 SUB.',
@@ -880,7 +880,7 @@ export const PATCHBAY: Insert[] = [
         {
           id: 'transport.eg',
           try: 'Set EG to held',
-          hear: 'The VCA is held open under the gate: the chopping is gone, a plain pad.',
+          hear: 'The VCA is held open under the gate: the chop shrinks to a slight pulse.',
         },
       ],
     },
@@ -1026,7 +1026,7 @@ export const PATCHBAY: Insert[] = [
       name: 'Width Sequencer',
       ref: 'In the style of La Monte Young’s just-tuned drones',
       artist: 'La Monte Young',
-      tags: ['drone', 'patch', 'just', 'pwm'],
+      tags: ['drone', 'patch', 'just intonation', 'pwm'],
       level: 3,
       blurb:
         'A just fifth whose upper voice changes vowel on every step: SEQ 2 OUT patched into VCO 2 PWM.',
@@ -1098,7 +1098,7 @@ export const PATCHBAY: Insert[] = [
       name: 'Leslie Chorale',
       ref: 'In the style of a gospel organ through a rotating speaker',
       artist: 'Gospel organ',
-      tags: ['keys', 'patch', 'just'],
+      tags: ['keys', 'patch', 'just intonation'],
       level: 3,
       blurb:
         'Just-tuned organ chords with a throbbing tremolo: a slowed VCO 2 patched into the VCA.',
@@ -1183,7 +1183,7 @@ export const PATCHBAY: Insert[] = [
       bpm: 120,
       steps: [
         {
-          title: 'Two voices',
+          title: 'A chord',
           module: 'osc',
           why: 'VCO 1 square at C5 with subs at ÷2 and ÷3.',
           set: vco(1, { note: 'C5', wave: 'square', subs: [2, 3], levels: [4, 2, 2] }),
@@ -1565,10 +1565,10 @@ export const PATCHBAY: Insert[] = [
         {
           title: 'A dull strike',
           module: 'env',
-          why: 'A half-closed filter, VCF EG into VCO 1’s input for a quick pitch drop, and a short VCA decay.',
+          why: 'A half-closed filter, VCF EG into VCO 1’s input (and VCO 2’s, through the normal) for a zapping pitch drop, and a short VCA decay.',
           set: shape({ cutoff: 5, res: 1, fd: 1.2, ad: 3.2 }),
           cables: [['j.vcf_eg_out', 'j.vco1_in']],
-          listen: 'with a key tapped, a dull drum.',
+          listen: 'with a key tapped, a muffled, zapping drum.',
         },
         {
           title: 'Two rhythms',

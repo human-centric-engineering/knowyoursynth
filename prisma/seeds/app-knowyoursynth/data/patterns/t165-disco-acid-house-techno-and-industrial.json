@@ -105,7 +105,7 @@
     },
     {
       "sound": "subharmonicon/shc-fm-snare",
-      "reason": "It names a style, not one work, and the batch’s “Planet Rock” patterns are its bass, kick, snare and cowbell. The patch is a snare made from VCO 1 patched into VCO 2’s pitch, played on the backbeat by its riff; there is no part to write."
+      "reason": "It names a style, not one work. The patch is a snare made from VCO 1 patched into VCO 2’s pitch, played on the backbeat by its riff; the riff is the sound’s own hits, not a part from a record."
     }
   ],
   "patterns": [
