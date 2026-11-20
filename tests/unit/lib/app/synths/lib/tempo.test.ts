@@ -26,6 +26,12 @@ describe('tempo controls', () => {
     expect(withRiffTempo(mapped, {}, 90)).toEqual({ 'clock.tempo': 3 });
   });
 
+  it("holds the BPM it reads to the app's 20 to 300, whatever the control reaches", () => {
+    expect(tempoBpmOf(mapped, { 'clock.tempo': 0.1 })).toBe(20);
+    expect(tempoBpmOf(mapped, { 'clock.tempo': 25 })).toBe(300);
+    expect(tempoBpmOf(plain, { 'seq.tempo': 400 })).toBe(300);
+  });
+
   it('reads nothing from a synth with no tempo control, or a value that is not a number', () => {
     expect(tempoBpmOf({}, { 'seq.tempo': 96 })).toBeNull();
     expect(tempoBpmOf(plain, { 'seq.tempo': 'fast' })).toBeNull();

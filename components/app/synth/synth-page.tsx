@@ -551,6 +551,13 @@ function Synth({
     unplugging.current.forEach(clearTimeout);
     unplugging.current = [];
   }, []);
+  // Play owed once a synth's own sequencer's run control lights (below, with the effect that presses it): a lesson step
+  // or the tutor lighting it asks, and an undo, a redo, a new patch or another step taking over the panel drops the ask.
+  const pressOnLight = useRef(false);
+  const takeOver = useCallback(() => {
+    stopUnplugging();
+    pressOnLight.current = false;
+  }, [stopUnplugging]);
   // A new patch loading (`f-default-patch` t-172) silences the synth until it has loaded: set below, once what it
   // stops and starts is.
   const loadHandler = useRef<(loading: boolean) => void>(() => undefined);
@@ -570,7 +577,7 @@ function Synth({
     shown: historyShown,
     loading,
     isLoading,
-  } = usePanelHistory(stored, setSess, synthDef, stopUnplugging, onLoad);
+  } = usePanelHistory(stored, setSess, synthDef, takeOver, onLoad);
   // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
@@ -1880,6 +1887,36 @@ function Synth({
   // takes leaves the button's own value alone; its lamp shows what it drives (`seqLamps`). Read through a ref, so the
   // panel is handed one function and does not redraw for it.
   const seqPress = useRef<(id: string, v: ControlValue | null) => void>(() => undefined);
+  // Whether a synth's own sequencer's run control is lit on the panel, as last drawn.
+  const runId = synthDef.ownSequencer?.run;
+  const runOn = !!runId && sess.values[runId] === true;
+  const runLit = useRef(runOn);
+  // A control set from the panel or the Inspector. A synth's own sequencer runs on the app's clock (`f-own-sequencer`):
+  // lighting its run control (the Subharmonicon's PLAY) while nothing plays presses Play, so the sequencer starts as it
+  // does on the hardware.
+  const runPress = useRef<(id: string, v: ControlValue | null) => void>(() => undefined);
+  useEffect(() => {
+    runPress.current = (id, v) => {
+      onChange(id, v);
+      // a reset (`null`) sets the target's value, as `onChange` does
+      const nv = v === null ? targetRef.current[id] : v;
+      // only when it lights: one already lit changes nothing
+      if (nv === true && id === synthDef.ownSequencer?.run && !runLit.current && !transportPlaying)
+        void playPattern();
+    };
+  });
+  // The same for a change that lands a whole panel at once (a lesson step, the tutor's): it asks, and Play is pressed
+  // once the run control lights on the panel, so the run starts from the panel's new riff and tempo.
+  useEffect(() => {
+    runLit.current = runOn;
+    if (!runOn || !pressOnLight.current) return;
+    pressOnLight.current = false;
+    if (!transportPlaying) void playPattern();
+  }, [runOn, transportPlaying, playPattern]);
+  const onInspectorChange = useCallback(
+    (id: string, v: ControlValue | null) => runPress.current(id, v),
+    []
+  );
   // The key mode ARP and REC/EDIT each hand back when turned off: the one it was turned on from.
   const keysBack = useRef<Record<'arp' | 'step', KeyMode>>({ arp: 'edit', step: 'edit' });
   useEffect(() => {
@@ -1893,13 +1930,8 @@ function Synth({
     };
     seqPress.current = (id, v) => {
       const b = seqButtonFor(synthDef, id, seqShown);
-      if (!b) {
-        onChange(id, v);
-        // A synth's own sequencer runs on the app's clock (`f-own-sequencer`): lighting its run control (the
-        // Subharmonicon's PLAY) while nothing plays presses Play, so the sequencer starts as it does on the hardware.
-        if (v === true && id === synthDef.ownSequencer?.run && !transportPlaying)
-          void playPattern();
-      } else if (b === 'run') {
+      if (!b) runPress.current(id, v);
+      else if (b === 'run') {
         if (transportPlaying) stopRiff();
         else void playPattern();
       } else if (b === 'hold') setHoldMode(!hold);
@@ -2017,8 +2049,12 @@ function Synth({
   };
   // A change the learner applied from the tutor lands as turning the controls would: the step and the sound stay.
   const setTutorPanel = useCallback(
-    (p: PanelState) => patch((s) => ({ ...s, values: p.values, cables: p.cables })),
-    [patch]
+    (p: PanelState) => {
+      patch((s) => ({ ...s, values: p.values, cables: p.cables }));
+      // the tutor lighting the run control presses Play, as the panel does (asked only: a step's ask stands)
+      if (runId && !runLit.current && p.values[runId] === true) pressOnLight.current = true;
+    },
+    [patch, runId]
   );
   // A pattern the learner applied from the tutor lands as an edit in the sequencer would, so its own Undo takes it back
   // too, and the tutor's Undo is that Undo. A new one opens as a riff from the library does, so the saved pattern that
@@ -2306,9 +2342,22 @@ function Synth({
         void riffShown(() => replayRiff.current);
       }
     };
+    // A step whose panel has a synth's own sequencer's run control lit (the Subharmonicon's PLAY), where the panel has
+    // it dark, presses Play once it lights, however the step was reached, so its "listen for" is heard. Not on a Replay,
+    // which plays the riff itself.
+    const run = synthDef.ownSequencer?.run;
+    // asked once the step's walk has begun, which takes over the panel and so drops any earlier ask
+    const press =
+      !!run &&
+      how !== 'replay' &&
+      k != null &&
+      !!shown &&
+      !runLit.current &&
+      lessonState(synthDef, shown, k).values[run] === true;
     if (ownLesson) {
       openSeq.current++;
       set((s) => ({ ...s, step: k, ...lessonState(synthDef, ownLesson, k) }));
+      pressOnLight.current = press;
       return;
     }
     leaveShared();
@@ -2328,6 +2377,7 @@ function Synth({
         ...lessonState(synthDef, from, k),
       };
     });
+    pressOnLight.current = press;
   };
   // With the Lesson sheet open at half height, the step's controls are scrolled into the band above it: on opening, on
   // each step, and when the sheet drops back to half. Full height covers the panel, so there is nothing to scroll to.
@@ -2555,7 +2605,7 @@ function Synth({
         target={step == null ? target : null}
         preset={shown ?? null}
         cables={sess.cables}
-        onChange={onChange}
+        onChange={onInspectorChange}
         onConnect={onConnect}
         onUnplug={onUnplug}
       />

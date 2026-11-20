@@ -44,6 +44,7 @@ import type {
 } from '@/lib/app/synths/contract';
 import { DIV_PER_VOLT, quantize, SUBHARM_PPQ } from '@/lib/app/synths/audio/subharm-core';
 import { num } from '@/lib/app/synths/lib/def-kit';
+import { MAX_BPM, MIN_BPM } from '@/lib/app/sequencer/pattern';
 import {
   clamp,
   expMap,
@@ -84,7 +85,9 @@ const tempoHz = (v: number): number => expMap(clamp(v, 0, 10) / 10, TEMPO_LO, TE
  * a riff's 120 comes back as 120, not 119.8.
  */
 const tempoMap = {
-  toBpm: (v: number): number => Math.round((tempoHz(v) * 60) / SUBHARM_PPQ),
+  // held to the app's tempos (20 to 300): past either end the bar, the riff and MIDI out stay at that end
+  toBpm: (v: number): number =>
+    clamp(Math.round((tempoHz(v) * 60) / SUBHARM_PPQ), MIN_BPM, MAX_BPM),
   fromBpm: (bpm: number): number =>
     clamp(
       (10 * Math.log((bpm * SUBHARM_PPQ) / 60 / TEMPO_LO)) / Math.log(TEMPO_HI / TEMPO_LO),
@@ -292,10 +295,11 @@ STEP_X.forEach((x, i) => {
 text(322, 675, 'TEMPO', 17, { weight: 700 });
 knob('clock.tempo', 322, 745, 44, {
   module: 'mod',
-  def: 3.6,
+  // ♩ = 120, to a hundredth of a turn as a knob's positions are stored
+  def: Math.round(tempoMap.fromBpm(120) * 100) / 100,
   label: 'TEMPO',
   fmt: (v) => `${Math.round(tempoHz(v) * 60)} BPM · ♩ = ${tempoMap.toBpm(v)}`,
-  help: 'The master clock, from 20 to 3,000 beats a minute, one clock a beat. The four rhythm generators divide it; it runs only while PLAY is lit, and a cable in CLOCK takes over from it. In this app it is also the tempo on the bar (♩): on a MIDI clock the Subharmonicon counts four clocks to a beat, so a beat of the app is four of its clocks, and the app’s Play clocks it as a MIDI clock would.',
+  help: 'The master clock, from 20 to 3,000 beats a minute, one clock a beat. The four rhythm generators divide it; it runs only while PLAY is lit, and a cable in CLOCK takes over from it. In this app it is also the tempo on the bar (♩): on a MIDI clock the Subharmonicon counts four clocks to a beat, so a beat of the app is four of its clocks, and the app’s Play clocks it as a MIDI clock would. The app’s tempos run from 20 to 300, so past those the knob turns without moving ♩.',
 });
 button(
   'transport.reset',

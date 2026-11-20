@@ -48,7 +48,7 @@
 import type { ControlValues, EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import { byBeat, noteEvents, type NoteEvent } from '@/lib/app/synths/audio/note-events';
-import { CLOCK_PPQ } from '@/lib/app/synths/audio/subharm-core';
+import { CLOCK_PPQ, SUBHARM_PPQ } from '@/lib/app/synths/audio/subharm-core';
 import {
   NO_BACKING,
   countInBeats,
@@ -480,6 +480,8 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     announce = true;
   }
 
+  /** Pulses to one of the synth's clocks: a sixteenth. */
+  const PULSES_PER_CLOCK = CLOCK_PPQ / SUBHARM_PPQ;
   /** The sample of this loop the next clock pulse falls on. */
   const pulseAt = () => Math.round((pulse / CLOCK_PPQ - beatsDone) * spb());
 
@@ -492,14 +494,21 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     if (!muted && follows()) {
       if (!clocked) {
         clocked = true;
-        // started part-way (a Continue), the pulses count from the run's first beat as the backing's bar does
-        pulse = Math.ceil((beatsDone + pos / spb()) * CLOCK_PPQ - 1e-6);
+        // started part-way (a Continue, an unmute, the voice back on the synth), the pulses count from the run's first
+        // beat as the backing's bar does, and the first is the next one on a sixteenth: the synth counts its clocks from
+        // its start, so they fall on the drums' grid
+        pulse = Math.ceil((beatsDone + pos / spb()) * SUBHARM_PPQ - 1e-6) * PULSES_PER_CLOCK;
         synth.handle({ type: 'clock', at: 'start' });
       }
       while (pulseAt() <= pos) {
         pulse++;
         synth.handle({ type: 'clock', at: 'pulse' });
       }
+    } else if (clocked) {
+      // the settings no longer follow the clock (the voice has left the synth): its run ends, and one starts again if
+      // they come back
+      clocked = false;
+      synth.handle({ type: 'clock', at: 'stop' });
     }
     if (announce !== null && onEvent) {
       const e: LoopEvent = {
@@ -558,7 +567,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         return;
       case 'patternMute':
         // Muting lets go of what the synth holds, and stops a sequencer of its own the clock runs; unmuted, it plays
-        // from the next note on, and the clock starts that sequencer again from where the run is.
+        // from the next note on, and the clock starts that sequencer again, from step 1, on the run's next sixteenth.
         if (m.muted && !muted) {
           release();
           if (clocked) {

@@ -106,17 +106,17 @@
       "+24 st"
     ],
     "clock.tempo": [
-      "20 BPM · ♩ = 5",
-      "33 BPM · ♩ = 8",
-      "54 BPM · ♩ = 14",
+      "20 BPM · ♩ = 20",
+      "33 BPM · ♩ = 20",
+      "54 BPM · ♩ = 20",
       "90 BPM · ♩ = 22",
       "148 BPM · ♩ = 37",
       "245 BPM · ♩ = 61",
       "404 BPM · ♩ = 101",
       "667 BPM · ♩ = 167",
       "1101 BPM · ♩ = 275",
-      "1817 BPM · ♩ = 454",
-      "3000 BPM · ♩ = 750"
+      "1817 BPM · ♩ = 300",
+      "3000 BPM · ♩ = 300"
     ],
     "vco1.freq": [
       "C4 · 262 Hz",
@@ -274,7 +274,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -302,7 +302,7 @@
           { "assign": [false, false, false], "steps": [-1, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -326,7 +326,7 @@
           { "assign": [false, false, false], "steps": [-0.5, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -350,7 +350,7 @@
           { "assign": [false, false, false], "steps": [0.5, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -374,7 +374,7 @@
           { "assign": [false, false, false], "steps": [1, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -398,7 +398,7 @@
           { "assign": [false, false, false], "steps": [0, -1, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -422,7 +422,7 @@
           { "assign": [false, false, false], "steps": [0, -0.5, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -446,7 +446,7 @@
           { "assign": [false, false, false], "steps": [0, 0.5, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -470,7 +470,7 @@
           { "assign": [false, false, false], "steps": [0, 1, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -494,7 +494,7 @@
           { "assign": [false, false, false], "steps": [0, 0, -1, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -518,7 +518,7 @@
           { "assign": [false, false, false], "steps": [0, 0, -0.5, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -542,7 +542,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0.5, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -566,7 +566,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 1, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -590,7 +590,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, -1] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -614,7 +614,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, -0.5] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -638,7 +638,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0.5] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -662,7 +662,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 1] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -686,7 +686,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [-1, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -710,7 +710,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [-0.5, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -734,7 +734,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0.5, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -758,7 +758,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [1, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -782,7 +782,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, -1, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -806,7 +806,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, -0.5, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -830,7 +830,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0.5, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -854,7 +854,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 1, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -878,7 +878,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, -1, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -902,7 +902,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, -0.5, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -926,7 +926,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0.5, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -950,7 +950,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 1, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -974,7 +974,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, -1] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -998,7 +998,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, -0.5] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1022,7 +1022,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0.5] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1046,7 +1046,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 1] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1070,7 +1070,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1094,7 +1094,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1118,7 +1118,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1142,7 +1142,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1166,7 +1166,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1190,7 +1190,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1214,7 +1214,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1238,7 +1238,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1262,7 +1262,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1286,7 +1286,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1310,7 +1310,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1334,7 +1334,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1358,7 +1358,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1382,7 +1382,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1406,7 +1406,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1430,7 +1430,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1454,7 +1454,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1478,7 +1478,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1502,7 +1502,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1526,7 +1526,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1550,7 +1550,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1574,7 +1574,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1598,7 +1598,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1622,7 +1622,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1646,7 +1646,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1670,7 +1670,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1694,7 +1694,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1718,7 +1718,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1742,7 +1742,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1766,7 +1766,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1790,7 +1790,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1814,7 +1814,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1838,7 +1838,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1862,7 +1862,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1886,7 +1886,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1910,7 +1910,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1934,7 +1934,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1958,7 +1958,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -1982,7 +1982,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2006,7 +2006,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2030,7 +2030,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2054,7 +2054,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2078,7 +2078,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2102,7 +2102,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2126,7 +2126,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2150,7 +2150,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2174,7 +2174,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2198,7 +2198,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2222,7 +2222,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2246,7 +2246,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2270,7 +2270,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2294,7 +2294,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2318,7 +2318,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2342,7 +2342,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2366,7 +2366,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2390,7 +2390,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2414,7 +2414,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2438,7 +2438,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2462,7 +2462,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2486,7 +2486,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2510,7 +2510,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2534,7 +2534,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2558,7 +2558,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2582,7 +2582,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2606,7 +2606,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2630,7 +2630,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2654,7 +2654,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2678,7 +2678,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2823,7 +2823,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2847,7 +2847,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2872,7 +2872,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2897,7 +2897,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 12, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2921,7 +2921,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 24, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2945,7 +2945,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 36, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2969,7 +2969,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 48, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -2993,7 +2993,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "square" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3017,7 +3017,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "pwm" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3041,7 +3041,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [16, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3065,7 +3065,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [15, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3089,7 +3089,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [14, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3113,7 +3113,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [13, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3137,7 +3137,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [12, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3161,7 +3161,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [11, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3185,7 +3185,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [10, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3209,7 +3209,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [9, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3233,7 +3233,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [8, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3257,7 +3257,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [7, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3281,7 +3281,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [6, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3305,7 +3305,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [5, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3329,7 +3329,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [4, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3353,7 +3353,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [3, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3377,7 +3377,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [1, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3401,7 +3401,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 16], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3425,7 +3425,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 15], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3449,7 +3449,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 14], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3473,7 +3473,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 13], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3497,7 +3497,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 12], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3521,7 +3521,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 11], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3545,7 +3545,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 10], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3569,7 +3569,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 9], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3593,7 +3593,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 8], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3617,7 +3617,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 7], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3641,7 +3641,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 6], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3665,7 +3665,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 5], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3689,7 +3689,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 4], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3713,7 +3713,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 2], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3737,7 +3737,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 1], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3761,7 +3761,7 @@
           { "assign": [true, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3785,7 +3785,7 @@
           { "assign": [false, true, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3809,7 +3809,7 @@
           { "assign": [false, false, true], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3833,7 +3833,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3857,7 +3857,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.25, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3881,7 +3881,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.5, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3905,7 +3905,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.75, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3929,7 +3929,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [1, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3953,7 +3953,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0.25, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -3977,7 +3977,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0.5, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4001,7 +4001,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0.75, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4025,7 +4025,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 1, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4049,7 +4049,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0.25], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4073,7 +4073,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0.5], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4097,7 +4097,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0.75], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4121,7 +4121,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 1], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4145,7 +4145,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 12, "level": [0, 0, 0], "wave": "saw" }
@@ -4169,7 +4169,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 24, "level": [0, 0, 0], "wave": "saw" }
@@ -4193,7 +4193,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 36, "level": [0, 0, 0], "wave": "saw" }
@@ -4217,7 +4217,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 48, "level": [0, 0, 0], "wave": "saw" }
@@ -4241,7 +4241,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "square" }
@@ -4265,7 +4265,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "pwm" }
@@ -4289,7 +4289,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [16, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4313,7 +4313,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [15, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4337,7 +4337,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [14, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4361,7 +4361,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [13, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4385,7 +4385,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [12, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4409,7 +4409,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [11, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4433,7 +4433,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [10, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4457,7 +4457,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [9, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4481,7 +4481,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [8, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4505,7 +4505,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [7, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4529,7 +4529,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [6, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4553,7 +4553,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [5, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4577,7 +4577,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [4, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4601,7 +4601,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [3, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4625,7 +4625,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [1, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4649,7 +4649,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 16], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4673,7 +4673,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 15], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4697,7 +4697,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 14], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4721,7 +4721,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 13], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4745,7 +4745,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 12], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4769,7 +4769,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 11], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4793,7 +4793,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 10], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4817,7 +4817,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 9], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4841,7 +4841,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 8], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4865,7 +4865,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 7], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4889,7 +4889,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 6], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4913,7 +4913,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 5], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4937,7 +4937,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 4], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4961,7 +4961,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 2], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -4985,7 +4985,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 1], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5009,7 +5009,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [true, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5033,7 +5033,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, true, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5057,7 +5057,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, true], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5081,7 +5081,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0.25, 0, 0], "wave": "saw" }
@@ -5105,7 +5105,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0.5, 0, 0], "wave": "saw" }
@@ -5129,7 +5129,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0.75, 0, 0], "wave": "saw" }
@@ -5153,7 +5153,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [1, 0, 0], "wave": "saw" }
@@ -5177,7 +5177,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0.25, 0], "wave": "saw" }
@@ -5201,7 +5201,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0.5, 0], "wave": "saw" }
@@ -5225,7 +5225,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0.75, 0], "wave": "saw" }
@@ -5249,7 +5249,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 1, 0], "wave": "saw" }
@@ -5273,7 +5273,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0.25], "wave": "saw" }
@@ -5297,7 +5297,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0.5], "wave": "saw" }
@@ -5321,7 +5321,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0.75], "wave": "saw" }
@@ -5345,7 +5345,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 1], "wave": "saw" }
@@ -5369,7 +5369,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5393,7 +5393,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5417,7 +5417,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5441,7 +5441,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5465,7 +5465,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5489,7 +5489,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5742,7 +5742,7 @@
           { "assign": [false, false, false], "steps": [-1, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5766,7 +5766,7 @@
           { "assign": [false, false, false], "steps": [-0.5, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5790,7 +5790,7 @@
           { "assign": [false, false, false], "steps": [0.5, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5814,7 +5814,7 @@
           { "assign": [false, false, false], "steps": [1, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5838,7 +5838,7 @@
           { "assign": [false, false, false], "steps": [0, -1, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5862,7 +5862,7 @@
           { "assign": [false, false, false], "steps": [0, -0.5, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5886,7 +5886,7 @@
           { "assign": [false, false, false], "steps": [0, 0.5, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5910,7 +5910,7 @@
           { "assign": [false, false, false], "steps": [0, 1, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5934,7 +5934,7 @@
           { "assign": [false, false, false], "steps": [0, 0, -1, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5958,7 +5958,7 @@
           { "assign": [false, false, false], "steps": [0, 0, -0.5, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -5982,7 +5982,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0.5, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6006,7 +6006,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 1, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6030,7 +6030,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, -1] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6054,7 +6054,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, -0.5] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6078,7 +6078,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0.5] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6102,7 +6102,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 1] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6126,7 +6126,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [-1, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6150,7 +6150,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [-0.5, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6174,7 +6174,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0.5, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6198,7 +6198,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [1, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6222,7 +6222,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, -1, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6246,7 +6246,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, -0.5, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6270,7 +6270,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0.5, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6294,7 +6294,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 1, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6318,7 +6318,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, -1, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6342,7 +6342,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, -0.5, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6366,7 +6366,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0.5, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6390,7 +6390,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 1, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6414,7 +6414,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, -1] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6438,7 +6438,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, -0.5] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6462,7 +6462,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0.5] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6486,7 +6486,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 1] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6510,7 +6510,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6534,7 +6534,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6558,7 +6558,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6582,7 +6582,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6606,7 +6606,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6630,7 +6630,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6654,7 +6654,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6678,7 +6678,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6702,7 +6702,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6726,7 +6726,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6750,7 +6750,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6774,7 +6774,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6798,7 +6798,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6822,7 +6822,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6846,7 +6846,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6870,7 +6870,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6894,7 +6894,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6918,7 +6918,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6942,7 +6942,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6966,7 +6966,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -6990,7 +6990,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7014,7 +7014,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7038,7 +7038,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7062,7 +7062,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7086,7 +7086,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7110,7 +7110,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7134,7 +7134,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7158,7 +7158,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7182,7 +7182,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7206,7 +7206,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7230,7 +7230,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7254,7 +7254,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7278,7 +7278,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7302,7 +7302,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7326,7 +7326,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7350,7 +7350,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7374,7 +7374,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7398,7 +7398,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7422,7 +7422,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7446,7 +7446,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7470,7 +7470,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7494,7 +7494,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7518,7 +7518,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7542,7 +7542,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7566,7 +7566,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7590,7 +7590,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7614,7 +7614,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7638,7 +7638,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7662,7 +7662,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7686,7 +7686,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7710,7 +7710,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7734,7 +7734,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7758,7 +7758,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7782,7 +7782,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7806,7 +7806,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7830,7 +7830,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7854,7 +7854,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7878,7 +7878,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7902,7 +7902,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7926,7 +7926,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7950,7 +7950,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7974,7 +7974,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -7998,7 +7998,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8022,7 +8022,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8046,7 +8046,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8070,7 +8070,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8094,7 +8094,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8118,7 +8118,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8263,7 +8263,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8287,7 +8287,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8312,7 +8312,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8337,7 +8337,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 12, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8361,7 +8361,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 24, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8385,7 +8385,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 36, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8409,7 +8409,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 48, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8433,7 +8433,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "square" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8457,7 +8457,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "pwm" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8481,7 +8481,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [16, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8505,7 +8505,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [15, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8529,7 +8529,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [14, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8553,7 +8553,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [13, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8577,7 +8577,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [12, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8601,7 +8601,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [11, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8625,7 +8625,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [10, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8649,7 +8649,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [9, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8673,7 +8673,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [8, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8697,7 +8697,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [7, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8721,7 +8721,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [6, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8745,7 +8745,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [5, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8769,7 +8769,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [4, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8793,7 +8793,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [3, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8817,7 +8817,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [1, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8841,7 +8841,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 16], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8865,7 +8865,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 15], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8889,7 +8889,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 14], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8913,7 +8913,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 13], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8937,7 +8937,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 12], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8961,7 +8961,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 11], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -8985,7 +8985,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 10], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9009,7 +9009,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 9], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9033,7 +9033,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 8], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9057,7 +9057,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 7], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9081,7 +9081,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 6], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9105,7 +9105,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 5], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9129,7 +9129,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 4], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9153,7 +9153,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 2], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9177,7 +9177,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 1], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9201,7 +9201,7 @@
           { "assign": [true, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9225,7 +9225,7 @@
           { "assign": [false, true, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9249,7 +9249,7 @@
           { "assign": [false, false, true], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9273,7 +9273,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9297,7 +9297,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.25, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9321,7 +9321,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.5, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9345,7 +9345,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.75, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9369,7 +9369,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [1, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9393,7 +9393,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0.25, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9417,7 +9417,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0.5, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9441,7 +9441,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0.75, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9465,7 +9465,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 1, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9489,7 +9489,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0.25], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9513,7 +9513,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0.5], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9537,7 +9537,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0.75], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9561,7 +9561,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 1], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9585,7 +9585,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 12, "level": [0, 0, 0], "wave": "saw" }
@@ -9609,7 +9609,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 24, "level": [0, 0, 0], "wave": "saw" }
@@ -9633,7 +9633,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 36, "level": [0, 0, 0], "wave": "saw" }
@@ -9657,7 +9657,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 48, "level": [0, 0, 0], "wave": "saw" }
@@ -9681,7 +9681,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "square" }
@@ -9705,7 +9705,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "pwm" }
@@ -9729,7 +9729,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [16, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9753,7 +9753,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [15, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9777,7 +9777,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [14, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9801,7 +9801,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [13, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9825,7 +9825,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [12, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9849,7 +9849,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [11, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9873,7 +9873,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [10, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9897,7 +9897,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [9, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9921,7 +9921,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [8, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9945,7 +9945,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [7, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9969,7 +9969,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [6, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -9993,7 +9993,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [5, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10017,7 +10017,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [4, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10041,7 +10041,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [3, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10065,7 +10065,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [1, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10089,7 +10089,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 16], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10113,7 +10113,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 15], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10137,7 +10137,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 14], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10161,7 +10161,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 13], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10185,7 +10185,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 12], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10209,7 +10209,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 11], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10233,7 +10233,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 10], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10257,7 +10257,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 9], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10281,7 +10281,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 8], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10305,7 +10305,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 7], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10329,7 +10329,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 6], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10353,7 +10353,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 5], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10377,7 +10377,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 4], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10401,7 +10401,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 2], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10425,7 +10425,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 1], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10449,7 +10449,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [true, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10473,7 +10473,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, true, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10497,7 +10497,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, true], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10521,7 +10521,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0.25, 0, 0], "wave": "saw" }
@@ -10545,7 +10545,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0.5, 0, 0], "wave": "saw" }
@@ -10569,7 +10569,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0.75, 0, 0], "wave": "saw" }
@@ -10593,7 +10593,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [1, 0, 0], "wave": "saw" }
@@ -10617,7 +10617,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0.25, 0], "wave": "saw" }
@@ -10641,7 +10641,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0.5, 0], "wave": "saw" }
@@ -10665,7 +10665,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0.75, 0], "wave": "saw" }
@@ -10689,7 +10689,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 1, 0], "wave": "saw" }
@@ -10713,7 +10713,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0.25], "wave": "saw" }
@@ -10737,7 +10737,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0.5], "wave": "saw" }
@@ -10761,7 +10761,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0.75], "wave": "saw" }
@@ -10785,7 +10785,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 1], "wave": "saw" }
@@ -10809,7 +10809,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10833,7 +10833,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10857,7 +10857,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10881,7 +10881,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10905,7 +10905,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }
@@ -10929,7 +10929,7 @@
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] },
           { "assign": [false, false, false], "steps": [0, 0, 0, 0] }
         ],
-        "tempo": 2.0229889520376196,
+        "tempo": 7.986593350103506,
         "vco": [
           { "div": [2, 3], "freq": 0, "level": [0.7, 0, 0], "wave": "saw" },
           { "div": [2, 3], "freq": 0, "level": [0, 0, 0], "wave": "saw" }

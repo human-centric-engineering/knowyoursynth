@@ -40,6 +40,7 @@ import {
 import { createSolar, SOLAR_SIGNALS, SOLAR_DESTS } from '@/lib/app/synths/audio/solar-core';
 import {
   CLOCK_PPQ,
+  SUBHARM_PPQ,
   createSubharm,
   SUBHARM_SIGNALS,
   SUBHARM_DESTS,
@@ -2245,12 +2246,18 @@ function createVoice(
         if (p.subharm) {
           if (!phrase.clocked) {
             phrase.clocked = true;
+            // back on the synth part-way through the riff, its clock starts again on the riff's next sixteenth
+            phrase.pulse =
+              Math.ceil((phrasePos / phrase.spb) * SUBHARM_PPQ - 1e-6) * (CLOCK_PPQ / SUBHARM_PPQ);
             subharm.clock('start');
           }
           while (Math.round((phrase.pulse * phrase.spb) / CLOCK_PPQ) <= phrasePos) {
             phrase.pulse++;
             subharm.clock('pulse');
           }
+        } else if (phrase.clocked) {
+          // the voice has left the Subharmonicon (`off()` ended its run): a start is owed if it comes back
+          phrase.clocked = false;
         }
         const evs = phrase.evs;
         while (phraseIdx < evs.length && evs[phraseIdx].t! <= phrasePos) {

@@ -823,7 +823,7 @@ describe('the app’s clock to a synth with its own sequencer (f-own-sequencer)'
     expect(muted.clocks.filter(([at]) => at > 1500)).toEqual([]);
   });
 
-  it('starts it again where the run is when it is unmuted', () => {
+  it('starts it again when it is unmuted, its first pulse on the run’s next sixteenth', () => {
     const r = play(3000, [
       follows,
       [0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM }],
@@ -832,6 +832,30 @@ describe('the app’s clock to a synth with its own sequencer (f-own-sequencer)'
     ]);
     const starts = r.clocks.filter(([, w]) => w === 'start');
     expect(starts.map(([at]) => at)).toEqual([0, 1408]);
+    // unmuted at beat 1.408 (the block's start): the next sixteenth is beat 1.5, not the next pulse at 1.4167, so the
+    // synth's clocks, every sixth pulse from its start, fall on the drums' grid
+    const after = pulses(r.clocks).filter(([at]) => at >= 1408);
+    expect(after.slice(0, 2).map(([at]) => at)).toEqual([1500, 1542]);
+    expect(after.filter((_, i) => i % 6 === 0).map(([at]) => at)).toEqual([
+      1500, 1750, 2000, 2250, 2500, 2750,
+    ]);
+  });
+
+  it('stops it when the settings stop following, and starts it again on a sixteenth when they follow again', () => {
+    const r = play(3000, [
+      follows,
+      [0, { type: 'pattern', loop: loop([[0, 60, 1]], 1), bpm: BPM }],
+      [600, { type: 'params', p: monoParams({}) }],
+      [1300, follows[1]],
+    ]);
+    expect(r.clocks.filter(([, w]) => w !== 'pulse')).toEqual([
+      [0, 'start'],
+      [512, 'stop'],
+      [1280, 'start'],
+    ]);
+    // nothing while it did not follow, then from beat 1.5
+    expect(pulses(r.clocks).filter(([at]) => at > 512 && at < 1500)).toEqual([]);
+    expect(pulses(r.clocks).find(([at]) => at >= 1280)?.[0]).toBe(1500);
   });
 
   it('sends nothing to a synth that does not follow', () => {

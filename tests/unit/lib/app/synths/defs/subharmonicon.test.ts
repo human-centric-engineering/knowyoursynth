@@ -63,7 +63,9 @@ describe('Subharmonicon toEngine at the init patch', () => {
       play: false,
       eg: 'on',
     });
-    expect(s.tempo).toBeCloseTo(exp(0.36, 0.333, 50), 9);
+    // TEMPO opens at the app's 120 BPM (6.34 to a hundredth of a turn): 480 clocks a minute, near enough 8 Hz
+    expect(s.tempo).toBeCloseTo(exp(0.634, 0.333, 50), 9);
+    expect(subharmonicon.tempoMap!.toBpm(6.34)).toBe(120);
   });
 
   it('opens the ladder filter fully with no envelope on it, and plays the VCA EG as attack then decay', () => {
@@ -281,9 +283,11 @@ describe('Subharmonicon on the app’s clock (f-own-sequencer)', () => {
     const map = subharmonicon.tempoMap;
     if (!map) throw new Error('no tempoMap');
     expect(subharmonicon.tempo).toBe('clock.tempo');
-    // fully left 20 clocks a minute, fully right 3,000: a quarter of each in the app's BPM, to the whole beat
-    expect(map.toBpm(0)).toBe(Math.round((exp(0, 0.333, 50) * 60) / 4));
-    expect(map.toBpm(10)).toBe(750);
+    // fully left 20 clocks a minute, fully right 3,000: a quarter of each is 5 and 750, held to the app's 20 to 300
+    expect(map.toBpm(0)).toBe(20);
+    expect(map.toBpm(10)).toBe(300);
+    expect(map.toBpm(map.fromBpm(19))).toBe(20);
+    expect(map.toBpm(map.fromBpm(301))).toBe(300);
     // a riff's BPM comes back whole, from the knob stored to a hundredth as the page stores it
     for (const bpm of [20, 61, 120, 300]) {
       expect(map.toBpm(map.fromBpm(bpm))).toBe(bpm);
@@ -299,5 +303,7 @@ describe('Subharmonicon on the app’s clock (f-own-sequencer)', () => {
       throw new Error('no TEMPO');
     const at = subharmonicon.tempoMap!.fromBpm(120);
     expect(tempo.fmt(at)).toBe('480 BPM · ♩ = 120');
+    // past the app's tempos the clock still reads its own rate, and ♩ stays at the end of the range
+    expect(tempo.fmt(10)).toBe('3000 BPM · ♩ = 300');
   });
 });
