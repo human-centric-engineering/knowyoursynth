@@ -5,7 +5,7 @@
     {
       "id": "ody-funk-bass",
       "name": "Funk Bass",
-      "ref": "In the style of Herbie Hancock — “Chameleon”",
+      "ref": "A round bass that snaps bright and settles dark, the ARP sound of Herbie Hancock’s “Chameleon” bassline",
       "artist": "Herbie Hancock",
       "tags": ["bass", "funk"],
       "level": 1,
@@ -80,7 +80,7 @@
     {
       "id": "ody-sync-lead",
       "name": "Sync Sweep Lead",
-      "ref": "In the style of George Duke’s Odyssey solos with Frank Zappa",
+      "ref": "A tearing, vocal sync lead swept on every note, close to George Duke’s Odyssey solos with Frank Zappa",
       "artist": "George Duke",
       "tags": ["lead", "jazz fusion"],
       "level": 2,
@@ -165,7 +165,7 @@
     {
       "id": "ody-duo-fifths",
       "name": "Duophonic Fifths",
-      "ref": "In the style of progressive rock leads",
+      "ref": "Two keys, two oscillators: gliding intervals through one filter, for 1970s progressive rock leads",
       "artist": "Progressive rock",
       "tags": ["lead", "prog"],
       "level": 1,
@@ -235,7 +235,7 @@
     {
       "id": "ody-ring-bells",
       "name": "Ring-Mod Bells",
-      "ref": "In the style of 1970s science-fiction soundtracks",
+      "ref": "Clanging, inharmonic ring-mod bells that ring on after each key, out of a 1970s science-fiction score",
       "artist": "Science-fiction soundtracks",
       "tags": ["pluck", "sci-fi"],
       "level": 2,
@@ -308,7 +308,7 @@
     {
       "id": "ody-sh-burble",
       "name": "Sample and Hold Burble",
-      "ref": "In the style of 1970s science-fiction soundtracks",
+      "ref": "Random filter steps ticking at the LFO’s rate: the computer-at-work burble of 1970s science fiction",
       "artist": "Science-fiction soundtracks",
       "tags": ["fx", "sci-fi"],
       "level": 1,
@@ -371,7 +371,7 @@
     {
       "id": "ody-repeat-pulse",
       "name": "LFO Repeat Pulse",
-      "ref": "In the style of Berlin-school sequences",
+      "ref": "One held key turned into a run of plucks by the LFO, a Berlin School pulse with no sequencer",
       "artist": "Berlin school",
       "tags": ["seq", "berlin school"],
       "level": 2,
@@ -440,7 +440,7 @@
     {
       "id": "ody-pwm-strings",
       "name": "PWM Strings",
-      "ref": "In the style of synth-pop string lines",
+      "ref": "Slow, shimmering strings from two moving pulse widths, for the string lines of synth-pop",
       "artist": "Synth-pop",
       "tags": ["strings", "synth-pop"],
       "level": 2,
@@ -515,7 +515,7 @@
     {
       "id": "ody-whistle",
       "name": "Filter Whistle",
-      "ref": "In the style of 1970s library music",
+      "ref": "The filter ringing on its own and played in tune, a pure whistle heard all over 1970s library music",
       "artist": "Library music",
       "tags": ["lead", "library music"],
       "level": 3,
@@ -586,7 +586,7 @@
     {
       "id": "ody-2pole-brass",
       "name": "2-Pole Brass",
-      "ref": "In the style of disco horn stabs",
+      "ref": "Bright brass stabs that swell at the front through the gentler 2-pole filter, cut for disco horn lines",
       "artist": "Disco",
       "tags": ["brass", "disco"],
       "level": 2,
@@ -659,7 +659,7 @@
     {
       "id": "ody-drive-bass",
       "name": "Driven Pulse Bass",
-      "ref": "In the style of new-wave bass lines",
+      "ref": "A gritty, driven pulse bass with the boom trimmed off, for new-wave bass lines",
       "artist": "New wave",
       "tags": ["bass", "new wave"],
       "level": 2,
@@ -733,7 +733,7 @@
     {
       "id": "ody-laser",
       "name": "Laser Zap",
-      "ref": "In the style of 1970s science-fiction soundtracks",
+      "ref": "A zap that drops three octaves in an instant, the ray gun of 1970s science-fiction soundtracks",
       "artist": "Science-fiction soundtracks",
       "tags": ["fx", "sci-fi"],
       "level": 1,
@@ -791,7 +791,7 @@
     {
       "id": "ody-trill",
       "name": "LFO Square Trill",
-      "ref": "In the style of jazz-fusion synth solos",
+      "ref": "A rapid trill a tone wide from a single key, a flourish of jazz-fusion synth solos",
       "artist": "Jazz fusion",
       "tags": ["lead", "jazz fusion"],
       "level": 1,
@@ -847,7 +847,7 @@
     {
       "id": "ody-gain-drone",
       "name": "Gain Drone",
-      "ref": "In the style of ambient drones",
+      "ref": "Two detuned sawtooths that drone on with no key held while the filter drifts, for ambient pieces",
       "artist": "Ambient",
       "tags": ["drone", "ambient"],
       "level": 2,

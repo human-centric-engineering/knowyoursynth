@@ -723,7 +723,7 @@
     {
       "id": "easel-arp-plucks",
       "name": "Arpeggiated Plucks",
-      "ref": "In the style of Kaitlyn Aurelia Smith",
+      "ref": "Held chords broken into bright, rippling lowpass-gate plucks, the Easel as Kaitlyn Aurelia Smith plays it",
       "artist": "Kaitlyn Aurelia Smith",
       "tags": ["seq", "arpeggio", "lpg"],
       "level": 1,
@@ -1056,7 +1056,7 @@
     {
       "id": "easel-chance-melody",
       "name": "Sequence with Chance",
-      "ref": "In the style of Charles Cohen’s Music Easel improvisations",
+      "ref": "A self-playing tune that chance recolours note by note, like Charles Cohen’s Music Easel improvisations",
       "artist": "Charles Cohen",
       "tags": ["seq", "sequencer", "random", "west coast"],
       "level": 3,
@@ -1706,7 +1706,7 @@
     {
       "id": "easel-spring-pad",
       "name": "Two Voices in the Spring",
-      "ref": "In the style of Kaitlyn Aurelia Smith’s slower Easel pieces",
+      "ref": "Two oscillators a fifth apart swelling slowly into the spring, for Kaitlyn Aurelia Smith’s slower Easel pieces",
       "artist": "Kaitlyn Aurelia Smith",
       "tags": ["pad", "reverb", "portamento", "lpg"],
       "level": 2,
@@ -1794,7 +1794,7 @@
     {
       "id": "easel-silver-apples-pulse",
       "name": "Silver Apples Pulse",
-      "ref": "In the style of Morton Subotnick — “Silver Apples of the Moon” (1967)",
+      "ref": "Morton Subotnick’s “Silver Apples of the Moon” on a small scale: soft round pings bubbling in a five-note loop",
       "artist": "Morton Subotnick",
       "tags": ["seq", "west coast", "60s", "sequencer"],
       "level": 3,
@@ -1888,7 +1888,7 @@
     {
       "id": "easel-ciani-concert-sequence",
       "name": "Twinkling Concert Sequence",
-      "ref": "In the style of Suzanne Ciani — “Buchla Concerts 1975”",
+      "ref": "A quick figure of glassy FM tones glittering in the spring, as in Suzanne Ciani’s “Buchla Concerts 1975”",
       "artist": "Suzanne Ciani",
       "tags": ["seq", "west coast", "70s", "fm"],
       "level": 3,
@@ -1987,7 +1987,7 @@
     {
       "id": "easel-five-against-six",
       "name": "Five Against Six",
-      "ref": "In the style of Caterina Barbieri — “Ecstatic Computation” (2019)",
+      "ref": "Six notes against an accent of five, the sliding pattern-play of Caterina Barbieri’s “Ecstatic Computation”",
       "artist": "Caterina Barbieri",
       "tags": ["seq", "arpeggio", "polymeter", "minimalism"],
       "level": 3,
@@ -2086,7 +2086,7 @@
     {
       "id": "easel-limping-clock",
       "name": "Limping Clock",
-      "ref": "In the style of Bana Haffar’s live modular sets",
+      "ref": "A dry, spiky ping stumbling in an uneven five, like the limping clocks of Bana Haffar’s live modular sets",
       "artist": "Bana Haffar",
       "tags": ["seq", "rhythm", "west coast", "modular"],
       "level": 3,
@@ -2179,7 +2179,7 @@
     {
       "id": "easel-random-glitch",
       "name": "Random Glitch Pings",
-      "ref": "In the style of Richard Devine — “Lipswitch” (2001)",
+      "ref": "Nervous bursts of clicky metallic pings, every one a new pitch and grain: Richard Devine’s “Lipswitch” territory",
       "artist": "Richard Devine",
       "tags": ["seq", "idm", "glitch", "random"],
       "level": 3,
@@ -2275,7 +2275,7 @@
     {
       "id": "easel-octave-plate-arp",
       "name": "Octave-Plate Arpeggio",
-      "ref": "In the style of Chris Meloche’s Music Easel recordings",
+      "ref": "A gentle arpeggio of folded triangle tones that open bright and soften, in Chris Meloche’s Music Easel manner",
       "artist": "Chris Meloche",
       "tags": ["seq", "arpeggio", "ambient", "wavefolding"],
       "level": 2,
@@ -2376,7 +2376,7 @@
     {
       "id": "easel-northern-wasteland",
       "name": "Northern Wasteland Sequence",
-      "ref": "In the style of Michael Hoenig — “Departure from the Northern Wasteland” (1978)",
+      "ref": "A five-note bass rolling across the beat: Michael Hoenig’s “Departure from the Northern Wasteland”",
       "artist": "Michael Hoenig",
       "tags": ["seq", "berlin school", "70s", "sequencer"],
       "level": 2,
@@ -2470,7 +2470,7 @@
     {
       "id": "easel-upside-down-stages",
       "name": "Upside-Down Three Stages",
-      "ref": "In the style of Conrad Schnitzler — “Con” (1978)",
+      "ref": "A stubborn three-note figure that falls instead of rises, close to Conrad Schnitzler’s “Con”",
       "artist": "Conrad Schnitzler",
       "tags": ["seq", "kosmische", "70s", "inverter"],
       "level": 3,
@@ -2564,7 +2564,7 @@
     {
       "id": "easel-glass-marimba-arp",
       "name": "Glass Marimba Arpeggio",
-      "ref": "In the style of Visible Cloaks — “Reassemblage” (2017)",
+      "ref": "Wooden-glassy FM plucks picked at random from a chord, the digital marimba of Visible Cloaks’ “Reassemblage”",
       "artist": "Visible Cloaks",
       "tags": ["seq", "arpeggio", "fm", "ambient"],
       "level": 2,
@@ -2660,7 +2660,7 @@
     {
       "id": "easel-held-key-ratchet",
       "name": "Held-Key Ratchet",
-      "ref": "In the style of Robert Aiki Aubrey Lowe’s modular pieces",
+      "ref": "Held keys burst into chirping repeats that drop and brighten, as in Robert Aiki Aubrey Lowe’s modular work",
       "artist": "Robert Aiki Aubrey Lowe",
       "tags": ["seq", "ratchet", "west coast", "pulser"],
       "level": 3,
@@ -2756,8 +2756,8 @@
     {
       "id": "easel-six-eight-arp",
       "name": "Six-Eight Arpeggio",
-      "ref": "In the style of Harmonia — “Musik von Harmonia” (1974)",
-      "artist": "Harmonia",
+      "ref": "A lilting triplet arpeggio of spiky, bright notes gliding into each other, a touch of 1970s krautrock",
+      "artist": "Krautrock",
       "tags": ["seq", "kosmische", "arpeggio", "70s"],
       "level": 2,
       "blurb": "A lilting triplet arpeggio of spiky, bright notes that glide slightly into each other, lifted a fifth by a touch of a plate.",
@@ -2845,7 +2845,7 @@
     {
       "id": "easel-random-decay-pings",
       "name": "Random Decay Pings",
-      "ref": "In the style of Bernard Parmegiani — “De Natura Sonorum” (1975)",
+      "ref": "Struck metal of uneven length and clang, from the tape world of Bernard Parmegiani’s “De Natura Sonorum”",
       "artist": "Bernard Parmegiani",
       "tags": ["seq", "musique concrète", "70s", "random"],
       "level": 3,
@@ -2944,7 +2944,7 @@
     {
       "id": "easel-index-swept-bass",
       "name": "Index-Swept FM Bass",
-      "ref": "In the style of Lisa Bella Donna’s Buchla improvisations",
+      "ref": "A rubbery FM bass that snaps into sidebands and settles to a sine, as in Lisa Bella Donna’s Buchla playing",
       "artist": "Lisa Bella Donna",
       "tags": ["bass", "fm", "west coast", "funk"],
       "level": 2,
@@ -3027,7 +3027,7 @@
     {
       "id": "easel-bongo-bass",
       "name": "Bongo Bass",
-      "ref": "In the style of Todd Barton’s Music Easel lessons",
+      "ref": "A deep knocking bass in five, each note a tuned drum skin: the lowpass-gate thump of Todd Barton’s lessons",
       "artist": "Todd Barton",
       "tags": ["bass", "lpg", "west coast", "five"],
       "level": 1,
@@ -3102,7 +3102,7 @@
     {
       "id": "easel-timbre-wobble-bass",
       "name": "Timbre Wobble Bass",
-      "ref": "In the style of Skream — “Midnight Request Line” (2005)",
+      "ref": "A half-time sub wobbling between hum and growl, the early dubstep of Skream’s “Midnight Request Line”",
       "artist": "Skream",
       "tags": ["bass", "dubstep", "wobble", "lfo"],
       "level": 2,
@@ -3185,7 +3185,7 @@
     {
       "id": "easel-pulser-ramp-bass",
       "name": "Pulser Ramp Bass",
-      "ref": "In the style of Robert Hood — “Minimal Nation” (1994)",
+      "ref": "Robert Hood’s “Minimal Nation” stripped to one line: a tight sixteenth bass that pumps by itself",
       "artist": "Robert Hood",
       "tags": ["bass", "techno", "minimal", "pulser"],
       "level": 3,
@@ -3285,7 +3285,7 @@
     {
       "id": "easel-dropping-electro-bass",
       "name": "Dropping Electro Bass",
-      "ref": "In the style of Egyptian Lover — “Egypt, Egypt” (1984)",
+      "ref": "A punchy square bass that zaps down an octave into each note, the electro of Egyptian Lover’s “Egypt, Egypt”",
       "artist": "Egyptian Lover",
       "tags": ["bass", "electro", "80s", "pitch drop"],
       "level": 2,
@@ -3365,8 +3365,8 @@
     {
       "id": "easel-lowpass-dub-bass",
       "name": "Lowpass Dub Bass",
-      "ref": "In the style of King Tubby — “Dub from the Roots” (1974)",
-      "artist": "King Tubby",
+      "ref": "A deep, soft, round bass that swells open and shut slowly, with a splash of spring: the low end of 1970s dub",
+      "artist": "Dub reggae",
       "tags": ["bass", "dub", "reggae", "70s"],
       "level": 1,
       "blurb": "A deep, soft, round reggae bass that swells open and closes slowly, with a splash of spring reverb.",
@@ -3439,7 +3439,7 @@
     {
       "id": "easel-folded-growl-bass",
       "name": "Folded Growl Bass",
-      "ref": "In the style of Floating Points — “Crush” (2019)",
+      "ref": "A syncopated Buchla bass that growls as it folds on each attack, close to Floating Points’ “Crush”",
       "artist": "Floating Points",
       "tags": ["bass", "electronic", "wavefolding", "growl"],
       "level": 2,
@@ -3515,7 +3515,7 @@
     {
       "id": "easel-bubblebath-bass",
       "name": "Bubblebath Octave Bass",
-      "ref": "In the style of Aphex Twin — “Analogue Bubblebath” (1991)",
+      "ref": "A bubbling bass jumping octaves, its FM squelch rising in threes, for Aphex Twin’s “Analogue Bubblebath”",
       "artist": "Aphex Twin",
       "tags": ["bass", "idm", "acid", "90s"],
       "level": 3,
@@ -3612,8 +3612,8 @@
     {
       "id": "easel-seven-eight-fusion-bass",
       "name": "Seven-Eight Fusion Bass",
-      "ref": "In the style of Mahavishnu Orchestra — “Birds of Fire” (1973)",
-      "artist": "Mahavishnu Orchestra",
+      "ref": "A tight bass ostinato in seven, snarling on the accents and soft on the ghost notes, for 1970s jazz fusion",
+      "artist": "1970s jazz fusion",
       "tags": ["bass", "jazz fusion", "70s", "odd meter"],
       "level": 2,
       "blurb": "A tight, punchy bass ostinato in seven, the accented notes folding into a bright snarl and the ghost notes soft and round.",
@@ -3697,7 +3697,7 @@
     {
       "id": "easel-velocity-glide-bass",
       "name": "Velocity Glide Bass",
-      "ref": "In the style of Bruce Haack — “The Electric Lucifer” (1970)",
+      "ref": "Soft notes swoop in, hard ones jump: a bouncing, buzzy bass from Bruce Haack’s “The Electric Lucifer”",
       "artist": "Bruce Haack",
       "tags": ["bass", "psychedelic", "70s", "portamento"],
       "level": 2,
@@ -3773,7 +3773,7 @@
     {
       "id": "easel-forse-lead",
       "name": "Forse Lead",
-      "ref": "In the style of Alessandro Cortini — “Forse 1” (2013)",
+      "ref": "A soft, melancholy triangle lead deep in the spring, like Alessandro Cortini’s Easel album “Forse 1”",
       "artist": "Alessandro Cortini",
       "tags": ["lead", "ambient", "melancholy", "spring reverb"],
       "level": 2,
@@ -3865,7 +3865,7 @@
     {
       "id": "easel-slow-lowpass-line",
       "name": "Slow Lowpass Line",
-      "ref": "In the style of Sarah Davachi’s slow, sustained melodies",
+      "ref": "Hushed notes that bloom out of nothing and fade on a slow tremolo, as Sarah Davachi’s melodies do",
       "artist": "Sarah Davachi",
       "tags": ["lead", "ambient", "minimal", "tremolo"],
       "level": 2,
@@ -3952,7 +3952,7 @@
     {
       "id": "easel-clearing-ring-lead",
       "name": "Clearing Ring Lead",
-      "ref": "In the style of the San Francisco Tape Music Center’s 1960s pieces",
+      "ref": "A ring-mod clangour that clears to a pure, sliding tone, from the 1960s San Francisco Tape Music Center",
       "artist": "San Francisco Tape Music Center",
       "tags": ["lead", "ring mod", "60s", "experimental"],
       "level": 3,
@@ -4045,7 +4045,7 @@
     {
       "id": "easel-cold-spike-lead",
       "name": "Cold Spike Lead",
-      "ref": "In the style of Dopplereffekt — “Gesamtkunstwerk” (1999)",
+      "ref": "Thin, nasal and robotic with a hollow octave shadow, the cold lead of Dopplereffekt’s “Gesamtkunstwerk”",
       "artist": "Dopplereffekt",
       "tags": ["lead", "electro", "cold", "90s"],
       "level": 2,
@@ -4127,7 +4127,7 @@
     {
       "id": "easel-cauldron-fuzz-lead",
       "name": "Cauldron Fuzz Lead",
-      "ref": "In the style of Fifty Foot Hose — “Cauldron” (1967)",
+      "ref": "A gritty, sliding lead rough with sidebands, from the homemade electronics of Fifty Foot Hose",
       "artist": "Fifty Foot Hose",
       "tags": ["lead", "psychedelic", "60s", "fuzz"],
       "level": 2,
@@ -4210,7 +4210,7 @@
     {
       "id": "easel-pressure-ring-lead",
       "name": "Pressure Ring Lead",
-      "ref": "In the style of The United States of America — “The American Metaphysical Circus” (1968)",
+      "ref": "Strange and electric when struck hard, a plain sine when soft: The United States of America’s ring mod",
       "artist": "The United States of America",
       "tags": ["lead", "psychedelic", "am", "pressure"],
       "level": 2,
@@ -4294,7 +4294,7 @@
     {
       "id": "easel-delayed-vibrato-lead",
       "name": "Delayed Vibrato Lead",
-      "ref": "In the style of Weather Report — “Mysterious Traveller” (1974)",
+      "ref": "A horn-like synth lead whose long notes bloom into vibrato, Zawinul’s on “Mysterious Traveller”",
       "artist": "Weather Report",
       "tags": ["lead", "jazz fusion", "70s", "vibrato"],
       "level": 3,
@@ -4380,7 +4380,7 @@
     {
       "id": "easel-solaris-lead",
       "name": "Solaris Lead",
-      "ref": "In the style of Eduard Artemyev — “Solaris” (1972)",
+      "ref": "Eduard Artemyev’s “Solaris” in small: an eerie lead that slides and lands slightly off pitch",
       "artist": "Eduard Artemyev",
       "tags": ["lead", "film score", "70s", "eerie"],
       "level": 2,
@@ -4463,7 +4463,7 @@
     {
       "id": "easel-sea-of-bliss-lead",
       "name": "Sea of Bliss Lead",
-      "ref": "In the style of Don Slepian — “Sea of Bliss” (1980)",
+      "ref": "A sine and its octave sliding through a slow melody in a wide reverb, as in Don Slepian’s “Sea of Bliss”",
       "artist": "Don Slepian",
       "tags": ["lead", "ambient", "new age", "80s"],
       "level": 3,
@@ -4551,7 +4551,7 @@
     {
       "id": "easel-trill-warble-lead",
       "name": "Trill Warble Lead",
-      "ref": "In the style of Louis and Bebe Barron — “Forbidden Planet” (1956)",
+      "ref": "A lead trilling between two pitches and swooping, like the circuits of Louis and Bebe Barron’s “Forbidden Planet”",
       "artist": "Louis and Bebe Barron",
       "tags": ["lead", "film score", "50s", "sci-fi"],
       "level": 2,
@@ -4631,7 +4631,7 @@
     {
       "id": "easel-ocean-sine-swell",
       "name": "Ocean Sine Swell",
-      "ref": "In the style of Joanna Brouk — “Sounds of the Sea” (1981)",
+      "ref": "Slow swells of soft triangle tone that open and close like waves, as in Joanna Brouk’s “Sounds of the Sea”",
       "artist": "Joanna Brouk",
       "tags": ["pad", "new age", "80s", "lowpass gate"],
       "level": 2,
@@ -4707,7 +4707,7 @@
     {
       "id": "easel-shimmer-fold-pad",
       "name": "Shimmering Fold Pad",
-      "ref": "In the style of Iasos — “Inter-Dimensional Music” (1975)",
+      "ref": "A pad shimmering between pure sine and glassy fold, the new-age glow of Iasos’s “Inter-Dimensional Music”",
       "artist": "Iasos",
       "tags": ["pad", "new age", "70s", "wavefolding"],
       "level": 2,
@@ -4790,7 +4790,7 @@
     {
       "id": "easel-cathedral-fm-swell",
       "name": "Cathedral FM Swell",
-      "ref": "In the style of Constance Demby — “Novus Magnificat” (1986)",
+      "ref": "Huge swells from pure sine into hollow organ richness, the synth cathedral of Constance Demby’s “Novus Magnificat”",
       "artist": "Constance Demby",
       "tags": ["pad", "new age", "80s", "fm"],
       "level": 2,
@@ -4870,8 +4870,8 @@
     {
       "id": "easel-series-gate-haze",
       "name": "Series-Gate Haze",
-      "ref": "In the style of Grouper — “Dragging a Dead Deer Up a Hill” (2008)",
-      "artist": "Grouper",
+      "ref": "A muffled, reedy swell heard as if through a wall, every note blurring into the next in a wash of reverb",
+      "artist": "Hazy ambient folk",
       "tags": ["pad", "dream pop", "lo-fi", "lowpass gate"],
       "level": 2,
       "blurb": "A muffled, hazy swell of a reedy tone heard as if through a wall, every note blurring into the next in a wash of reverb.",
@@ -4949,8 +4949,8 @@
     {
       "id": "easel-pressure-bloom-pad",
       "name": "Pressure Bloom Pad",
-      "ref": "In the style of Ana Roxanne — “~~~” (2019)",
-      "artist": "Ana Roxanne",
+      "ref": "Dim and pure when played gently, blooming glassy when played firmly, a dreamy pad with a faint vibrato",
+      "artist": "Dream ambient",
       "tags": ["pad", "ambient", "dreamy", "pressure"],
       "level": 2,
       "blurb": "A soft, dreamy pad that is pure and dim when played gently and blooms into a glassy brightness when played firmly, with a faint vibrato.",
@@ -5038,7 +5038,7 @@
     {
       "id": "easel-slow-timbre-steps",
       "name": "Slow Timbre Steps",
-      "ref": "In the style of Susumu Yokota — “Sakura” (2000)",
+      "ref": "Long, soft notes changing colour in slow steps, the sampled calm of Susumu Yokota’s “Sakura”",
       "artist": "Susumu Yokota",
       "tags": ["pad", "ambient", "sequencer", "2000s"],
       "level": 2,
@@ -5122,7 +5122,7 @@
     {
       "id": "easel-tidal-lowpass-throb",
       "name": "Tidal Lowpass Throb",
-      "ref": "In the style of Loscil — “Endless Falls” (2010)",
+      "ref": "A submerged chord tone throbbing on every beat, the dub-ambient tide of Loscil’s “Endless Falls”",
       "artist": "Loscil",
       "tags": ["pad", "ambient", "dub techno", "pulser"],
       "level": 3,
@@ -5200,7 +5200,7 @@
     {
       "id": "easel-inverted-fold-pad",
       "name": "Inverted Fold Pad",
-      "ref": "In the style of K. Leimer — “Land of Leaves” (1982)",
+      "ref": "A pad that seems to play backwards, bright, pure, bright again, like K. Leimer’s “Land of Leaves”",
       "artist": "K. Leimer",
       "tags": ["pad", "ambient", "80s", "inverter"],
       "level": 2,
@@ -5278,7 +5278,7 @@
     {
       "id": "easel-beating-unison-drone",
       "name": "Beating Unison Drone",
-      "ref": "In the style of Éliane Radigue — “Trilogie de la Mort” (1998)",
+      "ref": "Two low sines a hair apart, beating slowly, the ARP 2500 stillness of Éliane Radigue’s “Trilogie de la Mort”",
       "artist": "Éliane Radigue",
       "tags": ["drone", "minimalism", "beating", "lpg"],
       "level": 3,
@@ -5366,8 +5366,8 @@
     {
       "id": "easel-organ-fifth-drone",
       "name": "Organ Fifth Drone",
-      "ref": "In the style of Kali Malone — “The Sacrificial Code” (2019)",
-      "artist": "Kali Malone",
+      "ref": "A breathy, hollow organ tone and its pure fifth held for long stretches, as a pipe organ sustains a drone",
+      "artist": "Pipe-organ drone",
       "tags": ["drone", "organ", "minimalism", "just intonation"],
       "level": 2,
       "blurb": "A breathy, hollow organ tone and its pure fifth speaking slowly together, held for long stretches and changing note only rarely.",
@@ -5449,8 +5449,8 @@
     {
       "id": "easel-pure-tenth-drone",
       "name": "Pure Tenth Drone",
-      "ref": "In the style of Ellen Arkbro — “CHORDS” (2019)",
-      "artist": "Ellen Arkbro",
+      "ref": "A soft triangle and a beatless major tenth above it, held still: a just-tuned minimalist drone",
+      "artist": "Just-intonation drone",
       "tags": ["drone", "just intonation", "minimalism", "two voices"],
       "level": 2,
       "blurb": "A soft triangle tone and a pure major tenth above it, still and beatless, swelling in and slowly fading.",
@@ -5533,8 +5533,8 @@
     {
       "id": "easel-mist-lowpass-drone",
       "name": "Mist Lowpass Drone",
-      "ref": "In the style of Chihei Hatakeyama — “Minima Moralia” (2006)",
-      "artist": "Chihei Hatakeyama",
+      "ref": "A low, misty drone breathing open and closed while its loudness holds, each new note blossoming into harmonics",
+      "artist": "Japanese ambient drone",
       "tags": ["drone", "ambient", "japan", "lfo"],
       "level": 2,
       "blurb": "A low, misty drone whose tone opens and closes in slow breaths while its loudness holds, each new note blossoming into extra harmonics.",
@@ -5620,7 +5620,7 @@
     {
       "id": "easel-planetary-fm-drone",
       "name": "Planetary FM Drone",
-      "ref": "In the style of Michael Stearns — “Planetary Unfolding” (1981)",
+      "ref": "A deep sine unfolding into a growling choral cloud and back, like Michael Stearns’s “Planetary Unfolding”",
       "artist": "Michael Stearns",
       "tags": ["drone", "space music", "80s", "fm"],
       "level": 3,
@@ -5703,8 +5703,8 @@
     {
       "id": "easel-two-partial-marimba",
       "name": "Two-Partial Marimba",
-      "ref": "In the style of Midori Takada — “Through the Looking Glass” (1983)",
-      "artist": "Midori Takada",
+      "ref": "Soft, woody marimba strikes in a lilting loop, each with a faint ring two octaves up",
+      "artist": "Minimalist percussion",
       "tags": ["pluck", "japanese ambient", "minimalism", "lpg"],
       "level": 2,
       "blurb": "Soft, woody marimba strikes in a lilting repeating pattern, each with a faint bright ring two octaves above.",
@@ -5795,9 +5795,9 @@
     },
     {
       "id": "easel-postcard-fm-keys",
-      "name": "Postcard FM Keys",
-      "ref": "In the style of Hiroshi Yoshimura — “Music for Nine Post Cards” (1982)",
-      "artist": "Hiroshi Yoshimura",
+      "name": "Sparse FM Keys",
+      "ref": "Soft electric-piano notes with a bell-like tine, placed sparsely and left to ring in a quiet room",
+      "artist": "Kankyo ongaku",
       "tags": ["keys", "environmental", "japanese ambient", "fm"],
       "level": 2,
       "blurb": "Soft electric-piano notes with a gentle bell-like tine at the start, placed sparsely and left to ring.",
@@ -5880,7 +5880,7 @@
     {
       "id": "easel-glass-wave-bell",
       "name": "Glass Wave Bell",
-      "ref": "In the style of Takashi Kokubo — “Get at the Wave” (1987)",
+      "ref": "Glassy FM bells with a shimmer of inharmonic overtones, from Takashi Kokubo’s “Get at the Wave”",
       "artist": "Takashi Kokubo",
       "tags": ["keys", "environmental", "bell", "fm"],
       "level": 2,
@@ -5961,9 +5961,9 @@
     },
     {
       "id": "easel-radiance-zither",
-      "name": "Radiance Zither",
-      "ref": "In the style of Laraaji — “Day of Radiance” (1980)",
-      "artist": "Laraaji",
+      "name": "Hammered Zither Roll",
+      "ref": "Fast mallet strikes rolling on each held note, a hammered zither shimmering in a new-age haze",
+      "artist": "New-age zither",
       "tags": ["pluck", "new age", "zither", "pulser"],
       "level": 3,
       "blurb": "A shimmering roll of fast hammered strikes on each held note, like a zither played with mallets, every strike a slightly different brightness.",
@@ -6045,8 +6045,8 @@
     {
       "id": "easel-kalimba-tines",
       "name": "Kalimba Tines",
-      "ref": "In the style of Inoyamaland — “Danzindan-Pojidon” (1983)",
-      "artist": "Inoyamaland",
+      "ref": "Quick thumb-plucked kalimba tones in a bouncing figure, a tiny metallic tick at the front of each",
+      "artist": "Japanese ambient",
       "tags": ["pluck", "japanese ambient", "kalimba", "fm"],
       "level": 2,
       "blurb": "Quick, thumb-plucked kalimba tones in a bouncing figure, each with a tiny metallic tick at the start and a soft, round fall.",
@@ -6138,7 +6138,7 @@
     {
       "id": "easel-ring-mod-bells",
       "name": "Ring-Modulated Bells",
-      "ref": "In the style of Pauline Anna Strom — “Trans-Millenia Music” (1982)",
+      "ref": "Hollow bells with overtones between the notes, for Pauline Anna Strom’s “Trans-Millenia Music”",
       "artist": "Pauline Anna Strom",
       "tags": ["keys", "bell", "ambient", "ring mod"],
       "level": 2,
@@ -6217,9 +6217,9 @@
     },
     {
       "id": "easel-pearl-reverb-keys",
-      "name": "Pearl Reverb Keys",
-      "ref": "In the style of Harold Budd — “The Pearl” (1984)",
-      "artist": "Harold Budd",
+      "name": "Deep Reverb Keys",
+      "ref": "Soft, slow piano-like notes with a gentle waver, each sinking over seconds into a deep pool of spring",
+      "artist": "Ambient piano",
       "tags": ["keys", "ambient", "80s", "reverb"],
       "level": 2,
       "blurb": "Soft, slow piano-like notes with a gentle wavering, each fading over seconds into a deep pool of spring reverb.",
@@ -6298,8 +6298,8 @@
     {
       "id": "easel-lofi-wobble-keys",
       "name": "Lo-Fi Wobble Keys",
-      "ref": "In the style of Nujabes — “Modal Soul” (2005)",
-      "artist": "Nujabes",
+      "ref": "Warm, rounded keys with a seasick pitch wobble, like a worn tape of a jazz record under a lo-fi hip-hop beat",
+      "artist": "Lo-fi hip hop",
       "tags": ["keys", "lo-fi", "hip hop", "chill"],
       "level": 2,
       "blurb": "Warm, rounded keys with a soft edge on each note and a slow, seasick pitch wobble, like a worn tape of a jazz record.",
@@ -6390,8 +6390,8 @@
     {
       "id": "easel-vibraphone-tremolo",
       "name": "Vibraphone Tremolo",
-      "ref": "In the style of Satoshi Ashikawa — “Still Way (Wave Notation 2)” (1982)",
-      "artist": "Satoshi Ashikawa",
+      "ref": "Soft vibraphone notes pulsing with tremolo as they fade, placed sparsely in a calm Japanese ambient room",
+      "artist": "Kankyo ongaku",
       "tags": ["keys", "environmental", "vibraphone", "am"],
       "level": 2,
       "blurb": "Soft, ringing vibraphone notes that pulse with a gentle tremolo as they fade, placed sparsely in a calm room.",
@@ -6470,8 +6470,8 @@
     {
       "id": "easel-music-box-bell",
       "name": "Music Box Bell",
-      "ref": "In the style of Yoko Shimomura — “Kingdom Hearts” (2002)",
-      "artist": "Yoko Shimomura",
+      "ref": "A tiny, high music-box waltz, each note a glassy tine that fades almost at once",
+      "artist": "Music boxes",
       "tags": ["keys", "game", "music box", "fm"],
       "level": 2,
       "blurb": "A tiny, high, tinkling music-box melody in three, each note a bright glassy tine that fades quickly.",
@@ -6566,8 +6566,8 @@
     {
       "id": "easel-felt-piano-keys",
       "name": "Felt Piano Keys",
-      "ref": "In the style of C418 — “Minecraft – Volume Alpha” (2011)",
-      "artist": "C418",
+      "ref": "Muted, felted piano-like notes, dark when gentle and brighter when firm, each fading into a quiet tail",
+      "artist": "Felt-piano ambient",
       "tags": ["keys", "game", "ambient", "velocity"],
       "level": 2,
       "blurb": "Soft, muted piano-like notes, gently struck ones dark and firmer ones a little brighter, each fading into a quiet tail.",
@@ -6644,7 +6644,7 @@
     {
       "id": "easel-expanding-arp",
       "name": "Expanding Universe Arpeggio",
-      "ref": "In the style of Laurie Spiegel — “The Expanding Universe” (1980)",
+      "ref": "Laurie Spiegel’s “The Expanding Universe” as a pattern: four-note chords whose notes ring for shifting lengths",
       "artist": "Laurie Spiegel",
       "tags": ["seq", "arpeggio", "ambient", "80s"],
       "level": 3,
@@ -6747,8 +6747,8 @@
     {
       "id": "easel-pulsing-mallets",
       "name": "Pulsing Mallets",
-      "ref": "In the style of Steve Reich — “Music for 18 Musicians” (1976)",
-      "artist": "Steve Reich",
+      "ref": "A steady stream of eighth-note mallet strikes swelling with the touch, the pulse of 1970s minimalism",
+      "artist": "Minimalism",
       "tags": ["seq", "minimalism", "pulse", "fm"],
       "level": 3,
       "blurb": "A steady stream of eighth-note mallet strikes on each held note, the note changing every bar, the pulses swelling brighter and softer with the touch.",
@@ -6839,9 +6839,9 @@
     },
     {
       "id": "easel-curved-air-arp",
-      "name": "Curved Air Arpeggio",
-      "ref": "In the style of Terry Riley — “A Rainbow in Curved Air” (1969)",
-      "artist": "Terry Riley",
+      "name": "Twinkling Organ Arpeggio",
+      "ref": "A fast patter of reedy organ notes picked at random from a modal chord and doubled up an octave",
+      "artist": "Minimalism",
       "tags": ["seq", "minimalism", "organ", "arpeggio"],
       "level": 3,
       "blurb": "A fast, twinkling patter of reedy organ notes picked at random from a held modal chord, doubled an octave up, in a soft reverb.",
@@ -6940,9 +6940,9 @@
     },
     {
       "id": "easel-glassworks-arp",
-      "name": "Glassworks Broken Chords",
-      "ref": "In the style of Philip Glass — “Glassworks” (1982)",
-      "artist": "Philip Glass",
+      "name": "Flowing Broken Chords",
+      "ref": "Gentle triplet broken chords on a soft, rounded tone, the harmony shifting each bar as minimalism does",
+      "artist": "Minimalism",
       "tags": ["seq", "minimalism", "arpeggio", "80s"],
       "level": 1,
       "blurb": "Gentle, flowing triplet broken chords of a soft, rounded tone, three notes to every beat, the harmony shifting each bar.",
@@ -7025,8 +7025,8 @@
     {
       "id": "easel-harp-glissando",
       "name": "Harp Glissando",
-      "ref": "In the style of Mary Lattimore — “Hundreds of Days” (2018)",
-      "artist": "Mary Lattimore",
+      "ref": "Sweeping glissandi through wide two-octave chords, every string a bright, twanging pluck in a long reverb",
+      "artist": "Ambient harp",
       "tags": ["pluck", "harp", "ambient", "arpeggio"],
       "level": 2,
       "blurb": "Sweeping harp glissandi up through wide, two-octave chords, each string a bright pluck with a twang, ringing together in a long reverb.",
@@ -7118,7 +7118,7 @@
     {
       "id": "easel-generative-pentatonic",
       "name": "Generative Pentatonic",
-      "ref": "In the style of Emily A. Sprague — “Water Memory” (2017)",
+      "ref": "A melody that writes itself from a pentatonic chord, the modular calm of Emily A. Sprague’s “Water Memory”",
       "artist": "Emily A. Sprague",
       "tags": ["seq", "generative", "ambient", "random"],
       "level": 2,
@@ -7211,7 +7211,7 @@
     {
       "id": "easel-ever-new-lead",
       "name": "Ever New Lead",
-      "ref": "In the style of Beverly Glenn-Copeland — “Keyboard Fantasies” (1986)",
+      "ref": "A warm singing lead whose vibrato deepens with weight, the DX7 of Beverly Glenn-Copeland’s “Keyboard Fantasies”",
       "artist": "Beverly Glenn-Copeland",
       "tags": ["lead", "new age", "80s", "pressure"],
       "level": 2,
@@ -7297,8 +7297,8 @@
     {
       "id": "easel-sunset-lead",
       "name": "Sunset Balearic Lead",
-      "ref": "In the style of José Padilla — “Café del Mar” compilations (1990s)",
-      "artist": "José Padilla",
+      "ref": "A soft, breathy sine lead with a lazy vibrato, sliding slowly through a Balearic sunset melody",
+      "artist": "Balearic chill-out",
       "tags": ["lead", "balearic", "chill-out", "90s"],
       "level": 2,
       "blurb": "A soft, breathy sine lead with a lazy vibrato, sliding slowly between the notes of a sunset melody.",
@@ -7382,8 +7382,8 @@
     {
       "id": "easel-shakuhachi-breath",
       "name": "Shakuhachi Breath",
-      "ref": "In the style of Goro Yamaguchi — “A Bell Ringing in the Empty Sky” (1968)",
-      "artist": "Goro Yamaguchi",
+      "ref": "A bamboo flute that starts each note on a rush of air and scoops up into tune from just below",
+      "artist": "Japanese shakuhachi",
       "tags": ["wind", "japanese", "honkyoku", "breath"],
       "level": 3,
       "blurb": "A breathy bamboo flute: each note starts with a rush of air and scoops up into tune from just below, then hangs in a quiet room.",
@@ -7475,8 +7475,8 @@
     {
       "id": "easel-ney-taksim",
       "name": "Ney Taksim",
-      "ref": "In the style of Kudsi Erguner — Mevlevi ney improvisations (taksim)",
-      "artist": "Kudsi Erguner",
+      "ref": "A breathy reed flute wavering through a Hijaz phrase, brighter and airier on the harder notes",
+      "artist": "Turkish Sufi ney",
       "tags": ["wind", "turkish", "sufi", "pressure"],
       "level": 3,
       "blurb": "A reed flute full of breath, wavering gently through a Hijaz phrase, the air louder and the tone brighter on the notes played hardest.",
@@ -7574,8 +7574,8 @@
     {
       "id": "easel-half-ratio-bassoon",
       "name": "Half-Ratio Bassoon",
-      "ref": "In the style of Sergei Prokofiev — the grandfather’s bassoon in “Peter and the Wolf” (1936)",
-      "artist": "Sergei Prokofiev",
+      "ref": "A grumpy, nasal bassoon in its low register, staccato and buzzing, with a ghostly octave beneath",
+      "artist": "Orchestral woodwind",
       "tags": ["wind", "classical", "fm", "reed"],
       "level": 2,
       "blurb": "A grumpy, nasal double reed in the low register, staccato and buzzing, with a ghostly octave beneath each note.",
@@ -7663,8 +7663,8 @@
     {
       "id": "easel-cross-harp-bends",
       "name": "Cross-Harp Bends",
-      "ref": "In the style of Sonny Terry — Piedmont blues harmonica with Brownie McGhee",
-      "artist": "Sonny Terry",
+      "ref": "A buzzing harmonica shuffle that bends into its blue notes and shakes with a hand tremolo",
+      "artist": "Piedmont blues harmonica",
       "tags": ["wind", "blues", "harmonica", "portamento"],
       "level": 3,
       "blurb": "A buzzing mouth-harp shuffle that bends up into its blue notes, snarls on the accents and shakes with a hand tremolo.",
@@ -7758,8 +7758,8 @@
     {
       "id": "easel-chanter-and-drone",
       "name": "Chanter and Drone",
-      "ref": "In the style of Paddy Moloney — uilleann pipes with The Chieftains",
-      "artist": "Paddy Moloney",
+      "ref": "A piercing, nasal chanter skipping through a jig with crisp grace notes over a buzzing drone",
+      "artist": "Irish uilleann pipes",
       "tags": ["wind", "celtic", "irish", "drone"],
       "level": 3,
       "blurb": "A piercing, nasal chanter skipping through a jig with crisp grace notes, over a buzzing drone that never stops.",
@@ -7851,8 +7851,8 @@
     {
       "id": "easel-hunting-horn-call",
       "name": "Hunting Horn Call",
-      "ref": "In the style of Dennis Brain — Mozart’s horn concertos (1953)",
-      "artist": "Dennis Brain",
+      "ref": "A round French horn calling in six-eight, each note opening from a covered tone into a brassy glow",
+      "artist": "Orchestral horn",
       "tags": ["brass", "classical", "horn", "wavefolding"],
       "level": 2,
       "blurb": "A round French horn calling in six-eight, each note opening from a soft, covered tone into a brassy glow.",
@@ -7931,8 +7931,8 @@
     {
       "id": "easel-plunger-wah-trumpet",
       "name": "Plunger Wah Trumpet",
-      "ref": "In the style of Bubber Miley — “East St. Louis Toodle-Oo” with Duke Ellington (1927)",
-      "artist": "Bubber Miley",
+      "ref": "A growling trumpet under a plunger mute, each note opening with a wah and a fluttering rasp",
+      "artist": "1920s jungle jazz",
       "tags": ["brass", "jazz", "1920s", "growl"],
       "level": 3,
       "blurb": "A growling jungle-style trumpet, each note opening with a wah and a rough, fluttering rasp in the throat.",
@@ -8015,8 +8015,8 @@
     {
       "id": "easel-tailgate-trombone",
       "name": "Tailgate Trombone",
-      "ref": "In the style of Kid Ory — tailgate trombone on “Muskrat Ramble” (1926)",
-      "artist": "Kid Ory",
+      "ref": "Brassy trombone that smears between its notes, every change of pitch a slide of the arm",
+      "artist": "New Orleans jazz",
       "tags": ["brass", "jazz", "new orleans", "portamento"],
       "level": 2,
       "blurb": "A brassy trombone smearing between its notes, every change of pitch a slide of the arm.",
@@ -8094,8 +8094,8 @@
     {
       "id": "easel-pressure-bowed-cello",
       "name": "Pressure-Bowed Cello",
-      "ref": "In the style of Jacqueline du Pré — Elgar’s Cello Concerto (1965)",
-      "artist": "Jacqueline du Pré",
+      "ref": "A singing cello line drawn in slowly by the bow, with more rosin bite on the harder notes and a warm vibrato",
+      "artist": "Classical cello",
       "tags": ["strings", "classical", "cello", "pressure"],
       "level": 3,
       "blurb": "A singing cello line in E minor, each note drawn in slowly by the bow, with more rosin bite on the notes played hardest and a warm vibrato.",
@@ -8185,8 +8185,8 @@
     {
       "id": "easel-pizzicato-polka",
       "name": "Pizzicato Polka",
-      "ref": "In the style of Johann and Josef Strauss — “Pizzicato-Polka” (1869)",
-      "artist": "Johann Strauss II",
+      "ref": "Plucked strings bouncing through a two-four polka, each note a soft thud that dies at once",
+      "artist": "Viennese polka",
       "tags": ["pluck", "classical", "pizzicato", "lowpass gate"],
       "level": 1,
       "blurb": "Plucked strings bouncing through a two-four polka, each note a soft thud that dies away at once.",
@@ -8260,8 +8260,8 @@
     {
       "id": "easel-reel-fiddle",
       "name": "Reel Fiddle",
-      "ref": "In the style of Martin Hayes — East Clare fiddle reels",
-      "artist": "Martin Hayes",
+      "ref": "A lilting fiddle reel on a woody, singing tone, each bow change marked by a quick bite",
+      "artist": "Irish fiddle",
       "tags": ["strings", "celtic", "irish", "fiddle"],
       "level": 2,
       "blurb": "A lilting fiddle reel in D, each bow change marked by a quick bite of brightness on a woody, singing tone.",
@@ -8356,8 +8356,8 @@
     {
       "id": "easel-koto-hirajoshi",
       "name": "Koto Hirajoshi",
-      "ref": "In the style of Michio Miyagi — “Haru no Umi” (1929)",
-      "artist": "Michio Miyagi",
+      "ref": "Koto plucks in the hirajoshi scale, a bright twang of the plectrum softening at once",
+      "artist": "Japanese koto",
       "tags": ["pluck", "japanese", "koto", "wavefolding"],
       "level": 2,
       "blurb": "A koto in the hirajoshi scale, each pluck a bright twang of the plectrum that softens at once into a round tone.",
@@ -8438,8 +8438,8 @@
     {
       "id": "easel-oud-tremolo",
       "name": "Oud Tremolo",
-      "ref": "In the style of Munir Bashir — Iraqi maqam taqsim on the oud",
-      "artist": "Munir Bashir",
+      "ref": "A woody fretless lute picking quick notes in maqam Hijaz and trembling into tremolo on the long ones",
+      "artist": "Arabic oud",
       "tags": ["pluck", "arabic", "oud", "pulser"],
       "level": 3,
       "blurb": "A woody, fretless lute picking quick single notes in maqam Hijaz and trembling into rapid tremolo on the long ones.",
@@ -8535,8 +8535,8 @@
     {
       "id": "easel-sitar-jawari",
       "name": "Sitar Jawari",
-      "ref": "In the style of Ravi Shankar — “Three Ragas” (1956)",
-      "artist": "Ravi Shankar",
+      "ref": "Bright, buzzing sitar plucks sliding through a raga, each echoed by a shimmer of sympathetic strings",
+      "artist": "Hindustani sitar",
       "tags": ["pluck", "indian", "raga", "wavefolding"],
       "level": 3,
       "blurb": "A buzzing sitar sliding through a raga in D, every pluck bright with jawari and echoed by a shimmer of sympathetic strings.",
@@ -8637,8 +8637,8 @@
     {
       "id": "easel-banjo-forward-roll",
       "name": "Banjo Forward Roll",
-      "ref": "In the style of Béla Fleck — five-string banjo rolls",
-      "artist": "Béla Fleck",
+      "ref": "A twangy five-string banjo rolling sixteenths through G, C and D, picked by the arpeggiator",
+      "artist": "Bluegrass banjo",
       "tags": ["pluck", "bluegrass", "banjo", "arpeggiator"],
       "level": 2,
       "blurb": "A bright, twangy banjo rolling sixteenths through G, C and D, the picking played by the arpeggiator from held chords.",
@@ -8725,8 +8725,8 @@
     {
       "id": "easel-balafon-gourds",
       "name": "Balafon Gourds",
-      "ref": "In the style of Kélétigui Diabaté — Malian balafon",
-      "artist": "Kélétigui Diabaté",
+      "ref": "Dry wooden keys in a triplet Mande pattern, each strike rasping with the gourd’s buzzing membrane",
+      "artist": "Malian balafon",
       "tags": ["pluck", "west african", "mande", "noise"],
       "level": 2,
       "blurb": "Dry wooden keys in a triplet Mande pattern, each strike with a rasp of buzzing membrane from the gourd underneath.",
@@ -8821,8 +8821,8 @@
     {
       "id": "easel-steel-pan",
       "name": "Steel Pan",
-      "ref": "In the style of Andy Narell — Trinidad steel pan jazz",
-      "artist": "Andy Narell",
+      "ref": "A bright tenor pan playing a syncopated calypso line, its metallic glow mellowing as it rings",
+      "artist": "Trinidad steel pan",
       "tags": ["perc", "caribbean", "steel pan", "fm"],
       "level": 2,
       "blurb": "A bright, ringing tenor pan playing a syncopated calypso line, every note with a metallic glow that mellows as it rings.",
@@ -8911,7 +8911,7 @@
     {
       "id": "easel-gong-ageng-ombak",
       "name": "Gong Ageng Ombak",
-      "ref": "In the style of the Javanese court gamelan — the great gong that closes each gongan",
+      "ref": "The great bronze gong that closes each phrase of Javanese court gamelan, its long tail pulsing slowly",
       "artist": "Javanese court gamelan",
       "tags": ["perc", "indonesian", "gamelan", "am"],
       "level": 2,
@@ -8990,8 +8990,8 @@
     {
       "id": "easel-tolling-tubular-bells",
       "name": "Tolling Tubular Bells",
-      "ref": "In the style of Hector Berlioz — the bells of the “Symphonie fantastique” finale (1830)",
-      "artist": "Hector Berlioz",
+      "ref": "Orchestral bells tolling C and G, each stroke a clangorous crash that settles into a long, pure hum",
+      "artist": "Orchestral bells",
       "tags": ["keys", "classical", "bell", "fm"],
       "level": 2,
       "blurb": "Orchestral bells tolling C and G, each stroke a clangorous metal crash that settles into a long, pure hum.",
@@ -9071,8 +9071,8 @@
     {
       "id": "easel-wah-clavinet",
       "name": "Wah Clavinet",
-      "ref": "In the style of Billy Preston — “Outa-Space” (1971)",
-      "artist": "Billy Preston",
+      "ref": "A snappy, nasal clavinet riff through a wah that rocks open and shut on every beat, early-1970s funk",
+      "artist": "1970s funk clavinet",
       "tags": ["keys", "funk", "70s", "wah"],
       "level": 3,
       "blurb": "A snappy, nasal clavinet riff in E minor through a wah that rocks open and shut on every beat.",
@@ -9164,8 +9164,8 @@
     {
       "id": "easel-quill-harpsichord",
       "name": "Quill Harpsichord",
-      "ref": "In the style of Domenico Scarlatti — the keyboard sonatas (1738)",
-      "artist": "Domenico Scarlatti",
+      "ref": "A bright harpsichord racing through a sonata figure, each note snapped by a quill",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "baroque", "harpsichord", "fm"],
       "level": 2,
       "blurb": "A bright, plucked harpsichord racing through a D major sonata figure, each note with the snap of a quill.",
@@ -9258,8 +9258,8 @@
     {
       "id": "easel-sygyt-overtones",
       "name": "Sygyt Overtones",
-      "ref": "In the style of Kongar-ol Ondar — Tuvan sygyt throat singing",
-      "artist": "Kongar-ol Ondar",
+      "ref": "A low, throaty drone with a whistling melody stepping through its upper harmonics, as Tuvan sygyt singing does",
+      "artist": "Tuvan throat singing",
       "tags": ["drone", "tuvan", "throat singing", "sequencer"],
       "level": 3,
       "blurb": "A low, throaty drone on G with a whistling overtone melody stepping above it through the eighth, ninth, tenth and twelfth harmonics.",
@@ -9359,8 +9359,8 @@
     {
       "id": "easel-prairie-whistle",
       "name": "Prairie Whistle",
-      "ref": "In the style of Alessandro Alessandroni — the whistling on Ennio Morricone’s western scores (1960s)",
-      "artist": "Alessandro Alessandroni",
+      "ref": "A lonely, breathy whistled melody scooping between notes, the sound of a spaghetti-western score",
+      "artist": "Spaghetti-western whistling",
       "tags": ["lead", "western", "whistle", "vibrato"],
       "level": 2,
       "blurb": "A lonely whistled melody high over the prairie, pure and breathy, scooping lightly between notes with a quick vibrato.",
@@ -9451,7 +9451,7 @@
     {
       "id": "easel-pitch-drop-kick",
       "name": "Pitch-Drop Kick",
-      "ref": "In the style of Mantronix — “Fresh Is the Word” (1985)",
+      "ref": "A booming 808-style kick dropping from knock to sub thud in a broken pattern, Mantronix’s “Fresh Is the Word”",
       "artist": "Mantronix",
       "tags": ["perc", "electro", "hip-hop", "kick"],
       "level": 2,
@@ -9529,7 +9529,7 @@
     {
       "id": "easel-ghost-note-snare",
       "name": "Ghost-Note Snare",
-      "ref": "In the style of Mtume — “Juicy Fruit” (1983)",
+      "ref": "A crisp drum-machine snare on two and four with whispered ghosts between, as on Mtume’s “Juicy Fruit”",
       "artist": "Mtume",
       "tags": ["perc", "r&b", "80s", "snare"],
       "level": 3,
@@ -9616,7 +9616,7 @@
     {
       "id": "easel-open-closed-hats",
       "name": "Open and Closed Hats",
-      "ref": "In the style of Cybotron — “Clear” (1983)",
+      "ref": "Ticking sixteenth hats with an open hat hissing on the off-beats, the machine pulse of Cybotron’s “Clear”",
       "artist": "Cybotron",
       "tags": ["perc", "electro", "detroit", "hi-hat"],
       "level": 2,
@@ -9706,7 +9706,7 @@
     {
       "id": "easel-pulser-handclap",
       "name": "Pulser Handclap",
-      "ref": "In the style of Hashim — “Al-Naafiysh (The Soul)” (1983)",
+      "ref": "A splattering electro clap, a flurry of noise smeared into one, as on Hashim’s “Al-Naafiysh (The Soul)”",
       "artist": "Hashim",
       "tags": ["perc", "electro", "80s", "clap"],
       "level": 3,
@@ -9791,8 +9791,8 @@
     {
       "id": "easel-two-square-cowbell",
       "name": "Two-Square Cowbell",
-      "ref": "In the style of Tito Puente — mambo cowbell on “Ran Kan Kan” (1949)",
-      "artist": "Tito Puente",
+      "ref": "A clanking cowbell driving a mambo pattern, mouth and heel of the bell on two pitches",
+      "artist": "Mambo",
       "tags": ["perc", "latin", "mambo", "cowbell"],
       "level": 2,
       "blurb": "A clanking cowbell driving a mambo pattern, mouth and heel of the bell on two pitches.",
@@ -9886,8 +9886,8 @@
     {
       "id": "easel-tabla-teentaal",
       "name": "Tabla Teentaal",
-      "ref": "In the style of Zakir Hussain — tabla in teentaal",
-      "artist": "Zakir Hussain",
+      "ref": "Ringing dayan and booming, swooping bayan strokes playing the sixteen-beat teentaal theka",
+      "artist": "Hindustani tabla",
       "tags": ["perc", "indian", "tabla", "portamento"],
       "level": 3,
       "blurb": "A tabla playing the sixteen-beat teentaal theka, ringing dayan strokes and booming bayan strokes that swoop as the palm presses the skin.",
@@ -9989,8 +9989,8 @@
     {
       "id": "easel-talking-drum-squeeze",
       "name": "Talking Drum Squeeze",
-      "ref": "In the style of King Sunny Adé — “Juju Music” (1982)",
-      "artist": "King Sunny Adé",
+      "ref": "A talking drum chattering through a phrase, each stroke rising in pitch as if squeezed under the arm",
+      "artist": "Nigerian jùjú",
       "tags": ["perc", "nigerian", "juju", "inverter"],
       "level": 3,
       "blurb": "A talking drum chattering through a jùjú phrase, every stroke rising in pitch just after it lands, as if squeezed under the arm.",
@@ -10075,8 +10075,8 @@
     {
       "id": "easel-timpani-roll",
       "name": "Timpani Roll",
-      "ref": "In the style of Richard Strauss — the timpani of “Also sprach Zarathustra” (1896)",
-      "artist": "Richard Strauss",
+      "ref": "Kettledrums pounding C and G, then a held roll that thunders on while the key is down",
+      "artist": "Orchestral timpani",
       "tags": ["perc", "orchestral", "timpani", "pulser"],
       "level": 3,
       "blurb": "Kettledrums pounding C and G, then a held roll that thunders on for as long as the key is down.",
@@ -10173,7 +10173,7 @@
     {
       "id": "easel-self-playing-electro-kit",
       "name": "Self-Playing Electro Kit",
-      "ref": "In the style of Newcleus — “Jam on It” (1984)",
+      "ref": "A whole electro beat that plays itself, dropping kick and crackling snare, built for Newcleus’s “Jam on It”",
       "artist": "Newcleus",
       "tags": ["perc", "electro", "80s", "sequencer"],
       "level": 3,
@@ -10277,7 +10277,7 @@
     {
       "id": "easel-alpha-chance-bells",
       "name": "Alpha Chance Bells",
-      "ref": "In the style of David Rosenboom — “Brainwave Music” (1974)",
+      "ref": "Soft FM bells sounding at uneven moments and pitches between the keys, like David Rosenboom’s “Brainwave Music”",
       "artist": "David Rosenboom",
       "tags": ["seq", "experimental", "random", "fm"],
       "level": 3,
@@ -10374,8 +10374,8 @@
     {
       "id": "easel-cistern-resonance",
       "name": "Cistern Resonance",
-      "ref": "In the style of Pauline Oliveros — “Deep Listening” (1989), recorded in an underground cistern",
-      "artist": "Pauline Oliveros",
+      "ref": "A reedy, accordion-like drone and its fifth swelling by themselves in a long, cavernous reverberation",
+      "artist": "Resonant-space drone",
       "tags": ["drone", "ambient", "deep listening", "reverb"],
       "level": 3,
       "blurb": "A reedy, accordion-like drone and a fifth above it, swelling and folding brighter by themselves in a long, cavernous reverberation.",
@@ -10463,7 +10463,7 @@
     {
       "id": "easel-crystal-shards",
       "name": "Crystal Shards",
-      "ref": "In the style of Maggi Payne — “Crystal” (1982)",
+      "ref": "High, glassy splinters in a five-step pattern with two rests, the electronic glitter of Maggi Payne’s “Crystal”",
       "artist": "Maggi Payne",
       "tags": ["seq", "glass", "fm", "sequencer"],
       "level": 3,
@@ -10564,7 +10564,7 @@
     {
       "id": "easel-foghorn-in-the-bay",
       "name": "Foghorn in the Bay",
-      "ref": "In the style of Ingram Marshall — “Fog Tropes” (1981)",
+      "ref": "A low, buzzing foghorn that groans up, holds and sags away, as in Ingram Marshall’s tape piece “Fog Tropes”",
       "artist": "Ingram Marshall",
       "tags": ["fx", "ambient", "foghorn", "inverter"],
       "level": 2,
@@ -10641,7 +10641,7 @@
     {
       "id": "easel-sonified-data-arp",
       "name": "Sonified Data Arpeggio",
-      "ref": "In the style of Carla Scaletti’s data sonifications in Kyma",
+      "ref": "Data turned into notes: a quick random arpeggio with an FM edge, as Carla Scaletti sonifies in Kyma",
       "artist": "Carla Scaletti",
       "tags": ["seq", "experimental", "arpeggiator", "random"],
       "level": 3,
@@ -10745,7 +10745,7 @@
     {
       "id": "easel-rainforest-cross-feedback",
       "name": "Rainforest Cross-Feedback",
-      "ref": "In the style of David Tudor — “Rainforest” (1968)",
+      "ref": "Unstable, chattering electronic squawks, each a new knot of feedback, out of David Tudor’s “Rainforest”",
       "artist": "David Tudor",
       "tags": ["fx", "experimental", "feedback", "cross-modulation"],
       "level": 3,
@@ -10831,7 +10831,7 @@
     {
       "id": "easel-echolocation-clicks",
       "name": "Echolocation Clicks",
-      "ref": "In the style of Alvin Lucier — “Vespers” (1968), played on echolocation click devices",
+      "ref": "Sharp click trains answered by the room, the way Alvin Lucier’s “Vespers” players feel out the walls in the dark",
       "artist": "Alvin Lucier",
       "tags": ["fx", "experimental", "clicks", "reverb"],
       "level": 2,
@@ -10910,7 +10910,7 @@
     {
       "id": "easel-cosmic-freak-out",
       "name": "Cosmic Freak-Out",
-      "ref": "In the style of Sun Ra — Minimoog freak-outs on “My Brother the Wind” (1970)",
+      "ref": "Soft notes buzz and hard ones burst into clang: Sun Ra’s Minimoog freak-out on “My Brother the Wind”",
       "artist": "Sun Ra",
       "tags": ["lead", "free jazz", "psychedelic", "pressure"],
       "level": 3,
@@ -11005,7 +11005,7 @@
     {
       "id": "easel-stuttering-grain",
       "name": "Stuttering Grain Pattern",
-      "ref": "In the style of Autechre — “Gantz Graf” (2002)",
+      "ref": "Metallic clicks in a stuttering five-step figure, the machine funk of Autechre’s “Gantz Graf”",
       "artist": "Autechre",
       "tags": ["seq", "idm", "glitch", "sequencer"],
       "level": 3,
@@ -11104,7 +11104,7 @@
     {
       "id": "easel-pointillist-trance-arp",
       "name": "Pointillist Trance Arp",
-      "ref": "In the style of Lorenzo Senni — “Persistence of Vision” (2016)",
+      "ref": "Trance with the chords taken out: dry, glittering stabs, as in Lorenzo Senni’s “Persistence of Vision”",
       "artist": "Lorenzo Senni",
       "tags": ["seq", "trance", "arpeggiator", "pointillist"],
       "level": 2,
@@ -11193,8 +11193,8 @@
     {
       "id": "easel-glossolalia-warble",
       "name": "Glossolalia Warble",
-      "ref": "In the style of Eartheater — “Phoenix: Flames Are Dew upon My Skin” (2020)",
-      "artist": "Eartheater",
+      "ref": "A strange voice that slides between notes and opens its vowel on the hard ones, a wordless art-pop warble",
+      "artist": "Experimental art pop",
       "tags": ["lead", "experimental", "vocal", "pressure"],
       "level": 3,
       "blurb": "A strange, singing voice that slides between notes, opening its vowel on the hard ones, with a vibrato that changes on every note.",
@@ -11287,7 +11287,7 @@
     {
       "id": "easel-chopped-choir-stutter",
       "name": "Chopped Choir Stutter",
-      "ref": "In the style of Holly Herndon — “Chorus” (2014)",
+      "ref": "A voice cut up and re-sequenced, each sixteenth chop a new vowel, the laptop choir of Holly Herndon’s “Chorus”",
       "artist": "Holly Herndon",
       "tags": ["seq", "vocal", "stutter", "pulser"],
       "level": 3,
@@ -11382,7 +11382,7 @@
     {
       "id": "easel-pulsing-persona-pad",
       "name": "Pulsing Persona Pad",
-      "ref": "In the style of Rival Consoles — “Persona” (2018)",
+      "ref": "A warm, slow-swelling pad with a fifth pulsing in eighths, the steady drive of Rival Consoles’ “Persona”",
       "artist": "Rival Consoles",
       "tags": ["pad", "electronica", "pulser", "two voices"],
       "level": 3,
@@ -11479,7 +11479,7 @@
     {
       "id": "easel-test-oscillator-drift",
       "name": "Test Oscillator Drift",
-      "ref": "In the style of Hainbach’s test-equipment improvisations",
+      "ref": "Two lab sines beating slowly and jumping to new tunings, as Hainbach turns the dials of old test equipment",
       "artist": "Hainbach",
       "tags": ["drone", "experimental", "sine", "random"],
       "level": 3,
@@ -11576,7 +11576,7 @@
     {
       "id": "easel-droid-chatter",
       "name": "Droid Chatter",
-      "ref": "In the style of Ben Burtt — the droid voices of “Star Wars” (1977)",
+      "ref": "Bleeps and warbling whistles in nervous bursts: the droid babble Ben Burtt made for “Star Wars”",
       "artist": "Ben Burtt",
       "tags": ["fx", "sci-fi", "film", "random"],
       "level": 3,
@@ -11675,7 +11675,7 @@
     {
       "id": "easel-flying-saucer-warble",
       "name": "Flying Saucer Warble",
-      "ref": "In the style of Tom Dissevelt and Kid Baltan — “Song of the Second Moon” (1957)",
+      "ref": "A high whistle widening into a wobble, the 1950s saucer of Dissevelt and Baltan’s “Song of the Second Moon”",
       "artist": "Tom Dissevelt and Kid Baltan",
       "tags": ["fx", "sci-fi", "50s", "fm"],
       "level": 2,
@@ -11754,7 +11754,7 @@
     {
       "id": "easel-transporter-shimmer",
       "name": "Transporter Shimmer",
-      "ref": "In the style of Douglas Grindstaff’s sound effects for “Star Trek” (1966)",
+      "ref": "A rising cloud of twinkling tones over ring-modulated hiss, Douglas Grindstaff’s “Star Trek” transporter",
       "artist": "Douglas Grindstaff",
       "tags": ["fx", "sci-fi", "tv", "random"],
       "level": 3,
@@ -11850,7 +11850,7 @@
     {
       "id": "easel-ray-gun-zap",
       "name": "Ray-Gun Zap",
-      "ref": "In the style of the sound effects of late-1970s arcade games such as “Space Invaders” (1978)",
+      "ref": "A buzzy pew diving two octaves in a fifth of a second, the shot of late-1970s arcade games like “Space Invaders”",
       "artist": "1970s arcade games",
       "tags": ["fx", "arcade", "video game", "pulser"],
       "level": 2,
@@ -11942,7 +11942,7 @@
     {
       "id": "easel-biohazard-lab-alarm",
       "name": "Biohazard Lab Alarm",
-      "ref": "In the style of Gil Mellé — “The Andromeda Strain” (1971)",
+      "ref": "A cold tritone alarm beeping in a three-step loop, from Gil Mellé’s electronic score for “The Andromeda Strain”",
       "artist": "Gil Mellé",
       "tags": ["fx", "film", "alarm", "sequencer"],
       "level": 2,
@@ -12038,7 +12038,7 @@
     {
       "id": "easel-sonar-ping",
       "name": "Sonar Ping",
-      "ref": "In the style of the sonar pings in submarine films such as “Run Silent, Run Deep” (1958)",
+      "ref": "A pure ping every two seconds, wavering into a deep sea, as in submarine films like “Run Silent, Run Deep”",
       "artist": "Submarine films",
       "tags": ["fx", "film", "sonar", "reverb"],
       "level": 2,
@@ -12118,8 +12118,8 @@
     {
       "id": "easel-dawn-chorus-birds",
       "name": "Dawn Chorus Birds",
-      "ref": "In the style of Bernie Krause — “The Great Animal Orchestra” (2012) and his soundscape recordings",
-      "artist": "Bernie Krause",
+      "ref": "High, trilling chirps sweeping upwards, some lazy, some twittering, a little wood at dawn",
+      "artist": "Nature soundscapes",
       "tags": ["fx", "nature", "birds", "random"],
       "level": 3,
       "blurb": "High, trilling chirps that sweep upwards, some long and lazy, some quick and twittering, in a little wood.",
@@ -12212,7 +12212,7 @@
     {
       "id": "easel-dripsody-drops",
       "name": "Dripsody Water Drops",
-      "ref": "In the style of Hugh Le Caine — “Dripsody” (1955)",
+      "ref": "Round liquid bloops that bend up at a new pitch each time, Hugh Le Caine’s tape piece “Dripsody” remade",
       "artist": "Hugh Le Caine",
       "tags": ["perc", "musique concrete", "water", "random"],
       "level": 3,
@@ -12300,8 +12300,8 @@
     {
       "id": "easel-cicada-chorus",
       "name": "Cicada Chorus",
-      "ref": "In the style of Chris Watson — “Outside the Circle of Fire” (1998)",
-      "artist": "Chris Watson",
+      "ref": "A shrill, buzzing insect chorus that swells, holds and fades by itself in the heat of the day",
+      "artist": "Nature soundscapes",
       "tags": ["fx", "nature", "insects", "am"],
       "level": 2,
       "blurb": "A shrill, buzzing insect chorus that swells up, holds and fades again by itself, with a dry rasp under it, in the heat of the day.",
@@ -12388,8 +12388,8 @@
     {
       "id": "easel-rain-on-still-water",
       "name": "Rain on Still Water",
-      "ref": "In the style of Tomoko Sauvage’s water-bowl pieces, as on “Ombrophilia”",
-      "artist": "Tomoko Sauvage",
+      "ref": "Dense, tiny drops ringing at random pitches over a soft hiss of rain, never in time",
+      "artist": "Water sound art",
       "tags": ["fx", "ambient", "water", "random"],
       "level": 3,
       "blurb": "Dense, tiny drops ringing at random pitches over a soft hiss of rain, scattered and never in time.",
@@ -12481,8 +12481,8 @@
     {
       "id": "easel-wind-through-the-gaps",
       "name": "Wind Through the Gaps",
-      "ref": "In the style of Hildegard Westerkamp — “Beneath the Forest Floor” (1992)",
-      "artist": "Hildegard Westerkamp",
+      "ref": "Gusting wind rising and falling at changing speeds, a faint whistle in it like air through a door",
+      "artist": "Soundscape composition",
       "tags": ["fx", "nature", "wind", "noise"],
       "level": 3,
       "blurb": "Gusting wind that rises and falls at changing speeds, with a faint, wavering whistle in it, like air through a gap in a door.",
@@ -12577,7 +12577,7 @@
     {
       "id": "easel-cavern-heartbeat",
       "name": "Cavern Heartbeat",
-      "ref": "In the style of Lustmord — “Heresy” (1990)",
+      "ref": "A slow lub-dub heartbeat dropping in pitch and booming in a cavern, the dark ambient of Lustmord’s “Heresy”",
       "artist": "Lustmord",
       "tags": ["perc", "dark ambient", "heartbeat", "sequencer"],
       "level": 3,
@@ -12669,7 +12669,7 @@
     {
       "id": "easel-shortwave-morse",
       "name": "Shortwave Morse",
-      "ref": "In the style of “The Conet Project” (1997), recordings of shortwave numbers stations",
+      "ref": "A thin Morse tone spelling through fading shortwave static, as captured on “The Conet Project”",
       "artist": "The Conet Project",
       "tags": ["fx", "radio", "morse", "sequencer"],
       "level": 3,
@@ -12763,7 +12763,7 @@
     {
       "id": "easel-geiger-counter",
       "name": "Geiger Counter",
-      "ref": "In the style of Kraftwerk — the Geiger counter that opens “Radio-Activity” (1975)",
+      "ref": "Dry random ticks and rattling bursts, the Geiger counter that opens Kraftwerk’s “Radio-Activity”",
       "artist": "Kraftwerk",
       "tags": ["fx", "electro", "clicks", "random"],
       "level": 2,
@@ -12845,7 +12845,7 @@
     {
       "id": "easel-dalek-ring-voice",
       "name": "Dalek Ring-Mod Voice",
-      "ref": "In the style of Brian Hodgson — the Dalek voices of “Doctor Who” (1963)",
+      "ref": "A grating, ring-modulated monotone barked in syllables, the Dalek voice Brian Hodgson made for “Doctor Who”",
       "artist": "Brian Hodgson",
       "tags": ["fx", "sci-fi", "tv", "ring mod"],
       "level": 3,
@@ -12937,7 +12937,7 @@
     {
       "id": "easel-dial-up-handshake",
       "name": "Dial-Up Handshake",
-      "ref": "In the style of a 1990s dial-up modem connecting",
+      "ref": "A screeching, warbling handshake of tones leaping over hiss: a 1990s dial-up modem connecting",
       "artist": "1990s dial-up modems",
       "tags": ["fx", "machine", "glitch", "random"],
       "level": 3,
@@ -13038,7 +13038,7 @@
     {
       "id": "easel-reversed-tape-swell",
       "name": "Reversed Tape Swell",
-      "ref": "In the style of Pierre Henry — “Variations pour une porte et un soupir” (1963)",
+      "ref": "Notes that swell out of nothing and stop dead like reversed tape, the musique concrète of Pierre Henry",
       "artist": "Pierre Henry",
       "tags": ["fx", "musique concrete", "reverse", "envelope"],
       "level": 2,
@@ -13125,7 +13125,7 @@
     {
       "id": "easel-series-phase-swirl",
       "name": "Series Phase Swirl",
-      "ref": "In the style of Tonto’s Expanding Head Band — “Zero Time” (1971)",
+      "ref": "A bright, hollow chord with a slow jet-like phase swirl, the TONTO sound of Tonto’s Expanding Head Band",
       "artist": "Tonto’s Expanding Head Band",
       "tags": ["pad", "psychedelic", "phasing", "lowpass gate"],
       "level": 3,
@@ -13216,8 +13216,8 @@
     {
       "id": "easel-kosmische-ratio-drift",
       "name": "Kosmische Ratio Drift",
-      "ref": "In the style of Ash Ra Tempel — “Schwingungen” (1972)",
-      "artist": "Ash Ra Tempel",
+      "ref": "A low drone whose overtones bloom into a new chord each second, smeared in a spring pushed hard",
+      "artist": "Kosmische Musik",
       "tags": ["drone", "krautrock", "kosmische", "fm"],
       "level": 3,
       "blurb": "A low drone whose overtones bloom into a new chord every second, unison, fifth, octave, fourth, all smeared in a spring pushed hard.",

@@ -5,7 +5,7 @@
     {
       "id": "cs-blade-brass",
       "name": "Blade Runner Brass",
-      "ref": "In the style of Vangelis’s Blade Runner end titles (1982)",
+      "ref": "A slow-breathing brass chord that swells, glows and hangs in the air, as in Vangelis’s \"Blade Runner\" end titles",
       "artist": "Vangelis",
       "tags": ["brass", "film", "80s"],
       "level": 2,
@@ -125,7 +125,7 @@
     {
       "id": "cs-fanfare",
       "name": "Fanfare Brass",
-      "ref": "In the style of Vangelis’s Chariots of Fire (1981)",
+      "ref": "Two brass presets layered into a bright, stately fanfare, the CS-80 sound of Vangelis’s \"Chariots of Fire\"",
       "artist": "Vangelis",
       "tags": ["brass", "film", "80s"],
       "level": 1,
@@ -207,7 +207,7 @@
     {
       "id": "cs-strings",
       "name": "Layered Strings",
-      "ref": "In the style of late-1970s polysynth string sections",
+      "ref": "Two string presets layered, detuned and chorused into a full late-1970s polysynth string section",
       "artist": "Various",
       "tags": ["strings", "pad", "70s"],
       "level": 1,
@@ -285,7 +285,7 @@
     {
       "id": "cs-sine-organ",
       "name": "Sine Organ",
-      "ref": "In the style of 1970s organ ballads",
+      "ref": "Two pure sine stops whirling through the tremolo, a round organ for 1970s ballads",
       "artist": "Various",
       "tags": ["keys", "organ", "70s"],
       "level": 1,
@@ -370,7 +370,7 @@
     {
       "id": "cs-vocal-band",
       "name": "Vocal Band",
-      "ref": "In the style of late-1970s synth choir pads",
+      "ref": "Breathy and vowel-like, a narrow resonant band that drifts like a late-1970s synth choir",
       "artist": "Various",
       "tags": ["pad", "choir", "70s"],
       "level": 2,
@@ -453,7 +453,7 @@
     {
       "id": "cs-touch-keys",
       "name": "Touch Keys",
-      "ref": "In the style of 1970s electric keyboards",
+      "ref": "A plucky key tone, mellow when soft and biting when hard, like a 1970s electric keyboard",
       "artist": "Various",
       "tags": ["keys", "pluck"],
       "level": 2,
@@ -525,7 +525,7 @@
     {
       "id": "cs-ring-bells",
       "name": "Ring Bells",
-      "ref": "In the style of late-1970s film and TV sound design",
+      "ref": "Clanging, swooping ring-mod bells, the strange pings of late-1970s film and TV sound design",
       "artist": "Various",
       "tags": ["keys", "bells", "fx"],
       "level": 2,
@@ -598,7 +598,7 @@
     {
       "id": "cs-bend-lead",
       "name": "Expressive Lead",
-      "ref": "In the style of late-1970s jazz-rock synth solos",
+      "ref": "A brassy lead that scoops up into hard notes and glides between them, made for jazz-rock solos",
       "artist": "Various",
       "tags": ["lead", "jazz", "70s"],
       "level": 2,
@@ -671,7 +671,7 @@
     {
       "id": "cs-glissando",
       "name": "Glissando Harp",
-      "ref": "In the style of 1970s TV library music",
+      "ref": "Wide leaps filled in with quick chromatic runs, a harp-like glissando for 1970s TV library music",
       "artist": "Various",
       "tags": ["fx", "harp"],
       "level": 3,
@@ -745,7 +745,7 @@
     {
       "id": "cs-trill",
       "name": "Trumpet Trill",
-      "ref": "In the style of the CS-80 manual’s trill example",
+      "ref": "A bright brass note that trills by itself, as the CS-80 manual sets it up",
       "artist": "Yamaha",
       "tags": ["lead", "brass"],
       "level": 2,
@@ -804,7 +804,7 @@
     {
       "id": "cs-bass",
       "name": "Round Bass",
-      "ref": "In the style of late-1970s funk and soul synth bass",
+      "ref": "A round, punchy bass with a quick filter snap, for late-1970s funk and soul",
       "artist": "Various",
       "tags": ["bass", "funk", "70s"],
       "level": 1,
@@ -949,7 +949,7 @@
     {
       "id": "cs-wind",
       "name": "Night Wind",
-      "ref": "In the style of 1980s film soundtrack atmospheres",
+      "ref": "Gusting, circling wind from filtered noise, an atmosphere from 1980s film soundtracks",
       "artist": "Various",
       "tags": ["fx", "texture", "80s"],
       "level": 3,

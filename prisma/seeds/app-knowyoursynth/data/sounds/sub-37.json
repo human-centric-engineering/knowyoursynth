@@ -5,7 +5,7 @@
     {
       "id": "s37-sub-bass",
       "name": "Sub Oscillator Bass",
-      "ref": "In the style of 2010s synthwave basses",
+      "ref": "A round, heavy saw with a square an octave under it and a soft pluck, the bass of 2010s synthwave",
       "artist": "Various",
       "tags": ["bass", "synthwave", "moog"],
       "level": 1,
@@ -84,7 +84,7 @@
     {
       "id": "s37-feedback-growl",
       "name": "Feedback Growl Bass",
-      "ref": "In the style of Bernie Worrell’s Minimoog bass — “Flash Light” (Parliament)",
+      "ref": "A fat, growling bass that slides between notes, like Bernie Worrell’s Minimoog on Parliament’s “Flash Light”",
       "artist": "Bernie Worrell",
       "tags": ["bass", "funk", "70s", "feedback"],
       "level": 2,
@@ -172,7 +172,7 @@
     {
       "id": "s37-lucky-glide",
       "name": "Portamento Lead",
-      "ref": "In the style of Keith Emerson’s Moog solo — “Lucky Man” (Emerson, Lake & Palmer)",
+      "ref": "A big, singing mono lead that slides slowly from note to note, close to Keith Emerson’s solo on “Lucky Man”",
       "artist": "Keith Emerson",
       "tags": ["lead", "prog", "70s", "glide"],
       "level": 1,
@@ -253,7 +253,7 @@
     {
       "id": "s37-duo-fifths",
       "name": "Duo Interval Lead",
-      "ref": "In the style of 1970s prog-rock two-voice leads",
+      "ref": "Parallel fourths and fifths from two keys through one filter, a two-voice lead from 1970s prog rock",
       "artist": "Various",
       "tags": ["lead", "prog", "duo"],
       "level": 2,
@@ -319,7 +319,7 @@
     {
       "id": "s37-sync-sweep",
       "name": "Sync Sweep Lead",
-      "ref": "In the style of 1980s new-wave sync leads",
+      "ref": "A tearing, vocal lead that sweeps down through its harmonics on every note, as new-wave sync leads did",
       "artist": "Various",
       "tags": ["lead", "sync", "new wave", "80s"],
       "level": 2,
@@ -392,7 +392,7 @@
     {
       "id": "s37-two-pole-pluck",
       "name": "Two-Pole Pluck",
-      "ref": "In the style of 2010s synth-pop plucks",
+      "ref": "Bright and glassy even with the filter low, a gentle-slope pluck for 2010s synth-pop",
       "artist": "Various",
       "tags": ["pluck", "synth-pop", "filter"],
       "level": 1,
@@ -468,7 +468,7 @@
     {
       "id": "s37-loop-pulse",
       "name": "Looping Envelope Pulse",
-      "ref": "In the style of Tangerine Dream — “Phaedra”",
+      "ref": "One held note pulsing by itself while the filter rises and falls in long waves, like Tangerine Dream’s “Phaedra”",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "70s", "loop"],
       "level": 3,
@@ -543,7 +543,7 @@
     {
       "id": "s37-morph-drone",
       "name": "Shape-Shifting Drone",
-      "ref": "In the style of Klaus Schulze — “Timewind”",
+      "ref": "Waveshapes and filter drifting on separate clocks, a slow, living drone like Klaus Schulze’s “Timewind”",
       "artist": "Klaus Schulze",
       "tags": ["drone", "ambient", "kosmische", "70s"],
       "level": 2,
@@ -620,7 +620,7 @@
     {
       "id": "s37-chase-arp",
       "name": "Octave Arpeggio",
-      "ref": "In the style of Giorgio Moroder — “Chase”",
+      "ref": "A held bass note turned into driving sixteenth-note octaves, the disco pulse of Giorgio Moroder’s “Chase”",
       "artist": "Giorgio Moroder",
       "tags": ["seq", "arp", "disco", "70s"],
       "level": 1,
@@ -687,7 +687,7 @@
     {
       "id": "s37-velocity-wah",
       "name": "Velocity Wah Bass",
-      "ref": "In the style of 1970s funk synth bass",
+      "ref": "Hard notes throw the filter wide and soft ones barely move it: a touch-played 1970s funk synth bass",
       "artist": "Various",
       "tags": ["bass", "funk", "70s", "velocity"],
       "level": 2,
@@ -755,7 +755,7 @@
     {
       "id": "s37-random-bleeps",
       "name": "Random Computer Bleeps",
-      "ref": "In the style of 1970s science-fiction film computers",
+      "ref": "A pitch hopping to a new random note several times a second, the thinking computer of 1970s science fiction",
       "artist": "Various",
       "tags": ["fx", "random", "sci-fi", "70s"],
       "level": 2,
@@ -810,7 +810,7 @@
     {
       "id": "s37-surf",
       "name": "Ocean Surf",
-      "ref": "In the style of 1970s analogue-synthesizer sound effects",
+      "ref": "Pink noise swelling bright and sinking dark, the breaking waves of 1970s synth sound effects",
       "artist": "Various",
       "tags": ["fx", "noise", "ambient"],
       "level": 2,
@@ -872,7 +872,7 @@
     {
       "id": "s37-acid-line",
       "name": "Squelching Acid Line",
-      "ref": "In the style of 1980s Chicago acid house",
+      "ref": "A rubbery, squelching sixteenth-note line with slides and accents, roughened for 1980s Chicago acid house",
       "artist": "Various",
       "tags": ["bass", "acid house", "80s", "squelch"],
       "level": 2,
@@ -954,8 +954,8 @@
     {
       "id": "s37-velocity-length-keys",
       "name": "Velocity-Length Mallets",
-      "ref": "In the style of Steve Reich’s mallet patterns — “Music for 18 Musicians”",
-      "artist": "Steve Reich",
+      "ref": "Struck, marimba-like notes that ring longer the harder they are hit, for interlocking minimalist patterns",
+      "artist": "Minimalism",
       "tags": ["keys", "mallet", "minimal", "velocity"],
       "level": 3,
       "blurb": "Struck, marimba-like notes that ring longer the harder they are played, and shorter up the keyboard.",
@@ -1030,7 +1030,7 @@
     {
       "id": "s37-drone-chanter",
       "name": "Drone and Chanter",
-      "ref": "In the style of the Highland bagpipes",
+      "ref": "A reedy chanter melody running over a steady drone, as on the Highland bagpipes",
       "artist": "Scottish piping tradition",
       "tags": ["lead", "folk", "drone", "duo"],
       "level": 3,
@@ -1095,7 +1095,7 @@
     {
       "id": "s37-wheel-wobble",
       "name": "Wheel-Speed Wobble Bass",
-      "ref": "In the style of 2010s dubstep wobble basses",
+      "ref": "A filter wobble that speeds up as the mod wheel goes forward, the bass of 2010s dubstep",
       "artist": "Various",
       "tags": ["bass", "dubstep", "wobble", "2010s"],
       "level": 3,
@@ -1165,7 +1165,7 @@
     {
       "id": "s37-latched-drone",
       "name": "Latched Feedback Drone",
-      "ref": "In the style of La Monte Young’s drone music",
+      "ref": "A thick drone that sounds with no key held and breathes slowly, from the long-tone world of La Monte Young",
       "artist": "La Monte Young",
       "tags": ["drone", "minimal", "feedback"],
       "level": 3,
@@ -1228,7 +1228,7 @@
     {
       "id": "s37-filter-whistle",
       "name": "Filter Whistle Lead",
-      "ref": "In the style of the theremin in 1950s science-fiction films",
+      "ref": "A pure whistle from the filter alone, gliding and wavering like the theremin of 1950s science-fiction films",
       "artist": "Various",
       "tags": ["lead", "sine", "sci-fi", "filter"],
       "level": 2,

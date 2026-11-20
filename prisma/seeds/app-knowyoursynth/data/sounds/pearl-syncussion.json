@@ -5,7 +5,7 @@
     {
       "id": "disco-toms",
       "name": "Disco Toms",
-      "ref": "In the style of the late-1970s disco synth tom",
+      "ref": "Two tuned drums that fall in pitch as they ring, the synth-tom “pew” of late-1970s disco",
       "artist": "Disco-era synth drums",
       "tags": ["perc", "disco", "70s"],
       "level": 1,
@@ -88,7 +88,7 @@
     {
       "id": "laser-zap",
       "name": "Laser Zap",
-      "ref": "In the style of the space-disco laser shot",
+      "ref": "A high strike diving three octaves like a falling whistle, the laser shot of space disco",
       "artist": "Disco-era synth drums",
       "tags": ["fx", "disco", "70s"],
       "level": 1,
@@ -219,7 +219,7 @@
     {
       "id": "two-channel-snare",
       "name": "Two-Channel Snare",
-      "ref": "In the style of the 808-style snare the Syncussion makes from both channels",
+      "ref": "A tuned body on one channel and a burst of noise on the other, struck together into an 808-like snare",
       "artist": "Pearl Syncussion",
       "tags": ["perc", "electro", "80s"],
       "level": 2,
