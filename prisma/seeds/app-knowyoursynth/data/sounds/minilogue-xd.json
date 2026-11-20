@@ -5,7 +5,7 @@
     {
       "id": "mxd-poly-pad",
       "name": "Warm Poly Pad",
-      "ref": "In the style of 1980s synth-pop pads",
+      "ref": "Two slowly beating saws, softened and widened, the warm chord bed of 1980s synth-pop",
       "artist": "Various",
       "tags": ["pad", "synth-pop", "80s"],
       "level": 1,
@@ -106,7 +106,7 @@
     {
       "id": "mxd-brass",
       "name": "Poly Brass",
-      "ref": "In the style of 1980s synth brass",
+      "ref": "Bright chords that blare open on every note, the polysynth brass section of the 1980s",
       "artist": "Various",
       "tags": ["brass", "80s"],
       "level": 1,
@@ -200,7 +200,7 @@
     {
       "id": "mxd-duo-lead",
       "name": "Duo Lead",
-      "ref": "In the style of 2010s synthwave leads",
+      "ref": "Two detuned voices on every key, gliding and echoing: the fat synthwave lead",
       "artist": "Various",
       "tags": ["lead", "synthwave"],
       "level": 2,
@@ -288,7 +288,7 @@
     {
       "id": "mxd-unison-bass",
       "name": "Unison Bass",
-      "ref": "In the style of 1990s techno basslines",
+      "ref": "Four voices stacked on one low note and driven, a mono bass as thick as a chord for 1990s techno",
       "artist": "Various",
       "tags": ["bass", "techno", "90s"],
       "level": 1,
@@ -382,7 +382,7 @@
     {
       "id": "mxd-chord-stab",
       "name": "Minor Seventh Stab",
-      "ref": "In the style of 1990s deep house chord stabs",
+      "ref": "A whole minor-seventh chord from one finger, short and plucked, the deep house stab",
       "artist": "Various",
       "tags": ["keys", "house", "90s"],
       "level": 2,
@@ -468,7 +468,7 @@
     {
       "id": "mxd-sync-lead",
       "name": "Sync Sweep Lead",
-      "ref": "In the style of early 1980s new-wave sync leads",
+      "ref": "A tearing lead whose harmonics sweep down on every note, the sync sound of early-1980s new wave",
       "artist": "Various",
       "tags": ["lead", "new wave", "80s"],
       "level": 2,
@@ -539,7 +539,7 @@
     {
       "id": "mxd-ring-bell",
       "name": "Ring Bell",
-      "ref": "In the style of 1970s BBC Radiophonic Workshop bells",
+      "ref": "Two ring-modulated triangles clanging into a plate, a metallic bell from the Radiophonic Workshop’s kit",
       "artist": "Various",
       "tags": ["keys", "bells", "70s"],
       "level": 2,
@@ -615,7 +615,7 @@
     {
       "id": "mxd-xmod-growl",
       "name": "Cross Mod Growl",
-      "ref": "In the style of 2010s dubstep basses",
+      "ref": "A rough, cross-modulated snarl wobbling in eighths, the bass of 2010s dubstep",
       "artist": "Various",
       "tags": ["bass", "dubstep"],
       "level": 3,
@@ -689,7 +689,7 @@
     {
       "id": "mxd-fm-epiano",
       "name": "FM Electric Piano",
-      "ref": "In the style of the 1980s FM electric piano",
+      "ref": "A glassy tine whose bright attack mellows as it rings, the FM electric piano of the 1980s",
       "artist": "Various",
       "tags": ["keys", "80s"],
       "level": 2,
@@ -785,7 +785,7 @@
     {
       "id": "mxd-air-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of 1980s new-age flute leads",
+      "ref": "A breathy sine with air across the mouthpiece, the soft synth flute of 1980s new age",
       "artist": "Various",
       "tags": ["wind", "new age", "80s"],
       "level": 2,
@@ -866,7 +866,7 @@
     {
       "id": "mxd-snare",
       "name": "Drum-Machine Snare",
-      "ref": "In the style of 1980s drum-machine snares",
+      "ref": "A falling triangle head and high-passed wires, snapping like a 1980s drum machine",
       "artist": "Various",
       "tags": ["perc", "80s"],
       "level": 2,
@@ -948,7 +948,7 @@
     {
       "id": "mxd-pitched-wind",
       "name": "Pitched Wind",
-      "ref": "In the style of 1970s synthesizer sound effects",
+      "ref": "A band of noise that whistles in tune and gusts as it widens, a 1970s synth sound effect",
       "artist": "Various",
       "tags": ["fx", "texture", "70s"],
       "level": 2,
@@ -1030,7 +1030,7 @@
     {
       "id": "mxd-decim-hat",
       "name": "Lo-Fi Hi-Hat",
-      "ref": "In the style of lo-fi hip-hop drums",
+      "ref": "Crunchy, low-sample-rate noise for the dusty closed hats of lo-fi hip-hop",
       "artist": "Various",
       "tags": ["perc", "lo-fi", "hip-hop"],
       "level": 1,
@@ -1103,7 +1103,7 @@
     {
       "id": "mxd-oneshot-swell",
       "name": "One-Shot Swell",
-      "ref": "In the style of 1990s trance pads",
+      "ref": "A pad whose filter opens once per chord and stays there, echoing behind, as 1990s trance pads did",
       "artist": "Various",
       "tags": ["pad", "trance", "90s"],
       "level": 2,
@@ -1193,7 +1193,7 @@
     {
       "id": "mxd-fold-lead",
       "name": "Folded Saw Lead",
-      "ref": "In the style of 2010s electro-house leads",
+      "ref": "A wavefolded saw churning as the fold moves, with ping-pong echoes, for 2010s electro house",
       "artist": "Various",
       "tags": ["lead", "electro house"],
       "level": 3,
@@ -1279,7 +1279,7 @@
     {
       "id": "mxd-italo-arp",
       "name": "Italo Arpeggio",
-      "ref": "In the style of 1980s Italo disco arpeggios",
+      "ref": "Held chords broken into a plucked, echoing climb over two octaves, the Italo disco arpeggio",
       "artist": "Various",
       "tags": ["seq", "italo disco", "80s"],
       "level": 2,
@@ -1370,7 +1370,7 @@
     {
       "id": "mxd-pwm-strings",
       "name": "PWM Strings",
-      "ref": "In the style of 1970s string machines",
+      "ref": "Two squares swimming on the LFO through an ensemble, slightly unsteady like a 1970s string machine",
       "artist": "Various",
       "tags": ["strings", "70s"],
       "level": 2,
@@ -1461,7 +1461,7 @@
     {
       "id": "mxd-shimmer-pad",
       "name": "Shimmer Hall Pad",
-      "ref": "In the style of M83’s shoegaze-synth pads — “Midnight City”",
+      "ref": "A huge, glittering pad carried off into a vast hall, the shoegaze-tinged synth wash of M83",
       "artist": "M83",
       "tags": ["pad", "synth-pop", "ambient", "beautiful"],
       "level": 2,
@@ -1561,7 +1561,7 @@
     {
       "id": "mxd-ensemble-strings",
       "name": "Ensemble Strings",
-      "ref": "In the style of Jean-Michel Jarre’s string machine — “Oxygène”",
+      "ref": "A swirling string-machine section, the sound Jean-Michel Jarre spread across “Oxygène”",
       "artist": "Jean-Michel Jarre",
       "tags": ["strings", "electronic", "string machine", "70s"],
       "level": 2,
@@ -1647,8 +1647,8 @@
     {
       "id": "mxd-city-pop-keys",
       "name": "VPM Glass Keys",
-      "ref": "In the style of Tatsuro Yamashita’s city pop",
-      "artist": "Tatsuro Yamashita",
+      "ref": "A glassy, bell-tinged digital electric piano under a chorus, the sheen of 1980s city pop",
+      "artist": "City pop",
       "tags": ["keys", "city pop", "vpm", "80s"],
       "level": 2,
       "blurb": "A glassy, bell-tinged electric piano from the MULTI ENGINE’s phase modulation.",
@@ -1743,7 +1743,7 @@
     {
       "id": "mxd-carillon",
       "name": "VPM Carillon",
-      "ref": "In the style of the Flemish carillon tradition",
+      "ref": "Big tower bells whose overtones fall between the harmonics, ringing out like a Flemish carillon",
       "artist": "Flemish carillon tradition",
       "tags": ["keys", "bell", "vpm"],
       "level": 3,
@@ -1827,7 +1827,7 @@
     {
       "id": "mxd-dub-techno-chord",
       "name": "Dub Techno Chord",
-      "ref": "In the style of Basic Channel’s dub techno",
+      "ref": "A muffled minor-seventh stab trailing into a dubby tape echo, Basic Channel’s dub techno",
       "artist": "Basic Channel",
       "tags": ["keys", "dub techno", "chord", "90s"],
       "level": 2,
@@ -1908,7 +1908,7 @@
     {
       "id": "mxd-riser-swell",
       "name": "Riser Reverb Swell",
-      "ref": "In the style of Tim Hecker — “Ravedeath, 1972”",
+      "ref": "Smeared chords dissolving into a rising wash bigger than the notes, like Tim Hecker’s “Ravedeath, 1972”",
       "artist": "Tim Hecker",
       "tags": ["pad", "ambient", "reverb", "beautiful"],
       "level": 2,
@@ -1997,7 +1997,7 @@
     {
       "id": "mxd-submarine",
       "name": "Submarine Drone",
-      "ref": "In the style of Lustmord’s dark ambient",
+      "ref": "A low, throbbing drone heard as if through a hull, the underwater dark of Lustmord",
       "artist": "Lustmord",
       "tags": ["drone", "dark ambient", "reverb"],
       "level": 2,
@@ -2079,8 +2079,8 @@
     {
       "id": "mxd-horror-cluster",
       "name": "Horror Strings",
-      "ref": "In the style of Krzysztof Penderecki’s string clusters",
-      "artist": "Krzysztof Penderecki",
+      "ref": "Trembling, dissonant string clusters in a warped reverb, for modernist horror cues",
+      "artist": "Modernist string clusters",
       "tags": ["strings", "soundtrack", "horror", "reverb"],
       "level": 2,
       "blurb": "Dissonant, trembling string clusters in a warped, uneasy reverb.",
@@ -2165,8 +2165,8 @@
     {
       "id": "mxd-hornsby-keys",
       "name": "Plate Piano Keys",
-      "ref": "In the style of Bruce Hornsby — “The Way It Is”",
-      "artist": "Bruce Hornsby",
+      "ref": "A bright, struck, piano-like key in a warm plate, for 1980s piano-led pop",
+      "artist": "1980s piano pop",
       "tags": ["keys", "pop", "piano", "80s"],
       "level": 2,
       "blurb": "A bright, struck, piano-like key in a warm plate reverb.",
@@ -2250,7 +2250,7 @@
     {
       "id": "mxd-jet-pad",
       "name": "Flanged Jet Pad",
-      "ref": "In the style of Hawkwind’s space rock",
+      "ref": "A flanged saw pad roaring past like a jet overhead, Hawkwind’s space rock",
       "artist": "Hawkwind",
       "tags": ["pad", "space rock", "flanger", "70s"],
       "level": 2,
@@ -2328,7 +2328,7 @@
     {
       "id": "mxd-phased-strings",
       "name": "Phased String Machine",
-      "ref": "In the style of Air — “La Femme d’Argent”",
+      "ref": "A soft string machine swirling slowly through a phaser pedal, as on Air’s French dream pop",
       "artist": "Air",
       "tags": ["strings", "french", "phaser", "beautiful"],
       "level": 2,
@@ -2417,7 +2417,7 @@
     {
       "id": "mxd-supersaw",
       "name": "Unison Supersaw Lead",
-      "ref": "In the style of Tiësto’s trance anthems",
+      "ref": "Eight saws stacked into one enormous, wide lead: the trance supersaw of Tiësto’s anthems",
       "artist": "Tiësto",
       "tags": ["lead", "trance", "unison", "2000s"],
       "level": 2,
@@ -2509,7 +2509,7 @@
     {
       "id": "mxd-chase-arp",
       "name": "Rise-Fall Arpeggio",
-      "ref": "In the style of Giorgio Moroder — “Chase”",
+      "ref": "Resonant plucks running up and down a held chord and bouncing side to side, Moroder’s “Chase”",
       "artist": "Giorgio Moroder",
       "tags": ["seq", "disco", "arpeggio", "70s"],
       "level": 2,
@@ -2590,7 +2590,7 @@
     {
       "id": "mxd-random-cloud",
       "name": "Random Arp Cloud",
-      "ref": "In the style of Emeralds — “Does It Look Like I’m Here?”",
+      "ref": "Glassy notes scattered at random into a cloud of reverb, as in Emeralds’ “Does It Look Like I’m Here?”",
       "artist": "Emeralds",
       "tags": ["seq", "ambient", "arpeggio", "beautiful"],
       "level": 2,
@@ -2674,7 +2674,7 @@
     {
       "id": "mxd-reese-unison",
       "name": "Detuned Reese",
-      "ref": "In the style of Kevin Saunderson’s Reese — “Just Want Another Chance”",
+      "ref": "Stacked saws drifting in and out of phase: the Reese growl of Kevin Saunderson’s “Just Want Another Chance”",
       "artist": "Kevin Saunderson",
       "tags": ["bass", "techno", "unison", "80s"],
       "level": 2,
@@ -2744,7 +2744,7 @@
     {
       "id": "mxd-sync-bass",
       "name": "Sync Bass",
-      "ref": "In the style of Prince’s Minneapolis sound — “1999”",
+      "ref": "Every note snapping through a sync sweep, a tearing bass for the Minneapolis sound of Prince’s “1999”",
       "artist": "Prince",
       "tags": ["bass", "funk", "sync", "80s"],
       "level": 3,
@@ -2825,7 +2825,7 @@
     {
       "id": "mxd-ring-robot",
       "name": "Ring Mod Robot Lead",
-      "ref": "In the style of Silver Apples’ oscillator rock",
+      "ref": "A clanging robot lead whose tones do not belong to the melody, the oscillator rock of Silver Apples",
       "artist": "Silver Apples",
       "tags": ["lead", "psychedelic", "ring mod", "60s"],
       "level": 3,
@@ -2889,7 +2889,7 @@
     {
       "id": "mxd-cross-mod-gong",
       "name": "Cross Mod Gong",
-      "ref": "In the style of Peking opera gongs",
+      "ref": "A crashing storm of inharmonic partials, struck like the gongs of Peking opera",
       "artist": "Peking opera tradition",
       "tags": ["perc", "gong", "cross mod"],
       "level": 3,
@@ -2957,8 +2957,8 @@
     {
       "id": "mxd-gated-snare",
       "name": "Gated Peak Snare",
-      "ref": "In the style of Phil Collins’s gated drums — “In the Air Tonight”",
-      "artist": "Phil Collins",
+      "ref": "A booming band of noise whose room is cut off dead by a gate: the 1980s gated snare",
+      "artist": "1980s gated drums",
       "tags": ["perc", "snare", "gated", "80s"],
       "level": 2,
       "blurb": "A huge, booming snare, cut off sharp by a gate.",
@@ -3030,7 +3030,7 @@
     {
       "id": "mxd-decim-glitch",
       "name": "Decimated Glitch",
-      "ref": "In the style of Oval’s glitch music",
+      "ref": "Gritty, aliased clicks pitched by the keys, the digital debris of Oval’s glitch music",
       "artist": "Oval",
       "tags": ["perc", "glitch", "noise", "decim"],
       "level": 2,
@@ -3104,7 +3104,7 @@
     {
       "id": "mxd-ocean",
       "name": "Ocean Waves",
-      "ref": "In the style of 1970s new-age ocean recordings",
+      "ref": "Low noise rising and falling like surf, the ocean recordings of 1970s new age",
       "artist": "Various",
       "tags": ["fx", "water", "noise", "ambient"],
       "level": 2,
@@ -3175,7 +3175,7 @@
     {
       "id": "mxd-shape-swell-keys",
       "name": "One-Shot Shape Keys",
-      "ref": "In the style of Boards of Canada’s detuned keys",
+      "ref": "A soft, slightly detuned key whose wave morphs once and settles, Boards of Canada nostalgia",
       "artist": "Boards of Canada",
       "tags": ["keys", "ambient", "one-shot", "beautiful"],
       "level": 3,
@@ -3262,7 +3262,7 @@
     {
       "id": "mxd-bpm-wobble",
       "name": "Tempo Wobble Bass",
-      "ref": "In the style of Skrillex’s wobble basses",
+      "ref": "A folded, driven bass growling in time with the tempo, the wobble Skrillex built tracks on",
       "artist": "Skrillex",
       "tags": ["bass", "dubstep", "wobble", "bpm"],
       "level": 2,
@@ -3333,7 +3333,7 @@
     {
       "id": "mxd-tape-echo-lead",
       "name": "Tape Echo Lead",
-      "ref": "In the style of Pink Floyd — “Shine On You Crazy Diamond”",
+      "ref": "A gliding lead singing into a warm tape delay, Rick Wright’s Minimoog in “Shine On You Crazy Diamond”",
       "artist": "Pink Floyd",
       "tags": ["lead", "prog", "tape delay", "70s"],
       "level": 2,
@@ -3418,7 +3418,7 @@
     {
       "id": "mxd-doubled-square",
       "name": "Doubled Square Lead",
-      "ref": "In the style of Tears for Fears’ synth hooks",
+      "ref": "A hollow, reedy square thickened by a short double, the kind of synth hook Tears for Fears wrote",
       "artist": "Tears for Fears",
       "tags": ["lead", "synth-pop", "square", "80s"],
       "level": 1,
@@ -3493,7 +3493,7 @@
     {
       "id": "mxd-acid-bass",
       "name": "Resonant Acid Bass",
-      "ref": "In the style of Josh Wink — “Higher State of Consciousness”",
+      "ref": "A squelching, sliding 303 line whose accents bite, Josh Wink’s “Higher State of Consciousness”",
       "artist": "Josh Wink",
       "tags": ["bass", "acid", "house", "90s"],
       "level": 2,
@@ -3582,7 +3582,7 @@
     {
       "id": "mxd-french-house-bass",
       "name": "Filtered House Bass",
-      "ref": "In the style of 1990s French house basslines",
+      "ref": "A round, bouncy square bass with a little wah on each note, for disco-sampling French house",
       "artist": "Various",
       "tags": ["bass", "french house", "90s"],
       "level": 1,
@@ -3661,7 +3661,7 @@
     {
       "id": "mxd-vpm-fat-bass",
       "name": "VPM Fat Bass",
-      "ref": "In the style of Noisia’s neurofunk basses",
+      "ref": "A thick, rasping, metallic sub with a saw edge, in the neurofunk territory of Noisia",
       "artist": "Noisia",
       "tags": ["bass", "drum and bass", "vpm"],
       "level": 3,
@@ -3748,7 +3748,7 @@
     {
       "id": "mxd-throat",
       "name": "Throat Singer",
-      "ref": "In the style of Tuvan throat singing",
+      "ref": "A low, buzzing drone with a whistling overtone wandering above it, as in Tuvan throat singing",
       "artist": "Tuvan throat-singing tradition",
       "tags": ["lead", "vocal", "vpm", "world"],
       "level": 3,
@@ -3816,7 +3816,7 @@
     {
       "id": "mxd-creep-pad",
       "name": "Creeping VPM Pad",
-      "ref": "In the style of Ben Frost’s dark ambient",
+      "ref": "A dark pad that grows a metallic, unstable edge after each chord, the dread of Ben Frost",
       "artist": "Ben Frost",
       "tags": ["pad", "dark ambient", "vpm"],
       "level": 2,
@@ -3891,7 +3891,7 @@
     {
       "id": "mxd-shakuhachi",
       "name": "Shakuhachi",
-      "ref": "In the style of the Japanese shakuhachi’s honkyoku",
+      "ref": "A breathy bamboo flute bending into its notes, the shakuhachi of Japanese honkyoku",
       "artist": "Japanese shakuhachi tradition",
       "tags": ["wind", "japanese", "flute", "vpm"],
       "level": 3,
@@ -3974,7 +3974,7 @@
     {
       "id": "mxd-vpm-feedback-lead",
       "name": "VPM Feedback Lead",
-      "ref": "In the style of Jan Hammer — “Miami Vice Theme”",
+      "ref": "A bright, buzzing digital lead for 1980s TV, Jan Hammer’s “Miami Vice Theme”",
       "artist": "Jan Hammer",
       "tags": ["lead", "fm", "vpm", "80s"],
       "level": 3,
@@ -4050,8 +4050,8 @@
     {
       "id": "mxd-fm-slap-bass",
       "name": "FM Pluck Bass",
-      "ref": "In the style of Level 42’s 1980s slap bass",
-      "artist": "Level 42",
+      "ref": "A metallic snap settling into a round low note, the synth answer to 1980s slap bass",
+      "artist": "1980s slap bass",
       "tags": ["bass", "fm", "vpm", "80s"],
       "level": 2,
       "blurb": "A punchy, plucky, metallic slap bass from VPM Decay 2.",
@@ -4118,7 +4118,7 @@
     {
       "id": "mxd-ganza",
       "name": "Samba Shaker",
-      "ref": "In the style of Brazilian samba ganzá",
+      "ref": "Crisp swishing sixteenths with accents pushing through, a samba ganzá",
       "artist": "Brazilian samba tradition",
       "tags": ["perc", "shaker", "samba", "noise"],
       "level": 2,
@@ -4199,7 +4199,7 @@
     {
       "id": "mxd-909-kick",
       "name": "VCO Kick",
-      "ref": "In the style of 909 techno kicks",
+      "ref": "A triangle thrown up and dropped in milliseconds, the punchy kick of 909 techno",
       "artist": "Various",
       "tags": ["perc", "kick", "techno"],
       "level": 2,
@@ -4267,7 +4267,7 @@
     {
       "id": "mxd-linn-tom",
       "name": "Pitch-Drop Toms",
-      "ref": "In the style of 1980s drum-machine tom fills",
+      "ref": "Round electronic toms dropping in pitch, one per key, for 1980s drum-machine fills",
       "artist": "Various",
       "tags": ["perc", "tom", "80s"],
       "level": 2,
@@ -4339,8 +4339,8 @@
     {
       "id": "mxd-harp-gliss",
       "name": "Harp Glissando",
-      "ref": "In the style of Joanna Newsom’s harp",
-      "artist": "Joanna Newsom",
+      "ref": "Short ringing plucks rippling up through a chord, a harp glissando",
+      "artist": "Harp",
       "tags": ["pluck", "harp", "arpeggio", "beautiful"],
       "level": 2,
       "blurb": "Fast, rippling harp glissandi rising through each held chord.",
@@ -4431,8 +4431,8 @@
     {
       "id": "mxd-kalimba",
       "name": "Folded Kalimba",
-      "ref": "In the style of Hugh Tracey’s kalimba",
-      "artist": "Hugh Tracey",
+      "ref": "A soft, ringing thumb-piano tine with a slightly metallic ping",
+      "artist": "Kalimba",
       "tags": ["pluck", "african", "kalimba", "beautiful"],
       "level": 2,
       "blurb": "A soft, ringing, slightly metallic thumb-piano note.",
@@ -4503,7 +4503,7 @@
     {
       "id": "mxd-jump-brass",
       "name": "Sync Brass Stab",
-      "ref": "In the style of Van Halen — “Jump”",
+      "ref": "Brassy chord stabs with a sync rasp on every attack, the Oberheim of Van Halen’s “Jump”",
       "artist": "Van Halen",
       "tags": ["brass", "rock", "sync", "80s"],
       "level": 3,
@@ -4594,7 +4594,7 @@
     {
       "id": "mxd-lucky-man",
       "name": "Portamento Solo",
-      "ref": "In the style of Emerson, Lake & Palmer — “Lucky Man”",
+      "ref": "Two VCOs a fifth apart sliding from note to note: Emerson, Lake & Palmer’s “Lucky Man” solo",
       "artist": "Emerson, Lake & Palmer",
       "tags": ["lead", "prog", "portamento", "70s"],
       "level": 2,
@@ -4672,7 +4672,7 @@
     {
       "id": "mxd-sus2-plucks",
       "name": "Sus2 Pluck Chords",
-      "ref": "In the style of Lane 8’s melodic house",
+      "ref": "Airy, open sus2 plucks echoing from a one-finger line, Lane 8’s melodic house",
       "artist": "Lane 8",
       "tags": ["keys", "melodic house", "chord", "beautiful"],
       "level": 2,
@@ -4750,8 +4750,8 @@
     {
       "id": "mxd-maj7-glow",
       "name": "Major Seventh Glow",
-      "ref": "In the style of Satoshi Ashikawa — “Still Way”",
-      "artist": "Satoshi Ashikawa",
+      "ref": "Soft major-seventh chords swelling into a long hall, a quiet Japanese environmental-music glow",
+      "artist": "Kankyō ongaku",
       "tags": ["pad", "ambient", "chord", "beautiful"],
       "level": 2,
       "blurb": "Warm, glowing major-seventh chords from single notes, swelling softly.",
@@ -4828,8 +4828,8 @@
     {
       "id": "mxd-power-fifths",
       "name": "Power Chord Riff",
-      "ref": "In the style of Ministry’s industrial metal",
-      "artist": "Ministry",
+      "ref": "Root and fifth from one key, folded and driven to chug like a down-tuned guitar",
+      "artist": "Industrial metal",
       "tags": ["lead", "industrial", "chord", "90s"],
       "level": 2,
       "blurb": "Distorted power-chord chugs from single notes, like a down-tuned guitar.",
@@ -4904,8 +4904,8 @@
     {
       "id": "mxd-herrmann-dim",
       "name": "Diminished Stabs",
-      "ref": "In the style of Bernard Herrmann’s suspense scores — “Psycho”",
-      "artist": "Bernard Herrmann",
+      "ref": "Sharp, tense diminished stabs from single notes, for a suspense film cue",
+      "artist": "Suspense film scores",
       "tags": ["keys", "soundtrack", "chord", "suspense"],
       "level": 2,
       "blurb": "Sharp, tense diminished chord stabs from single notes.",
@@ -4978,8 +4978,8 @@
     {
       "id": "mxd-honky-tonk",
       "name": "Detuned Duo Piano",
-      "ref": "In the style of Winifred Atwell’s honky-tonk piano",
-      "artist": "Winifred Atwell",
+      "ref": "Two voices drifting apart on every key, a jangling, out-of-tune saloon piano",
+      "artist": "Honky-tonk piano",
       "tags": ["keys", "honky-tonk", "piano", "duo"],
       "level": 2,
       "blurb": "A jangling, out-of-tune saloon piano: two voices on every key, a little apart.",
@@ -5061,7 +5061,7 @@
     {
       "id": "mxd-blade-runner-chords",
       "name": "Gliding Poly Chords",
-      "ref": "In the style of Vangelis — “Blade Runner (End Titles)”",
+      "ref": "Brassy chords whose every note slides into the next, Vangelis’s “Blade Runner (End Titles)”",
       "artist": "Vangelis",
       "tags": ["brass", "soundtrack", "portamento", "80s"],
       "level": 3,
@@ -5151,8 +5151,8 @@
     {
       "id": "mxd-velocity-clav",
       "name": "Velocity Clav",
-      "ref": "In the style of Bill Withers — “Use Me”",
-      "artist": "Bill Withers",
+      "ref": "A thin, percussive clavinet whose accents snap brighter, for a 1970s soul groove",
+      "artist": "1970s soul",
       "tags": ["keys", "funk", "clavinet", "velocity"],
       "level": 2,
       "blurb": "A thin, percussive clavinet whose accents snap brighter and louder.",
@@ -5226,7 +5226,7 @@
     {
       "id": "mxd-filter-pings",
       "name": "Resonant Filter Pings",
-      "ref": "In the style of Edgar Froese’s sequencer music",
+      "ref": "Glassy pings from a filter ringing at its own pitch, as in Edgar Froese’s sequencer music",
       "artist": "Edgar Froese",
       "tags": ["pluck", "berlin school", "resonance", "70s"],
       "level": 3,
@@ -5306,7 +5306,7 @@
     {
       "id": "mxd-chip-trill",
       "name": "Chiptune Trill Lead",
-      "ref": "In the style of Tim Follin’s 8-bit game music",
+      "ref": "A narrow pulse trilling in thirty-seconds on every note, Tim Follin’s 8-bit trick",
       "artist": "Tim Follin",
       "tags": ["lead", "chiptune", "game", "bpm"],
       "level": 2,
@@ -5368,8 +5368,8 @@
     {
       "id": "mxd-grouper-pad",
       "name": "Breathing Noise Pad",
-      "ref": "In the style of Grouper — “Dragging a Dead Deer Up a Hill”",
-      "artist": "Grouper",
+      "ref": "A dark, soft pad under a halo of hiss that stays bright, like a quiet home recording",
+      "artist": "Lo-fi ambient",
       "tags": ["pad", "ambient", "noise", "beautiful"],
       "level": 3,
       "blurb": "A dark, soft pad with a halo of airy hiss that stays bright above it.",
@@ -5450,7 +5450,7 @@
     {
       "id": "mxd-folded-tri-lead",
       "name": "Folded Triangle Lead",
-      "ref": "In the style of Kaitlyn Aurelia Smith — “Resurrect”",
+      "ref": "A liquid triangle folding and unfolding as it sings, the Buchla shimmer of Kaitlyn Aurelia Smith’s “Resurrect”",
       "artist": "Kaitlyn Aurelia Smith",
       "tags": ["lead", "west coast", "electronic", "beautiful"],
       "level": 2,
@@ -5523,7 +5523,7 @@
     {
       "id": "mxd-space-zaps",
       "name": "Space Zaps",
-      "ref": "In the style of 1980s arcade shooters",
+      "ref": "A square thrown up four octaves and dropped at once, laser fire in a 1980s arcade shooter",
       "artist": "Various",
       "tags": ["fx", "laser", "game", "80s"],
       "level": 1,
@@ -5593,8 +5593,8 @@
     {
       "id": "mxd-dilla-keys",
       "name": "Lo-Fi Wobbly Keys",
-      "ref": "In the style of J Dilla’s hazy keys — “Donuts”",
-      "artist": "J Dilla",
+      "ref": "A dusty electric-piano chord with a seasick tape wobble, the hazy keys of beat-tape hip-hop",
+      "artist": "Lo-fi hip-hop",
       "tags": ["keys", "lo-fi", "hip-hop", "beautiful"],
       "level": 2,
       "blurb": "A soft, dusty electric-piano chord with a seasick tape wobble and warm echoes.",
@@ -5686,8 +5686,8 @@
     {
       "id": "mxd-gospel-organ",
       "name": "Gospel Organ",
-      "ref": "In the style of Billy Preston’s gospel organ",
-      "artist": "Billy Preston",
+      "ref": "A full, bright drawbar organ with the speaker spinning fast, for a gospel service",
+      "artist": "Gospel organ",
       "tags": ["keys", "organ", "gospel", "soul"],
       "level": 2,
       "blurb": "A full, bright drawbar organ with a fast, swirling speaker.",
@@ -5770,7 +5770,7 @@
     {
       "id": "mxd-musette",
       "name": "Musette Accordion",
-      "ref": "In the style of French bal-musette accordion",
+      "ref": "Two reeds beating against each other on every key, the bright waver of bal-musette accordion",
       "artist": "French musette tradition",
       "tags": ["keys", "accordion", "french", "duo"],
       "level": 2,
@@ -5844,8 +5844,8 @@
     {
       "id": "mxd-harmonium",
       "name": "Harmonium",
-      "ref": "In the style of Nusrat Fateh Ali Khan’s qawwali harmonium",
-      "artist": "Nusrat Fateh Ali Khan",
+      "ref": "A warm, reedy, pumped harmonium for long chords and melodies, as in qawwali",
+      "artist": "Qawwali",
       "tags": ["keys", "harmonium", "qawwali", "world"],
       "level": 1,
       "blurb": "A warm, reedy, pumped harmonium for sustained chords and melodies.",
@@ -5912,7 +5912,7 @@
     {
       "id": "mxd-fairlight-choir",
       "name": "Air Choir",
-      "ref": "In the style of Peter Gabriel’s Fairlight choirs",
+      "ref": "A breathy, wide “aah”, the airy Fairlight choir Peter Gabriel used",
       "artist": "Peter Gabriel",
       "tags": ["pad", "choir", "vpm", "80s"],
       "level": 2,
@@ -5991,8 +5991,8 @@
     {
       "id": "mxd-tower-brass",
       "name": "Funk Brass Section",
-      "ref": "In the style of Tower of Power’s horn section",
-      "artist": "Tower of Power",
+      "ref": "Tight, punchy stabs with a quick blat, a funk horn section",
+      "artist": "Funk horn sections",
       "tags": ["brass", "funk", "soul", "70s"],
       "level": 2,
       "blurb": "Tight, punchy brass stabs with a quick blare.",
@@ -6075,8 +6075,8 @@
     {
       "id": "mxd-williams-horn",
       "name": "Warm French Horn",
-      "ref": "In the style of John Williams’s horn themes",
-      "artist": "John Williams",
+      "ref": "A round, covered French horn that swells nobly into each note",
+      "artist": "Film-score brass",
       "tags": ["brass", "soundtrack", "horn", "beautiful"],
       "level": 2,
       "blurb": "A warm, round, heroic horn that swells into each note.",
@@ -6151,8 +6151,8 @@
     {
       "id": "mxd-alpert-trumpet",
       "name": "Bright Trumpet",
-      "ref": "In the style of Herb Alpert’s Tijuana Brass",
-      "artist": "Herb Alpert",
+      "ref": "A bright, punchy trumpet with a quick blare and a little vibrato, for 1960s easy listening",
+      "artist": "1960s easy listening",
       "tags": ["brass", "trumpet", "latin", "60s"],
       "level": 2,
       "blurb": "A bright, punchy trumpet with a quick blare and a little vibrato.",
@@ -6226,8 +6226,8 @@
     {
       "id": "mxd-richter-cello",
       "name": "Unison Cello",
-      "ref": "In the style of Max Richter — “On the Nature of Daylight”",
-      "artist": "Max Richter",
+      "ref": "A deep, aching bowed line thickened into a cello section",
+      "artist": "Neoclassical strings",
       "tags": ["strings", "neo-classical", "cello", "beautiful"],
       "level": 2,
       "blurb": "A deep, aching, bowed cello line, gently thickened.",
@@ -6308,8 +6308,8 @@
     {
       "id": "mxd-love-unlimited",
       "name": "Disco Strings",
-      "ref": "In the style of Love Unlimited Orchestra — “Love’s Theme”",
-      "artist": "Love Unlimited Orchestra",
+      "ref": "Soaring string chords and swooping runs, the orchestra behind 1970s disco",
+      "artist": "Disco strings",
       "tags": ["strings", "disco", "soul", "70s"],
       "level": 2,
       "blurb": "Lush, soaring string chords and swoops for a disco orchestra.",
@@ -6397,8 +6397,8 @@
     {
       "id": "mxd-pizzicato",
       "name": "Pizzicato",
-      "ref": "In the style of Léo Delibes — “Sylvia”",
-      "artist": "Léo Delibes",
+      "ref": "Short, round plucked strings in a little hall, orchestral pizzicato",
+      "artist": "Orchestral pizzicato",
       "tags": ["strings", "orchestral", "pizzicato", "classical"],
       "level": 1,
       "blurb": "Short, round, plucked orchestral strings.",
@@ -6470,7 +6470,7 @@
     {
       "id": "mxd-recorder",
       "name": "Recorder Consort",
-      "ref": "In the style of Renaissance recorder consorts",
+      "ref": "A pure, slightly breathy recorder with a soft chiff, for a Renaissance consort",
       "artist": "Renaissance consort tradition",
       "tags": ["wind", "recorder", "early music"],
       "level": 1,
@@ -6547,8 +6547,8 @@
     {
       "id": "mxd-clarinet",
       "name": "Square Clarinet",
-      "ref": "In the style of Artie Shaw’s swing clarinet",
-      "artist": "Artie Shaw",
+      "ref": "Odd harmonics only: a woody, hollow clarinet that swings",
+      "artist": "Swing",
       "tags": ["wind", "jazz", "clarinet", "swing"],
       "level": 1,
       "blurb": "A woody, hollow clarinet that swings.",
@@ -6611,8 +6611,8 @@
     {
       "id": "mxd-baker-street-sax",
       "name": "Growl Sax",
-      "ref": "In the style of Gerry Rafferty — “Baker Street”",
-      "artist": "Gerry Rafferty",
+      "ref": "A fat, growling reed bending into its notes, the alto sax of 1970s soft rock",
+      "artist": "1970s soft rock",
       "tags": ["wind", "saxophone", "soft rock", "70s"],
       "level": 3,
       "blurb": "A fat, growling alto sax line, bending into its notes.",
@@ -6704,7 +6704,7 @@
     {
       "id": "mxd-trance-pluck",
       "name": "Trance Pluck",
-      "ref": "In the style of Armin van Buuren’s uplifting trance",
+      "ref": "Short, wide plucks thrown from side to side in time, the bounce of Armin van Buuren’s uplifting trance",
       "artist": "Armin van Buuren",
       "tags": ["pluck", "trance", "2000s"],
       "level": 1,
@@ -6788,7 +6788,7 @@
     {
       "id": "mxd-future-bass",
       "name": "Future Bass Chords",
-      "ref": "In the style of Flume’s future bass",
+      "ref": "Big seventh chords pumping and wobbling in tempo, the future bass Flume made his",
       "artist": "Flume",
       "tags": ["keys", "future bass", "chord", "2010s"],
       "level": 3,
@@ -6868,7 +6868,7 @@
     {
       "id": "mxd-synthwave-arp",
       "name": "Synthwave Arp",
-      "ref": "In the style of Carpenter Brut’s darksynth",
+      "ref": "A menacing eighth-note figure in dotted echoes, the darksynth drive of Carpenter Brut",
       "artist": "Carpenter Brut",
       "tags": ["seq", "synthwave", "arpeggio", "2010s"],
       "level": 2,
@@ -6951,7 +6951,7 @@
     {
       "id": "mxd-upside-down-arp",
       "name": "Retro Horror Arp",
-      "ref": "In the style of Kyle Dixon & Michael Stein — “Stranger Things”",
+      "ref": "An eerie arpeggio rising and falling in a dark glow, Dixon and Stein’s “Stranger Things” theme",
       "artist": "Kyle Dixon & Michael Stein",
       "tags": ["seq", "soundtrack", "arpeggio", "horror"],
       "level": 2,
@@ -7026,7 +7026,7 @@
     {
       "id": "mxd-mighty-real-bass",
       "name": "Octave Pulse Bass",
-      "ref": "In the style of Sylvester — “You Make Me Feel (Mighty Real)”",
+      "ref": "Octaves bouncing in sixteenths, the Hi-NRG synth bass under Sylvester’s “You Make Me Feel (Mighty Real)”",
       "artist": "Sylvester",
       "tags": ["bass", "hi-nrg", "disco", "arpeggio"],
       "level": 2,
@@ -7090,7 +7090,7 @@
     {
       "id": "mxd-prodigy-hoover",
       "name": "Rave Hoover",
-      "ref": "In the style of The Prodigy’s rave stabs",
+      "ref": "Sour, enormous and swooping, every voice detuned: the rave hoover as The Prodigy fired it",
       "artist": "The Prodigy",
       "tags": ["lead", "rave", "hardcore", "90s"],
       "level": 3,
@@ -7160,7 +7160,7 @@
     {
       "id": "mxd-freakazoid-bass",
       "name": "Electro Funk Bass",
-      "ref": "In the style of Midnight Star — “Freak-a-Zoid”",
+      "ref": "A bubbly, rubbery square bass for electro-funk, Midnight Star’s “Freak-a-Zoid”",
       "artist": "Midnight Star",
       "tags": ["bass", "electro", "funk", "80s"],
       "level": 2,
@@ -7243,7 +7243,7 @@
     {
       "id": "mxd-trap-808",
       "name": "808 Slide Bass",
-      "ref": "In the style of Metro Boomin’s trap 808s",
+      "ref": "A long, booming sub sliding where notes overlap, the trap 808 Metro Boomin made standard",
       "artist": "Metro Boomin",
       "tags": ["bass", "trap", "hip-hop", "808"],
       "level": 2,
@@ -7322,7 +7322,7 @@
     {
       "id": "mxd-thriller-bass",
       "name": "Funk Synth Bass",
-      "ref": "In the style of Michael Jackson — “Thriller”",
+      "ref": "A fat, driven synth bass locked to the groove of Michael Jackson’s “Thriller”",
       "artist": "Michael Jackson",
       "tags": ["bass", "funk", "pop", "80s"],
       "level": 2,
@@ -7401,7 +7401,7 @@
     {
       "id": "mxd-noise-riser",
       "name": "White Noise Riser",
-      "ref": "In the style of 2010s EDM build-ups",
+      "ref": "A whoosh of noise climbing for seconds, the build-up before a 2010s EDM drop",
       "artist": "Various",
       "tags": ["fx", "riser", "noise", "edm"],
       "level": 3,
@@ -7475,7 +7475,7 @@
     {
       "id": "mxd-wind-chimes",
       "name": "Wind Chimes",
-      "ref": "In the style of Japanese furin wind bells",
+      "ref": "High, glassy chimes tinkling at random in the breeze, like Japanese furin bells",
       "artist": "Japanese furin tradition",
       "tags": ["fx", "bells", "arpeggio", "beautiful"],
       "level": 2,
@@ -7560,8 +7560,8 @@
     {
       "id": "mxd-steel-drum",
       "name": "Steel Drum",
-      "ref": "In the style of Ellie Mannette’s steel pans",
-      "artist": "Ellie Mannette",
+      "ref": "A hollow, metallic pan note that blooms and sings, the Trinidad steel pan",
+      "artist": "Trinidad steel pan",
       "tags": ["pluck", "caribbean", "steel pan", "vpm"],
       "level": 2,
       "blurb": "A bright, hollow, ringing pan note.",
@@ -7630,8 +7630,8 @@
     {
       "id": "mxd-arnalds-arp",
       "name": "Soft Piano Arpeggio",
-      "ref": "In the style of Ólafur Arnalds — “Saman”",
-      "artist": "Ólafur Arnalds",
+      "ref": "Soft, felted notes rippling through a chord in a quiet room, for neoclassical piano music",
+      "artist": "Neoclassical piano",
       "tags": ["seq", "neo-classical", "arpeggio", "beautiful"],
       "level": 2,
       "blurb": "A gentle, rippling arpeggio of soft, felted notes in a quiet room.",
@@ -7718,7 +7718,7 @@
     {
       "id": "mxd-music-box",
       "name": "VPM Music Box",
-      "ref": "In the style of antique music boxes",
+      "ref": "A tiny, sweet comb tine that plinks and rings, an antique music box",
       "artist": "Various",
       "tags": ["keys", "music box", "vpm", "beautiful"],
       "level": 1,
@@ -7789,8 +7789,8 @@
     {
       "id": "mxd-hutcherson-vibes",
       "name": "Vibraphone",
-      "ref": "In the style of Bobby Hutcherson’s vibraphone",
-      "artist": "Bobby Hutcherson",
+      "ref": "A soft, ringing metal bar with a slow motor shimmer, the jazz vibraphone",
+      "artist": "Jazz vibraphone",
       "tags": ["keys", "jazz", "mallet", "vpm"],
       "level": 2,
       "blurb": "A soft, ringing metal bar with a slow shimmer from the motor.",
@@ -7872,7 +7872,7 @@
     {
       "id": "mxd-mbira-marimba",
       "name": "Marimba",
-      "ref": "In the style of Zimbabwean marimba bands",
+      "ref": "A woody mallet knock that keeps fast interlocking patterns clear, as in Zimbabwean marimba bands",
       "artist": "Zimbabwean marimba tradition",
       "tags": ["pluck", "african", "mallet", "world"],
       "level": 2,
@@ -7949,8 +7949,8 @@
     {
       "id": "mxd-fleck-banjo",
       "name": "Banjo",
-      "ref": "In the style of Béla Fleck’s banjo",
-      "artist": "Béla Fleck",
+      "ref": "A bright, twangy pluck with a drum-head bark that dies fast, the bluegrass banjo",
+      "artist": "Bluegrass",
       "tags": ["pluck", "bluegrass", "banjo"],
       "level": 2,
       "blurb": "A bright, twangy, fast-dying plucked string.",
@@ -8030,8 +8030,8 @@
     {
       "id": "mxd-electric-sitar",
       "name": "Electric Sitar",
-      "ref": "In the style of The Box Tops — “Cry Like a Baby”",
-      "artist": "The Box Tops",
+      "ref": "A buzzing, jangling ring-modulated pluck, the electric sitar of late-1960s pop",
+      "artist": "1960s pop",
       "tags": ["pluck", "psychedelic", "sitar", "60s"],
       "level": 3,
       "blurb": "A buzzing, jangling electric sitar with a metallic ring.",
@@ -8105,8 +8105,8 @@
     {
       "id": "mxd-chic-guitar",
       "name": "Funk Guitar Chop",
-      "ref": "In the style of Nile Rodgers’s rhythm guitar — “Le Freak”",
-      "artist": "Nile Rodgers",
+      "ref": "Short, bright chord chops on the sixteenths through a phaser, like a clean disco rhythm guitar",
+      "artist": "Disco",
       "tags": ["pluck", "funk", "disco", "guitar"],
       "level": 2,
       "blurb": "A short, bright, chopping chord, like a clean funk guitar through a phaser.",
@@ -8193,7 +8193,7 @@
     {
       "id": "mxd-10cc-ooh",
       "name": "Ooh Choir Pad",
-      "ref": "In the style of 10cc — “I’m Not in Love”",
+      "ref": "A floating wall of soft “ooh”s, the tape-looped voices of 10cc’s “I’m Not in Love”",
       "artist": "10cc",
       "tags": ["pad", "choir", "soft rock", "beautiful"],
       "level": 2,
@@ -8276,7 +8276,7 @@
     {
       "id": "mxd-sync-sweep-pad",
       "name": "Sync Sweep Pad",
-      "ref": "In the style of Tangerine Dream — “Love on a Real Train”",
+      "ref": "Harmonics flowing endlessly through a slow sync sweep, Tangerine Dream’s “Love on a Real Train”",
       "artist": "Tangerine Dream",
       "tags": ["pad", "sync", "ambient", "80s"],
       "level": 3,
@@ -8357,7 +8357,7 @@
     {
       "id": "mxd-xmod-drone",
       "name": "Cross Mod Drone",
-      "ref": "In the style of Thomas Köner’s glacial drones",
+      "ref": "A dark, metallic drone whose partials never settle, as glacial as Thomas Köner’s",
       "artist": "Thomas Köner",
       "tags": ["drone", "dark ambient", "cross mod"],
       "level": 3,
@@ -8428,7 +8428,7 @@
     {
       "id": "mxd-computer-love",
       "name": "VPM Square Lead",
-      "ref": "In the style of Kraftwerk — “Computer Love”",
+      "ref": "A clean, hollow, faintly glassy square tune, Kraftwerk’s “Computer Love” played by a home computer",
       "artist": "Kraftwerk",
       "tags": ["lead", "electronic", "vpm", "80s"],
       "level": 2,
@@ -8502,7 +8502,7 @@
     {
       "id": "mxd-jungle-sub",
       "name": "Feedback Sine Sub",
-      "ref": "In the style of 1990s jungle sub-bass",
+      "ref": "A round, slightly gritty sine sub rolling under breakbeats in 1990s jungle",
       "artist": "Various",
       "tags": ["bass", "jungle", "sub", "vpm"],
       "level": 2,
@@ -8566,8 +8566,8 @@
     {
       "id": "mxd-doors-organ",
       "name": "Hollow VPM Organ",
-      "ref": "In the style of Ray Manzarek’s organ — The Doors",
-      "artist": "The Doors",
+      "ref": "A thin, reedy combo-organ tone with a vibrato swirl, for 1960s psychedelic runs",
+      "artist": "1960s psychedelic rock",
       "tags": ["keys", "organ", "psychedelic", "60s"],
       "level": 2,
       "blurb": "A thin, reedy, combo-organ tone for psychedelic runs.",
@@ -8638,7 +8638,7 @@
     {
       "id": "mxd-enya-bells",
       "name": "Bell Pad",
-      "ref": "In the style of Enya — “Orinoco Flow”",
+      "ref": "A bell strike over a slow-swelling pad in a cathedral of reverb, the layered synths of Enya",
       "artist": "Enya",
       "tags": ["pad", "new age", "bell", "beautiful"],
       "level": 2,
@@ -8720,8 +8720,8 @@
     {
       "id": "mxd-eluvium-drone",
       "name": "Fifth Drone",
-      "ref": "In the style of Eluvium — “Copia”",
-      "artist": "Eluvium",
+      "ref": "An open fifth that hangs and glows in a huge space, an endless ambient drone",
+      "artist": "Ambient",
       "tags": ["drone", "ambient", "chord", "beautiful"],
       "level": 1,
       "blurb": "A warm, open fifth that hangs and glows in a huge reverb.",
@@ -8790,8 +8790,8 @@
     {
       "id": "mxd-hisaishi-lullaby",
       "name": "Lullaby Chords",
-      "ref": "In the style of Joe Hisaishi’s film themes",
-      "artist": "Joe Hisaishi",
+      "ref": "Tender major chords harmonising a simple melody, soft and ringing like a film lullaby",
+      "artist": "Japanese film scores",
       "tags": ["keys", "soundtrack", "chord", "beautiful"],
       "level": 1,
       "blurb": "Gentle, tender major chords from single notes, soft and ringing.",
@@ -8867,7 +8867,7 @@
     {
       "id": "mxd-eple-pluck",
       "name": "Ping-Pong Pluck",
-      "ref": "In the style of Röyksopp — “Eple”",
+      "ref": "A soft bell pluck bouncing across the stereo field, Röyksopp’s “Eple”",
       "artist": "Röyksopp",
       "tags": ["pluck", "electronica", "delay", "beautiful"],
       "level": 1,
@@ -8953,8 +8953,8 @@
     {
       "id": "mxd-edge-delay",
       "name": "Dotted-Eighth Delay Lead",
-      "ref": "In the style of U2’s The Edge — “Where the Streets Have No Name”",
-      "artist": "U2",
+      "ref": "Straight eighths turned into a galloping shimmer by a dotted-eighth echo, the 1980s stadium-rock guitar trick",
+      "artist": "1980s stadium rock",
       "tags": ["lead", "rock", "delay", "80s"],
       "level": 2,
       "blurb": "Repeated eighth notes turned into a shimmering, galloping wash by a dotted-eighth delay.",
@@ -9036,7 +9036,7 @@
     {
       "id": "mxd-rimshot",
       "name": "Rimshot",
-      "ref": "In the style of 1980s drum-machine rimshots",
+      "ref": "A sharp, woody crack in a short boxy room, the 1980s drum-machine rimshot",
       "artist": "Various",
       "tags": ["perc", "rimshot", "80s"],
       "level": 2,
@@ -9111,7 +9111,7 @@
     {
       "id": "mxd-909-clap",
       "name": "Noise Clap",
-      "ref": "In the style of 909 handclaps",
+      "ref": "A bright clack with a splashy tail, the 909 handclap",
       "artist": "Various",
       "tags": ["perc", "clap", "house"],
       "level": 2,
@@ -9184,7 +9184,7 @@
     {
       "id": "mxd-ride",
       "name": "Ride Cymbal",
-      "ref": "In the style of jazz ride-cymbal patterns",
+      "ref": "Clangy metal and a long wash, played in a swung jazz ride pattern",
       "artist": "Various",
       "tags": ["perc", "cymbal", "jazz"],
       "level": 3,
@@ -9257,8 +9257,8 @@
     {
       "id": "mxd-james-brown-stab",
       "name": "Seventh Horn Stabs",
-      "ref": "In the style of James Brown’s horn stabs",
-      "artist": "James Brown",
+      "ref": "Tight dominant-seventh stabs from single notes, the horn hits at the heart of funk",
+      "artist": "Funk",
       "tags": ["brass", "funk", "chord", "60s"],
       "level": 2,
       "blurb": "Tight, punchy dominant-seventh horn stabs from single notes.",
@@ -9328,7 +9328,7 @@
     {
       "id": "mxd-birdland-chords",
       "name": "7sus4 Fusion Chords",
-      "ref": "In the style of Weather Report — “Birdland”",
+      "ref": "Open seventh-suspended chords with no third, the synth vamp of Weather Report’s “Birdland”",
       "artist": "Weather Report",
       "tags": ["keys", "jazz fusion", "chord", "70s"],
       "level": 2,
@@ -9401,8 +9401,8 @@
     {
       "id": "mxd-bond-chord",
       "name": "Spy Chord",
-      "ref": "In the style of John Barry’s James Bond scores",
-      "artist": "John Barry",
+      "ref": "A minor chord with a major seventh, sinister and glamorous, the spy-film cue",
+      "artist": "Spy film scores",
       "tags": ["keys", "soundtrack", "chord", "spy"],
       "level": 2,
       "blurb": "The minor chord with a major seventh: sinister, glamorous, unresolved.",
@@ -9471,7 +9471,7 @@
     {
       "id": "mxd-dream-sequence",
       "name": "Dream Sequence Chords",
-      "ref": "In the style of 1960s television dream sequences",
+      "ref": "Augmented chords swimming through a flanger, the wavy dissolve of a 1960s television dream sequence",
       "artist": "Various",
       "tags": ["keys", "soundtrack", "chord", "flanger"],
       "level": 2,
@@ -9543,7 +9543,7 @@
     {
       "id": "mxd-rydeen-arp",
       "name": "Manual Arp Groove",
-      "ref": "In the style of Yellow Magic Orchestra — “Rydeen”",
+      "ref": "Held notes bounced in the order they were pressed, the technopop of Yellow Magic Orchestra’s “Rydeen”",
       "artist": "Yellow Magic Orchestra",
       "tags": ["seq", "technopop", "arpeggio", "70s"],
       "level": 2,
@@ -9626,7 +9626,7 @@
     {
       "id": "mxd-may-sus4-stab",
       "name": "Sus4 Techno Stab",
-      "ref": "In the style of Derrick May — “Strings of Life”",
+      "ref": "Urgent sus4 stabs cutting through a Detroit groove, like Derrick May’s “Strings of Life”",
       "artist": "Derrick May",
       "tags": ["keys", "detroit techno", "chord", "80s"],
       "level": 2,
@@ -9706,7 +9706,7 @@
     {
       "id": "mxd-ascent-pad",
       "name": "Ascent Pad",
-      "ref": "In the style of Brian Eno — “An Ending (Ascent)”",
+      "ref": "A weightless pad that seems to rise as it blooms, Brian Eno’s “An Ending (Ascent)”",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "beautiful"],
       "level": 2,
@@ -9794,7 +9794,7 @@
     {
       "id": "mxd-pwm-lead",
       "name": "PWM Lead",
-      "ref": "In the style of Steve Winwood’s synth leads — “Higher Love”",
+      "ref": "A rich square lead with a swimming pulse width, Steve Winwood’s synth line on “Higher Love”",
       "artist": "Steve Winwood",
       "tags": ["lead", "pop", "pwm", "80s"],
       "level": 2,
@@ -9870,8 +9870,8 @@
     {
       "id": "mxd-chorus-bass",
       "name": "Chorused Fretless Bass",
-      "ref": "In the style of Pino Palladino’s fretless bass",
-      "artist": "Pino Palladino",
+      "ref": "A smooth, singing bass sliding between notes under a chorus, like a 1980s fretless",
+      "artist": "1980s fretless bass",
       "tags": ["bass", "pop", "fretless", "80s"],
       "level": 2,
       "blurb": "A smooth, singing, chorused bass that slides between notes.",

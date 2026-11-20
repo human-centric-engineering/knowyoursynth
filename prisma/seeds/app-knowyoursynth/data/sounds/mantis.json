@@ -5,7 +5,7 @@
     {
       "id": "mantis-talk-lead",
       "name": "Talking Lead",
-      "ref": "In the style of G-funk",
+      "ref": "A gliding saw lead through a narrow band that opens like a mouth, the talking whine of G-funk",
       "artist": "G-funk",
       "tags": ["lead", "filter", "joystick"],
       "level": 2,
@@ -90,7 +90,7 @@
     {
       "id": "mantis-notch-lead",
       "name": "Notch Lead",
-      "ref": "In the style of progressive rock",
+      "ref": "A hollow lead with a slow swirling notch through its middle, for a 1970s progressive rock solo",
       "artist": "Progressive rock",
       "tags": ["lead", "filter", "lfo"],
       "level": 2,
@@ -163,7 +163,7 @@
     {
       "id": "mantis-duo-lead",
       "name": "Duophonic Lead",
-      "ref": "In the style of 1970s duophonic synth leads",
+      "ref": "Two keys, two singing band-pass voices: the duophonic lead of the 1970s synth solo",
       "artist": "70s synth soloists",
       "tags": ["lead", "duophonic", "filter"],
       "level": 2,
@@ -243,7 +243,7 @@
     {
       "id": "mantis-density-pad",
       "name": "Density Pad",
-      "ref": "In the style of ambient music",
+      "ref": "A wide four-voice pad that breathes slowly, washed in chorus and reverb for ambient music",
       "artist": "Ambient",
       "tags": ["pad", "density", "fx"],
       "level": 2,
@@ -329,7 +329,7 @@
     {
       "id": "mantis-organ",
       "name": "Drawbar Organ",
-      "ref": "In the style of 1970s progressive rock organ",
+      "ref": "Three footages and a fast chorus swirl, the bright organ of 1970s progressive rock",
       "artist": "Progressive rock",
       "tags": ["keys", "organ", "fx"],
       "level": 1,
@@ -401,7 +401,7 @@
     {
       "id": "mantis-wavetable",
       "name": "Wavetable Sweep",
-      "ref": "In the style of 1980s new wave",
+      "ref": "Glassy tones whose wave itself sweeps on every note, the moving digital sound of early-1980s new wave",
       "artist": "New wave",
       "tags": ["keys", "wavetable", "envelope"],
       "level": 2,
@@ -469,7 +469,7 @@
     {
       "id": "mantis-ring-bells",
       "name": "Ring Bells",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "Two ring-modulated sines clanging into reverb, a bell sound from the BBC Radiophonic Workshop toolkit",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["keys", "ring", "bell"],
       "level": 2,
@@ -547,7 +547,7 @@
     {
       "id": "mantis-acid-line",
       "name": "Acid Line",
-      "ref": "In the style of acid house",
+      "ref": "A squelchy, resonant saw bass with drive and a little slide, the core of acid house",
       "artist": "Acid house",
       "tags": ["bass", "acid", "filter"],
       "level": 1,
@@ -621,7 +621,7 @@
     {
       "id": "mantis-trance-arp",
       "name": "Synced Arp",
-      "ref": "In the style of trance",
+      "ref": "Sixteenths over two octaves with a pulse width that moves with the bar, a trance arpeggio",
       "artist": "Trance",
       "tags": ["seq", "arp", "lfo"],
       "level": 2,
@@ -706,7 +706,7 @@
     {
       "id": "mantis-pwm-strings",
       "name": "PWM Strings",
-      "ref": "In the style of 1970s string machines",
+      "ref": "Two pulses shimmering on two LFOs, the soft ensemble of a 1970s string machine",
       "artist": "1970s string machines",
       "tags": ["pad", "pwm", "chorus"],
       "level": 1,
@@ -783,7 +783,7 @@
     {
       "id": "mantis-velocity-keys",
       "name": "Velocity Keys",
-      "ref": "In the style of 1990s house",
+      "ref": "Punchy chords that brighten the harder they are hit, for a 1990s house groove",
       "artist": "House",
       "tags": ["keys", "velocity", "filter"],
       "level": 2,
@@ -862,7 +862,7 @@
     {
       "id": "mantis-noise-hats",
       "name": "Noise Hats",
-      "ref": "In the style of electro",
+      "ref": "Steeply high-passed hiss ticking out the hats of an electro beat",
       "artist": "Electro",
       "tags": ["perc", "noise", "filter"],
       "level": 1,
@@ -930,7 +930,7 @@
     {
       "id": "mantis-repeat-pulse",
       "name": "Repeating Pulse",
-      "ref": "In the style of minimal techno",
+      "ref": "A held note that throbs by itself on a looping envelope, the hypnotic bass of minimal techno",
       "artist": "Techno",
       "tags": ["seq", "envelope", "filter"],
       "level": 2,
@@ -990,7 +990,7 @@
     {
       "id": "mantis-hammer-lead",
       "name": "Fusion Lead",
-      "ref": "In the style of Jan Hammer",
+      "ref": "A gritty, gliding lead whose vibrato grows under the wheel, the fusion Minimoog of Jan Hammer",
       "artist": "Jan Hammer",
       "tags": ["lead", "vibrato", "joystick"],
       "level": 2,
@@ -1077,7 +1077,7 @@
     {
       "id": "mantis-airport-pad",
       "name": "Airport Pad",
-      "ref": "In the style of Brian Eno — “Music for Airports”",
+      "ref": "Soft chords that bloom out of nothing and hang far away, like Brian Eno’s “Music for Airports”",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "reverb"],
       "level": 1,
@@ -1156,7 +1156,7 @@
     {
       "id": "mantis-ascent-swell",
       "name": "Ascent Swell",
-      "ref": "In the style of Brian Eno — “An Ending (Ascent)”",
+      "ref": "Brian Eno’s “An Ending (Ascent)” as one patch: slowly beating saws rising like light",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "density"],
       "level": 2,
@@ -1238,7 +1238,7 @@
     {
       "id": "mantis-awake-arp",
       "name": "Sunlit Arp",
-      "ref": "In the style of Tycho — “Awake”",
+      "ref": "A warm arpeggio rolling up and down under a soft chorus, the sunlit sequence of Tycho’s “Awake”",
       "artist": "Tycho",
       "tags": ["seq", "chillwave", "arp"],
       "level": 2,
@@ -1325,7 +1325,7 @@
     {
       "id": "mantis-tape-wobble-keys",
       "name": "Tape Wobble Keys",
-      "ref": "In the style of Boards of Canada — “Roygbiv”",
+      "ref": "Toy-like keys that sag and wobble as if off a worn tape, from Boards of Canada’s “Roygbiv”",
       "artist": "Boards of Canada",
       "tags": ["keys", "electronica", "lfo"],
       "level": 2,
@@ -1400,9 +1400,9 @@
     },
     {
       "id": "mantis-pearl-piano",
-      "name": "Pearl Piano",
-      "ref": "In the style of Harold Budd — “The Pearl”",
-      "artist": "Harold Budd",
+      "name": "Felt Piano",
+      "ref": "A soft, bell-edged felted piano melting into a deep, dark reverb, for slow ambient music",
+      "artist": "Ambient",
       "tags": ["keys", "ambient", "reverb"],
       "level": 1,
       "blurb": "A soft, bell-edged piano tone that melts into a deep, dark reverb.",
@@ -1468,7 +1468,7 @@
     {
       "id": "mantis-wind-chimes",
       "name": "Wind Chimes",
-      "ref": "In the style of ambient music",
+      "ref": "Pure, ringing chimes scattered at random over three octaves, for an ambient piece",
       "artist": "Ambient",
       "tags": ["perc", "ambient", "arp"],
       "level": 2,
@@ -1552,8 +1552,8 @@
     {
       "id": "mantis-glass-harmonica",
       "name": "Glass Harmonica",
-      "ref": "In the style of Mozart — Adagio for Glass Harmonica",
-      "artist": "Mozart",
+      "ref": "The eerie ring of a wet glass rim: a soft swell, a high overtone and a slow tremble",
+      "artist": "Glass harmonica",
       "tags": ["keys", "classical", "sine"],
       "level": 2,
       "blurb": "The eerie, pure ring of wet glass rims: soft attack, a glassy overtone and a slow shimmer.",
@@ -1623,8 +1623,8 @@
     {
       "id": "mantis-zeroes-and-ones",
       "name": "Slow Wavetable Pad",
-      "ref": "In the style of Stars of the Lid",
-      "artist": "Stars of the Lid",
+      "ref": "A glacial chord drifting from soft triangle to bright square and back, never settling",
+      "artist": "Drone ambient",
       "tags": ["pad", "ambient", "wavetable"],
       "level": 2,
       "blurb": "A glacial pad whose tone slowly turns from a soft triangle to a bright square and back.",
@@ -1701,7 +1701,7 @@
     {
       "id": "mantis-lofi-chords",
       "name": "Lo-Fi Chords",
-      "ref": "In the style of lo-fi hip-hop",
+      "ref": "Dusty, lazy seventh chords that sag a little out of tune, as sampled for lo-fi hip-hop",
       "artist": "Lo-fi hip-hop",
       "tags": ["keys", "lo-fi", "drift"],
       "level": 1,
@@ -1779,7 +1779,7 @@
     {
       "id": "mantis-chillwave-haze",
       "name": "Chillwave Haze",
-      "ref": "In the style of Washed Out — “Feel It All Around”",
+      "ref": "Heavily chorused saws as woozy as a faded VHS, the summer haze of Washed Out’s “Feel It All Around”",
       "artist": "Washed Out",
       "tags": ["pad", "chillwave", "chorus"],
       "level": 1,
@@ -1846,7 +1846,7 @@
     {
       "id": "mantis-ocean-waves",
       "name": "Ocean Waves",
-      "ref": "In the style of ambient field recordings",
+      "ref": "Band-passed hiss swelling and drawing back, surf rolling in on a beach",
       "artist": "Ambient",
       "tags": ["fx", "ambient", "noise"],
       "level": 2,
@@ -1917,8 +1917,8 @@
     {
       "id": "mantis-bloom-bells",
       "name": "Bloom Bells",
-      "ref": "In the style of Four Tet — “Two Thousand and Seventeen”",
-      "artist": "Four Tet",
+      "ref": "Warm bells hammered like a dulcimer, looping gently in the way of folktronica",
+      "artist": "Folktronica",
       "tags": ["pluck", "electronica", "ring"],
       "level": 2,
       "blurb": "Warm, hammered-dulcimer bells in a gentle, looping figure.",
@@ -1994,7 +1994,7 @@
     {
       "id": "mantis-says-arp",
       "name": "Rising Arp",
-      "ref": "In the style of Nils Frahm — “Says”",
+      "ref": "Nils Frahm’s “Says” in slow motion: a hypnotic arpeggio brightening over a long crescendo",
       "artist": "Nils Frahm",
       "tags": ["seq", "neo-classical", "arp"],
       "level": 2,
@@ -2081,7 +2081,7 @@
     {
       "id": "mantis-phaedra-sequence",
       "name": "Phaedra Sequence",
-      "ref": "In the style of Tangerine Dream — “Phaedra”",
+      "ref": "A dark sequencer line churning on while its filter swells and recedes, like Tangerine Dream’s “Phaedra”",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "arp"],
       "level": 2,
@@ -2160,7 +2160,7 @@
     {
       "id": "mantis-oxygene-swirl",
       "name": "Oxygène Swirl",
-      "ref": "In the style of Jean-Michel Jarre — “Oxygène”",
+      "ref": "A string-machine chord with a phaser-like swirl through it, the wash of Jarre’s “Oxygène”",
       "artist": "Jean-Michel Jarre",
       "tags": ["pad", "70s", "notch"],
       "level": 2,
@@ -2236,9 +2236,9 @@
     },
     {
       "id": "mantis-midnight-city",
-      "name": "Midnight Lead",
-      "ref": "In the style of M83 — “Midnight City”",
-      "artist": "M83",
+      "name": "Stadium Saw Lead",
+      "ref": "Huge, bright, buzzing saws with a glassy shimmer, a hook big enough for 2010s stadium synth-pop",
+      "artist": "2010s synth-pop",
       "tags": ["lead", "synth-pop", "density"],
       "level": 2,
       "blurb": "A huge, bright, buzzing saw lead with a slight, glassy shimmer.",
@@ -2308,8 +2308,8 @@
     {
       "id": "mantis-glacier-pad",
       "name": "Glacier Pad",
-      "ref": "In the style of Sigur Rós",
-      "artist": "Sigur Rós",
+      "ref": "A thin, cold swell rising out of the reverb like a guitar played with a cello bow, as in post-rock",
+      "artist": "Post-rock",
       "tags": ["pad", "post-rock", "reverb"],
       "level": 2,
       "blurb": "A cold, bowed swell that rises slowly out of the reverb, like a guitar played with a cello bow.",
@@ -2380,9 +2380,9 @@
     },
     {
       "id": "mantis-daylight-strings",
-      "name": "Daylight Strings",
-      "ref": "In the style of Max Richter — “On the Nature of Daylight”",
-      "artist": "Max Richter",
+      "name": "Mournful Strings",
+      "ref": "A slow string section swelling into each chord with a late vibrato, for neoclassical film music",
+      "artist": "Neoclassical strings",
       "tags": ["strings", "neo-classical", "pwm"],
       "level": 2,
       "blurb": "A slow, mournful string section that swells into each chord.",
@@ -2470,8 +2470,8 @@
     {
       "id": "mantis-choir-aah",
       "name": "Choir Aah",
-      "ref": "In the style of Vangelis — “Conquest of Paradise”",
-      "artist": "Vangelis",
+      "ref": "A solemn, wordless “aah”, each voice of the chord singing a slightly different vowel",
+      "artist": "Film-score choir",
       "tags": ["pad", "choir", "filter"],
       "level": 3,
       "blurb": "A solemn, wordless choir singing “aah”, each note a slightly different vowel.",
@@ -2560,9 +2560,9 @@
     },
     {
       "id": "mantis-cornfield-organ",
-      "name": "Cornfield Organ",
-      "ref": "In the style of Hans Zimmer — Interstellar",
-      "artist": "Hans Zimmer",
+      "name": "Breathing Pipe Organ",
+      "ref": "Pipes that speak slowly into a cathedral-length reverb, the vast organ of modern film scores",
+      "artist": "Film-score organ",
       "tags": ["keys", "film", "organ"],
       "level": 2,
       "blurb": "A vast, breathing pipe organ that swells under a slow, insistent figure.",
@@ -2631,9 +2631,9 @@
     },
     {
       "id": "mantis-solaris-glass",
-      "name": "Solaris Glass",
-      "ref": "In the style of Cliff Martinez — Solaris",
-      "artist": "Cliff Martinez",
+      "name": "Floating Glass",
+      "ref": "Struck-glass tones with the strike taken away, left floating in a ringing metallic halo",
+      "artist": "Ambient film scores",
       "tags": ["keys", "film", "ring"],
       "level": 3,
       "blurb": "Weightless, glassy tones with a ringing metallic halo, suspended in space.",
@@ -2701,7 +2701,7 @@
     {
       "id": "mantis-tanpura-drone",
       "name": "Tanpura Drone",
-      "ref": "In the style of Hindustani classical music",
+      "ref": "One key, two jobs: a buzzing tanpura drone that holds still while the melody moves above",
       "artist": "Hindustani classical",
       "tags": ["drone", "world", "mod"],
       "level": 3,
@@ -2774,7 +2774,7 @@
     {
       "id": "mantis-strobe-pluck",
       "name": "Strobe Pluck",
-      "ref": "In the style of deadmau5 — “Strobe”",
+      "ref": "Bell-edged plucks spiralling patiently up two octaves, the long build of deadmau5’s “Strobe”",
       "artist": "deadmau5",
       "tags": ["seq", "progressive house", "arp"],
       "level": 2,
@@ -2858,7 +2858,7 @@
     {
       "id": "mantis-filter-house-chords",
       "name": "Filter House Chords",
-      "ref": "In the style of Daft Punk — “Revolution 909”",
+      "ref": "Choppy disco chords opened and shut by hand, the French filter house of Daft Punk’s “Revolution 909”",
       "artist": "Daft Punk",
       "tags": ["keys", "french house", "joystick"],
       "level": 3,
@@ -2946,7 +2946,7 @@
     {
       "id": "mantis-genesis-bass",
       "name": "Distorted Electro Bass",
-      "ref": "In the style of Justice — “Genesis”",
+      "ref": "Fat, crunchy saws with the drive right up, snarling like Justice’s “Genesis”",
       "artist": "Justice",
       "tags": ["bass", "electro house", "drive"],
       "level": 2,
@@ -3018,7 +3018,7 @@
     {
       "id": "mantis-reese-density",
       "name": "Density Reese",
-      "ref": "In the style of Ed Rush & Optical — “Wormhole”",
+      "ref": "Three detuned saws grinding against each other: the neurofunk Reese of Ed Rush & Optical’s “Wormhole”",
       "artist": "Ed Rush & Optical",
       "tags": ["bass", "drum and bass", "density"],
       "level": 2,
@@ -3086,7 +3086,7 @@
     {
       "id": "mantis-wobble-bass",
       "name": "Wobble Bass",
-      "ref": "In the style of Skream — “Midnight Request Line”",
+      "ref": "A talking sub wobble locked to the tempo, the early dubstep of Skream’s “Midnight Request Line”",
       "artist": "Skream",
       "tags": ["bass", "dubstep", "lfo"],
       "level": 2,
@@ -3162,7 +3162,7 @@
     {
       "id": "mantis-organ-house-bass",
       "name": "Organ House Bass",
-      "ref": "In the style of Robin S — “Show Me Love”",
+      "ref": "The round, bouncing preset-organ bass that carries Robin S’s “Show Me Love”",
       "artist": "Robin S",
       "tags": ["bass", "house", "organ"],
       "level": 1,
@@ -3218,7 +3218,7 @@
     {
       "id": "mantis-strings-of-life",
       "name": "Detroit String Stab",
-      "ref": "In the style of Derrick May — “Strings of Life”",
+      "ref": "Urgent, syncopated string stabs, the sampled strings Derrick May fired through “Strings of Life”",
       "artist": "Derrick May",
       "tags": ["strings", "detroit", "techno"],
       "level": 2,
@@ -3296,7 +3296,7 @@
     {
       "id": "mantis-dub-chord",
       "name": "Dub Techno Chord",
-      "ref": "In the style of Basic Channel",
+      "ref": "A muffled minor-seventh stab that is almost all reverb: Basic Channel’s dub techno",
       "artist": "Basic Channel",
       "tags": ["keys", "dub techno", "reverb"],
       "level": 2,
@@ -3372,7 +3372,7 @@
     {
       "id": "mantis-minimal-blip",
       "name": "Minimal Blip",
-      "ref": "In the style of Plastikman — “Spastik”",
+      "ref": "A tiny, dry sine blip ticking out a figure, like Plastikman’s “Spastik” stripped to the bone",
       "artist": "Plastikman",
       "tags": ["perc", "minimal techno", "sine"],
       "level": 1,
@@ -3438,7 +3438,7 @@
     {
       "id": "mantis-hoover",
       "name": "Hoover",
-      "ref": "In the style of Joey Beltram — “Mentasm”",
+      "ref": "Thick, whining and swooping into tune, the rave hoover Joey Beltram unleashed on “Mentasm”",
       "artist": "Joey Beltram",
       "tags": ["lead", "rave", "density"],
       "level": 3,
@@ -3515,7 +3515,7 @@
     {
       "id": "mantis-rave-organ-stab",
       "name": "Rave Organ Stab",
-      "ref": "In the style of The Prodigy — “Everybody in the Place”",
+      "ref": "A bright, punchy organ stab hammered over breakbeats, the Prodigy’s “Everybody in the Place”",
       "artist": "The Prodigy",
       "tags": ["keys", "rave", "organ"],
       "level": 1,
@@ -3583,7 +3583,7 @@
     {
       "id": "mantis-italo-octave-bass",
       "name": "Italo Octave Bass",
-      "ref": "In the style of Italo disco",
+      "ref": "One key bouncing between itself and its octave in eighths, Italo disco’s driving bass",
       "artist": "Italo disco",
       "tags": ["bass", "italo disco", "arp"],
       "level": 1,
@@ -3654,7 +3654,7 @@
     {
       "id": "mantis-feel-love-sequence",
       "name": "Feel Love Sequence",
-      "ref": "In the style of Giorgio Moroder — “I Feel Love”",
+      "ref": "Root, fifth and octave pulsing without rest: the sequencer bass of Giorgio Moroder’s “I Feel Love”",
       "artist": "Giorgio Moroder",
       "tags": ["bass", "disco", "arp"],
       "level": 2,
@@ -3728,7 +3728,7 @@
     {
       "id": "mantis-upside-down-arp",
       "name": "Upside Down Arp",
-      "ref": "In the style of Kyle Dixon & Michael Stein — Stranger Things",
+      "ref": "A glowing major-seventh arpeggio that rises, falls and threatens, Dixon and Stein’s Stranger Things theme",
       "artist": "Kyle Dixon & Michael Stein",
       "tags": ["seq", "synthwave", "arp"],
       "level": 2,
@@ -3800,7 +3800,7 @@
     {
       "id": "mantis-nightcall-bass",
       "name": "Nightcall Bass",
-      "ref": "In the style of Kavinsky — “Nightcall”",
+      "ref": "Slow, deep and glossy octaves for a night drive, close to Kavinsky’s “Nightcall”",
       "artist": "Kavinsky",
       "tags": ["bass", "synthwave", "chorus"],
       "level": 1,
@@ -3858,7 +3858,7 @@
     {
       "id": "mantis-blinding-lead",
       "name": "Blinding Lead",
-      "ref": "In the style of The Weeknd — “Blinding Lights”",
+      "ref": "A bubbly square-and-saw lead with a quick glide, the 1980s revival of The Weeknd’s “Blinding Lights”",
       "artist": "The Weeknd",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 2,
@@ -3929,7 +3929,7 @@
     {
       "id": "mantis-take-on-me-lead",
       "name": "Bright Square Lead",
-      "ref": "In the style of a-ha — “Take On Me”",
+      "ref": "A bright square-wave hook that sparkles on fast melodies, like the riff of a-ha’s “Take On Me”",
       "artist": "a-ha",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 1,
@@ -3993,7 +3993,7 @@
     {
       "id": "mantis-jump-brass",
       "name": "Jump Brass",
-      "ref": "In the style of Van Halen — “Jump”",
+      "ref": "Big brassy chords swelling on each hit, the arena synth of Van Halen’s “Jump”",
       "artist": "Van Halen",
       "tags": ["brass", "rock", "80s"],
       "level": 2,
@@ -4071,7 +4071,7 @@
     {
       "id": "mantis-minneapolis-stab",
       "name": "Minneapolis Stab",
-      "ref": "In the style of Prince — “1999”",
+      "ref": "Synths in place of a horn section, punched out in short hits: Prince’s “1999”",
       "artist": "Prince",
       "tags": ["brass", "funk", "80s"],
       "level": 2,
@@ -4150,7 +4150,7 @@
     {
       "id": "mantis-vox-humana",
       "name": "Vox Humana",
-      "ref": "In the style of Gary Numan — “Are ‘Friends’ Electric?”",
+      "ref": "A cold, nasal choir-organ pad, the polysynth vox humana under Gary Numan’s “Are ‘Friends’ Electric?”",
       "artist": "Gary Numan",
       "tags": ["pad", "new wave", "filter"],
       "level": 2,
@@ -4222,7 +4222,7 @@
     {
       "id": "mantis-metal-bell-lead",
       "name": "Metal Bell Lead",
-      "ref": "In the style of Depeche Mode — “Everything Counts”",
+      "ref": "A clanging tune as if played on hammered scrap, Depeche Mode’s “Everything Counts”",
       "artist": "Depeche Mode",
       "tags": ["lead", "synth-pop", "ring"],
       "level": 2,
@@ -4293,7 +4293,7 @@
     {
       "id": "mantis-computer-love",
       "name": "Computer Love",
-      "ref": "In the style of Kraftwerk — “Computer Love”",
+      "ref": "Soft at the edges and a little sad, the home-computer melody of Kraftwerk’s “Computer Love”",
       "artist": "Kraftwerk",
       "tags": ["lead", "synth-pop", "70s"],
       "level": 1,
@@ -4354,7 +4354,7 @@
     {
       "id": "mantis-rydeen-arp",
       "name": "Rydeen Arp",
-      "ref": "In the style of Yellow Magic Orchestra — “Rydeen”",
+      "ref": "Galloping square waves racing up three octaves, the nimble techno-pop of Yellow Magic Orchestra’s “Rydeen”",
       "artist": "Yellow Magic Orchestra",
       "tags": ["seq", "techno-pop", "arp"],
       "level": 2,
@@ -4424,7 +4424,7 @@
     {
       "id": "mantis-chip-arp",
       "name": "Chiptune Chord Arp",
-      "ref": "In the style of Rob Hubbard — Commodore 64 music",
+      "ref": "A thin pulse arpeggiated into a flickering chord, Rob Hubbard’s way of fitting harmony into a Commodore 64",
       "artist": "Rob Hubbard",
       "tags": ["seq", "chiptune", "arp"],
       "level": 2,
@@ -4484,7 +4484,7 @@
     {
       "id": "mantis-lucky-man-lead",
       "name": "Portamento Solo",
-      "ref": "In the style of Emerson, Lake & Palmer — “Lucky Man”",
+      "ref": "A fat solo sliding slowly into every note, the Moog that closes Emerson, Lake & Palmer’s “Lucky Man”",
       "artist": "Emerson, Lake & Palmer",
       "tags": ["lead", "prog", "glide"],
       "level": 2,
@@ -4554,7 +4554,7 @@
     {
       "id": "mantis-on-the-run",
       "name": "Running Sequence",
-      "ref": "In the style of Pink Floyd — “On the Run”",
+      "ref": "A frantic eight-note sequence tearing up and down, Pink Floyd’s “On the Run”",
       "artist": "Pink Floyd",
       "tags": ["seq", "prog", "arp"],
       "level": 3,
@@ -4625,7 +4625,7 @@
     {
       "id": "mantis-crazy-diamond-pad",
       "name": "Crazy Diamond Pad",
-      "ref": "In the style of Pink Floyd — “Shine On You Crazy Diamond”",
+      "ref": "A deep, patient string-synth pad opening over seconds, as under Pink Floyd’s “Shine On You Crazy Diamond”",
       "artist": "Pink Floyd",
       "tags": ["pad", "prog", "wavetable"],
       "level": 2,
@@ -4700,7 +4700,7 @@
     {
       "id": "mantis-sinking-growl",
       "name": "Sinking Growl",
-      "ref": "In the style of Rush — “Tom Sawyer”",
+      "ref": "A snarling saw that sinks in pitch as it is held, the synth growl in Rush’s “Tom Sawyer”",
       "artist": "Rush",
       "tags": ["lead", "rock", "envelope"],
       "level": 3,
@@ -4770,7 +4770,7 @@
     {
       "id": "mantis-baba-organ-arp",
       "name": "Repeating Organ",
-      "ref": "In the style of The Who — “Baba O’Riley”",
+      "ref": "Every note of a chord repeating in a bubbling stream, the electronic organ of The Who’s “Baba O’Riley”",
       "artist": "The Who",
       "tags": ["seq", "rock", "organ"],
       "level": 2,
@@ -4845,7 +4845,7 @@
     {
       "id": "mantis-birdland-lead",
       "name": "Fusion Saw Lead",
-      "ref": "In the style of Weather Report — “Birdland”",
+      "ref": "A bright, singing saw with a quick slide, carrying the jubilant theme of Weather Report’s “Birdland”",
       "artist": "Weather Report",
       "tags": ["lead", "fusion", "jazz"],
       "level": 2,
@@ -4914,8 +4914,8 @@
     {
       "id": "mantis-gospel-organ",
       "name": "Gospel Organ",
-      "ref": "In the style of Billy Preston",
-      "artist": "Billy Preston",
+      "ref": "A churchy drawbar organ, its chorus spinning like a rotary speaker at full speed",
+      "artist": "Gospel organ",
       "tags": ["keys", "gospel", "organ"],
       "level": 2,
       "blurb": "A churchy, swirling drawbar organ, its fast chorus spinning like a rotary speaker.",
@@ -4987,9 +4987,9 @@
     },
     {
       "id": "mantis-toccata-organ",
-      "name": "Toccata Organ",
-      "ref": "In the style of Bach — Toccata and Fugue in D minor",
-      "artist": "Bach",
+      "name": "Grand Pipe Organ",
+      "ref": "Reedy stops and a 16-foot pedal filling a vast stone church: the Baroque pipe organ",
+      "artist": "Baroque pipe organ",
       "tags": ["keys", "baroque", "organ"],
       "level": 1,
       "blurb": "A grand, reedy pipe organ in a vast stone church.",
@@ -5053,8 +5053,8 @@
     {
       "id": "mantis-harpsichord",
       "name": "Harpsichord",
-      "ref": "In the style of Domenico Scarlatti",
-      "artist": "Domenico Scarlatti",
+      "ref": "All quill and no body, quick to speak and quick to fade, a harpsichord for Baroque sonatas",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "baroque", "pluck"],
       "level": 2,
       "blurb": "A bright, twangy, plucked harpsichord, quick to speak and quick to fade.",
@@ -5128,8 +5128,8 @@
     {
       "id": "mantis-syrinx-flute",
       "name": "Flute",
-      "ref": "In the style of Debussy — Syrinx",
-      "artist": "Debussy",
+      "ref": "A breathy, soft flute whose vibrato grows as each note is held",
+      "artist": "Solo flute",
       "tags": ["wind", "classical", "noise"],
       "level": 2,
       "blurb": "A breathy, soft flute with a vibrato that grows as each note is held.",
@@ -5196,8 +5196,8 @@
     {
       "id": "mantis-clarinet",
       "name": "Clarinet",
-      "ref": "In the style of Mozart — Clarinet Concerto",
-      "artist": "Mozart",
+      "ref": "Odd harmonics from a square, mellow low down and singing high: a dark, woody clarinet",
+      "artist": "Classical clarinet",
       "tags": ["wind", "classical", "pulse"],
       "level": 2,
       "blurb": "A dark, woody, hollow clarinet, mellow low down and singing up high.",
@@ -5264,8 +5264,8 @@
     {
       "id": "mantis-gabriels-oboe",
       "name": "Oboe",
-      "ref": "In the style of Ennio Morricone — “Gabriel’s Oboe”",
-      "artist": "Ennio Morricone",
+      "ref": "A thin, nasal double reed that sings tenderly over a film score",
+      "artist": "Film-score oboe",
       "tags": ["wind", "film", "filter"],
       "level": 2,
       "blurb": "A thin, nasal, singing double reed, tender and plaintive.",
@@ -5336,8 +5336,8 @@
     {
       "id": "mantis-bowed-cello",
       "name": "Bowed Cello",
-      "ref": "In the style of Arvo Pärt — “Spiegel im Spiegel”",
-      "artist": "Arvo Pärt",
+      "ref": "A warm, slow cello line with the bow catching the string and a vibrato easing in",
+      "artist": "Solo cello",
       "tags": ["strings", "classical", "mono"],
       "level": 2,
       "blurb": "A warm, slow, singing cello line with the bow’s soft start.",
@@ -5405,8 +5405,8 @@
     {
       "id": "mantis-harp-glissando",
       "name": "Harp Glissando",
-      "ref": "In the style of Debussy — Danse sacrée et danse profane",
-      "artist": "Debussy",
+      "ref": "A hand swept across the strings: a rippling harp glissando from one held chord",
+      "artist": "Orchestral harp",
       "tags": ["pluck", "classical", "arp"],
       "level": 2,
       "blurb": "A rippling harp sweep across four octaves from a single held chord.",
@@ -5474,8 +5474,8 @@
     {
       "id": "mantis-kalimba",
       "name": "Kalimba",
-      "ref": "In the style of Earth, Wind & Fire — Maurice White’s kalimba",
-      "artist": "Earth, Wind & Fire",
+      "ref": "A soft, woody thumb piano with a faint metallic tine, as heard in 1970s soul and African music",
+      "artist": "Kalimba",
       "tags": ["pluck", "world", "ring"],
       "level": 2,
       "blurb": "A soft, woody thumb piano with a little metallic ring.",
@@ -5534,7 +5534,7 @@
     {
       "id": "mantis-steelpan",
       "name": "Steelpan",
-      "ref": "In the style of Trinidad steelpan",
+      "ref": "Round, hollow and singing, the Trinidad steel pan carrying a sunny melody",
       "artist": "Steelpan",
       "tags": ["perc", "caribbean", "ring"],
       "level": 2,
@@ -5596,8 +5596,8 @@
     {
       "id": "mantis-reich-marimba",
       "name": "Marimba",
-      "ref": "In the style of Steve Reich — Music for 18 Musicians",
-      "artist": "Steve Reich",
+      "ref": "Short, woody, hollow strikes for an interlocking pulse, the marimba of minimalism",
+      "artist": "Minimalism",
       "tags": ["perc", "minimalism", "sine"],
       "level": 1,
       "blurb": "A soft, woody, hollow marimba for an interlocking minimalist pattern.",
@@ -5657,7 +5657,7 @@
     {
       "id": "mantis-gamelan",
       "name": "Gamelan",
-      "ref": "In the style of Javanese gamelan",
+      "ref": "Bronze gongs and metallophones tuned a little sour so they shimmer, as a Javanese gamelan does",
       "artist": "Gamelan",
       "tags": ["perc", "world", "ring"],
       "level": 3,
@@ -5727,7 +5727,7 @@
     {
       "id": "mantis-singing-bowl",
       "name": "Singing Bowl",
-      "ref": "In the style of Tibetan singing bowls",
+      "ref": "A deep metal bowl that hums and throbs long after the strike: the Tibetan singing bowl",
       "artist": "Singing bowls",
       "tags": ["drone", "world", "ring"],
       "level": 2,
@@ -5791,7 +5791,7 @@
     {
       "id": "mantis-duo-bagpipes",
       "name": "Bagpipes",
-      "ref": "In the style of Scottish Highland pipes",
+      "ref": "One voice drones while the other plays a reedy chanter, the two halves of Highland pipes",
       "artist": "Highland pipes",
       "tags": ["wind", "world", "duophonic"],
       "level": 3,
@@ -5861,7 +5861,7 @@
     {
       "id": "mantis-musette-accordion",
       "name": "Accordion",
-      "ref": "In the style of French musette",
+      "ref": "Reeds tuned apart so every note wavers, the café accordion of French musette",
       "artist": "Musette",
       "tags": ["keys", "world", "density"],
       "level": 2,
@@ -5928,8 +5928,8 @@
     {
       "id": "mantis-honky-tonk",
       "name": "Honky-Tonk Piano",
-      "ref": "In the style of Scott Joplin — “The Entertainer”",
-      "artist": "Scott Joplin",
+      "ref": "Strings tuned a quarter-tone apart for a sour, jangly bar-room piano, ready for ragtime",
+      "artist": "Ragtime",
       "tags": ["keys", "ragtime", "density"],
       "level": 2,
       "blurb": "A jangly, out-of-tune saloon piano, its strings tuned apart for that bar-room sourness.",
@@ -6006,7 +6006,7 @@
     {
       "id": "mantis-gfunk-whistle",
       "name": "G-Funk Whistle",
-      "ref": "In the style of Dr. Dre — “Nuthin’ but a ‘G’ Thang”",
+      "ref": "A high, whining sine sliding lazily over the beat, Dr. Dre’s G-funk lead on “Nuthin’ but a ‘G’ Thang”",
       "artist": "Dr. Dre",
       "tags": ["lead", "g-funk", "sine"],
       "level": 2,
@@ -6073,7 +6073,7 @@
     {
       "id": "mantis-talkbox-funk",
       "name": "Talk Box Funk",
-      "ref": "In the style of Zapp — “More Bounce to the Ounce”",
+      "ref": "An “oo-wah” funk lead that seems to speak, Zapp’s talk box on “More Bounce to the Ounce”",
       "artist": "Zapp",
       "tags": ["lead", "funk", "filter"],
       "level": 3,
@@ -6153,7 +6153,7 @@
     {
       "id": "mantis-chameleon-bass",
       "name": "Funk Synth Bass",
-      "ref": "In the style of Herbie Hancock — “Chameleon”",
+      "ref": "Rubbery, squelchy and elastic, the synth bass that runs through Herbie Hancock’s “Chameleon”",
       "artist": "Herbie Hancock",
       "tags": ["bass", "funk", "filter"],
       "level": 2,
@@ -6222,7 +6222,7 @@
     {
       "id": "mantis-trap-808",
       "name": "Sliding 808",
-      "ref": "In the style of Metro Boomin",
+      "ref": "A driven, booming sub that slides where notes overlap: the trap 808 as Metro Boomin uses it",
       "artist": "Metro Boomin",
       "tags": ["bass", "trap", "glide"],
       "level": 2,
@@ -6286,7 +6286,7 @@
     {
       "id": "mantis-trap-bells",
       "name": "Trap Bells",
-      "ref": "In the style of trap",
+      "ref": "Dark, glassy bells leaving room for the 808 under a moody trap melody",
       "artist": "Trap",
       "tags": ["keys", "trap", "ring"],
       "level": 1,
@@ -6350,7 +6350,7 @@
     {
       "id": "mantis-grime-square",
       "name": "Grime Square Bass",
-      "ref": "In the style of Wiley — “Eskimo”",
+      "ref": "A bare, clipped square-wave bass, cold as Wiley’s “Eskimo” and the grime it started",
       "artist": "Wiley",
       "tags": ["bass", "grime", "pulse"],
       "level": 1,
@@ -6406,7 +6406,7 @@
     {
       "id": "mantis-hyperpop-zap",
       "name": "Hyperpop Zap Pluck",
-      "ref": "In the style of SOPHIE — “Immaterial”",
+      "ref": "A glossy, plasticky pluck that zaps on every note: SOPHIE’s “Immaterial” and hyperpop’s shine",
       "artist": "SOPHIE",
       "tags": ["pluck", "hyperpop", "ring"],
       "level": 3,
@@ -6477,7 +6477,7 @@
     {
       "id": "mantis-bad-guy-bass",
       "name": "Whisper-Pop Sub",
-      "ref": "In the style of Billie Eilish — “bad guy”",
+      "ref": "A fat sub with just enough buzz to feel close, the bass under Billie Eilish’s whispered “bad guy”",
       "artist": "Billie Eilish",
       "tags": ["bass", "pop", "drive"],
       "level": 1,
@@ -6533,8 +6533,8 @@
     {
       "id": "mantis-garage-organ",
       "name": "Garage Organ Stab",
-      "ref": "In the style of MJ Cole — “Sincere”",
-      "artist": "MJ Cole",
+      "ref": "A short, bright organ stab skipping over a two-step beat, a UK garage staple",
+      "artist": "UK garage",
       "tags": ["keys", "uk garage", "organ"],
       "level": 2,
       "blurb": "A short, bright organ stab skipping over a two-step beat.",
@@ -6601,7 +6601,7 @@
     {
       "id": "mantis-boom-kick",
       "name": "Boom Kick",
-      "ref": "In the style of Afrika Bambaataa — “Planet Rock”",
+      "ref": "A sine thrown up and dropped in a flash, the booming 808 kick of Afrika Bambaataa’s “Planet Rock”",
       "artist": "Afrika Bambaataa",
       "tags": ["perc", "electro", "drums"],
       "level": 2,
@@ -6671,7 +6671,7 @@
     {
       "id": "mantis-synth-snare",
       "name": "Synth Snare",
-      "ref": "In the style of 1980s electronic drums",
+      "ref": "A tuned body and a burst of noise cracking in a small room, the 1980s electronic snare",
       "artist": "1980s electronic drums",
       "tags": ["perc", "80s", "drums"],
       "level": 2,
@@ -6737,7 +6737,7 @@
     {
       "id": "mantis-repeat-clap",
       "name": "Repeat Clap",
-      "ref": "In the style of Chicago house",
+      "ref": "Two or three quick bursts of noise making one snappy clap for a Chicago house track",
       "artist": "Chicago house",
       "tags": ["perc", "house", "envelope"],
       "level": 3,
@@ -6800,7 +6800,7 @@
     {
       "id": "mantis-electronic-toms",
       "name": "Electronic Toms",
-      "ref": "In the style of 1980s electronic drums",
+      "ref": "Big round toms falling in pitch as they roll down a 1980s electronic kit",
       "artist": "1980s electronic drums",
       "tags": ["perc", "80s", "drums"],
       "level": 2,
@@ -6868,7 +6868,7 @@
     {
       "id": "mantis-electro-cowbell",
       "name": "Electro Cowbell",
-      "ref": "In the style of Miami bass",
+      "ref": "Two band-passed squares a fifth apart: the clanky drum-machine cowbell of Miami bass",
       "artist": "Miami bass",
       "tags": ["perc", "electro", "drums"],
       "level": 2,
@@ -6927,7 +6927,7 @@
     {
       "id": "mantis-shaker",
       "name": "Shaker",
-      "ref": "In the style of Brazilian samba",
+      "ref": "Swishing, accented sixteenths of hiss, a shaker driving a samba",
       "artist": "Samba",
       "tags": ["perc", "latin", "noise"],
       "level": 1,
@@ -6987,7 +6987,7 @@
     {
       "id": "mantis-space-zap",
       "name": "Space Zap",
-      "ref": "In the style of space disco",
+      "ref": "A high tone diving two octaves into the reverb, the laser “pew” of space disco",
       "artist": "Space disco",
       "tags": ["fx", "disco", "mod"],
       "level": 1,
@@ -7052,7 +7052,7 @@
     {
       "id": "mantis-arcade-coin",
       "name": "Arcade Coin",
-      "ref": "In the style of 1980s arcade games",
+      "ref": "The bright two-note “ba-ding” of a collected coin in a 1980s arcade game",
       "artist": "Arcade games",
       "tags": ["fx", "chiptune", "pulse"],
       "level": 1,
@@ -7102,7 +7102,7 @@
     {
       "id": "mantis-8bit-bass",
       "name": "8-Bit Triangle Bass",
-      "ref": "In the style of Koji Kondo — Super Mario Bros.",
+      "ref": "Nothing but a soft, round triangle, the bass channel of Koji Kondo’s Super Mario Bros.",
       "artist": "Koji Kondo",
       "tags": ["bass", "chiptune", "triangle"],
       "level": 1,
@@ -7149,7 +7149,7 @@
     {
       "id": "mantis-gallop-bass",
       "name": "Galloping Bass",
-      "ref": "In the style of Delia Derbyshire — “Doctor Who” theme",
+      "ref": "One long, two short: the plucked electronic gallop of Delia Derbyshire’s “Doctor Who” theme",
       "artist": "Delia Derbyshire",
       "tags": ["bass", "radiophonic", "60s"],
       "level": 2,
@@ -7212,7 +7212,7 @@
     {
       "id": "mantis-forbidden-planet",
       "name": "Electronic Tonalities",
-      "ref": "In the style of Bebe and Louis Barron — Forbidden Planet",
+      "ref": "Swooping, warbling ring-modulated tones from another world, the Barrons’ circuits for Forbidden Planet",
       "artist": "Bebe and Louis Barron",
       "tags": ["fx", "sci-fi", "ring"],
       "level": 3,
@@ -7277,7 +7277,7 @@
     {
       "id": "mantis-theremin",
       "name": "Theremin",
-      "ref": "In the style of Bernard Herrmann — The Day the Earth Stood Still",
+      "ref": "An eerie sliding voice with a deep vibrato, the theremin of Bernard Herrmann’s The Day the Earth Stood Still",
       "artist": "Bernard Herrmann",
       "tags": ["lead", "sci-fi", "glide"],
       "level": 2,
@@ -7342,7 +7342,7 @@
     {
       "id": "mantis-flying-saucer",
       "name": "Flying Saucer",
-      "ref": "In the style of 1950s sci-fi films",
+      "ref": "A fast warble over a slow swoop, a saucer hovering overhead in a 1950s science-fiction film",
       "artist": "Sci-fi films",
       "tags": ["fx", "sci-fi", "lfo"],
       "level": 2,
@@ -7405,7 +7405,7 @@
     {
       "id": "mantis-computer-burble",
       "name": "Computer Burble",
-      "ref": "In the style of 1960s sci-fi television",
+      "ref": "Random bleeps tumbling over each other: a starship computer thinking on 1960s television",
       "artist": "Sci-fi television",
       "tags": ["fx", "sci-fi", "lfo"],
       "level": 2,
@@ -7463,7 +7463,7 @@
     {
       "id": "mantis-air-raid-siren",
       "name": "Air-Raid Siren",
-      "ref": "In the style of 1940s wartime newsreels",
+      "ref": "A rough wail rising and falling through an octave, the air-raid siren of wartime newsreels",
       "artist": "Newsreels",
       "tags": ["fx", "film", "lfo"],
       "level": 1,
@@ -7514,7 +7514,7 @@
     {
       "id": "mantis-howling-wind",
       "name": "Howling Wind",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "Whistling noise that howls and gusts at random, a stormy night from the BBC Radiophonic Workshop",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "radiophonic", "noise"],
       "level": 3,
@@ -7580,7 +7580,7 @@
     {
       "id": "mantis-thunder",
       "name": "Thunder",
-      "ref": "In the style of film sound effects",
+      "ref": "A sharp crack closing slowly into a rolling rumble, thunder for film",
       "artist": "Film sound effects",
       "tags": ["fx", "film", "noise"],
       "level": 2,
@@ -7643,7 +7643,7 @@
     {
       "id": "mantis-edm-riser",
       "name": "EDM Riser",
-      "ref": "In the style of EDM",
+      "ref": "Noise and saw thinning out and climbing for seconds before an EDM drop",
       "artist": "EDM",
       "tags": ["fx", "edm", "envelope"],
       "level": 2,
@@ -7706,7 +7706,7 @@
     {
       "id": "mantis-dark-drone",
       "name": "Dark Drone",
-      "ref": "In the style of Lustmord",
+      "ref": "A vast low drone grinding a semitone against itself in a cavern, the dark ambient of Lustmord",
       "artist": "Lustmord",
       "tags": ["drone", "dark ambient", "drift"],
       "level": 2,
@@ -7775,8 +7775,8 @@
     {
       "id": "mantis-cluster-pad",
       "name": "Cluster Pad",
-      "ref": "In the style of György Ligeti — Atmosphères",
-      "artist": "György Ligeti",
+      "ref": "So many close notes that they blur into one shimmering, unsettling cloud, as in avant-garde orchestral music",
+      "artist": "Avant-garde orchestral music",
       "tags": ["pad", "classical", "density"],
       "level": 3,
       "blurb": "A dense, shimmering cloud of clustered notes, unsettling and beautiful at once.",
@@ -7847,8 +7847,8 @@
     {
       "id": "mantis-five-four-ostinato",
       "name": "Five-Four Ostinato",
-      "ref": "In the style of John Carpenter — Halloween",
-      "artist": "John Carpenter",
+      "ref": "A cold, piano-like figure in five that never lands where expected, for a 1970s horror score",
+      "artist": "1970s horror scores",
       "tags": ["keys", "horror", "film"],
       "level": 1,
       "blurb": "A cold, insistent piano-like ostinato in five-four time.",
@@ -7910,7 +7910,7 @@
     {
       "id": "mantis-glitch-scatter",
       "name": "Glitch Scatter",
-      "ref": "In the style of Autechre",
+      "ref": "Fractured metallic blips thrown at random over three octaves, Autechre’s glitch territory",
       "artist": "Autechre",
       "tags": ["seq", "idm", "lfo"],
       "level": 3,
@@ -7984,7 +7984,7 @@
     {
       "id": "mantis-blade-runner-brass",
       "name": "Rain Brass",
-      "ref": "In the style of Vangelis — Blade Runner",
+      "ref": "Dark, noble CS-80 brass that sings as the wheel goes up, Vangelis in the rain of Blade Runner",
       "artist": "Vangelis",
       "tags": ["brass", "film", "aftertouch"],
       "level": 3,
@@ -8072,8 +8072,8 @@
     {
       "id": "mantis-city-pop-keys",
       "name": "City Pop Keys",
-      "ref": "In the style of Tatsuro Yamashita",
-      "artist": "Tatsuro Yamashita",
+      "ref": "A glossy, bell-toned electric piano under a wide chorus, the sunny sheen of 1980s city pop",
+      "artist": "City pop",
       "tags": ["keys", "city pop", "ring"],
       "level": 2,
       "blurb": "A glossy, bell-toned electric piano with a shimmering chorus, for sunny 1980s Japanese pop.",
@@ -8145,8 +8145,8 @@
     {
       "id": "mantis-bossa-guitar",
       "name": "Nylon Guitar",
-      "ref": "In the style of Antônio Carlos Jobim",
-      "artist": "Antônio Carlos Jobim",
+      "ref": "Soft, warm nylon-string plucks with thumb and fingers a hair apart, for a gentle bossa nova",
+      "artist": "Bossa nova",
       "tags": ["pluck", "bossa nova", "filter"],
       "level": 2,
       "blurb": "A soft, warm, plucked nylon-string guitar for a gentle bossa nova.",
@@ -8222,7 +8222,7 @@
     {
       "id": "mantis-dub-siren",
       "name": "Dub Siren",
-      "ref": "In the style of dub reggae",
+      "ref": "The sound-system siren whooping up again and again into a deep echo, straight from dub reggae",
       "artist": "Dub reggae",
       "tags": ["fx", "dub", "lfo"],
       "level": 1,
@@ -8283,8 +8283,8 @@
     {
       "id": "mantis-reggae-bubble",
       "name": "Reggae Organ Bubble",
-      "ref": "In the style of Bob Marley & the Wailers",
-      "artist": "Bob Marley & the Wailers",
+      "ref": "Short offbeat organ chords with quick pickups, the bubble that keeps a reggae band moving",
+      "artist": "Roots reggae",
       "tags": ["keys", "reggae", "organ"],
       "level": 2,
       "blurb": "The bouncing “bubble” of a reggae organ: short, offbeat chords.",
@@ -8354,8 +8354,8 @@
     {
       "id": "mantis-afrobeat-organ",
       "name": "Afrobeat Organ",
-      "ref": "In the style of Fela Kuti",
-      "artist": "Fela Kuti",
+      "ref": "A thin, buzzy combo organ stabbing out an interlocking riff over a big Afrobeat band",
+      "artist": "Afrobeat",
       "tags": ["keys", "afrobeat", "organ"],
       "level": 2,
       "blurb": "A buzzy, thin, combo organ, stabbing out an interlocking Afrobeat riff.",
@@ -8420,7 +8420,7 @@
     {
       "id": "mantis-liquid-pad",
       "name": "Liquid Pad",
-      "ref": "In the style of LTJ Bukem — “Horizons”",
+      "ref": "A soft pad whose tone opens and narrows like water, the backdrop of LTJ Bukem’s liquid “Horizons”",
       "artist": "LTJ Bukem",
       "tags": ["pad", "drum and bass", "filter"],
       "level": 2,
@@ -8493,7 +8493,7 @@
     {
       "id": "mantis-trance-gate",
       "name": "Trance Gate",
-      "ref": "In the style of trance",
+      "ref": "A held chord chopped into pulses by its own looping envelope, the trance gate",
       "artist": "Trance",
       "tags": ["pad", "trance", "envelope"],
       "level": 3,
@@ -8564,7 +8564,7 @@
     {
       "id": "mantis-anthem-supersaw",
       "name": "Anthem Saws",
-      "ref": "In the style of Paul van Dyk — “For an Angel”",
+      "ref": "A euphoric wall of detuned saws for the breakdown, as in Paul van Dyk’s “For an Angel”",
       "artist": "Paul van Dyk",
       "tags": ["pad", "trance", "density"],
       "level": 2,
@@ -8636,7 +8636,7 @@
     {
       "id": "mantis-fluffy-clouds",
       "name": "Fluffy Clouds",
-      "ref": "In the style of The Orb — “Little Fluffy Clouds”",
+      "ref": "A soft, woozy chord drifting through endless reverb, the ambient house of The Orb",
       "artist": "The Orb",
       "tags": ["pad", "ambient house", "lfo"],
       "level": 2,
@@ -8709,7 +8709,7 @@
     {
       "id": "mantis-xtal-pad",
       "name": "Xtal Pad",
-      "ref": "In the style of Aphex Twin — Selected Ambient Works 85–92",
+      "ref": "Warm and hazy with a faint hiss, the dreamlike lo-fi of Aphex Twin’s Selected Ambient Works 85–92",
       "artist": "Aphex Twin",
       "tags": ["pad", "ambient techno", "noise"],
       "level": 2,
@@ -8779,8 +8779,8 @@
     {
       "id": "mantis-shoegaze-wall",
       "name": "Shoegaze Wall",
-      "ref": "In the style of My Bloody Valentine — Loveless",
-      "artist": "My Bloody Valentine",
+      "ref": "A driven, bending wall of sound, as if the whole chord were melting, the heart of shoegaze",
+      "artist": "Shoegaze",
       "tags": ["pad", "shoegaze", "drive"],
       "level": 3,
       "blurb": "A woozy, driven, bending wall of sound, as if the whole chord were melting.",
@@ -8854,7 +8854,7 @@
     {
       "id": "mantis-isolation-lead",
       "name": "Cold Pulse Lead",
-      "ref": "In the style of Joy Division — “Isolation”",
+      "ref": "A thin, nervous pulse with no warmth at all, the cold synth line of Joy Division’s “Isolation”",
       "artist": "Joy Division",
       "tags": ["lead", "post-punk", "pulse"],
       "level": 1,
@@ -8918,7 +8918,7 @@
     {
       "id": "mantis-motorik-arp",
       "name": "Motorik Arp",
-      "ref": "In the style of Harmonia — “Deluxe (Immer wieder)”",
+      "ref": "Steady eighths that never change pace, phasing as they go, Harmonia’s “Deluxe (Immer wieder)”",
       "artist": "Harmonia",
       "tags": ["seq", "krautrock", "arp"],
       "level": 2,
@@ -8992,7 +8992,7 @@
     {
       "id": "mantis-industrial-clang",
       "name": "Industrial Clang",
-      "ref": "In the style of Nine Inch Nails — “Closer”",
+      "ref": "A distorted, ring-modulated bass hit like a hammer on a girder, out of Nine Inch Nails’ “Closer”",
       "artist": "Nine Inch Nails",
       "tags": ["bass", "industrial", "ring"],
       "level": 3,
@@ -9053,7 +9053,7 @@
     {
       "id": "mantis-prelude-arp",
       "name": "Crystal Prelude",
-      "ref": "In the style of Nobuo Uematsu — Final Fantasy, “Prelude”",
+      "ref": "A crystalline arpeggio climbing four octaves and back, Nobuo Uematsu’s Final Fantasy “Prelude”",
       "artist": "Nobuo Uematsu",
       "tags": ["seq", "game", "arp"],
       "level": 1,
@@ -9126,8 +9126,8 @@
     {
       "id": "mantis-celesta",
       "name": "Celesta",
-      "ref": "In the style of Tchaikovsky — “Dance of the Sugar Plum Fairy”",
-      "artist": "Tchaikovsky",
+      "ref": "Hammered steel bars with a bright high partial, a delicate, sparkling celesta",
+      "artist": "Orchestral celesta",
       "tags": ["keys", "classical", "ring"],
       "level": 2,
       "blurb": "A delicate, sparkling celesta, sweet and bell-like.",
@@ -9189,8 +9189,8 @@
     {
       "id": "mantis-music-box",
       "name": "Music Box Lullaby",
-      "ref": "In the style of Brahms — “Wiegenlied” (Lullaby)",
-      "artist": "Brahms",
+      "ref": "A tiny, tinkling music box whose clockwork wavers as it plays a lullaby",
+      "artist": "Music box",
       "tags": ["keys", "classical", "drift"],
       "level": 1,
       "blurb": "A tiny, tinkling, slightly wavering wind-up music box.",
@@ -9254,7 +9254,7 @@
     {
       "id": "mantis-vaporwave-pad",
       "name": "Vaporwave Pad",
-      "ref": "In the style of Macintosh Plus — Floral Shoppe",
+      "ref": "Slowed-down mall music warbling off a stretched tape: Macintosh Plus’s Floral Shoppe",
       "artist": "Macintosh Plus",
       "tags": ["pad", "vaporwave", "chorus"],
       "level": 1,
@@ -9315,7 +9315,7 @@
     {
       "id": "mantis-o-superman-pulse",
       "name": "Ha-Ha Pulse",
-      "ref": "In the style of Laurie Anderson — “O Superman”",
+      "ref": "A held “ah” that pulses by itself, hypnotic and eerie, the looped voice of Laurie Anderson’s “O Superman”",
       "artist": "Laurie Anderson",
       "tags": ["pad", "art pop", "envelope"],
       "level": 3,
@@ -9382,7 +9382,7 @@
     {
       "id": "mantis-mirror-keys",
       "name": "Mirror Keyboard",
-      "ref": "In the style of Raymond Scott — Manhattan Research",
+      "ref": "Play up and the second voice goes down: the mirror-image trick of Raymond Scott’s Manhattan Research",
       "artist": "Raymond Scott",
       "tags": ["keys", "experimental", "mod"],
       "level": 3,
@@ -9450,7 +9450,7 @@
     {
       "id": "mantis-wavetable-pluck",
       "name": "Wavetable Pluck",
-      "ref": "In the style of Thomas Dolby — “She Blinded Me with Science”",
+      "ref": "A glassy digital pluck that flicks from bright to soft, Thomas Dolby’s “She Blinded Me with Science”",
       "artist": "Thomas Dolby",
       "tags": ["pluck", "new wave", "wavetable"],
       "level": 2,
@@ -9519,7 +9519,7 @@
     {
       "id": "mantis-duo-thirds",
       "name": "Duophonic Thirds",
-      "ref": "In the style of Chick Corea — Return to Forever",
+      "ref": "A bright lead in parallel thirds from one hand, the duophonic fusion of Chick Corea’s Return to Forever",
       "artist": "Chick Corea",
       "tags": ["lead", "fusion", "duophonic"],
       "level": 2,
@@ -9591,7 +9591,7 @@
     {
       "id": "mantis-bubbles",
       "name": "Bubbles",
-      "ref": "In the style of cartoon sound effects",
+      "ref": "Round little bubbles swooping up to the surface, straight from a cartoon",
       "artist": "Cartoon sound effects",
       "tags": ["fx", "cartoon", "lfo"],
       "level": 2,
@@ -9664,7 +9664,7 @@
     {
       "id": "mantis-magnetic-fields",
       "name": "Magnetic Chords",
-      "ref": "In the style of Jean-Michel Jarre — “Les Chants Magnétiques”",
+      "ref": "Held chords blipping with a new random colour every sixteenth, Jarre’s “Les Chants Magnétiques”",
       "artist": "Jean-Michel Jarre",
       "tags": ["keys", "electronic", "lfo"],
       "level": 2,
@@ -9740,8 +9740,8 @@
     {
       "id": "mantis-pulsing-pad",
       "name": "Breathing Pad",
-      "ref": "In the style of Bonobo — “Cirrus”",
-      "artist": "Bonobo",
+      "ref": "A warm pad whose filter swells and settles on its own, steady as breathing, for downtempo",
+      "artist": "Downtempo",
       "tags": ["pad", "downtempo", "envelope"],
       "level": 3,
       "blurb": "A warm, soft pad whose filter breathes in and out by itself, gently and steadily.",
@@ -9814,7 +9814,7 @@
     {
       "id": "mantis-radio-voice",
       "name": "Old Radio Lead",
-      "ref": "In the style of old-time radio",
+      "ref": "A tinny, rasping melody squeezed through the speaker of an old-time radio set",
       "artist": "Old-time radio",
       "tags": ["lead", "radio", "filter"],
       "level": 2,
@@ -9884,8 +9884,8 @@
     {
       "id": "mantis-sub-pulse-bass",
       "name": "Square Sub Bass",
-      "ref": "In the style of Jamiroquai — “Space Cowboy”",
-      "artist": "Jamiroquai",
+      "ref": "A square over a sub square, round and funky with a quick glide, for 1990s acid jazz",
+      "artist": "Acid jazz",
       "tags": ["bass", "acid jazz", "pulse"],
       "level": 2,
       "blurb": "A round, punchy, funky bass: a square with a square an octave below it.",
@@ -9955,7 +9955,7 @@
     {
       "id": "mantis-pulstar",
       "name": "Leaning Pulse",
-      "ref": "In the style of Vangelis — “Pulstar”",
+      "ref": "An insistent pulse whose tone leans and straightens each bar, as Vangelis’s “Pulstar” does",
       "artist": "Vangelis",
       "tags": ["seq", "electronic", "arp"],
       "level": 2,
@@ -10024,7 +10024,7 @@
     {
       "id": "mantis-jangle-chorus",
       "name": "Jangle Chorus Pluck",
-      "ref": "In the style of 1980s jangle pop",
+      "ref": "A synth take on chiming, chorused 1980s jangle-pop guitar",
       "artist": "Jangle pop",
       "tags": ["pluck", "indie", "chorus"],
       "level": 2,
@@ -10101,8 +10101,8 @@
     {
       "id": "mantis-sitar-buzz",
       "name": "Buzzing Sitar",
-      "ref": "In the style of Ravi Shankar",
-      "artist": "Ravi Shankar",
+      "ref": "A twanging, buzzing string that slides between notes, the sitar of Hindustani classical music",
+      "artist": "Hindustani classical music",
       "tags": ["pluck", "world", "filter"],
       "level": 3,
       "blurb": "A twanging, buzzing plucked string that slides between notes.",
@@ -10177,7 +10177,7 @@
     {
       "id": "mantis-koto",
       "name": "Koto",
-      "ref": "In the style of Japanese koto music",
+      "ref": "A bright, twanging zither ringing out in a pentatonic mode, as in Japanese koto music",
       "artist": "Koto music",
       "tags": ["pluck", "world", "pulse"],
       "level": 2,
@@ -10240,8 +10240,8 @@
     {
       "id": "mantis-film-horns",
       "name": "Film Horns",
-      "ref": "In the style of John Williams",
-      "artist": "John Williams",
+      "ref": "Noble horns that brighten as they swell into a fanfare, the brass of Hollywood film scores",
+      "artist": "Film-score brass",
       "tags": ["brass", "film", "filter"],
       "level": 2,
       "blurb": "Warm, noble horns that swell into each chord of a fanfare.",
@@ -10319,8 +10319,8 @@
     {
       "id": "mantis-vibraphone",
       "name": "Vibraphone",
-      "ref": "In the style of Milt Jackson",
-      "artist": "Milt Jackson",
+      "ref": "A soft metal bar throbbing as the motor turns, a jazz vibraphone",
+      "artist": "Jazz vibraphone",
       "tags": ["perc", "jazz", "envelope"],
       "level": 3,
       "blurb": "A soft, metallic vibraphone with its motor turning, the notes throbbing as they ring.",
@@ -10390,9 +10390,9 @@
     },
     {
       "id": "mantis-postcard-piano",
-      "name": "Postcard Piano",
-      "ref": "In the style of Hiroshi Yoshimura — Music for Nine Post Cards",
-      "artist": "Hiroshi Yoshimura",
+      "name": "Sparse Electric Piano",
+      "ref": "Unhurried, glassy electric piano notes with air between them, the calm of Japanese environmental music",
+      "artist": "Kankyō ongaku",
       "tags": ["keys", "ambient", "reverb"],
       "level": 1,
       "blurb": "A gentle, glassy, unhurried electric piano, notes falling like light through a window.",
@@ -10460,8 +10460,8 @@
     {
       "id": "mantis-space-song-organ",
       "name": "Dream Pop Organ Arp",
-      "ref": "In the style of Beach House — “Space Song”",
-      "artist": "Beach House",
+      "ref": "A slow, falling organ arpeggio with a worn, wobbly tuning, sad and dreamy as dream pop",
+      "artist": "Dream pop",
       "tags": ["seq", "dream pop", "organ"],
       "level": 2,
       "blurb": "A slow, falling, wobbly organ arpeggio, sad and dreamy.",
@@ -10535,7 +10535,7 @@
     {
       "id": "mantis-emerald-arp",
       "name": "Emerald Arp",
-      "ref": "In the style of Jon Hopkins — “Emerald Rush”",
+      "ref": "A rushing arpeggio whose filter opens over four bars like a sunrise, Jon Hopkins’s “Emerald Rush”",
       "artist": "Jon Hopkins",
       "tags": ["seq", "electronica", "arp"],
       "level": 2,
@@ -10611,7 +10611,7 @@
     {
       "id": "mantis-orinoco-pizzicato",
       "name": "Pizzicato Synth",
-      "ref": "In the style of Enya — “Orinoco Flow”",
+      "ref": "Bouncy digital pizzicato floating in reverb, the D-50 preset that carries Enya’s “Orinoco Flow”",
       "artist": "Enya",
       "tags": ["pluck", "new age", "filter"],
       "level": 1,
@@ -10681,7 +10681,7 @@
     {
       "id": "mantis-twin-peaks-pad",
       "name": "Twin Peaks Pad",
-      "ref": "In the style of Angelo Badalamenti — Twin Peaks",
+      "ref": "A dark synth pad hanging like fog in the woods, Angelo Badalamenti’s Twin Peaks theme",
       "artist": "Angelo Badalamenti",
       "tags": ["pad", "film", "lfo"],
       "level": 2,
@@ -10761,7 +10761,7 @@
     {
       "id": "mantis-untrue-pad",
       "name": "Rain-Soaked Pad",
-      "ref": "In the style of Burial — Untrue",
+      "ref": "A dusty, crackling, warped pad for a late-night bus through the rain, Burial’s Untrue",
       "artist": "Burial",
       "tags": ["pad", "uk garage", "noise"],
       "level": 2,
