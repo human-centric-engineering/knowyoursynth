@@ -5,7 +5,7 @@
     {
       "id": "pd-poly-brass",
       "name": "Four-Note Brass",
-      "ref": "In the style of early-80s synth-pop brass stabs",
+      "ref": "Four sawtooths opening and closing as one block: the bright brass stab of early-1980s synth-pop",
       "artist": "Classic technique",
       "tags": ["brass", "poly", "80s"],
       "level": 1,
@@ -118,7 +118,7 @@
     {
       "id": "pd-unison-bass",
       "name": "Four-Saw Unison Bass",
-      "ref": "In the style of 90s rave and big-room synth bass",
+      "ref": "Four detuned sawtooths piled on one note, as wide and heavy as a 1990s rave bass",
       "artist": "Classic technique",
       "tags": ["bass", "unison", "90s"],
       "level": 1,
@@ -223,7 +223,7 @@
     {
       "id": "pd-chorus-pad",
       "name": "Chorus Pad",
-      "ref": "In the style of 80s Juno-era string pads",
+      "ref": "Soft, slow sawtooth chords made wide and moving by chorus, as on 1980s Juno string pads",
       "artist": "Classic technique",
       "tags": ["pad", "poly", "80s"],
       "level": 1,
@@ -327,7 +327,7 @@
     {
       "id": "pd-dist-lead",
       "name": "Fuzz Lead",
-      "ref": "In the style of 70s prog-rock synth leads through a fuzz pedal",
+      "ref": "A singing, gliding mono lead driven through fuzz, the kind 1970s prog keyboard players soloed with",
       "artist": "Classic technique",
       "tags": ["lead", "prog", "distortion"],
       "level": 2,
@@ -425,7 +425,7 @@
     {
       "id": "pd-arp-chords",
       "name": "Arpeggio Chords",
-      "ref": "In the style of 80s arpeggiated synth-pop",
+      "ref": "Hold a chord and it comes back as a bright, bouncing arpeggio, a mainstay of 1980s synth-pop",
       "artist": "Classic technique",
       "tags": ["seq", "arp", "80s"],
       "level": 2,
@@ -526,7 +526,7 @@
     {
       "id": "pd-fifth-stab",
       "name": "One-Finger Chord Stab",
-      "ref": "In the style of early Detroit techno chord stabs",
+      "ref": "Short, hollow minor chords from single keys, the stab early Detroit techno was built on",
       "artist": "Classic technique",
       "tags": ["keys", "techno", "stab"],
       "level": 2,
@@ -734,7 +734,7 @@
     {
       "id": "pd-noise-surf",
       "name": "Pink Noise Surf",
-      "ref": "In the style of 70s film and TV atmospheres",
+      "ref": "Pink noise swelling and ebbing like surf, a stock atmosphere of 1970s film and TV",
       "artist": "Classic technique",
       "tags": ["fx", "noise", "ambient"],
       "level": 1,
@@ -815,7 +815,7 @@
     {
       "id": "pd-funk-bass",
       "name": "Rubber Funk Bass",
-      "ref": "In the style of Parliament — \"Flash Light\"",
+      "ref": "Bernie Worrell’s Minimoog bottom end on Parliament’s \"Flash Light\": round, fat and wowing on each note",
       "artist": "Bernie Worrell",
       "tags": ["bass", "funk", "70s"],
       "level": 1,
@@ -838,7 +838,7 @@
         {
           "title": "Three stacked sawtooths",
           "module": "osc",
-          "why": "MONO stacks three oscillators (the parts that make the raw tone) on the one note: two saws a hair apart and one an octave down. This is the Minimoog bass layout, in the style of P-Funk.\n- MODE MONO: every switched-on oscillator plays the key you press. In POLY each note would get only one of them.\n- RANGE 16’ / 16’ / 32’: footage comes from organ pipes; 16’ is an octave below normal pitch, 32’ two octaves, for weight.\n- WAVEFORM sawtooth on all three: the buzziest wave, plenty for the filter to sweep through.\n- Osc 2 FREQUENCY +0.1: a tenth of a semitone sharp, so the two 16’ saws beat and the note moves.\n- OSC 1–3 on, VOLUME 8 / 7.5 / 6.5: OSC 4 off. The 16’ saws lead and the sub sits a little lower.\n- Listen for: hold a low note. Switch osc 3 off and on to hear the sub drop out and return.",
+          "why": "MONO stacks three oscillators (the parts that make the raw tone) on the one note: two saws a hair apart and one an octave down. This is the Minimoog bass layout Bernie Worrell used in P-Funk.\n- MODE MONO: every switched-on oscillator plays the key you press. In POLY each note would get only one of them.\n- RANGE 16’ / 16’ / 32’: footage comes from organ pipes; 16’ is an octave below normal pitch, 32’ two octaves, for weight.\n- WAVEFORM sawtooth on all three: the buzziest wave, plenty for the filter to sweep through.\n- Osc 2 FREQUENCY +0.1: a tenth of a semitone sharp, so the two 16’ saws beat and the note moves.\n- OSC 1–3 on, VOLUME 8 / 7.5 / 6.5: OSC 4 off. The 16’ saws lead and the sub sits a little lower.\n- Listen for: hold a low note. Switch osc 3 off and on to hear the sub drop out and return.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "16",
@@ -893,7 +893,7 @@
     {
       "id": "pd-buzz-lead",
       "name": "Buzzing Saw Lead",
-      "ref": "In the style of Tubeway Army — \"Are ‘Friends’ Electric?\"",
+      "ref": "A raw, buzzing sawtooth lead that drones rather than sings, as on Tubeway Army’s \"Are ‘Friends’ Electric?\"",
       "artist": "Gary Numan",
       "tags": ["lead", "new wave", "70s"],
       "level": 1,
@@ -913,7 +913,7 @@
         {
           "title": "Two sawtooths, slowly beating",
           "module": "osc",
-          "why": "Two sawtooth oscillators (the parts that make the raw tone) stacked in MONO, tuned slightly apart so they waver against each other. That slow, uneasy beating is the character of this lead, in the style of Tubeway Army.\n- MODE MONO: both oscillators play the one key you press.\n- RANGE 8’ on both: footage comes from organ pipes; 8’ is normal pitch.\n- WAVEFORM sawtooth on both: the brightest, buzziest wave.\n- Osc 2 FREQUENCY +0.2: a fifth of a semitone sharp. Closer to 0 the beating slows and steadies; further away it sounds sour.\n- OSC 1 and 2 on, VOLUME 7 each: 3 and 4 off. Two equal saws, so the beating is as deep as it can be.\n- Listen for: hold a note and hear the tone waver a few times a second. Set osc 2 FREQUENCY to 0 and it goes still.",
+          "why": "Two sawtooth oscillators (the parts that make the raw tone) stacked in MONO, tuned slightly apart so they waver against each other. That slow, uneasy beating is the character of this lead, as on Tubeway Army’s records.\n- MODE MONO: both oscillators play the one key you press.\n- RANGE 8’ on both: footage comes from organ pipes; 8’ is normal pitch.\n- WAVEFORM sawtooth on both: the brightest, buzziest wave.\n- Osc 2 FREQUENCY +0.2: a fifth of a semitone sharp. Closer to 0 the beating slows and steadies; further away it sounds sour.\n- OSC 1 and 2 on, VOLUME 7 each: 3 and 4 off. Two equal saws, so the beating is as deep as it can be.\n- Listen for: hold a note and hear the tone waver a few times a second. Set osc 2 FREQUENCY to 0 and it goes still.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "8",
@@ -958,7 +958,7 @@
     {
       "id": "pd-autobahn-bass",
       "name": "Round Staccato Bass",
-      "ref": "In the style of Kraftwerk — \"Autobahn\"",
+      "ref": "The short, round, biteless bass that bounces along under Kraftwerk’s \"Autobahn\"",
       "artist": "Kraftwerk",
       "tags": ["bass", "electronic", "70s"],
       "level": 1,
@@ -982,7 +982,7 @@
         {
           "title": "Triangle and square",
           "module": "osc",
-          "why": "MONO stacks a triangle and a square on one note: both soft, hollow waves with a strong fundamental (the note itself rather than its overtones). No bite, just a round, bouncing bass in the style of Kraftwerk.\n- MODE MONO: both oscillators play the one key.\n- Osc 1 RANGE 16’, triangle: footage comes from organ pipes; 16’ is an octave below normal pitch. Triangle is the softest wave, nearly a pure tone.\n- Osc 2 RANGE 32’, square, FREQUENCY 0: a hollow square an octave further down gives the note its body.\n- OSC 1 and 2 on, VOLUME 8 / 5.5: 3 and 4 off. The triangle leads and the square fills in under it.\n- Listen for: switch osc 2 off and on while holding a note. Without it the bass is thin and flute-like; with it, it has body.",
+          "why": "MONO stacks a triangle and a square on one note: both soft, hollow waves with a strong fundamental (the note itself rather than its overtones). No bite, just a round, bouncing bass like Kraftwerk’s.\n- MODE MONO: both oscillators play the one key.\n- Osc 1 RANGE 16’, triangle: footage comes from organ pipes; 16’ is an octave below normal pitch. Triangle is the softest wave, nearly a pure tone.\n- Osc 2 RANGE 32’, square, FREQUENCY 0: a hollow square an octave further down gives the note its body.\n- OSC 1 and 2 on, VOLUME 8 / 5.5: 3 and 4 off. The triangle leads and the square fills in under it.\n- Listen for: switch osc 2 off and on while holding a note. Without it the bass is thin and flute-like; with it, it has body.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "16",
@@ -1034,7 +1034,7 @@
     {
       "id": "pd-string-pad",
       "name": "Slow String Chords",
-      "ref": "In the style of late-70s string-machine pads",
+      "ref": "Plain sawtooth chords turned into a slow, soft ensemble, the way late-1970s string machines did it",
       "artist": "Classic technique",
       "tags": ["strings", "pad", "70s"],
       "level": 2,
@@ -1058,7 +1058,7 @@
         {
           "title": "Four matching sawtooths",
           "module": "osc",
-          "why": "POLY gives each key you hold one of the four oscillators (the parts that make the raw tone), so a four-note chord uses them all. For a string section in the style of late-70s string machines, they must all match.\n- MODE POLY: each new key takes the next oscillator in turn.\n- RANGE 8’ on all four: footage comes from organ pipes; 8’ is normal pitch.\n- WAVEFORM sawtooth on all four: bright and full of harmonics, the nearest wave to a bowed string.\n- FREQUENCY 0 on 2–4: in tune. The chorus will add the ensemble movement.\n- OSC 1–4 on, VOLUME 5.5 each: every note of the chord present and even, at a moderate level so the filter is not driven hard.\n- Listen for: hold a chord. Plain and bright for now.",
+          "why": "POLY gives each key you hold one of the four oscillators (the parts that make the raw tone), so a four-note chord uses them all. For a string section like a late-70s string machine’s, they must all match.\n- MODE POLY: each new key takes the next oscillator in turn.\n- RANGE 8’ on all four: footage comes from organ pipes; 8’ is normal pitch.\n- WAVEFORM sawtooth on all four: bright and full of harmonics, the nearest wave to a bowed string.\n- FREQUENCY 0 on 2–4: in tune. The chorus will add the ensemble movement.\n- OSC 1–4 on, VOLUME 5.5 each: every note of the chord present and even, at a moderate level so the filter is not driven hard.\n- Listen for: hold a chord. Plain and bright for now.",
           "set": {
             "voice.mode": "poly",
             "osc1.range": "8",
@@ -1130,7 +1130,7 @@
     {
       "id": "pd-organ-keys",
       "name": "Combo Organ",
-      "ref": "In the style of 60s combo organ",
+      "ref": "Hollow square-wave chords that start and stop dead, a synth take on the 1960s combo organ",
       "artist": "Classic technique",
       "tags": ["keys", "organ", "60s"],
       "level": 2,
@@ -1227,7 +1227,7 @@
     {
       "id": "pd-poly-pluck",
       "name": "Plucked Chords",
-      "ref": "In the style of 80s synth-pop plucked chords",
+      "ref": "Bright chords plucked and left to ring out, a staple of 1980s synth-pop",
       "artist": "Classic technique",
       "tags": ["pluck", "poly", "80s"],
       "level": 1,
@@ -1321,7 +1321,7 @@
     {
       "id": "pd-acid-bass",
       "name": "Driven Acid Line",
-      "ref": "In the style of late-80s acid house",
+      "ref": "A lone sawtooth with high emphasis, slides and grit: a squelching late-1980s acid house line",
       "artist": "Classic technique",
       "tags": ["bass", "acid", "resonant"],
       "level": 2,
@@ -1406,7 +1406,7 @@
     {
       "id": "pd-sub-bass",
       "name": "Clean Sub Bass",
-      "ref": "In the style of modern pop and hip-hop sub bass",
+      "ref": "An almost pure low tone to feel rather than hear, the sub bass under modern pop and hip-hop",
       "artist": "Classic technique",
       "tags": ["bass", "sub", "modern"],
       "level": 1,
@@ -1428,7 +1428,7 @@
         {
           "title": "One triangle, low",
           "module": "osc",
-          "why": "One low triangle, the softest wave here and almost a pure tone. A sub bass is felt as much as heard, in the style of modern pop and hip-hop.\n- MODE MONO: one note at a time.\n- Osc 1 RANGE 32’: footage comes from organ pipes; 32’ is two octaves under the normal 8’.\n- Osc 1 WAVEFORM triangle: very few harmonics, so it is round and smooth.\n- OSC 1 on, 2–4 off; VOLUME 8.5: one oscillator, strong.\n- Listen for: a low, soft tone. On small speakers it may be hard to hear; headphones help.",
+          "why": "One low triangle, the softest wave here and almost a pure tone. A sub bass is felt as much as heard, as in modern pop and hip-hop.\n- MODE MONO: one note at a time.\n- Osc 1 RANGE 32’: footage comes from organ pipes; 32’ is two octaves under the normal 8’.\n- Osc 1 WAVEFORM triangle: very few harmonics, so it is round and smooth.\n- OSC 1 on, 2–4 off; VOLUME 8.5: one oscillator, strong.\n- Listen for: a low, soft tone. On small speakers it may be hard to hear; headphones help.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "32",
@@ -1475,7 +1475,7 @@
     {
       "id": "pd-rave-stab",
       "name": "Unison Rave Stab",
-      "ref": "In the style of early-90s rave stabs",
+      "ref": "Detuned, chorused and driven chord hits, made for an early-1990s rave",
       "artist": "Classic technique",
       "tags": ["lead", "rave", "90s"],
       "level": 2,
@@ -1650,7 +1650,7 @@
     {
       "id": "pd-noise-snare",
       "name": "Noise Snare",
-      "ref": "In the style of early drum-machine snares",
+      "ref": "Filtered white noise snapping over a short tone, the snare early drum machines made",
       "artist": "Classic technique",
       "tags": ["perc", "noise", "drums"],
       "level": 1,
@@ -1802,7 +1802,7 @@
     {
       "id": "pd-arp-bass",
       "name": "Latched Arpeggio Bass",
-      "ref": "In the style of Italo-disco octave basses",
+      "ref": "One held chord running as a two-octave bass line, the bouncing octave pulse of Italo disco",
       "artist": "Classic technique",
       "tags": ["seq", "bass", "disco"],
       "level": 2,
@@ -1878,7 +1878,7 @@
     {
       "id": "pd-glass-keys",
       "name": "Glass Keys",
-      "ref": "In the style of 80s bell-like synth keys",
+      "ref": "Bright chords that ring and fade like struck glass, a 1980s digital-keys sound",
       "artist": "Classic technique",
       "tags": ["keys", "bell", "80s"],
       "level": 2,
@@ -2921,8 +2921,8 @@
     {
       "id": "pd-gliding-solo",
       "name": "Gliding Solo Lead",
-      "ref": "In the style of Daft Punk — \"Digital Love\"",
-      "artist": "Daft Punk",
+      "ref": "A warm mono lead that slides from note to note and spreads across the stereo, built for a French house solo",
+      "artist": "French house",
       "tags": ["lead", "french house", "glide"],
       "level": 2,
       "blurb": "A warm, singing mono lead that slides between notes and is spread wide by the chorus.",
@@ -2945,7 +2945,7 @@
         {
           "title": "Three oscillators on one note",
           "module": "mode",
-          "why": "MONO stacks three oscillators (the parts that make the raw tone) on one note: two saws a hair apart that beat slowly, and a square an octave down for body. The base of a warm, singing lead in the style of Daft Punk.\n- MODE MONO: in POLY each note would get only one of them.\n- RANGE 8’ / 8’ / 16’: footage comes from organ pipes; 8’ is normal pitch, 16’ an octave down.\n- WAVEFORM saw / saw / square: bright saws with a hollow square under them.\n- Osc 2 FREQUENCY +0.1: slightly sharp. Further from 0 it sounds sour.\n- Osc 3 FREQUENCY 0: in tune.\n- OSC 1–3 on, VOLUME 7 / 6.5 / 4: OSC 4 off. Turn osc 3 up for a fatter, lower tone.\n- Listen for: the slow beating between the two saws on a held note.",
+          "why": "MONO stacks three oscillators (the parts that make the raw tone) on one note: two saws a hair apart that beat slowly, and a square an octave down for body. The base of a warm, singing lead for a French house solo.\n- MODE MONO: in POLY each note would get only one of them.\n- RANGE 8’ / 8’ / 16’: footage comes from organ pipes; 8’ is normal pitch, 16’ an octave down.\n- WAVEFORM saw / saw / square: bright saws with a hollow square under them.\n- Osc 2 FREQUENCY +0.1: slightly sharp. Further from 0 it sounds sour.\n- Osc 3 FREQUENCY 0: in tune.\n- OSC 1–3 on, VOLUME 7 / 6.5 / 4: OSC 4 off. Turn osc 3 up for a fatter, lower tone.\n- Listen for: the slow beating between the two saws on a held note.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "8",
@@ -3036,7 +3036,7 @@
     {
       "id": "pd-clean-melody",
       "name": "Clean Bright Melody",
-      "ref": "In the style of Kraftwerk — \"Computer Love\"",
+      "ref": "Kraftwerk’s \"Computer Love\" reduced to essentials: a clean, bright line with no slides or wobble",
       "artist": "Kraftwerk",
       "tags": ["lead", "electronic", "80s"],
       "level": 1,
@@ -3062,7 +3062,7 @@
         {
           "title": "A square and a triangle, in tune",
           "module": "mode",
-          "why": "MONO with a square and a triangle an octave above it, both exactly in tune: a bright but pure tone with no beating at all, in the style of Kraftwerk.\n- MODE MONO: both oscillators (the parts that make the raw tone) play each note.\n- Osc 1 RANGE 8’, square: footage comes from organ pipes; 8’ is normal pitch. The square gives a hollow, clear body; on sawtooth it would be brassier.\n- Osc 2 RANGE 4’, triangle: an octave above, adding brightness without buzz.\n- Osc 2 FREQUENCY 0: exactly in tune. Move it off and the two start to beat.\n- OSC 1 and 2 on, VOLUME 6 / 4.5: 3 and 4 off. Osc 2 VOLUME sets how much upper octave you hear.\n- Listen for: a steady, clean tone with no movement.",
+          "why": "MONO with a square and a triangle an octave above it, both exactly in tune: a bright but pure tone with no beating at all, as Kraftwerk’s melodies have.\n- MODE MONO: both oscillators (the parts that make the raw tone) play each note.\n- Osc 1 RANGE 8’, square: footage comes from organ pipes; 8’ is normal pitch. The square gives a hollow, clear body; on sawtooth it would be brassier.\n- Osc 2 RANGE 4’, triangle: an octave above, adding brightness without buzz.\n- Osc 2 FREQUENCY 0: exactly in tune. Move it off and the two start to beat.\n- OSC 1 and 2 on, VOLUME 6 / 4.5: 3 and 4 off. Osc 2 VOLUME sets how much upper octave you hear.\n- Listen for: a steady, clean tone with no movement.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "8",
@@ -3133,7 +3133,7 @@
     {
       "id": "pd-squelch-glide-lead",
       "name": "Squelching Slide Lead",
-      "ref": "In the style of Parliament — \"Give Up the Funk (Tear the Roof off the Sucker)\"",
+      "ref": "A rubbery, squelching lead that slides like Bernie Worrell’s Minimoog on \"Give Up the Funk\"",
       "artist": "Bernie Worrell",
       "tags": ["lead", "funk", "70s"],
       "level": 2,
@@ -3157,7 +3157,7 @@
         {
           "title": "Three oscillators on one note",
           "module": "mode",
-          "why": "MONO stacks three oscillators (the parts that make the raw tone) on one note: a saw, a narrow pulse a hair sharp for a reedy buzz, and a square an octave down for weight. A rubbery lead in the style of P-Funk.\n- MODE MONO: all three play the one note.\n- RANGE 8’ / 8’ / 16’: footage comes from organ pipes; 8’ is normal pitch, 16’ an octave down.\n- WAVEFORM saw / narrow pulse / square: the narrow pulse adds a thin, nasal buzz on top of the saw.\n- Osc 2 FREQUENCY +0.1, osc 3 0: a hair of beating between saw and pulse.\n- OSC 1–3 on, VOLUME 7.5 / 6 / 5.5: OSC 4 off. The saw leads, with the pulse and square a little under it.\n- Listen for: a buzzy, reedy tone. Switch osc 3 off to hear the weight drop.",
+          "why": "MONO stacks three oscillators (the parts that make the raw tone) on one note: a saw, a narrow pulse a hair sharp for a reedy buzz, and a square an octave down for weight. A rubbery lead like the ones Bernie Worrell played in P-Funk.\n- MODE MONO: all three play the one note.\n- RANGE 8’ / 8’ / 16’: footage comes from organ pipes; 8’ is normal pitch, 16’ an octave down.\n- WAVEFORM saw / narrow pulse / square: the narrow pulse adds a thin, nasal buzz on top of the saw.\n- Osc 2 FREQUENCY +0.1, osc 3 0: a hair of beating between saw and pulse.\n- OSC 1–3 on, VOLUME 7.5 / 6 / 5.5: OSC 4 off. The saw leads, with the pulse and square a little under it.\n- Listen for: a buzzy, reedy tone. Switch osc 3 off to hear the weight drop.",
           "set": {
             "voice.mode": "mono",
             "osc1.range": "8",
@@ -3238,7 +3238,7 @@
     {
       "id": "pd-sonar-drone-pad",
       "name": "Distant Sonar Pad",
-      "ref": "In the style of Brian Eno — \"Signals\" (Apollo: Atmospheres and Soundtracks)",
+      "ref": "Soft notes swelling out of a still, low drone and slowly fading, close to Brian Eno’s \"Signals\" from Apollo",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "80s"],
       "level": 2,
@@ -3356,8 +3356,8 @@
     {
       "id": "pd-steel-swell-duo",
       "name": "Steel Swell Pairs",
-      "ref": "In the style of Daniel Lanois — \"Agave\" (Belladonna)",
-      "artist": "Daniel Lanois",
+      "ref": "Two-note harmonies that fade in on a volume swell and bend into each other, like an ambient pedal steel",
+      "artist": "Ambient pedal steel",
       "tags": ["lead", "ambient", "glide"],
       "level": 3,
       "blurb": "Two-note harmonies that fade in slowly and slide into each other, like a pedal steel played with a volume pedal.",
@@ -3378,7 +3378,7 @@
         {
           "title": "Two oscillators per note",
           "module": "mode",
-          "why": "UNI (unison) deals the oscillators out among the keys held, so two keys get two each. Here each note gets a triangle and a soft saw a hair apart, for two-note harmonies in the style of Daniel Lanois’s pedal steel.\n- MODE UNI: with two keys held, 1 and 3 take one note, 2 and 4 the other. One key gets all four.\n- RANGE 8’ on all four: footage comes from organ pipes; 8’ is normal pitch.\n- WAVEFORM tri on 1–2, saw on 3–4: each note gets one of each.\n- FREQUENCY 0 / +0.1 / −0.1 on 2–4: small detune on the saws, so the pairs shimmer slightly.\n- OSC 1–4 on; VOLUME 7 / 7 / 5 / 5: the saws sit under the triangles.\n- Listen for: play two notes. Each is soft with a faint shimmer.",
+          "why": "UNI (unison) deals the oscillators out among the keys held, so two keys get two each. Here each note gets a triangle and a soft saw a hair apart, for two-note harmonies that swell like a pedal steel.\n- MODE UNI: with two keys held, 1 and 3 take one note, 2 and 4 the other. One key gets all four.\n- RANGE 8’ on all four: footage comes from organ pipes; 8’ is normal pitch.\n- WAVEFORM tri on 1–2, saw on 3–4: each note gets one of each.\n- FREQUENCY 0 / +0.1 / −0.1 on 2–4: small detune on the saws, so the pairs shimmer slightly.\n- OSC 1–4 on; VOLUME 7 / 7 / 5 / 5: the saws sit under the triangles.\n- Listen for: play two notes. Each is soft with a faint shimmer.",
           "set": {
             "voice.mode": "uni",
             "osc1.range": "8",
@@ -3466,7 +3466,7 @@
     {
       "id": "pd-funky-worm-lead",
       "name": "Squealing Worm Lead",
-      "ref": "In the style of Ohio Players — \"Funky Worm\"",
+      "ref": "The high, whining, wriggling synth lead that gives Ohio Players’ \"Funky Worm\" its name",
       "artist": "Ohio Players",
       "tags": ["lead", "funk", "70s"],
       "level": 2,
@@ -3554,7 +3554,7 @@
     {
       "id": "pd-sunshine-bass",
       "name": "Sunshine Moog Bass",
-      "ref": "In the style of Roy Ayers — \"Everybody Loves the Sunshine\"",
+      "ref": "A soft, round, humming synth bass for a lazy summer groove, as under Roy Ayers’s \"Everybody Loves the Sunshine\"",
       "artist": "Roy Ayers",
       "tags": ["bass", "jazz-funk", "70s"],
       "level": 1,
@@ -3621,7 +3621,7 @@
     {
       "id": "pd-summer-madness-lead",
       "name": "Sweet Slow-Burn Lead",
-      "ref": "In the style of Kool & the Gang — \"Summer Madness\"",
+      "ref": "Sweet, slow notes that swell in and glide together, the ARP lead of Kool & the Gang’s \"Summer Madness\"",
       "artist": "Kool & the Gang",
       "tags": ["lead", "soul", "70s"],
       "level": 2,
@@ -3693,7 +3693,7 @@
     {
       "id": "pd-between-sheets-bass",
       "name": "Silk Sheets Bass",
-      "ref": "In the style of The Isley Brothers — \"Between the Sheets\"",
+      "ref": "Deep, smooth and softly swelling: the synth bass on The Isley Brothers’ \"Between the Sheets\"",
       "artist": "The Isley Brothers",
       "tags": ["bass", "quiet storm", "80s"],
       "level": 1,
@@ -3757,7 +3757,7 @@
     {
       "id": "pd-outstanding-bass",
       "name": "Bouncing Moog Bass",
-      "ref": "In the style of The Gap Band — \"Outstanding\"",
+      "ref": "A springy Moog bass bouncing on every note, the engine of The Gap Band’s \"Outstanding\"",
       "artist": "The Gap Band",
       "tags": ["bass", "funk", "80s"],
       "level": 1,
@@ -3829,8 +3829,8 @@
     {
       "id": "pd-expansions-lead",
       "name": "Spiritual Space Lead",
-      "ref": "In the style of Lonnie Liston Smith — \"Expansions\"",
-      "artist": "Lonnie Liston Smith",
+      "ref": "A floating, glowing lead that drifts slowly over a deep groove, for 1970s spiritual jazz",
+      "artist": "Spiritual jazz",
       "tags": ["lead", "spiritual jazz", "70s"],
       "level": 2,
       "blurb": "A floating, glowing lead that drifts over a deep groove.",
@@ -3899,7 +3899,7 @@
     {
       "id": "pd-supernature-arp",
       "name": "Menacing Disco Arpeggio",
-      "ref": "In the style of Cerrone — \"Supernature\"",
+      "ref": "Cerrone’s \"Supernature\" pulse: a dark synth arpeggio driving a menacing disco groove",
       "artist": "Cerrone",
       "tags": ["seq", "space disco", "70s"],
       "level": 2,
@@ -3962,7 +3962,7 @@
     {
       "id": "pd-magic-fly-lead",
       "name": "Space Disco Lead",
-      "ref": "In the style of Space — \"Magic Fly\"",
+      "ref": "A bright, smooth lead with wheel vibrato floating over strings, as on Space’s \"Magic Fly\"",
       "artist": "Space",
       "tags": ["lead", "space disco", "70s"],
       "level": 1,
@@ -4035,7 +4035,7 @@
     {
       "id": "pd-wayward-lead",
       "name": "Arena Prog Lead",
-      "ref": "In the style of Kansas — \"Carry On Wayward Son\"",
+      "ref": "A fat, bright synth lead strong enough to stand beside the guitars in Kansas’s \"Carry On Wayward Son\"",
       "artist": "Kansas",
       "tags": ["lead", "prog rock", "70s"],
       "level": 2,
@@ -4108,9 +4108,9 @@
     },
     {
       "id": "pd-silver-cloud-pad",
-      "name": "Silver Cloud Chords",
-      "ref": "In the style of La Düsseldorf — \"Silver Cloud\"",
-      "artist": "La Düsseldorf",
+      "name": "Shimmering Motorik Chords",
+      "ref": "Bright paraphonic chords shimmering over a steady motorik beat, out of late-1970s Krautrock",
+      "artist": "Krautrock",
       "tags": ["pad", "krautrock", "70s"],
       "level": 2,
       "blurb": "Bright, shimmering paraphonic chords that ring out over a steady beat.",
@@ -4183,7 +4183,7 @@
     {
       "id": "pd-jealous-bass",
       "name": "Rubbery Electro-Funk Bass",
-      "ref": "In the style of Chromeo — \"Jealous (I Ain’t with It)\"",
+      "ref": "A bright, rubbery synth bass with a snap, the glossy electro-funk of Chromeo’s \"Jealous (I Ain’t with It)\"",
       "artist": "Chromeo",
       "tags": ["bass", "electro-funk", "10s"],
       "level": 2,
@@ -4254,7 +4254,7 @@
     {
       "id": "pd-mount-vision-arp",
       "name": "Wandering Garden Arpeggio",
-      "ref": "In the style of Emily A. Sprague — \"Mount Vision\"",
+      "ref": "Emily A. Sprague’s \"Mount Vision\" as a slow arpeggio wandering through a chord at random",
       "artist": "Emily A. Sprague",
       "tags": ["seq", "ambient", "10s"],
       "level": 2,
@@ -4335,7 +4335,7 @@
     {
       "id": "pd-heart-of-glass-seq",
       "name": "Glassy Disco Sequence",
-      "ref": "In the style of Blondie — \"Heart of Glass\"",
+      "ref": "The bubbling synth sequence that rocks up and down under Blondie’s \"Heart of Glass\"",
       "artist": "Blondie",
       "tags": ["seq", "disco", "70s"],
       "level": 2,
@@ -4408,7 +4408,7 @@
     {
       "id": "pd-number-one-arp",
       "name": "Heavenly Climbing Arpeggio",
-      "ref": "In the style of Sparks — \"The Number One Song in Heaven\"",
+      "ref": "A fast, bright arpeggio climbing two octaves over and over, as in Sparks’s \"The Number One Song in Heaven\"",
       "artist": "Sparks",
       "tags": ["seq", "synth-pop", "70s"],
       "level": 2,
@@ -4476,7 +4476,7 @@
     {
       "id": "pd-smalltown-arp",
       "name": "Played-Order Pulse",
-      "ref": "In the style of Bronski Beat — \"Smalltown Boy\"",
+      "ref": "A melancholy pulse that plays each chord in the order the keys went down, driving Bronski Beat’s \"Smalltown Boy\"",
       "artist": "Bronski Beat",
       "tags": ["seq", "synth-pop", "80s"],
       "level": 3,
@@ -4544,7 +4544,7 @@
     {
       "id": "pd-sunset-arp",
       "name": "Falling Sunset Arpeggio",
-      "ref": "In the style of Phoenix — \"Love Like a Sunset\"",
+      "ref": "Warm arpeggios pouring down through a chord: Phoenix’s \"Love Like a Sunset\" in miniature",
       "artist": "Phoenix",
       "tags": ["seq", "indie", "00s"],
       "level": 2,
@@ -4613,7 +4613,7 @@
     {
       "id": "pd-dancing-own-chords",
       "name": "Pulsing Heartbreak Chords",
-      "ref": "In the style of Robyn — \"Dancing On My Own\"",
+      "ref": "Steady eighth-note synth chords pushing a bittersweet pop song along, as in Robyn’s \"Dancing On My Own\"",
       "artist": "Robyn",
       "tags": ["keys", "electropop", "10s"],
       "level": 1,
@@ -4700,7 +4700,7 @@
     {
       "id": "pd-bulletproof-lead",
       "name": "Bright Square Hook",
-      "ref": "In the style of La Roux — \"Bulletproof\"",
+      "ref": "La Roux’s \"Bulletproof\" hook: a hard, bright square wave with a crisp edge",
       "artist": "La Roux",
       "tags": ["lead", "electropop", "00s"],
       "level": 1,
@@ -4761,7 +4761,7 @@
     {
       "id": "pd-bedroom-chords",
       "name": "Wobbly Bedroom Chords",
-      "ref": "In the style of Mac DeMarco — \"Chamber of Reflection\"",
+      "ref": "Soft, seasick, wobbling chords from a cheap synth, the bedroom sound of Mac DeMarco’s \"Chamber of Reflection\"",
       "artist": "Mac DeMarco",
       "tags": ["keys", "indie", "10s"],
       "level": 1,
@@ -4835,7 +4835,7 @@
     {
       "id": "pd-melancholy-hill-chords",
       "name": "Bright Hilltop Chords",
-      "ref": "In the style of Gorillaz — \"On Melancholy Hill\"",
+      "ref": "Gentle, toy-like chords bobbing brightly along, close to Gorillaz’s \"On Melancholy Hill\"",
       "artist": "Gorillaz",
       "tags": ["keys", "indie pop", "10s"],
       "level": 1,
@@ -4924,7 +4924,7 @@
     {
       "id": "pd-polish-girl-lead",
       "name": "Woozy Chillwave Lead",
-      "ref": "In the style of Neon Indian — \"Polish Girl\"",
+      "ref": "A woozy lead that bends up under the wheel, the hazy chillwave of Neon Indian’s \"Polish Girl\"",
       "artist": "Neon Indian",
       "tags": ["lead", "chillwave", "10s"],
       "level": 2,
@@ -4999,7 +4999,7 @@
     {
       "id": "pd-chillwave-pad",
       "name": "Hazy Afternoon Pad",
-      "ref": "In the style of Toro y Moi — \"So Many Details\"",
+      "ref": "Soft chords in a warm haze with a slow chorus, for chillwave like Toro y Moi’s \"So Many Details\"",
       "artist": "Toro y Moi",
       "tags": ["pad", "chillwave", "10s"],
       "level": 1,
@@ -5068,7 +5068,7 @@
     {
       "id": "pd-over-and-over-riff",
       "name": "Buzzing Dance-Rock Riff",
-      "ref": "In the style of Hot Chip — \"Over and Over\"",
+      "ref": "A buzzy, distorted riff hammered out again and again, as in Hot Chip’s \"Over and Over\"",
       "artist": "Hot Chip",
       "tags": ["lead", "dance-punk", "00s"],
       "level": 2,
@@ -5135,7 +5135,7 @@
     {
       "id": "pd-lights-music-pad",
       "name": "Bright Dance-Floor Pad",
-      "ref": "In the style of Cut Copy — \"Lights & Music\"",
+      "ref": "A bright, wide pad swelling over a driving beat, the dance-floor shimmer of Cut Copy’s \"Lights & Music\"",
       "artist": "Cut Copy",
       "tags": ["pad", "synth-pop", "00s"],
       "level": 1,
@@ -5204,7 +5204,7 @@
     {
       "id": "pd-sleepyhead-chords",
       "name": "Chirpy Pop Chords",
-      "ref": "In the style of Passion Pit — \"Sleepyhead\"",
+      "ref": "High, chirpy chords that pop and sparkle, for the bright, busy synth-pop of Passion Pit",
       "artist": "Passion Pit",
       "tags": ["keys", "electropop", "00s"],
       "level": 2,
@@ -5285,7 +5285,7 @@
     {
       "id": "pd-french-disko-lead",
       "name": "Thin Buzzing Organ Lead",
-      "ref": "In the style of Stereolab — \"French Disko\"",
+      "ref": "A thin, nasal, buzzing lead with its bass cut away, like the cheap combo organ in Stereolab’s \"French Disko\"",
       "artist": "Stereolab",
       "tags": ["lead", "indie", "90s"],
       "level": 2,
@@ -5351,7 +5351,7 @@
     {
       "id": "pd-gaita-drone",
       "name": "Bagpipe Drone and Chanter",
-      "ref": "In the style of the Galician gaita",
+      "ref": "A buzzing reed chanter over a fixed drone, the sound of the Galician gaita bagpipe",
       "artist": "Galician gaita tradition",
       "tags": ["drone", "galician folk", "traditional"],
       "level": 3,
@@ -5434,8 +5434,8 @@
     {
       "id": "pd-nuvole-keys",
       "name": "Pedalled Piano Chords",
-      "ref": "In the style of Ludovico Einaudi — \"Nuvole Bianche\"",
-      "artist": "Ludovico Einaudi",
+      "ref": "Soft, piano-like notes left ringing as if the sustain pedal were down, for gentle modern solo piano",
+      "artist": "Modern solo piano",
       "tags": ["keys", "contemporary classical", "00s"],
       "level": 3,
       "blurb": "Soft piano-like notes that keep ringing, as if the sustain pedal were down.",
@@ -5503,7 +5503,7 @@
     {
       "id": "pd-detroit-hats",
       "name": "Sizzling Noise Hats",
-      "ref": "In the style of Detroit techno hi-hats",
+      "ref": "Crisp hi-hats cut from high-passed noise, sizzling as they do on Detroit techno records",
       "artist": "Detroit techno",
       "tags": ["perc", "detroit techno", "80s"],
       "level": 2,
@@ -5573,7 +5573,7 @@
     {
       "id": "pd-self-osc-kick",
       "name": "Ringing Filter Kick",
-      "ref": "In the style of minimal techno kicks",
+      "ref": "A ringing filter dropping fast into a deep, round thump: the minimal techno kick",
       "artist": "Minimal techno",
       "tags": ["perc", "minimal techno", "00s"],
       "level": 3,
@@ -5642,7 +5642,7 @@
     {
       "id": "pd-stratus-feedback-lead",
       "name": "Overdriven Fusion Lead",
-      "ref": "In the style of Billy Cobham — \"Stratus\"",
+      "ref": "A hot, growling feedback lead for fast runs, like Jan Hammer’s Minimoog on Billy Cobham’s \"Stratus\"",
       "artist": "Billy Cobham",
       "tags": ["lead", "jazz fusion", "70s"],
       "level": 3,
@@ -5714,7 +5714,7 @@
     {
       "id": "pd-deep-house-bass",
       "name": "Deep House Organ Bass",
-      "ref": "In the style of Kerri Chandler — \"Rain\"",
+      "ref": "A round, organ-like bass with a soft click, the warm deep house of Kerri Chandler’s \"Rain\"",
       "artist": "Kerri Chandler",
       "tags": ["bass", "deep house", "90s"],
       "level": 1,
@@ -5771,7 +5771,7 @@
     {
       "id": "pd-dub-techno-chord",
       "name": "Dub Techno Chord",
-      "ref": "In the style of Basic Channel — \"Quadrant Dub\"",
+      "ref": "Basic Channel’s \"Quadrant Dub\" stripped down: a short, muffled minor chord echoing in the dark",
       "artist": "Basic Channel",
       "tags": ["keys", "dub techno", "90s"],
       "level": 2,
@@ -5845,7 +5845,7 @@
     {
       "id": "pd-reese-bass",
       "name": "Churning Reese Bass",
-      "ref": "In the style of the jungle Reese bass",
+      "ref": "Detuned sawtooths churning against each other: the dark Reese bass of jungle",
       "artist": "Jungle",
       "tags": ["bass", "jungle", "90s"],
       "level": 2,
@@ -5912,7 +5912,7 @@
     {
       "id": "pd-tin-whistle",
       "name": "Tin Whistle",
-      "ref": "In the style of the Irish tin whistle",
+      "ref": "Bright, pure and breathy, a tin whistle for a quick Irish jig",
       "artist": "Irish traditional music",
       "tags": ["wind", "irish traditional", "traditional"],
       "level": 2,
@@ -5984,7 +5984,7 @@
     {
       "id": "pd-mariachi-trumpets",
       "name": "Mariachi Trumpets",
-      "ref": "In the style of mariachi trumpets",
+      "ref": "Brassy trumpets in thirds with a bold attack and wide vibrato, as a mariachi band plays them",
       "artist": "Mariachi",
       "tags": ["brass", "mariachi", "traditional"],
       "level": 2,
@@ -6057,8 +6057,8 @@
     {
       "id": "pd-philly-strings",
       "name": "Silky Philly Strings",
-      "ref": "In the style of MFSB — \"TSOP (The Sound of Philadelphia)\"",
-      "artist": "MFSB",
+      "ref": "Silky string chords that swell and sweep into each other, for sweet 1970s Philadelphia soul",
+      "artist": "Philadelphia soul strings",
       "tags": ["strings", "philly soul", "70s"],
       "level": 1,
       "blurb": "Lush, silky string chords that swell and sweep, for sweet soul.",
@@ -6125,7 +6125,7 @@
     {
       "id": "pd-feedback-howl",
       "name": "Industrial Feedback Howl",
-      "ref": "In the style of Throbbing Gristle — \"Hamburger Lady\"",
+      "ref": "A low drone that groans, howls and breaks up, the industrial unease of Throbbing Gristle’s \"Hamburger Lady\"",
       "artist": "Throbbing Gristle",
       "tags": ["fx", "industrial", "70s"],
       "level": 3,
@@ -6181,7 +6181,7 @@
     {
       "id": "pd-somnium-pad",
       "name": "Sleep-Concert Pad",
-      "ref": "In the style of Robert Rich — Somnium",
+      "ref": "Robert Rich’s Somnium was made to sleep to: a deep, dark pad that hardly moves",
       "artist": "Robert Rich",
       "tags": ["pad", "ambient", "90s"],
       "level": 2,
@@ -6254,8 +6254,8 @@
     {
       "id": "pd-silence-answer-pad",
       "name": "Meditation Pad",
-      "ref": "In the style of Deuter — \"Silence Is the Answer\"",
-      "artist": "Deuter",
+      "ref": "A soft, open, still pad that leaves plenty of space, for new age meditation music",
+      "artist": "New age meditation music",
       "tags": ["pad", "new age", "80s"],
       "level": 1,
       "blurb": "A soft, open, warm pad for meditation, still and spacious.",
@@ -6321,7 +6321,7 @@
     {
       "id": "pd-novus-pad",
       "name": "Cathedral Choir Pad",
-      "ref": "In the style of Constance Demby — Novus Magnificat",
+      "ref": "A vast, bright, choir-like swell filling a cathedral, as in Constance Demby’s Novus Magnificat",
       "artist": "Constance Demby",
       "tags": ["pad", "new age", "80s"],
       "level": 2,
@@ -6385,7 +6385,7 @@
     {
       "id": "pd-chill-out-pad",
       "name": "Ambient House Drift",
-      "ref": "In the style of The KLF — Chill Out",
+      "ref": "Warm, hazy chords drifting like dawn after the rave, from the world of The KLF’s Chill Out",
       "artist": "The KLF",
       "tags": ["pad", "ambient house", "90s"],
       "level": 2,
@@ -6450,8 +6450,8 @@
     {
       "id": "pd-kora-pluck",
       "name": "Kora Pluck",
-      "ref": "In the style of Toumani Diabaté — \"Jarabi\"",
-      "artist": "Toumani Diabaté",
+      "ref": "A bright, ringing, harp-like pluck for the fast, flowing runs of the West African kora",
+      "artist": "West African kora",
       "tags": ["pluck", "west african", "traditional"],
       "level": 2,
       "blurb": "A bright, harp-like pluck that rings, for fast, flowing patterns.",
@@ -6524,8 +6524,8 @@
     {
       "id": "pd-oud-pluck",
       "name": "Oud-like Pluck",
-      "ref": "In the style of Anouar Brahem — Le pas du chat noir",
-      "artist": "Anouar Brahem",
+      "ref": "A dark, woody pluck, low and resonant, with slides that hint at the fretless Arabic oud",
+      "artist": "Arabic oud",
       "tags": ["pluck", "arabic", "00s"],
       "level": 2,
       "blurb": "A dark, warm, woody pluck, low and resonant.",
@@ -6591,7 +6591,7 @@
     {
       "id": "pd-guzheng-pluck",
       "name": "Guzheng Bend",
-      "ref": "In the style of the Chinese guzheng",
+      "ref": "A twangy zither pluck whose notes bend as the string is pressed, as on the Chinese guzheng",
       "artist": "Chinese guzheng tradition",
       "tags": ["pluck", "chinese traditional", "traditional"],
       "level": 3,
@@ -6668,7 +6668,7 @@
     {
       "id": "pd-watering-flower-keys",
       "name": "Watering-Can Keys",
-      "ref": "In the style of Haruomi Hosono — Watering a Flower",
+      "ref": "Bright, droplet-like keys looping calmly, the gentle ambient of Haruomi Hosono’s Watering a Flower",
       "artist": "Haruomi Hosono",
       "tags": ["keys", "ambient", "80s"],
       "level": 2,
@@ -6741,7 +6741,7 @@
     {
       "id": "pd-zouk-stabs",
       "name": "Bright Zouk Stabs",
-      "ref": "In the style of Kassav’ — \"Zouk-la sé sèl médikaman nou ni\"",
+      "ref": "Bright, chorused chord stabs bouncing over a fast zouk groove, as Kassav’ played them",
       "artist": "Kassav’",
       "tags": ["keys", "zouk", "80s"],
       "level": 1,
@@ -6816,7 +6816,7 @@
     {
       "id": "pd-gospel-organ",
       "name": "Gospel Organ Swell",
-      "ref": "In the style of a black gospel church organ",
+      "ref": "A warm, full organ chord that swells and shouts with wide vibrato, as in a black gospel church",
       "artist": "Black gospel tradition",
       "tags": ["keys", "gospel", "traditional"],
       "level": 2,
@@ -6891,8 +6891,8 @@
     {
       "id": "pd-silhouettes-arp",
       "name": "Rippling Jazz Arpeggio",
-      "ref": "In the style of Floating Points — \"Silhouettes (I, II & III)\"",
-      "artist": "Floating Points",
+      "ref": "A soft arpeggio rippling over rich jazz chords, warm and flowing, for jazz-tinged electronica",
+      "artist": "Jazz-tinged electronica",
       "tags": ["seq", "electronica", "10s"],
       "level": 2,
       "blurb": "A soft, rippling arpeggio over rich jazz chords, warm and flowing.",
@@ -6973,7 +6973,7 @@
     {
       "id": "pd-singing-bowl",
       "name": "Singing Bowl",
-      "ref": "In the style of a Tibetan singing bowl",
+      "ref": "A struck metal bowl ringing on and on as its overtones beat: the Tibetan singing bowl",
       "artist": "Tibetan singing bowl tradition",
       "tags": ["drone", "tibetan", "traditional"],
       "level": 3,
@@ -7044,7 +7044,7 @@
     {
       "id": "pd-ney-flute",
       "name": "Breathy Ney",
-      "ref": "In the style of the Sufi ney",
+      "ref": "A breathy reed flute that swells and slides into each note, as the Sufi ney is played",
       "artist": "Sufi ney tradition",
       "tags": ["wind", "sufi", "traditional"],
       "level": 3,
@@ -7117,8 +7117,8 @@
     {
       "id": "pd-funk-horn-section",
       "name": "Funk Horn Section",
-      "ref": "In the style of Tower of Power — \"What Is Hip?\"",
-      "artist": "Tower of Power",
+      "ref": "Tight brass stabs that hit hard together and stop dead, a synth take on a 1970s funk horn section",
+      "artist": "1970s funk horns",
       "tags": ["brass", "funk", "70s"],
       "level": 2,
       "blurb": "Tight, punchy horn stabs that hit hard and stop dead.",
@@ -7194,8 +7194,8 @@
     {
       "id": "pd-rock-horn-riff",
       "name": "Rock Horn Riff",
-      "ref": "In the style of Chicago — \"25 or 6 to 4\"",
-      "artist": "Chicago",
+      "ref": "A bold horn riff doubled in octaves with a touch of grit, the trumpets-over-trombones sound of jazz-rock",
+      "artist": "Jazz-rock horns",
       "tags": ["brass", "jazz rock", "70s"],
       "level": 2,
       "blurb": "A bold, bright horn line doubled in octaves, with a hint of grit.",
@@ -7260,7 +7260,7 @@
     {
       "id": "pd-banda-tuba",
       "name": "Banda Tuba Bass",
-      "ref": "In the style of banda sinaloense tuba",
+      "ref": "A deep, brassy tuba bass that oom-pahs along under a banda sinaloense",
       "artist": "Banda sinaloense",
       "tags": ["brass", "banda", "traditional"],
       "level": 2,
@@ -7325,8 +7325,8 @@
     {
       "id": "pd-loves-theme-strings",
       "name": "Sweeping Disco Strings",
-      "ref": "In the style of Love Unlimited Orchestra — \"Love’s Theme\"",
-      "artist": "Love Unlimited Orchestra",
+      "ref": "Sweeping string chords that soar over the groove, the orchestral side of 1970s disco",
+      "artist": "Disco strings",
       "tags": ["strings", "disco", "70s"],
       "level": 2,
       "blurb": "Lush, sweeping string chords that soar over a disco groove.",
@@ -7397,8 +7397,8 @@
     {
       "id": "pd-out-of-africa-strings",
       "name": "Wide Plains Strings",
-      "ref": "In the style of John Barry — Out of Africa",
-      "artist": "John Barry",
+      "ref": "Broad, warm string chords that move slowly, sized for a sweeping orchestral film theme",
+      "artist": "Film score strings",
       "tags": ["strings", "soundtrack", "80s"],
       "level": 2,
       "blurb": "Warm, broad, slow string chords for a sweeping film theme.",
@@ -7474,8 +7474,8 @@
     {
       "id": "pd-enta-omri-strings",
       "name": "Gliding Arabic Strings",
-      "ref": "In the style of Umm Kulthum — \"Enta Omri\"",
-      "artist": "Umm Kulthum",
+      "ref": "A string section gliding through one melody in unison, warm and yearning, as an Arabic orchestra plays",
+      "artist": "Arabic orchestral strings",
       "tags": ["strings", "arabic classical", "60s"],
       "level": 3,
       "blurb": "A string section playing a gliding melody in unison, warm and yearning.",
@@ -7532,8 +7532,8 @@
     {
       "id": "pd-morning-mood-flute",
       "name": "Morning Flute",
-      "ref": "In the style of Edvard Grieg — \"Morning Mood\" (Peer Gynt)",
-      "artist": "Edvard Grieg",
+      "ref": "A soft, pure flute with a touch of breath, for a gentle, rising morning melody",
+      "artist": "Orchestral flute",
       "tags": ["wind", "romantic", "1870s"],
       "level": 2,
       "blurb": "A soft, pure flute with a breath, for a gentle sunrise melody.",
@@ -7607,7 +7607,7 @@
     {
       "id": "pd-invader-march",
       "name": "Invader March",
-      "ref": "In the style of Space Invaders (Tomohiro Nishikado)",
+      "ref": "Four low, thudding notes creeping downwards, the advancing aliens of Tomohiro Nishikado’s Space Invaders",
       "artist": "Tomohiro Nishikado",
       "tags": ["fx", "arcade", "70s"],
       "level": 1,
@@ -7667,8 +7667,8 @@
     {
       "id": "pd-environments-ocean",
       "name": "Slow Ocean Waves",
-      "ref": "In the style of Irv Teibel — Environments",
-      "artist": "Irv Teibel",
+      "ref": "Slow waves of filtered noise rolling in and drawing back: a synthesised seashore",
+      "artist": "Nature soundscapes",
       "tags": ["fx", "environmental", "70s"],
       "level": 2,
       "blurb": "Slow waves of filtered noise that roll in and draw back.",
@@ -7727,8 +7727,8 @@
     {
       "id": "pd-glide-whistle",
       "name": "Cartoon Slide Whistle",
-      "ref": "In the style of Carl Stalling — Looney Tunes",
-      "artist": "Carl Stalling",
+      "ref": "A pure tone swooping up and down like a slide whistle, for a cartoon gag",
+      "artist": "Cartoon sound effects",
       "tags": ["fx", "cartoon", "40s"],
       "level": 1,
       "blurb": "A pure whistle that swoops up and down, for a cartoon gag.",
@@ -7785,7 +7785,7 @@
     {
       "id": "pd-syndrum-fall",
       "name": "Falling Syn-Drum",
-      "ref": "In the style of late-1970s disco syn-drums",
+      "ref": "The falling “pew” of an electronic drum, all over late-1970s disco fills",
       "artist": "Syn-drum disco",
       "tags": ["perc", "disco", "70s"],
       "level": 3,
@@ -7854,7 +7854,7 @@
     {
       "id": "pd-new-jack-snare",
       "name": "New Jack Snare",
-      "ref": "In the style of Teddy Riley — new jack swing snares",
+      "ref": "A sharp noise snare with a tight snap for a swung beat, the crack of Teddy Riley’s new jack swing",
       "artist": "Teddy Riley",
       "tags": ["perc", "new jack swing", "80s"],
       "level": 2,
@@ -7916,7 +7916,7 @@
     {
       "id": "pd-steel-guitar-pluck",
       "name": "Hawaiian Steel Slide",
-      "ref": "In the style of the Hawaiian steel guitar",
+      "ref": "A sweet plucked tone that glides between notes as a bar slides on a Hawaiian steel guitar",
       "artist": "Hawaiian steel guitar tradition",
       "tags": ["pluck", "hawaiian", "traditional"],
       "level": 2,
@@ -7990,9 +7990,9 @@
     },
     {
       "id": "pd-fantastic-voyage-bass",
-      "name": "Voyage Funk Bass",
-      "ref": "In the style of Lakeside — \"Fantastic Voyage\"",
-      "artist": "Lakeside",
+      "name": "Barking Funk Bass",
+      "ref": "A thick, buzzing funk bass with a quick bark on each note, loud and swaggering",
+      "artist": "Early-1980s funk",
       "tags": ["bass", "funk", "80s"],
       "level": 1,
       "blurb": "A thick, buzzing funk bass with a quick bark, swaggering and loud.",
@@ -8057,7 +8057,7 @@
     {
       "id": "pd-drill-slide-bass",
       "name": "Sliding Drill Bass",
-      "ref": "In the style of UK drill sliding 808 basses",
+      "ref": "A booming sub that slides from note to note, the 808 bass of UK drill",
       "artist": "UK drill",
       "tags": ["bass", "uk drill", "20s"],
       "level": 2,
@@ -8130,7 +8130,7 @@
     {
       "id": "pd-ninos-parque-bass",
       "name": "Minimal Synth Bass",
-      "ref": "In the style of Liaisons Dangereuses — \"Los Niños del Parque\"",
+      "ref": "Hard, cold, buzzing eighths pounding away, the sequenced bass of Liaisons Dangereuses’ \"Los Niños del Parque\"",
       "artist": "Liaisons Dangereuses",
       "tags": ["bass", "ebm", "80s"],
       "level": 2,
@@ -8196,7 +8196,7 @@
     {
       "id": "pd-hollywood-octave-bass",
       "name": "Neon Octave Bass",
-      "ref": "In the style of Mitch Murder — \"Hollywood Heights\"",
+      "ref": "A bright, driving octave bass for a glossy 1980s-style chase, as in Mitch Murder’s \"Hollywood Heights\"",
       "artist": "Mitch Murder",
       "tags": ["bass", "synthwave", "10s"],
       "level": 1,
@@ -8263,7 +8263,7 @@
     {
       "id": "pd-hari-meru-lead",
       "name": "Ethio-Jazz Moog Lead",
-      "ref": "In the style of Hailu Mergia — \"Hari Meru Meru\"",
+      "ref": "A warm, reedy, singing lead for a winding Ethiopian melody, close to Hailu Mergia’s \"Hari Meru Meru\"",
       "artist": "Hailu Mergia",
       "tags": ["lead", "ethio-jazz", "70s"],
       "level": 2,
@@ -8332,7 +8332,7 @@
     {
       "id": "pd-donence-lead",
       "name": "Anatolian Psych Lead",
-      "ref": "In the style of Barış Manço — \"Dönence\"",
+      "ref": "A bright, slightly fuzzy lead with wide wheel vibrato, carrying the sweeping tune of Barış Manço’s \"Dönence\"",
       "artist": "Barış Manço",
       "tags": ["lead", "anatolian rock", "80s"],
       "level": 2,
@@ -8398,7 +8398,7 @@
     {
       "id": "pd-rai-lead",
       "name": "Raï Keyboard Lead",
-      "ref": "In the style of Khaled — \"Didi\"",
+      "ref": "A nasal keyboard lead that trills and slides through its ornaments, the raï sound of Khaled’s \"Didi\"",
       "artist": "Khaled",
       "tags": ["lead", "raï", "90s"],
       "level": 2,
@@ -8471,7 +8471,7 @@
     {
       "id": "pd-chip-meditation-arp",
       "name": "Chip Meditation Arpeggio",
-      "ref": "In the style of Software — \"Chip-Meditation\"",
+      "ref": "Software’s \"Chip-Meditation\" as a calm, crystalline arpeggio rippling on and on",
       "artist": "Software",
       "tags": ["seq", "electronic", "80s"],
       "level": 2,
@@ -8551,7 +8551,7 @@
     {
       "id": "pd-overdrive-arp",
       "name": "Night-Drive Arpeggio",
-      "ref": "In the style of Lazerhawk — \"Overdrive\"",
+      "ref": "A bright, pulsing arpeggio for a night drive, from the synthwave of Lazerhawk’s \"Overdrive\"",
       "artist": "Lazerhawk",
       "tags": ["seq", "synthwave", "10s"],
       "level": 2,
@@ -8627,7 +8627,7 @@
     {
       "id": "pd-dirty-talk-seq",
       "name": "Italo Bass Sequence",
-      "ref": "In the style of Klein + M.B.O. — \"Dirty Talk\"",
+      "ref": "A low sequence bouncing up and down a held chord, the Italo-disco drive of Klein + M.B.O.’s \"Dirty Talk\"",
       "artist": "Klein + M.B.O.",
       "tags": ["seq", "italo disco", "80s"],
       "level": 2,
@@ -8691,8 +8691,8 @@
     {
       "id": "pd-organ-drone",
       "name": "Shimmering Organ Drone",
-      "ref": "In the style of Charlemagne Palestine — Schlingen-Blängen",
-      "artist": "Charlemagne Palestine",
+      "ref": "A held organ chord that drones and shimmers as its notes beat together, for minimalist drone music",
+      "artist": "Minimalist drone music",
       "tags": ["drone", "minimalism", "70s"],
       "level": 2,
       "blurb": "A huge, shimmering organ drone of a held chord, beating and glowing.",
@@ -8755,7 +8755,7 @@
     {
       "id": "pd-samba-shaker",
       "name": "Noise Shaker",
-      "ref": "In the style of a samba ganzá",
+      "ref": "Crisp bursts of noise accented on the beat, standing in for a samba ganzá shaker",
       "artist": "Samba",
       "tags": ["perc", "samba", "traditional"],
       "level": 1,
@@ -8822,7 +8822,7 @@
     {
       "id": "pd-face-of-waters-pad",
       "name": "Rising Waters Pad",
-      "ref": "In the style of Moby — \"God Moving Over the Face of the Waters\"",
+      "ref": "A hopeful pad that brightens as each chord holds, like Moby’s \"God Moving Over the Face of the Waters\"",
       "artist": "Moby",
       "tags": ["pad", "ambient", "90s"],
       "level": 2,
@@ -8881,7 +8881,7 @@
     {
       "id": "pd-photosynthesis-pad",
       "name": "Psybient Glow Pad",
-      "ref": "In the style of Carbon Based Lifeforms — \"Photosynthesis\"",
+      "ref": "Carbon Based Lifeforms’ \"Photosynthesis\" glow: a deep, warm pad with a soft vowel, slow and organic",
       "artist": "Carbon Based Lifeforms",
       "tags": ["pad", "psybient", "00s"],
       "level": 2,
@@ -8945,7 +8945,7 @@
     {
       "id": "pd-passion-pad",
       "name": "Desert Passion Pad",
-      "ref": "In the style of Peter Gabriel — Passion",
+      "ref": "Open fifths that ache and hang over a desert, the dark synth pads of Peter Gabriel’s Passion",
       "artist": "Peter Gabriel",
       "tags": ["pad", "world fusion", "80s"],
       "level": 2,
@@ -9018,7 +9018,7 @@
     {
       "id": "pd-namlook-air-pad",
       "name": "Floating Ambient Techno Pad",
-      "ref": "In the style of Pete Namlook — Air",
+      "ref": "Slowly beating chords that float without weight, the ambient techno of Pete Namlook’s Air",
       "artist": "Pete Namlook",
       "tags": ["pad", "ambient techno", "90s"],
       "level": 2,
@@ -9086,8 +9086,8 @@
     {
       "id": "pd-american-beauty-pluck",
       "name": "Tinkling Marimba Pattern",
-      "ref": "In the style of Thomas Newman — American Beauty",
-      "artist": "Thomas Newman",
+      "ref": "A soft, woody mallet pattern of repeated notes, curious and gently off-kilter, like a film-score marimba",
+      "artist": "Film score marimba",
       "tags": ["pluck", "soundtrack", "90s"],
       "level": 2,
       "blurb": "A soft, woody, tinkling pattern of repeated notes, curious and gentle.",
@@ -9156,8 +9156,8 @@
     {
       "id": "pd-soul-harp",
       "name": "Jazz Harp Glissando",
-      "ref": "In the style of Dorothy Ashby — \"Soul Vibrations\"",
-      "artist": "Dorothy Ashby",
+      "ref": "A soft, bright harp sweeping through rippling glissandos, for soul jazz",
+      "artist": "Jazz harp",
       "tags": ["pluck", "jazz", "60s"],
       "level": 2,
       "blurb": "A soft, bright harp that sweeps through rippling runs.",
@@ -9224,7 +9224,7 @@
     {
       "id": "pd-mandolin-tremolo",
       "name": "Mandolin Tremolo",
-      "ref": "In the style of the Neapolitan mandolin",
+      "ref": "A bright pluck picked so fast it trembles on each long note: the Neapolitan mandolin tremolo",
       "artist": "Neapolitan mandolin tradition",
       "tags": ["pluck", "italian folk", "traditional"],
       "level": 2,
@@ -9306,8 +9306,8 @@
     {
       "id": "pd-montara-vibes",
       "name": "Soft Vibraphone",
-      "ref": "In the style of Bobby Hutcherson — \"Montara\"",
-      "artist": "Bobby Hutcherson",
+      "ref": "Soft mallet notes that ring and shimmer like a jazz vibraphone with its motor running",
+      "artist": "Jazz vibraphone",
       "tags": ["keys", "latin jazz", "70s"],
       "level": 2,
       "blurb": "A soft, mellow mallet tone that rings and shimmers.",
@@ -9381,8 +9381,8 @@
     {
       "id": "pd-street-life-keys",
       "name": "Jazz-Funk Electric Piano",
-      "ref": "In the style of The Crusaders — \"Street Life\"",
-      "artist": "The Crusaders",
+      "ref": "A warm electric piano with a bell-like tine on the front, for smooth 1970s jazz-funk chords",
+      "artist": "Jazz-funk electric piano",
       "tags": ["keys", "jazz-funk", "70s"],
       "level": 2,
       "blurb": "A warm, bell-tipped electric piano for smooth jazz-funk chords.",
@@ -9463,7 +9463,7 @@
     {
       "id": "pd-musette-accordion",
       "name": "Musette Accordion",
-      "ref": "In the style of a French musette accordion",
+      "ref": "Three reeds tuned apart on every note, so the melody shimmers like a French musette accordion",
       "artist": "French musette tradition",
       "tags": ["keys", "musette", "traditional"],
       "level": 2,
@@ -9533,8 +9533,8 @@
     {
       "id": "pd-bansuri",
       "name": "Bansuri Flute",
-      "ref": "In the style of Hariprasad Chaurasia — bansuri",
-      "artist": "Hariprasad Chaurasia",
+      "ref": "A warm, breathy bamboo flute that slides and bends between notes, for a slow raga phrase",
+      "artist": "Hindustani bansuri",
       "tags": ["wind", "hindustani classical", "traditional"],
       "level": 3,
       "blurb": "A warm, breathy bamboo flute that slides and bends between notes.",
@@ -9603,7 +9603,7 @@
     {
       "id": "pd-heresy-drone",
       "name": "Dark Cavern Drone",
-      "ref": "In the style of Lustmord — Heresy",
+      "ref": "Lustmord’s Heresy as a vast, dark, rumbling drone rising out of a cave",
       "artist": "Lustmord",
       "tags": ["drone", "dark ambient", "90s"],
       "level": 2,
@@ -9663,8 +9663,8 @@
     {
       "id": "pd-rhayader-lead",
       "name": "Flute-Like Prog Lead",
-      "ref": "In the style of Camel — \"Rhayader\" (The Snow Goose)",
-      "artist": "Camel",
+      "ref": "A light, airy lead that skips and flutters like a flute through a 1970s prog melody",
+      "artist": "1970s prog rock",
       "tags": ["lead", "prog rock", "70s"],
       "level": 2,
       "blurb": "A light, airy, fluttering lead that skips like a flute.",
@@ -9737,7 +9737,7 @@
     {
       "id": "pd-morning-sunrise-lead",
       "name": "Soulful Moog Lead",
-      "ref": "In the style of Weldon Irvine — \"Morning Sunrise\"",
+      "ref": "A warm, round synth lead that bends and sings over a groove, as Weldon Irvine plays on \"Morning Sunrise\"",
       "artist": "Weldon Irvine",
       "tags": ["lead", "jazz-funk", "70s"],
       "level": 2,
@@ -9811,7 +9811,7 @@
     {
       "id": "pd-haboglabotribin-bass",
       "name": "Jazz-Funk Moog Bass",
-      "ref": "In the style of Bernard Wright — \"Haboglabotribin’\"",
+      "ref": "Fat, squelching Moog bass bouncing through a busy line: Bernard Wright’s \"Haboglabotribin’\"",
       "artist": "Bernard Wright",
       "tags": ["bass", "jazz-funk", "80s"],
       "level": 2,
@@ -9883,7 +9883,7 @@
     {
       "id": "pd-agenda-bass",
       "name": "Synth-Punk Bass",
-      "ref": "In the style of The Faint — \"Agenda Suicide\"",
+      "ref": "A hard, distorted synth bass thrashing in eighths, doing the bass guitar’s job as on The Faint’s \"Agenda Suicide\"",
       "artist": "The Faint",
       "tags": ["bass", "synth-punk", "00s"],
       "level": 2,
@@ -9955,7 +9955,7 @@
     {
       "id": "pd-oh-lamour-seq",
       "name": "Bubbling Synth-Pop Sequence",
-      "ref": "In the style of Erasure — \"Oh L’amour\"",
+      "ref": "A cheerful sequence bubbling up and down each chord, the bounce of Erasure’s \"Oh L’amour\"",
       "artist": "Vince Clarke",
       "tags": ["seq", "synth-pop", "80s"],
       "level": 2,
@@ -10028,7 +10028,7 @@
     {
       "id": "pd-sky-was-pink-arp",
       "name": "Pink Sky Arpeggio",
-      "ref": "In the style of Nathan Fake — \"The Sky Was Pink\"",
+      "ref": "A detuned, wobbling arpeggio that slowly opens and glows, close to Nathan Fake’s \"The Sky Was Pink\"",
       "artist": "Nathan Fake",
       "tags": ["seq", "progressive house", "00s"],
       "level": 2,
@@ -10092,8 +10092,8 @@
     {
       "id": "pd-valkyries-brass",
       "name": "Charging Brass Fanfare",
-      "ref": "In the style of Richard Wagner — \"Ride of the Valkyries\"",
-      "artist": "Richard Wagner",
+      "ref": "A bold brass call doubled in octaves with a galloping rhythm, like horns and trombones charging together",
+      "artist": "Orchestral brass",
       "tags": ["brass", "romantic", "1850s"],
       "level": 2,
       "blurb": "A bold, charging brass call in octaves, bright and heroic.",
@@ -10158,7 +10158,7 @@
     {
       "id": "pd-computer-chatter",
       "name": "Computer Chatter",
-      "ref": "In the style of Paddy Kingsland — The Hitchhiker’s Guide to the Galaxy",
+      "ref": "Fast, random, high bleeps of a computer thinking aloud, as Paddy Kingsland scored The Hitchhiker’s Guide to the Galaxy",
       "artist": "Paddy Kingsland",
       "tags": ["fx", "sci-fi", "80s"],
       "level": 2,
@@ -10225,7 +10225,7 @@
     {
       "id": "pd-cajun-fiddle",
       "name": "Cajun Fiddle",
-      "ref": "In the style of a Cajun fiddle",
+      "ref": "A bright, rasping fiddle that saws and slides through a Cajun two-step",
       "artist": "Cajun music",
       "tags": ["strings", "cajun", "traditional"],
       "level": 2,
@@ -10295,7 +10295,7 @@
     {
       "id": "pd-planetary-pad",
       "name": "Planetary Unfolding Pad",
-      "ref": "In the style of Michael Stearns — Planetary Unfolding",
+      "ref": "Slow chords unfolding over a fixed low drone, the spacious sound of Michael Stearns’s Planetary Unfolding",
       "artist": "Michael Stearns",
       "tags": ["pad", "space music", "80s"],
       "level": 2,
@@ -10364,8 +10364,8 @@
     {
       "id": "pd-machine-gun-clav",
       "name": "Clav-Like Funk Keys",
-      "ref": "In the style of Commodores — \"Machine Gun\"",
-      "artist": "Commodores",
+      "ref": "A bright, nasal keyboard snapping out a percussive riff, a synth take on 1970s funk clavinet",
+      "artist": "1970s funk clavinet",
       "tags": ["keys", "funk", "70s"],
       "level": 2,
       "blurb": "A bright, snappy, nasal keyboard that chops out a funk riff.",
@@ -10437,7 +10437,7 @@
     {
       "id": "pd-tom-fill",
       "name": "Electronic Tom Fill",
-      "ref": "In the style of 1980s electronic tom fills",
+      "ref": "Pitched electronic toms that drop as they ring, rolled into a 1980s fill",
       "artist": "1980s electronic drums",
       "tags": ["perc", "synth-pop", "80s"],
       "level": 3,
@@ -10508,7 +10508,7 @@
     {
       "id": "pd-lucifer-lead",
       "name": "Pulsing Prog-Pop Lead",
-      "ref": "In the style of The Alan Parsons Project — \"Lucifer\"",
+      "ref": "A bright, hard-edged synth lead that drives a repeated riff, as in The Alan Parsons Project’s \"Lucifer\"",
       "artist": "The Alan Parsons Project",
       "tags": ["lead", "prog pop", "70s"],
       "level": 2,
@@ -10573,7 +10573,7 @@
     {
       "id": "pd-qawwali-harmonium",
       "name": "Qawwali Harmonium",
-      "ref": "In the style of the qawwali harmonium",
+      "ref": "A reedy, breathy pump organ that swells and pulses with the bellows under a qawwali song",
       "artist": "Qawwali",
       "tags": ["keys", "qawwali", "traditional"],
       "level": 2,
@@ -10642,7 +10642,7 @@
     {
       "id": "pd-bass-pedals",
       "name": "Prog Bass Pedals",
-      "ref": "In the style of 1970s prog-rock bass pedals",
+      "ref": "Huge, deep bass notes held under the whole band, as 1970s prog groups played them on pedals",
       "artist": "Prog rock",
       "tags": ["bass", "prog rock", "70s"],
       "level": 1,
@@ -10701,8 +10701,8 @@
     {
       "id": "pd-magic-place-pad",
       "name": "Looped Voices Pad",
-      "ref": "In the style of Julianna Barwick — The Magic Place",
-      "artist": "Julianna Barwick",
+      "ref": "A soft, airy choral pad that blurs like layers of looped voices",
+      "artist": "Looped-vocal ambient",
       "tags": ["pad", "ambient", "10s"],
       "level": 2,
       "blurb": "A soft, choral pad of looping voices, airy and luminous.",
@@ -10772,8 +10772,8 @@
     {
       "id": "pd-static-king-pad",
       "name": "Slow Requiem Pad",
-      "ref": "In the style of A Winged Victory for the Sullen — \"Requiem for the Static King Part One\"",
-      "artist": "A Winged Victory for the Sullen",
+      "ref": "A grave, bowed-string pad that swells and fades slowly, as in a requiem played in a large hall",
+      "artist": "Neoclassical ambient",
       "tags": ["pad", "modern classical", "10s"],
       "level": 2,
       "blurb": "A slow, grave, bowed pad that swells and fades like a requiem.",
@@ -10840,7 +10840,7 @@
     {
       "id": "pd-chromium-echoes-seq",
       "name": "Cosmic Echo Arpeggio",
-      "ref": "In the style of Neuronium — Chromium Echoes",
+      "ref": "A slow falling arpeggio whose notes ring over each other like echoes, the cosmic drift of Neuronium’s Chromium Echoes",
       "artist": "Neuronium",
       "tags": ["seq", "space music", "70s"],
       "level": 2,
@@ -10908,8 +10908,8 @@
     {
       "id": "pd-ska-horns",
       "name": "Ska Horn Skank",
-      "ref": "In the style of The Skatalites — \"Guns of Navarone\"",
-      "artist": "The Skatalites",
+      "ref": "Bright, punchy horns in thirds for a bouncing ska melody over the off-beat",
+      "artist": "Ska horns",
       "tags": ["brass", "ska", "60s"],
       "level": 1,
       "blurb": "Bright, punchy horns in thirds, for a bouncing ska melody.",
@@ -10972,7 +10972,7 @@
     {
       "id": "pd-fly-like-eagle-whoosh",
       "name": "Space Whoosh",
-      "ref": "In the style of Steve Miller Band — \"Fly Like an Eagle\"",
+      "ref": "The whistling synth wind that sweeps up and away at the start of Steve Miller Band’s \"Fly Like an Eagle\"",
       "artist": "Steve Miller Band",
       "tags": ["fx", "rock", "70s"],
       "level": 2,
@@ -11040,8 +11040,8 @@
     {
       "id": "pd-world-of-echo-cello",
       "name": "Lonely Cello",
-      "ref": "In the style of Arthur Russell — World of Echo",
-      "artist": "Arthur Russell",
+      "ref": "A dark, intimate cello line bowed slowly, with a soft vibrato under the wheel",
+      "artist": "Solo cello",
       "tags": ["strings", "avant-garde", "80s"],
       "level": 2,
       "blurb": "A dark, intimate, bowed cello line with a soft vibrato on the wheel.",
@@ -11114,8 +11114,8 @@
     {
       "id": "pd-sitar-buzz",
       "name": "Sitar-Like Buzz",
-      "ref": "In the style of Ravi Shankar — sitar",
-      "artist": "Ravi Shankar",
+      "ref": "A bright pluck that buzzes and bends into its notes the way a sitar’s strings do",
+      "artist": "Hindustani sitar",
       "tags": ["pluck", "hindustani classical", "60s"],
       "level": 3,
       "blurb": "A bright, buzzing pluck that bends into its notes, like a sitar.",
@@ -11191,8 +11191,8 @@
     {
       "id": "pd-celtic-harp",
       "name": "Celtic Harp",
-      "ref": "In the style of Alan Stivell — Renaissance of the Celtic Harp",
-      "artist": "Alan Stivell",
+      "ref": "Clear, ringing harp notes left to sound under each other, for a gentle Celtic folk air",
+      "artist": "Celtic harp",
       "tags": ["pluck", "celtic folk", "70s"],
       "level": 1,
       "blurb": "A bright, clear, ringing harp for a gentle folk air.",
@@ -11249,7 +11249,7 @@
     {
       "id": "pd-ocarina",
       "name": "Clay Ocarina",
-      "ref": "In the style of a clay ocarina",
+      "ref": "A soft, round, hollow tone with a little breath, like a small clay ocarina playing a simple tune",
       "artist": "Ocarina tradition",
       "tags": ["wind", "folk", "traditional"],
       "level": 1,
@@ -11314,7 +11314,7 @@
     {
       "id": "pd-aeolian-drone",
       "name": "Aeolian Harp Drone",
-      "ref": "In the style of an Aeolian harp",
+      "ref": "Ghostly harmonics blown out of a fixed tone by noise, as the wind plays an Aeolian harp",
       "artist": "Aeolian harp",
       "tags": ["drone", "ambient", "traditional"],
       "level": 3,
