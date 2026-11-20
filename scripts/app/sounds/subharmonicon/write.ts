@@ -1,7 +1,7 @@
 /**
  * Writes the Subharmonicon's library (`prisma/seeds/app-knowyoursynth/data/sounds/subharmonicon.json`) from its
  * specs (`f-own-sequencer` t-289), designed by the method in `.context/app/sequencer-synths.md`. The manual's guided
- * start and patch sheets, already in the file, are kept as they are and listed after the new sounds' first family.
+ * start and patch sheets, already in the file, are kept as they are: the guided start first, the patch sheets after every new sound.
  *
  *   npx tsx scripts/app/sounds/subharmonicon/write.ts
  *

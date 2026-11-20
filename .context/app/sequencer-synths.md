@@ -78,7 +78,11 @@ The method the Subharmonicon's library is written by (t-289). Apply it to the ne
 5. **Then shape**: the mixer, the filter, the two envelopes, the EG mode. A short decay shows the rhythm; a long
    one blurs it into a texture.
 6. **Then the patchbay**, for the sounds that need it: a cable that only changes a timbre should earn its place
-   by changing something you can hear in every cycle.
+   by changing something you can hear in every cycle. On the Subharmonicon a sequencer can be a voltage
+   source: all four steps fully down at SEQ OCT ±5, assigned to nothing, put −5 V on SEQ OUT, and patched into
+   VCO 2's input that drops VCO 2 to about 8 Hz at a held C4 (keys move it too), so its subs are LFOs for RHYTHM, SUB, PWM, CUTOFF, VCA, PLAY or
+   RESET (`scripts/app/sounds/subharmonicon/patchbay.ts`, t-290). An audio-rate signal in a RHYTHM input is
+   read once a clock, so it throws a new divisor each sixteenth: a random rhythm.
 7. **The lesson builds in that order**: sources, rhythm, sequence, shape, cables, play. Its last step is where
    the sound starts playing, so each step before it can be heard with a key or with Play.
 

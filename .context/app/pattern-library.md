@@ -1634,23 +1634,23 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-20 over the library's 5,994 sounds:
+Measured on 2026-11-20 over the library's 6,024 sounds:
 
-- **The detector reads the sound's own category for 2,746 of them (45.8%).** Picking the commonest category, bass, every
+- **The detector reads the sound's own category for 2,753 of them (45.7%).** Picking the commonest category, bass, every
   time would get 16.2%.
-- **Cross-validated: 2,718 (45.3%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **Cross-validated: 2,726 (45.3%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **8 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
   `pro-1/filter-clave`, `nymphes/nym-filter-whistle`, `malevolent/mal-extreme`, `grandmother/gm-ringing-ladder-ping`, `buchla-easel/easel-rainforest-cross-feedback` and `buchla-easel/easel-sonar-ping`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. The two filter pings (the clave and the Grandmother's) have no oscillator in the mixer, only a
   filter struck by a short envelope. The two Easel effects play themselves and first speak about 1 s and 1.5 s in, after the probe's note has ended. Why the pings and the Nymphes' whistle are silent has not been looked into. They count as disagreements.
 
-The figure fell from 48.7% over 5,024 sounds (t-250) to 47.2% over 5,579 (t-193), to 46.2% over 5,829 and to 45.8% now, because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library). t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%), and t-197's 250 VCS3 and Music Easel sounds 59 (24%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. Two of t-197's effects joined the five silent sounds. The 165 sounds since 46.2% are the Sub 37's, the TEO-5's and the Nymphes' 18 each, the ODYSSEY's 13 and the Subharmonicon's 98 (17 with t-272, 81 more with t-289). The Subharmonicon's agree on 9 of 98 (9%): its sounds are its own sequencers playing polyrhythms on the app's clock (40 of them tagged seq), which the probe's held notes do not run. The Nymphes' `nym-filter-whistle` is the eighth silent sound.
+The figure fell from 48.7% over 5,024 sounds (t-250) to 47.2% over 5,579 (t-193), to 46.2% over 5,829, to 45.8% over 5,994 and to 45.7% now, because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library). t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%), and t-197's 250 VCS3 and Music Easel sounds 59 (24%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. Two of t-197's effects joined the five silent sounds. The 165 sounds since 46.2% are the Sub 37's, the TEO-5's and the Nymphes' 18 each, the ODYSSEY's 13 and the Subharmonicon's 98 (17 with t-272, 81 more with t-289). The Subharmonicon's agree on 9 of 98 (9%): its sounds are its own sequencers playing polyrhythms on the app's clock (40 of them tagged seq), which the probe's held notes do not run. The Nymphes' `nym-filter-whistle` is the eighth silent sound. The 30 sounds since 45.8% are the Subharmonicon's patchbay sounds (t-290), most of them its sequencers again; refit with them, the detector reads 7 more of the whole library right, and none of the 30 is silent.
 
 When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
 the macOS ones.
 
-`soundkind-library.test.ts` pins the 45.8% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
+`soundkind-library.test.ts` pins the 45.7% (its floor is one sound below the macOS count, for that tip), so a change to the probe, the engine, the features or the library can't
 make the detector worse without someone deciding it should. It renders the whole library, about three minutes of CPU,
 so it is the slowest test in the app. It sweeps on two worker threads rather than one per core: a sweep across every
 core starved the tests vitest runs alongside it into timeouts. It runs when something it imports changes (the probe
@@ -1661,18 +1661,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad |  pluck |    keys |      fx |  drone |    perc |     seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | -----: | ------: | ------: | -----: | ------: | ------: | ----: | -----: | ----: |
-| bass    | **751** |      70 |       6 |     10 |      41 |       9 |     14 |      20 |      48 |     2 |      · |   77% |
-| lead    |     115 | **585** |      62 |     12 |      67 |      29 |      3 |       5 |      38 |     1 |      1 |   64% |
-| pad     |       2 |      46 | **409** |      1 |      23 |      12 |     22 |       1 |      23 |     · |      · |   76% |
-| pluck   |      49 |      30 |       6 | **78** |     132 |       5 |      1 |      23 |      34 |     · |      · |   22% |
-| keys    |      85 |      86 |      32 |     54 | **310** |      15 |      4 |      16 |      50 |     4 |      · |   47% |
-| fx      |      52 |     143 |      37 |     14 |      21 | **186** |     16 |      53 |      47 |     · |      4 |   32% |
-| drone   |      23 |      53 |      91 |      · |      12 |      18 | **51** |       · |      15 |     · |      1 |   19% |
-| perc    |      76 |      30 |       · |     25 |      48 |      41 |      5 | **179** |      30 |     · |      2 |   41% |
-| seq     |     125 |      92 |      45 |     34 |      80 |      56 |     16 |      22 | **191** |     · |      · |   29% |
-| brass   |      42 |      58 |      44 |      · |      45 |       1 |      1 |       · |       · | **6** |      · |    3% |
-| strings |      16 |      45 |     113 |      · |      19 |       3 |      2 |       · |       8 |     · |      · |    0% |
-| wind    |      28 |     142 |      17 |      · |       3 |      11 |      2 |       · |      10 |     2 |      · |    0% |
+| bass    | **751** |      71 |       6 |     10 |      41 |       9 |     15 |      20 |      49 |     2 |      · |   77% |
+| lead    |     117 | **586** |      61 |     11 |      68 |      27 |      3 |       5 |      40 |     1 |      1 |   64% |
+| pad     |       4 |      46 | **410** |      1 |      23 |      13 |     22 |       1 |      22 |     · |      · |   76% |
+| pluck   |      50 |      31 |       6 | **79** |     131 |       5 |      1 |      22 |      34 |     · |      · |   22% |
+| keys    |      84 |      87 |      32 |     52 | **311** |      16 |      4 |      17 |      52 |     4 |      · |   47% |
+| fx      |      53 |     142 |      37 |     14 |      22 | **187** |     16 |      53 |      47 |     · |      4 |   33% |
+| drone   |      24 |      51 |      94 |      · |      13 |      18 | **52** |       · |      15 |     · |      1 |   19% |
+| perc    |      76 |      32 |       · |     24 |      48 |      41 |      5 | **180** |      31 |     · |      2 |   41% |
+| seq     |     127 |      94 |      46 |     33 |      82 |      58 |     16 |      22 | **191** |     · |      · |   29% |
+| brass   |      42 |      60 |      44 |      · |      43 |       1 |      1 |       · |       · | **6** |      · |    3% |
+| strings |      16 |      45 |     114 |      · |      19 |       3 |      2 |       · |       8 |     · |      · |    0% |
+| wind    |      28 |     142 |      17 |      · |       2 |      11 |      2 |       · |      11 |     2 |      · |    0% |
 
 #### The disagreements
 

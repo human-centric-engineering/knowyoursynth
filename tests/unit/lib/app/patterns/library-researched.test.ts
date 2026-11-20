@@ -332,7 +332,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      165,
+      166,
     ],
     [
       't-166',
@@ -412,7 +412,7 @@ describe('the research batches', () => {
         'Popol Vuh',
         'Roger Payne',
       ],
-      201,
+      203,
     ],
     [
       't-168',
@@ -472,7 +472,7 @@ describe('the research batches', () => {
         'Yo-Yo Ma',
         'Yoshida Brothers',
       ],
-      236,
+      238,
     ],
   ];
 
