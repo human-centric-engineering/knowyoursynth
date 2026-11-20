@@ -86,7 +86,7 @@
     {
       "id": "jp8-prayer-arp",
       "name": "Glassy Arpeggio",
-      "ref": "In the style of Duran Duran — \"Save a Prayer\"",
+      "ref": "A held chord broken into soft, glassy notes climbing two octaves, as in Duran Duran’s “Save a Prayer”",
       "artist": "Duran Duran",
       "tags": ["seq", "new wave", "80s"],
       "level": 1,
@@ -442,7 +442,7 @@
     {
       "id": "jp8-pop-stab",
       "name": "Synth-Pop Stab",
-      "ref": "In the style of Howard Jones — \"What Is Love?\"",
+      "ref": "Short, bright off-beat chord stabs with a glassy edge, the rhythm part of Howard Jones’s “What Is Love?”",
       "artist": "Howard Jones",
       "tags": ["keys", "synth-pop", "80s"],
       "level": 1,
@@ -1322,7 +1322,7 @@
     {
       "id": "jp8-axel-lead",
       "name": "Detroit Cop Lead",
-      "ref": "In the style of Harold Faltermeyer — “Axel F”",
+      "ref": "Harold Faltermeyer’s “Axel F” hook in spirit: a bright, staccato square lead that hops up the octave",
       "artist": "Harold Faltermeyer",
       "tags": ["lead", "synth-pop", "film", "80s"],
       "level": 2,
@@ -1413,7 +1413,7 @@
     {
       "id": "jp8-vienna-strings",
       "name": "Vienna Strings",
-      "ref": "In the style of Ultravox — “Vienna”",
+      "ref": "Slow, sad string chords swelling under the ballad, the synth strings of Ultravox’s “Vienna”",
       "artist": "Ultravox",
       "tags": ["strings", "new romantic", "synth-pop", "80s"],
       "level": 2,
@@ -1493,7 +1493,7 @@
     {
       "id": "jp8-blinding-synth",
       "name": "Neon Night Riff",
-      "ref": "In the style of The Weeknd — “Blinding Lights”",
+      "ref": "The bright octave riff that drives The Weeknd’s “Blinding Lights”, stacked four voices deep",
       "artist": "The Weeknd",
       "tags": ["lead", "synthwave", "pop", "20s"],
       "level": 2,
@@ -1574,7 +1574,7 @@
     {
       "id": "jp8-tron-arp",
       "name": "Grid Arpeggio",
-      "ref": "In the style of Daft Punk — TRON: Legacy",
+      "ref": "Dark sixteenth-note arpeggios on a narrow pulse, the engine room of Daft Punk’s TRON: Legacy score",
       "artist": "Daft Punk",
       "tags": ["seq", "film", "electronic", "arpeggio", "10s"],
       "level": 2,
@@ -1655,7 +1655,7 @@
     {
       "id": "jp8-vice-pad",
       "name": "Miami Night Pad",
-      "ref": "In the style of Jan Hammer — Miami Vice",
+      "ref": "Warm, glossy chords with a slow vibrato: the sunset bed of Jan Hammer’s Miami Vice music",
       "artist": "Jan Hammer",
       "tags": ["pad", "film", "tv", "80s"],
       "level": 2,
@@ -1740,7 +1740,7 @@
     {
       "id": "jp8-kitaro-desert-pad",
       "name": "Desert Drift Pad",
-      "ref": "In the style of Kitaro",
+      "ref": "Kitaro’s new-age sound: a wide, gentle pad drifting under a simple pentatonic tune",
       "artist": "Kitaro",
       "tags": ["pad", "new age", "ambient", "80s"],
       "level": 2,
@@ -1813,7 +1813,7 @@
     {
       "id": "jp8-jarre-gallop-seq",
       "name": "Galloping Up-Down Sequence",
-      "ref": "In the style of Jean-Michel Jarre",
+      "ref": "A bright, resonant arpeggio galloping up and down the chord, as Jean-Michel Jarre sequenced them",
       "artist": "Jean-Michel Jarre",
       "tags": ["seq", "electronic", "80s", "arpeggio"],
       "level": 2,
@@ -1889,7 +1889,7 @@
     {
       "id": "jp8-house-stab",
       "name": "Chicago Chord Stab",
-      "ref": "In the style of late-1980s Chicago deep house",
+      "ref": "Soulful minor-seventh chords snapped short on the offbeat, straight from late-1980s Chicago deep house",
       "artist": "Deep house",
       "tags": ["keys", "deep house", "house", "80s"],
       "level": 2,
@@ -1990,7 +1990,7 @@
     {
       "id": "jp8-xmod-crystal",
       "name": "Crystal Bells",
-      "ref": "In the style of 1980s ambient bell pads",
+      "ref": "Glassy, faintly metallic bells that ring a long time with no sustain, for 1980s ambient records",
       "artist": "Ambient",
       "tags": ["keys", "ambient", "bells", "80s"],
       "level": 3,
@@ -2064,7 +2064,7 @@
     {
       "id": "jp8-sync-scream",
       "name": "Sync Scream",
-      "ref": "In the style of 1980s arena rock synth solos",
+      "ref": "A tearing sync lead that dives on every note, built for a 1980s arena-rock solo",
       "artist": "Arena rock",
       "tags": ["lead", "rock", "80s"],
       "level": 2,
@@ -2143,7 +2143,7 @@
     {
       "id": "jp8-glass-arp",
       "name": "Glass Cascade",
-      "ref": "In the style of 1980s new-age synth music",
+      "ref": "Soft, glassy notes tumbling over three octaves: the cascade of 1980s new-age synth records",
       "artist": "New age",
       "tags": ["seq", "new age", "ambient", "arpeggio", "80s"],
       "level": 1,
@@ -2217,7 +2217,7 @@
     {
       "id": "jp8-trance-unison",
       "name": "Trance Unison Lead",
-      "ref": "In the style of 1990s uplifting trance",
+      "ref": "Eight voices of detuned saws on one note make the huge lead of 1990s uplifting trance",
       "artist": "Uplifting trance",
       "tags": ["lead", "trance", "90s"],
       "level": 2,
@@ -2294,7 +2294,7 @@
     {
       "id": "jp8-hpf-choir",
       "name": "Airy Choir",
-      "ref": "In the style of 1980s film-score choirs",
+      "ref": "A breathy, far-off “ahh” made from filters alone, standing in for a 1980s film-score choir",
       "artist": "Film scoring",
       "tags": ["pad", "choir", "film", "80s"],
       "level": 3,
@@ -2376,7 +2376,7 @@
     {
       "id": "jp8-lofi-keys",
       "name": "Lo-Fi Chord Keys",
-      "ref": "In the style of lo-fi hip hop",
+      "ref": "Soft jazz seventh chords that wobble like worn tape, looped under a lo-fi hip-hop beat",
       "artist": "Lo-fi hip hop",
       "tags": ["keys", "lo-fi", "hip hop", "chill-out"],
       "level": 1,
@@ -2462,7 +2462,7 @@
     {
       "id": "jp8-eno-shimmer",
       "name": "Ambient Shimmer",
-      "ref": "In the style of Brian Eno — Ambient 1",
+      "ref": "Slow tones overlapping at odd times so the chord keeps shifting, the method of Brian Eno’s Ambient 1",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "70s"],
       "level": 2,
@@ -2532,7 +2532,7 @@
     {
       "id": "jp8-pwm-strings-lush",
       "name": "Lush PWM Strings",
-      "ref": "In the style of 1980s pop ballads",
+      "ref": "One pulse wave with its width swept sounds like a whole section: moving strings for a 1980s pop ballad",
       "artist": "80s ballads",
       "tags": ["strings", "pop", "ballad", "80s"],
       "level": 2,
@@ -2613,7 +2613,7 @@
     {
       "id": "jp8-brass-fanfare",
       "name": "Brass Fanfare",
-      "ref": "In the style of Vince DiCola",
+      "ref": "Big, punchy synth-brass chords that swell on every stab, as Vince DiCola scored a training montage",
       "artist": "Vince DiCola",
       "tags": ["brass", "film", "synth rock", "80s"],
       "level": 2,
@@ -2709,7 +2709,7 @@
     {
       "id": "jp8-random-computer",
       "name": "Mainframe",
-      "ref": "In the style of 1970s science-fiction films",
+      "ref": "A computer thinking aloud: random, resonant filter blips over one held note, from 1970s sci-fi films",
       "artist": "Science-fiction films",
       "tags": ["fx", "sci-fi", "film", "70s"],
       "level": 2,
@@ -2774,7 +2774,7 @@
     {
       "id": "jp8-ocean",
       "name": "Ocean Waves",
-      "ref": "In the style of ambient sound design",
+      "ref": "Filtered noise that swells and washes back like surf breaking on a shore",
       "artist": "Ambient",
       "tags": ["fx", "ambient", "nature"],
       "level": 2,
@@ -2839,7 +2839,7 @@
     {
       "id": "jp8-solo-portamento",
       "name": "Gliding Solo",
-      "ref": "In the style of 1980s prog-pop synth solos",
+      "ref": "A smooth mono lead that glides between notes and blooms with late vibrato, for a 1980s prog-pop solo",
       "artist": "Prog rock",
       "tags": ["lead", "prog", "rock", "80s"],
       "level": 2,
@@ -2921,7 +2921,7 @@
     {
       "id": "jp8-synthpop-arp-updown",
       "name": "Synth-Pop Twinkle",
-      "ref": "In the style of Howard Jones",
+      "ref": "Cheerful major-key notes sparkling up and down two octaves, the way Howard Jones lit up his songs",
       "artist": "Howard Jones",
       "tags": ["seq", "synth-pop", "80s", "arpeggio"],
       "level": 1,
@@ -2998,7 +2998,7 @@
     {
       "id": "jp8-env-polarity-swell",
       "name": "Backwards Swell",
-      "ref": "In the style of 1980s ambient soundtracks",
+      "ref": "Chords that start bright and close down as they swell, as if a tape were running backwards",
       "artist": "Film scoring",
       "tags": ["pad", "ambient", "film", "80s"],
       "level": 3,
@@ -3074,7 +3074,7 @@
     {
       "id": "jp8-lowfreq-wobble",
       "name": "Second LFO Wobble",
-      "ref": "In the style of 1980s experimental synth music",
+      "ref": "One held tone wobbling in pitch, its second oscillator slowed into an LFO, for experimental electronics",
       "artist": "Experimental electronic",
       "tags": ["fx", "experimental", "electronic"],
       "level": 3,
@@ -3145,7 +3145,7 @@
     {
       "id": "jp8-kf-pluck-harp",
       "name": "Key-Follow Harp",
-      "ref": "In the style of 1980s soundtrack harps",
+      "ref": "A plucked harp whose high notes ring brighter and shorter, ready for a 1980s film-score glissando",
       "artist": "Film scoring",
       "tags": ["pluck", "harp", "film", "80s"],
       "level": 2,
@@ -3276,7 +3276,7 @@
     {
       "id": "jp8-depeche-pluck",
       "name": "Metallic Minor Pluck",
-      "ref": "In the style of Depeche Mode",
+      "ref": "A dark, clangy plucked riff in a minor key, the metallic edge of mid-1980s Depeche Mode",
       "artist": "Depeche Mode",
       "tags": ["pluck", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -3356,7 +3356,7 @@
     {
       "id": "jp8-tremolo-ep",
       "name": "Tremolo Electric Piano",
-      "ref": "In the style of 1970s soul ballads",
+      "ref": "A warm, bell-tinged electric piano with a soft amp tremolo, as heard on 1970s soul ballads",
       "artist": "Soul",
       "tags": ["keys", "soul", "electric piano", "70s"],
       "level": 2,
@@ -3439,7 +3439,7 @@
     {
       "id": "jp8-mod-sweep-pad",
       "name": "Breathing Pad",
-      "ref": "In the style of 1990s ambient techno",
+      "ref": "Warm chords whose glowing filter breathes slowly open and shut, out of 1990s ambient techno",
       "artist": "Ambient techno",
       "tags": ["pad", "ambient techno", "chill-out", "90s"],
       "level": 2,
@@ -3516,7 +3516,7 @@
     {
       "id": "jp8-cold-new-wave-pad",
       "name": "Cold New-Wave Pad",
-      "ref": "In the style of Tears for Fears",
+      "ref": "Hollow, dark minor chords that swell slowly, the cold pad of early Tears for Fears",
       "artist": "Tears for Fears",
       "tags": ["pad", "new wave", "synth-pop", "80s"],
       "level": 1,
@@ -3591,7 +3591,7 @@
     {
       "id": "jp8-relax-bass",
       "name": "Relax Sequence Bass",
-      "ref": "In the style of Frankie Goes to Hollywood — “Relax”",
+      "ref": "A hard, pumping octave bass in eighths, the sequenced drive of Frankie Goes to Hollywood’s “Relax”",
       "artist": "Frankie Goes to Hollywood",
       "tags": ["bass", "synth-pop", "hi-nrg", "80s"],
       "level": 2,
@@ -3688,7 +3688,7 @@
     {
       "id": "jp8-air-tonight-pad",
       "name": "Night Air Pad",
-      "ref": "In the style of Phil Collins — “In the Air Tonight”",
+      "ref": "The dark, uneasy pad that hangs over the intro of Phil Collins’s “In the Air Tonight” until the drums",
       "artist": "Phil Collins",
       "tags": ["pad", "pop", "rock", "80s"],
       "level": 2,
@@ -3767,7 +3767,7 @@
     {
       "id": "jp8-africa-mallet",
       "name": "African Mallets",
-      "ref": "In the style of Toto — “Africa”",
+      "ref": "Short, bright, woody notes halfway between kalimba and marimba, as in the riff of Toto’s “Africa”",
       "artist": "Toto",
       "tags": ["pluck", "pop", "rock", "80s"],
       "level": 2,
@@ -3849,7 +3849,7 @@
     {
       "id": "jp8-final-brass",
       "name": "Countdown Brass",
-      "ref": "In the style of Europe — “The Final Countdown”",
+      "ref": "Two saws swelling brassy on every note: the arena synth fanfare of Europe’s “The Final Countdown”",
       "artist": "Europe",
       "tags": ["brass", "rock", "arena", "80s"],
       "level": 2,
@@ -3930,7 +3930,7 @@
     {
       "id": "jp8-separate-ways",
       "name": "Arena Chord Pulse",
-      "ref": "In the style of Journey — “Separate Ways (Worlds Apart)”",
+      "ref": "Punchy eighth-note synth chords pulsing under the chorus of Journey’s “Separate Ways (Worlds Apart)”",
       "artist": "Journey",
       "tags": ["seq", "arena rock", "rock", "80s"],
       "level": 2,
@@ -4090,7 +4090,7 @@
     {
       "id": "jp8-minneapolis-stab",
       "name": "Minneapolis Stab",
-      "ref": "In the style of Prince",
+      "ref": "Bright, brassy synth chords stabbed where the horns would be, in Prince’s Minneapolis sound",
       "artist": "Prince",
       "tags": ["keys", "funk", "minneapolis sound", "80s"],
       "level": 2,
@@ -4184,7 +4184,7 @@
     {
       "id": "jp8-human-nature",
       "name": "Human Nature Pad",
-      "ref": "In the style of Michael Jackson — “Human Nature”",
+      "ref": "Michael Jackson’s “Human Nature” floats on a sound like this: a soft pluck settling into a glassy pad",
       "artist": "Michael Jackson",
       "tags": ["pad", "pop", "soul", "80s"],
       "level": 2,
@@ -4263,7 +4263,7 @@
     {
       "id": "jp8-jump-stab",
       "name": "Jump Stabs",
-      "ref": "In the style of Van Halen — “Jump”",
+      "ref": "Big, bright, brassy chords bouncing on the beat, close to the keyboard riff of Van Halen’s “Jump”",
       "artist": "Van Halen",
       "tags": ["keys", "rock", "arena", "80s"],
       "level": 1,
@@ -4371,7 +4371,7 @@
     {
       "id": "jp8-m83-swell",
       "name": "Midnight Swell",
-      "ref": "In the style of M83 — “Midnight City”",
+      "ref": "Eight voices of detuned saws opening slowly into the euphoric wall of M83’s “Midnight City”",
       "artist": "M83",
       "tags": ["pad", "synthwave", "shoegaze", "10s"],
       "level": 2,
@@ -4448,7 +4448,7 @@
     {
       "id": "jp8-chvrches-pluck",
       "name": "Bright Pop Pluck",
-      "ref": "In the style of CHVRCHES",
+      "ref": "A crisp, bouncing pluck with a quick filter snap, the bright edge of CHVRCHES’ synth-pop",
       "artist": "CHVRCHES",
       "tags": ["pluck", "synth-pop", "indie", "10s"],
       "level": 1,
@@ -4527,7 +4527,7 @@
     {
       "id": "jp8-chromatics-arp",
       "name": "Italo Night Arpeggio",
-      "ref": "In the style of Chromatics",
+      "ref": "Dreamy and melancholy, a soft square arpeggio over minor chords for a Chromatics night drive",
       "artist": "Chromatics",
       "tags": ["seq", "synthwave", "italo", "arpeggio", "10s"],
       "level": 2,
@@ -4603,7 +4603,7 @@
     {
       "id": "jp8-tame-impala",
       "name": "Psych-Pop Lead",
-      "ref": "In the style of Tame Impala",
+      "ref": "Warm and wobbly, this phasey lead glides between notes the way Tame Impala’s synth lines do",
       "artist": "Tame Impala",
       "tags": ["lead", "psychedelic", "indie", "10s"],
       "level": 2,
@@ -4682,7 +4682,7 @@
     {
       "id": "jp8-italo-arp",
       "name": "Italo Arpeggio",
-      "ref": "In the style of 1980s Italo disco",
+      "ref": "Bright saw notes galloping up and down an octave over a four-chord 1980s Italo-disco loop",
       "artist": "Italo disco",
       "tags": ["seq", "italo disco", "disco", "arpeggio", "80s"],
       "level": 1,
@@ -4758,7 +4758,7 @@
     {
       "id": "jp8-eurodance-chords",
       "name": "Eurodance Chords",
-      "ref": "In the style of 1990s Eurodance",
+      "ref": "Big, bright chords punched on the offbeats under a 1990s Eurodance chart hit",
       "artist": "Eurodance",
       "tags": ["keys", "eurodance", "dance-pop", "90s"],
       "level": 1,
@@ -4846,7 +4846,7 @@
     {
       "id": "jp8-deadmau5-pluck",
       "name": "Progressive Pluck",
-      "ref": "In the style of deadmau5",
+      "ref": "deadmau5’s progressive house rides clean, resonant plucks like this one, rolling in sixteenths",
       "artist": "deadmau5",
       "tags": ["pluck", "progressive house", "house", "00s"],
       "level": 2,
@@ -4941,7 +4941,7 @@
     {
       "id": "jp8-perturbator-bass",
       "name": "Dark Synthwave Bass",
-      "ref": "In the style of Perturbator",
+      "ref": "Two saws in unison hammering out a menacing sixteenth bass, Perturbator’s darksynth chase",
       "artist": "Perturbator",
       "tags": ["bass", "synthwave", "darksynth", "10s"],
       "level": 2,
@@ -5038,8 +5038,8 @@
     {
       "id": "jp8-goblin-organ",
       "name": "Giallo Organ",
-      "ref": "In the style of Goblin",
-      "artist": "Goblin",
+      "ref": "A reedy, creepy organ figure repeating in a minor key, from 1970s Italian horror scores",
+      "artist": "Italian horror scores",
       "tags": ["keys", "horror", "prog", "70s"],
       "level": 2,
       "blurb": "A creepy, reedy, minor organ figure for an Italian horror film.",
@@ -5133,7 +5133,7 @@
     {
       "id": "jp8-heaven17-brass",
       "name": "Sheffield Brass",
-      "ref": "In the style of Heaven 17",
+      "ref": "Crisp, syncopated synth-brass blats, the funk side of Heaven 17’s Sheffield synth-pop",
       "artist": "Heaven 17",
       "tags": ["brass", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -5227,7 +5227,7 @@
     {
       "id": "jp8-simple-minds-keys",
       "name": "Anthem Keys",
-      "ref": "In the style of Simple Minds",
+      "ref": "Shimmering eighth-note chords pushing a stadium chorus, as Simple Minds’ keyboards did in the mid-1980s",
       "artist": "Simple Minds",
       "tags": ["keys", "new wave", "rock", "80s"],
       "level": 1,
@@ -5387,7 +5387,7 @@
     {
       "id": "jp8-nervous-new-wave-seq",
       "name": "Nervous New-Wave Sequence",
-      "ref": "In the style of Duran Duran",
+      "ref": "A nervous sixteenth-note bass with a resonant bite, pulsing under the band on early Duran Duran records",
       "artist": "Duran Duran",
       "tags": ["bass", "new wave", "synth-pop", "80s"],
       "level": 2,
@@ -5483,7 +5483,7 @@
     {
       "id": "jp8-house-pad",
       "name": "Warehouse Pad",
-      "ref": "In the style of early-1990s deep house",
+      "ref": "Soft, jazzy ninth chords held warm under an early-1990s deep-house groove",
       "artist": "Deep house",
       "tags": ["pad", "deep house", "house", "90s"],
       "level": 1,
@@ -5556,7 +5556,7 @@
     {
       "id": "jp8-trance-pluck-arp",
       "name": "Trance Gate Arp",
-      "ref": "In the style of late-1990s trance",
+      "ref": "Fast, bright plucks rolling over two octaves in a late-1990s trance breakdown",
       "artist": "Trance",
       "tags": ["seq", "trance", "arpeggio", "90s"],
       "level": 2,
@@ -5635,7 +5635,7 @@
     {
       "id": "jp8-film-swell-strings",
       "name": "Epic Film Strings",
-      "ref": "In the style of 1980s action-film scores",
+      "ref": "Big synth string chords swelling slowly for the heroic moment in a 1980s action film",
       "artist": "Film scoring",
       "tags": ["strings", "film", "orchestral", "80s"],
       "level": 2,
@@ -5716,7 +5716,7 @@
     {
       "id": "jp8-glass-sh-arp",
       "name": "Random Glass",
-      "ref": "In the style of 1980s ambient electronica",
+      "ref": "Glassy notes picked at random from a chord over three octaves, like wind chimes",
       "artist": "Ambient electronica",
       "tags": ["seq", "ambient", "arpeggio", "80s"],
       "level": 2,
@@ -5790,7 +5790,7 @@
     {
       "id": "jp8-sub-pulse-bass",
       "name": "Deep Pulse Bass",
-      "ref": "In the style of 2010s synthwave",
+      "ref": "A deep, round, steady eighth-note bass, the floor under a 2010s synthwave chorus",
       "artist": "Synthwave",
       "tags": ["bass", "synthwave", "10s"],
       "level": 1,
@@ -5886,7 +5886,7 @@
     {
       "id": "jp8-hoover-stab",
       "name": "Hoover Stab",
-      "ref": "In the style of early-1990s rave",
+      "ref": "Wildly detuned saws bending down into a menacing stab: the hoover of early-1990s rave",
       "artist": "Rave",
       "tags": ["fx", "rave", "hardcore", "90s"],
       "level": 3,
@@ -5959,7 +5959,7 @@
     {
       "id": "jp8-celestial-pad",
       "name": "Celestial Pad",
-      "ref": "In the style of 1990s ambient music",
+      "ref": "High, thin chords that shimmer like starlight, for 1990s ambient and chill-out",
       "artist": "Ambient",
       "tags": ["pad", "ambient", "chill-out", "90s"],
       "level": 1,
@@ -6036,7 +6036,7 @@
     {
       "id": "jp8-clav-funk",
       "name": "Synth Clav",
-      "ref": "In the style of 1970s funk",
+      "ref": "A twangy, biting pluck that snaps shut fast, a synth stand-in for a 1970s funk clavinet",
       "artist": "Funk",
       "tags": ["keys", "funk", "clavinet", "70s"],
       "level": 2,
@@ -6119,7 +6119,7 @@
     {
       "id": "jp8-sequencer-bells",
       "name": "Clockwork Bells",
-      "ref": "In the style of 1980s minimal synth",
+      "ref": "Cross-modulated bells ticking through an arpeggio like clockwork, a 1980s minimal-synth chime",
       "artist": "Minimal synth",
       "tags": ["seq", "minimal synth", "electronic", "arpeggio", "80s"],
       "level": 2,
@@ -6419,7 +6419,7 @@
     {
       "id": "jp8-fusion-lead",
       "name": "Fusion Lead",
-      "ref": "In the style of Chick Corea",
+      "ref": "Fast, bright lines with a short glide and a bend in the voice, as Chick Corea played his synth solos",
       "artist": "Chick Corea",
       "tags": ["lead", "jazz fusion", "fusion", "70s"],
       "level": 3,
@@ -6512,7 +6512,7 @@
     {
       "id": "jp8-zawinul-pad",
       "name": "Weather Pad",
-      "ref": "In the style of Joe Zawinul",
+      "ref": "Open chords stacked in fourths with a soft, horn-like swell, the voicings of Joe Zawinul’s synths",
       "artist": "Joe Zawinul",
       "tags": ["pad", "jazz fusion", "fusion", "80s"],
       "level": 2,
@@ -6592,7 +6592,7 @@
     {
       "id": "jp8-lyle-mays",
       "name": "Open Sky Lead",
-      "ref": "In the style of Lyle Mays",
+      "ref": "A soft, flute-like melody with gentle vibrato, close to Lyle Mays’s synth lines with Pat Metheny Group",
       "artist": "Lyle Mays",
       "tags": ["lead", "jazz", "fusion", "80s"],
       "level": 2,
@@ -6675,7 +6675,7 @@
     {
       "id": "jp8-rockit-stab",
       "name": "Rockit Stab",
-      "ref": "In the style of Herbie Hancock — “Rockit”",
+      "ref": "Herbie Hancock’s “Rockit” in miniature: punchy, robotic minor stabs in a syncopated electro riff",
       "artist": "Herbie Hancock",
       "tags": ["keys", "electro", "hip hop", "80s"],
       "level": 2,
@@ -6768,7 +6768,7 @@
     {
       "id": "jp8-george-duke",
       "name": "Funk Synth Solo",
-      "ref": "In the style of George Duke",
+      "ref": "A fat, sliding, resonant solo lead with a vocal filter, the way George Duke played funk synth",
       "artist": "George Duke",
       "tags": ["lead", "funk", "jazz funk", "70s"],
       "level": 3,
@@ -6854,7 +6854,7 @@
     {
       "id": "jp8-rpg-town",
       "name": "Village Theme",
-      "ref": "In the style of 16-bit role-playing game music",
+      "ref": "A gentle, cheerful plucked melody over simple chords: the village theme of a 16-bit role-playing game",
       "artist": "Video game music",
       "tags": ["keys", "game", "chiptune", "90s"],
       "level": 1,
@@ -6942,7 +6942,7 @@
     {
       "id": "jp8-news-fanfare",
       "name": "Newsroom Fanfare",
-      "ref": "In the style of 1980s TV news themes",
+      "ref": "Driving brass pulses with a big chord on top, for the top of the hour on 1980s TV news",
       "artist": "TV themes",
       "tags": ["brass", "tv", "fanfare", "80s"],
       "level": 1,
@@ -7081,7 +7081,7 @@
     {
       "id": "jp8-dreamy-small-town-pad",
       "name": "Dreamy Small-Town Pad",
-      "ref": "In the style of Angelo Badalamenti",
+      "ref": "Slow, yearning chords with a soft vibrato, the dreamy melancholy of Angelo Badalamenti’s TV themes",
       "artist": "Angelo Badalamenti",
       "tags": ["pad", "tv", "dream pop", "90s"],
       "level": 2,
@@ -7162,7 +7162,7 @@
     {
       "id": "jp8-upside-down-pad",
       "name": "Upside-Down Pad",
-      "ref": "In the style of Kyle Dixon & Michael Stein",
+      "ref": "A dark saw pad swelling slowly under the arpeggios of Kyle Dixon & Michael Stein’s Stranger Things score",
       "artist": "Kyle Dixon & Michael Stein",
       "tags": ["pad", "tv", "synthwave", "10s"],
       "level": 2,
@@ -7233,7 +7233,7 @@
     {
       "id": "jp8-fog-pad",
       "name": "Fog Bank",
-      "ref": "In the style of John Carpenter",
+      "ref": "A cold, low fifth that creeps in slowly and drifts in pitch, like the fog in John Carpenter’s scores",
       "artist": "John Carpenter",
       "tags": ["pad", "horror", "film", "80s"],
       "level": 2,
@@ -7304,8 +7304,8 @@
     {
       "id": "jp8-organ-cathedral",
       "name": "Cosmic Organ",
-      "ref": "In the style of Hans Zimmer — Interstellar",
-      "artist": "Hans Zimmer",
+      "ref": "Squares stacked a fifth and an octave apart into a vast, slow pipe organ that fills a cathedral",
+      "artist": "Pipe organ",
       "tags": ["keys", "film", "organ", "10s"],
       "level": 2,
       "blurb": "A vast, slow, pipe-organ-like chord that fills a cathedral.",
@@ -7380,7 +7380,7 @@
     {
       "id": "jp8-drive-pad",
       "name": "Night City Pad",
-      "ref": "In the style of Cliff Martinez",
+      "ref": "A cool, shimmering pad pulsing slowly with tremolo, the night-drive mood of Cliff Martinez’s film scores",
       "artist": "Cliff Martinez",
       "tags": ["pad", "film", "ambient", "10s"],
       "level": 2,
@@ -7456,7 +7456,7 @@
     {
       "id": "jp8-gamelan",
       "name": "Bronze Gamelan",
-      "ref": "In the style of Balinese gamelan",
+      "ref": "Pairs of bronze tones tuned slightly apart so they beat and shimmer, as in Balinese gamelan",
       "artist": "Gamelan",
       "tags": ["perc", "gamelan", "indonesian", "traditional"],
       "level": 2,
@@ -7541,7 +7541,7 @@
     {
       "id": "jp8-koto",
       "name": "Koto Pluck",
-      "ref": "In the style of Japanese koto music",
+      "ref": "A twangy pluck with a resonant snap, playing a koto melody in a Japanese scale",
       "artist": "Japanese traditional music",
       "tags": ["pluck", "japanese", "traditional"],
       "level": 2,
@@ -7622,7 +7622,7 @@
     {
       "id": "jp8-steelpan",
       "name": "Steelpan",
-      "ref": "In the style of Trinidadian steelpan",
+      "ref": "A bright, singing metallic note with a ring above it: a Trinidadian steelpan",
       "artist": "Steelpan",
       "tags": ["perc", "calypso", "caribbean"],
       "level": 2,
@@ -7704,7 +7704,7 @@
     {
       "id": "jp8-marimba",
       "name": "Marimba",
-      "ref": "In the style of marimba music",
+      "ref": "A warm, round wooden note with a quick knock and a short ring, like a marimba",
       "artist": "Marimba",
       "tags": ["perc", "marimba", "world"],
       "level": 1,
@@ -7797,7 +7797,7 @@
     {
       "id": "jp8-vibes",
       "name": "Motor Vibes",
-      "ref": "In the style of jazz vibraphone",
+      "ref": "A soft, long-ringing bell tone with the spinning motor tremolo of a jazz vibraphone",
       "artist": "Jazz",
       "tags": ["perc", "jazz", "vibraphone"],
       "level": 2,
@@ -7881,7 +7881,7 @@
     {
       "id": "jp8-harpsichord",
       "name": "Harpsichord",
-      "ref": "In the style of Baroque harpsichord",
+      "ref": "Two narrow pulses an octave apart, bright, jangly and quick to fade: a Baroque harpsichord",
       "artist": "Baroque",
       "tags": ["keys", "baroque", "classical", "harpsichord"],
       "level": 2,
@@ -7978,7 +7978,7 @@
     {
       "id": "jp8-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of synthesized flutes",
+      "ref": "A soft triangle with breath noise and a vibrato that waits: the synthesiser’s standard flute",
       "artist": "Wind instruments",
       "tags": ["wind", "flute"],
       "level": 2,
@@ -8059,7 +8059,7 @@
     {
       "id": "jp8-oboe",
       "name": "Oboe",
-      "ref": "In the style of orchestral oboe solos",
+      "ref": "A nasal, reedy honk singing an orchestral oboe line",
       "artist": "Orchestral",
       "tags": ["wind", "oboe", "classical"],
       "level": 2,
@@ -8141,7 +8141,7 @@
     {
       "id": "jp8-cello",
       "name": "Solo Cello",
-      "ref": "In the style of solo cello",
+      "ref": "Slow to bow into each note and singing with late vibrato, a woody solo cello",
       "artist": "Classical",
       "tags": ["strings", "cello", "classical"],
       "level": 2,
@@ -8222,7 +8222,7 @@
     {
       "id": "jp8-ooh-choir",
       "name": "Ooh Choir",
-      "ref": "In the style of choir pads",
+      "ref": "A soft, rounded “ooh” choir, a darker vowel than the usual “ahh”",
       "artist": "Choir",
       "tags": ["pad", "choir"],
       "level": 2,
@@ -8307,7 +8307,7 @@
     {
       "id": "jp8-thunder",
       "name": "Thunder",
-      "ref": "In the style of storm sound effects",
+      "ref": "A low rumble that crackles and rolls away: a storm’s thunder made from noise",
       "artist": "Sound effects",
       "tags": ["fx", "nature", "storm"],
       "level": 2,
@@ -8372,7 +8372,7 @@
     {
       "id": "jp8-ufo",
       "name": "Flying Saucer",
-      "ref": "In the style of 1950s science-fiction films",
+      "ref": "An eerie, warbling saucer hovering overhead, straight out of a 1950s science-fiction film",
       "artist": "Science-fiction films",
       "tags": ["fx", "sci-fi", "film", "50s"],
       "level": 2,
@@ -8439,7 +8439,7 @@
     {
       "id": "jp8-simmons-toms",
       "name": "Electronic Toms",
-      "ref": "In the style of 1980s electronic drum kits",
+      "ref": "A big electronic tom that drops in pitch as it dies, from a 1980s electronic drum kit",
       "artist": "Electronic drums",
       "tags": ["perc", "electronic", "drums", "80s"],
       "level": 2,
@@ -8515,7 +8515,7 @@
     {
       "id": "jp8-singing-bowl-drone",
       "name": "Bowl Drone",
-      "ref": "In the style of Himalayan singing bowls",
+      "ref": "Two struck bowls slightly out of tune, beating slowly as they ring: Himalayan singing bowls",
       "artist": "Singing bowls",
       "tags": ["drone", "meditation", "ambient"],
       "level": 2,
@@ -8582,7 +8582,7 @@
     {
       "id": "jp8-laser-harp",
       "name": "Laser Harp",
-      "ref": "In the style of Jean-Michel Jarre — Rendez-vous",
+      "ref": "Bright, ringing notes that hang in the air, the laser harp of Jean-Michel Jarre’s Rendez-vous",
       "artist": "Jean-Michel Jarre",
       "tags": ["lead", "electronic", "80s"],
       "level": 2,
@@ -8659,7 +8659,7 @@
     {
       "id": "jp8-lullaby-pad",
       "name": "Cradle Song",
-      "ref": "In the style of lullabies",
+      "ref": "Soft, round chords swelling gently in a slow three, rocking like a lullaby",
       "artist": "Lullaby",
       "tags": ["pad", "lullaby", "ambient"],
       "level": 1,
@@ -8741,7 +8741,7 @@
     {
       "id": "jp8-italo-bass-arp",
       "name": "Space Disco Bass",
-      "ref": "In the style of late-1970s space disco",
+      "ref": "A bubbling bass bouncing between octaves, built for late-1970s space disco",
       "artist": "Space disco",
       "tags": ["bass", "space disco", "disco", "70s"],
       "level": 2,
@@ -8812,7 +8812,7 @@
     {
       "id": "jp8-baba-arp",
       "name": "Teenage Arpeggio",
-      "ref": "In the style of The Who — “Baba O’Riley”",
+      "ref": "The rippling, repeating organ pattern that The Who’s “Baba O’Riley” is built on",
       "artist": "The Who",
       "tags": ["seq", "rock", "arpeggio", "70s"],
       "level": 2,
@@ -8890,7 +8890,7 @@
     {
       "id": "jp8-rush-lead",
       "name": "Prog Power Lead",
-      "ref": "In the style of Rush",
+      "ref": "Two bright saws an octave apart soaring over the band, as on Rush’s 1980s records",
       "artist": "Rush",
       "tags": ["lead", "prog", "rock", "80s"],
       "level": 2,
@@ -8972,7 +8972,7 @@
     {
       "id": "jp8-genesis-pad",
       "name": "Brooding Drum-Machine Pad",
-      "ref": "In the style of Genesis",
+      "ref": "A low, brooding saw pad swelling slowly over a drum machine, as on 1980s Genesis",
       "artist": "Genesis",
       "tags": ["pad", "prog", "rock", "80s"],
       "level": 2,
@@ -9048,7 +9048,7 @@
     {
       "id": "jp8-wakeman-lead",
       "name": "Cape and Lead",
-      "ref": "In the style of Rick Wakeman",
+      "ref": "Fast, flamboyant runs on a bright square and saw: Rick Wakeman’s prog-rock synth showmanship",
       "artist": "Rick Wakeman",
       "tags": ["lead", "prog", "rock", "70s"],
       "level": 3,
@@ -9137,7 +9137,7 @@
     {
       "id": "jp8-emerson-brass",
       "name": "Regal Prog Brass",
-      "ref": "In the style of Keith Emerson",
+      "ref": "Huge, regal brass chords swelling open, the synth fanfares Keith Emerson loved",
       "artist": "Keith Emerson",
       "tags": ["brass", "prog", "rock", "70s"],
       "level": 2,
@@ -9234,8 +9234,8 @@
     {
       "id": "jp8-floyd-pad",
       "name": "Sad Slow Keyboard Pad",
-      "ref": "In the style of Richard Wright",
-      "artist": "Richard Wright",
+      "ref": "Soft, sad chords moving slowly under a long guitar solo, the keyboard bed of 1970s prog rock",
+      "artist": "Progressive rock",
       "tags": ["pad", "psychedelic", "prog", "70s"],
       "level": 2,
       "blurb": "A soft, sad, slowly moving keyboard pad under a long guitar solo.",
@@ -9315,8 +9315,8 @@
     {
       "id": "jp8-supertramp-ep",
       "name": "Bouncy Electric Piano",
-      "ref": "In the style of Supertramp",
-      "artist": "Supertramp",
+      "ref": "Bright, bouncy electric-piano chords in eighths, driving a 1970s pop-rock song",
+      "artist": "1970s pop rock",
       "tags": ["keys", "rock", "electric piano", "70s"],
       "level": 2,
       "blurb": "A bouncy, bright electric-piano chord pattern.",
@@ -9475,7 +9475,7 @@
     {
       "id": "jp8-japan-pad",
       "name": "Cold Eastern Pad",
-      "ref": "In the style of Japan",
+      "ref": "Sparse, cold, mysterious textures with an Eastern colour, as Richard Barbieri made them for Japan",
       "artist": "Japan",
       "tags": ["pad", "art pop", "new wave", "80s"],
       "level": 2,
@@ -9547,7 +9547,7 @@
     {
       "id": "jp8-yazoo-arp",
       "name": "Tender Ballad Arpeggio",
-      "ref": "In the style of Yazoo",
+      "ref": "A gentle synth-pop arpeggio running eighths under a tender Yazoo ballad",
       "artist": "Yazoo",
       "tags": ["seq", "synth-pop", "arpeggio", "80s"],
       "level": 1,
@@ -9623,7 +9623,7 @@
     {
       "id": "jp8-soft-cell",
       "name": "Clipped Synth Riff",
-      "ref": "In the style of Soft Cell",
+      "ref": "Two cool, clipped notes on a narrow pulse with a dark edge, the kind of riff Soft Cell built songs on",
       "artist": "Soft Cell",
       "tags": ["lead", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -9692,7 +9692,7 @@
     {
       "id": "jp8-alphaville-pad",
       "name": "Wistful Synth-Pop Pad",
-      "ref": "In the style of Alphaville",
+      "ref": "Warm detuned saws swelling slowly into the wistful pad of an Alphaville anthem",
       "artist": "Alphaville",
       "tags": ["pad", "synth-pop", "80s"],
       "level": 1,
@@ -9768,7 +9768,7 @@
     {
       "id": "jp8-aha-riff",
       "name": "Bright Pop Riff",
-      "ref": "In the style of a-ha",
+      "ref": "Bright and staccato, bouncing on a quick filter snap, like the synth riffs of a-ha",
       "artist": "a-ha",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 2,
@@ -9856,8 +9856,8 @@
     {
       "id": "jp8-harold-budd",
       "name": "Soft Pedal Keys",
-      "ref": "In the style of Harold Budd",
-      "artist": "Harold Budd",
+      "ref": "Sparse, soft notes left to ring a long time in a haze, as 1980s ambient piano music does",
+      "artist": "1980s ambient",
       "tags": ["keys", "ambient", "minimal", "80s"],
       "level": 1,
       "blurb": "Sparse, soft, haloed notes that hang in the air for a long time.",
@@ -9925,7 +9925,7 @@
     {
       "id": "jp8-yoshimura",
       "name": "Water Garden Keys",
-      "ref": "In the style of Hiroshi Yoshimura",
+      "ref": "Gentle, glassy notes falling like droplets: the quiet room music of Hiroshi Yoshimura",
       "artist": "Hiroshi Yoshimura",
       "tags": ["keys", "ambient", "kankyō ongaku", "80s"],
       "level": 1,
@@ -9994,9 +9994,9 @@
     },
     {
       "id": "jp8-midori-takada",
-      "name": "Looking-Glass Marimba",
-      "ref": "In the style of Midori Takada — Through the Looking Glass",
-      "artist": "Midori Takada",
+      "name": "Interlocking Marimba",
+      "ref": "Woody mallet notes in a hypnotic, interlocking figure that shifts slowly, as minimalist percussion does",
+      "artist": "Minimalism",
       "tags": ["perc", "ambient", "minimalism", "80s"],
       "level": 2,
       "blurb": "A hypnotic, interlocking, marimba-like pattern that slowly shifts.",
@@ -10088,8 +10088,8 @@
     {
       "id": "jp8-max-richter",
       "name": "Neo-Classical Strings",
-      "ref": "In the style of Max Richter",
-      "artist": "Max Richter",
+      "ref": "Slow, aching string chords that move one note at a time, as in 2000s neo-classical music",
+      "artist": "Neo-classical",
       "tags": ["strings", "neoclassical", "ambient", "00s"],
       "level": 2,
       "blurb": "Slow, aching, sustained string chords that move one note at a time.",
@@ -10167,7 +10167,7 @@
     {
       "id": "jp8-enya-pizz",
       "name": "Sail Away Plucks",
-      "ref": "In the style of Enya",
+      "ref": "Light, bright plucks rocking in eighths, the synth pizzicato behind Enya’s “Orinoco Flow”",
       "artist": "Enya",
       "tags": ["pluck", "new age", "celtic", "80s"],
       "level": 1,
@@ -10326,8 +10326,8 @@
     {
       "id": "jp8-stars-of-the-lid",
       "name": "Slow Drone Chorus",
-      "ref": "In the style of Stars of the Lid",
-      "artist": "Stars of the Lid",
+      "ref": "Vast, overlapping drones so slow they seem never to move, from 2000s drone music",
+      "artist": "Drone music",
       "tags": ["drone", "ambient", "drone music", "00s"],
       "level": 2,
       "blurb": "Vast, slow, overlapping drones that seem not to move at all.",
@@ -10394,7 +10394,7 @@
     {
       "id": "jp8-royksopp",
       "name": "Melody A.M. Keys",
-      "ref": "In the style of Röyksopp — Melody A.M.",
+      "ref": "A warm, melancholy synth melody plucked gently, the mood of Röyksopp’s Melody A.M.",
       "artist": "Röyksopp",
       "tags": ["keys", "downtempo", "electronica", "00s"],
       "level": 2,
@@ -10471,7 +10471,7 @@
     {
       "id": "jp8-moderat",
       "name": "Melancholy Gliding Bass",
-      "ref": "In the style of Moderat",
+      "ref": "A deep, gliding saw bass under a melancholy song, the low end of Moderat’s electronica",
       "artist": "Moderat",
       "tags": ["bass", "electronica", "techno", "10s"],
       "level": 2,
@@ -10547,7 +10547,7 @@
     {
       "id": "jp8-schnauss",
       "name": "Shoegaze Shimmer",
-      "ref": "In the style of Ulrich Schnauss",
+      "ref": "Wide-detuned saws blurred into a bright, shimmering wall: Ulrich Schnauss’s electronic shoegaze",
       "artist": "Ulrich Schnauss",
       "tags": ["pad", "shoegaze", "electronica", "00s"],
       "level": 2,
@@ -10630,7 +10630,7 @@
     {
       "id": "jp8-koji-kondo",
       "name": "Adventure Theme",
-      "ref": "In the style of Koji Kondo",
+      "ref": "A cheerful, bouncy square lead over plucked chords, like the adventure themes Koji Kondo wrote for games",
       "artist": "Koji Kondo",
       "tags": ["lead", "game", "chiptune"],
       "level": 2,
@@ -10719,8 +10719,8 @@
     {
       "id": "jp8-neo-soul",
       "name": "Neo-Soul Chords",
-      "ref": "In the style of D’Angelo",
-      "artist": "D’Angelo",
+      "ref": "Warm, rich ninth chords played lazily behind the beat, where 1990s neo-soul keys sit",
+      "artist": "Neo-soul",
       "tags": ["keys", "neo soul", "r&b", "90s"],
       "level": 2,
       "blurb": "Warm, lazy, rich ninth chords that sit behind the beat.",
@@ -10802,7 +10802,7 @@
     {
       "id": "jp8-rnb-pad",
       "name": "Slow Jam Pad",
-      "ref": "In the style of 1990s R&B slow jams",
+      "ref": "A smooth, glossy pad with a soft vibrato under a 1990s R&B slow jam",
       "artist": "R&B",
       "tags": ["pad", "r&b", "slow jam", "90s"],
       "level": 1,
@@ -10888,7 +10888,7 @@
     {
       "id": "jp8-trap-bells",
       "name": "Trap Bells",
-      "ref": "In the style of 2010s trap",
+      "ref": "Dark, glassy cross-mod bells picking a minor tune over the 808s of a 2010s trap beat",
       "artist": "Trap",
       "tags": ["keys", "trap", "hip hop", "10s"],
       "level": 2,
@@ -10963,8 +10963,8 @@
     {
       "id": "jp8-ravi-drone",
       "name": "Raga Drone and Melody",
-      "ref": "In the style of Ravi Shankar",
-      "artist": "Ravi Shankar",
+      "ref": "A held root-and-fifth drone with a melody sliding above it, the shape of Hindustani raga music",
+      "artist": "Hindustani classical music",
       "tags": ["lead", "indian", "classical", "raga"],
       "level": 2,
       "blurb": "A held drone of root and fifth with a sliding melody above.",
@@ -11040,7 +11040,7 @@
     {
       "id": "jp8-andean",
       "name": "Mountain Flute",
-      "ref": "In the style of Andean music",
+      "ref": "A breathy, hollow pan-pipe tune with a short attack, from Andean folk music",
       "artist": "Andean music",
       "tags": ["wind", "andean", "folk", "traditional"],
       "level": 1,
@@ -11117,7 +11117,7 @@
     {
       "id": "jp8-tangerine-pad",
       "name": "Berlin Pad Swell",
-      "ref": "In the style of Tangerine Dream",
+      "ref": "A slow filter swell opening over a dark minor chord for several seconds, as Tangerine Dream did it",
       "artist": "Tangerine Dream",
       "tags": ["pad", "berlin school", "ambient", "80s"],
       "level": 2,
@@ -11188,7 +11188,7 @@
     {
       "id": "jp8-vangelis-brass",
       "name": "Bladed Brass",
-      "ref": "In the style of Vangelis — Blade Runner",
+      "ref": "Huge, slow synth brass with a blooming vibrato, the swell of Vangelis’s Blade Runner score",
       "artist": "Vangelis",
       "tags": ["brass", "film", "electronic", "80s"],
       "level": 2,
@@ -11266,7 +11266,7 @@
     {
       "id": "jp8-schulze-arp",
       "name": "Kosmische Arpeggio",
-      "ref": "In the style of Klaus Schulze",
+      "ref": "An arpeggio rising and falling over three octaves for minutes on end, as Klaus Schulze let them run",
       "artist": "Klaus Schulze",
       "tags": ["seq", "berlin school", "ambient", "arpeggio", "70s"],
       "level": 2,
@@ -11336,7 +11336,7 @@
     {
       "id": "jp8-boc-pad",
       "name": "Faded Pad",
-      "ref": "In the style of Boards of Canada",
+      "ref": "A faded, slightly flat pad that wobbles like an old film strip, Boards of Canada’s nostalgia",
       "artist": "Boards of Canada",
       "tags": ["pad", "idm", "downtempo", "90s"],
       "level": 2,
@@ -11422,7 +11422,7 @@
     {
       "id": "jp8-aphex-ambient",
       "name": "Selected Ambient Pad",
-      "ref": "In the style of Aphex Twin — Selected Ambient Works Volume II",
+      "ref": "A hazy, slowly pulsing pad near the otherworldly drift of Aphex Twin’s Selected Ambient Works Volume II",
       "artist": "Aphex Twin",
       "tags": ["pad", "ambient", "idm", "90s"],
       "level": 2,
@@ -11496,7 +11496,7 @@
     {
       "id": "jp8-close-encounters",
       "name": "Five-Note Signal",
-      "ref": "In the style of 1970s science-fiction film scores",
+      "ref": "A pure, clear five-note signal sent to the sky, for a 1970s science-fiction film score",
       "artist": "Science-fiction films",
       "tags": ["lead", "sci-fi", "film", "70s"],
       "level": 1,
@@ -11562,7 +11562,7 @@
     {
       "id": "jp8-solo-acid-squelch",
       "name": "Solo Acid Squelch",
-      "ref": "In the style of acid house",
+      "ref": "A squelchy mono line with high resonance and a fast envelope, straight out of acid house",
       "artist": "Acid house",
       "tags": ["bass", "acid", "house"],
       "level": 2,
@@ -11656,7 +11656,7 @@
     {
       "id": "jp8-italo-lead",
       "name": "Italo Lead",
-      "ref": "In the style of 1980s Italo disco",
+      "ref": "A bright, singing lead with a touch of melancholy and vibrato, for 1980s Italo disco",
       "artist": "Italo disco",
       "tags": ["lead", "italo disco", "disco", "80s"],
       "level": 1,
@@ -11734,7 +11734,7 @@
     {
       "id": "jp8-gospel-organ",
       "name": "Gospel Chords",
-      "ref": "In the style of gospel organ",
+      "ref": "Joyful organ chords with a rocking tremolo in a slow three, as a gospel organ swells",
       "artist": "Gospel",
       "tags": ["keys", "gospel", "organ"],
       "level": 2,
@@ -11825,7 +11825,7 @@
     {
       "id": "jp8-sitar-sync",
       "name": "Electric Sitar",
-      "ref": "In the style of 1960s psychedelic pop",
+      "ref": "A buzzing, twanging pluck with a metallic edge: the electric sitar of 1960s psychedelic pop",
       "artist": "Psychedelic pop",
       "tags": ["pluck", "psychedelic", "sitar", "60s"],
       "level": 3,
@@ -11906,7 +11906,7 @@
     {
       "id": "jp8-bass-pluck-unison",
       "name": "Unison Pluck Bass",
-      "ref": "In the style of 1980s synth-funk",
+      "ref": "Eight voices on one note for a huge, rubbery bass pluck, the bottom end of 1980s synth-funk",
       "artist": "Synth-funk",
       "tags": ["bass", "funk", "synth-funk", "80s"],
       "level": 2,
@@ -11987,7 +11987,7 @@
     {
       "id": "jp8-hold-arp-drone",
       "name": "Held Arpeggio Drone",
-      "ref": "In the style of ambient electronica",
+      "ref": "A slow, latched arpeggio turning over one chord like a mobile, for ambient electronica",
       "artist": "Ambient electronica",
       "tags": ["seq", "ambient", "arpeggio"],
       "level": 2,
@@ -12061,7 +12061,7 @@
     {
       "id": "jp8-sh-bass-blips",
       "name": "Random Bass Blips",
-      "ref": "In the style of 1970s experimental electronic music",
+      "ref": "A low note whose filter jumps somewhere new on every beat, as 1970s experimental electronics did",
       "artist": "Experimental electronic",
       "tags": ["bass", "experimental", "electronic", "70s"],
       "level": 3,
@@ -12124,7 +12124,7 @@
     {
       "id": "jp8-closing-credits",
       "name": "Closing Credits",
-      "ref": "In the style of 1980s film-score endings",
+      "ref": "A warm, rising chord progression that resolves hopefully as a 1980s film’s credits roll",
       "artist": "Film scoring",
       "tags": ["pad", "film", "80s"],
       "level": 1,
@@ -12203,7 +12203,7 @@
     {
       "id": "jp8-sync-xmod-lead",
       "name": "Metal Sync Lead",
-      "ref": "In the style of 1980s industrial synth-pop",
+      "ref": "Sync and cross mod at once, so a snarling lead tears and clangs, for 1980s industrial synth-pop",
       "artist": "Industrial synth-pop",
       "tags": ["lead", "industrial", "synth-pop", "80s"],
       "level": 3,

@@ -5,7 +5,7 @@
     {
       "id": "kobol-brass",
       "name": "Morphing Brass",
-      "ref": "In the style of late-70s French synth pop",
+      "ref": "A warm brass lead that blooms open at the start of each note, for late-1970s French synth-pop",
       "artist": "Classic technique",
       "tags": ["brass", "lead", "70s"],
       "level": 1,
@@ -82,7 +82,7 @@
     {
       "id": "kobol-pwm-strings",
       "name": "PWM Ensemble",
-      "ref": "In the style of late-70s French space music",
+      "ref": "Two pulse waves thinning and thickening into slow, shimmering strings: late-1970s French space music",
       "artist": "Classic technique",
       "tags": ["strings", "pad", "70s"],
       "level": 2,
@@ -164,7 +164,7 @@
     {
       "id": "kobol-sync-lead",
       "name": "Sync Sweep Lead",
-      "ref": "In the style of The Cars — “Let’s Go”",
+      "ref": "A tearing, vocal sync lead that sweeps down on every note, like Greg Hawkes’s on The Cars’ \"Let’s Go\"",
       "artist": "Greg Hawkes",
       "tags": ["lead", "new wave", "80s"],
       "level": 2,
@@ -242,7 +242,7 @@
     {
       "id": "kobol-bass",
       "name": "Round Filter Bass",
-      "ref": "In the style of 80s synth-pop bass",
+      "ref": "A punchy, rounded bass with a quick, slightly vocal filter snap, for 1980s synth-pop",
       "artist": "Classic technique",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -551,7 +551,7 @@
     {
       "id": "kobol-acid",
       "name": "Squelch Line",
-      "ref": "In the style of late-80s acid house",
+      "ref": "A rubbery, squelching bass line with the resonance well up, straight from late-1980s acid house",
       "artist": "Classic technique",
       "tags": ["bass", "acid", "80s"],
       "level": 2,
@@ -836,7 +836,7 @@
     {
       "id": "kobol-sequencer",
       "name": "Sequencer Blips",
-      "ref": "In the style of Tangerine Dream’s 70s sequences",
+      "ref": "Short, bright blips with a hollow fifth, built for fast patterns like Tangerine Dream’s 1970s sequences",
       "artist": "Tangerine Dream",
       "tags": ["seq", "electronic", "70s"],
       "level": 2,
@@ -1128,7 +1128,7 @@
     {
       "id": "kobol-fifths",
       "name": "Fifths Lead",
-      "ref": "In the style of 70s prog-rock leads",
+      "ref": "A bold, brassy lead with a parallel fifth under every note, for a 1970s prog-rock solo",
       "artist": "Classic technique",
       "tags": ["lead", "prog", "70s"],
       "level": 1,
@@ -1450,7 +1450,7 @@
     {
       "id": "kobol-tine-piano",
       "name": "Tine Electric Piano",
-      "ref": "In the style of a 1970s Rhodes electric piano",
+      "ref": "A round body with a bright metallic ding on each note: a 1970s Rhodes electric piano",
       "artist": "Classic technique",
       "tags": ["keys", "soul", "70s"],
       "level": 2,
@@ -1531,7 +1531,7 @@
     {
       "id": "kobol-reed-piano",
       "name": "Reed Piano",
-      "ref": "In the style of a 1970s Wurlitzer electric piano",
+      "ref": "Warm keys that bark a little at the start of each note and settle pure, like a 1970s Wurlitzer",
       "artist": "Classic technique",
       "tags": ["keys", "soul", "70s"],
       "level": 2,
@@ -1612,7 +1612,7 @@
     {
       "id": "kobol-vibes",
       "name": "Vibraphone with Motor",
-      "ref": "In the style of a jazz vibraphone with its tremolo motor on",
+      "ref": "A soft mallet tone ringing long, pulsing slowly as a jazz vibraphone does with its motor on",
       "artist": "Classic technique",
       "tags": ["keys", "jazz", "modular"],
       "level": 3,
@@ -2019,7 +2019,7 @@
     {
       "id": "kobol-upright-bass",
       "name": "Round Upright Bass",
-      "ref": "In the style of a jazz double bass",
+      "ref": "A warm, plucked bass with a soft thump and a long, mellow fade, like a jazz double bass",
       "artist": "Classic technique",
       "tags": ["bass", "jazz", "acoustic"],
       "level": 1,
@@ -2088,7 +2088,7 @@
     {
       "id": "kobol-floating-arp",
       "name": "Floating Arpeggio",
-      "ref": "In the style of 1970s ambient electronic arpeggios",
+      "ref": "Soft, rounded plucks whose long tails blur a slow arpeggio into a haze, as 1970s ambient electronics did",
       "artist": "Classic technique",
       "tags": ["seq", "ambient", "70s"],
       "level": 1,
@@ -2168,7 +2168,7 @@
     {
       "id": "kobol-flute-organ",
       "name": "Flute Organ",
-      "ref": "In the style of a soft chapel organ",
+      "ref": "Two soft stops with one drifting against the other for a living shimmer, like a small chapel organ",
       "artist": "Classic technique",
       "tags": ["keys", "ambient", "classical"],
       "level": 1,
@@ -2414,7 +2414,7 @@
     {
       "id": "kobol-cello",
       "name": "Solo Cello",
-      "ref": "In the style of a slow solo cello line",
+      "ref": "A warm, bowed string with a soft start and a gentle vibrato, playing a slow solo cello line",
       "artist": "Classic technique",
       "tags": ["strings", "classical", "soundtrack"],
       "level": 2,
@@ -2496,7 +2496,7 @@
     {
       "id": "kobol-horn",
       "name": "Distant Horn",
-      "ref": "In the style of a French horn in a film score",
+      "ref": "A soft, round horn that warms into each note, as if a film score’s French horn called across a valley",
       "artist": "Classic technique",
       "tags": ["brass", "soundtrack", "classical"],
       "level": 2,
@@ -2653,8 +2653,8 @@
     {
       "id": "kobol-aero-arp",
       "name": "Bright Racing Arpeggio",
-      "ref": "In the style of Daft Punk — \"Aerodynamic\"",
-      "artist": "Daft Punk",
+      "ref": "A fast, bright arpeggio tumbling down each chord with a glassy edge on every note, for French house",
+      "artist": "French house",
       "tags": ["seq", "house", "00s"],
       "level": 2,
       "blurb": "A fast, bright arpeggio that tumbles down each chord, with a sharp, glassy edge on the front of every note.",
@@ -2765,7 +2765,7 @@
     {
       "id": "kobol-metro-pulse",
       "name": "Slowly Opening Pulse",
-      "ref": "In the style of Kraftwerk — \"Metropolis\"",
+      "ref": "Kraftwerk’s \"Metropolis\" in outline: a dark, steady bass pulse whose filter opens over many bars",
       "artist": "Kraftwerk",
       "tags": ["seq", "synth-pop", "70s"],
       "level": 3,
@@ -2874,7 +2874,7 @@
     {
       "id": "kobol-rubber-scoop-bass",
       "name": "Rubber Scoop Bass",
-      "ref": "In the style of Parliament — \"Rumpofsteelskin\" (Motor Booty Affair)",
+      "ref": "A bouncy, squelching bass that scoops up into every note, Bernie Worrell’s on Parliament’s \"Rumpofsteelskin\"",
       "artist": "Bernie Worrell",
       "tags": ["bass", "funk", "70s"],
       "level": 3,
@@ -2971,7 +2971,7 @@
     {
       "id": "kobol-dark-drift-pad",
       "name": "Dark Drifting Pad",
-      "ref": "In the style of Brian Eno — \"Zawinul/Lava\" (Another Green World)",
+      "ref": "A slow, murky tone whose lower half keeps changing shape, close to Brian Eno’s \"Zawinul/Lava\"",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "70s"],
       "level": 2,
@@ -3057,8 +3057,8 @@
     {
       "id": "kobol-steel-bender",
       "name": "Steel Bender Swell",
-      "ref": "In the style of Daniel Lanois — \"Sioux Lookout\" (Flesh and Machine)",
-      "artist": "Daniel Lanois",
+      "ref": "Two voices fade in together, then the upper one bends up a whole tone, as a pedal steel’s pedal does",
+      "artist": "Pedal steel",
       "tags": ["lead", "ambient", "10s"],
       "level": 3,
       "blurb": "A pedal-steel style swell: two voices fade in together, then the upper one bends up a whole tone while the lower one holds.",
@@ -3150,7 +3150,7 @@
     {
       "id": "kobol-feeling-for-you-house-bass",
       "name": "French House Bass",
-      "ref": "In the style of Cassius — \"Feeling for You\" (1999, 1999)",
+      "ref": "A round, bouncy house bass with a little squelch on every note, as in Cassius’s \"Feeling for You\"",
       "artist": "Cassius",
       "tags": ["bass", "french house", "house", "90s"],
       "level": 1,
@@ -3223,7 +3223,7 @@
     {
       "id": "kobol-black-devil-eerie-disco-bass",
       "name": "Haunted Space-Disco Bass",
-      "ref": "In the style of Black Devil Disco Club — Disco Club (1978)",
+      "ref": "A dark, hollow disco bass with a slow, uneasy waver: Black Devil Disco Club’s haunted dancefloor",
       "artist": "Black Devil Disco Club",
       "tags": ["bass", "space disco", "dark", "70s"],
       "level": 2,
@@ -3304,8 +3304,8 @@
     {
       "id": "kobol-lovers-holiday-wave-envelope-bass",
       "name": "Morphing-Wave Boogie Bass",
-      "ref": "In the style of Change — \"A Lover’s Holiday\" (The Glow of Love, 1980)",
-      "artist": "Change",
+      "ref": "A funky bass whose wave snaps from buzzy pulse to soft triangle on every note, for early-1980s boogie",
+      "artist": "Boogie",
       "tags": ["bass", "boogie", "disco", "80s"],
       "level": 3,
       "blurb": "A funky bass whose tone changes shape on every note, from a buzzy pulse to a soft triangle.",
@@ -3390,7 +3390,7 @@
     {
       "id": "kobol-embody-sync-sweep-bass",
       "name": "Sync-Sweep Electro Bass",
-      "ref": "In the style of SebastiAn — \"Embody\" (Total, 2011)",
+      "ref": "A snarling sync bass that tears open on each note and closes again, like SebastiAn’s \"Embody\"",
       "artist": "SebastiAn",
       "tags": ["bass", "electro", "french touch", "10s"],
       "level": 3,
@@ -3473,8 +3473,8 @@
     {
       "id": "kobol-baby-im-yours-disco-bass",
       "name": "Filter-Disco Bass",
-      "ref": "In the style of Breakbot — \"Baby I’m Yours\" (2010)",
-      "artist": "Breakbot",
+      "ref": "A warm, rubbery bass jumping octaves, sunny and loose, for 2010s nu-disco",
+      "artist": "Nu-disco",
       "tags": ["bass", "nu-disco", "funk", "10s"],
       "level": 1,
       "blurb": "A warm, rubbery disco bass with octave jumps, sunny and loose.",
@@ -3545,7 +3545,7 @@
     {
       "id": "kobol-anti-war-sub-wobble",
       "name": "Dubstep Sub Wobble",
-      "ref": "In the style of Digital Mystikz — \"Anti-War Dub\" (2006)",
+      "ref": "Deep half-step sub whose filter opens and shuts in slow, heavy wobbles, as on Digital Mystikz’s \"Anti-War Dub\"",
       "artist": "Digital Mystikz",
       "tags": ["bass", "dubstep", "sub", "00s"],
       "level": 3,
@@ -3632,7 +3632,7 @@
     {
       "id": "kobol-atomic-bomb-synth-funk-bass",
       "name": "Nigerian Synth-Funk Bass",
-      "ref": "In the style of William Onyeabor — \"Atomic Bomb\" (1978)",
+      "ref": "A buzzy, joyful bass looping one short figure until it hypnotises, as in William Onyeabor’s \"Atomic Bomb\"",
       "artist": "William Onyeabor",
       "tags": ["bass", "afro-funk", "synth funk", "70s"],
       "level": 1,
@@ -3706,7 +3706,7 @@
     {
       "id": "kobol-dont-stop-the-music-boogie-bass",
       "name": "Boogie Synth Bass",
-      "ref": "In the style of Yarbrough & Peoples — \"Don’t Stop the Music\" (The Two of Us, 1980)",
+      "ref": "Fat, slow and deep with a soft bloom of brightness, like Yarbrough & Peoples’ \"Don’t Stop the Music\"",
       "artist": "Yarbrough & Peoples",
       "tags": ["bass", "boogie", "funk", "80s"],
       "level": 1,
@@ -3779,7 +3779,7 @@
     {
       "id": "kobol-minus-minimal-bass",
       "name": "Minimal Techno Bass",
-      "ref": "In the style of Robert Hood — Minimal Nation (1994)",
+      "ref": "A short, dry, rubbery blip repeated with tiny changes, the stripped groove of Robert Hood’s Minimal Nation",
       "artist": "Robert Hood",
       "tags": ["bass", "minimal techno", "detroit", "90s"],
       "level": 1,
@@ -3848,7 +3848,7 @@
     {
       "id": "kobol-im-ready-italo-bass",
       "name": "Italo Octave Bass",
-      "ref": "In the style of Kano — \"I’m Ready\" (Kano, 1980)",
+      "ref": "Kano’s \"I’m Ready\" runs on a bass like this: bright octaves bouncing on the eighths",
       "artist": "Kano",
       "tags": ["bass", "italo disco", "disco", "80s"],
       "level": 1,
@@ -3921,7 +3921,7 @@
     {
       "id": "kobol-divine-vocal-lead",
       "name": "Sweet Falsetto Lead",
-      "ref": "In the style of Sébastien Tellier — \"Divine\" (Sexuality, 2008)",
+      "ref": "A soft, sweet lead with a gentle vibrato that sings like a falsetto, for Sébastien Tellier’s synth-pop",
       "artist": "Sébastien Tellier",
       "tags": ["lead", "french pop", "synth-pop", "00s"],
       "level": 1,
@@ -3999,7 +3999,7 @@
     {
       "id": "kobol-1901-buzzing-riff",
       "name": "Buzzing Indie Synth Riff",
-      "ref": "In the style of Phoenix — \"1901\" (Wolfgang Amadeus Phoenix, 2009)",
+      "ref": "Loud, buzzing, slightly detuned stabs, the swirling synth riff of Phoenix’s \"1901\"",
       "artist": "Phoenix",
       "tags": ["lead", "indie", "synth-pop", "00s"],
       "level": 1,
@@ -4073,7 +4073,7 @@
     {
       "id": "kobol-onyx-space-art-lead",
       "name": "Spacey French Lead",
-      "ref": "In the style of Space Art — \"Onyx\" (Space Art, 1977)",
+      "ref": "A bright pulse lead whose width wavers slowly over a driving beat, as on Space Art’s \"Onyx\"",
       "artist": "Space Art",
       "tags": ["lead", "space rock", "electronic", "70s"],
       "level": 2,
@@ -4152,7 +4152,7 @@
     {
       "id": "kobol-visions-of-dune-sweep-lead",
       "name": "Desert-Planet Lead",
-      "ref": "In the style of Bernard Szajner — Visions of Dune (1979)",
+      "ref": "A dark, open fifth whose filter swells on each note, mysterious as Bernard Szajner’s Visions of Dune",
       "artist": "Bernard Szajner",
       "tags": ["lead", "electronic", "sci-fi", "70s"],
       "level": 2,
@@ -4222,7 +4222,7 @@
     {
       "id": "kobol-distroia-audio-lfo-growl",
       "name": "Audio-Rate LFO Growl",
-      "ref": "In the style of Mouse on Mars — Idiology (2001)",
+      "ref": "Pitch shaken a hundred times a second until the lead growls and clangs, as Mouse on Mars do on Idiology",
       "artist": "Mouse on Mars",
       "tags": ["lead", "idm", "glitch", "00s"],
       "level": 2,
@@ -4301,7 +4301,7 @@
     {
       "id": "kobol-rectangle-chorus-lead",
       "name": "One-VCO-Wobble Chorus Lead",
-      "ref": "In the style of Jacno — \"Rectangle\" (1979)",
+      "ref": "A cheeky square lead with one oscillator wavering against the other, as on Jacno’s \"Rectangle\"",
       "artist": "Jacno",
       "tags": ["lead", "new wave", "minimal", "70s"],
       "level": 2,
@@ -4387,7 +4387,7 @@
     {
       "id": "kobol-eva-whistle-lead",
       "name": "Whistling Filter Lead",
-      "ref": "In the style of Jean-Jacques Perrey — \"E.V.A.\" (Moog Indigo, 1970)",
+      "ref": "The filter whistles the tune over a quiet pulse, a cheerful Moog-age lead like Jean-Jacques Perrey’s \"E.V.A.\"",
       "artist": "Jean-Jacques Perrey",
       "tags": ["lead", "space age", "retro", "70s"],
       "level": 2,
@@ -4459,7 +4459,7 @@
     {
       "id": "kobol-discopolis-sync-scream",
       "name": "Sync Scream Lead",
-      "ref": "In the style of Lifelike & Kris Menace — \"Discopolis\" (2006)",
+      "ref": "A soaring sync lead that tears at the top of each phrase, as in Lifelike & Kris Menace’s \"Discopolis\"",
       "artist": "Lifelike & Kris Menace",
       "tags": ["lead", "french house", "nu-disco", "00s"],
       "level": 2,
@@ -4539,7 +4539,7 @@
     {
       "id": "kobol-hood-pass-modern-funk-lead",
       "name": "Modern-Funk Square Lead",
-      "ref": "In the style of Dâm-Funk — Toeachizown (2009)",
+      "ref": "A warm, smooth square lead with a lazy vibrato for a late-night jam, Dâm-Funk’s modern funk",
       "artist": "Dâm-Funk",
       "tags": ["lead", "modern funk", "boogie", "00s"],
       "level": 1,
@@ -4621,7 +4621,7 @@
     {
       "id": "kobol-paris-moscou-lead",
       "name": "Euro Synth-Pop Lead",
-      "ref": "In the style of Didier Marouani — Paris–Moscou (1983)",
+      "ref": "A bright, heroic saw lead with a touch of detune, for a European anthem like Didier Marouani’s Paris–Moscou",
       "artist": "Didier Marouani",
       "tags": ["lead", "synth-pop", "space disco", "80s"],
       "level": 1,
@@ -4701,7 +4701,7 @@
     {
       "id": "kobol-outstanding-synth-brass",
       "name": "Funk Synth Brass Stab",
-      "ref": "In the style of The Gap Band — \"Outstanding\" (Gap Band IV, 1982)",
+      "ref": "A fat synth-brass stab swelling on each hit, where early-1980s funk such as The Gap Band’s put its horns",
       "artist": "The Gap Band",
       "tags": ["brass", "funk", "boogie", "80s"],
       "level": 1,
@@ -4772,8 +4772,8 @@
     {
       "id": "kobol-ironside-rasping-brass",
       "name": "Rasping TV-Theme Brass",
-      "ref": "In the style of Quincy Jones — \"Ironside\" (1967)",
-      "artist": "Quincy Jones",
+      "ref": "A blaring, menacing brass blast with a rasp in it, like a trombone played hard in a 1960s TV theme",
+      "artist": "1960s TV themes",
       "tags": ["brass", "soundtrack", "tv", "60s"],
       "level": 2,
       "blurb": "A blaring, menacing brass blast with a rasp in it, like a trombone played hard.",
@@ -4853,8 +4853,8 @@
     {
       "id": "kobol-mahler-horn-call",
       "name": "Romantic Horn",
-      "ref": "In the style of Gustav Mahler’s horn writing",
-      "artist": "Gustav Mahler",
+      "ref": "A warm, round French horn calling across a valley, as in late-Romantic orchestral music",
+      "artist": "Romantic orchestral music",
       "tags": ["brass", "orchestral", "classical", "horn"],
       "level": 2,
       "blurb": "A warm, round French horn calling across a valley.",
@@ -4935,7 +4935,7 @@
     {
       "id": "kobol-mariachi-trumpet",
       "name": "Mariachi Trumpet",
-      "ref": "In the style of mariachi trumpets",
+      "ref": "A bright, bold trumpet with a wide, fast vibrato, playing a proud mariachi melody in thirds",
       "artist": "Mariachi",
       "tags": ["brass", "mexican", "world", "trumpet"],
       "level": 2,
@@ -5019,8 +5019,8 @@
     {
       "id": "kobol-winelight-smooth-sax",
       "name": "Smooth-Jazz Sax",
-      "ref": "In the style of Grover Washington Jr. — \"Winelight\" (Winelight, 1980)",
-      "artist": "Grover Washington Jr.",
+      "ref": "A warm, reedy sax line with breath on the attack and a lazy vibrato, for 1980s smooth jazz",
+      "artist": "Smooth jazz",
       "tags": ["wind", "smooth jazz", "sax", "80s"],
       "level": 2,
       "blurb": "A warm, reedy sax line with breath on the attack and a lazy vibrato.",
@@ -5103,7 +5103,7 @@
     {
       "id": "kobol-andean-pan-flute",
       "name": "Breathy Pan Flute",
-      "ref": "In the style of Andean pan-pipe music",
+      "ref": "A hollow pan flute with lots of air on each note, playing a pentatonic tune from the Andes",
       "artist": "Andean pan pipes",
       "tags": ["wind", "andean", "world", "gentle"],
       "level": 2,
@@ -5184,7 +5184,7 @@
     {
       "id": "kobol-klezmer-clarinet",
       "name": "Klezmer Clarinet",
-      "ref": "In the style of klezmer",
+      "ref": "A hollow, crying clarinet with a quick vibrato in the freygish mode of klezmer",
       "artist": "Klezmer",
       "tags": ["wind", "klezmer", "world", "clarinet"],
       "level": 2,
@@ -5268,7 +5268,7 @@
     {
       "id": "kobol-honkyoku-shakuhachi",
       "name": "Breathy Shakuhachi",
-      "ref": "In the style of shakuhachi honkyoku",
+      "ref": "Slow bamboo-flute notes that swell and fall with lots of air, as in shakuhachi honkyoku",
       "artist": "Shakuhachi",
       "tags": ["wind", "japanese", "world", "calm"],
       "level": 2,
@@ -5346,7 +5346,7 @@
     {
       "id": "kobol-candy-shoppe-morphing-pad",
       "name": "Morphing-Wave Shimmer Pad",
-      "ref": "In the style of Emeralds — \"Candy Shoppe\" (Does It Look Like I’m Here?, 2010)",
+      "ref": "A glowing pad turning from soft triangle to bright pulse and back, as on Emeralds’ \"Candy Shoppe\"",
       "artist": "Emeralds",
       "tags": ["pad", "ambient", "kosmische", "gentle", "10s"],
       "level": 3,
@@ -5421,7 +5421,7 @@
     {
       "id": "kobol-paradise-symphony-pad",
       "name": "Nordic Paradise Pad",
-      "ref": "In the style of Ralph Lundsten — Paradissymfonin (1978)",
+      "ref": "A broad, gently beating pad that swells like morning light over water, Ralph Lundsten’s Paradissymfonin",
       "artist": "Ralph Lundsten",
       "tags": ["pad", "electronic", "gentle", "soft", "70s"],
       "level": 1,
@@ -5491,7 +5491,7 @@
     {
       "id": "kobol-space-between-soft-pad",
       "name": "Soft Triangle Pad",
-      "ref": "In the style of Joanna Brouk — \"The Space Between\" (Hearing Music, 1981)",
+      "ref": "Very soft, pure triangle tones, quiet and spacious, close to Joanna Brouk’s \"The Space Between\"",
       "artist": "Joanna Brouk",
       "tags": ["pad", "new age", "ambient", "soft", "80s"],
       "level": 1,
@@ -5558,7 +5558,7 @@
     {
       "id": "kobol-chronos-dark-swell",
       "name": "Dark Resonant Swell",
-      "ref": "In the style of Michael Stearns — Chronos (1984)",
+      "ref": "A deep, dark swell whose resonant peak blooms slowly open, vast and solemn as Michael Stearns’s Chronos",
       "artist": "Michael Stearns",
       "tags": ["pad", "ambient", "dark", "cinematic", "80s"],
       "level": 2,
@@ -5626,7 +5626,7 @@
     {
       "id": "kobol-stars-go-with-you-pad",
       "name": "Starlit Space Pad",
-      "ref": "In the style of Jonn Serrie — And the Stars Go with You (1987)",
+      "ref": "A wide, calm root and fifth drifting slowly, the 1980s space music of Jonn Serrie’s And the Stars Go with You",
       "artist": "Jonn Serrie",
       "tags": ["pad", "space music", "ambient", "calm", "80s"],
       "level": 1,
@@ -5700,7 +5700,7 @@
     {
       "id": "kobol-sunyata-breathing-drone",
       "name": "Breathing Low Drone",
-      "ref": "In the style of Robert Rich — Sunyata (1982)",
+      "ref": "Low saws whose resonant peak drifts over the overtones like slow breath, as on Robert Rich’s Sunyata",
       "artist": "Robert Rich",
       "tags": ["drone", "ambient", "calm", "deep", "80s"],
       "level": 2,
@@ -5765,7 +5765,7 @@
     {
       "id": "kobol-osmose-sweet-pad",
       "name": "Sweet Rainforest Pad",
-      "ref": "In the style of Ariel Kalma — Osmose (1978)",
+      "ref": "A sweet, warm pad with two voices drifting gently against each other, from Ariel Kalma’s Osmose",
       "artist": "Ariel Kalma",
       "tags": ["pad", "new age", "french", "soft", "70s"],
       "level": 1,
@@ -5842,7 +5842,7 @@
     {
       "id": "kobol-returnal-gated-pad",
       "name": "Self-Gating Pad",
-      "ref": "In the style of Oneohtrix Point Never — Returnal (2010)",
+      "ref": "A held chord that pulses by itself like a slow heartbeat, as Oneohtrix Point Never’s Returnal does",
       "artist": "Oneohtrix Point Never",
       "tags": ["pad", "ambient", "hypnagogic", "pulsing", "10s"],
       "level": 3,
@@ -5921,7 +5921,7 @@
     {
       "id": "kobol-reassemblage-glass-pad",
       "name": "Glassy Fourth-World Pad",
-      "ref": "In the style of Visible Cloaks — Reassemblage (2017)",
+      "ref": "Clear, airy and precise, a triangle with a glassy pulse on top: the fourth-world pads of Visible Cloaks",
       "artist": "Visible Cloaks",
       "tags": ["pad", "ambient", "glassy", "gentle", "10s"],
       "level": 2,
@@ -5990,7 +5990,7 @@
     {
       "id": "kobol-bloody-shadows-minor-pad",
       "name": "Shadowed Minor Pad",
-      "ref": "In the style of Lena Platonos — Sabotage (1985)",
+      "ref": "A cool, dusky pad moving through minor chords, intimate as Lena Platonos’s Sabotage",
       "artist": "Lena Platonos",
       "tags": ["pad", "synth-pop", "dark", "soft", "80s"],
       "level": 1,
@@ -6060,7 +6060,7 @@
     {
       "id": "kobol-bruits-sync-sweep-pad",
       "name": "Slow Sync-Sweep Pad",
-      "ref": "In the style of Patrick Vian — Bruits et temps analogues (1976)",
+      "ref": "A held tone whose synced colour sweeps slowly through vowels, as on Patrick Vian’s Bruits et temps analogues",
       "artist": "Patrick Vian",
       "tags": ["pad", "electronic", "modular", "french", "70s"],
       "level": 3,
@@ -6136,7 +6136,7 @@
     {
       "id": "kobol-philharmony-pwm-pad",
       "name": "Lush PWM Pad",
-      "ref": "In the style of Haruomi Hosono — Philharmony (1982)",
+      "ref": "Two pulse waves swaying slowly in width for a chorus-like shimmer, the pads of Haruomi Hosono’s Philharmony",
       "artist": "Haruomi Hosono",
       "tags": ["pad", "synth-pop", "lush", "soft", "80s"],
       "level": 2,
@@ -6213,8 +6213,8 @@
     {
       "id": "kobol-i-love-america-disco-strings",
       "name": "Disco String Machine",
-      "ref": "In the style of Patrick Juvet — \"I Love America\" (Got a Feeling, 1978)",
-      "artist": "Patrick Juvet",
+      "ref": "A bright, sweeping string-machine line with a chorus wobble, soaring over a late-1970s disco beat",
+      "artist": "Disco",
       "tags": ["strings", "disco", "french", "70s"],
       "level": 1,
       "blurb": "A bright, sweeping string-machine line, soaring over a disco beat.",
@@ -6292,12 +6292,12 @@
     {
       "id": "kobol-pizzicati-plucked-strings",
       "name": "Pizzicato Strings",
-      "ref": "In the style of Léo Delibes — \"Pizzicati\" (Sylvia, 1876)",
-      "artist": "Léo Delibes",
+      "ref": "Light, plucked string notes with no sustain, dancing like a ballet pizzicato",
+      "artist": "Romantic ballet",
       "tags": ["strings", "classical", "ballet", "pizzicato"],
       "level": 1,
       "blurb": "Light, plucked string notes, playful and dancing.",
-      "how": "Pizzicato is a bowed instrument’s string plucked with a finger: a short, woody note with no sustain. A soft ramp through a filter that ADS 2 plucks, with ADS 1 falling to nothing. The riff is in the style of Delibes’s ballet, not his notes.",
+      "how": "Pizzicato is a bowed instrument’s string plucked with a finger: a short, woody note with no sustain. A soft ramp through a filter that ADS 2 plucks, with ADS 1 falling to nothing. The riff is a light, dancing ballet figure of its own, not a quotation.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -6369,7 +6369,7 @@
     {
       "id": "kobol-irish-fiddle-jig",
       "name": "Fiddle Jig",
-      "ref": "In the style of Irish fiddle music",
+      "ref": "A bright, quick fiddle with a fast, narrow vibrato, playing an Irish jig in groups of three",
       "artist": "Irish fiddle",
       "tags": ["strings", "celtic", "folk", "jig"],
       "level": 2,
@@ -6446,8 +6446,8 @@
     {
       "id": "kobol-spiegel-long-violin",
       "name": "Still Violin Line",
-      "ref": "In the style of Arvo Pärt — \"Spiegel im Spiegel\" (1978)",
-      "artist": "Arvo Pärt",
+      "ref": "Long, still, gently bowed notes stepping slowly up and down, calm as a mirror, for slow minimalism",
+      "artist": "Minimalism",
       "tags": ["strings", "minimalism", "calm", "soft", "70s"],
       "level": 1,
       "blurb": "A long, still, gently bowed line of slow notes, calm as a mirror.",
@@ -6516,7 +6516,7 @@
     {
       "id": "kobol-tanpura-repeating-drone",
       "name": "Self-Plucking Tanpura",
-      "ref": "In the style of the Hindustani tanpura",
+      "ref": "A buzzing root and lower fifth plucked over and over by itself, the tanpura under a Hindustani raga",
       "artist": "Tanpura",
       "tags": ["drone", "indian classical", "world", "calm"],
       "level": 3,
@@ -6591,7 +6591,7 @@
     {
       "id": "kobol-hyperbolas-beating-sines",
       "name": "Beating Sine Tones",
-      "ref": "In the style of Alvin Lucier — Still and Moving Lines of Silence in Families of Hyperbolas (1973–74)",
+      "ref": "Two pure tones a hair apart throbbing in the room, the beating sines of Alvin Lucier’s Hyperbolas",
       "artist": "Alvin Lucier",
       "tags": ["drone", "experimental", "minimal", "calm", "70s"],
       "level": 1,
@@ -6653,7 +6653,7 @@
     {
       "id": "kobol-heresy-dark-ambient",
       "name": "Subterranean Rumble",
-      "ref": "In the style of Lustmord — Heresy (1990)",
+      "ref": "Low tones and noise rising like pressure underground, the dark ambient of Lustmord’s Heresy",
       "artist": "Lustmord",
       "tags": ["drone", "dark ambient", "dark", "cinematic", "90s"],
       "level": 2,
@@ -6727,8 +6727,8 @@
     {
       "id": "kobol-schlingen-organ-drone",
       "name": "Shifting Organ Drone",
-      "ref": "In the style of Charlemagne Palestine — Schlingen-Blängen (1979)",
-      "artist": "Charlemagne Palestine",
+      "ref": "A loud, still organ drone of root and fifth whose overtones shift slowly as it holds",
+      "artist": "Drone music",
       "tags": ["drone", "minimalism", "organ", "calm", "70s"],
       "level": 3,
       "blurb": "A loud, still organ drone of a root and fifth whose overtones slowly shift as it is held.",
@@ -6799,8 +6799,8 @@
     {
       "id": "kobol-hari-meru-organ",
       "name": "Ethio-Jazz Organ",
-      "ref": "In the style of Hailu Mergia — Hailu Mergia & His Classical Instrument (1985)",
-      "artist": "Hailu Mergia",
+      "ref": "A bright, reedy organ winding through an Ethiopian pentatonic mode, for 1980s Ethio-jazz",
+      "artist": "Ethio-jazz",
       "tags": ["keys", "ethio-jazz", "organ", "80s"],
       "level": 2,
       "blurb": "A bright, reedy organ tone playing a winding melody in an Ethiopian pentatonic mode.",
@@ -6881,8 +6881,8 @@
     {
       "id": "kobol-mini-skirt-space-age-keys",
       "name": "Space-Age Lounge Keys",
-      "ref": "In the style of Esquivel — \"Mini Skirt\" (1962)",
-      "artist": "Esquivel",
+      "ref": "A bright, bouncy keyboard tone with a quick tremolo for a cheeky lounge line, from 1960s space-age pop",
+      "artist": "Space-age pop",
       "tags": ["keys", "space age pop", "lounge", "60s"],
       "level": 1,
       "blurb": "A bright, bouncy keyboard tone with a quick tremolo, playing a cheeky lounge line.",
@@ -6966,8 +6966,8 @@
     {
       "id": "kobol-toy-piano",
       "name": "Toy Piano",
-      "ref": "In the style of Pascal Comelade — Danses et chants de Xina (1980)",
-      "artist": "Pascal Comelade",
+      "ref": "Tinny, plinky and very short, slightly clangy against its overtones: a toy piano",
+      "artist": "Toy piano",
       "tags": ["keys", "toy", "french", "gentle"],
       "level": 1,
       "blurb": "A tinny, plinky toy piano, slightly clangy and very short.",
@@ -7040,8 +7040,8 @@
     {
       "id": "kobol-scissorhands-celesta",
       "name": "Snowfall Celesta",
-      "ref": "In the style of Danny Elfman — Edward Scissorhands (1990)",
-      "artist": "Danny Elfman",
+      "ref": "A soft, sparkling celesta playing a wistful film-score waltz, like snow falling",
+      "artist": "Film music",
       "tags": ["keys", "soundtrack", "celesta", "gentle", "90s"],
       "level": 2,
       "blurb": "A soft, sparkling celesta playing a wistful waltz, like snow falling.",
@@ -7111,8 +7111,8 @@
     {
       "id": "kobol-rainbow-seeker-electric-piano",
       "name": "Jazz-Funk Electric Piano",
-      "ref": "In the style of Joe Sample — Rainbow Seeker (1978)",
-      "artist": "Joe Sample",
+      "ref": "Warm, bell-tinged electric-piano keys that bark when played harder, for late-1970s jazz-funk",
+      "artist": "Jazz-funk",
       "tags": ["keys", "jazz-funk", "electric piano", "70s"],
       "level": 2,
       "blurb": "A warm, bell-tinged electric-piano tone with a soft bark when played harder.",
@@ -7185,8 +7185,8 @@
     {
       "id": "kobol-soul-sauce-tremolo-vibes",
       "name": "Tremolo Vibraphone",
-      "ref": "In the style of Cal Tjader — \"Soul Sauce\" (Soul Sauce, 1964)",
-      "artist": "Cal Tjader",
+      "ref": "A ringing vibraphone whose motor tremolo pulses the notes as they fade, for 1960s Latin jazz",
+      "artist": "Latin jazz",
       "tags": ["keys", "latin jazz", "vibes", "60s"],
       "level": 3,
       "blurb": "A ringing vibraphone with its motor tremolo pulsing the notes as they fade.",
@@ -7267,8 +7267,8 @@
     {
       "id": "kobol-walk-away-harpsichord",
       "name": "Baroque-Pop Harpsichord",
-      "ref": "In the style of The Left Banke — \"Walk Away Renée\" (1966)",
-      "artist": "The Left Banke",
+      "ref": "A bright, jangling harpsichord quick to die away, for a wistful 1960s baroque-pop song",
+      "artist": "Baroque pop",
       "tags": ["keys", "baroque pop", "harpsichord", "60s"],
       "level": 1,
       "blurb": "A bright, plucked harpsichord tone for a wistful 60s pop song.",
@@ -7344,7 +7344,7 @@
     {
       "id": "kobol-une-collection-fm-glass",
       "name": "Audio-LFO Glass Keys",
-      "ref": "In the style of Yoshio Ojima — Une Collection des Chaînons (1988)",
+      "ref": "Glassy bells shimmering with fast-LFO overtones, struck slowly, as on Yoshio Ojima’s Une Collection des Chaînons",
       "artist": "Yoshio Ojima",
       "tags": ["keys", "ambient", "kankyo ongaku", "gentle", "80s"],
       "level": 2,
@@ -7422,8 +7422,8 @@
     {
       "id": "kobol-soul-vibrations-harp",
       "name": "Jazz Harp",
-      "ref": "In the style of Dorothy Ashby — Afro-Harping (1968)",
-      "artist": "Dorothy Ashby",
+      "ref": "A warm, ringing harp plucking a soulful, flowing jazz line",
+      "artist": "Jazz harp",
       "tags": ["pluck", "jazz", "harp", "gentle", "60s"],
       "level": 1,
       "blurb": "A warm, ringing harp plucking a soulful, flowing line.",
@@ -7501,8 +7501,8 @@
     {
       "id": "kobol-kaira-kora-pluck",
       "name": "Kora Pluck",
-      "ref": "In the style of Toumani Diabaté — Kaira (1988)",
-      "artist": "Toumani Diabaté",
+      "ref": "Bright, rippling plucked notes interlocking like the two thumbs on a West African kora",
+      "artist": "Kora",
       "tags": ["pluck", "mande", "world", "gentle", "80s"],
       "level": 1,
       "blurb": "A bright, rippling kora line of interlocking plucked notes.",
@@ -7580,7 +7580,7 @@
     {
       "id": "kobol-guzheng-pluck",
       "name": "Guzheng Pluck",
-      "ref": "In the style of the Chinese guzheng",
+      "ref": "A bright, twanging zither shimmering on each pentatonic note, like a Chinese guzheng",
       "artist": "Guzheng",
       "tags": ["pluck", "chinese", "world", "gentle"],
       "level": 2,
@@ -7656,7 +7656,7 @@
     {
       "id": "kobol-charango-strum",
       "name": "Charango Strum",
-      "ref": "In the style of the Andean charango",
+      "ref": "A bright, jangling little lute on paired strings, strummed in a quick Andean dance",
       "artist": "Charango",
       "tags": ["pluck", "andean", "world", "bright"],
       "level": 1,
@@ -7733,7 +7733,7 @@
     {
       "id": "kobol-balafon-wood",
       "name": "Balafon",
-      "ref": "In the style of the Mandé balafon",
+      "ref": "Woody, buzzing xylophone notes in a fast, interlocking pattern, as the Mandé balafon plays",
       "artist": "Balafon",
       "tags": ["pluck", "mande", "world", "mallets"],
       "level": 2,
@@ -7812,7 +7812,7 @@
     {
       "id": "kobol-tilted-wave-pluck",
       "name": "Morphing Pop Pluck",
-      "ref": "In the style of Christine and the Queens — \"Tilted\" (Chaleur humaine, 2014)",
+      "ref": "A clean, punchy pluck snapping from bright to soft, no filter moving, as in Christine and the Queens’ \"Tilted\"",
       "artist": "Christine and the Queens",
       "tags": ["pluck", "french pop", "synth-pop", "10s"],
       "level": 3,
@@ -7895,7 +7895,7 @@
     {
       "id": "kobol-a-cause-des-garcons-sync-pluck",
       "name": "Electro-Pop Sync Pluck",
-      "ref": "In the style of Yelle — \"À cause des garçons\" (Pop Up, 2007)",
+      "ref": "A bouncy, nasal riff with a synced bite, the playful electro-pop of Yelle’s \"À cause des garçons\"",
       "artist": "Yelle",
       "tags": ["pluck", "electro-pop", "french pop", "00s"],
       "level": 2,
@@ -7971,7 +7971,7 @@
     {
       "id": "kobol-firestone-tropical-pluck",
       "name": "Tropical House Pluck",
-      "ref": "In the style of Kygo — \"Firestone\" (2014)",
+      "ref": "A soft, marimba-like pluck playing a sunny, laid-back line, the tropical house of Kygo’s \"Firestone\"",
       "artist": "Kygo",
       "tags": ["pluck", "tropical house", "gentle", "10s"],
       "level": 1,
@@ -8044,7 +8044,7 @@
     {
       "id": "kobol-gosh-long-synth-line",
       "name": "Rising Rave-Revival Line",
-      "ref": "In the style of Jamie xx — \"Gosh\" (In Colour, 2015)",
+      "ref": "Jamie xx’s \"Gosh\" builds on a line like this: soft, bright plucks brightening over many bars",
       "artist": "Jamie xx",
       "tags": ["pluck", "uk garage", "electronic", "10s"],
       "level": 2,
@@ -8136,7 +8136,7 @@
     {
       "id": "kobol-handpan-ping",
       "name": "Handpan Ping",
-      "ref": "In the style of handpan music",
+      "ref": "A soft, ringing steel tone with a gentle overtone, struck like a handpan",
       "artist": "Handpan",
       "tags": ["pluck", "handpan", "world", "calm"],
       "level": 2,
@@ -8210,7 +8210,7 @@
     {
       "id": "kobol-menergy-gated-repeats",
       "name": "Hi-NRG Machine-Gun Bass",
-      "ref": "In the style of Patrick Cowley — \"Menergy\" (1981)",
+      "ref": "A relentless bass firing sixteenths by itself, the Hi-NRG motor of Patrick Cowley’s \"Menergy\"",
       "artist": "Patrick Cowley",
       "tags": ["seq", "hi-nrg", "disco", "80s"],
       "level": 3,
@@ -8292,7 +8292,7 @@
     {
       "id": "kobol-dreamlab-wave-swept-seq",
       "name": "Wave-Swept Cosmic Sequence",
-      "ref": "In the style of Mythos — Dreamlab (1975)",
+      "ref": "A rippling sixteenth sequence whose tone morphs slowly between soft and buzzing, as on Mythos’s Dreamlab",
       "artist": "Mythos",
       "tags": ["seq", "kosmische", "berlin school", "70s"],
       "level": 3,
@@ -8382,7 +8382,7 @@
     {
       "id": "kobol-al-naafiysh-electro-seq",
       "name": "Electro Funk Sequence",
-      "ref": "In the style of Hashim — \"Al-Naafiysh (The Soul)\" (1983)",
+      "ref": "Punchy, syncopated sixteenths with a rubbery snap, the electro funk of Hashim’s \"Al-Naafiysh (The Soul)\"",
       "artist": "Hashim",
       "tags": ["seq", "electro", "funk", "80s"],
       "level": 1,
@@ -8456,7 +8456,7 @@
     {
       "id": "kobol-just-because-minimal-wave",
       "name": "French Minimal-Wave Sequence",
-      "ref": "In the style of Martin Dupont — \"Just Because\" (Hot Paradox, 1987)",
+      "ref": "A cool, melancholy eighth-note figure on a thin pulse, Martin Dupont’s French bedroom minimal wave",
       "artist": "Martin Dupont",
       "tags": ["seq", "minimal wave", "french", "80s"],
       "level": 1,
@@ -8532,7 +8532,7 @@
     {
       "id": "kobol-9pm-trance-arp",
       "name": "Euro-Trance Pluck Arp",
-      "ref": "In the style of ATB — \"9 PM (Till I Come)\" (1998)",
+      "ref": "Two detuned saws plucked into a bright trance arpeggio up front, as in ATB’s \"9 PM (Till I Come)\"",
       "artist": "ATB",
       "tags": ["seq", "trance", "euro", "90s"],
       "level": 1,
@@ -8614,12 +8614,12 @@
     {
       "id": "kobol-prelude-rpg-arp",
       "name": "RPG Prelude Arpeggio",
-      "ref": "In the style of Nobuo Uematsu’s role-playing-game scores",
+      "ref": "Clear, harp-like tones rising and falling through a chord, like the openings of Nobuo Uematsu’s game scores",
       "artist": "Nobuo Uematsu",
       "tags": ["seq", "games", "gentle", "retro"],
       "level": 1,
       "blurb": "A rising and falling arpeggio of clear, harp-like tones, the opening of an old role-playing game.",
-      "how": "A triangle with a quiet pulse an octave up, plucked short, runs up and down chord tones. Early console music used simple voices like this to sound grand. The figure is in the style of these scores, not their notes.",
+      "how": "A triangle with a quiet pulse an octave up, plucked short, runs up and down chord tones. Early console music used simple voices like this to sound grand. The figure follows the shape of those scores, not their notes.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -8692,7 +8692,7 @@
     {
       "id": "kobol-the-night-italo-arp",
       "name": "Italo Night Arpeggio",
-      "ref": "In the style of Valerie Dore — \"The Night\" (1984)",
+      "ref": "A shimmering, melancholy minor arpeggio over an Italo beat, glossy as Valerie Dore’s \"The Night\"",
       "artist": "Valerie Dore",
       "tags": ["seq", "italo disco", "synth-pop", "80s"],
       "level": 1,
@@ -8781,8 +8781,8 @@
     {
       "id": "kobol-looped-ambient-arp",
       "name": "Blurred Piano-Like Arp",
-      "ref": "In the style of Kiasmos — \"Looped\" (Kiasmos, 2014)",
-      "artist": "Kiasmos",
+      "ref": "Soft, round tones ringing into each other in a calm, drifting arpeggio, for melancholy ambient techno",
+      "artist": "Ambient techno",
       "tags": ["seq", "ambient techno", "gentle", "soft", "10s"],
       "level": 2,
       "blurb": "A soft, flowing arpeggio of round tones that ring into each other, calm and melancholic.",
@@ -8862,7 +8862,7 @@
     {
       "id": "kobol-gypsy-woman-organ-stab",
       "name": "House Organ Stab",
-      "ref": "In the style of Crystal Waters — \"Gypsy Woman (She’s Homeless)\" (1991)",
+      "ref": "A punchy, percussive house organ bouncing in syncopation, as in Crystal Waters’ \"Gypsy Woman (She’s Homeless)\"",
       "artist": "Crystal Waters",
       "tags": ["keys", "house", "organ", "90s"],
       "level": 1,
@@ -8935,7 +8935,7 @@
     {
       "id": "kobol-rastakraut-motorik-seq",
       "name": "Lopsided Kraut Sequence",
-      "ref": "In the style of Moebius & Plank — \"Rastakraut Pasta\" (1980)",
+      "ref": "A loose, bouncing sequence that skips a beat here and there, like Moebius & Plank’s \"Rastakraut Pasta\"",
       "artist": "Moebius & Plank",
       "tags": ["seq", "krautrock", "experimental", "80s"],
       "level": 1,
@@ -9006,7 +9006,7 @@
     {
       "id": "kobol-sincere-garage-organ-bass",
       "name": "Garage Organ Bass",
-      "ref": "In the style of MJ Cole — \"Sincere\" (1998)",
+      "ref": "A short, organ-like bass skipping through a two-step groove, as in MJ Cole’s \"Sincere\"",
       "artist": "MJ Cole",
       "tags": ["bass", "uk garage", "2-step", "90s"],
       "level": 1,
@@ -9078,7 +9078,7 @@
     {
       "id": "kobol-word-up-funk-bass",
       "name": "Snapping Funk Synth Bass",
-      "ref": "In the style of Cameo — \"Word Up!\" (Word Up!, 1986)",
+      "ref": "A punchy, slap-like synth bass with a hard snap on every note, as on Cameo’s \"Word Up!\"",
       "artist": "Cameo",
       "tags": ["bass", "funk", "synth funk", "80s"],
       "level": 1,
@@ -9151,7 +9151,7 @@
     {
       "id": "kobol-dem-bow-dancehall-bass",
       "name": "Dancehall Sub Bass",
-      "ref": "In the style of Shabba Ranks — \"Dem Bow\" (Just Reality, 1990)",
+      "ref": "Deep, round sub bouncing on the three-three-two of Shabba Ranks’s \"Dem Bow\"",
       "artist": "Shabba Ranks",
       "tags": ["bass", "dancehall", "reggae", "90s"],
       "level": 1,
@@ -9219,8 +9219,8 @@
     {
       "id": "kobol-sonido-amazonico-cumbia-lead",
       "name": "Psychedelic Cumbia Lead",
-      "ref": "In the style of Los Mirlos — \"Sonido Amazónico\" (1972)",
-      "artist": "Los Mirlos",
+      "ref": "A wobbly, twangy lead swaying through a minor melody, like a guitar through a cheap phaser in Peruvian chicha",
+      "artist": "Chicha",
       "tags": ["lead", "cumbia", "psychedelic", "70s"],
       "level": 2,
       "blurb": "A wobbly, twangy lead playing a swaying minor melody, like a guitar through a cheap phaser.",
@@ -9304,7 +9304,7 @@
     {
       "id": "kobol-didi-rai-lead",
       "name": "Raï Synth Lead",
-      "ref": "In the style of Khaled — \"Didi\" (Khaled, 1992)",
+      "ref": "A nasal, reedy lead with a quick, ornamenting vibrato, the synth raï of Khaled’s \"Didi\"",
       "artist": "Khaled",
       "tags": ["lead", "raï", "algerian", "90s"],
       "level": 2,
@@ -9385,7 +9385,7 @@
     {
       "id": "kobol-my-prerogative-new-jack-bass",
       "name": "New Jack Swing Bass",
-      "ref": "In the style of Bobby Brown — \"My Prerogative\" (Don’t Be Cruel, 1988)",
+      "ref": "Tight, punchy and swung, the hard-hitting new jack swing bass of Bobby Brown’s \"My Prerogative\"",
       "artist": "Bobby Brown",
       "tags": ["bass", "new jack swing", "r&b", "80s"],
       "level": 1,
@@ -9458,7 +9458,7 @@
     {
       "id": "kobol-two-tone-siren",
       "name": "Two-Tone Siren",
-      "ref": "In the style of European emergency sirens",
+      "ref": "A held note jumping up and down a fourth, the nee-naw of a European emergency siren",
       "artist": "European emergency sirens",
       "tags": ["fx", "siren", "urban", "retro"],
       "level": 2,
@@ -9524,7 +9524,7 @@
     {
       "id": "kobol-pinball-bonus-count",
       "name": "Pinball Bonus Count",
-      "ref": "In the style of 1980s pinball machines",
+      "ref": "Rapid, rising runs of bright blips as a 1980s pinball machine counts up a bonus",
       "artist": "Pinball machines",
       "tags": ["fx", "games", "retro", "80s"],
       "level": 1,
@@ -9616,7 +9616,7 @@
     {
       "id": "kobol-telephone-bell-ring",
       "name": "Old Telephone Ring",
-      "ref": "In the style of electromechanical telephone bells",
+      "ref": "A bright bell hammered rapidly, twice, then silence: the double ring of an old telephone",
       "artist": "Telephone bells",
       "tags": ["fx", "retro", "bell", "household"],
       "level": 3,
@@ -9693,7 +9693,7 @@
     {
       "id": "kobol-scifi-door-whoosh",
       "name": "Starship Door Whoosh",
-      "ref": "In the style of 1960s science-fiction television",
+      "ref": "A quick whoosh of noise sweeping up and away, like a starship’s sliding door on 1960s sci-fi television",
       "artist": "1960s science-fiction television",
       "tags": ["fx", "sci-fi", "whoosh", "retro"],
       "level": 2,
@@ -9758,7 +9758,7 @@
     {
       "id": "kobol-change-ringing-bells",
       "name": "Church Change-Ringing Bells",
-      "ref": "In the style of English change ringing",
+      "ref": "Big, clanging church bells with humming overtones, pealing down the scale in English change ringing",
       "artist": "Change ringing",
       "tags": ["keys", "bell", "church", "english"],
       "level": 2,
@@ -9838,7 +9838,7 @@
     {
       "id": "kobol-dancehall-boom-kick",
       "name": "Booming Dancehall Kick",
-      "ref": "In the style of dancehall",
+      "ref": "A deep, booming kick whose pitch drops fast, under a dancehall riddim",
       "artist": "Dancehall",
       "tags": ["perc", "dancehall", "drums", "reggae"],
       "level": 3,
@@ -9913,7 +9913,7 @@
     {
       "id": "kobol-son-clave",
       "name": "Son Clave",
-      "ref": "In the style of Cuban son",
+      "ref": "A high, short, woody click tapping out the three-two clave of Cuban son",
       "artist": "Son cubano",
       "tags": ["perc", "cuban", "latin", "clave"],
       "level": 1,
@@ -9978,7 +9978,7 @@
     {
       "id": "kobol-tabla-ping",
       "name": "Resonant Tabla Strike",
-      "ref": "In the style of the Hindustani tabla",
+      "ref": "Ringing, pitched strokes high and dull ones low, like the two drums of a Hindustani tabla",
       "artist": "Tabla",
       "tags": ["perc", "indian classical", "world", "drums"],
       "level": 2,
@@ -10050,8 +10050,8 @@
     {
       "id": "kobol-tsop-noise-hats",
       "name": "Philly Noise Hi-Hats",
-      "ref": "In the style of MFSB — \"TSOP (The Sound of Philadelphia)\" (1974)",
-      "artist": "MFSB",
+      "ref": "Crisp, ticking hi-hats with an open hat on the off-beat, the shimmer of 1970s Philadelphia disco",
+      "artist": "1970s disco",
       "tags": ["perc", "disco", "philly soul", "70s"],
       "level": 2,
       "blurb": "Crisp, ticking hi-hats with an open hat on the off-beat, the shimmer of early disco.",
@@ -10290,7 +10290,7 @@
     {
       "id": "kobol-superman-afro-house-lead",
       "name": "Deep Afro-House Lead",
-      "ref": "In the style of Black Coffee — \"Superman\" (Home Brewed, 2009)",
+      "ref": "A warm, soulful lead that sings rather than cuts over a deep groove, as in Black Coffee’s \"Superman\"",
       "artist": "Black Coffee",
       "tags": ["lead", "afro house", "deep house", "00s"],
       "level": 1,
@@ -10360,7 +10360,7 @@
     {
       "id": "kobol-amapiano-log-drum",
       "name": "Amapiano Log Drum",
-      "ref": "In the style of Kabza De Small — amapiano",
+      "ref": "A round, knocking bass that bends down into each note, the amapiano log drum Kabza De Small rides",
       "artist": "Kabza De Small",
       "tags": ["bass", "amapiano", "south african", "20s"],
       "level": 3,
@@ -10437,8 +10437,8 @@
     {
       "id": "kobol-ride-on-time-city-pop-brass",
       "name": "City-Pop Synth Brass",
-      "ref": "In the style of Tatsuro Yamashita — \"Ride on Time\" (1980)",
-      "artist": "Tatsuro Yamashita",
+      "ref": "Bright, punchy brass stabs with a slight swell, sunny and slick, for 1980s Japanese city pop",
+      "artist": "Japanese city pop",
       "tags": ["brass", "city pop", "japanese", "80s"],
       "level": 1,
       "blurb": "Bright, punchy synth-brass stabs with a slight swell, sunny and slick.",
@@ -10510,8 +10510,8 @@
     {
       "id": "kobol-plastic-love-city-pop-bass",
       "name": "City-Pop Synth Bass",
-      "ref": "In the style of Mariya Takeuchi — \"Plastic Love\" (Variety, 1984)",
-      "artist": "Mariya Takeuchi",
+      "ref": "A smooth, round, funky bass with octave pops, the bounce under 1980s Japanese city pop",
+      "artist": "Japanese city pop",
       "tags": ["bass", "city pop", "japanese", "80s"],
       "level": 1,
       "blurb": "A smooth, round, funky bass with octave pops, the bounce under 80s Japanese pop.",
@@ -10583,7 +10583,7 @@
     {
       "id": "kobol-sunset-synthwave-pad",
       "name": "Sunset Synthwave Pad",
-      "ref": "In the style of The Midnight — \"Sunset\" (Days of Thunder, 2014)",
+      "ref": "A warm, glowing pad of spread saws, wide and nostalgic, close to The Midnight’s \"Sunset\"",
       "artist": "The Midnight",
       "tags": ["pad", "synthwave", "warm", "10s"],
       "level": 1,
@@ -10653,7 +10653,7 @@
     {
       "id": "kobol-wahre-arbeit-ebm-bass",
       "name": "Metal-Bashing EBM Bass",
-      "ref": "In the style of Die Krupps — \"Wahre Arbeit, wahrer Lohn\" (1981)",
+      "ref": "A hammering, mechanical sixteenth bass on almost one note, Die Krupps’ \"Wahre Arbeit, wahrer Lohn\"",
       "artist": "Die Krupps",
       "tags": ["bass", "ebm", "industrial", "80s"],
       "level": 1,
@@ -10734,7 +10734,7 @@
     {
       "id": "kobol-king-night-witch-house-pad",
       "name": "Witch-House Murk Pad",
-      "ref": "In the style of Salem — \"King Night\" (King Night, 2010)",
+      "ref": "A huge, murky, sinking pad like a hymn played underwater, the witch house of Salem’s \"King Night\"",
       "artist": "Salem",
       "tags": ["pad", "witch house", "dark", "10s"],
       "level": 2,
@@ -10807,7 +10807,7 @@
     {
       "id": "kobol-myth-dream-pop-organ",
       "name": "Dream-Pop Organ",
-      "ref": "In the style of Beach House — \"Myth\" (Bloom, 2012)",
+      "ref": "A hazy, wobbly organ holding slow, wistful chords, the cheap-organ dream pop of Beach House",
       "artist": "Beach House",
       "tags": ["keys", "dream pop", "organ", "soft", "10s"],
       "level": 1,
@@ -10884,7 +10884,7 @@
     {
       "id": "kobol-money-machine-hyperpop-lead",
       "name": "Hyperpop Detuned Lead",
-      "ref": "In the style of 100 gecs — \"money machine\" (1000 gecs, 2019)",
+      "ref": "Loud, bright and wildly detuned on purpose, the over-the-top lead of 100 gecs’ \"money machine\"",
       "artist": "100 gecs",
       "tags": ["lead", "hyperpop", "distorted", "10s"],
       "level": 1,
@@ -10955,8 +10955,8 @@
     {
       "id": "kobol-the-sea-trip-hop-whistle",
       "name": "Trip-Hop Whistle Lead",
-      "ref": "In the style of Morcheeba — \"The Sea\" (Big Calm, 1998)",
-      "artist": "Morcheeba",
+      "ref": "A soft, eerie whistle sliding with a slow, theremin-like waver over a slow trip-hop beat",
+      "artist": "Trip hop",
       "tags": ["lead", "trip hop", "downtempo", "soft", "90s"],
       "level": 2,
       "blurb": "A soft, eerie, sliding whistle lead with a slow vibrato, floating over a slow beat.",
@@ -11024,8 +11024,8 @@
     {
       "id": "kobol-nuclear-burn-fusion-lead",
       "name": "Fusion Sync Lead",
-      "ref": "In the style of Brand X — \"Nuclear Burn\" (Unorthodox Behaviour, 1976)",
-      "artist": "Brand X",
+      "ref": "A fast, biting sync lead tearing through a busy line of sixteenths, for 1970s jazz fusion",
+      "artist": "1970s jazz fusion",
       "tags": ["lead", "jazz fusion", "prog", "70s"],
       "level": 2,
       "blurb": "A fast, biting, synced lead tearing through a busy fusion line.",
@@ -11115,7 +11115,7 @@
     {
       "id": "kobol-lunar-sea-prog-lead",
       "name": "Lunar Prog Lead",
-      "ref": "In the style of Camel — \"Lunar Sea\" (Moonmadness, 1976)",
+      "ref": "A soaring, warm lead with steady vibrato, singing over the band like Camel’s \"Lunar Sea\"",
       "artist": "Camel",
       "tags": ["lead", "prog", "rock", "70s"],
       "level": 1,
@@ -11190,7 +11190,7 @@
     {
       "id": "kobol-estrelar-boogie-keys",
       "name": "Brazilian Boogie Keys",
-      "ref": "In the style of Marcos Valle — \"Estrelar\" (Marcos Valle, 1983)",
+      "ref": "Bright, bouncy keys with a fifth in each note, stabbing a sunny line like Marcos Valle’s \"Estrelar\"",
       "artist": "Marcos Valle",
       "tags": ["keys", "boogie", "brazilian", "80s"],
       "level": 1,
@@ -11263,7 +11263,7 @@
     {
       "id": "kobol-i-feel-space-cosmic-arp",
       "name": "Cosmic Disco Arpeggio",
-      "ref": "In the style of Lindstrøm — \"I Feel Space\" (2005)",
+      "ref": "A long, rippling, happy arpeggio that keeps rising, the cosmic disco engine of Lindstrøm’s \"I Feel Space\"",
       "artist": "Lindstrøm",
       "tags": ["seq", "cosmic disco", "nu-disco", "00s"],
       "level": 1,
@@ -11344,7 +11344,7 @@
     {
       "id": "kobol-nyckelharpa-folk-fiddle",
       "name": "Nyckelharpa Drone Fiddle",
-      "ref": "In the style of the Swedish nyckelharpa",
+      "ref": "A bowed, buzzing fiddle over its own drone string, playing a lilting dance on a Swedish nyckelharpa",
       "artist": "Nyckelharpa",
       "tags": ["strings", "swedish", "folk", "world"],
       "level": 2,
@@ -11425,8 +11425,8 @@
     {
       "id": "kobol-ye-afrobeats-pluck",
       "name": "Afrobeats Pluck",
-      "ref": "In the style of Burna Boy — \"Ye\" (Outside, 2018)",
-      "artist": "Burna Boy",
+      "ref": "A soft, bright pluck bouncing off the beat, swaying rather than driving, for 2010s afrobeats",
+      "artist": "Afrobeats",
       "tags": ["pluck", "afrobeats", "nigerian", "10s"],
       "level": 1,
       "blurb": "A soft, bright pluck bouncing through a lilting, syncopated afrobeats figure.",
@@ -11497,7 +11497,7 @@
     {
       "id": "kobol-october-resonance-envelope",
       "name": "Ringing-Resonance Pluck",
-      "ref": "In the style of Chris & Cosey — \"October (Love Song)\" (Songs of Love & Lust, 1984)",
+      "ref": "A cool, glassy pluck that rings as it is struck, then goes plain, as on Chris & Cosey’s \"October (Love Song)\"",
       "artist": "Chris & Cosey",
       "tags": ["pluck", "minimal synth", "cold wave", "80s"],
       "level": 3,
