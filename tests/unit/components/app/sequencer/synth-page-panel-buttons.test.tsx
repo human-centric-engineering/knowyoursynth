@@ -47,7 +47,7 @@ vi.mock('@/components/app/synth/engine', () => ({
 }));
 
 const IDENTITY = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 };
-const IDS = ['tb-303', 'td-3', 'donner-b1'] as const;
+const IDS = ['tb-303', 'td-3', 'donner-b1', 'subharmonicon'] as const;
 
 beforeAll(async () => {
   for (const id of IDS) await loadSynthDef(id);
@@ -59,7 +59,7 @@ beforeAll(async () => {
 });
 
 /** A synth's page holding one sound, whose riff is C2 on beat 0 and G2 on beat 1: steps 1 and 5 at 1/16. */
-function page(id: (typeof IDS)[number]) {
+function page(id: (typeof IDS)[number], steps: CatalogueSound['steps'] = []) {
   const def = getSynthDef(id);
   if (!def) throw new Error(`${id} is not registered`);
   const synth: CatalogueSynth = {
@@ -90,7 +90,7 @@ function page(id: (typeof IDS)[number]) {
         [1, 43, 0.25],
       ],
     },
-    steps: [],
+    steps,
     context: {},
     tweaks: [],
     version: def.version,
@@ -221,6 +221,106 @@ describe('tb-303: the riff and the TEMPO knob (t-234)', () => {
     fireEvent.keyDown(tempo(), { key: 'ArrowDown' });
     expect(lastSent('tempo')).toEqual({ type: 'tempo', bpm: 120 });
     expect(runs()).toHaveLength(1);
+  });
+});
+
+describe('subharmonicon: its own sequencer on the app’s clock (f-own-sequencer)', () => {
+  const params = () =>
+    (lastSent('params') as { p?: { follow?: boolean; subharm?: { play?: boolean } } } | undefined)
+      ?.p;
+
+  it('lighting PLAY while nothing plays presses Play: the riff runs, and PLAY is lit on the panel', async () => {
+    page('subharmonicon');
+    expect(params()?.follow).toBe(true);
+    expect(lastSent('pattern')).toBeUndefined();
+    await pressPanel('PLAY');
+    expect(params()?.subharm?.play).toBe(true);
+    // at the riff's 120 BPM, which the sound set TEMPO to
+    expect((lastSent('pattern') as { bpm?: number } | undefined)?.bpm).toBe(120);
+    expect(screen.getByRole('button', { name: 'Stop' })).toBeTruthy();
+  });
+
+  it('PLAY changes only the panel while Play runs: it neither restarts nor stops the run', async () => {
+    page('subharmonicon');
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Play' }));
+    });
+    expect(lastSent('pattern')).toBeDefined();
+    engine.send.mockClear();
+    await pressPanel('PLAY');
+    expect(params()?.subharm?.play).toBe(true);
+    await pressPanel('PLAY');
+    expect(params()?.subharm?.play).toBe(false);
+    expect(lastSent('pattern')).toBeUndefined();
+    expect(lastSent('stopPattern')).toBeUndefined();
+  });
+
+  it('a lesson step that lights PLAY while nothing plays presses Play, as lighting it on the panel does', async () => {
+    page('subharmonicon', [
+      {
+        title: 'A rhythm',
+        module: 'mod',
+        why: 'Rhythm 1 on Sequencer 1.',
+        set: { 'rhythm1.seq1': true },
+      },
+      { title: 'PLAY', module: 'mod', why: 'Run it.', set: { 'transport.play': true } },
+    ]);
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button', { name: 'Learn sound design' })[0]);
+    });
+    const go = async (name: string) => {
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name }));
+      });
+    };
+    await go('Lesson step 1: A rhythm');
+    expect(lastSent('pattern')).toBeUndefined();
+    await go('Lesson step 2: PLAY');
+    expect(params()?.subharm?.play).toBe(true);
+    expect(lastSent('pattern')).toBeDefined();
+  });
+
+  it('a step reached past the one that lit PLAY presses Play too, and one with PLAY already lit does not', async () => {
+    page('subharmonicon', [
+      {
+        title: 'A rhythm',
+        module: 'mod',
+        why: 'Rhythm 1 on Sequencer 1.',
+        set: { 'rhythm1.seq1': true },
+      },
+      { title: 'PLAY', module: 'mod', why: 'Run it.', set: { 'transport.play': true } },
+      { title: 'Faster', module: 'mod', why: 'Rhythm 2 too.', set: { 'rhythm2.seq1': true } },
+    ]);
+    const go = async (name: string) => {
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name }));
+      });
+    };
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole('button', { name: 'Learn sound design' })[0]);
+    });
+    await go('Lesson step 1: A rhythm');
+    expect(params()?.subharm?.play).toBe(false);
+    // jumping over the step that lights PLAY
+    await go('Lesson step 3: Faster');
+    expect(params()?.subharm?.play).toBe(true);
+    expect(lastSent('pattern')).toBeDefined();
+    // stopped, with PLAY still lit: a step that leaves it lit starts nothing
+    await go('Stop');
+    engine.send.mockClear();
+    await go('Lesson step 2: PLAY');
+    expect(params()?.subharm?.play).toBe(true);
+    expect(lastSent('pattern')).toBeUndefined();
+  });
+
+  it('TEMPO sets the bar’s tempo at four of its clocks a beat', async () => {
+    page('subharmonicon');
+    const tempo = screen.getAllByRole('slider', { name: /^TEMPO/ })[0];
+    fireEvent.keyDown(tempo, { key: 'ArrowUp' });
+    const bpm = (lastSent('tempo') as { bpm?: number } | undefined)?.bpm ?? 0;
+    // the riff's 120 BPM put TEMPO at 480 clocks a minute; a step up is faster, and still a quarter of its clocks
+    expect(bpm).toBeGreaterThan(120.5);
+    expect(bpm).toBeLessThan(140);
   });
 });
 

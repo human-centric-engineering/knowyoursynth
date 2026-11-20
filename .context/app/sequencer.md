@@ -590,6 +590,9 @@ the tutor's Undo is the module's `undo`. From `lg` up applying it opens the modu
 
 ## The sequencer synths' own buttons
 
+A synth whose sequencer runs in its own engine (the Subharmonicon) is not mapped onto this one: the app's transport
+clocks it instead, and its riff is a key line over the sequence ([`sequencer-synths.md`](./sequencer-synths.md)).
+
 On the TB-303, TD-3, Donner B1 and Take 5 the panel's sequencer buttons drive this sequencer (t-85, t-116). A
 definition maps its buttons with `SynthDef.seqButtons` (control id → what it does, `SeqButton` in `contract.ts`). The
 page routes a press (`seqButtonFor`, `components/app/sequencer/panel-buttons.ts`) and draws the panel with `seqLamps`

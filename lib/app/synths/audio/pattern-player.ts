@@ -35,6 +35,11 @@
  * downbeat after the count. `backing` (on `pattern`, or `patternBacking` while it plays) says whether the metronome
  * clicks and which drum beat plays; neither touches the synth or the events.
  *
+ * A synth whose own sequencer follows the app's clock (its settings carry `follow`: the Subharmonicon, `f-own-sequencer`)
+ * is that clock's to start and stop: on the loop's first sample (after any count-in) the player sends it `clock` start,
+ * then a pulse every 1/{@link CLOCK_PPQ} beat counted from the run's start, each on its own sample before the notes
+ * there, and a stop when the pattern stops. So its sequence starts on the downbeat with the drums and keeps their time.
+ *
  * `muted` (on `pattern`, or `patternMute` while it plays) keeps the timing and the events but sends the synth no notes:
  * the pattern is heard on a MIDI output alone, and the clock MIDI is locked to still runs here. Muted, it also reports a
  * `patternTick` every {@link TICK_SECONDS}: the tab is silent then, so the browser slows the page's timers, but not
@@ -43,6 +48,7 @@
 import type { ControlValues, EngineParams, PhraseNote } from '@/lib/app/synths/contract';
 import type { Synth, SynthEventHandler, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import { byBeat, noteEvents, type NoteEvent } from '@/lib/app/synths/audio/note-events';
+import { CLOCK_PPQ, SUBHARM_PPQ } from '@/lib/app/synths/audio/subharm-core';
 import {
   NO_BACKING,
   countInBeats,
@@ -244,6 +250,13 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
   const down = { type: 'noteOn' as const, n: 0, v: 0 };
   const up = { type: 'noteOff' as const, n: 0 };
   let mode = '';
+  /**
+   * The app's clock to a synth that follows it: whether its start has been sent this run, and the next pulse, counted
+   * from the run's first beat.
+   */
+  let clocked = false,
+    pulse = 0;
+  const follows = () => !!(applied ?? rest)?.follow;
   /** The page's number for the run playing, echoed in its events. */
   let run: number | undefined;
   /** Notes go to MIDI out alone: the synth is sent none. */
@@ -318,6 +331,10 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
 
   function stop(silent: boolean) {
     if (!cur) return;
+    if (clocked) {
+      clocked = false;
+      synth.handle({ type: 'clock', at: 'stop' });
+    }
     cur = null;
     next = undefined;
     carry = null;
@@ -463,10 +480,36 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     announce = true;
   }
 
+  /** Pulses to one of the synth's clocks: a sixteenth. */
+  const PULSES_PER_CLOCK = CLOCK_PPQ / SUBHARM_PPQ;
+  /** The sample of this loop the next clock pulse falls on. */
+  const pulseAt = () => Math.round((pulse / CLOCK_PPQ - beatsDone) * spb());
+
   /** Everything due at `pos`, and the boundary when it is reached. */
   function fire() {
     if (cur && pos >= cur.len) turn();
     if (!cur) return;
+    // The clock first, so a note on the same sample finds the sequencer running. Not on a muted run, which the synth
+    // does not play.
+    if (!muted && follows()) {
+      if (!clocked) {
+        clocked = true;
+        // started part-way (a Continue, an unmute, the voice back on the synth), the pulses count from the run's first
+        // beat as the backing's bar does, and the first is the next one on a sixteenth: the synth counts its clocks from
+        // its start, so they fall on the drums' grid
+        pulse = Math.ceil((beatsDone + pos / spb()) * SUBHARM_PPQ - 1e-6) * PULSES_PER_CLOCK;
+        synth.handle({ type: 'clock', at: 'start' });
+      }
+      while (pulseAt() <= pos) {
+        pulse++;
+        synth.handle({ type: 'clock', at: 'pulse' });
+      }
+    } else if (clocked) {
+      // the settings no longer follow the clock (the voice has left the synth): its run ends, and one starts again if
+      // they come back
+      clocked = false;
+      synth.handle({ type: 'clock', at: 'stop' });
+    }
     if (announce !== null && onEvent) {
       const e: LoopEvent = {
         type: 'loop',
@@ -523,8 +566,15 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         if (playableBacking(m.backing)) backing.set(m.backing);
         return;
       case 'patternMute':
-        // Muting lets go of what the synth holds; unmuted, it plays from the next note on.
-        if (m.muted && !muted) release();
+        // Muting lets go of what the synth holds, and stops a sequencer of its own the clock runs; unmuted, it plays
+        // from the next note on, and the clock starts that sequencer again, from step 1, on the run's next sixteenth.
+        if (m.muted && !muted) {
+          release();
+          if (clocked) {
+            clocked = false;
+            synth.handle({ type: 'clock', at: 'stop' });
+          }
+        }
         muted = m.muted === true;
         // A count-in no one hears holds nothing back: the run starts now, MIDI out with it.
         if (muted) pre = 0;
@@ -599,6 +649,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       if (idx < cur.evs.length && cur.evs[idx].t < due) due = cur.evs[idx].t;
       if (pi < cur.pev.length && cur.pev[pi].t < due) due = cur.pev[pi].t;
       if (carrying()) due = Math.min(due, carryTime(spb()));
+      if (clocked) due = Math.min(due, pulseAt());
       const k = Math.min(Math.max(1, due - pos), n - i);
       if (i === 0 && k === n) synth.process(out, n, outR);
       else synth.process(out.subarray(i, i + k), k, outR && outR.subarray(i, i + k));

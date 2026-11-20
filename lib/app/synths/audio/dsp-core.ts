@@ -38,7 +38,14 @@ import {
   type MoogMeters,
 } from '@/lib/app/synths/audio/moog-core';
 import { createSolar, SOLAR_SIGNALS, SOLAR_DESTS } from '@/lib/app/synths/audio/solar-core';
-import { createSubharm, SUBHARM_SIGNALS, SUBHARM_DESTS } from '@/lib/app/synths/audio/subharm-core';
+import {
+  CLOCK_PPQ,
+  SUBHARM_PPQ,
+  createSubharm,
+  SUBHARM_SIGNALS,
+  SUBHARM_DESTS,
+  type ClockAt,
+} from '@/lib/app/synths/audio/subharm-core';
 import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
   withPatterns,
@@ -60,6 +67,12 @@ export type SynthMessage =
   | { type: 'panic' }
   /** A click on a momentary button (`ButtonControl.press`). */
   | { type: 'press'; name: SubharmPress }
+  /**
+   * The app's master clock, to a synth with a sequencer of its own (`f-own-sequencer`): a run starts, a pulse at
+   * {@link CLOCK_PPQ} a beat, the run stops. The pattern player sends it while the synth's settings `follow`; the voice's
+   * own riff player makes it for the Subharmonicon.
+   */
+  | { type: 'clock'; at: ClockAt }
   | { type: 'offset'; semi?: number }
   /** LFO phases. A value past 1 also counts the cycles, which a `common` LFO's sample and hold is drawn from. */
   | { type: 'phase'; lfo?: number; lfo2?: number; lfo3?: number }
@@ -277,6 +290,11 @@ interface VoicePhrase {
   len: number;
   loop: boolean;
   transpose: number;
+  /** Samples a beat, and the riff's next clock pulse in this loop (the Subharmonicon's master clock, see below). */
+  spb: number;
+  pulse: number;
+  /** The clock's start has been sent. */
+  clocked: boolean;
 }
 
 /** A phrase note event of the poly and dual wrappers: at sample `t`, key `n` goes down (`on`, velocity `v`) or up. */
@@ -1011,7 +1029,7 @@ function createVoice(
     compile();
     if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)));
     if (p.solar) solar.set(p.solar);
-    if (p.subharm) subharm.set(p.subharm);
+    if (p.subharm) subharm.set(p.subharm, !!p.follow);
     else subharm.off();
     nOsc = Math.min(4, p.osc.length);
     for (let i = 0; i < 4; i++) {
@@ -1312,13 +1330,23 @@ function createVoice(
     let end = 0;
     for (const [b, , len] of ph.steps) end = Math.max(end, b + len);
     const beats = Math.max(1, Math.ceil(end - 0.001));
-    phrase = { evs, beats, len: 0, loop: ph.loop !== false, transpose: ph.transpose || 0 };
+    phrase = {
+      evs,
+      beats,
+      len: 0,
+      loop: ph.loop !== false,
+      transpose: ph.transpose || 0,
+      spb: 0,
+      pulse: 0,
+      clocked: false,
+    };
     phraseTiming(ph.bpm);
     phrasePos = 0;
     phraseIdx = 0;
   }
   function phraseTiming(bpm: number) {
     const spb = (60 / bpm) * sr;
+    phrase!.spb = spb;
     const old = phrase!.len;
     for (const e of phrase!.evs) e.t = Math.round(e.b * spb);
     phrase!.len = Math.round(phrase!.beats * spb);
@@ -1326,6 +1354,7 @@ function createVoice(
   }
   function stopPhrase(silent?: boolean) {
     if (!phrase) return;
+    if (phrase.clocked) subharm.clock('stop');
     phrase = null;
     for (const n of Array.from(phraseHeld)) noteOff(n);
     phraseHeld.clear();
@@ -1358,6 +1387,9 @@ function createVoice(
         break;
       case 'press':
         subharm.press(m.name);
+        break;
+      case 'clock':
+        subharm.clock(m.at);
         break;
       case 'offset':
         vOff = m.semi || 0;
@@ -2208,6 +2240,25 @@ function createVoice(
     for (let i = 0; i < n; i++) {
       // ── phrase player ──
       if (phrase) {
+        // The riff is the Subharmonicon's master clock, as the pattern player is (`f-own-sequencer`): a start, then
+        // pulses at CLOCK_PPQ a beat, each sent before the riff's notes on its sample so a key there finds the
+        // sequencers running.
+        if (p.subharm) {
+          if (!phrase.clocked) {
+            phrase.clocked = true;
+            // back on the synth part-way through the riff, its clock starts again on the riff's next sixteenth
+            phrase.pulse =
+              Math.ceil((phrasePos / phrase.spb) * SUBHARM_PPQ - 1e-6) * (CLOCK_PPQ / SUBHARM_PPQ);
+            subharm.clock('start');
+          }
+          while (Math.round((phrase.pulse * phrase.spb) / CLOCK_PPQ) <= phrasePos) {
+            phrase.pulse++;
+            subharm.clock('pulse');
+          }
+        } else if (phrase.clocked) {
+          // the voice has left the Subharmonicon (`off()` ended its run): a start is owed if it comes back
+          phrase.clocked = false;
+        }
         const evs = phrase.evs;
         while (phraseIdx < evs.length && evs[phraseIdx].t! <= phrasePos) {
           const e = evs[phraseIdx++];
@@ -2224,6 +2275,7 @@ function createVoice(
           if (phrase.loop) {
             phrasePos = 0;
             phraseIdx = 0;
+            phrase.pulse = 0;
           } else {
             stopPhrase();
           }
@@ -3842,6 +3894,7 @@ function createSynthCore(sr: number, onEvent: SynthEventHandler | null): Synth {
         panic();
         break;
       case 'press':
+      case 'clock':
         (polyOn ? voices : parts).forEach((v) => v.handle(m));
         break;
       default:

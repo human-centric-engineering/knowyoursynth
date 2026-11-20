@@ -110,6 +110,18 @@
     {
       "sound": "nymphes/nym-sample-hold-filter",
       "reason": "The sound’s point is a random filter pattern made by the patch over held notes, not one of “Phaedra”’s sequenced parts, so there is nothing to transcribe."
+    },
+    {
+      "sound": "subharmonicon/shc-berlin-transposed",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “Phaedra: sequence” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-rubycon-pulse",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “Phaedra and Rubycon: opening sequence” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-oxygene-arp",
+      "reason": "The patch plays itself: Rhythm 1 steps both sequencers on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “Oxygène IV: triplet arpeggio” would be played over again."
     }
   ],
   "patterns": [

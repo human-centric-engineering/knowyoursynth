@@ -23,6 +23,7 @@ import { getSynthDef } from '@/lib/app/synths/defs';
 import { lessonState, START_STEP } from '@/lib/app/synths/default-patch';
 import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { validatePreset } from '@/lib/app/synths/validate';
+import { withRiffTempo } from '@/lib/app/synths/lib/tempo';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 
 const key = ([from, to]: readonly [string, string]) => `${from}>${to}`;
@@ -34,7 +35,7 @@ function onInit(
   p: Pick<Preset, 'steps' | 'phrase'>
 ): { values: ControlValues; cables: string[] } {
   const values: ControlValues = { ...def.init };
-  if (def.tempo && p.phrase.bpm) values[def.tempo] = p.phrase.bpm;
+  withRiffTempo(def, values, p.phrase.bpm);
   const cables = new Set<string>();
   for (const s of p.steps) {
     Object.assign(values, s.set ?? {});

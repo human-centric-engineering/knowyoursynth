@@ -18,10 +18,18 @@
 //   (a step with EG on, TRIGGER, the TRIGGER input, a key) opens a gate for its envelope's attack, and is ignored
 //   while that attack runs; a held key holds the gate; EG held holds both open.
 //
+// - A MIDI clock overrides TEMPO and the CLOCK input, at 4 PPQ (the spec). Here the MIDI clock is the app's transport
+//   (`clock()`, `f-own-sequencer`): whatever plays the riff or a pattern sends `start`, a `pulse` at 24 PPQ and `stop`,
+//   and every sixth pulse is a clock. Start brings the sequencers back to step 1 and runs them if PLAY is lit; Stop
+//   stops them. With `follow` set (the app's own definition sets it), PLAY lit waits for that clock rather than
+//   running at TEMPO.
+// - Keys play their pitch as an offset from C4 on both VCOs, and so transpose a running sequence (firmware 1.1.0).
+//
 // Choices the spec leaves open are the app's (`not_in_source`): a volt moves a divisor by `DIV_PER_VOLT` (so ±5 V
 // from a centred knob spans the range, as the manual's "centre the knob" implies), in both the sub and rhythm CVs;
 // the 12-JI ratios are the 5-limit chromatic scale; XOR with three or more rhythms advances only on exactly one; keys
-// gate the envelopes as a gate would, and play their pitch as an offset from C4 on both VCOs.
+// gate the envelopes as a gate would while the sequencers are stopped, and while they run never hold them open, firing
+// them only with EG off (the manual is silent on how MIDI notes gate them).
 import type { SubharmParams, SubharmPress } from '@/lib/app/synths/contract';
 
 /** Signals (outputs): the six sources, the mix, both sequencers' CV and clock, CLOCK OUT, TRIGGER OUT, the EG gates. */
@@ -122,15 +130,30 @@ export function quantize(semi: number, q: SubharmParams['quantize']): number {
   return 12 * oct + best;
 }
 
+/** MIDI clock's pulses a beat: what `clock('pulse')` counts. */
+export const CLOCK_PPQ = 24;
+/** The Subharmonicon's clocks a beat on a MIDI clock (the spec: 4 PPQ, a sixteenth each). */
+export const SUBHARM_PPQ = 4;
+/** MIDI clock pulses to one of the Subharmonicon's clocks. */
+const PULSES_PER_TICK = CLOCK_PPQ / SUBHARM_PPQ;
+
+/** A message of the app's master clock: a run starts, a pulse (24 a beat), the run stops. */
+export type ClockAt = 'start' | 'pulse' | 'stop';
+
 /** What `createSubharm` hands back to the voice. */
 export interface Subharm {
-  /** The settings. */
-  set: (p: SubharmParams) => void;
+  /** The settings, and whether PLAY waits for the app's clock (`EngineParams.follow`). */
+  set: (p: SubharmParams, follow?: boolean) => void;
   /**
    * A click on RESET, NEXT or TRIGGER, taken on the next sample. Presses come only from here, never from the settings,
    * so loading a patch, undoing or a lane moving a knob never presses a button.
    */
   press: (name: SubharmPress) => void;
+  /**
+   * The app's master clock (`f-own-sequencer`), taken on the next sample: a run starts (the sequencers go back to step
+   * 1 and run if PLAY is lit), a pulse, 24 a beat, every sixth of which is a clock, or the run stops.
+   */
+  clock: (at: ClockAt) => void;
   /** The voice has left the Subharmonicon: the next `set` starts afresh (counters synced, a lit PLAY ticks at once). */
   off: () => void;
   /** Whether the clock is running (a running clock opens its own gates, so the voice is never idle). */
@@ -187,6 +210,7 @@ export function createSubharm(
     EG_OUT = [SI.sbhEg1, SI.sbhEg2];
 
   let P: SubharmParams | null = null;
+  let follow = false;
   // per VCO: its phase, its count of whole cycles, the last SUB 1 saw (its PWM normal), the smoothed mixer levels
   const ph = [0, 0],
     cyc = [0, 0],
@@ -212,6 +236,15 @@ export function createSubharm(
     trigOut = 0;
   // RESET, NEXT and TRIGGER pressed since the last sample (`press()`), taken by the next one
   const pending = { reset: false, next: false, trigger: false };
+  // the app's master clock: whether a run of it is on, its start, stop and pulses not yet taken, the pulses since its
+  // start (every PULSES_PER_TICK-th is a clock), and the samples since the last pulse and between the last two
+  let ext = false,
+    extStart = false,
+    extStop = false,
+    extPulses = 0,
+    pulseN = 0,
+    pulseSince = -1,
+    pulsePeriod = 0;
   // per sequencer: its step, whether the next advance plays step 1 (just reset), and its SEQ CLK pulse
   const stage = [0, 0],
     armed = [true, true],
@@ -224,13 +257,22 @@ export function createSubharm(
   // which rhythm generators fired on this clock (kept, so a tick allocates nothing)
   const fired = [false, false, false, false];
 
-  function set(p: SubharmParams) {
+  function set(p: SubharmParams, follows = false) {
     const first = !P;
+    // told to follow the app's clock, a sequence running at TEMPO stops until the clock starts it
+    if (follows && !follow && !ext && !cabled[DI.sbhPlay]) running = false;
+    follow = follows;
     // a cable in PLAY overrides the panel's PLAY
     if ((first || p.play !== P!.play) && !cabled[DI.sbhPlay]) {
-      running = p.play;
-      // a start ticks at once, so the first step plays from the start
-      if (running) clkPh = 1;
+      if (ext) {
+        // on the app's clock, PLAY starts and stops the sequencers inside its run, from the next clock
+        running = p.play;
+      } else {
+        // following the app's clock, a lit PLAY waits for its run
+        running = p.play && !follow;
+        // a start ticks at once, so the first step plays from the start
+        if (running) clkPh = 1;
+      }
     }
     if (first)
       for (let k = 0; k < 2; k++) for (let j = 0; j < 3; j++) lvl[k][j] = p.vco[k].level[j];
@@ -244,6 +286,10 @@ export function createSubharm(
     clkPh = 0;
     trigOut = 0;
     pending.reset = pending.next = pending.trigger = false;
+    ext = extStart = extStop = false;
+    extPulses = pulseN = 0;
+    pulseSince = -1;
+    pulsePeriod = 0;
     playCab = clkCab = false;
     playPrev = clkPrev = resetPrev = trigInPrev = false;
     extSince = -1;
@@ -269,6 +315,34 @@ export function createSubharm(
     if (!P) return 0;
     const p = P;
 
+    // ── the app's master clock ──
+    if (extStop) {
+      extStop = false;
+      ext = false;
+      extPulses = 0;
+      running = false;
+    }
+    if (extStart) {
+      extStart = false;
+      ext = true;
+      pulseN = 0;
+      pulseSince = -1;
+      pulsePeriod = 0;
+      reset();
+      running = cabled[DI.sbhPlay] ? ev(DI.sbhPlay) > 0.5 : p.play;
+    }
+    let extTick = false;
+    if (extPulses > 0) {
+      if (pulseSince > 0) pulsePeriod = pulseSince;
+      pulseSince = 0;
+      // the players send each pulse on its own sample, so two at once are rare (a tempo past any the app sets)
+      for (; extPulses > 0; extPulses--) {
+        if (ext && pulseN % PULSES_PER_TICK === 0) extTick = true;
+        pulseN = (pulseN + 1) % CYCLE_WRAP;
+      }
+    }
+    if (pulseSince >= 0) pulseSince++;
+
     // ── transport ──
     const pc = !!cabled[DI.sbhPlay];
     if (pc !== playCab) {
@@ -277,15 +351,15 @@ export function createSubharm(
       // unplugged one hands the transport back to the panel PLAY
       playPrev = running;
       if (!pc) {
-        running = p.play;
-        if (running) clkPh = 1;
+        running = p.play && (ext || !follow);
+        if (running && !ext) clkPh = 1;
       }
     }
     if (pc) {
       const g = ev(DI.sbhPlay) > 0.5;
       if (g && !playPrev) {
         running = true;
-        clkPh = 1;
+        if (!ext) clkPh = 1;
       } else if (!g && playPrev) running = false;
       playPrev = g;
     }
@@ -306,7 +380,12 @@ export function createSubharm(
       extSince = -1;
       extPeriod = 0;
     }
-    if (cc) {
+    if (ext) {
+      // the app's clock overrides TEMPO and the CLOCK input, as a MIDI clock does; the clock is high for the first
+      // half of its pulses
+      tick = running && extTick;
+      clkHi = pulseN > 0 && (pulseN - 1) % PULSES_PER_TICK < PULSES_PER_TICK / 2;
+    } else if (cc) {
       const c = ev(DI.sbhClkIn) > 0.5;
       if (c && !clkPrev) {
         // -1 until the first edge: one edge alone gives no period
@@ -333,8 +412,14 @@ export function createSubharm(
       for (let r = 0; r < 4; r++)
         fired[r] = count % divisor(p.rhythm[r].div - DIV_PER_VOLT * ev(D_R[r])) === 0;
       count = (count + 1) % CYCLE_WRAP;
-      // half the clock's period: the incoming clock's while CLOCK is cabled (once it has two edges), else TEMPO's
-      const half = cc && extPeriod > 0 ? 0.5 * extPeriod : (0.5 * sr) / clamp(p.tempo, 0.01, 1000);
+      // half the clock's period: the app clock's, the incoming clock's while CLOCK is cabled (once it has two edges),
+      // else TEMPO's
+      const half =
+        ext && pulsePeriod > 0
+          ? 0.5 * PULSES_PER_TICK * pulsePeriod
+          : cc && extPeriod > 0
+            ? 0.5 * extPeriod
+            : (0.5 * sr) / clamp(p.tempo, 0.01, 1000);
       const clkLen = Math.min(SEQ_CLK_MAX_S * sr, half);
       for (let s = 0; s < 2; s++) {
         let n = 0;
@@ -367,8 +452,11 @@ export function createSubharm(
     const tIn = ev(DI.sbhTrigIn) > 0.5;
     const pressed = pending.trigger;
     pending.trigger = false;
+    // While the sequencers run a key transposes them (firmware 1.1.0) and never holds the envelopes open; it fires them
+    // only with EG off, when the steps do not. Stopped, a key gates them as a gate would.
+    const keyFires = running ? p.eg === 'off' : true;
     // TRIGGER and the TRIGGER input do nothing while EG holds the envelopes (firmware 1.1.0)
-    if (p.eg !== 'held' && ((tIn && !trigInPrev) || pressed || keyHit)) egHit = true;
+    if (p.eg !== 'held' && ((tIn && !trigInPrev) || pressed || (keyFires && keyHit))) egHit = true;
     trigInPrev = tIn;
     if (egHit) trigOut = Math.max(1, Math.round(TRIG_OUT_S * sr));
     S[SI.sbhTrig] = trigOut > 0 ? 1 : 0;
@@ -379,7 +467,7 @@ export function createSubharm(
         // a gate already high drops for a sample, so the envelope sees a new one and starts again
         if (egPrev[k]) egDrop[k] = true;
       }
-      let g = p.eg === 'held' || keyGate || egCnt[k] > 0;
+      let g = p.eg === 'held' || (!running && keyGate) || egCnt[k] > 0;
       if (egDrop[k]) {
         g = false;
         egDrop[k] = false;
@@ -465,5 +553,27 @@ export function createSubharm(
     if (P) pending[name] = true;
   }
 
-  return { set, press, off, step, running: () => running, stages: () => [stage[0], stage[1]] };
+  function clock(at: ClockAt) {
+    if (!P) return;
+    if (at === 'start') {
+      // a start takes back a stop not yet taken
+      extStart = true;
+      extStop = false;
+      extPulses = 0;
+    } else if (at === 'stop') {
+      extStop = true;
+      extStart = false;
+      extPulses = 0;
+    } else extPulses++;
+  }
+
+  return {
+    set,
+    press,
+    clock,
+    off,
+    step,
+    running: () => running,
+    stages: () => [stage[0], stage[1]],
+  };
 }

@@ -54,6 +54,10 @@
     {
       "sound": "buchla-easel/easel-geiger-counter",
       "reason": "An effect: random ticks and bursts, as the Geiger counter that opens “Radio-Activity”. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-trans-europe",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, while its riff’s four held keys move the whole figure, so the batch’s “Trans-Europe Express: slow descent” would be played over again."
     }
   ],
   "patterns": [

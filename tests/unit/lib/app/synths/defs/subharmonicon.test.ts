@@ -63,7 +63,9 @@ describe('Subharmonicon toEngine at the init patch', () => {
       play: false,
       eg: 'on',
     });
-    expect(s.tempo).toBeCloseTo(exp(0.36, 0.333, 50), 9);
+    // TEMPO opens at the app's 120 BPM (6.34 to a hundredth of a turn): 480 clocks a minute, near enough 8 Hz
+    expect(s.tempo).toBeCloseTo(exp(0.634, 0.333, 50), 9);
+    expect(subharmonicon.tempoMap!.toBpm(6.34)).toBe(120);
   });
 
   it('opens the ladder filter fully with no envelope on it, and plays the VCA EG as attack then decay', () => {
@@ -266,5 +268,42 @@ describe('Subharmonicon panel', () => {
       'POLYRHYTHMIC SYNTHESIZER',
       'moog',
     ]);
+  });
+});
+
+describe('Subharmonicon on the app’s clock (f-own-sequencer)', () => {
+  it('follows the app’s clock, and names PLAY as its sequencer’s run control', () => {
+    expect(run().follow).toBe(true);
+    expect(run({ 'transport.play': true }).follow).toBe(true);
+    expect(subharmonicon.ownSequencer).toEqual({ run: 'transport.play', ppq: 4 });
+    expect(subharmonicon.controls.some((c) => c.id === subharmonicon.ownSequencer?.run)).toBe(true);
+  });
+
+  it('makes TEMPO the app’s tempo at four clocks a beat, both ways', () => {
+    const map = subharmonicon.tempoMap;
+    if (!map) throw new Error('no tempoMap');
+    expect(subharmonicon.tempo).toBe('clock.tempo');
+    // fully left 20 clocks a minute, fully right 3,000: a quarter of each is 5 and 750, held to the app's 20 to 300
+    expect(map.toBpm(0)).toBe(20);
+    expect(map.toBpm(10)).toBe(300);
+    expect(map.toBpm(map.fromBpm(19))).toBe(20);
+    expect(map.toBpm(map.fromBpm(301))).toBe(300);
+    // a riff's BPM comes back whole, from the knob stored to a hundredth as the page stores it
+    for (const bpm of [20, 61, 120, 300]) {
+      expect(map.toBpm(map.fromBpm(bpm))).toBe(bpm);
+      expect(map.toBpm(Math.round(map.fromBpm(bpm) * 100) / 100)).toBe(bpm);
+    }
+    // 120 BPM in the app is 480 of the Subharmonicon's clocks a minute: 8 Hz
+    expect(sh({ 'clock.tempo': map.fromBpm(120) }).tempo).toBeCloseTo(8, 9);
+  });
+
+  it('reads TEMPO in its own clocks and in the app’s BPM', () => {
+    const tempo = subharmonicon.controls.find((c) => c.id === 'clock.tempo');
+    if (!tempo || tempo.type !== 'knob' || !('fmt' in tempo) || !tempo.fmt)
+      throw new Error('no TEMPO');
+    const at = subharmonicon.tempoMap!.fromBpm(120);
+    expect(tempo.fmt(at)).toBe('480 BPM · ♩ = 120');
+    // past the app's tempos the clock still reads its own rate, and ♩ stays at the end of the range
+    expect(tempo.fmt(10)).toBe('3000 BPM · ♩ = 300');
   });
 });

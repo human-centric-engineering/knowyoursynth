@@ -85,6 +85,7 @@ import {
 } from '@/scripts/native-synths';
 import { loadPrototypeSynths } from '@/scripts/prototype-synths';
 import { explainCable } from '@/lib/app/synths/lib/explain';
+import { withRiffTempo } from '@/lib/app/synths/lib/tempo';
 import { layoutDef, layoutKind, overlap } from '@/lib/app/synths/lib/layout';
 import {
   presetState,
@@ -709,7 +710,7 @@ async function main(): Promise<void> {
       const st =
         p.id === '(init)'
           ? {
-              values: { ...def.init, ...(def.tempo ? { [def.tempo]: p.phrase.bpm } : {}) },
+              values: withRiffTempo(def, { ...def.init }, p.phrase.bpm),
               cables: [],
             }
           : presetState(def, p);

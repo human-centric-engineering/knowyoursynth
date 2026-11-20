@@ -352,7 +352,8 @@ someone following on hardware from step 0 ends each step where the panel does. A
 it relies on that the Default patch changed from `init` (keyboard tracking off, the filter open, a full sustain…), and
 takes out every Default-patch cable it does not keep: `default-base.test.ts` fails on a sound whose finished panel
 differs built on `init`, or on a step that changes anything it does not name. The tempo knob (`tempo`) is the
-exception: it takes the riff's BPM. A step's `unplug` takes cables out (t-175): each must be in at that step, from
+exception: it takes the riff's BPM (through `tempoMap` where its value is not the BPM itself, the Subharmonicon's TEMPO;
+see [`sequencer-synths.md`](./sequencer-synths.md)). A step's `unplug` takes cables out (t-175): each must be in at that step, from
 the Default patch or an earlier step, and they come out before the step's `cables` go in, so one step can move a
 cable to another input. A patch synth's sound unplugs a Default-patch cable in the step that patches something else
 into the same input, else from the same output, else in step 1. The validator refuses one that is not in, or one named twice in a step

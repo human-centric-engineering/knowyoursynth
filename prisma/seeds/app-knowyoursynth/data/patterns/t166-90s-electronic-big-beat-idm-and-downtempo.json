@@ -214,6 +214,14 @@
     {
       "sound": "buchla-easel/easel-stuttering-grain",
       "reason": "The patch plays itself: the sequencer and pulser make the stuttering figure from one held key. There is no part to write."
+    },
+    {
+      "sound": "subharmonicon/shc-twelve-over-sixteen",
+      "reason": "The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key, so the batch’s “Aphex Twin: twisted acid” would be played over again."
+    },
+    {
+      "sound": "subharmonicon/shc-rhythm-sequencer",
+      "reason": "It names a style, not one work. The patch plays itself: Rhythm 1 steps Sequencer 1 and Rhythm 2 steps Sequencer 2 on the app’s clock, from one held key. There is no part to write."
     }
   ],
   "patterns": [

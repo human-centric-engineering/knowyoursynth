@@ -19,7 +19,11 @@ import type {
   SynthDef,
 } from '@/lib/app/synths/contract';
 
-/** The control a lane moves, if the synth has one it can move. Its tempo knob is the pattern's own tempo, so not that. */
+/**
+ * The control a lane moves, if the synth has one it can move. Its tempo knob is the pattern's own tempo, so not that: a
+ * lane saved for one (the Subharmonicon's TEMPO, from before it became the tempo, `f-own-sequencer`) is kept and
+ * silent, as any lane the synth has no control for.
+ */
 export function laneControl(def: SynthDef, id: string): Control | null {
   if (id === def.tempo) return null;
   return controlMap(def)[id] ?? null;
