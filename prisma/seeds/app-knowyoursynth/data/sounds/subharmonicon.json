@@ -1040,7 +1040,7 @@
         {
           "title": "Cross the rhythms",
           "module": "mod",
-          "why": "SEQ 1 OUT into RHYTHM 3’s input, SEQ 2 OUT into RHYTHM 1’s: each note moves the other sequencer’s divisor, up to three either way.\n- Patch SEQ 1 OUT to RHYTHM 3 input\n- Patch SEQ 2 OUT to RHYTHM 1 input\n- Listen for: still waiting.",
+          "why": "SEQ 1 OUT into RHYTHM 3’s input, SEQ 2 OUT into RHYTHM 1’s: each note moves the other sequencer’s divisor, up to two either way.\n- Patch SEQ 1 OUT to RHYTHM 3 input\n- Patch SEQ 2 OUT to RHYTHM 1 input\n- Listen for: still waiting.",
           "cables": [
             ["j.seq1_out", "j.rhythm3_in"],
             ["j.seq2_out", "j.rhythm1_in"]
@@ -2174,7 +2174,7 @@
         {
           "title": "The changes",
           "module": "mod",
-          "why": "SEQ OCT ±5 with Sequencer 2 on VCO 2’s subs: divisors as they are, two down, one up, one down.\n- SEQ OCT ±5\n- SEQ 2 STEP 2 -1.38 · divisor +2.1\n- SEQ 2 STEP 3 0.72 · divisor −1.1\n- SEQ 2 STEP 4 -0.72 · divisor +1.1\n- SEQ 2 ASSIGN SUB 1 lit\n- SEQ 2 ASSIGN SUB 2 lit\n- Listen for: still the first chord.",
+          "why": "SEQ OCT ±5 with Sequencer 2 on VCO 2’s subs: divisors as they are, two higher, one lower, one higher.\n- SEQ OCT ±5\n- SEQ 2 STEP 2 -1.38 · divisor +2.1\n- SEQ 2 STEP 3 0.72 · divisor −1.1\n- SEQ 2 STEP 4 -0.72 · divisor +1.1\n- SEQ 2 ASSIGN SUB 1 lit\n- SEQ 2 ASSIGN SUB 2 lit\n- Listen for: still the first chord.",
           "set": {
             "seq.oct": 5,
             "seq2.step2": -1.38,
@@ -2214,7 +2214,7 @@
         }
       ],
       "context": {
-        "seq2.step2": "In this sound: the darkest chord, every divisor two lower in pitch.",
+        "seq2.step2": "In this sound: the darkest chord, every divisor two higher.",
         "rhythm4.div": "In this sound: how long each chord lasts."
       },
       "tweaks": [
@@ -2226,7 +2226,7 @@
         {
           "id": "seq2.step3",
           "try": "Turn SEQ 2 STEP 3 to 2.05",
-          "hear": "The third chord lifts higher: three divisors up on every sub."
+          "hear": "The third chord lifts: every divisor three lower, so every sub higher."
         }
       ]
     },
@@ -5924,8 +5924,8 @@
       "tweaks": [
         {
           "id": "sub22.div",
-          "try": "Turn VCO 2 SUB 2 FREQ to ÷4",
-          "hear": "Quick stalls: the melody stutters, rarely getting past its second note."
+          "try": "Turn VCO 2 SUB 2 FREQ to ÷8",
+          "hear": "Quicker stalls: the melody reaches its second note, then is held again."
         },
         {
           "id": "seq1.step1",
@@ -6576,12 +6576,12 @@
         {
           "title": "The notes around it",
           "module": "mod",
-          "why": "8-ET at ±1: Sequencer 1 D, E, G, D an octave below.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 0.83 · +2 st\n- SEQ 1 STEP 3 1.67 · +4 st\n- SEQ 1 STEP 4 -5 · -12 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
+          "why": "8-ET at ±1: Sequencer 1 D, E, G, D an octave below.\n- QUANTIZE 8-ET\n- SEQ OCT ±1\n- SEQ 1 STEP 2 0.83 · +2 st\n- SEQ 1 STEP 3 2.08 · +5 st\n- SEQ 1 STEP 4 -5 · -12 st\n- SEQ 1 ASSIGN OSC 1 lit\n- Listen for: still waiting.",
           "set": {
             "vco.quantize": "8-ET",
             "seq.oct": 1,
             "seq1.step2": 0.83,
-            "seq1.step3": 1.67,
+            "seq1.step3": 2.08,
             "seq1.step4": -5,
             "seq1.assign_osc": true
           }

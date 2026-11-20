@@ -234,7 +234,7 @@ export const PATCHBAY: Insert[] = [
         {
           title: 'Cross the rhythms',
           module: 'mod',
-          why: 'SEQ 1 OUT into RHYTHM 3’s input, SEQ 2 OUT into RHYTHM 1’s: each note moves the other sequencer’s divisor, up to three either way.',
+          why: 'SEQ 1 OUT into RHYTHM 3’s input, SEQ 2 OUT into RHYTHM 1’s: each note moves the other sequencer’s divisor, up to two either way.',
           cables: [
             ['j.seq1_out', 'j.rhythm3_in'],
             ['j.seq2_out', 'j.rhythm1_in'],
@@ -446,7 +446,7 @@ export const PATCHBAY: Insert[] = [
         {
           title: 'The changes',
           module: 'mod',
-          why: 'SEQ OCT ±5 with Sequencer 2 on VCO 2’s subs: divisors as they are, two down, one up, one down.',
+          why: 'SEQ OCT ±5 with Sequencer 2 on VCO 2’s subs: divisors as they are, two higher, one lower, one higher.',
           set: {
             'seq.oct': 5,
             ...seq(2, [0, div(-2), div(1), div(-1)], { sub1: true, sub2: true }),
@@ -478,7 +478,7 @@ export const PATCHBAY: Insert[] = [
         },
       ],
       context: {
-        'seq2.step2': 'In this sound: the darkest chord, every divisor two lower in pitch.',
+        'seq2.step2': 'In this sound: the darkest chord, every divisor two higher.',
         'rhythm4.div': 'In this sound: how long each chord lasts.',
       },
       tweaks: [
@@ -490,7 +490,7 @@ export const PATCHBAY: Insert[] = [
         {
           id: 'seq2.step3',
           try: 'Turn SEQ 2 STEP 3 to 2.05',
-          hear: 'The third chord lifts higher: three divisors up on every sub.',
+          hear: 'The third chord lifts: every divisor three lower, so every sub higher.',
         },
       ],
     },
@@ -1230,8 +1230,8 @@ export const PATCHBAY: Insert[] = [
       tweaks: [
         {
           id: 'sub22.div',
-          try: 'Turn VCO 2 SUB 2 FREQ to ÷4',
-          hear: 'Quick stalls: the melody stutters, rarely getting past its second note.',
+          try: 'Turn VCO 2 SUB 2 FREQ to ÷8',
+          hear: 'Quicker stalls: the melody reaches its second note, then is held again.',
         },
         {
           id: 'seq1.step1',
@@ -1361,7 +1361,7 @@ export const PATCHBAY: Insert[] = [
           set: {
             'vco.quantize': '8-ET',
             'seq.oct': 1,
-            ...seq(1, [0, step(2), step(4), step(-12)]),
+            ...seq(1, [0, step(2), step(5), step(-12)]),
           },
           listen: 'still waiting.',
         },
