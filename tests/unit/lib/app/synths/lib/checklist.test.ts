@@ -67,6 +67,9 @@ describe('positionText', () => {
     expect(positionText(fader(), 10)).toBe('all the way up (10)');
     expect(positionText(fader(), 5)).toBe('half way (5)');
     expect(positionText(fader(), 3)).toBe('at 3, about 3/10 of the way up');
+    // near an end but not at it: never 0/10 or 10/10
+    expect(positionText(fader(), 0.3)).toBe('at 0.3, about 1/10 of the way up');
+    expect(positionText(fader(), 9.7)).toBe('at 9.7, about 9/10 of the way up');
     expect(positionText(fader({ maxAt: 'bottom' }), 0)).toBe('all the way up (0)');
     expect(positionText(fader({ maxAt: 'bottom' }), 3)).toBe('at 3, about 3/10 of the way down');
     expect(positionText(fader({ orient: 'h' }), 10)).toBe('all the way right (10)');
@@ -164,5 +167,16 @@ describe('checklistControls', () => {
         .map((c) => c.id)
         .sort()
     );
+  });
+
+  it("gives a control a later step names by its own id to that step, not to an earlier step's * pattern", () => {
+    const def = makeMiniD();
+    const [first, second] = checklistControls(def, [
+      { title: 'a', module: 'osc', why: 'a', controls: ['osc1.*'] },
+      { title: 'b', module: 'osc', why: 'b', controls: ['osc1.wave'] },
+    ]);
+
+    expect(first.map((c) => c.id)).not.toContain('osc1.wave');
+    expect(second.map((c) => c.id)).toEqual(['osc1.wave']);
   });
 });

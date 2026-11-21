@@ -2721,7 +2721,9 @@ const MOOG900_CHECKLIST: DefaultPatchStep[] = [
  * the modules that system has (the System 15 has no sequencer), and any step left with none dropped.
  */
 export function moog900DefaultPatch(controls: readonly Control[]): DefaultPatch {
-  const has = (p: string) => controls.some((c) => !c.ui && patternTest(p)(c.id));
+  // as `stepControls` reads a pattern: a `*` one does not reach a control behind a menu
+  const has = (p: string) =>
+    controls.some((c) => !c.ui && (!p.includes('*') || !c.deep) && patternTest(p)(c.id));
   const checklist = MOOG900_CHECKLIST.map((s) => ({
     ...s,
     controls: s.controls.filter(has),

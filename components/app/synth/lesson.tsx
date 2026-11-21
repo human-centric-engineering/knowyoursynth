@@ -784,7 +784,9 @@ export function Lesson({
                       <button type="button" onClick={() => onStep(begin)} className={primary}>
                         {hasStart
                           ? `Start from the ${defaultPatchName(def)}`
-                          : 'Start the checklist'}
+                          : def.defaultPatch?.checklist?.length
+                            ? 'Start the checklist'
+                            : 'Start the lesson'}
                       </button>
                     )}
                   </div>

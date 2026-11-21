@@ -61,6 +61,7 @@ import {
   defaultPatchSound,
   hasStartStep,
   isDefaultPatch,
+  isSawDefault,
   lessonState,
   startStep,
 } from '@/lib/app/synths/default-patch';
@@ -584,12 +585,12 @@ function Synth({
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
   // A synth switched to, or a sound opened by `?sound=`, is a patch chosen (t-277): the backing goes to Match and the
   // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`). The Default patch it
-  // opens on starts with the drums off (t-295); a sound from `?sound=` with them on Match.
+  // opens on starts with the drums off where it is the Default Saw (t-295); a sound from `?sound=` with them on Match.
   const arrivedOnPatch = useRef<'auto' | 'off' | null>(null);
   useEffect(() => {
     if (switchedTo.current) {
       setSess(() => freshSession(synthDef, defaultSound));
-      arrivedOnPatch.current = 'off';
+      arrivedOnPatch.current = isSawDefault(synthDef) ? 'off' : 'auto';
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
@@ -605,7 +606,7 @@ function Synth({
     const p = sounds.find((x) => x.id === soundParam);
     if (p) {
       glide(() => freshSession(synthDef, p));
-      arrivedOnPatch.current = isDefaultPatch(p.id) ? 'off' : 'auto';
+      arrivedOnPatch.current = isDefaultPatch(p.id) && isSawDefault(synthDef) ? 'off' : 'auto';
     }
     const url = new URL(window.location.href);
     url.searchParams.delete('sound');
@@ -2019,7 +2020,7 @@ function Synth({
     // Restore, or the same sound picked again, is not another patch: the drums and Count-in stay as set.
     // The Default Saw plays its scale with no drums (t-295).
     if (id !== sess.presetId || sess.soundId || designed || sharedPanel)
-      backing.newPatch(isDefaultPatch(id) ? 'off' : 'auto');
+      backing.newPatch(isDefaultPatch(id) && isSawDefault(synthDef) ? 'off' : 'auto');
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
   };
@@ -2365,8 +2366,8 @@ function Synth({
       return;
     }
     leaveShared();
-    // Progress is kept for the catalogue's lessons, not the Default patch's one step.
-    const kept = preset && !isDefaultPatch(preset.id) ? preset : null;
+    // Progress is kept for every lesson, the Default patch's checklist included.
+    const kept = preset ?? null;
     if (kept && k != null && k !== START_STEP) progress.record(kept.id, k);
     else if (k == null && kept && step != null && step === kept.steps.length - 1)
       progress.record(kept.id, step, true);

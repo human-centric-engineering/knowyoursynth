@@ -50,11 +50,16 @@ export function stepControls(
   );
 }
 
-/** Every step's controls, each control in the first step that matches it. */
+/**
+ * Every step's controls, each control in the first step that matches it. A control a step names by its own id goes
+ * to that step, whatever an earlier step's `*` pattern matches.
+ */
 export function checklistControls(def: SynthDef, steps: readonly DefaultPatchStep[]): Control[][] {
   const taken = new Set<string>();
-  return steps.map((s) => {
-    const cs = stepControls(def, s, taken);
+  const named = steps.map((s) => s.controls.filter((p) => !p.includes('*')));
+  return steps.map((s, i) => {
+    const elsewhere = named.flatMap((ids, j) => (j === i ? [] : ids));
+    const cs = stepControls(def, s, new Set([...taken, ...elsewhere]));
     cs.forEach((c) => taken.add(c.id));
     return cs;
   });
@@ -78,8 +83,8 @@ export function positionText(c: Control, v: ControlValue, values?: ControlValues
     if (c.type === 'button') return v ? 'on (lit)' : 'off (not lit)';
     return v ? 'on' : 'off';
   }
-  if (c.kind === 'enum') return `set to ${shown}`;
   if (c.type === 'menu') return `set to ${shown} (in the display)`;
+  if (c.kind === 'enum') return `set to ${shown}`;
   const num = Number(v);
   const span = c.max - c.min;
   const f = span > 0 ? (num - c.min) / span : 0;
@@ -102,7 +107,9 @@ export function positionText(c: Control, v: ControlValue, values?: ControlValues
   if (atMin) return `${low} (${shown})`;
   if (atMax) return `${high} (${shown})`;
   if (mid) return `half way (${shown})`;
-  return `at ${shown}, about ${Math.round(f * 10)}/10 of the way ${across ? 'across' : flip ? 'down' : 'up'}`;
+  // neither end, so never "0/10" or "10/10"
+  const tenths = Math.min(9, Math.max(1, Math.round(f * 10)));
+  return `at ${shown}, about ${tenths}/10 of the way ${across ? 'across' : flip ? 'down' : 'up'}`;
 }
 
 /** A control's line in a step's text: "- CUTOFF: fully clockwise (10)". */
