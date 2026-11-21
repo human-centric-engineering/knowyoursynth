@@ -281,7 +281,8 @@ export function laneReadout(
 ): string {
   const c = def.controls.find((x) => x.id === id);
   if (!c) throw new Error(`${def.id}: no control ${id}`);
-  const name = r.names[id] ?? c.label ?? id;
+  // A panel label can run over two lines (CUTOFF / FREQUENCY); a readout is one.
+  const name = r.names[id] ?? (c.label ?? id).replace(/\s*\n\s*/g, ' ');
   if (c.kind === 'bool') return `${name} ${v ? 'on' : 'off'}`;
   if (c.kind === 'enum') {
     const o = 'options' in c ? c.options?.find((x) => x.v === v) : undefined;
