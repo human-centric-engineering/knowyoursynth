@@ -12,6 +12,7 @@ import {
   focusStore,
   highlightStore,
   lensStore,
+  lessonAreaStore,
   mapStore,
   useStore,
 } from '@/components/app/synth/stores';
@@ -160,6 +161,50 @@ export function AreaLayer({ def }: { def: SynthDef }) {
       {active && (
         <AreaOutline rects={active.rects} color={moduleOf(active.module).color} view={view} />
       )}
+    </g>
+  );
+}
+
+/**
+ * The sections the open lesson step is about, tinted as Explain sections tints them and outlined, under the controls
+ * so they stay crisp. Nothing here takes the pointer. The lesson card stands beside them (`data-lesson-area`).
+ */
+export function LessonAreaLayer({ def }: { def: SynthDef }) {
+  const ids = useStore(lessonAreaStore, (a) => a.join('|'));
+  if (!ids) return null;
+  const amap = areaMap(def);
+  const areas = ids.split('|').flatMap((id) => {
+    const a = amap[id];
+    return a ? [a] : [];
+  });
+  return (
+    <g pointerEvents="none" data-testid="lesson-areas">
+      {areas.map((a) => {
+        const color = moduleOf(a.module).color;
+        return (
+          <g key={a.id}>
+            {a.rects.map((r, i) => (
+              <rect
+                key={i}
+                data-lesson-area={a.id}
+                x={r.x}
+                y={r.y}
+                width={r.w}
+                height={r.h}
+                rx={a.rects.length > 1 ? 0 : 8}
+                fill={color}
+                fillOpacity={0.2}
+              />
+            ))}
+            <AreaOutline
+              rects={a.rects}
+              color={color}
+              view={def.view}
+              id={`kysLessonEdge-${a.id}`}
+            />
+          </g>
+        );
+      })}
     </g>
   );
 }

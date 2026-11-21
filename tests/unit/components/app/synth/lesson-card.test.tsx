@@ -7,15 +7,22 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { LessonCard } from '@/components/app/synth/lesson-card';
 import { faceRoles } from '@/components/app/synth/face-roles';
 import { INK, PAPER } from '@/components/app/panel/parts';
 import { stepBadges } from '@/lib/app/synths/lib/history';
-import { badgeStore, highlightStore, moveStore } from '@/components/app/synth/stores';
+import {
+  badgeStore,
+  highlightStore,
+  lessonAreaStore,
+  moveStore,
+} from '@/components/app/synth/stores';
+import { areaOf } from '@/lib/app/synths/lib/areas';
+import { controlMap } from '@/lib/app/synths/lib/patch';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
-import type { Preset } from '@/lib/app/synths/contract';
+import type { Preset, SynthDef } from '@/lib/app/synths/contract';
 
 const get = vi.hoisted(() => vi.fn(async () => []));
 const post = vi.hoisted(() => vi.fn());
@@ -502,5 +509,140 @@ describe('LessonCard videos and links', () => {
   it('offers no suggestion for a sound that is not a library patch', () => {
     card();
     expect(screen.queryByRole('button', { name: 'Suggest a link' })).toBeNull();
+  });
+});
+
+describe("LessonCard beside the step's sections (t-297)", () => {
+  const ids = ['mix.osc1', 'filter.cutoff'];
+  const sound = (d: SynthDef, set: Record<string, number>): Preset => ({
+    ...defaultPatchSound(d),
+    id: 'beside',
+    name: 'Beside',
+    steps: [{ title: 'Set it', module: 'mixer', why: 'Why.', set }],
+  });
+  const areasOf = (d: SynthDef, of: string[]) => {
+    const cm = controlMap(d);
+    return [
+      ...new Set(
+        of.map((id) => {
+          const c = cm[id];
+          if (!c) throw new Error(`${d.id} has no ${id}`);
+          const a = areaOf(d, c);
+          if (!a) throw new Error(`${id} is in no area`);
+          return a.id;
+        })
+      ),
+    ];
+  };
+
+  // The panel's lit sections, as `LessonAreaLayer` draws them, at the given screen spans (happy-dom lays nothing out).
+  let drawn: HTMLElement[] = [];
+  const panelAt = (...spans: [number, number][]) => {
+    drawn = spans.map(([left, right]) => {
+      const el = document.createElement('div');
+      el.setAttribute('data-lesson-area', 'x');
+      el.getBoundingClientRect = () => new DOMRect(left, 200, right - left, 300);
+      document.body.appendChild(el);
+      return el;
+    });
+  };
+
+  afterEach(() => {
+    drawn.forEach((el) => el.remove());
+    drawn = [];
+    cleanup();
+    act(() => lessonAreaStore.set([]));
+  });
+
+  function open(
+    props: { d?: SynthDef; set?: Record<string, number>; section?: 'build' | 'fx' } = {}
+  ) {
+    const d = props.d ?? def;
+    const onSide = vi.fn();
+    const view = render(
+      <LessonCard
+        def={d}
+        preset={sound(d, props.set ?? Object.fromEntries(ids.map((id) => [id, 5])))}
+        step={0}
+        onStep={vi.fn()}
+        section={props.section ?? 'build'}
+        onClose={vi.fn()}
+        side="right"
+        onSide={onSide}
+        inspector={null}
+        effects={null}
+      />
+    );
+    const card = screen.getByTestId('lesson-card');
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    return { card, onSide, view };
+  }
+
+  it("lights the sections the step's moves are in, and lets them go when the card closes", () => {
+    const { view } = open();
+    const expected = areasOf(def, ids);
+    expect(expected.length).toBe(2);
+    expect(lessonAreaStore.get()).toEqual(expected);
+
+    view.unmount();
+    expect(lessonAreaStore.get()).toEqual([]);
+  });
+
+  it('stands beside the sections on the side with more room', async () => {
+    panelAt([100, 300], [250, 500]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe(`${500 + 16}px`));
+    expect(card).toHaveAttribute('data-beside');
+    expect(card).not.toHaveAttribute('data-detached');
+  });
+
+  it('stands to their left when the room is that side', async () => {
+    panelAt([900, 1300]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe(`${900 - 16 - 400}px`));
+  });
+
+  it('keeps to the far edge when it fits beside them on neither side', async () => {
+    panelAt([200, 1200]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe(`${1400 - 400 - 16}px`));
+  });
+
+  it('docks from ⇆ on the side away from the sections, and stays docked', async () => {
+    panelAt([100, 500]);
+    const { card, onSide } = open();
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Move the card to the left' }));
+
+    expect(onSide).toHaveBeenCalledTimes(1);
+    expect(card).not.toHaveAttribute('data-beside');
+    expect(card.style.left).toBe('');
+  });
+
+  it('docks as before with ⇆ when it already sits away from them', async () => {
+    panelAt([900, 1300]);
+    const { card, onSide } = open();
+    await waitFor(() => expect(card.style.left).toBe('484px'));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Move the card to the right' }));
+
+    expect(onSide).not.toHaveBeenCalled();
+    expect(card).not.toHaveAttribute('data-beside');
+  });
+
+  it('lights nothing for the effects, nor on a synth not trying it yet', () => {
+    open({ section: 'fx' });
+    expect(lessonAreaStore.get()).toEqual([]);
+    cleanup();
+
+    const other = getSynthDef('grandmother');
+    if (!other) throw new Error('grandmother is not registered');
+    const c = other.controls.find((x) => areaOf(other, x));
+    if (!c) throw new Error('grandmother has no control in an area');
+    panelAt([100, 500]);
+    const { card } = open({ d: other, set: { [c.id]: 5 } });
+    expect(lessonAreaStore.get()).toEqual([]);
+    expect(card).not.toHaveAttribute('data-beside');
   });
 });

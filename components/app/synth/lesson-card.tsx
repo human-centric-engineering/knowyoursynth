@@ -12,6 +12,10 @@
  * not in use; moved, it floats over the dock too (t-202). The ⇆ button docks it again, on the other side. Its grip at
  * the bottom right sizes it, by pointer or by the arrow keys (t-203), and the size is kept when it is docked again.
  *
+ * On a synth trying it (`BESIDE`), a step's sections are lit on the panel (`lessonAreaStore`, drawn by
+ * `LessonAreaLayer`) and the card stands beside them rather than over them, at the height it docks at, moving along as
+ * the steps go. Dragged, or docked with ⇆, it stays where it is put until it is closed.
+ *
  * The lesson hangs from a strip of the faceplate (`face`, t-201): its header is the panel's colour and silkscreen
  * ink, as the rails along the panel's head and foot are, so the card reads as part of the instrument; its body is the
  * stage's, so the text stands off any faceplate the card is over. The inspector and the effects are the stage's
@@ -29,6 +33,7 @@ import type {
 } from 'react';
 import { ArrowLeftRight, Check, ChevronLeft, ChevronRight, RotateCcw, X } from 'lucide-react';
 import { stepBadges } from '@/lib/app/synths/lib/history';
+import { areaOf } from '@/lib/app/synths/lib/areas';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
 import {
   controlMap,
@@ -43,6 +48,7 @@ import {
   badgeStore,
   focusStore,
   highlightStore,
+  lessonAreaStore,
   moveStore,
   useStore,
 } from '@/components/app/synth/stores';
@@ -58,6 +64,11 @@ export type CardId = 'build' | 'inspector' | 'fx';
 
 /** The controls a sound's tweaks are about, once each, in their order. */
 const tweakBadges = (p: Preset): string[] => [...new Set(p.tweaks.map((t) => t.id))];
+
+/** The synths whose lesson card lights a step's sections and stands beside them: tried on the Model D first. */
+const BESIDE = new Set(['model-d']);
+/** How far the card stands off the sections it is beside, in px. */
+const GAP = 16;
 
 /** How close a dragged card may come to the screen's edges, in px. */
 const EDGE = 8;
@@ -164,6 +175,10 @@ export function LessonCard({
     x: number;
     y: number;
   } | null>(null);
+  // Docked with ⇆: the card keeps to its side rather than standing beside the step's sections.
+  const [pinned, setPinned] = useState(false);
+  // Where the card stands beside the step's sections, and the side ⇆ would dock it on; `null` while docked.
+  const [beside, setBeside] = useState<{ x: number; dock: 'left' | 'right' } | null>(null);
   const n = preset?.steps.length ?? 0;
   const starting = !!preset && step === START_STEP;
   const current = preset && step != null && !starting ? preset.steps[step] : undefined;
@@ -190,6 +205,81 @@ export function LessonCard({
     badgeStore.set(badgeKey ? badgeKey.split('|') : []);
   }, [badgeKey]);
   useEffect(() => () => badgeStore.set([]), []);
+
+  // The sections the step's moves are in, lit on the panel: on a synth trying it, for a step that moves something.
+  const areaKey = useMemo(() => {
+    if (!BESIDE.has(def.id) || section !== 'build' || !current) return '';
+    const cm = controlMap(def);
+    const jm = jackMap(def);
+    const ids = new Set<string>();
+    for (const id of stepIds(current)) {
+      const at = cm[id] ?? jm[id];
+      const a = at ? areaOf(def, at) : null;
+      if (a) ids.add(a.id);
+    }
+    return [...ids].join('|');
+  }, [def, section, current]);
+  useEffect(() => {
+    lessonAreaStore.set(areaKey ? areaKey.split('|') : []);
+  }, [areaKey]);
+  useEffect(() => () => lessonAreaStore.set([]), []);
+
+  // Beside the lit sections, on the side with more room, at the height the card docks at. With no room either side it
+  // keeps to the far edge, over as little of them as it can. Measured from the panel as drawn, after the sections
+  // are, and again as the window or the panel moves.
+  const placing = !!areaKey && !pinned && pos == null;
+  const sizeW = size?.w;
+  useEffect(() => {
+    if (!placing) return undefined;
+    let frame = 0;
+    const place = () => {
+      const el = ref.current;
+      const rects = [...document.querySelectorAll('[data-lesson-area]')].map((r) =>
+        r.getBoundingClientRect()
+      );
+      if (!el || rects.length === 0) return setBeside(null);
+      const left = Math.min(...rects.map((r) => r.left));
+      const right = Math.max(...rects.map((r) => r.right));
+      const w = el.offsetWidth;
+      const vw = window.innerWidth;
+      const roomR = vw - EDGE - right;
+      const roomL = left - EDGE;
+      const onRight = roomR >= roomL;
+      const fits = (onRight ? roomR : roomL) >= w + GAP;
+      const at = onRight
+        ? fits
+          ? right + GAP
+          : vw - w - 2 * EDGE
+        : fits
+          ? left - GAP - w
+          : 2 * EDGE;
+      // Kept on screen when the panel is scrolled or zoomed past the sections.
+      const x = Math.round(Math.min(Math.max(at, EDGE), Math.max(EDGE, vw - w - EDGE)));
+      const dock = x + w / 2 < vw / 2 ? 'right' : 'left';
+      setBeside((b) => (b && b.x === x && b.dock === dock ? b : { x, dock }));
+    };
+    const later = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(place);
+    };
+    later();
+    // The panel changes size without the window when it is zoomed or its layout changes.
+    const frameEl = document.querySelector('[data-testid="panel-frame"]');
+    const seen =
+      frameEl && typeof ResizeObserver !== 'undefined' ? new ResizeObserver(later) : null;
+    if (frameEl) seen?.observe(frameEl);
+    window.addEventListener('resize', later);
+    window.addEventListener('scroll', later, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      seen?.disconnect();
+      window.removeEventListener('resize', later);
+      window.removeEventListener('scroll', later, true);
+    };
+  }, [placing, areaKey, sizeW]);
+  const besideX = placing ? (beside?.x ?? null) : null;
+  // Where ⇆ sends the card: beside the sections, the side away from them; docked, the other side.
+  const dockTo = besideX != null && beside ? beside.dock : side === 'right' ? 'left' : 'right';
 
   // Closed from inside (Escape or ×), focus goes back to what opened the card rather than dropping to the page. The
   // opener is whatever focus last came into the card from, so a section switched from the bar is the one returned to.
@@ -618,8 +708,10 @@ export function LessonCard({
       className={`kys-card ${lesson ? 'is-faced' : ''}`}
       data-side={side}
       data-detached={pos ? '' : undefined}
+      data-beside={besideX != null ? '' : undefined}
       style={{
         ...(size && { width: size.w, height: size.h }),
+        ...(besideX != null && { left: besideX, right: 'auto' }),
         ...(pos && {
           left: pos.x,
           top: pos.y,
@@ -650,11 +742,12 @@ export function LessonCard({
           <button
             type="button"
             className="kys-pbtn"
-            aria-label={`Move the card to the ${side === 'right' ? 'left' : 'right'}`}
-            title="Move the card to the other side of the panel"
+            aria-label={`Move the card to the ${dockTo}`}
+            title={`Move the card to the ${dockTo} of the panel`}
             onClick={() => {
               setPos(null);
-              onSide();
+              setPinned(true);
+              if (dockTo !== side) onSide();
             }}
           >
             <ArrowLeftRight size={16} aria-hidden="true" />

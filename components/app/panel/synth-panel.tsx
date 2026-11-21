@@ -43,6 +43,7 @@ import { controlMap, faceView, isShown } from '@/lib/app/synths/lib/patch';
 import { rebase } from '@/lib/app/sequencer/lanes';
 import {
   AreaLayer,
+  LessonAreaLayer,
   DimLayer,
   DoorRings,
   HeatLayer,
@@ -569,6 +570,7 @@ export function SynthPanel({
         <StaticDecor decor={decor} ctx={ctx} />
         <Leds decor={decor} ctx={ctx} values={values} />
         {heatOn && !areasOn && <HeatLayer def={shown} values={values} outline={outline} />}
+        {!areasOn && <LessonAreaLayer def={def} />}
         {def.controls.map((c) => {
           if (!isShown(c, values)) return null;
           const value = drawn(c.id);
