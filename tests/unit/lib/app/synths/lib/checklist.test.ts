@@ -53,6 +53,8 @@ describe('positionText', () => {
     expect(positionText(k, 7)).toBe('at 7, about 2 o’clock');
     expect(positionText(k, 4.5)).toBe('at 4.5, between 11 and 12 o’clock');
     expect(positionText(k, 1)).toBe('at 1, about 8 o’clock');
+    expect(positionText(k, 0.1)).toBe('at 0.1, just past 7 o’clock');
+    expect(positionText(k, 9.9)).toBe('at 9.9, just short of 5 o’clock');
   });
 
   it('reads a knob that runs either side of zero from its own range', () => {

@@ -12,10 +12,10 @@
  *
  * Every patch chosen starts with the drums on Match and the Count-in on (t-277), whatever was set on the last one, Off
  * included: the beat is the one that suits the new patch. The Default Saw is the exception: it starts with the drums
- * off (t-295, owner 2026-11-21), as it is the plain tone to check by ear, playing a scale. The Metronome is left as it was. The page calls `newPatch`
- * where the visitor picks a patch, not on a change of what is open: a reload, the stored panel arriving after the first
- * render, the account's copy arriving later, or another tab writing the setting is not a patch chosen, and leaves the
- * choices made on the panel as they were.
+ * off (t-295, owner 2026-11-21), as it is the plain tone to check by ear, playing a scale. The Metronome is left as
+ * it was. The page calls `newPatch` where the visitor picks a patch, not on a change of what is open: a reload, the
+ * stored panel arriving after the first render, the account's copy arriving later, or another tab writing the setting
+ * is not a patch chosen, and leaves the choices made on the panel as they were.
  *
  * The stored setting is read by `useBackingPref`, apart from the rest.
  */

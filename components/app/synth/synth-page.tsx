@@ -2366,8 +2366,9 @@ function Synth({
       return;
     }
     leaveShared();
-    // Progress is kept for every lesson, the Default patch's checklist included.
-    const kept = preset ?? null;
+    // Progress is kept for the catalogue's lessons, not the Default patch's checklist: it is no library sound, so the
+    // server has nowhere to keep it.
+    const kept = preset && !isDefaultPatch(preset.id) ? preset : null;
     if (kept && k != null && k !== START_STEP) progress.record(kept.id, k);
     else if (k == null && kept && step != null && step === kept.steps.length - 1)
       progress.record(kept.id, step, true);

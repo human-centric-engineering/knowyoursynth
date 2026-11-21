@@ -97,6 +97,9 @@ export function positionText(c: Control, v: ControlValue, values?: ControlValues
     if (atMax) return `fully clockwise (${shown})`;
     if (mid) return `straight up, at 12 o’clock (${shown})`;
     const at = clock(f);
+    // near an end but not at it: the nearest half hour would read as the end itself
+    if (at === '7 o’clock') return `at ${shown}, just past 7 o’clock`;
+    if (at === '5 o’clock') return `at ${shown}, just short of 5 o’clock`;
     return `at ${shown}, ${at.startsWith('between') ? at : `about ${at}`}`;
   }
   // faders: up for more, or down for more on a lever with its maximum at the bottom; across, right for more
