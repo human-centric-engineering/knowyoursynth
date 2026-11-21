@@ -550,7 +550,28 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     return made;
   };
 
+  // What each ResizeObserver watches, and a way to fire it: happy-dom lays nothing out, so nothing resizes on its own.
+  let observed: { els: Element[]; fire: () => void }[] = [];
+  beforeEach(() => {
+    observed = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        els: Element[] = [];
+        constructor(cb: () => void) {
+          observed.push({ els: this.els, fire: cb });
+        }
+        observe(el: Element) {
+          this.els.push(el);
+        }
+        unobserve() {}
+        disconnect() {}
+      }
+    );
+  });
+
   afterEach(() => {
+    vi.unstubAllGlobals();
     drawn.forEach((el) => el.remove());
     drawn = [];
     cleanup();
@@ -794,9 +815,46 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     expect(card).not.toHaveAttribute('data-beside');
     expect(card.style.left).toBe('');
 
-    // A longer step's text grows the docked card up into the row above.
+    // A longer step's text grows the docked card up into the row above: the card's own size is watched.
     card.getBoundingClientRect = () => new DOMRect(960, 100, 400, 700);
-    fireEvent(window, new Event('resize'));
+    const watched = observed.find((o) => o.els.includes(card));
+    if (!watched) throw new Error('the card is not watched for its size');
+    act(() => watched.fire());
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+  });
+
+  it('moves beside them when the Sound Design drawer lifts it into their row, unresized', async () => {
+    const page = document.createElement('div');
+    page.className = 'kys-synth';
+    document.body.appendChild(page);
+    drawn.push(page);
+    const [area] = panelAt([100, 500]);
+    area.getBoundingClientRect = () => new DOMRect(100, 50, 400, 200);
+    const d = def;
+    render(
+      <LessonCard
+        def={d}
+        preset={sound(d, Object.fromEntries(ids.map((id) => [id, 5])))}
+        step={0}
+        onStep={vi.fn()}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+      />,
+      { container: page }
+    );
+    const card = screen.getByTestId('lesson-card');
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(card).not.toHaveAttribute('data-beside');
+
+    // The page writes the drawer's height on its root, and the card, standing on it, rises into the row above.
+    card.getBoundingClientRect = () => new DOMRect(960, 100, 400, 500);
+    page.style.setProperty('--kys-strip-h', '200px');
     await waitFor(() => expect(card.style.left).toBe('516px'));
   });
 });

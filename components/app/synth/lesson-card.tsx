@@ -242,9 +242,8 @@ export function LessonCard({
       const band = el.getBoundingClientRect();
       const level = all.filter((r) => r.bottom > band.top && r.top < band.bottom);
       if (level.length === 0) return setBeside(null);
-      const rects = level;
-      const left = Math.min(...rects.map((r) => r.left));
-      const right = Math.max(...rects.map((r) => r.right));
+      const left = Math.min(...level.map((r) => r.left));
+      const right = Math.max(...level.map((r) => r.right));
       const w = el.offsetWidth;
       const vw = window.innerWidth;
       const roomR = vw - EDGE - right;
@@ -276,9 +275,13 @@ export function LessonCard({
     later();
     // The panel changes size without the window when it is zoomed or its layout changes; the scroller around it, when
     // a drawer or column beside it does, which can move the panel without resizing it. The card grows with a longer
-    // step and rises with the Sound Design drawer, which changes the rows it is level with.
+    // step, which changes the rows it is level with; and it stands on the dock and the Sound Design drawer, so it
+    // rises and falls, unresized, as the page writes their heights (`--kys-dock-h`, `--kys-strip-h`) on its root.
     const seen = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(later) : null;
     if (ref.current) seen?.observe(ref.current);
+    const lifted = typeof MutationObserver !== 'undefined' ? new MutationObserver(later) : null;
+    const root = ref.current?.closest('.kys-synth');
+    if (root) lifted?.observe(root, { attributes: true, attributeFilter: ['style'] });
     for (const sel of ['[data-testid="panel-frame"]', '.kys-panel-scroller']) {
       const el = document.querySelector(sel);
       if (el) seen?.observe(el);
@@ -288,6 +291,7 @@ export function LessonCard({
     return () => {
       cancelAnimationFrame(frame);
       seen?.disconnect();
+      lifted?.disconnect();
       window.removeEventListener('resize', later);
       window.removeEventListener('scroll', onScroll, true);
     };
