@@ -11,12 +11,13 @@ import type { Phrase, PhraseNote } from '@/lib/app/synths/contract';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { importPhrase, phraseBeats } from '@/lib/app/sequencer/import';
-import { PatternSchema } from '@/lib/app/sequencer/pattern';
+import { PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import {
   followSoundRiff,
   riffLeadsDefault,
   riffProblem,
+  playedDefault,
   phraseOf,
   planRiffPattern,
   riffInspiration,
@@ -496,17 +497,49 @@ describe('a pattern that can be a default', () => {
     expect(riffProblem(pattern())).toBeNull();
   });
 
-  it('is not one that ends in rests, has a second part in its chain, or plays nothing', () => {
+  it('is one that chains two parts or carries mod lanes, its riff being part A without them (t-300)', () => {
+    const ab = pattern();
+    ab.parts.push(structuredClone(ab.parts[0]));
+    ab.parts[1].steps[0].notes = [{ note: 55, gate: 1 }];
+    ab.chain = [0, 0, 1];
+    expect(riffProblem(ab)).toBeNull();
+    expect(phraseOf(ab).steps).toEqual(phraseOf(pattern()).steps);
+    expect(playedDefault(ab)).toBe(true);
+
+    const lanes: Pattern = {
+      ...pattern(),
+      lanes: ['filter.cutoff'],
+    };
+    lanes.parts[0].steps[0].mod = { 'filter.cutoff': 3 };
+    expect(riffProblem(lanes)).toBeNull();
+    expect(phraseOf(lanes)).toEqual(phraseOf(pattern()));
+    expect(playedDefault(lanes)).toBe(true);
+
+    expect(playedDefault(pattern())).toBe(false);
+    // A chain that only repeats its one part plays nothing past the riff.
+    expect(playedDefault({ ...pattern(), chain: [0, 0] })).toBe(false);
+  });
+
+  it('is not one that ends in rests, draws by chance, plays out of order, or plays nothing', () => {
     const rests = pattern();
     rests.parts[0].steps.push(
       ...structuredClone(rests.parts[0].steps).map((s) => ({ ...s, notes: [] }))
     );
     expect(riffProblem(rests)).toMatch(/rests/);
 
-    const ab = pattern();
-    ab.parts.push(structuredClone(ab.parts[0]));
-    ab.chain = [0, 1];
-    expect(riffProblem(ab)).toMatch(/two parts/);
+    // Part A ending in rests is refused even when part B fills the bar.
+    const restsA = pattern();
+    restsA.parts[0].steps.push(
+      ...structuredClone(restsA.parts[0].steps).map((s) => ({ ...s, notes: [] }))
+    );
+    restsA.parts.push(structuredClone(restsA.parts[0]));
+    for (const s of restsA.parts[1].steps) s.notes = [{ note: 60, gate: 1 }];
+    restsA.chain = [0, 1];
+    expect(riffProblem(restsA)).toMatch(/rests/);
+
+    const condition = pattern();
+    condition.parts[0].steps[1].condition = { t: 'first' };
+    expect(riffProblem(condition)).toMatch(/conditions/);
 
     const chance = pattern();
     chance.parts[0].steps[0].probability = 0.5;
@@ -514,9 +547,6 @@ describe('a pattern that can be a default', () => {
 
     const random = { ...pattern(), direction: 'random' as const };
     expect(riffProblem(random)).toMatch(/forward or in reverse/);
-
-    const lanes = { ...pattern(), lanes: ['vcf.cutoff'] };
-    expect(riffProblem(lanes)).toMatch(/mod lanes/);
 
     const silent = pattern();
     for (const step of silent.parts[0].steps) step.notes = [];

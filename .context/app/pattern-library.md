@@ -1173,11 +1173,16 @@ probe, lessons, the tutor, sharing and the content template all still read the o
   rewritten where the notes differ, and the sound is marked edited either way, so the seed and an upload then leave
   it alone. Otherwise a reseed could write a riff the admin's default no longer matches. A riff that already plays
   the pattern's notes is not rewritten.
-- **A default plays whole as a riff** (`riffProblem`). A riff is the first loop, frozen: one part, looping where its
-  last note ends, the same every time, moving no controls. So a pattern whose chain has a second part, that ends in
-  rests, that plays nothing on its first loop, that uses probability or conditions, that plays in a random, Brownian
-  or pendulum direction, or that has mod lanes cannot be a sound's default. It can still be in the library and on a sound's list behind the default. Playing a pattern in full
-  is the sequencer's job (t-123).
+- **A default's first loop is its riff** (`riffProblem`). A riff is the first loop, frozen: one part, looping where
+  its last note ends, the same every time, moving no controls. So a pattern that ends part A in rests, that plays
+  nothing on its first loop, that uses probability or conditions, or that plays in a random, Brownian or pendulum
+  direction cannot be a sound's default. It can still be in the library and on a sound's list behind the default.
+- **A default may chain a part B and carry mod lanes** (owner ruling, 2026-11-21, `f-lane-sounds` t-300). Its riff is
+  then part A's notes, with no control moving, and the sound is _played_: the catalogue sends `defaultPattern.played`
+  (`playedDefault`), and the page reads the sound's patterns and loads the default into the sequencer as the sound is
+  picked (`useLoadSoundDefault`), so Play plays the whole pattern, chain and lanes, before the sequencer has been
+  opened. Any other default is read only when the sequencer or the picker opens, as before. Playing a pattern in full is
+  the sequencer's job (t-123).
 - **A sound's riff is edited directly only while it leads** (`riffLeadsDefault`): while the default is the sound's own
   riff pattern, that pattern is still exactly what the riff imports to, and it is _In the style of_. An admin may have
   changed its name or role. A new riff whose bpm falls outside the pattern's tempo range clears the range.

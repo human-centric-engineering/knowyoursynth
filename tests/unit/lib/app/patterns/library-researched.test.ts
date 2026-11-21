@@ -1359,11 +1359,10 @@ describe('syncResearchedPatterns', () => {
     expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ edited: 1 });
     expect(jcge.name).not.toBe('Renamed in the batch');
 
-    // Enabled but unplayable as a riff (two parts): never the default, so the batch's change lands.
+    // Enabled but unplayable as a riff (by chance): never the default, so the batch's change lands.
     jcge.status = 'enabled';
     const two = PatternSchema.parse(jcge.pattern);
-    two.parts.push(structuredClone(two.parts[0]));
-    two.chain = [0, 1];
+    two.parts[0].steps[0].probability = 0.5;
     jcge.pattern = two;
     changed.patterns[1].pattern = two;
     expect(await syncResearchedPatterns(lib(), [changed])).toMatchObject({ updated: 1 });

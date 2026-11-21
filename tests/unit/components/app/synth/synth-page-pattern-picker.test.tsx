@@ -384,6 +384,49 @@ describe('the pattern picker in the sequencer', () => {
     );
   });
 
+  it('loads a played default (lanes, a part B) as the sound is picked, so Play plays it with the sequencer closed (t-300)', async () => {
+    const pattern = { ...structuredClone(ROLLING.pattern), lanes: ['filter.cutoff'] };
+    pattern.parts[0].steps[2].mod = { 'filter.cutoff': 4 };
+    const laned: LibraryPatternView = { ...ROLLING, name: 'Laned eighths', pattern };
+    serve({ '/api/v1/synths/model-d/sounds/fat-bass/patterns': [laned] });
+    page({
+      ...detail,
+      sounds: [
+        { ...FAT_BASS, defaultPattern: { id: laned.id, name: laned.name, played: true } },
+        WOBBLE,
+      ],
+    });
+    // Read at once, not when the sequencer opens.
+    await waitFor(() =>
+      expect(api.get).toHaveBeenCalledWith(
+        '/api/v1/synths/model-d/sounds/fat-bass/patterns',
+        undefined
+      )
+    );
+    await act(async () => {});
+    engine.send.mockClear();
+    await press('Play');
+    await waitFor(() => expect(patternsSent(sent())).toHaveLength(1));
+    // The pattern at its own tempo, not the riff at the sound's 90 bpm.
+    expect(patternsSent(sent())[0]).toMatchObject({ bpm: 140 });
+  });
+
+  it('leaves a default that is only its riff to be read when the sequencer opens', async () => {
+    serve({ '/api/v1/synths/model-d/sounds/fat-bass/patterns': [ROLLING] });
+    page({
+      ...detail,
+      sounds: [{ ...FAT_BASS, defaultPattern: { id: ROLLING.id, name: ROLLING.name } }, WOBBLE],
+    });
+    await act(async () => {});
+    expect(api.get).not.toHaveBeenCalledWith(
+      '/api/v1/synths/model-d/sounds/fat-bass/patterns',
+      undefined
+    );
+    engine.send.mockClear();
+    await press('Play');
+    expectRiff(patternsSent(sent()).at(-1), FAT_BASS.phrase);
+  });
+
   it('goes back to the new patch’s riff, by name, when another patch is chosen', async () => {
     page();
     sequencer();

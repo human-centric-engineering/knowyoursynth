@@ -138,20 +138,20 @@ export function phraseOf(pattern: Pattern): Phrase {
 }
 
 /**
- * Why a pattern cannot be a sound's default, or `null` when it can: the riff it becomes must play it whole. A riff
- * has one part, plays at least one note, and loops where its last note ends.
+ * Why a pattern cannot be a sound's default, or `null` when it can: the riff it becomes must be its first loop, the same
+ * however often it is played. A riff plays at least one note, and loops where its last note ends.
+ *
+ * A default may chain two parts and carry mod lanes (owner ruling, `f-lane-sounds` t-300): the riff is then part A's
+ * notes, with no control moving, and the sequencer plays the whole pattern, chain and lanes, when the sound is picked
+ * (`playedDefault`). What would make the first loop itself come out differently each time is still refused.
  */
 export function riffProblem(pattern: Pattern): string | null {
-  if (new Set(pattern.chain).size > 1)
-    return 'A sound plays its default as a riff, which has one part: a chain of two parts cannot be a default';
-  // A riff is the first loop, frozen: anything that makes one loop differ from the next is lost.
+  // A riff is the first loop, frozen: anything that makes that loop differ from one play to the next is lost.
   if (!['forward', 'reverse'].includes(pattern.direction))
     return 'A sound plays its default as a riff, the same every loop: a default plays forward or in reverse';
   const steps = pattern.parts.flatMap((p) => p.steps);
   if (steps.some((s) => s.probability !== undefined || s.condition !== undefined))
     return 'A sound plays its default as a riff, the same every loop: a default has no probability or conditions';
-  if (pattern.lanes?.length)
-    return 'A sound plays its default as a riff, which moves no controls: a default has no mod lanes';
   const riff = phraseOf(pattern);
   if (!riff.steps.length) return 'A default plays at least one note on its first loop';
   // The engine loops a riff at its last note's end, rounded up to a whole beat.
@@ -159,6 +159,13 @@ export function riffProblem(pattern: Pattern): string | null {
     return 'A sound plays its default as a riff, which loops where its last note ends: a default cannot end in rests';
   return null;
 }
+
+/**
+ * Whether a default plays more than its riff: a second part in its chain, or mod lanes. A sound with one is loaded
+ * into the sequencer as it is picked, so Play plays it whole rather than the riff (t-300).
+ */
+export const playedDefault = (pattern: Pattern): boolean =>
+  new Set(pattern.chain).size > 1 || !!pattern.lanes?.length;
 
 /** A riff, as a sound stores it. */
 export const PhraseSchema = PresetSchema.shape.phrase;

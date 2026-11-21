@@ -17,7 +17,8 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
-import { ENABLED, headOf, PLACES } from '@/lib/app/patterns/library';
+import { ENABLED, headOf, playedDefault, PLACES } from '@/lib/app/patterns/library';
+import { PatternSchema } from '@/lib/app/sequencer/pattern';
 import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import {
   summarisePublicLinks,
@@ -56,11 +57,13 @@ export interface CatalogueSynth {
  * that keeps the riff in step with it (`headOf`): what Play names the riff, and which of the sound's patterns the
  * picker and the sequencer take for it. None when it has no default, when it plays its riff as it has it, named for
  * the sound. Its `style` is the words of its Inspired by that say its style (`styleWordsOf`), what the drums' Match
- * goes by for the riff (t-267); absent for a work or a synth.
+ * goes by for the riff (t-267); absent for a work or a synth. `played` marks a default that plays more than its riff
+ * (a chained part B, or mod lanes: `playedDefault`, t-300), which the page loads into the sequencer as the sound is
+ * picked, so Play plays it whole; absent otherwise.
  */
 export type CatalogueSound = Preset & {
   version: number;
-  defaultPattern?: { id: string; name: string; style?: string };
+  defaultPattern?: { id: string; name: string; style?: string; played?: true };
 };
 
 export type Limit = z.infer<typeof LimitSchema>;
@@ -259,6 +262,9 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     const style = head
       ? styleWordsOf({ kind: head.pattern.inspiration, label: head.pattern.inspiredBy })
       : null;
+    // headOf has already parsed it to choose it, so this parse succeeds.
+    const headPattern = head ? PatternSchema.safeParse(head.pattern.pattern) : null;
+    const played = !!headPattern?.success && playedDefault(headPattern.data);
     sounds.push({
       ...result.value,
       version: s.definitionVersion,
@@ -268,6 +274,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
               id: head.patternId,
               name: head.pattern.name,
               ...(style ? { style } : {}),
+              ...(played ? { played: true as const } : {}),
             },
           }
         : {}),

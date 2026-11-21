@@ -109,6 +109,39 @@ const capitalise = (text: string) => text.charAt(0).toUpperCase() + text.slice(1
 const failure = (err: unknown) =>
   err instanceof Error && err.message ? err.message : 'Try again.';
 
+/**
+ * The sound's default pattern is its riff: it takes the riff's place while the sequencer holds the riff as it came, so
+ * what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived (`loaded`
+ * back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an unedited
+ * riff is where the Undo said it would go.
+ *
+ * The library runs it while the sequencer is open. The page runs it too for a sound whose default plays more than its
+ * riff (`played`, t-300), so the chain and the lanes are what Play plays before the sequencer has ever been opened.
+ */
+export function useLoadSoundDefault(seq: Sequencer, soundPatterns: SoundPatterns | null) {
+  const { loaded, edited, load } = seq;
+  const soundDefault = soundDefaultOf(soundPatterns);
+  const soundKey = soundPatterns
+    ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
+    : null;
+  const defaultFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!soundKey) defaultFor.current = null;
+    if (!soundDefault || loaded !== null || edited || defaultFor.current === soundKey) return;
+    defaultFor.current = soundKey;
+    load(
+      soundDefault.pattern,
+      {
+        id: null,
+        name: soundDefault.name,
+        libraryId: soundDefault.id,
+        inspiredBy: styleWordsOf(soundDefault.inspiredBy) ?? undefined,
+      },
+      { quiet: true }
+    );
+  }, [soundDefault, soundKey, loaded, edited, load]);
+}
+
 export function PatternLibrary({
   seq,
   library,
@@ -158,30 +191,7 @@ export function PatternLibrary({
     return () => want?.(false);
   }, [want, pickerOpen]);
 
-  // The sound's default pattern is its riff: it takes the riff's place while the sequencer holds the riff as it came,
-  // so what is held is named, and has the pattern's own settings. Run again once a new sound's riff has arrived
-  // (`loaded` back to null), so it never lands on another sound's riff. Once per sound on the panel: an Undo back to an
-  // unedited riff is where the Undo said it would go.
-  const soundDefault = soundDefaultOf(soundPatterns);
-  const soundKey = soundPatterns
-    ? `${soundPatterns.sound.synthId}/${soundPatterns.sound.slug}`
-    : null;
-  const defaultFor = useRef<string | null>(null);
-  useEffect(() => {
-    if (!soundKey) defaultFor.current = null;
-    if (!soundDefault || loaded !== null || edited || defaultFor.current === soundKey) return;
-    defaultFor.current = soundKey;
-    load(
-      soundDefault.pattern,
-      {
-        id: null,
-        name: soundDefault.name,
-        libraryId: soundDefault.id,
-        inspiredBy: styleWordsOf(soundDefault.inspiredBy) ?? undefined,
-      },
-      { quiet: true }
-    );
-  }, [soundDefault, soundKey, loaded, edited, load]);
+  useLoadSoundDefault(seq, soundPatterns);
 
   const run = async (what: string, fn: () => Promise<void>) => {
     setBusy(true);
