@@ -7666,7 +7666,7 @@
       "artist": "Stadium rock guitar",
       "tags": ["pluck", "rock", "delay"],
       "level": 2,
-      "blurb": "Clean, bright, picked notes in eighths with a dotted-eighth echo filling the gaps into a shimmering pattern: The Edge’s delay guitar, on a synth.",
+      "blurb": "Clean, bright, picked notes in eighths with a dotted-eighth echo filling the gaps into a shimmering pattern: the dotted-eighth delay guitar of 1980s rock, on a synth.",
       "how": "The Edge plays simple eighth notes into a delay set to a dotted eighth, so the echoes land between his notes and make a rhythm he never plays. A bright pluck and a synced ping-pong delay do it.",
       "phrase": {
         "bpm": 120,
@@ -11011,7 +11011,7 @@
       "tags": ["seq", "horror", "70s"],
       "level": 2,
       "blurb": "A fast, eerie, minor arpeggio with a bell-like tone and echoes: the prog-rock horror of 1970s Italian giallo films.",
-      "how": "Goblin’s horror themes are fast, repeating minor arpeggios on bell-like keyboards over darkness. A triangle with a quiet sync overtone, a ringing decay and echo.",
+      "how": "1970s Italian horror themes run fast, repeating minor arpeggios on bell-like keyboards over darkness. A triangle with a quiet sync overtone, a ringing decay and echo.",
       "phrase": {
         "bpm": 140,
         "loop": true,

@@ -7954,8 +7954,8 @@
     {
       "id": "pv-carpenter-arp",
       "name": "Horror Arpeggio",
-      "ref": "A cold, tense, repeating arpeggio with a chilly resonant ring, for late-1970s horror scores",
-      "artist": "1970s horror scores",
+      "ref": "A cold, tense, repeating arpeggio with a chilly resonant ring, like the synth figures in John Carpenter’s horror scores",
+      "artist": "John Carpenter",
       "tags": ["seq", "soundtrack", "horror", "80s"],
       "level": 1,
       "blurb": "A cold, tense, repeating arpeggio with a menacing ring.",

@@ -72,7 +72,7 @@ export function SoundPicker({
 }: {
   /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
-  /** "In the style of…", where the sound has one. */
+  /** The sound's one-line reference (what it is like), where it has one. */
   soundRef: string | null;
   /** Opens (or closes) the sound library. */
   onChooseSound: () => void;

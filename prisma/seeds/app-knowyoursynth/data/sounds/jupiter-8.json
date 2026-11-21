@@ -5043,7 +5043,7 @@
       "tags": ["keys", "horror", "prog", "70s"],
       "level": 2,
       "blurb": "A creepy, reedy, minor organ figure for an Italian horror film.",
-      "how": "Goblin scored Italian horror films with prog rock and creepy keyboards. A reedy square, filter open, a repeating minor figure.",
+      "how": "1970s Italian horror scores mixed prog rock with creepy keyboards. A reedy square, filter open, a repeating minor figure.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -7309,7 +7309,7 @@
       "tags": ["keys", "film", "organ", "10s"],
       "level": 2,
       "blurb": "A vast, slow, pipe-organ-like chord that fills a cathedral.",
-      "how": "The Interstellar score is built on a pipe organ. Two squares a fifth and octave apart give an organ’s stacked pipes; no filter movement, a slow attack.",
+      "how": "Two squares a fifth and octave apart give an organ’s stacked pipes; no filter movement, a slow attack.",
       "phrase": {
         "bpm": 66,
         "loop": true,
@@ -9239,7 +9239,7 @@
       "tags": ["pad", "psychedelic", "prog", "70s"],
       "level": 2,
       "blurb": "A soft, sad, slowly moving keyboard pad under a long guitar solo.",
-      "how": "Richard Wright’s pads for Pink Floyd were soft, sad and slow. A soft blend with a slow swell.",
+      "how": "1970s prog-rock keyboard pads were often soft, sad and slow. A soft blend with a slow swell.",
       "phrase": {
         "bpm": 64,
         "loop": true,
@@ -9320,7 +9320,7 @@
       "tags": ["keys", "rock", "electric piano", "70s"],
       "level": 2,
       "blurb": "A bouncy, bright electric-piano chord pattern.",
-      "how": "Supertramp drove songs with bouncy electric-piano chords. A bright, reedy pluck in eighths.",
+      "how": "1970s pop rock drove songs with bouncy electric-piano chords. A bright, reedy pluck in eighths.",
       "phrase": {
         "bpm": 126,
         "loop": true,
@@ -9861,7 +9861,7 @@
       "tags": ["keys", "ambient", "minimal", "80s"],
       "level": 1,
       "blurb": "Sparse, soft, haloed notes that hang in the air for a long time.",
-      "how": "Harold Budd played very soft, sparse notes left to ring in a haze. A soft bell tone with the longest release.",
+      "how": "1980s ambient piano plays very soft, sparse notes left to ring in a haze. A soft bell tone with the longest release.",
       "phrase": {
         "bpm": 56,
         "loop": true,
@@ -10000,7 +10000,7 @@
       "tags": ["perc", "ambient", "minimalism", "80s"],
       "level": 2,
       "blurb": "A hypnotic, interlocking, marimba-like pattern that slowly shifts.",
-      "how": "Midori Takada’s minimalist percussion music layers interlocking mallet patterns. A woody pluck in a repeating figure.",
+      "how": "Minimalist percussion music layers interlocking mallet patterns. A woody pluck in a repeating figure.",
       "phrase": {
         "bpm": 126,
         "loop": true,
@@ -10093,7 +10093,7 @@
       "tags": ["strings", "neoclassical", "ambient", "00s"],
       "level": 2,
       "blurb": "Slow, aching, sustained string chords that move one note at a time.",
-      "how": "Max Richter’s neo-classical pieces move slow, aching string chords a note at a time. A soft, bowed stack with a slow swell.",
+      "how": "Neo-classical pieces often move slow, aching string chords a note at a time. A soft, bowed stack with a slow swell.",
       "phrase": {
         "bpm": 56,
         "loop": true,
@@ -10331,7 +10331,7 @@
       "tags": ["drone", "ambient", "drone music", "00s"],
       "level": 2,
       "blurb": "Vast, slow, overlapping drones that seem not to move at all.",
-      "how": "Stars of the Lid stretch notes into vast, slow drones. Long, overlapping notes with the slowest envelopes.",
+      "how": "Drone music stretches notes into vast, slow drones. Long, overlapping notes with the slowest envelopes.",
       "phrase": {
         "bpm": 40,
         "loop": true,

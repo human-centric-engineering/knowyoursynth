@@ -5907,7 +5907,7 @@
       "tags": ["drone", "ambient", "experimental", "minimalism"],
       "level": 3,
       "blurb": "A slow, beating, cavernous drone to listen into.",
-      "how": "Pauline Oliveros’s Deep Listening drones beat and shimmer slowly in a resonant space. VCO-2 in LOW at its slowest bends VCO-1 gently through the cross mod, so the fifth beats and shifts.",
+      "how": "Slow drones beat and shimmer slowly in a resonant space. VCO-2 in LOW at its slowest bends VCO-1 gently through the cross mod, so the fifth beats and shifts.",
       "phrase": {
         "bpm": 50,
         "loop": true,
@@ -6944,7 +6944,7 @@
       "tags": ["seq", "spiritual jazz", "jazz", "arpeggio", "70s"],
       "level": 2,
       "blurb": "Shimmering harp sweeps pouring over four octaves.",
-      "how": "Alice Coltrane’s spiritual jazz pours harp glissandi over held chords. The arpeggiator, UP over four octaves at a fast rate, sweeps the chord; a ringing pluck lets the notes overlap.",
+      "how": "Spiritual jazz pours harp glissandi over held chords. The arpeggiator, UP over four octaves at a fast rate, sweeps the chord; a ringing pluck lets the notes overlap.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7655,7 +7655,7 @@
       "tags": ["pad", "dream pop", "shoegaze", "80s"],
       "level": 3,
       "blurb": "Shimmering, chorused, ethereal chords that seem to float.",
-      "how": "Cocteau Twins’ dream pop shimmers like a chorused guitar in a cathedral. UNISON without SOLO puts two detuned voices on every note, so three-note chords shimmer; a fast PWM adds to it.",
+      "how": "1980s dream pop shimmers like a chorused guitar in a cathedral. UNISON without SOLO puts two detuned voices on every note, so three-note chords shimmer; a fast PWM adds to it.",
       "phrase": {
         "bpm": 100,
         "loop": true,
@@ -8198,7 +8198,7 @@
       "tags": ["wind", "tango", "argentine", "60s"],
       "level": 2,
       "blurb": "A reedy, beating, nasal squeezebox marking a tango rhythm.",
-      "how": "Piazzolla’s tango drives on the bandoneon’s reedy, beating chords. A narrow pulse and a saw tuned apart so they beat, through the band-pass for the nasal reed.",
+      "how": "Nuevo tango drives on the bandoneon’s reedy, beating chords. A narrow pulse and a saw tuned apart so they beat, through the band-pass for the nasal reed.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -8938,7 +8938,7 @@
       "tags": ["drone", "modern classical", "film", "2010s"],
       "level": 2,
       "blurb": "A deep, dark, slowly opening drone, vast and unknowable.",
-      "how": "Jóhannsson’s scores open with deep, dark, slowly blooming drones. A low cluster of saws; ENV-1’s slow attack opens the filter over many seconds.",
+      "how": "Modern film scores often open with deep, dark, slowly blooming drones. A low cluster of saws; ENV-1’s slow attack opens the filter over many seconds.",
       "phrase": {
         "bpm": 54,
         "loop": true,
@@ -9014,7 +9014,7 @@
       "tags": ["keys", "french", "film", "waltz"],
       "level": 1,
       "blurb": "A wistful, tinkling toy-piano waltz from a Paris café.",
-      "how": "Yann Tiersen’s Amélie music tinkles with toy piano and accordion waltzes. A triangle and square with a triangle an octave up, a quick, short ring.",
+      "how": "French café waltzes tinkle with toy piano and accordion. A triangle and square with a triangle an octave up, a quick, short ring.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -11886,7 +11886,7 @@
       "tags": ["drone", "ethereal wave", "darkwave", "80s"],
       "level": 3,
       "blurb": "A resonant, slowly changing vowel held over a deep fifth, like a chant in a stone hall.",
-      "how": "Dead Can Dance’s music echoes ancient chant. A band-pass with high resonance gives a vowel; a slow LFO moves it, so the drone seems to sing different vowels.",
+      "how": "This drone echoes ancient chant. A band-pass with high resonance gives a vowel; a slow LFO moves it, so the drone seems to sing different vowels.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -12046,7 +12046,7 @@
       "tags": ["keys", "modern classical", "ambient", "2010s"],
       "level": 2,
       "blurb": "A soft, felted, five-note pattern drifting against the bar, never quite repeating.",
-      "how": "Ólafur Arnalds writes for pianos that play themselves in slowly shifting patterns. A five-note cell in sixteenths against a four-beat bar lands somewhere new each time; a soft, ringing tone lets the notes overlap.",
+      "how": "Some neo-classical pieces have pianos that play themselves in slowly shifting patterns. A five-note cell in sixteenths against a four-beat bar lands somewhere new each time; a soft, ringing tone lets the notes overlap.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -12269,7 +12269,7 @@
       "tags": ["lead", "western", "film", "60s"],
       "level": 2,
       "blurb": "A lonely, whistled melody echoing across a desert.",
-      "how": "Morricone’s westerns made the whistle a lead instrument. A pure triangle an octave up, a vibrato that waits, a quick glide.",
+      "how": "Spaghetti-western scores made the whistle a lead instrument. A pure triangle an octave up, a vibrato that waits, a quick glide.",
       "phrase": {
         "bpm": 96,
         "loop": true,

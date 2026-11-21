@@ -983,8 +983,8 @@
     {
       "id": "steel-pan",
       "name": "Steel Pan",
-      "ref": "A struck metallic note with a ringing twelfth on top that dies away by itself: a synth steel pan",
-      "artist": "Caribbean steel band",
+      "ref": "A struck metallic note with a ringing twelfth on top that dies away by itself, like the Juno-60 solo in Cyndi Lauper’s “Girls Just Wanna Have Fun”",
+      "artist": "Cyndi Lauper",
       "tags": ["perc", "pop", "80s"],
       "level": 2,
       "blurb": "A short, ringing metallic note like a struck steel drum.",
@@ -1877,8 +1877,8 @@
     {
       "id": "juno-ballad-pad",
       "name": "Warm Ballad Pad",
-      "ref": "A soft, warm, chorused pad that fades in quietly behind the voice of a mid-1980s pop ballad",
-      "artist": "1980s pop ballads",
+      "ref": "A soft, warm, chorused pad that fades in quietly behind the voice, like the Juno-60 pad Cyndi Lauper’s “Time After Time” is built on",
+      "artist": "Cyndi Lauper",
       "tags": ["pad", "pop", "80s"],
       "level": 1,
       "blurb": "A soft, warm pad that fades in gently under a song.",
@@ -5726,8 +5726,8 @@
     {
       "id": "fripp-loop",
       "name": "Long-Delay Loop Lead",
-      "ref": "Long notes fed back by a long delay until they pile up into a slowly shifting chord: 1970s tape-loop music",
-      "artist": "Tape-loop ambient",
+      "ref": "Long notes fed back by a long delay until they pile up into a slowly shifting chord, as on Fripp & Eno’s two-tape-machine loop for “(No Pussyfooting)”",
+      "artist": "Fripp & Eno",
       "tags": ["lead", "ambient", "70s"],
       "level": 2,
       "blurb": "Long, singing notes that repeat and pile up in a slow echo until they become a slowly changing chord.",
@@ -6950,7 +6950,7 @@
       "tags": ["seq", "ambient", "60s"],
       "level": 2,
       "blurb": "A fast, bright organ pattern that runs up and down, with echoes piling up into a shimmering cloud.",
-      "how": "Riley layered fast organ patterns with a tape delay, so each figure came back over itself. Here the arpeggiator runs quickly up and down a held chord over three octaves, in a simple organ tone of two squares an octave apart. A delay with high feedback keeps every note coming back, so the patterns blur into a shimmering whole.",
+      "how": "1960s minimalists layered fast organ patterns with a tape delay, so each figure came back over itself. Here the arpeggiator runs quickly up and down a held chord over three octaves, in a simple organ tone of two squares an octave apart. A delay with high feedback keeps every note coming back, so the patterns blur into a shimmering whole.",
       "phrase": {
         "bpm": 80,
         "loop": true,
@@ -8382,7 +8382,7 @@
       "tags": ["keys", "jazz", "70s"],
       "level": 2,
       "blurb": "A dreamy Rhodes whose chords repeat in soft, wavering tape echoes.",
-      "how": "In the early 70s Hancock played the Rhodes through an Echoplex, a tape delay whose repeats wobble slightly and lose treble each time. The Tel-Ray delay here gives the same kind of dark, unsteady echo. A hall lets the chords float.",
+      "how": "In the early 1970s jazz players ran the Rhodes through an Echoplex, a tape delay whose repeats wobble slightly and lose treble each time. The Tel-Ray delay here gives the same kind of dark, unsteady echo. A hall lets the chords float.",
       "phrase": {
         "bpm": 66,
         "loop": true,
@@ -11789,7 +11789,7 @@
       "tags": ["lead", "ambient", "00s"],
       "level": 3,
       "blurb": "A slow single-note melody where each note fades in, bends into the next and trails off into echoes.",
-      "how": "Lanois plays pedal steel across Belladonna, and this is a pedal-steel style line: notes are swelled in rather than picked and slide into each other. MONO-2 puts two slightly detuned voices on one note, and PORTAMENTO makes every change of note a bend. A curved VCA attack stands in for the volume pedal. A late vibrato, a dark echo and a hall wash the line out behind itself.",
+      "how": "This is a pedal-steel style line: notes are swelled in rather than picked and slide into each other. MONO-2 puts two slightly detuned voices on one note, and PORTAMENTO makes every change of note a bend. A curved VCA attack stands in for the volume pedal. A late vibrato, a dark echo and a hall wash the line out behind itself.",
       "phrase": {
         "bpm": 60,
         "loop": true,

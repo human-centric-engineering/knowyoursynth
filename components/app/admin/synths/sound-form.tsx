@@ -370,11 +370,20 @@ export function SoundForm({ synthId, mode, sound }: SoundFormProps) {
           'ref',
           'Reference',
           <p>
-            <code>In the style of &lt;artist&gt; — &quot;&lt;work&gt;&quot;</code>. Never a claim to
-            be the exact patch.
+            One line on what the sound is like. Name a person or work only when the patch is their
+            synth or electronic part; an imitation of an acoustic or electric instrument describes
+            the instrument instead. Never &quot;In the style of…&quot;, and never a claim to be the
+            exact patch.
           </p>
         )}
-        {textInput('artist', 'Artist', <p>The player the patch is in the style of.</p>)}
+        {textInput(
+          'artist',
+          'Artist',
+          <p>
+            Whoever the reference credits. Where it credits no one, the genre, era or tradition the
+            sound comes from.
+          </p>
+        )}
         {textInput(
           'tags',
           'Tags',

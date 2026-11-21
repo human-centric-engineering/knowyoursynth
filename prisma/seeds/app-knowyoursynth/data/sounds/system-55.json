@@ -15834,7 +15834,7 @@
       "artist": "Baroque solo cello",
       "tags": ["strings", "cello", "baroque", "914"],
       "level": 3,
-      "blurb": "A warm, singing solo cello flowing through the rocking arpeggios of Bach’s G major prelude, with a little bow noise and a gentle vibrato.",
+      "blurb": "A warm, singing solo cello flowing through the rocking arpeggios of a Baroque cello prelude, with a little bow noise and a gentle vibrato.",
       "how": "A cello’s warmth is its wooden body: fixed resonances that colour every note. The 914 plays the body here, with peaks around 250, 500 and 1000 Hz. Two SAWTOOTHs a few cents apart are the string, and PINK NOISE through the 923’s HIGH PASS is the rosin on the hair. The 904A follows the keyboard from CM1A CV 2, and the 921’s AUX OUT gives the vibrato. The quick attack lets the arpeggio speak but not snap.",
       "phrase": {
         "bpm": 72,

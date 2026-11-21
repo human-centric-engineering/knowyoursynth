@@ -877,7 +877,7 @@
       "tags": ["seq", "ambient", "polyrhythm"],
       "level": 2,
       "blurb": "Soft chimes on rhythms of 7, 9, 11 and 13: a cycle of thousands of sixteenths that never repeats in a listening.",
-      "how": "Eno made Music for Airports from tape loops of unrelated lengths. Four rhythm generators at prime-ish divisors do the same: 7 and 9 on one sequencer, 11 and 13 on the other, coming back together only after 9,009 sixteenths, over half an hour at this tempo. Just C major and soft, long envelopes keep every collision gentle.",
+      "how": "Generative ambient pieces were first made from tape loops of unrelated lengths. Four rhythm generators at prime-ish divisors do the same: 7 and 9 on one sequencer, 11 and 13 on the other, coming back together only after 9,009 sixteenths, over half an hour at this tempo. Just C major and soft, long envelopes keep every collision gentle.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -4983,7 +4983,7 @@
       "tags": ["drone", "patch", "just intonation", "pwm"],
       "level": 3,
       "blurb": "A just fifth whose upper voice changes vowel on every step: SEQ 2 OUT patched into VCO 2 PWM.",
-      "how": "Young’s drones hold just intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.",
+      "how": "Just-intonation drones hold their intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.",
       "phrase": {
         "bpm": 72,
         "loop": true,

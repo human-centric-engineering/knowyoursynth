@@ -6782,7 +6782,7 @@
       "artist": "Baroque keyboard",
       "tags": ["keys", "baroque", "classical", "arp"],
       "level": 2,
-      "blurb": "A harpsichord-like pluck running through each held chord in the order played, as Bach's famous prelude does.",
+      "blurb": "A harpsichord-like pluck running through each held chord in the order played, as a Baroque keyboard prelude does.",
       "how": "The arpeggiator in ORDR plays the held notes in the order they went down, one octave only, so each chord ripples exactly as written. A short, bright pluck stands in for the harpsichord.",
       "phrase": {
         "bpm": 66,

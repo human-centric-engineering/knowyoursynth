@@ -6223,7 +6223,7 @@
       "tags": ["keys", "ambient", "80s", "reverb"],
       "level": 2,
       "blurb": "Soft, slow piano-like notes with a gentle wavering, each fading over seconds into a deep pool of spring reverb.",
-      "how": "This is a sound made mostly of the REVERBERATION. The keys are plain: a soft triangle through Gate 1 in combination, so as each note fades it also darkens, like a felt hammer on a string, with a long decay after the key is let go. A shallow, slow a.m. from the modulation oscillator gives a faint tremolo, the halo of Budd’s treated piano, and the spring, turned fully up, does the rest.",
+      "how": "This is a sound made mostly of the REVERBERATION. The keys are plain: a soft triangle through Gate 1 in combination, so as each note fades it also darkens, like a felt hammer on a string, with a long decay after the key is let go. A shallow, slow a.m. from the modulation oscillator gives a faint tremolo, the halo of a treated ambient piano, and the spring, turned fully up, does the rest.",
       "phrase": {
         "bpm": 52,
         "loop": true,
@@ -6752,7 +6752,7 @@
       "tags": ["seq", "minimalism", "pulse", "fm"],
       "level": 3,
       "blurb": "A steady stream of eighth-note mallet strikes on each held note, the note changing every bar, the pulses swelling brighter and softer with the touch.",
-      "how": "The pulser runs as a clock and strikes the envelope on every eighth note, whatever key is held, so a held note becomes a pulse of repeated mallet strikes, the pulsing of Reich’s ensemble. The modulation oscillator at four to one adds a metallic, vibraphone-like ring through the modulation input. Pressure goes to TIMBRE, so the notes played firmly pulse brighter: the swell of the players’ breath.",
+      "how": "The pulser runs as a clock and strikes the envelope on every eighth note, whatever key is held, so a held note becomes a pulse of repeated mallet strikes, the pulsing of a minimalist mallet ensemble. The modulation oscillator at four to one adds a metallic, vibraphone-like ring through the modulation input. Pressure goes to TIMBRE, so the notes played firmly pulse brighter: the swell of the players’ breath.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -6845,7 +6845,7 @@
       "tags": ["seq", "minimalism", "organ", "arpeggio"],
       "level": 3,
       "blurb": "A fast, twinkling patter of reedy organ notes picked at random from a held modal chord, doubled an octave up, in a soft reverb.",
-      "how": "The arpeggiator in random mode picks one of the held keys twelve times a second, a glittering, never-repeating spray from a fixed set of notes, like Riley’s fast keyboard loops. Each note is a short organ tone through Gate 1 as an amplifier. The modulation oscillator, an octave up and following the keys, is a second organ rank through Gate 2, opened by the same envelope, so every note is doubled.",
+      "how": "The arpeggiator in random mode picks one of the held keys twelve times a second, a glittering, never-repeating spray from a fixed set of notes, like the fast keyboard loops of 1960s minimalism. Each note is a short organ tone through Gate 1 as an amplifier. The modulation oscillator, an octave up and following the keys, is a second organ rank through Gate 2, opened by the same envelope, so every note is doubled.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -10379,7 +10379,7 @@
       "tags": ["drone", "ambient", "deep listening", "reverb"],
       "level": 3,
       "blurb": "A reedy, accordion-like drone and a fifth above it, swelling and folding brighter by themselves in a long, cavernous reverberation.",
-      "how": "No key is needed: Gate 1 is in lo pass filter mode, which passes the sound at a fixed gain and only opens and closes its filter, and its LEVEL slider holds it a little open, so the triangle drones on its own. The envelope is set to self, so it cycles by itself from the first moment, slowly, and two of its orange jacks open the filter further and fold the triangle brighter, a breathing swell like a bellows. Gate 2 adds the modulation oscillator a fifth above, and the spring reverberation is turned all the way up, the forty-five second echo of the Fort Worden cistern squeezed into a spring.",
+      "how": "No key is needed: Gate 1 is in lo pass filter mode, which passes the sound at a fixed gain and only opens and closes its filter, and its LEVEL slider holds it a little open, so the triangle drones on its own. The envelope is set to self, so it cycles by itself from the first moment, slowly, and two of its orange jacks open the filter further and fold the triangle brighter, a breathing swell like a bellows. Gate 2 adds the modulation oscillator a fifth above, and the spring reverberation is turned all the way up, the forty-five second echo of a vast empty cistern squeezed into a spring.",
       "phrase": {
         "bpm": 60,
         "loop": true,

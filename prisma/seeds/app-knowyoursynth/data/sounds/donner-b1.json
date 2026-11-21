@@ -1050,7 +1050,7 @@
       "tags": ["lead", "dub", "reggae", "70s"],
       "level": 2,
       "blurb": "A reedy, minor-key melodica melody floating in echo.",
-      "how": "Augustus Pablo played haunting minor melodies on the melodica over dub, his “Far East” sound. A reedy square, PITCH set to put it in key, and a long echo.",
+      "how": "In dub, the melodica plays haunting minor melodies over the rhythm. A reedy square, PITCH set to put it in key, and a long echo.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -4815,7 +4815,7 @@
       "tags": ["bass", "drill and bass", "jazz", "90s"],
       "level": 3,
       "blurb": "Fast, fluid, jazzy bass runs that dart up and down the scale.",
-      "how": "Squarepusher plays fast, virtuosic jazz-fusion bass runs over frantic breakbeats. Rapid chromatic runs with a plucky tone.",
+      "how": "Jazz-fusion bass guitar plays fast, virtuosic runs. Rapid chromatic runs with a plucky tone.",
       "phrase": {
         "bpm": 170,
         "loop": true,
@@ -4896,7 +4896,7 @@
       "tags": ["pluck", "downtempo", "chill-out", "10s"],
       "level": 1,
       "blurb": "A warm, organic, plucked melody over a laid-back groove.",
-      "how": "Bonobo’s downtempo music is warm and organic: plucked, harp-like melodies with echoes.",
+      "how": "Downtempo is often warm and organic: plucked, harp-like melodies with echoes.",
       "phrase": {
         "bpm": 92,
         "loop": true,
@@ -4965,7 +4965,7 @@
       "tags": ["lead", "chill-out", "electronica", "10s"],
       "level": 1,
       "blurb": "A warm, sunlit, nostalgic melody, like a drive along the coast.",
-      "how": "Tycho’s music is warm and sunlit: soft, nostalgic melodies with tape warmth and echo.",
+      "how": "2010s chill-out electronica is often warm and sunlit: soft, nostalgic melodies with tape warmth and echo.",
       "phrase": {
         "bpm": 100,
         "loop": true,
@@ -5099,7 +5099,7 @@
       "tags": ["pluck", "folktronica", "electronica", "00s"],
       "level": 2,
       "blurb": "A delicate, plucked, harp-like pattern with a homemade warmth.",
-      "how": "Four Tet’s folktronica cut up plucked acoustic sounds into delicate, repeating patterns. A soft, plucked loop with a short echo.",
+      "how": "Folktronica cuts up plucked acoustic sounds into delicate, repeating patterns. A soft, plucked loop with a short echo.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -5378,8 +5378,8 @@
     {
       "id": "b1-air-moon",
       "name": "French Lounge Bass",
-      "ref": "A warm, round, melodic bass with gentle saturation, from a hazy late-1990s French lounge",
-      "artist": "French downtempo",
+      "ref": "A warm, round, melodic bass with gentle saturation, like the Minimoog bass lines of Air’s “Moon Safari”",
+      "artist": "Air",
       "tags": ["bass", "downtempo", "french", "90s"],
       "level": 1,
       "blurb": "A warm, round, retro bass line from a hazy French lounge.",
@@ -5897,7 +5897,7 @@
       "tags": ["keys", "neoclassical", "ambient", "10s"],
       "level": 2,
       "blurb": "A soft, repeating, felted piano-like pulse that slowly hypnotises.",
-      "how": "Nils Frahm plays soft, felted piano patterns that repeat hypnotically. A soft, round pulse cycling through a few notes, with a short echo.",
+      "how": "Neo-classical piano often plays soft, felted patterns that repeat hypnotically. A soft, round pulse cycling through a few notes, with a short echo.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -6360,7 +6360,7 @@
       "tags": ["pluck", "classical", "romantic"],
       "level": 2,
       "blurb": "A twinkling, delicate, slightly mysterious celesta melody.",
-      "how": "Tchaikovsky made the celesta famous with its twinkling, bell-like sound. A high, delicate pluck with a little echo.",
+      "how": "The celesta has a twinkling, bell-like sound. A high, delicate pluck with a little echo.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -7386,7 +7386,7 @@
       "tags": ["keys", "jazz", "vibraphone", "50s"],
       "level": 2,
       "blurb": "A cool, ringing, swinging vibraphone line.",
-      "how": "Milt Jackson’s vibraphone rang cool and soft over swinging jazz. A soft, ringing tone, swung eighths, and a short echo for the motor’s shimmer.",
+      "how": "A jazz vibraphone rings cool and soft over a swing. A soft, ringing tone, swung eighths, and a short echo for the motor’s shimmer.",
       "phrase": {
         "bpm": 150,
         "loop": true,

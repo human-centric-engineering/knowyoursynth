@@ -4,7 +4,7 @@
  *
  * `syncResearchedPatterns` puts a researched pattern **behind** a sound's own riff, and the owner ruled on 2026-11-01
  * that it becomes the default only once an admin reorders the sound after the owner's listen. No reorder was ever
- * done, so a sound like the TEO-5's _Jump Brass_ ("In the style of Van Halen — “Jump”") still opened with its own
+ * done, so a sound like the TEO-5's _Jump Brass_ (whose ref names Van Halen's “Jump”) still opened with its own
  * riff while _Jump: synth riff_ sat second on its list. The owner ruled again on 2026-11-15: a sound whose ref names a
  * work, artist or style, and that a researched pattern of it already names, takes that pattern as its default now.
  *

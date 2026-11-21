@@ -463,7 +463,7 @@ export const POLY: SoundSpec[] = [
     level: 2,
     blurb:
       'Soft chimes on rhythms of 7, 9, 11 and 13: a cycle of thousands of sixteenths that never repeats in a listening.',
-    how: 'Eno made Music for Airports from tape loops of unrelated lengths. Four rhythm generators at prime-ish divisors do the same: 7 and 9 on one sequencer, 11 and 13 on the other, coming back together only after 9,009 sixteenths, over half an hour at this tempo. Just C major and soft, long envelopes keep every collision gentle.',
+    how: 'Generative ambient pieces were first made from tape loops of unrelated lengths. Four rhythm generators at prime-ish divisors do the same: 7 and 9 on one sequencer, 11 and 13 on the other, coming back together only after 9,009 sixteenths, over half an hour at this tempo. Just C major and soft, long envelopes keep every collision gentle.',
     bpm: 72,
     steps: [
       {

@@ -106,6 +106,15 @@ describe('the research batches', () => {
     );
   const artistOf = (key: string, artist: string) => researchedAs[key] ?? artist;
 
+  // An entry for a sound that is gone, or whose artist is its research-time one again, would hide a later change.
+  it('holds a research-time artist only for a sound still in the catalogue under another artist', () => {
+    expect(Object.keys(researchedAs).length).toBeGreaterThan(0);
+    const stale = Object.entries(researchedAs).filter(
+      ([key, artist]) => sounds.get(key)?.artist === undefined || sounds.get(key)?.artist === artist
+    );
+    expect(stale).toEqual([]);
+  });
+
   /**
    * Each batch's artists and how many of their sounds the catalogue holds now. A task that adds
    * sounds by a batch's artist places each one (a pattern, or a reason it has none) and raises the count.

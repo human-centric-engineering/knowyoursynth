@@ -3126,7 +3126,7 @@
       "tags": ["wind", "fourth world", "ambient", "80s"],
       "level": 3,
       "blurb": "A breathy, smeared, bending horn line floating in a hazy space.",
-      "how": "Jon Hassell’s “Fourth World” music smears and bends a processed trumpet. A wide pulse and noise in UNISON 1, a soft, blown attack, a long portamento and vibrato that waits.",
+      "how": "A processed ambient trumpet smears and bends its notes. A wide pulse and noise in UNISON 1, a soft, blown attack, a long portamento and vibrato that waits.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -6568,7 +6568,7 @@
       "tags": ["lead", "new wave", "art rock", "80s"],
       "level": 1,
       "blurb": "A simple, looping, tender synth melody that goes round and round.",
-      "how": "Talking Heads’ “This Must Be the Place” loops a simple, tender melody. A square through a soft filter with vibrato that waits, and the ensemble.",
+      "how": "A simple, tender melody loops round and round. A square through a soft filter with vibrato that waits, and the ensemble.",
       "phrase": {
         "bpm": 114,
         "loop": true,
@@ -7141,13 +7141,13 @@
     },
     {
       "id": "j4-destiny-pad",
-      "name": "Chill-Out Destiny Pad",
+      "name": "Chill-Out Pad",
       "ref": "Warm, gentle chords turning slowly for a lazy Sunday, in early-2000s chill-out",
       "artist": "Early-2000s chill-out",
       "tags": ["pad", "chill-out", "downtempo", "2000s"],
       "level": 1,
       "blurb": "Warm, gentle, slowly turning chords for a lazy Sunday.",
-      "how": "Zero 7’s chill-out drifts on warm, gentle chords. A saw through a soft filter, slow envelopes, a little vibrato that waits, and the ensemble.",
+      "how": "Early-2000s chill-out drifts on warm, gentle chords. A saw through a soft filter, slow envelopes, a little vibrato that waits, and the ensemble.",
       "phrase": {
         "bpm": 86,
         "loop": true,
@@ -7396,7 +7396,7 @@
       "tags": ["seq", "classical", "romantic", "arpeggio"],
       "level": 2,
       "blurb": "Glassy, rippling arpeggios shimmering like light through water.",
-      "how": "Saint-Saëns’s “Aquarium” ripples with glassy arpeggios. UP/DOWN in sixteenths through held chords; a narrow pulse with the high-pass, a ringing, key-following filter and the ensemble.",
+      "how": "Glassy arpeggios ripple like light through water. UP/DOWN in sixteenths through held chords; a narrow pulse with the high-pass, a ringing, key-following filter and the ensemble.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7560,7 +7560,7 @@
       "tags": ["wind", "dub", "reggae", "70s"],
       "level": 2,
       "blurb": "A reedy, haunting, minor-key melodica line drifting through a dub.",
-      "how": "Augustus Pablo played haunting minor melodies on melodica over dub rhythms. A pulse with a little noise, the high-pass for the reed, UNISON 1.",
+      "how": "In dub, the melodica plays haunting minor melodies over the rhythm. A pulse with a little noise, the high-pass for the reed, UNISON 1.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -11046,7 +11046,7 @@
       "tags": ["keys", "soul", "organ", "60s"],
       "level": 1,
       "blurb": "A cool, bluesy, swaggering organ riff.",
-      "how": "Booker T.’s “Green Onions” swaggers on a cool, bluesy organ riff. A square and the sub like drawbars, a quick vibrato and the ensemble standing in for a rotating speaker.",
+      "how": "1960s soul organ swaggers on cool, bluesy riffs. A square and the sub like drawbars, a quick vibrato and the ensemble standing in for a rotating speaker.",
       "phrase": {
         "bpm": 136,
         "loop": true,

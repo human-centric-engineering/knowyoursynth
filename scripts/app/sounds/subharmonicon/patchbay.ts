@@ -1030,7 +1030,7 @@ export const PATCHBAY: Insert[] = [
       level: 3,
       blurb:
         'A just fifth whose upper voice changes vowel on every step: SEQ 2 OUT patched into VCO 2 PWM.',
-      how: 'Young’s drones hold just intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.',
+      how: 'Just-intonation drones hold their intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.',
       bpm: 72,
       steps: [
         {
