@@ -7,7 +7,7 @@
  * `ref` says what the sound is like.
  */
 import type { LaneSoundSpec, Readouts } from '@/scripts/app/sounds/lane-kit';
-import { cycle, holds, laneTweak, ramp, up, wave } from '@/scripts/app/sounds/lane-kit';
+import { holds, laneTweak, moves, ramp, up, wave } from '@/scripts/app/sounds/lane-kit';
 
 /** The LFO RATE knob position for `hz` (`lfoHz` in the definition: 0.05 Hz to 200 Hz, exponential). */
 export const lfoAt = (hz: number): number =>
@@ -87,7 +87,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['bass', 'acid', '90s'],
     level: 2,
     blurb: 'A rubbery, squelching acid bass whose filter climbs and twists as the song plays.',
-    how: 'One sawtooth an octave down goes into a resonant, nearly closed filter, and a short filter envelope gives every note its squelch. The playing is in the sequencer: one mod lane walks the cutoff up through part A and swings it in a wave through part B, and the other pushes the emphasis up on the slides and towards a scream at the end. Open the sequencer and press Mod lanes to watch both move.',
+    how: 'One sawtooth an octave down goes into a resonant, nearly closed filter, and a short filter envelope gives every note its squelch. The playing is in the sequencer: one mod lane walks the cutoff up through part A and swings it in a wave through part B, and the other pushes the emphasis up on the slides and towards a scream at the end. Open the sequencer: the lanes are under the steps, and the cutoff and emphasis rows show both moving.',
     steps: [
       {
         title: 'One sawtooth, an octave down',
@@ -193,7 +193,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['seq', 'kosmische', '70s'],
     level: 2,
     blurb: 'A hypnotic, pulsing sequence that slowly brightens and darkens like breathing.',
-    how: 'Two sawtooths, a hair apart, play a steady sixteenth-note pattern through a moderately resonant filter. One mod lane sweeps the cutoff in one slow wave spread over parts A and B, so the sequence opens and closes over four bars; the other sets each note’s filter decay, long on the downbeats and short between, which gives the line its lilt.',
+    how: 'Two sawtooths, a hair apart, play a steady sixteenth-note pattern through a moderately resonant filter. One mod lane sweeps the cutoff in one slow wave spread over parts A and B, so the sequence opens and closes over four bars; the other stretches the filter decay as it goes, from a tight tick at the start of A to a long, rubbery pluck where B begins, and back. Both are slow turns of one knob each, as a player would ride them.',
     steps: [
       {
         title: 'Two sawtooths, slightly apart',
@@ -234,7 +234,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       'filter.cutoff':
         'Moved by a lane in one slow wave across the whole song: the four-bar breath of the sequence.',
       'fenv.decay':
-        'The other lane: long on the strong sixteenths, short between, which is where the lilt comes from.',
+        'The other lane: tight at the start of A, long where B begins, tight again by B’s end. The pluck grows and shrinks with the sweep.',
       'osc2.freq': 'The tiny detune is the shimmer. Past 0.3 it goes sour.',
       'filter.emphasis': 'More makes the sweep sing; less keeps it warm.',
     },
@@ -247,7 +247,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       laneTweak(
         'fenv.decay',
         'set every step of the decay lane to the same value.',
-        'The lilt goes: the sequence pulses evenly, like a machine.'
+        'The pluck stays one length: only the cutoff breathes.'
       ),
       { id: 'filter.emphasis', try: 'Push up to 7', hear: 'The sweep turns vocal and glassy.' },
       {
@@ -272,7 +272,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'E2! E3 B2 E3 | G2 E3 B2 E3 | E2 E3 B2 D3 | F#2 D3 B2 D3 | C2! C3 G2 C3 | E2 C3 G2 C3 | D2 D3 A2 D3 | F#2 D3 A2 B2',
           lanes: {
             'filter.cutoff': wave(-2.5, 1.5, 64),
-            'fenv.decay': cycle([2.4, 1.2, 1.6, 1.2]),
+            'fenv.decay': ramp(1.2, 2.8),
           },
         },
         {
@@ -280,12 +280,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'A1! A2 E2 A2 | C2 A2 E2 A2 | B1 B2 F#2 B2 | D2 B2 F#2 A2 | G1! G2 D2 G2 | B1 G2 D2 G2 | B1 B2 F#2 B2 | D#2 B2 F#2 B2',
           lanes: {
             'filter.cutoff': wave(-2.5, 1.5, 64, 32),
-            'fenv.decay': cycle([3, 1.4, 2, 1.4]),
+            'fenv.decay': ramp(2.8, 1.2),
           },
         },
       ],
       notes:
-        'A plays E minor to C and D, a root-octave-fifth sixteenth figure; B moves to A minor and B major, the dominant, pulling back to E. Chained ABAB, so the cutoff lane’s 64-step wave runs across A into B: dark at the start of A, brightest where A hands over to B, dark again at B’s end. The decay lane gives the beat’s first sixteenth the longest tail, a little longer in B.',
+        'A plays E minor to C and D, a root-octave-fifth sixteenth figure; B moves to A minor and B major, the dominant, pulling back to E. Chained ABAB, so the cutoff lane’s 64-step wave runs across A into B: dark at the start of A, brightest where A hands over to B, dark again at B’s end. The decay lane stretches the pluck across A and draws it back in across B, one slow turn each way.',
     },
   },
 
@@ -298,7 +298,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['bass', 'funk', '70s'],
     level: 2,
     blurb: 'A bouncy, syncopated funk bass with slides on just the notes that need them.',
-    how: 'A hollow square and a sawtooth an octave down make a woody bass, plucked by the filter envelope. On a real Model D the glide knob is on or off for every note, so a player rides it by hand to slide into one note and not the next. Here a mod lane does that: glide is up only on the steps the line slides into. A second lane sets the contour amount, so accented notes pop brighter than the rest.',
+    how: 'A hollow square and a sawtooth an octave down make a woody bass, plucked by the filter envelope. On a real Model D the glide knob is on or off for every note, so a player rides it by hand to slide into one note and not the next. Here a mod lane does that: glide is up only on the steps the line slides into. A second lane jabs the contour amount up on the first note of each phrase, so it pops brighter than the rest.',
     steps: [
       {
         title: 'Square and saw, an octave down',
@@ -340,7 +340,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     context: {
       'ctl.glide':
         'Moved by a lane: up only on the steps the line slides into, which is how a player rides the knob.',
-      'filter.contour': 'The other lane: higher on the accents, so they pop.',
+      'filter.contour': 'The other lane: jabbed up on each phrase’s first note, so it pops.',
       'fenv.decay': 'The length of each pluck.',
       'mix.osc2': 'The sawtooth’s bite. Take it down for a rounder, more dub-like bass.',
     },
@@ -352,8 +352,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       ),
       laneTweak(
         'filter.contour',
-        'draw the contour lane up on the off-beats instead of the accents.',
-        'The pops move to the gaps, and the groove turns inside out.'
+        'draw the contour lane up on the second bar’s first note instead of the first.',
+        'The pop moves to the answer, and the phrase leans the other way.'
       ),
       {
         id: 'fenv.decay',
@@ -394,13 +394,14 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'C2! . . C3 | . C2 Eb2 . | F2^ G2 . Bb2 | . C3 Bb2 G2 | F1! . . F2 | . F1 . A1^ | Bb1 . B1^ C2 | D2 . F1 G1'
           ),
           lanes: {
-            'ctl.glide': (c) => (c.slidIn ? 3.5 : 0),
-            'filter.contour': (c) => (c.accent ? 7.5 : c.since === 0 && c.i % 4 === 3 ? 5.5 : 3.5),
+            // The climb A–B♭–B–C is one raise of the knob, held through its three slides.
+            'ctl.glide': (c) => (c.slidIn || (c.i >= 23 && c.i <= 27) ? 3.5 : 0),
+            'filter.contour': (c) => (c.accent ? 7.5 : 3.5),
           },
         },
       ],
       notes:
-        'A sits on G with the minor third and a slide from C up to D, then a chromatic slide from D♭ into D at the end of the second bar. B goes to C, then F, climbing A–B♭–B to C with two slides, and its contour lane pops the last sixteenth of each beat as well as the accents. The glide lane is up only on the notes a slide lands on.',
+        'A sits on G with the minor third and a slide from C up to D, then a chromatic slide from D♭ into D at the end of the second bar. B goes to C, then F, climbing A–B♭–B to C with two slides, the glide held up through the whole climb. Elsewhere the glide lane is up only on the notes a slide lands on, a quick flick of the knob, and the contour lane jabs up on the bar’s accented first note.',
     },
   },
   // ── 4 ──────────────────────────────────────────────────────────────────────
@@ -412,7 +413,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['bass', 'dub', 'reggae'],
     level: 2,
     blurb: 'A huge, round dub bass that sinks darker and wobbles as each note is held.',
-    how: 'A triangle and a quiet square, both an octave down, make a soft but solid bass. The playing is in two mod lanes. The cutoff opens a little on every new note, then sinks step by step as the note is held, the way a dub engineer rides the bass EQ. Mod depth rises on the long notes only, so they start to waver with vibrato while the short ones stay still.',
+    how: 'A triangle and a quiet square, both an octave down, make a soft but solid bass. The playing is in two mod lanes. The cutoff is ridden slowly, the way a dub engineer rides the bass EQ: it sinks through each bar and opens again for the next, while the filter envelope gives every note its own soft bloom. Mod depth rises on the long notes only, so they start to waver with vibrato while the short ones stay still.',
     steps: [
       {
         title: 'A round tone, an octave down',
@@ -432,11 +433,11 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'Keep the top end down',
         module: 'filter',
-        why: 'The filter sits low with almost no emphasis, and a gentle envelope gives each note a soft thump.',
+        why: 'The filter sits low with almost no emphasis, and a gentle envelope gives each note a soft thump that blooms and settles.',
         set: {
           'filter.cutoff': -1.5,
           'filter.emphasis': 1,
-          'filter.contour': 2,
+          'filter.contour': 3,
           'fenv.attack': 0,
           'fenv.decay': 3,
           'fenv.sustain': 3,
@@ -462,7 +463,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     ],
     context: {
       'filter.cutoff':
-        'A lane opens it on each new note and lets it sink while the note is held: the dark bloom of a dub bass.',
+        'A lane rides it slowly: it sinks through each bar and opens again for the next, the dark pull of a dub bass.',
       'mod.depth':
         'The other lane: vibrato that grows only on notes held for more than a step or two.',
       'lfo.rate': 'The speed of the waver. Slower is woozier.',
@@ -476,8 +477,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       ),
       laneTweak(
         'filter.cutoff',
-        'draw the cutoff lane rising through each held note instead of falling.',
-        'The long notes swell brighter and push forward.'
+        'draw the cutoff lane rising through each bar instead of sinking.',
+        'The line swells brighter as it goes and pushes forward.'
       ),
       {
         id: 'lfo.rate',
@@ -503,8 +504,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'E1:3 . . . | . . E2 . | G1:2 . . A1 | . B1:2 . . | E1:3 . . . | . . D2 . | B1:4 . . . | . G1 A1:2 .'
           ),
           lanes: {
-            'filter.cutoff': (c) =>
-              c.sounding === null ? -2.6 : Math.max(-2.6, -0.4 - 0.35 * c.since),
+            // Opened at each bar's start, sinking to its darkest half way, and back: a slow ride of the EQ.
+            'filter.cutoff': wave(-2.6, -0.6, 16, 8),
             'mod.depth': (c) =>
               c.sounding !== null && c.since >= 2 ? Math.min(2.2, 0.7 * (c.since - 1)) : 0,
           },
@@ -515,15 +516,14 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'C2:3 . . . | . . C3 . | B1:2 . . A1 | . G1:2 . . | A1:3 . . . | . . B1 . | E1:6 . . . | . . E2 G1'
           ),
           lanes: {
-            'filter.cutoff': (c) =>
-              c.sounding === null ? -2.6 : Math.max(-2.6, -0.2 - 0.3 * c.since),
+            'filter.cutoff': wave(-2.6, -0.4, 16, 8),
             'mod.depth': (c) =>
               c.sounding !== null && c.since >= 2 ? Math.min(2.2, 0.5 * (c.since - 1)) : 0,
           },
         },
       ],
       notes:
-        'A one-drop line in E minor: a held root, an octave jump on the and, walking G–A–B and back. B moves to C and down through B and A to G, then a long E that rises to its octave. The cutoff lane opens on each new note and sinks while it is held; the depth lane waits two steps before any vibrato, so only the held notes waver, most in B’s long E.',
+        'A one-drop line in E minor: a held root, an octave jump on the and, walking G–A–B and back. B moves to C and down through B and A to G, then a long E that rises to its octave. The cutoff lane is ridden slowly, opening at each bar’s start and sinking half way through, a little brighter in B; the depth lane waits two steps before any vibrato, so only the held notes waver, most in B’s long E.',
     },
   },
 
@@ -536,7 +536,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['keys', 'house', '90s'],
     level: 3,
     blurb: 'Bright, punchy two-note chord stabs bouncing on the offbeat.',
-    how: 'A Model D plays one note at a time, but its second oscillator can be tuned up to a fifth away, so each note is a two-note chord. On the hardware you would set that interval and leave it. Here a mod lane retunes Oscillator 2 for every chord, so the progression is minor, then major, then suspended, from one key at a time. A second lane makes each stab brighter than its tail, with the accents brightest of all.',
+    how: 'A Model D plays one note at a time, but its second oscillator can be tuned up to a fifth away, so each note is a two-note chord. On the hardware you would set that interval and leave it. Here a mod lane retunes Oscillator 2 for every chord, so the progression is minor, then major, then suspended, from one key at a time: one hand on the FREQUENCY knob, set in the gap before each new chord. A second hand opens the cutoff slowly across part A and closes it across part B, so the riff brightens and settles every two bars.',
     steps: [
       {
         title: 'Two equal sawtooths',
@@ -581,7 +581,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       'osc2.freq':
         'Played by a lane: the interval of each chord. 3 is minor, 4 major, 5 a fourth, 7 a fifth.',
       'filter.cutoff':
-        'The other lane: open on each stab, brightest on the accents, back to the panel between.',
+        'The other lane: opening slowly across part A and closing across part B, so the riff builds and settles.',
       'aenv.decay': 'The length of each stab. Longer turns them into chords that ring together.',
       'filter.emphasis': 'More gives the stabs a hollow, vocal edge.',
     },
@@ -593,8 +593,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       ),
       laneTweak(
         'filter.cutoff',
-        'lower the cutoff lane on the stabs that are not accented.',
-        'A bigger gap between accents and the rest: the groove gets a lilt.'
+        'draw the cutoff lane as one climb across both parts.',
+        'A four-bar build that drops back as the loop comes round.'
       ),
       {
         id: 'aenv.decay',
@@ -619,7 +619,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             '. . C3! . | . . C3 . | . C3 . . | C3:2 . . . | . . F3! . | . . F3 . | . F3 . . | Ab3 . G3:2 .',
           lanes: {
             'osc2.freq': holds({ 0: 7, 16: 3, 28: 4, 30: 5 }),
-            'filter.cutoff': (c) => (c.note === null ? null : c.accent ? 2.5 : 1.2),
+            'filter.cutoff': ramp(0.2, 2.4),
           },
         },
         {
@@ -627,12 +627,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             '. . Eb3! . | . . Eb3 . | . Eb3 . . | Eb3:2 . . . | . . Bb2! . | . . Bb2 . | . C3 . . | D3 . G3:2 .',
           lanes: {
             'osc2.freq': holds({ 0: 4, 16: 4, 25: 3, 28: 5, 30: 4 }),
-            'filter.cutoff': (c) => (c.note === null ? null : c.accent ? 2.8 : 1.4),
+            'filter.cutoff': ramp(2.4, 0.2),
           },
         },
       ],
       notes:
-        'Offbeat stabs, the house push on the and of each beat and a syncopated third stab. A: C with a fifth, F minor (F and A♭), A♭ major, then a G suspended fourth. B: E♭ major, B♭ major, C minor, D with a fourth, and G major to lead back to C. The interval lane is the harmony; the cutoff lane brightens each stab and most the first of each bar.',
+        'Offbeat stabs, the house push on the and of each beat and a syncopated third stab. A: C with a fifth, F minor (F and A♭), A♭ major, then a G suspended fourth. B: E♭ major, B♭ major, C minor, D with a fourth, and G major to lead back to C. The interval lane is the harmony; the cutoff lane opens across A and closes across B, two slow turns of the knob.',
     },
   },
 
@@ -640,13 +640,13 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-wave-switch',
     name: 'Wave-Switch Lead',
-    ref: 'A singing synth-pop lead whose waveform switches inside every note, brassy at the front and hollow as it holds',
+    ref: 'A singing synth-pop lead whose waveform is switched inside each long note, brassy at the front and hollow as it holds',
     artist: '80s synth-pop',
     tags: ['lead', 'synth-pop', '80s'],
     level: 3,
     blurb:
-      'A bright pop lead that starts brassy and turns hollow on every held note, with a vibrato that blooms.',
-    how: 'Oscillator 1 is the lead and a quiet triangle two octaves up adds sparkle. A mod lane turns Oscillator 1’s waveform switch inside each note: sawtooth for the first two steps, then square, so every note starts brassy and goes hollow and woody as it holds. In part B the lane alternates narrow and wide pulses instead. A second lane brings vibrato in on held notes only, as a singer would.',
+      'A bright pop lead whose long notes start brassy and turn hollow, with a vibrato that blooms.',
+    how: 'Oscillator 1 is the lead and a quiet triangle two octaves up adds sparkle. A mod lane turns Oscillator 1’s waveform switch two steps into each long note, the last of every phrase: sawtooth to square, so the note starts brassy and goes hollow and woody as it holds, and back for the next. In part B the switch goes from narrow to wide pulse instead. A second lane swells vibrato in on those long notes, as a singer would. One hand on the switch, one on MOD DEPTH.',
     steps: [
       {
         title: 'A lead with a little sparkle',
@@ -696,8 +696,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     ],
     context: {
       'osc1.wave':
-        'Played by a lane, inside every note: sawtooth at the front, square as it holds (narrow and wide pulses in part B).',
-      'mod.depth': 'The other lane: vibrato that arrives on held notes only.',
+        'Played by a lane, inside each phrase’s long note: sawtooth at the front, square as it holds (narrow and wide pulses in part B).',
+      'mod.depth': 'The other lane: vibrato that swells in on the long notes only.',
       'mix.osc2': 'The sparkle on top. More makes it bell-like; none makes it plainer.',
       'filter.cutoff': 'How bright the lead is overall.',
     },
@@ -705,11 +705,11 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       laneTweak(
         'osc1.wave',
         'set the waveform lane to triangle on the held steps.',
-        'Each note starts brassy and fades into a soft flute.'
+        'Each long note starts brassy and fades into a soft flute.'
       ),
       laneTweak(
         'mod.depth',
-        'start the depth lane on the first step of each note.',
+        'start the depth lane’s swell on the first step of each long note.',
         'Vibrato from the start: more like a violin than a singer.'
       ),
       { id: 'mix.osc2', try: 'Raise to 6', hear: 'A glassier, organ-like lead.' },
@@ -730,23 +730,22 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'E4:2 . C#4 . | E4:3 . . F#4 | E4:2 . C#4 . | B3:4 . . . | A3:2 . B3 . | C#4:2 . E4 . | F#4:3 . . E4 | C#4:4 . . .',
           lanes: {
-            'osc1.wave': (c) => (c.sounding === null ? null : c.since < 2 ? 'saw' : 'sq'),
-            'mod.depth': (c) =>
-              c.sounding !== null && c.since >= 2 ? Math.min(1.8, 0.6 * (c.since - 1)) : 0,
+            // Two steps into each phrase's long note (B3 and C♯4, four steps each), and back for the next phrase.
+            'osc1.wave': (c) => ([14, 15, 30, 31].includes(c.i) ? 'sq' : 'saw'),
+            'mod.depth': moves({ 0: 0, 12: 0, 15: 1.8, 17: 0, 28: 0, 31: 1.8 }),
           },
         },
         {
           notes:
             'A4:2 . G#4 . | F#4:2 . E4 . | F#4:3 . . G#4 | A4:4 . . . | B4:2 . A4 . | G#4:2 . E4 . | F#4:2 . G#4 . | A4:4 . . .',
           lanes: {
-            'osc1.wave': (c) => (c.sounding === null ? null : c.since < 2 ? 'narrow' : 'wide'),
-            'mod.depth': (c) =>
-              c.sounding !== null && c.since >= 2 ? Math.min(2, 0.7 * (c.since - 1)) : 0,
+            'osc1.wave': (c) => ([14, 15, 30, 31].includes(c.i) ? 'wide' : 'narrow'),
+            'mod.depth': moves({ 0: 0, 12: 0, 15: 2, 17: 0, 28: 0, 31: 2 }),
           },
         },
       ],
       notes:
-        'A verse in A major circling E and C♯, falling to B, then climbing A–B–C♯–E–F♯ and landing on C♯. B is the chorus an octave up the register: A down to E, F♯ up to A, B down to E and up to the high A. The waveform lane turns the switch two steps into every note: sawtooth to square in A, narrow to wide pulse in B, so the chorus is thinner at the front and fuller as it holds. Vibrato only on the held notes.',
+        'A verse in A major circling E and C♯, falling to B, then climbing A–B–C♯–E–F♯ and landing on C♯. B is the chorus an octave up the register: A down to E, F♯ up to A, B down to E and up to the high A. The waveform lane turns the switch two steps into each phrase’s four-step note and back for the next phrase: sawtooth to square in A, narrow to wide pulse in B, so the chorus is thinner and fills out as it holds. The depth lane swells vibrato in on those notes only.',
     },
   },
 
@@ -754,12 +753,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-breath-flute',
     name: 'Breath-Lane Flute',
-    ref: 'A breathy synth flute with a puff of air at the start of every note and vibrato that blooms on the long ones',
+    ref: 'A breathy synth flute whose breath swells with each phrase, and vibrato that blooms on the long notes',
     artist: 'Folk melody',
     tags: ['wind', 'folk', 'melodic'],
     level: 2,
-    blurb: 'A soft, airy flute that breathes at the start of each note.',
-    how: 'A triangle through a soft filter makes the flute’s pure tone, and noise is mixed in for breath. The playing is in two mod lanes: the noise jumps up on the first step of every note, the chiff of air as a flute player tongues it, then falls back to a whisper. The other raises vibrato on the held notes only.',
+    blurb: 'A soft, airy flute whose breath rises and falls with the tune.',
+    how: 'A triangle through a soft filter makes the flute’s pure tone, and noise is mixed in for breath. The playing is in two mod lanes: the noise swells as each phrase climbs to its long note and eases off as it falls, the way a player blows harder at the top of a phrase. The other raises vibrato on the held notes only. A quick little filter rise on every note does the tonguing.',
     steps: [
       {
         title: 'A pure, soft tone',
@@ -778,16 +777,16 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'Soften it and let it track',
         module: 'filter',
-        why: 'Both keyboard controls on make the filter follow the melody, so high notes stay as bright as low ones. A slow filter rise gives each note a gentle start.',
+        why: 'Both keyboard controls on make the filter follow the melody, so high notes stay as bright as low ones. A quick filter rise that settles back gives each note a soft, tongued start.',
         set: {
           'filter.cutoff': 0.5,
           'filter.kbd1': true,
           'filter.kbd2': true,
           'filter.emphasis': 1,
-          'filter.contour': 2,
-          'fenv.attack': 1,
-          'fenv.decay': 3,
-          'fenv.sustain': 6,
+          'filter.contour': 3,
+          'fenv.attack': 0.4,
+          'fenv.decay': 2.2,
+          'fenv.sustain': 5,
           'aenv.attack': 1.2,
           'aenv.decay': 3,
           'aenv.sustain': 9,
@@ -803,7 +802,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'mix.noise': 'Played by a lane: a puff of air on each note’s first step, then a whisper.',
+      'mix.noise':
+        'Played by a lane: the breath, swelling as each phrase climbs to its long note and easing as it falls.',
       'mod.depth': 'The other lane: vibrato on the held notes.',
       'aenv.attack': 'How softly each note starts. Longer is more like a recorder blown gently.',
       'filter.cutoff': 'How airy or dark the flute is.',
@@ -841,7 +841,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'D4:2 . E4 . | F4:3 . . G4 | A4:4 . . . | G4 F4 E4:2 . | D4:2 . C4 . | D4:3 . . E4 | F4:2 . E4 . | D4:4 . . .',
           lanes: {
-            'mix.noise': (c) => (c.since === 0 ? 6 : c.sounding !== null ? 1.2 : 0.5),
+            // Blown harder up to each phrase's long note (A4, then D4 at the end), easing off after it.
+            'mix.noise': moves({ 0: 1, 8: 3.5, 12: 3, 16: 1.5, 28: 3, 31: 1.2 }),
             'mod.depth': (c) =>
               c.sounding !== null && c.since >= 2 ? Math.min(1.2, 0.4 * (c.since - 1)) : 0,
           },
@@ -850,14 +851,14 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'A4:2 . C5 . | B4:2 . A4 . | G4:3 . . A4 | B4:4 . . . | C5 B4 A4:2 . | G4:2 . E4 . | F4:2 . E4 . | D4:4 . . .',
           lanes: {
-            'mix.noise': (c) => (c.since === 0 ? 5 : c.sounding !== null ? 1 : 0.5),
+            'mix.noise': moves({ 0: 1.2, 12: 4, 16: 2, 24: 1.5, 28: 2.5, 31: 1 }),
             'mod.depth': (c) =>
               c.sounding !== null && c.since >= 2 ? Math.min(1.4, 0.45 * (c.since - 1)) : 0,
           },
         },
       ],
       notes:
-        'A tune in D dorian. A rises D–E–F–G to a held A, steps down and comes home through C to D. B is the answering phrase higher up: A to C, B down to A and G, a held B (the dorian sixth), then down through C–B–A–G–E–F–E to D. The noise lane tongues every note; the depth lane adds vibrato from the third step of a held note.',
+        'A tune in D dorian. A rises D–E–F–G to a held A, steps down and comes home through C to D. B is the answering phrase higher up: A to C, B down to A and G, a held B (the dorian sixth), then down through C–B–A–G–E–F–E to D. The noise lane is the breath, rising to each phrase’s long note and easing after, highest on B’s held B; the depth lane adds vibrato from the third step of a held note.',
     },
   },
 
@@ -865,12 +866,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-talking-bass',
     name: 'Talking Emphasis Bass',
-    ref: 'An electro-funk bass that says “wow” on every note in part A and “yow” in part B, its filter and emphasis riding each note',
+    ref: 'An electro-funk bass that says “wow” on every note in part A and “yow” in part B, the filter envelope reset between them by hand',
     artist: 'Electro-funk',
     tags: ['bass', 'electro', '80s'],
     level: 3,
     blurb: 'A talking, vowel-shaped bass that seems to speak each note.',
-    how: 'Two oscillators an octave down make a thick bass, and a resonant filter makes it vocal. Two mod lanes shape the vowel through each note. In part A the cutoff opens step by step while the emphasis falls, so each note says “wow”; in part B they cross the other way and each note says “yow”. It is what a player would do with two hands on the filter knobs.',
+    how: 'Two oscillators an octave down make a thick bass, and a resonant filter makes it vocal. The filter envelope shapes the vowel inside each note, and two mod lanes change it between parts, as a player would with a hand free. In part A the filter ATTACK is turned up, so each note opens slowly and says “wow”; for part B it is turned right down, so each note snaps open and falls, “yow”. The other hand rides the emphasis in slow waves, so the voice gets more and less nasal as the line goes.',
     steps: [
       {
         title: 'A thick bass',
@@ -891,16 +892,16 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'A vocal filter',
         module: 'filter',
-        why: 'High emphasis is what makes a filter sound like a mouth. The cutoff and emphasis here are only resting points for the lanes.',
+        why: 'High emphasis is what makes a filter sound like a mouth, and a big contour lets the filter envelope say the vowel. The attack and emphasis here are only resting points for the lanes.',
         set: {
-          'filter.cutoff': -1,
+          'filter.cutoff': -1.5,
           'filter.emphasis': 6,
-          'filter.contour': 2,
-          'fenv.attack': 0,
+          'filter.contour': 5,
+          'fenv.attack': 2,
           'fenv.decay': 2,
           'fenv.sustain': 3,
         },
-        listen: 'a nasal, ringing tone.',
+        listen: 'a nasal tone that opens slowly on each note: “wow”.',
       },
       {
         title: 'Notes that hold',
@@ -911,21 +912,21 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'filter.cutoff':
-        'Played by a lane, step by step through each note: opening in A, closing in B.',
-      'filter.emphasis': 'The other lane, crossing the cutoff: the two together are the vowel.',
+      'fenv.attack':
+        'Played by a lane: up for part A, so each note opens slowly (“wow”), right down for part B, so it snaps (“yow”).',
+      'filter.emphasis': 'The other lane, ridden in slow waves: how nasal the voice is.',
       'osc2.freq': 'The square’s detune. A little more makes the bass growl.',
-      'filter.contour': 'A small flick on each note, on top of the lanes.',
+      'filter.contour': 'How wide the vowel opens on each note.',
     },
     tweaks: [
       laneTweak(
         'filter.emphasis',
-        'raise the emphasis lane to 9 on the last step of each note.',
-        'Each note ends on a squeal.'
+        'raise the emphasis lane’s peaks to 9.',
+        'The voice squeals at the top of every wave.'
       ),
       laneTweak(
-        'filter.cutoff',
-        'copy part B’s cutoff lane into part A.',
+        'fenv.attack',
+        'copy part B’s attack lane into part A.',
         'The whole song says “yow”: punchier and more aggressive.'
       ),
       { id: 'osc2.freq', try: 'Move to -0.3', hear: 'A rougher, growlier bass.' },
@@ -946,23 +947,21 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'D2:3 . . D2 | . F2:2 . D2 | . . A1:2 . | C2:2 . D2 . | D2:3 . . D3 | . C3:2 . A2 | . G2 . F2 | E2:2 . C2:2 .',
           lanes: {
-            'filter.cutoff': (c) =>
-              c.sounding === null ? -2.2 : -2.2 + 0.8 * Math.min(c.since, 4),
-            'filter.emphasis': (c) => (c.sounding === null ? 5 : Math.max(4, 8 - 0.7 * c.since)),
+            'fenv.attack': () => 2.2,
+            'filter.emphasis': wave(5, 7.5, 16),
           },
         },
         {
           notes:
             'G1:3 . . G1 | . Bb1:2 . G1 | . . D2:2 . | F2:2 . G2 . | A1:3 . . A1 | . C2:2 . E2 | . G2 . A2 | Bb2:2 . A2:2 .',
           lanes: {
-            'filter.cutoff': (c) =>
-              c.sounding === null ? -2.2 : Math.max(-2.4, 1 - 0.8 * c.since),
-            'filter.emphasis': (c) => (c.sounding === null ? 5 : Math.min(8.5, 5 + 0.8 * c.since)),
+            'fenv.attack': () => 0,
+            'filter.emphasis': wave(5.5, 8.5, 16),
           },
         },
       ],
       notes:
-        'A in D minor: a held D answered by F, a drop to A, and in its second bar a jump to the octave that walks down C–A–G–F–E–C. B moves to G minor, then A, climbing through C, E, G and A to B♭ and back. Chained AABB, so each vowel plays twice. In A the cutoff lane climbs over the first four steps of each note while the emphasis falls (“wow”); in B the cutoff falls while the emphasis climbs (“yow”).',
+        'A in D minor: a held D answered by F, a drop to A, and in its second bar a jump to the octave that walks down C–A–G–F–E–C. B moves to G minor, then A, climbing through C, E, G and A to B♭ and back. Chained AABB, so each vowel plays twice. The attack lane is the vowel: up through A, so the filter envelope opens each note slowly (“wow”), and down through B, so it snaps open and falls (“yow”), one turn of the knob at each change of part. The emphasis lane rises and falls twice a part, higher in B.',
     },
   },
 
@@ -970,12 +969,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-trance-gate',
     name: 'Gated Trance Pulse',
-    ref: 'A continuous sixteenth-note power-chord pulse chopped into a rhythm by a decay lane, with a filter build',
+    ref: 'A sixteenth-note power-chord pulse gated into a rhythm by its note lengths, with a two-handed filter build',
     artist: '90s trance',
     tags: ['seq', 'trance', '90s'],
     level: 2,
     blurb: 'A pulsing, chopped trance riff that builds up brighter every time round.',
-    how: 'Two sawtooths a fifth apart make a power chord from one key. Every sixteenth is played, and a mod lane on the loudness decay chops them into a rhythm: long notes ring, short ones are just a tick, the effect a trance gate gives a held pad. A second lane lifts the cutoff, gently through part A and hard through part B, which is the build into the next section.',
+    how: 'Two sawtooths a fifth apart make a power chord from one key. Every sixteenth is played, and the sequencer gates them into a rhythm: long notes ring, clipped ones are just a tick, the effect a trance gate gives a held pad. The hands do the build: one lane lifts the cutoff and the other the emphasis, gently through part A and hard through part B, and both drop back as the loop comes round.',
     steps: [
       {
         title: 'A power chord from one key',
@@ -1006,32 +1005,37 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
         listen: 'a rounded, slightly ringing chord.',
       },
       {
-        title: 'Nothing held: decay is the note length',
+        title: 'Held: the note length is the gate',
         module: 'env',
-        why: 'With LOUDNESS SUSTAIN at 0, every note dies away over the decay time, held or not. That makes the decay knob the note length, which is what the lane plays.',
-        set: { 'aenv.attack': 0, 'aenv.decay': 2, 'aenv.sustain': 0 },
-        listen: 'a held key dies away by itself.',
+        why: 'With LOUDNESS SUSTAIN high and the LOUD DECAY switch off, a note sounds for exactly as long as its key is down and stops dead. So the sequencer’s note lengths are the gate: a full sixteenth rings, a clipped one is a tick.',
+        set: { 'aenv.attack': 0, 'aenv.decay': 1.5, 'aenv.sustain': 7, 'env.loudDecay': false },
+        listen: 'a held key keeps sounding until it is let go.',
       },
     ],
     context: {
-      'aenv.decay': 'Played by a lane: long and short sixteenths, which is the gate rhythm.',
-      'filter.cutoff': 'The other lane: the build, slow through A and steep through B.',
+      'filter.cutoff': 'Played by a lane: the build, slow through A and steep through B.',
+      'filter.emphasis':
+        'The other lane, rising with the cutoff: the build squeals more as it climbs.',
       'osc2.freq': 'The interval of the chord: 7 is a fifth, 5 a fourth.',
-      'filter.emphasis': 'More makes the build squeal at the top.',
+      'aenv.decay': 'How fast each note settles to its held level. Longer blurs the gate.',
     },
     tweaks: [
-      laneTweak(
-        'aenv.decay',
-        'draw your own rhythm into the decay lane: long on the beats you want to hear.',
-        'A new gate pattern: the same notes, a different groove.'
-      ),
       laneTweak(
         'filter.cutoff',
         'make part B’s cutoff lane fall instead of rise.',
         'A breakdown instead of a build.'
       ),
+      laneTweak(
+        'filter.emphasis',
+        'raise the end of part B’s emphasis lane to 7.',
+        'The build ends on a squeal.'
+      ),
       { id: 'osc2.freq', try: 'Set to 5', hear: 'Fourths: a darker, more modal riff.' },
-      { id: 'filter.emphasis', try: 'Push up to 6', hear: 'The build ends on a squeal.' },
+      {
+        id: 'aenv.decay',
+        try: 'Move between 1 and 4',
+        hear: 'From a hard gate to a softer, pumping one.',
+      },
     ],
     pattern: {
       key: key('gated-trance-pulse'),
@@ -1046,27 +1050,23 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       parts: [
         {
           notes:
-            'A2 A2 A2 A2 | A2 A2 A2 A2 | F2 F2 F2 F2 | F2 F2 F2 F2 | C3 C3 C3 C3 | C3 C3 C3 C3 | G2 G2 G2 G2 | G2 G2 G2 G2',
+            'A2 A2:0.3 A2 A2:0.3 | A2:0.3 A2 A2:0.3 A2:0.3 | F2 F2:0.3 F2 F2:0.3 | F2:0.3 F2:0.3 F2 F2:0.3 | C3 C3:0.3 C3 C3:0.3 | C3:0.3 C3 C3:0.3 C3:0.3 | G2 G2:0.3 G2 G2:0.3 | G2:0.3 G2:0.3 G2 G2:0.3',
           lanes: {
-            'aenv.decay': cycle([
-              2.4, 0.8, 2.4, 0.8, 0.8, 2.4, 0.8, 0.8, 2.4, 0.8, 2.4, 0.8, 0.8, 0.8, 2.4, 0.8,
-            ]),
-            'filter.cutoff': ramp(-1.5, 0.3),
+            'filter.cutoff': ramp(-1, 0.3),
+            'filter.emphasis': ramp(2.5, 3.5),
           },
         },
         {
           notes:
-            'A2 A3 A2 E3 | A2 A3 A2 E3 | F2 F3 F2 C3 | F2 F3 F2 C3 | C3 C4 C3 G3 | C3 C4 C3 G3 | G2 G3 G2 D3 | G2 G3 B2 D3',
+            'A2 A3:0.3 A2:0.3 E3 | A2:0.3 A3:0.3 A2 E3:0.3 | F2 F3:0.3 F2:0.3 C3 | F2:0.3 F3 F2:0.3 C3 | C3 C4:0.3 C3:0.3 G3 | C3:0.3 C4:0.3 C3 G3:0.3 | G2 G3:0.3 G2:0.3 D3 | G2:0.3 G3 B2:0.3 D3',
           lanes: {
-            'aenv.decay': cycle([
-              2.4, 0.8, 0.8, 2.4, 0.8, 0.8, 2.4, 0.8, 2.4, 0.8, 0.8, 2.4, 0.8, 2.4, 0.8, 2.4,
-            ]),
-            'filter.cutoff': ramp(0.3, 2.8),
+            'filter.cutoff': ramp(0.3, 2.2),
+            'filter.emphasis': ramp(3.5, 5.5),
           },
         },
       ],
       notes:
-        'A minor, F, C, G: half a bar each, every sixteenth played. The decay lane is the gate, a sixteen-step pattern of long and short; A plays it three times while its cutoff lane rises slowly, then B jumps the line into octaves, changes the gate to a dotted pattern and lifts the cutoff steeply into the loop’s return.',
+        'A minor, F, C, G: half a bar each, every sixteenth played. The gate is in the notes, a sixteen-step pattern of full and clipped sixteenths; A plays it three times while the cutoff and emphasis lanes rise slowly, then B jumps the line into octaves, changes the gate to a dotted pattern and lifts both steeply, and both hands pull them back as the loop returns.',
     },
   },
 
@@ -1191,8 +1191,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['bass', 'industrial', '80s'],
     level: 3,
     blurb:
-      'A metallic, snarling bass that growls harder on the accents and changes its clang between sections.',
-    how: 'Oscillator 3 is taken out of the mixer and used as a modulator at audio rate, following the keyboard: that is frequency modulation, and it turns a plain sawtooth into a clang. One mod lane sets MOD DEPTH per step, a snarl on the accents, a little on the other notes and almost none on the tails. The other retunes Oscillator 3, which changes the ratio between modulator and carrier and so the colour of the clang: plain in the first half of part A, a fifth in the second, and four different colours through part B.',
+      'A metallic, snarling bass whose growl swells through each bar and whose clang changes between sections.',
+    how: 'Oscillator 3 is taken out of the mixer and used as a modulator at audio rate, following the keyboard: that is frequency modulation, and it turns a plain sawtooth into a clang. One mod lane rides MOD DEPTH, swelling the snarl through each bar and easing it back for the next. The other retunes Oscillator 3, which changes the ratio between modulator and carrier and so the colour of the clang: plain in the first half of part A, a fifth in the second, and four different colours through part B, a turn of the knob every half bar.',
     steps: [
       {
         title: 'A sawtooth bass',
@@ -1241,7 +1241,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     ],
     context: {
       'mod.depth':
-        'Played by a lane: how hard Oscillator 3 growls into each step, most on the accents.',
+        'Played by a lane: how hard Oscillator 3 growls, swelling through each bar and eased back for the next.',
       'osc3.freq':
         'The other lane: Oscillator 3’s tuning, which is the FM ratio. 0 is harmonic; 7 a fifth up is still sweet; 5 or −5 go metallic.',
       'osc3.wave': 'The modulator’s shape. A square makes a harsher, buzzier growl.',
@@ -1280,7 +1280,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'E2! E2 . E2 | F2 . E2 . | E2! E2 . G2 | . E2 F2 . | E2! E2 . E2 | Bb2 . A2 . | G2! . F2 . | E2 . F2:2 .',
           lanes: {
-            'mod.depth': (c) => (c.accent ? 6 : c.since === 0 ? 2.5 : 0.8),
+            'mod.depth': moves({ 0: 1.5, 12: 5, 16: 1.5, 28: 6, 31: 3 }),
             'osc3.freq': holds({ 0: 0, 16: 7 }),
           },
         },
@@ -1288,13 +1288,13 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'A2! A2 . A2 | Bb2 . A2 . | A2! A2 . C3 | . A2 Bb2 . | G2! G2 . G2 | F2 . E2 . | F2! . G2 . | Bb2 . A2:2 .',
           lanes: {
-            'mod.depth': (c) => (c.accent ? 8 : c.since === 0 ? 4 : 1.5),
-            'osc3.freq': holds({ 0: 5, 8: 0, 16: -5, 24: 7 }),
+            'mod.depth': moves({ 0: 3, 12: 7, 16: 3, 28: 8, 31: 4 }),
+            'osc3.freq': holds({ 0: 5, 8: 0, 16: -5, 24: -2 }),
           },
         },
       ],
       notes:
-        'An E phrygian riff: the flat second F leaning on E, a lift to G, and a tritone B♭ falling through A, G and F. B goes up a fourth to A with its own flat second, then down through G, F and E. The depth lane snarls on the accents; the frequency lane changes the clang every half bar in B, so the same notes keep changing metal.',
+        'An E phrygian riff: the flat second F leaning on E, a lift to G, and a tritone B♭ falling through A, G and F. B goes up a fourth to A with its own flat second, then down through G, F and E. The depth lane swells the snarl through each bar, harder in B; the frequency lane changes the clang every half bar in B, so the same notes keep changing metal.',
     },
   },
 
@@ -1308,7 +1308,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     level: 3,
     blurb:
       'A heavy synth riff that snarls into overdrive for the chorus and pushes harder on the accents.',
-    how: 'Three oscillators make a big rock tone. With nothing plugged into EXT, switching on the external input feeds the synth’s own output back into its mixer: the Minimoog’s overdrive trick. A mod lane rides that EXT IN VOLUME, low through the verse (part A) with a push on the accents, and high through the chorus (part B). A second lane opens the cutoff on the accents and further in the chorus.',
+    how: 'Three oscillators make a big rock tone. With nothing plugged into EXT, switching on the external input feeds the synth’s own output back into its mixer: the Minimoog’s overdrive trick. A mod lane rides that EXT IN VOLUME, low through the verse (part A) with a push on the accents, turned up over the chorus’s (part B’s) first beat and eased back over its last. A second lane opens the cutoff on the accents and further in the chorus.',
     steps: [
       {
         title: 'Three oscillators',
@@ -1354,7 +1354,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     ],
     context: {
       'mix.ext':
-        'Played by a lane: the overdrive. Low in the verse, high in the chorus, pushed on accents.',
+        'Played by a lane: the overdrive. Low in the verse, turned up into the chorus and back out of it, pushed on accents.',
       'filter.cutoff': 'The other lane: brighter on the accents and through the chorus.',
       'out.volume': 'Also sets how hard the feedback loop is driven.',
       'osc2.freq': 'The detune that makes the riff wide.',
@@ -1400,13 +1400,15 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'G2! . G2 B2 | G2 . C3 . | A2! . A2 C3 | A2 . D3 . | B2! . B2 D3 | E3 . D3 B2 | A2! . G2 . | F#2 . D#2 B1',
           lanes: {
-            'mix.ext': (c) => (c.accent ? 8.5 : 6),
+            // Turned up over the chorus's first beat and back down over its last, so the verse is never a leap away.
+            'mix.ext': (c) =>
+              (moves({ 0: 3, 4: 6, 28: 6, 31: 3 })(c) as number) + (c.accent && c.i > 0 ? 2.5 : 0),
             'filter.cutoff': (c) => (c.accent ? 2.8 : 2),
           },
         },
       ],
       notes:
-        'A is the verse riff in E minor: E answered by G and A, a lift to B and down through A–G–E–D. B is the chorus: G, A and B, each with its third above, climbing to E and falling to F♯, D♯ and B, the dominant that pulls back to E. AABB. The EXT IN lane is the drive, lightly in A and hard in B, with every accent pushed further.',
+        'A is the verse riff in E minor: E answered by G and A, a lift to B and down through A–G–E–D. B is the chorus: G, A and B, each with its third above, climbing to E and falling to F♯, D♯ and B, the dominant that pulls back to E. AABB. The EXT IN lane is the drive, lightly in A and hard in B, turned up over B’s first beat and back over its last, with every accent pushed further.',
     },
   },
 
@@ -1419,7 +1421,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['keys', 'synthwave', '2010s'],
     level: 2,
     blurb: 'A glassy, sparkling arpeggio with an accent that seems to roll across the beat.',
-    how: 'A triangle and a square two octaves up make a bell-like tone that dies away on every note. Two mod lanes play it. The cutoff repeats bright, middle, dark every three steps while the arpeggio repeats every four, so the bright note lands somewhere new each time: the rolling accent. The other lane lengthens the first note of every beat, so the beat is still clear underneath.',
+    how: 'A triangle and a square two octaves up make a bell-like tone that dies away on every note. The LFO sweeps the filter once every three sixteenths while the arpeggio repeats every four, so the bright note lands somewhere new each time: the rolling accent. Two mod lanes ride it by hand: one brings the roll in and out with MOD DEPTH, the other lets the notes ring longer through part A and draws them back in through part B.',
     steps: [
       {
         title: 'A bell-like tone',
@@ -1457,25 +1459,45 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
         set: { 'aenv.attack': 0, 'aenv.decay': 2.2, 'aenv.sustain': 0 },
         listen: 'every note fading out like a struck bell.',
       },
+      {
+        title: 'Roll the filter with the LFO',
+        module: 'mod',
+        why: 'MOD MIX fully right picks the LFO, and FILTER MODULATION sends it to the cutoff. Its rate is one cycle every three sixteenths at the song’s 96 bpm, against the arpeggio’s fours. MOD DEPTH is left at 0 for the lane.',
+        set: {
+          'mod.mix': 10,
+          'mod.toFilter': true,
+          'lfo.shape': 'tri',
+          'lfo.rate': lfoSync(96, 4 / 3),
+          'mod.depth': 0,
+        },
+        listen: 'turn MOD DEPTH up by hand: the brightness rolls across the notes.',
+      },
     ],
     context: {
-      'filter.cutoff':
-        'Played by a lane in a three-step cycle against the four-note arpeggio: the accent that rolls across the beat.',
-      'aenv.decay': 'The other lane: a longer ring on the first note of each beat.',
+      'mod.depth':
+        'Played by a lane: how much of the LFO’s three-step roll reaches the filter, swelling through each half of the song.',
+      'aenv.decay':
+        'The other lane: the notes ring longer through A and are drawn back in through B.',
+      'lfo.rate': 'Set to three sixteenths a cycle against the arpeggio’s four: the roll.',
       'mix.osc2': 'The glass on top. More is more like a celesta.',
       'filter.emphasis': 'A ring at the cutoff. More makes the bright notes sing.',
     },
     tweaks: [
       laneTweak(
-        'filter.cutoff',
-        'redraw the cutoff lane in a cycle of four.',
-        'The accent stops rolling and sits on the same note every beat.'
+        'mod.depth',
+        'flatten the depth lane to 0.',
+        'The roll stops: every note as bright as the last.'
       ),
       laneTweak(
         'aenv.decay',
         'raise the decay lane to 4 everywhere.',
         'The notes ring into each other: a wash rather than a pattern.'
       ),
+      {
+        id: 'lfo.rate',
+        try: 'Slow it to about 4',
+        hear: 'A slow tide of brightness instead of a roll.',
+      },
       { id: 'mix.osc2', try: 'Raise to 6', hear: 'A brighter, more metallic arpeggio.' },
       {
         id: 'filter.emphasis',
@@ -1498,21 +1520,21 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'F3 A3 C4 E4 | B4 E4 C4 A3 | F3 A3 C4 E4 | B4 E4 C4 A3 | D3 F3 A3 C4 | E4 C4 A3 F3 | G3 B3 D4 F#4 | A4 F#4 D4 B3',
           lanes: {
-            'filter.cutoff': cycle([2.5, 0.5, -0.5]),
-            'aenv.decay': (c) => (c.i % 4 === 0 ? 3.5 : 1.8),
+            'mod.depth': moves({ 0: 2, 16: 5, 31: 3 }),
+            'aenv.decay': ramp(1.8, 3),
           },
         },
         {
           notes:
             'C3 E3 G3 B3 | F#4 B3 G3 E3 | A2 C3 E3 G3 | B3 G3 E3 C3 | Bb2 D3 F3 A3 | C4 A3 F3 D3 | C3 E3 G3 B3 | D4 B3 G3 E3',
           lanes: {
-            'filter.cutoff': cycle([2.8, 0.2, 0.8]),
-            'aenv.decay': (c) => (c.i % 4 === 0 ? 4 : c.i % 4 === 2 ? 2.4 : 1.6),
+            'mod.depth': moves({ 0: 3, 16: 6, 31: 2 }),
+            'aenv.decay': ramp(3, 1.8),
           },
         },
       ],
       notes:
-        'An F major seventh arpeggio with the Lydian B on top, then D minor and G major (the Lydian II). B: C major seventh with an F♯, A minor seventh, a B♭ major seventh for colour, and C again. The cutoff lane repeats every three steps against the four-note shapes, so the accent rolls round the beat; the decay lane rings the first of each beat, and in B the third as well.',
+        'An F major seventh arpeggio with the Lydian B on top, then D minor and G major (the Lydian II). B: C major seventh with an F♯, A minor seventh, a B♭ major seventh for colour, and C again. The LFO sweeps the filter every three steps against the four-note shapes, so the accent rolls round the beat; the depth lane brings that roll in through each part, most in the middle of B, and the decay lane lets the notes ring longer through A and draws them in through B.',
     },
   },
 
@@ -1525,7 +1547,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['bass', 'garage', '90s'],
     level: 2,
     blurb: 'A bouncing, swung sub bass that slides between some notes and skips over others.',
-    how: 'A square and a triangle an octave down make a round sub with a little edge, through a mostly closed filter. The rhythm is two-step: swung sixteenths with gaps. One mod lane raises GLIDE only on the notes a slide lands on, so the line slips into those and jumps to the rest. The other sets the contour amount, so accented notes pluck brighter than the rest.',
+    how: 'A square and a triangle an octave down make a round sub with a little edge, through a mostly closed filter. The rhythm is two-step: swung sixteenths with gaps. One mod lane raises GLIDE only on the notes a slide lands on, so the line slips into those and jumps to the rest. The other jabs the contour amount up on the two accented notes of each part, so they pluck brighter than the rest.',
     steps: [
       {
         title: 'A rounded sub',
@@ -1597,7 +1619,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'G2! . . . | . . G2 . | Bb2^ C3 . . | G2 . . F2 | . . G2! . | . . D3 . | . C3 Bb2^ A2 | . F2 G2 .',
           lanes: {
             'ctl.glide': (c) => (c.slidIn ? 2.5 : 0),
-            'filter.contour': (c) => (c.note === null ? null : c.accent ? 7 : 3.5),
+            // A jab of the knob on the two accents, otherwise left where the panel has it.
+            'filter.contour': (c) => (c.accent ? 7 : 3.5),
           },
         },
         {
@@ -1605,7 +1628,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'Eb2! . . . | . . Eb3 . | D3^ C3 . . | Bb2 . . G2 | . . F2! . | . . F3 . | . Eb3 D3^ C3 | . A2 D3 .',
           lanes: {
             'ctl.glide': (c) => (c.slidIn ? 3 : 0),
-            'filter.contour': (c) => (c.note === null ? null : c.accent ? 7.5 : 4),
+            'filter.contour': (c) => (c.accent ? 7 : 3.5),
           },
         },
       ],
@@ -1618,12 +1641,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-italo-octaves',
     name: 'Italo Octave Bass',
-    ref: 'A bouncing eighth-note octave bass in the disco tradition, its filter opening over four bars and ringing on the high notes',
+    ref: 'A bouncing eighth-note octave bass in the disco tradition, its filter opening over four bars and its ring rising and falling',
     artist: 'Italo disco',
     tags: ['bass', 'disco', '80s'],
     level: 2,
     blurb: 'A bouncing, driving octave bass that slowly opens up over the song.',
-    how: 'Two sawtooths an octave down bounce between each note and its octave. One mod lane sweeps the cutoff in one slow wave that runs across both parts, four bars from dark to bright and back. The other raises the emphasis on the high octave of each pair, so the upper notes ring with a little resonance and the bounce feels bigger.',
+    how: 'Two sawtooths an octave down bounce between each note and its octave. One mod lane sweeps the cutoff in one slow wave that runs across both parts, four bars from dark to bright and back. Keyboard control opens the filter a little for the high octave of each pair, so the upper notes are brighter and the bounce feels bigger. The other lane turns the emphasis up through part A and back down through part B, so the bass rings more as it opens.',
     steps: [
       {
         title: 'Two sawtooths an octave down',
@@ -1643,9 +1666,10 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'A bouncy filter',
         module: 'filter',
-        why: 'A quick pluck on each note from the envelope, over a cutoff the lane will sweep.',
+        why: 'A quick pluck on each note from the envelope, over a cutoff the lane will sweep. Keyboard control 1 opens the filter a little for higher notes, so the top of each octave is brighter.',
         set: {
           'filter.cutoff': -1,
+          'filter.kbd1': true,
           'filter.emphasis': 3,
           'filter.contour': 4,
           'fenv.attack': 0,
@@ -1660,7 +1684,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     ],
     context: {
       'filter.cutoff': 'Played by a lane in one four-bar wave across parts A and B.',
-      'filter.emphasis': 'The other lane: up on the high octave of each pair, so it rings.',
+      'filter.emphasis':
+        'The other lane: turned up through A and back down through B, so the bass rings as it opens.',
       'osc2.freq': 'The detune that makes the bass wide.',
       'filter.contour': 'The pluck on each note.',
     },
@@ -1672,8 +1697,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       ),
       laneTweak(
         'filter.emphasis',
-        'raise the emphasis lane to 7 on the high notes.',
-        'The upper octave squelches: closer to an acid bass.'
+        'raise the top of the emphasis lane to 7.',
+        'The bass squelches at its brightest: closer to an acid bass.'
       ),
       { id: 'filter.contour', try: 'Raise to 6', hear: 'A harder, clickier pluck.' },
       { id: 'osc2.freq', try: 'Set to 0', hear: 'A narrower, punchier bass.' },
@@ -1694,7 +1719,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'A2 . A3 . | A2 . A3 . | A2 . A3 . | A2 . A3 A3 | F2 . F3 . | F2 . F3 . | G2 . G3 . | G2 . G3 .',
           lanes: {
             'filter.cutoff': wave(-2.2, 1.5, 64),
-            'filter.emphasis': (c) => (c.i % 4 >= 2 ? 6 : 3),
+            'filter.emphasis': ramp(3, 5.5),
           },
         },
         {
@@ -1702,12 +1727,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'C3 . C4 . | C3 . C4 C4 | G2 . G3 . | G2 . G3 . | D3 . D4 . | D3 . D4 D4 | E2 . E3 . | E2 . E3 E3',
           lanes: {
             'filter.cutoff': wave(-2.2, 1.5, 64, 32),
-            'filter.emphasis': (c) => (c.i % 4 >= 2 ? 6.5 : 3),
+            'filter.emphasis': ramp(5.5, 3),
           },
         },
       ],
       notes:
-        'Eighth-note octaves, with a sixteenth pickup on the high note to make it gallop. A: A minor for a bar, then F and G. B: C, G, D and an E that turns the progression back to A minor. The cutoff lane is one 64-step wave spread over A and B; the emphasis lane rings the upper note of each octave pair.',
+        'Eighth-note octaves, with a sixteenth pickup on the high note to make it gallop. A: A minor for a bar, then F and G. B: C, G, D and an E that turns the progression back to A minor. The cutoff lane is one 64-step wave spread over A and B; the emphasis lane climbs through A and falls back through B, and keyboard control brightens the upper note of each octave pair.',
     },
   },
 
@@ -1810,12 +1835,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-pulse-shuffle',
     name: 'Pulse-Width Shuffle',
-    ref: 'A wiry new-wave riff whose oscillator switches between square, wide and narrow pulses every step',
+    ref: 'A wiry new-wave riff whose oscillator is flicked between square, wide and narrow pulses on every beat',
     artist: 'Post-punk new wave',
     tags: ['lead', 'new-wave', '80s'],
     level: 3,
-    blurb: 'A twitchy, wiry riff whose tone flickers from note to note.',
-    how: 'The Model D has no pulse-width knob, but its waveform switch has three pulses: square, wide and narrow. A mod lane flicks Oscillator 1 between them on every step, which gives the riff a nervous, phasing flicker like pulse-width modulation, but in rhythm. A second lane lifts the cutoff through each bar.',
+    blurb: 'A twitchy, wiry riff whose tone flickers from beat to beat.',
+    how: 'The Model D has no pulse-width knob, but its waveform switch has three pulses: square, wide and narrow. A mod lane flicks Oscillator 1’s switch to its neighbour on every beat, square to wide to narrow and back, which gives the riff a nervous, phasing flicker like pulse-width modulation, but in rhythm. A second lane lifts the cutoff through each bar.',
     steps: [
       {
         title: 'A pulse lead',
@@ -1850,7 +1875,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'osc1.wave': 'Played by a lane: square, wide and narrow pulses, changing every step.',
+      'osc1.wave': 'Played by a lane: square, wide and narrow pulses, flicked on every beat.',
       'filter.cutoff': 'The other lane: a rise through each bar.',
       'mix.osc2': 'The body underneath. Up for a fatter riff.',
       'filter.emphasis': 'A ring on the flicker.',
@@ -1884,7 +1909,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'C3! . C3 Eb3 | . C3 G3 . | Bb2 . C3 . | Eb3 . F3 G3 | C3! . C3 Eb3 | . C3 G3 . | Bb2 . G2 . | Ab2 . Bb2 .',
           lanes: {
-            'osc1.wave': cycle(['sq', 'wide', 'narrow', 'wide']),
+            // A beat each, one click of the switch at a time.
+            'osc1.wave': (c) => ['sq', 'wide', 'narrow', 'wide'][Math.floor(c.i / 4) % 4],
             'filter.cutoff': (c) => -0.5 + 0.18 * (c.i % 16),
           },
         },
@@ -1892,13 +1918,13 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'Ab2! . Ab2 C3 | . Ab2 Eb3 . | G2 . Ab2 . | C3 . Eb3 F3 | G2! . G2 B2 | . G2 D3 . | F3 . Eb3 . | D3 . B2 .',
           lanes: {
-            'osc1.wave': cycle(['narrow', 'narrow', 'wide', 'sq']),
+            'osc1.wave': (c) => ['narrow', 'wide', 'sq', 'wide'][Math.floor(c.i / 4) % 4],
             'filter.cutoff': (c) => 0 + 0.2 * (c.i % 16),
           },
         },
       ],
       notes:
-        'A in C minor, root and minor third, a reach to G, and a B♭–C–E♭–F–G run; its second bar turns down through B♭, G and A♭. B goes to A♭ major, then G major with its B natural, and falls F–E♭–D–B to lead home. The waveform lane changes pulse every step, in a different order in B; the cutoff lane rises through every bar.',
+        'A in C minor, root and minor third, a reach to G, and a B♭–C–E♭–F–G run; its second bar turns down through B♭, G and A♭. B goes to A♭ major, then G major with its B natural, and falls F–E♭–D–B to lead home. The waveform lane flicks the pulse on every beat, one click at a time, starting from the other end in B; the cutoff lane rises through every bar.',
     },
   },
 
@@ -1906,12 +1932,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-contour-marimba',
     name: 'Contour Marimba Cells',
-    ref: 'Interlocking marimba-like pulse cells in the minimalist tradition, with accents in threes and fives over the fours',
+    ref: 'Interlocking marimba-like pulse cells in the minimalist tradition, with accents in threes phasing over the fours',
     artist: 'American minimalism',
     tags: ['keys', 'minimal', '70s'],
     level: 3,
     blurb: 'Bright, wooden pulse patterns whose accents drift and phase over the beat.',
-    how: 'A triangle with a quiet square two octaves up, dying away fast, makes a wooden, marimba-like strike. The notes are four-note cells. Two mod lanes play against them in other cycles: the contour amount brightens every third step, and the filter decay lengthens every fifth. Neither lines up with the four, so the accents seem to walk through the pattern, the phasing effect of minimalist pulse music.',
+    how: 'A triangle with a quiet square two octaves up, dying away fast, makes a wooden, marimba-like strike. The notes are four-note cells, and the LFO brightens the filter once every three steps, which never lines up with the four, so the accents seem to walk through the pattern: the phasing effect of minimalist pulse music. Two mod lanes ride it slowly: MOD DEPTH brings the phasing in and lets it fade, and the filter decay rounds the strike off through part A and tightens it again through part B.',
     steps: [
       {
         title: 'A wooden strike',
@@ -1950,24 +1976,44 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
         set: { 'aenv.attack': 0, 'aenv.decay': 2.6, 'aenv.sustain': 0 },
         listen: 'a short, ringing strike.',
       },
+      {
+        title: 'Accents in threes, from the LFO',
+        module: 'mod',
+        why: 'MOD MIX fully right picks the LFO and FILTER MODULATION sends it to the cutoff, at one cycle every three sixteenths of the song’s 112 bpm. MOD DEPTH starts at 0 for the lane.',
+        set: {
+          'mod.mix': 10,
+          'mod.toFilter': true,
+          'lfo.shape': 'tri',
+          'lfo.rate': lfoSync(112, 4 / 3),
+          'mod.depth': 0,
+        },
+        listen: 'turn MOD DEPTH up by hand: the bright strike walks through the cell.',
+      },
     ],
     context: {
-      'filter.contour': 'Played by a lane in threes: a brighter strike every third step.',
-      'fenv.decay': 'The other lane, in fives: a longer, rounder strike every fifth step.',
+      'mod.depth':
+        'Played by a lane: how strongly the LFO’s threes accent the strikes, phasing in and fading out.',
+      'fenv.decay': 'The other lane: the strike rounds off through A and tightens again through B.',
+      'filter.contour': 'How bright each strike is before the LFO adds its accent.',
       'aenv.decay': 'How long each bar rings.',
       'mix.osc2': 'The knock on top. More is more like a xylophone.',
     },
     tweaks: [
       laneTweak(
-        'filter.contour',
-        'redraw the contour lane in a cycle of four.',
-        'The accents stop walking and lock to the beat.'
+        'mod.depth',
+        'hold the depth lane at its highest all the way through.',
+        'The phasing never fades: a hard, insistent walk.'
       ),
       laneTweak(
         'fenv.decay',
-        'change the decay lane’s cycle from five steps to seven.',
-        'The accents take longer to come round: a slower phase.'
+        'flatten the decay lane at 1.2.',
+        'Every strike stays tight and dry: a woodblock more than a marimba.'
       ),
+      {
+        id: 'lfo.rate',
+        try: 'Nudge it a little either way',
+        hear: 'The accents drift against the cells instead of walking in step.',
+      },
       {
         id: 'aenv.decay',
         try: 'Raise to 4',
@@ -1990,21 +2036,21 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'E3 B3 F#3 . | E3 B3 F#3 A3 | . B3 F#3 A3 | E3 . F#3 A3 | E3 B3 . A3 | E3 B3 F#3 . | E3 B3 F#3 A3 | . B3 F#3 A3',
           lanes: {
-            'filter.contour': cycle([7, 3, 3]),
-            'fenv.decay': cycle([2.2, 1.2, 1.2, 1.6, 1.2]),
+            'mod.depth': moves({ 0: 1, 24: 4.5, 31: 4 }),
+            'fenv.decay': ramp(1.2, 2.2),
           },
         },
         {
           notes:
             'D3 A3 E3 . | D3 A3 E3 G3 | . A3 E3 G3 | D3 . E3 G3 | C#3 A3 . G3 | C#3 A3 E3 . | C#3 A3 E3 G3 | . A3 E3 G3',
           lanes: {
-            'filter.contour': cycle([7, 3, 3]),
-            'fenv.decay': cycle([2.2, 1.2, 1.2, 1.6, 1.2]),
+            'mod.depth': moves({ 0: 4, 8: 4.5, 31: 1 }),
+            'fenv.decay': ramp(2.2, 1.2),
           },
         },
       ],
       notes:
-        'One four-note cell, E–B–F♯–A, played with a different note left out each time, so the pattern’s gaps move. B shifts the cell down a step to D–A–E–G and then to C♯ under the same top notes: a slow harmonic change in the minimalist way. AABB. The contour lane accents every third step and the decay lane every fifth, neither in step with the four-note cell.',
+        'One four-note cell, E–B–F♯–A, played with a different note left out each time, so the pattern’s gaps move. B shifts the cell down a step to D–A–E–G and then to C♯ under the same top notes: a slow harmonic change in the minimalist way. AABB. The LFO accents every third step, out of step with the four-note cell; the depth lane phases that in through A and lets it fade through B, and the decay lane rounds the strike off through A and tightens it through B.',
     },
   },
 
@@ -2017,7 +2063,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['seq', 'idm', '2000s'],
     level: 3,
     blurb: 'A stuttering, glitchy line that rolls and crackles through its notes.',
-    how: 'Some steps of this line are ratcheted, hit two, three or four times inside one sixteenth. Two mod lanes play it. The loudness decay snaps short on the ratcheted steps, so the rolls stay crisp, and longer on the single notes. The cutoff jumps between seven values that repeat every seven steps, never in step with the bar, which scatters the tone like a glitch.',
+    how: 'Some steps of this line are ratcheted, hit two, three or four times inside one sixteenth. Two mod lanes play it. The loudness decay is tightened through part A, so the rolls get crisper, and let out again through part B, so they smear into buzzes. The cutoff is jerked to a new place every three steps, seven places that come round every twenty-one steps, never in step with the bar, which scatters the tone like a glitch.',
     steps: [
       {
         title: 'A hollow, bright tone',
@@ -2056,21 +2102,22 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'aenv.decay': 'Played by a lane: short on the ratcheted steps, longer on single notes.',
+      'aenv.decay':
+        'Played by a lane: tightened through A so the rolls crisp up, let out through B.',
       'filter.cutoff':
-        'The other lane: seven values that repeat every seven steps, the scattered tone.',
+        'The other lane: jerked to a new place every three steps, seven places that never line up with the bar.',
       'filter.emphasis': 'More gives the scatter a ringing, zappy edge.',
       'mix.osc2': 'The crackle on top.',
     },
     tweaks: [
       laneTweak(
         'aenv.decay',
-        'raise the decay lane on the ratcheted steps to 2.5.',
+        'raise the decay lane to 2.5 everywhere.',
         'The rolls smear into buzzes.'
       ),
       laneTweak(
         'filter.cutoff',
-        'shorten the cutoff lane’s cycle to four steps.',
+        'move the cutoff every four steps instead of three.',
         'The scatter locks to the beat: more groove, less glitch.'
       ),
       { id: 'filter.emphasis', try: 'Push to 7', hear: 'Zappy, resonant glitches.' },
@@ -2091,21 +2138,22 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'C3! . C3*3 . | Eb3 . . G2*2 | C3 . Bb2 . | C3*4 . G2 . | C3! . C3*3 . | Eb3 . F3*2 . | G3 . F3 Eb3*3 | . C3 G2*2 .',
           lanes: {
-            'aenv.decay': (c) => (c.ratchet > 1 ? 0.6 : c.note !== null ? 2 : null),
-            'filter.cutoff': cycle([1.5, -1, 0.5, 2.5, -0.5, 1, -1.5]),
+            'aenv.decay': ramp(2, 0.7),
+            // A new place every three steps, alternately up and down, so the hand turns once a move.
+            'filter.cutoff': (c) => [1.5, -1, 0.5, 2.5, -0.5, 1, -1.5][Math.floor(c.i / 3) % 7],
           },
         },
         {
           notes:
             'Ab2! . Ab2*3 . | C3 . . Eb2*2 | Ab2 . G2 . | Ab2*4 . Eb2 . | Bb2! . Bb2*3 . | D3 . Eb3*2 . | F3 . Eb3 D3*3 | . Bb2 G2*4 .',
           lanes: {
-            'aenv.decay': (c) => (c.ratchet > 1 ? 0.5 : c.note !== null ? 2.2 : null),
-            'filter.cutoff': cycle([2, -0.5, 1, -1.5, 2.5, 0, -1]),
+            'aenv.decay': ramp(0.7, 2),
+            'filter.cutoff': (c) => [2, -0.5, 1, -1.5, 2.5, 0, -1][Math.floor(c.i / 3) % 7],
           },
         },
       ],
       notes:
-        'C minor: C with a triple roll, E♭, a double roll on G below, a four-hit roll on C, then up through F to G and back down with a triple on E♭. B moves to A♭ and B♭ major with the same shapes and ends on a four-hit G. The decay lane snaps short on every ratchet; the cutoff lane repeats in sevens, across the bar.',
+        'C minor: C with a triple roll, E♭, a double roll on G below, a four-hit roll on C, then up through F to G and back down with a triple on E♭. B moves to A♭ and B♭ major with the same shapes and ends on a four-hit G. The decay lane tightens through A and lets out through B; the cutoff lane jerks to a new place every three steps, seven places round, across the bar.',
     },
   },
 
@@ -2348,12 +2396,13 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-octave-leap',
     name: 'Octave-Leap Electro',
-    ref: 'A robotic electro-funk riff whose two oscillators jump between octaves step by step, their RANGE switches played by lanes',
+    ref: 'A robotic electro-funk riff that leaps between octaves every step, its two oscillators’ RANGE switches set against each other by lanes',
     artist: 'Electro-funk',
     tags: ['seq', 'electro', '80s'],
     level: 3,
-    blurb: 'A jumpy, robotic riff that leaps between octaves faster than any hand could.',
-    how: 'The RANGE switches set each oscillator’s octave, and a hand can only turn one at a time. Two mod lanes switch both, every step, in different cycles, so the same few notes leap across three octaves and the two oscillators keep landing in new combinations: unison, an octave apart, two octaves apart. The riff itself barely moves; the lanes make the melody.',
+    blurb:
+      'A jumpy, robotic riff that leaps between octaves, its two oscillators landing in new combinations.',
+    how: 'The riff leaps an octave down, back, an octave up and back on every four steps, so the same few notes jump across three octaves. The RANGE switches set each oscillator’s octave, and two mod lanes turn them, one hand each: Oscillator 2’s switch moves every half bar, so the two oscillators keep landing in new combinations, unison, an octave apart, two octaves apart; Oscillator 1’s moves only for a phrase, lifting the whole riff.',
     steps: [
       {
         title: 'Two oscillators, two tones',
@@ -2389,8 +2438,10 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'osc1.range': 'Played by a lane: Oscillator 1’s octave on every step.',
-      'osc2.range': 'The other lane, in a different cycle, so the two land in new combinations.',
+      'osc1.range':
+        'Played by a lane: Oscillator 1’s octave, lifted for the last phrase of A and held there through the first half of B.',
+      'osc2.range':
+        'The other lane, turned every half bar, so the two oscillators land in new combinations.',
       'osc2.wave':
         'The second oscillator’s tone. A sawtooth blends it in; the narrow pulse keeps it apart.',
       'filter.emphasis': 'A robotic ring on every note.',
@@ -2399,12 +2450,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       laneTweak(
         'osc1.range',
         'set Oscillator 1’s lane to 8’ everywhere.',
-        'Only the second oscillator leaps: half the riff stays put.'
+        'The riff stays in one register: only the second oscillator moves against it.'
       ),
       laneTweak(
         'osc2.range',
         'make Oscillator 2’s lane copy Oscillator 1’s.',
-        'The two move together: big octave jumps, no combinations.'
+        'The two move together: the octave leaps, but no combinations.'
       ),
       {
         id: 'osc2.wave',
@@ -2426,23 +2477,23 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       parts: [
         {
           notes:
-            'C3! . C3 C3 | . C3 . Eb3 | . Eb3 C3 . | C3 . G2 Bb2 | C3! . C3 C3 | . C3 . Eb3 | . F3 Eb3 . | C3 . Bb2 C3',
+            'C2! . C4 C3 | . C3 . Eb3 | . Eb3 C4 . | C2 . G3 Bb2 | C2! . C4 C3 | . C3 . Eb3 | . F3 Eb4 . | C2 . Bb3 C3',
           lanes: {
-            'osc1.range': cycle(['16', '8', '4', '8']),
-            'osc2.range': cycle(['8', '4', '8', '2', '8', '16']),
+            'osc1.range': holds({ 0: '8', 24: '4' }),
+            'osc2.range': (c) => ['8', '4', '2', '4'][Math.floor(c.i / 8)],
           },
         },
         {
           notes:
-            'Ab2! . Ab2 Ab2 | . Ab2 . C3 | . C3 Ab2 . | Bb2 . G2 Bb2 | G2! . G2 G2 | . G2 . B2 | . D3 B2 . | G2 . F2 G2',
+            'Ab2! . Ab1 Ab3 | . Ab3 . C4 | . C4 Ab1 . | Bb2 . G1 Bb3 | G2! . G1 G3 | . G3 . B3 | . D4 B1 . | G2 . F1 G3',
           lanes: {
-            'osc1.range': cycle(['8', '4', '16', '4']),
-            'osc2.range': cycle(['4', '2', '8', '4', '16']),
+            'osc1.range': holds({ 0: '4', 16: '8' }),
+            'osc2.range': (c) => ['4', '16', '8', '2'][Math.floor(c.i / 8)],
           },
         },
       ],
       notes:
-        'A C minor riff that hardly moves: C repeated, E♭, a turn down to G and B♭. B is the same shape on A♭ and then G with its B natural. The two RANGE lanes are the melody: Oscillator 1 cycles 16’–8’–4’–8’ (in B 8’–4’–16’–4’), Oscillator 2 in a cycle of six (in B five), so they keep landing a different number of octaves apart.',
+        'A C minor riff that hardly moves: C repeated, E♭, a turn down to G and B♭. B is the same shape on A♭ and then G with its B natural. The octave leaps are written into the notes: down, back, up, back on every four steps (in B back, up, down, up). The RANGE lanes set the two oscillators against each other: Oscillator 2’s switch turns every half bar, Oscillator 1’s lifts the last phrase of A and holds it up through the first half of B, so they keep landing a different number of octaves apart.',
     },
   },
 
@@ -2450,12 +2501,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-noise-kit',
     name: 'One-Voice Drum Kit',
-    ref: 'A breakbeat drum pattern played on one mono voice: kick, snare and hats made step by step by noise and cutoff lanes',
+    ref: 'A breakbeat drum pattern played on one mono voice: kick, snare and hats made by the notes through a key-tracking filter',
     artist: 'Breakbeat',
     tags: ['perc', 'breakbeat', '90s'],
     level: 3,
     blurb: 'A whole drum kit, kick, snare and hats, from a single voice.',
-    how: 'One voice can only make one sound at a time, but its sound can change on every step. Each drum is a note and a setting of two mod lanes. The kick is a low note with no noise and a dark filter, thumped by the envelope. The snare is a middle note with lots of noise and an open filter. The hat is a high note, almost all noise, with the filter wide open. The lanes switch between them on every step, so the sequence plays a breakbeat.',
+    how: 'One voice can only make one sound at a time, but with both keyboard controls on, the filter follows the key, so each drum is just a note. The kick is a low note: the filter is nearly shut, so the noise is only a little grit on a deep thump. The snare is a middle note, the filter half open on body and noise. The hat is a high note with the filter wide open, almost all hiss. Two mod lanes ride the kit by hand: the noise climbs through the loop and most in the fill, and the cutoff opens the whole kit up into the fill.',
     steps: [
       {
         title: 'A triangle for the drum bodies',
@@ -2467,16 +2518,18 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'Noise for the snare and hats',
         module: 'mixer',
-        why: 'White noise in the mixer, at 0 for now: the lane brings it up for the snare and hats.',
-        set: { 'mix.noiseOn': true, 'mix.noise': 0, 'noise.colour': 'white' },
-        listen: 'nothing new yet.',
+        why: 'White noise in the mixer, half up. The filter decides how much of it each drum gets: hardly any on the low kick, nearly all on the high hats.',
+        set: { 'mix.noiseOn': true, 'mix.noise': 4.5, 'noise.colour': 'white' },
+        listen: 'a hiss with every note.',
       },
       {
-        title: 'A thump on every hit',
+        title: 'A thump on every hit, darker low down',
         module: 'filter',
-        why: 'A big, fast filter envelope gives every hit its crack, and with nothing held the loudness dies away like a drum.',
+        why: 'Both keyboard controls on make the filter follow the key, dark for low notes and open for high ones: that is what turns one voice into a kick, a snare and a hat. A big, fast filter envelope gives every hit its crack, and with nothing held the loudness dies away like a drum.',
         set: {
-          'filter.cutoff': 0,
+          'filter.cutoff': -2,
+          'filter.kbd1': true,
+          'filter.kbd2': true,
           'filter.emphasis': 1,
           'filter.contour': 6,
           'fenv.attack': 0,
@@ -2486,26 +2539,27 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           'aenv.decay': 1.4,
           'aenv.sustain': 0,
         },
-        listen: 'a short, percussive knock on every key.',
+        listen: 'a deep thump low on the keyboard, a hissing tick high up.',
       },
     ],
     context: {
-      'mix.noise': 'Played by a lane: none on the kick, lots on the snare, nearly all on the hats.',
+      'mix.noise':
+        'Played by a lane: the kit’s grit, climbing through the loop and most in the fill.',
       'filter.cutoff':
-        'The other lane: dark for the kick, open for the snare, wide open for the hats.',
+        'The other lane: the whole kit opening up into the fill. The keyboard tracking keeps the kick dark and the hats open on top of it.',
       'aenv.decay': 'The length of every hit. Longer for an open, roomy kit.',
       'filter.contour': 'The crack on each hit.',
     },
     tweaks: [
       laneTweak(
         'mix.noise',
-        'raise the noise on the kick steps to 3.',
-        'A dirtier, trashier kick, like a sampled break.'
+        'raise the noise lane to 8 everywhere.',
+        'A dirtier, trashier kit, like a sampled break.'
       ),
       laneTweak(
         'filter.cutoff',
-        'lower the cutoff on the hat steps to 2.',
-        'Duller, shaker-like hats.'
+        'lower the cutoff lane by 1 everywhere.',
+        'A duller kit: shaker-like hats and a deeper kick.'
       ),
       { id: 'aenv.decay', try: 'Raise to 2.5', hear: 'A boomier, roomier kit.' },
       { id: 'noise.colour', try: 'Switch to pink', hear: 'Softer, darker snares and hats.' },
@@ -2526,24 +2580,21 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'C2! . C5 . | G2 . C5 C2 | . C2 C5 . | G2 . C5 . | C2! . C5 C2 | G2 . C5 . | . C2 C5 . | G2 . C5 C5',
           lanes: {
-            'mix.noise': (c) => (c.note === null ? null : c.note < 40 ? 0 : c.note < 60 ? 7 : 9.5),
-            'filter.cutoff': (c) =>
-              c.note === null ? null : c.note < 40 ? -1.5 : c.note < 60 ? 1.5 : 4,
+            'mix.noise': ramp(4, 5.5),
+            'filter.cutoff': ramp(-2.2, -1.6),
           },
         },
         {
           notes:
             'C2! . C5 C2 | G2 . C5 . | C2 . C5 C2 | G2 . G2 C5 | C2! C5 C5 C2 | G2 . C5 . | C2 . G2*2 . | G2*3 . G2*4 C5',
           lanes: {
-            'mix.noise': (c) =>
-              c.note === null ? null : c.note < 40 ? 0 : c.note < 60 ? 7.5 : 9.5,
-            'filter.cutoff': (c) =>
-              c.note === null ? null : c.note < 40 ? -1.5 : c.note < 60 ? 1.8 : 4,
+            'mix.noise': ramp(5.5, 7),
+            'filter.cutoff': ramp(-1.6, -0.6),
           },
         },
       ],
       notes:
-        'A two-bar break at 96 with light swing: kick (C2) on one, a pushed kick before three and after the second backbeat, snare (G2) on two and four, hats (C5) on the offbeats. B is the fill: kicks doubled, an extra snare, and snare rolls of two, three and four hits into the turnaround. Both lanes read the note, so each drum keeps its noise and cutoff wherever it falls.',
+        'A two-bar break at 96 with light swing: kick (C2) on one, a pushed kick before three and after the second backbeat, snare (G2) on two and four, hats (C5) on the offbeats. B is the fill: kicks doubled, an extra snare, and snare rolls of two, three and four hits into the turnaround. The drums are in the notes: the key-tracking filter makes each one, wherever it falls. The lanes ride the whole kit, the noise climbing a little through each A and more through the fill, the cutoff opening into the fill, and both pulled back for the next A.',
     },
   },
 
@@ -2838,7 +2889,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'D3:3 . . . | . . . D3 | F3:2 . . A2 | . . C3 . | D3:3 . . . | . . F3 . | G3:2 . F3^ D3 | . . C3:2 .',
           lanes: {
-            'filter.cutoff': (c) => (c.note === null ? null : c.i % 4 === 0 ? 0.5 : -1.8),
+            // Open for as long as a note that started on a beat sounds, nearly shut otherwise: a turn up and back per beat note.
+            'filter.cutoff': (c) => (c.sounding !== null && (c.i - c.since) % 4 === 0 ? 0.5 : -1.8),
             'ctl.glide': (c) => (c.slidIn ? 2.5 : 0),
           },
         },
@@ -2846,7 +2898,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'Bb2:3 . . . | . . . Bb2 | D3:2 . . F2 | . . A2 . | G2:3 . . . | . . Bb2 . | A2:2 . C3^ D3 | . . A2:2 .',
           lanes: {
-            'filter.cutoff': (c) => (c.note === null ? null : c.i % 4 === 0 ? 0.6 : -1.8),
+            'filter.cutoff': (c) => (c.sounding !== null && (c.i - c.since) % 4 === 0 ? 0.6 : -1.8),
             'ctl.glide': (c) => (c.slidIn ? 3 : 0),
           },
         },
@@ -2860,12 +2912,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-electro-zap',
     name: 'Electro Zap Bass',
-    ref: 'An early-80s electro bass that fires a laser-like zap on its accents and high notes and stays round on the rest',
+    ref: 'An early-80s electro bass that fires a laser-like zap on the first note of each phrase and stays round on the rest',
     artist: 'Early 80s electro',
     tags: ['bass', 'electro', '80s'],
     level: 2,
-    blurb: 'A bouncing electro bass that zaps like a laser on its accents.',
-    how: 'A sawtooth and a square an octave down go into a resonant filter. Two mod lanes make some notes zap: on the accents and the octave jumps, the contour amount goes up and the filter decay goes very short, so the resonant filter flicks down from high in a fraction of a second, the “pew” of an electro bass. On every other note both go back to a gentle, round setting.',
+    blurb: 'A bouncing electro bass that zaps like a laser at the top of each phrase.',
+    how: 'A sawtooth and a square an octave down go into a resonant filter. Two mod lanes, a hand each, make the first note of each phrase zap: the contour amount is jabbed up and the filter decay down, so the resonant filter flicks down from high in a fraction of a second, the “pew” of an electro bass. Then both go back to a gentle, round setting for the rest. Keyboard control brightens the octave jumps a little on their own.',
     steps: [
       {
         title: 'A punchy bass',
@@ -2885,9 +2937,10 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'A resonant, closed filter',
         module: 'filter',
-        why: 'High emphasis is what makes a fast filter sweep sound like a laser. The cutoff sits low, and the lanes set how far and how fast each note sweeps.',
+        why: 'High emphasis is what makes a fast filter sweep sound like a laser. The cutoff sits low, keyboard control 1 opens it a little for the high notes, and the lanes set how far and how fast the zaps sweep.',
         set: {
           'filter.cutoff': -2,
+          'filter.kbd1': true,
           'filter.emphasis': 6,
           'filter.contour': 3,
           'fenv.attack': 0,
@@ -2901,8 +2954,9 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'filter.contour': 'Played by a lane: high on the zaps, gentle on the rest.',
-      'fenv.decay': 'The other lane: very short on the zaps, so the sweep is a flick.',
+      'filter.contour':
+        'Played by a lane: jabbed up on each phrase’s first note, the zap, gentle on the rest.',
+      'fenv.decay': 'The other lane: jabbed short on the zaps, so the sweep is a flick.',
       'filter.emphasis': 'The laser’s ring. Less is a softer zap.',
       'osc2.freq': 'The square’s detune.',
     },
@@ -2914,7 +2968,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       ),
       laneTweak(
         'filter.contour',
-        'put the zap value on every note.',
+        'put the zap value on every step.',
         'A laser on every note: hectic and video-game-like.'
       ),
       { id: 'filter.emphasis', try: 'Push to 8', hear: 'Sharper, whistling zaps.' },
@@ -2939,21 +2993,21 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'A2! . . A2 | . . A3 . | . A2 . . | G2 . C3 . | A2! . . A2 | . . A3 . | . E3 . D3 | . C3 G2 .',
           lanes: {
-            'filter.contour': (c) => (c.note === null ? null : c.accent || c.note >= 57 ? 9 : 3),
-            'fenv.decay': (c) => (c.note === null ? null : c.accent || c.note >= 57 ? 0.9 : 2.2),
+            'filter.contour': (c) => (c.accent ? 7 : 3),
+            'fenv.decay': (c) => (c.accent ? 0.9 : 2.2),
           },
         },
         {
           notes:
             'F2! . . F2 | . . F3 . | . F2 . . | E2 . G2 . | D2! . . D2 | . . D3 . | . A2 . C3 | . D3 E3 .',
           lanes: {
-            'filter.contour': (c) => (c.note === null ? null : c.accent || c.note >= 50 ? 9 : 3),
-            'fenv.decay': (c) => (c.note === null ? null : c.accent || c.note >= 50 ? 0.9 : 2.2),
+            'filter.contour': (c) => (c.accent ? 7 : 3),
+            'fenv.decay': (c) => (c.accent ? 0.9 : 2.2),
           },
         },
       ],
       notes:
-        'A minor at 120: A on one, a pushed A, the octave on the and of two, G and C; then E, D, C and G. B moves to F and D minor with their octaves, ending on E to turn back to A. Both lanes read the accents and the high notes: those zap; the rest stay round.',
+        'A minor at 120: A on one, a pushed A, the octave on the and of two, G and C; then E, D, C and G. B moves to F and D minor with their octaves, ending on E to turn back to A. Both lanes jab on the accent that starts each phrase, so that note zaps; the rest stay round, with the octave jumps a little brighter from the keyboard control.',
     },
   },
 
@@ -2966,7 +3020,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['lead', 'synthwave', '2010s'],
     level: 2,
     blurb: 'A wide, nostalgic lead whose long notes bloom open and shimmer.',
-    how: 'Two sawtooths a little apart make a wide, warm lead with a touch of glide. One mod lane opens the cutoff step by step through every held note, so each one blooms brighter as it rings. The other brings vibrato in late, only after a note has held for three steps, which gives the long notes a shimmer at their ends.',
+    how: 'Two sawtooths a little apart make a wide, warm lead with a touch of glide. A slow filter envelope opens every note as it rings, so each one blooms brighter. The hands do the rest: one mod lane brightens the whole lead through part A and draws it back through part B, and the other swells vibrato in late on the long notes, which gives them a shimmer at their ends.',
     steps: [
       {
         title: 'A wide lead',
@@ -2985,47 +3039,49 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       {
         title: 'A soft, swelling start',
         module: 'filter',
-        why: 'A slow little attack on both envelopes, so notes ease in.',
+        why: 'A slow filter attack with the sustain right up, so the filter keeps opening as a note holds: the bloom. The loudness eases in a little too.',
         set: {
-          'filter.cutoff': 0,
+          'filter.cutoff': -0.5,
           'filter.emphasis': 2,
-          'filter.contour': 2,
-          'fenv.attack': 0.5,
+          'filter.contour': 3,
+          'fenv.attack': 4,
           'fenv.decay': 3,
-          'fenv.sustain': 6,
+          'fenv.sustain': 10,
           'aenv.attack': 0.4,
           'aenv.decay': 3,
           'aenv.sustain': 9,
         },
-        listen: 'notes that ease in.',
+        listen: 'a held note that eases in and keeps getting brighter.',
       },
       {
         title: 'Vibrato, ready',
         module: 'mod',
-        why: 'The LFO to pitch, depth at 0 for the lane to raise late in each note.',
+        why: 'The LFO to pitch, depth at 0 for the lane to raise late in the long notes.',
         set: { 'mod.toOsc': true, 'lfo.rate': lfoAt(5.5), 'mod.mix': 10, 'mod.depth': 0 },
         listen: 'a still note.',
       },
     ],
     context: {
-      'filter.cutoff': 'Played by a lane: opening step by step through every held note.',
-      'mod.depth': 'The other lane: vibrato that arrives after three steps.',
+      'filter.cutoff': 'Played by a lane: the lead brightening through A and drawn back through B.',
+      'mod.depth': 'The other lane: vibrato swelling in late on the long notes.',
+      'fenv.attack': 'How slowly each note blooms. Shorter opens it at once.',
       'ctl.glide': 'The slur between notes.',
       'osc2.freq': 'The width.',
     },
     tweaks: [
       laneTweak(
         'filter.cutoff',
-        'draw the cutoff lane closing through each note instead.',
-        'Each note fades darker: moodier, more distant.'
+        'draw the cutoff lane closing through A instead.',
+        'The verse fades darker: moodier, more distant.'
       ),
       laneTweak(
         'mod.depth',
-        'bring the depth lane in on the second step.',
+        'start each of the depth lane’s swells two steps earlier.',
         'An earlier, more emotional vibrato.'
       ),
       { id: 'ctl.glide', try: 'Raise to 3', hear: 'A dreamy, sliding lead.' },
       { id: 'osc2.freq', try: 'Raise to 0.25', hear: 'A wider, more detuned lead.' },
+      { id: 'fenv.attack', try: 'Lower to 1', hear: 'Notes open at once: punchier, less dreamy.' },
     ],
     pattern: {
       key: key('night-drive-lead'),
@@ -3042,25 +3098,22 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'B4:4 . . . | A4:2 . G4 . | F#4:3 . . E4 | F#4:6 . . . | . . G4 . | A4:2 . B4 . | D5:4 . . . | B4:4 . . .',
           lanes: {
-            'filter.cutoff': (c) =>
-              c.sounding === null ? -0.5 : -0.5 + 0.5 * Math.min(c.since, 5),
-            'mod.depth': (c) =>
-              c.sounding !== null && c.since >= 3 ? Math.min(1.6, 0.5 * (c.since - 2)) : 0,
+            'filter.cutoff': ramp(-0.8, 1.2),
+            // Swelling in late on the long notes: B, F♯, then one swell across D and B.
+            'mod.depth': moves({ 0: 0, 2: 0, 3: 1, 5: 0, 14: 0, 17: 1.6, 19: 0, 25: 0, 31: 1.6 }),
           },
         },
         {
           notes:
             'E5:4 . . . | D5:2 . B4 . | C5:3 . . B4 | A4:6 . . . | . . G4 . | F#4:2 . G4 . | A4:4 . . . | F#4:4 . . .',
           lanes: {
-            'filter.cutoff': (c) =>
-              c.sounding === null ? -0.3 : -0.3 + 0.55 * Math.min(c.since, 5),
-            'mod.depth': (c) =>
-              c.sounding !== null && c.since >= 3 ? Math.min(1.8, 0.5 * (c.since - 2)) : 0,
+            'filter.cutoff': ramp(1.2, -0.8),
+            'mod.depth': moves({ 0: 0, 2: 0, 3: 1, 5: 0, 14: 0, 17: 1.8, 19: 0, 25: 0, 31: 1.8 }),
           },
         },
       ],
       notes:
-        'E minor at 100. A: a held B falling A–G–F♯–E to a long F♯, then rising G–A–B to a high D and back to B. B starts higher on E, falls D–B–C–B to a long A, then G–F♯–G–A and ends on F♯, the second, so it hangs. The cutoff lane opens through each held note; the depth lane waits three steps before vibrato.',
+        'E minor at 100. A: a held B falling A–G–F♯–E to a long F♯, then rising G–A–B to a high D and back to B. B starts higher on E, falls D–B–C–B to a long A, then G–F♯–G–A and ends on F♯, the second, so it hangs. The filter envelope blooms each note open; the cutoff lane brightens the lead through A and draws it back through B, and the depth lane swells vibrato in late on the long notes.',
     },
   },
 
@@ -3073,7 +3126,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tags: ['lead', 'chiptune', '80s'],
     level: 2,
     blurb: 'A cheerful, bleepy game melody that warbles on its long notes.',
-    how: 'A narrow pulse is the thin, bright tone of an old game console. A square-wave LFO on the pitch flips each note back and forth by about a tone, many times a second: the warble that game music uses in place of vibrato. One mod lane switches it on only on held notes; the other sets its speed, faster in part B.',
+    how: 'A narrow pulse is the thin, bright tone of an old game console. A square-wave LFO on the pitch flips each note back and forth by about a tone, many times a second: the warble that game music uses in place of vibrato. One mod lane turns it on for the long notes that end each phrase, a twist of MOD DEPTH up and back; the other sets its speed, faster in part B.',
     steps: [
       {
         title: 'A narrow pulse',
@@ -3111,7 +3164,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       },
     ],
     context: {
-      'mod.depth': 'Played by a lane: the warble, on held notes only. Its size is the interval.',
+      'mod.depth':
+        'Played by a lane: the warble, on the long note ending each phrase. Its size is the interval.',
       'lfo.rate': 'The other lane: the warble’s speed, faster in part B.',
       'osc1.wave': 'The tone channel’s pulse. Square is rounder; narrow is the classic bleep.',
       'aenv.decay': 'Shorter makes the notes blip.',
@@ -3119,7 +3173,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     tweaks: [
       laneTweak(
         'mod.depth',
-        'raise the depth lane to 3.5 on the held notes.',
+        'raise the depth lane to 3.5 on the long notes.',
         'A wider warble that sounds like a two-note arpeggio.'
       ),
       laneTweak(
@@ -3149,7 +3203,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'C5 . E5 . | G5:2 . E5 . | C5 . D5 . | E5:4 . . . | F5 . E5 . | D5:2 . B4 . | C5:2 . D5 . | E5:4 . . .',
           lanes: {
-            'mod.depth': (c) => (c.sounding !== null && c.since >= 1 ? 2.7 : 0),
+            // From the second step of each phrase's four-step note.
+            'mod.depth': (c) => ([13, 14, 15, 29, 30, 31].includes(c.i) ? 2.7 : 0),
             'lfo.rate': (c) => lfoAt(c.i < 16 ? 12 : 14),
           },
         },
@@ -3157,13 +3212,13 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           notes:
             'A4 . C5 . | F5:2 . E5 . | D5 . C5 . | B4:4 . . . | C5 . E5 . | G5:2 . A5 . | G5:2 . D5 . | C5:4 . . .',
           lanes: {
-            'mod.depth': (c) => (c.sounding !== null && c.since >= 1 ? 2.7 : 0),
+            'mod.depth': (c) => ([13, 14, 15, 29, 30, 31].includes(c.i) ? 2.7 : 0),
             'lfo.rate': (c) => lfoAt(c.i < 16 ? 16 : 18),
           },
         },
       ],
       notes:
-        'A bright C major tune at 150. A: an arpeggio up to G, down to a held E, then F–E–D–B and C–D to a held E. B: A–C to F and E, a scale down to a held B, then up C–E–G–A and back through G and D to C. The depth lane turns the warble on from the second step of every note; the rate lane speeds it up through each part, fastest in B.',
+        'A bright C major tune at 150. A: an arpeggio up to G, down to a held E, then F–E–D–B and C–D to a held E. B: A–C to F and E, a scale down to a held B, then up C–E–G–A and back through G and D to C. The depth lane turns the warble on from the second step of each phrase’s long note; the rate lane speeds it up through each part, fastest in B.',
     },
   },
 
@@ -3171,12 +3226,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
   {
     id: 'lane-fusion-unison',
     name: 'Fusion Unison Line',
-    ref: 'A fast, twisting jazz-fusion synth line in D dorian whose long notes spread wider as Oscillator 2 detunes, with bite on every beat',
+    ref: 'A fast, twisting jazz-fusion synth line in D dorian whose long notes spread wider as Oscillator 2 detunes, its bite rising with each phrase',
     artist: 'Jazz fusion',
     tags: ['lead', 'fusion', '70s'],
     level: 3,
     blurb: 'A fast, twisting fusion line whose long notes open out into a wide chorus.',
-    how: 'Two sawtooths and a quiet square an octave down make a bright, cutting lead for fast lines. One mod lane detunes Oscillator 2 inside each held note: in tune at the start, then spreading wider step by step, so fast runs stay tight and long notes open out like a chorus. The other lane sets EMPHASIS, higher on the first sixteenth of every beat, which gives the run its pulse.',
+    how: 'Two sawtooths and a quiet square an octave down make a bright, cutting lead for fast lines. One mod lane detunes Oscillator 2 inside each held note: in tune at the start, then spreading wider step by step, so fast runs stay tight and long notes open out like a chorus. The other hand rides EMPHASIS, rising through each phrase and easing off for the next, so the run bites harder as it climbs.',
     steps: [
       {
         title: 'A cutting lead',
@@ -3216,7 +3271,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
     ],
     context: {
       'osc2.freq': 'Played by a lane: in tune as each note starts, spreading wider as it holds.',
-      'filter.emphasis': 'The other lane: bite on the first sixteenth of each beat.',
+      'filter.emphasis':
+        'The other lane: the bite, rising through each phrase and easing off for the next.',
       'mix.osc3': 'The weight under the line.',
       'ctl.glide': 'A touch of slur on fast runs.',
     },
@@ -3228,8 +3284,8 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
       ),
       laneTweak(
         'filter.emphasis',
-        'raise the emphasis lane to 7 on the beats.',
-        'A sharper, wah-like pulse on every beat.'
+        'raise the top of the emphasis lane to 7.',
+        'A sharper, wah-like peak to every phrase.'
       ),
       { id: 'ctl.glide', try: 'Raise to 1.5', hear: 'A slippery, legato run.' },
       { id: 'mix.osc3', try: 'Raise to 6', hear: 'A heavier, darker line.' },
@@ -3251,7 +3307,7 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           lanes: {
             'osc2.freq': (c) =>
               c.sounding === null || c.since === 0 ? 0.05 : Math.min(0.35, 0.05 + 0.1 * c.since),
-            'filter.emphasis': (c) => (c.i % 4 === 0 ? 5.5 : 3),
+            'filter.emphasis': wave(3, 5.5, 16),
           },
         },
         {
@@ -3260,12 +3316,12 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
           lanes: {
             'osc2.freq': (c) =>
               c.sounding === null || c.since === 0 ? 0.05 : Math.min(0.35, 0.05 + 0.1 * c.since),
-            'filter.emphasis': (c) => (c.i % 4 === 0 ? 6 : 3),
+            'filter.emphasis': wave(3, 6, 16),
           },
         },
       ],
       notes:
-        'Unbroken sixteenths at 120 in D dorian. A runs up a D minor ninth shape, down through G and F, up an E half-diminished shape to a held C, a scale down from D to C, and up to a held high E. B starts on G minor, outlines F major and A minor, holds F, runs down E to E and up F–A–C–E to D. The frequency lane spreads Oscillator 2 only on held notes; the emphasis lane bites on every beat.',
+        'Unbroken sixteenths at 120 in D dorian. A runs up a D minor ninth shape, down through G and F, up an E half-diminished shape to a held C, a scale down from D to C, and up to a held high E. B starts on G minor, outlines F major and A minor, holds F, runs down E to E and up F–A–C–E to D. The frequency lane spreads Oscillator 2 only on held notes; the emphasis lane rises and falls with each bar, a little higher in B.',
     },
   },
 ];

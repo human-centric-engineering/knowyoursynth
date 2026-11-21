@@ -17,8 +17,10 @@
  *   pattern, or a new pattern at the head of the list. The riff is rewritten to the new notes where they differ, and
  *   the sound is marked edited even where they do not, so the seed and an upload leave the pair alone, as they leave
  *   any admin's edit. A riff already holding the pattern's notes is not rewritten, so a re-run writes nothing.
- * - **A default plays whole as a riff** ({@link riffProblem}). A riff has one part and loops at its last note's end,
- *   so a pattern with a second part in its chain, or rests after its last note, cannot be a sound's default.
+ * - **A default's first loop is its riff** ({@link riffProblem}). The riff is part A's first loop, frozen, and loops at
+ *   its last note's end, so a pattern with chance, conditions, a direction other than forward or reverse, or rests
+ *   after part A's last note cannot be a sound's default. A part B in its chain or mod lanes make the default
+ *   `played` ({@link playedDefault}, t-300): the riff is still its first loop, and Play plays the pattern whole.
  * - **Nothing is deleted.** A pattern stays in the library, and in every list it is on, whatever happens to it.
  */
 import { z } from 'zod';
@@ -334,10 +336,15 @@ export interface Place {
  * riff it has.
  */
 export function headOf<P extends Place>(places: P[]): P | null {
+  return parsedHeadOf(places)?.place ?? null;
+}
+
+/** {@link headOf}, with the default's pattern as it was parsed to choose it, so a caller reading it parses it once. */
+export function parsedHeadOf<P extends Place>(places: P[]): { place: P; pattern: Pattern } | null {
   for (const place of places) {
     if (place.pattern.status !== 'enabled') continue;
     const parsed = PatternSchema.safeParse(place.pattern.pattern);
-    if (parsed.success && !riffProblem(parsed.data)) return place;
+    if (parsed.success && !riffProblem(parsed.data)) return { place, pattern: parsed.data };
   }
   return null;
 }

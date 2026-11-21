@@ -16,6 +16,8 @@ import { join, resolve } from 'node:path';
 import { z } from 'zod';
 import { PresetSchema } from '@/lib/app/synths/validate';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
+import { presetState } from '@/lib/app/synths/lib/patch';
+import { handProblems } from '@/lib/app/sequencer/hands';
 import { compileLoop, seededRng, SLIDE_OVERLAP } from '@/lib/app/sequencer/compile';
 import { MAX_STEPS, PatternSchema, stepsPerBeat, type Pattern } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
@@ -523,7 +525,7 @@ describe('the research batches', () => {
     ).toEqual(rosters.map(([task]) => task).sort());
   });
 
-  it('gives each composed pattern one sound, which plays it by default, with mod lanes and a part B (t-301)', () => {
+  it('gives each composed pattern one sound, which plays it by default, with mod lanes a hand could play and a part B (t-301)', () => {
     const defaults = new Map(loadPatternDefaults().defaults.map((d) => [d.sound, d.pattern]));
     const made = batches.filter((b) => composed.includes(b.task));
     expect(made.map((b) => b.task)).toEqual(composed);
@@ -546,6 +548,12 @@ describe('the research batches', () => {
           ).toBeGreaterThan(1);
           expect(tweaks, `${p.key} ${id}`).toContain(id);
         }
+        // And a person could play the lanes by hand, against the panel the sound sets (`lane-sounds.md`).
+        const [synthId] = p.sounds[0].split('/');
+        const def = SYNTH_DEFS.find((d) => d.id === synthId)!;
+        const preset = sounds.get(p.sounds[0])!;
+        const panel = presetState(def, preset, preset.steps.length - 1).values;
+        expect(handProblems(def, pattern, panel), p.key).toEqual([]);
       }
     }
   });

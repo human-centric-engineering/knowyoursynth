@@ -17,8 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
-import { ENABLED, headOf, playedDefault, PLACES } from '@/lib/app/patterns/library';
-import { PatternSchema } from '@/lib/app/sequencer/pattern';
+import { ENABLED, parsedHeadOf, playedDefault, PLACES } from '@/lib/app/patterns/library';
 import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import {
   summarisePublicLinks,
@@ -258,13 +257,12 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       });
       continue;
     }
-    const head = headOf(s.patterns);
+    const parsedHead = parsedHeadOf(s.patterns);
+    const head = parsedHead?.place ?? null;
     const style = head
       ? styleWordsOf({ kind: head.pattern.inspiration, label: head.pattern.inspiredBy })
       : null;
-    // headOf has already parsed it to choose it, so this parse succeeds.
-    const headPattern = head ? PatternSchema.safeParse(head.pattern.pattern) : null;
-    const played = !!headPattern?.success && playedDefault(headPattern.data);
+    const played = !!parsedHead && playedDefault(parsedHead.pattern);
     sounds.push({
       ...result.value,
       version: s.definitionVersion,

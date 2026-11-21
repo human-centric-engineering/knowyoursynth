@@ -33,6 +33,7 @@ import {
   type StepSize,
 } from '@/lib/app/sequencer/pattern';
 import { laneControl, laneValue } from '@/lib/app/sequencer/lanes';
+import { handProblems } from '@/lib/app/sequencer/hands';
 import { phraseOf, riffProblem } from '@/lib/app/patterns/library';
 import type { PatternRole } from '@prisma/client';
 import type { SoundSpec, StepSpec } from '@/scripts/app/sounds/lesson-writer';
@@ -210,6 +211,17 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
   return pattern;
 }
 
+/**
+ * Refuses a lane no hand could play (`handProblems`), read against the panel the finished sound sets: a step a lane
+ * leaves alone is at that value.
+ */
+export function checkHands(def: SynthDef, sound: Preset, pattern: Pattern): void {
+  const panel = presetState(def, sound, sound.steps.length - 1).values;
+  const problems = handProblems(def, pattern, panel);
+  if (problems.length)
+    throw new Error(`${sound.name}: no hand could play it:\n  ${problems.join('\n  ')}`);
+}
+
 /** The riff a pattern's sound stores: its first loop, part A's notes. */
 export const riffOf = (pattern: Pattern): PhraseNote[] => phraseOf(pattern).steps;
 
@@ -233,6 +245,27 @@ export const wave =
   (lo: number, hi: number, period: number, phase = 0): Lane =>
   (c) =>
     lo + ((hi - lo) * (1 - Math.cos((2 * Math.PI * (c.i + phase)) / period))) / 2;
+
+/**
+ * A hand moving a knob between positions: `{ 0: -2, 24: 1, 31: -2 }` turns it from -2 on the first step to 1 by step
+ * 25, then back by the last, in straight lines. Before the first point and after the last it rests there. The shape
+ * a playable lane is usually made of (`lane-sounds.md`, Playable by hand).
+ */
+export const moves =
+  (points: Record<number, number>): Lane =>
+  (c) => {
+    const at = Object.entries(points)
+      .map(([k, v]) => [Number(k), v] as const)
+      .sort((a, b) => a[0] - b[0]);
+    if (!at.length) return null;
+    if (c.i <= at[0][0]) return at[0][1];
+    for (let k = 1; k < at.length; k++) {
+      const [i0, v0] = at[k - 1];
+      const [i1, v1] = at[k];
+      if (c.i <= i1) return v0 + ((v1 - v0) * (c.i - i0)) / (i1 - i0);
+    }
+    return at[at.length - 1][1];
+  };
 
 /** `on` on a step that starts a note, `off` elsewhere (null leaves the panel's value). */
 export const onNotes =

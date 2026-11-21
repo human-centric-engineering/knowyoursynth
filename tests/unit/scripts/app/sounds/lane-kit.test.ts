@@ -10,6 +10,8 @@ import { phraseOf } from '@/lib/app/patterns/library';
 import {
   buildPattern,
   cells,
+  checkHands,
+  moves,
   cycle,
   holds,
   laneTweak,
@@ -166,5 +168,67 @@ describe('the lesson', () => {
     expect(c.map(wave(0, 2, 4))).toEqual([0, 1, 2, 1].map((v) => expect.closeTo(v, 9)));
     expect(c.map(onNotes(5, null))).toEqual([5, null, null, 5]);
     expect(c.map(over(cycle([1]), onNotes(5, null)))).toEqual([5, 1, 1, 5]);
+  });
+
+  it('moves a hand between positions in straight lines, resting before the first and after the last', () => {
+    const c = cells('A2 . . A2 . . . A2', 8);
+    expect(c.map(moves({ 1: 0, 3: 4, 5: 2 }))).toEqual([0, 0, 2, 4, 3, 2, 2, 2]);
+    expect(c.map(moves({}))).toEqual(Array(8).fill(null));
+  });
+});
+
+describe('checkHands', () => {
+  const sound = (lanes: LanePatternSpec['parts'][number]['lanes']) => {
+    const pattern = buildPattern(
+      modelD,
+      spec({
+        parts: [
+          { notes: A, lanes },
+          { notes: A, lanes },
+        ],
+      })
+    );
+    const [preset] = writeLaneSounds(modelD, { names: {}, options: {} }, [
+      {
+        spec: {
+          id: 'lane-hands',
+          name: 'Lane Hands',
+          ref: 'A test',
+          artist: 'Test',
+          tags: ['bass'],
+          level: 1,
+          blurb: 'A test.',
+          how: 'A test.',
+          steps: [
+            {
+              title: 'Close it',
+              module: 'filter',
+              why: 'Dark.',
+              set: { 'filter.cutoff': -2 },
+              listen: 'dark.',
+            },
+          ],
+          context: {},
+          tweaks: [],
+          pattern: spec(),
+        },
+        riff: phraseOf(pattern).steps,
+        bpm: pattern.bpm,
+      },
+    ]);
+    return { pattern, preset };
+  };
+
+  it('passes a lane a hand can play, read against the panel the sound sets', () => {
+    const { pattern, preset } = sound({ 'filter.cutoff': ramp(-2, -1) });
+    expect(() => checkHands(modelD, preset, pattern)).not.toThrow();
+  });
+
+  it('refuses one no hand could, naming the sound and each problem', () => {
+    // Set on the notes only: the rests fall back to the sound's -2, a 50% jump each way.
+    const { pattern, preset } = sound({ 'filter.cutoff': (c) => (c.note === null ? null : 3) });
+    expect(() => checkHands(modelD, preset, pattern)).toThrow(
+      /^Lane Hands: no hand could play it:\n {2}filter\.cutoff: moves 50% of its travel/
+    );
   });
 });

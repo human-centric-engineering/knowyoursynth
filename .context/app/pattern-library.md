@@ -1366,6 +1366,9 @@ sound, is that sound's default in `pattern-defaults.json`, and is _In the style 
 - **The kit checks what the seed would refuse later**: every lane value is one its control takes (`laneValue`), in
   range, the chain plays two parts, and `riffProblem` passes. A swung note keeps its end on the grid, so it never
   overlaps the next.
+- **A person could play every lane by hand** (owner ruling, 2026-11-21): the writer refuses one that is not
+  (`checkHands`), and the batch test runs the same check (`handProblems`) over every composed batch. The limits, and
+  the design of a set for any synth, are [`lane-sounds.md`](./lane-sounds.md).
 
 ### The API
 

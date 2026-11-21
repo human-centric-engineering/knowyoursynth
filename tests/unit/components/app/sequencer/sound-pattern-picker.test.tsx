@@ -127,8 +127,11 @@ function Page({
   slug = 'fat-bass',
   riff = RIFF,
   defaultId = 'patdefault000000000001',
+  loadsDefault,
 }: {
   enabled?: boolean;
+  /** False: the page loads the default itself (a played one, t-300), so the library must not. */
+  loadsDefault?: boolean;
   /** The pattern the sound's riff plays, as the catalogue sends it. */
   defaultId?: string | null;
   slug?: string | null;
@@ -155,6 +158,7 @@ function Page({
         mine,
         sound: null,
         soundPatterns,
+        loadsDefault,
       }}
     />
   );
@@ -184,6 +188,15 @@ describe('opening on the default', () => {
     render(<Page defaultId="patunserved000000000009" />);
     await waitFor(() => expect(apiClient.get as Mock).toHaveBeenCalledTimes(1));
     await act(async () => undefined);
+    expect(state.loaded).toBeNull();
+    expect(state.pattern).not.toEqual(DEFAULT);
+  });
+
+  it('leaves the default alone when the page loads it itself, so it is never loaded twice (t-300)', async () => {
+    render(<Page loadsDefault={false} />);
+    await waitFor(() => expect(apiClient.get as Mock).toHaveBeenCalledTimes(1));
+    await act(async () => undefined);
+    // The patterns are read and listed, but the riff is still what the sequencer holds.
     expect(state.loaded).toBeNull();
     expect(state.pattern).not.toEqual(DEFAULT);
   });

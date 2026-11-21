@@ -1679,6 +1679,7 @@ function Synth({
     synths,
     mine: myPatterns,
     soundPatterns,
+    loadsDefault: !playedDefault,
     suggested,
     riffName,
     sound: openSound
