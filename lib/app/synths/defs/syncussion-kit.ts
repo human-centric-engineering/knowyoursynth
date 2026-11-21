@@ -167,7 +167,7 @@ export const SYNCUSSION_DEFAULT_PATCH: DefaultPatch = {
 
 /**
  * The Syncussions' checklist. The Pearl original has a POWER switch; Behringer's has FINE tuning and a SENSE knob for
- * each channel's trigger input instead.
+ * each channel's trigger input instead, set before the last step so its listen comes once the patch is set.
  */
 const syncussionChecklist = (behringer: boolean): DefaultPatchStep[] => [
   {
@@ -194,14 +194,6 @@ const syncussionChecklist = (behringer: boolean): DefaultPatchStep[] => [
     why: 'SWEEP off keeps each hit at one pitch rather than falling or rising. LFO WAVE off, S/H off and LFO DEPTH all the way down mean nothing wobbles it. Set the sweep and LFO speeds as shown, ready for later patches.',
     controls: ['ch1.sweep*', 'ch1.lfo*', 'ch1.sh', 'ch2.sweep*', 'ch2.lfo*', 'ch2.sh'],
   },
-  {
-    title: 'Set how each hit sounds and fades',
-    module: 'env',
-    why: 'DECAY a little below a third of the way up gives a short hit, and WIDTH sets how much the filter’s own per-hit movement brightens it: that is part of the drum’s voice, so it stays.',
-    controls: ['ch1.decay', 'ch1.width', 'ch2.decay', 'ch2.width'],
-    listen:
-      'play a few notes below and above middle C: a short, round drum hit, a tom, on each channel, holding one pitch as it dies away.',
-  },
   ...(behringer
     ? [
         {
@@ -212,6 +204,14 @@ const syncussionChecklist = (behringer: boolean): DefaultPatchStep[] => [
         },
       ]
     : []),
+  {
+    title: 'Set how each hit sounds and fades',
+    module: 'env',
+    why: 'DECAY a little below a third of the way up gives a short hit, and WIDTH sets how much the filter’s own per-hit movement brightens it: that is part of the drum’s voice, so it stays.',
+    controls: ['ch1.decay', 'ch1.width', 'ch2.decay', 'ch2.width'],
+    listen:
+      'play a few notes below and above middle C: a short, round drum hit, a tom, on each channel, holding one pitch as it dies away.',
+  },
 ];
 
 /** One Syncussion's Default patch: the shared one, with the checklist for its panel. */

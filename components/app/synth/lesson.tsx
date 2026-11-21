@@ -796,9 +796,11 @@ export function Lesson({
               <p className="mb-3 max-w-[68ch] text-sm text-(--kys-muted)">
                 {walking
                   ? isDefaultPatch(preset.id)
-                    ? 'The panel shows the whole Default patch. Set your synth to match it one part at a time, as this step says.'
+                    ? `The panel shows the whole ${defaultPatchName(def)}. Set your synth to match it one part at a time, as this step says.`
                     : 'The panel now shows the patch only as far as this step. Play the keys or the riff after each step and listen to what changed.'
-                  : 'The panel is set to the finished patch. Step through to hear it come together from a plain tone, one module at a time.'}
+                  : isDefaultPatch(preset.id)
+                    ? `The panel is set to the ${defaultPatchName(def)}. Step through to set your own synth to match it, one part at a time.`
+                    : 'The panel is set to the finished patch. Step through to hear it come together from a plain tone, one module at a time.'}
               </p>
               {n > 0 && hasStart && (
                 <StartLine def={def} now={step === START_STEP} onStep={onStep} base={base} />
