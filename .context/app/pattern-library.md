@@ -1,6 +1,6 @@
 # The pattern library
 
-Today every library sound carries exactly one riff (`SynthSound.phrase`). A sound "in the style of" an artist plays a
+Today every library sound carries exactly one riff (`SynthSound.phrase`). A sound whose ref names an artist plays a
 riff that makes no attempt at what that artist played, and once a patch has been changed a lot, nothing offers a riff
 that suits what it has become. The pattern library (`f-pattern-library`, §26) separates patterns from sounds. Each
 pattern has a role, may carry an "Inspired by" tag with an honest fidelity label, and can be suggested for whatever is on
@@ -1287,7 +1287,7 @@ unit.
 #### Researched defaults
 
 t-254. The batches put every researched pattern behind its sounds' riffs, and no admin reorder followed, so even the
-TEO-5's _Jump Brass_ ("In the style of Van Halen — “Jump”") opened with its own riff while _Jump: synth riff, an
+TEO-5's _Jump Brass_ (whose ref then read "In the style of Van Halen — “Jump”") opened with its own riff while _Jump: synth riff, an
 octave down_ sat second on its list. The owner's 2026-11-15 ruling ([Reviewing the current riffs](#reviewing-the-current-riffs)) is carried out by
 `prisma/seeds/app-knowyoursynth/data/pattern-defaults.json`, read by `pattern-data.ts`'s `loadPatternDefaults` and
 checked by `PatternDefaultsSchema`:

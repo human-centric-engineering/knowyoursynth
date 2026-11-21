@@ -5,7 +5,7 @@
     {
       "id": "teo-jump-brass",
       "name": "Jump Brass",
-      "ref": "In the style of Van Halen — “Jump”",
+      "ref": "Bright, punchy brass chords with a bite at the front, the Oberheim stabs of Van Halen's “Jump”",
       "artist": "Van Halen",
       "tags": ["brass", "rock", "80s"],
       "level": 1,
@@ -100,7 +100,7 @@
     {
       "id": "teo-1999-stabs",
       "name": "Minneapolis Stabs",
-      "ref": "In the style of Prince — “1999”",
+      "ref": "Short, gritty synth-horn stabs played tight on the beat, the Minneapolis funk of Prince's “1999”",
       "artist": "Prince",
       "tags": ["brass", "funk", "80s"],
       "level": 2,
@@ -186,7 +186,7 @@
     {
       "id": "teo-roboto-lead",
       "name": "Roboto Lead",
-      "ref": "In the style of Styx — “Mr. Roboto”",
+      "ref": "A singing lead that glides up into each note with a gentle vibrato, like the synth line of Styx's “Mr. Roboto”",
       "artist": "Styx",
       "tags": ["lead", "rock", "80s"],
       "level": 2,
@@ -259,7 +259,7 @@
     {
       "id": "teo-subdivisions-lead",
       "name": "Subdivisions Lead",
-      "ref": "In the style of Rush — “Subdivisions”",
+      "ref": "A hollow pulse-wave lead that never sits still, the early-1980s prog synth of Rush's “Subdivisions”",
       "artist": "Rush",
       "tags": ["lead", "rock", "prog", "80s"],
       "level": 2,
@@ -334,7 +334,7 @@
     {
       "id": "teo-notch-pad",
       "name": "Notch Pad",
-      "ref": "In the style of ambient synth pads",
+      "ref": "A hollow pad carved by a drifting notch, its notes shifting against each other, for slow ambient pieces",
       "artist": "Ambient",
       "tags": ["pad", "ambient"],
       "level": 2,
@@ -419,7 +419,7 @@
     {
       "id": "teo-bandpass-pluck",
       "name": "Band-Pass Pluck",
-      "ref": "In the style of house chord stabs",
+      "ref": "Woody, nasal chord plucks that open further the harder they are hit, for house chord stabs",
       "artist": "House",
       "tags": ["pluck", "house"],
       "level": 2,
@@ -509,7 +509,7 @@
     {
       "id": "teo-xmod-bells",
       "name": "X-Mod Bells",
-      "ref": "In the style of 1980s synth-pop bells",
+      "ref": "Glassy, metallic cross-mod bells that ring and fade, a colour of 1980s synth-pop",
       "artist": "Synth-pop",
       "tags": ["keys", "bells", "80s"],
       "level": 3,
@@ -583,7 +583,7 @@
     {
       "id": "teo-sync-lead",
       "name": "Sync Sweep Lead",
-      "ref": "In the style of arena-rock synth leads",
+      "ref": "A tearing sync lead whose tone sweeps down on every note, for arena-rock solos",
       "artist": "Arena rock",
       "tags": ["lead", "rock", "80s"],
       "level": 3,
@@ -656,7 +656,7 @@
     {
       "id": "teo-sub-bass",
       "name": "Sub Bass",
-      "ref": "In the style of synthwave bass",
+      "ref": "A round, heavy eighth-note bass with a square an octave under it, the low end of synthwave",
       "artist": "Synthwave",
       "tags": ["bass", "synthwave"],
       "level": 1,
@@ -728,7 +728,7 @@
     {
       "id": "teo-unison-lead",
       "name": "Five-Voice Unison Lead",
-      "ref": "In the style of hard-rock synth solos",
+      "ref": "All five voices growling on one note: the thick unison lead of hard-rock synth solos",
       "artist": "Hard rock",
       "tags": ["lead", "rock"],
       "level": 2,
@@ -794,7 +794,7 @@
     {
       "id": "teo-pwm-strings",
       "name": "PWM Strings",
-      "ref": "In the style of disco string sections",
+      "ref": "Shimmering string-machine chords whose notes move out of step, for disco string lines",
       "artist": "Disco",
       "tags": ["strings", "disco", "70s"],
       "level": 2,
@@ -880,7 +880,7 @@
     {
       "id": "teo-repeat-pulse",
       "name": "Repeating Pulse",
-      "ref": "In the style of techno pulses",
+      "ref": "One held note looping its own envelopes into a steady filtered pulse, the kind techno runs on",
       "artist": "Techno",
       "tags": ["seq", "techno"],
       "level": 3,
@@ -952,7 +952,7 @@
     {
       "id": "teo-wind",
       "name": "Wind",
-      "ref": "In the style of synthesizer sound effects",
+      "ref": "Breathy, whistling wind that gusts up and down, a stock synthesizer sound effect",
       "artist": "Sound design",
       "tags": ["fx", "texture"],
       "level": 2,
@@ -1021,7 +1021,7 @@
     {
       "id": "teo-bypass-keys",
       "name": "Bright-Over-Dark Keys",
-      "ref": "In the style of funk keyboard parts",
+      "ref": "A plucky funk keyboard part with a steady, bright edge riding over it, two tones from one voice",
       "artist": "Funk",
       "tags": ["keys", "funk"],
       "level": 3,
@@ -1091,7 +1091,7 @@
     {
       "id": "teo-echo-arp",
       "name": "Echoing Arpeggio",
-      "ref": "In the style of Italo-disco arpeggios",
+      "ref": "Held chords run as sixteenth-note arpeggios with darkening echoes, the pulse of Italo disco",
       "artist": "Italo disco",
       "tags": ["seq", "italo disco", "80s"],
       "level": 2,
@@ -1175,7 +1175,7 @@
     {
       "id": "teo-ring-clang",
       "name": "Ring-Mod Clang",
-      "ref": "In the style of industrial percussion",
+      "ref": "Short, clanging hits that ring out of tune like struck metal, for industrial percussion",
       "artist": "Industrial",
       "tags": ["perc", "industrial"],
       "level": 2,
@@ -1237,7 +1237,7 @@
     {
       "id": "teo-gated-organ",
       "name": "Bubble Organ",
-      "ref": "In the style of reggae organ bubble",
+      "ref": "Clipped off-beat organ chords with a quick filter blip, the bubble of a reggae rhythm section",
       "artist": "Reggae",
       "tags": ["keys", "organ", "reggae"],
       "level": 3,
@@ -1319,7 +1319,7 @@
     {
       "id": "teo-vintage-pad",
       "name": "Vintage Film Pad",
-      "ref": "In the style of 1980s film-score synth pads",
+      "ref": "A warm, slowly blooming pad from voices that drift like an old polysynth's, for 1980s film scores",
       "artist": "Film score",
       "tags": ["pad", "film", "80s"],
       "level": 1,

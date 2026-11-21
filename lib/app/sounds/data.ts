@@ -164,7 +164,7 @@ export interface UserSoundSource {
   soundId: string | null;
   slug: string;
   name: string;
-  /** `In the style of <artist> — "<work>"`. */
+  /** The source sound's one-line description of what it is like. */
   ref: string;
 }
 

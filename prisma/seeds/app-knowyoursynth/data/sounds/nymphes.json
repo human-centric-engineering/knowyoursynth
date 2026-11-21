@@ -5,7 +5,7 @@
     {
       "id": "nym-ethereal-pad",
       "name": "Ethereal Pad",
-      "ref": "In the style of Brian Eno — “An Ending (Ascent)”",
+      "ref": "A slow, glassy pad that blooms and hangs in a long reverb, like Brian Eno’s “An Ending (Ascent)”",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient"],
       "level": 2,
@@ -86,7 +86,7 @@
     {
       "id": "nym-unison-bass",
       "name": "Unison Bass",
-      "ref": "In the style of synthwave bass",
+      "ref": "Six voices stacked on one note and pulled apart in tune: a wide, heavy synthwave bass",
       "artist": "Synthwave",
       "tags": ["bass", "synthwave"],
       "level": 2,
@@ -158,7 +158,7 @@
     {
       "id": "nym-tri-lead",
       "name": "Gliding Lead",
-      "ref": "In the style of 1980s synth-pop leads",
+      "ref": "A fat two-voice lead that glides and grows a late vibrato, as 1980s synth-pop leads did",
       "artist": "Synth-pop",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 2,
@@ -235,7 +235,7 @@
     {
       "id": "nym-synth-brass",
       "name": "Synth Brass",
-      "ref": "In the style of 1980s synth brass",
+      "ref": "Bright, biting brass chords with a blat on the front, the synth brass of the 1980s",
       "artist": "Synth-pop",
       "tags": ["brass", "80s"],
       "level": 1,
@@ -322,7 +322,7 @@
     {
       "id": "nym-pwm-strings",
       "name": "PWM Strings",
-      "ref": "In the style of 1970s string machines",
+      "ref": "Moving strings from a pulse whose width never settles, the sound of a 1970s string machine",
       "artist": "Disco",
       "tags": ["strings", "70s"],
       "level": 2,
@@ -405,7 +405,7 @@
     {
       "id": "nym-soft-keys",
       "name": "Soft Keys",
-      "ref": "In the style of lo-fi hip-hop keys",
+      "ref": "A mellow electric-piano tone that fades under the fingers, for lo-fi hip-hop chords",
       "artist": "Lo-fi hip hop",
       "tags": ["keys", "lo-fi"],
       "level": 1,
@@ -485,7 +485,7 @@
     {
       "id": "nym-combo-organ",
       "name": "Combo Organ",
-      "ref": "In the style of 1960s combo organ",
+      "ref": "A buzzy, steady organ with the octave below underneath, straight out of 1960s garage rock",
       "artist": "Garage rock",
       "tags": ["keys", "60s"],
       "level": 1,
@@ -566,7 +566,7 @@
     {
       "id": "nym-breathy-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of progressive-rock flute leads",
+      "ref": "One breathy voice whose vibrato arrives late, as a player’s would, for progressive-rock flute lines",
       "artist": "Progressive rock",
       "tags": ["wind", "prog"],
       "level": 2,
@@ -644,7 +644,7 @@
     {
       "id": "nym-filter-kick",
       "name": "Analogue Kick",
-      "ref": "In the style of techno kick drums",
+      "ref": "A low triangle thrown down in pitch at every hit, the thump of a techno kick drum",
       "artist": "Techno",
       "tags": ["perc", "techno", "drums"],
       "level": 3,
@@ -713,7 +713,7 @@
     {
       "id": "nym-noise-snare",
       "name": "Noise Snare",
-      "ref": "In the style of 1980s drum-machine snares",
+      "ref": "Noise and a triangle with a burst of room: a 1980s drum-machine snare",
       "artist": "Synth-pop",
       "tags": ["perc", "80s", "drums"],
       "level": 2,
@@ -782,7 +782,7 @@
     {
       "id": "nym-closed-hat",
       "name": "Closed Hat",
-      "ref": "In the style of house hi-hats",
+      "ref": "A tight tick of high-passed noise, the closed hi-hat that drives house music",
       "artist": "House",
       "tags": ["perc", "house", "drums"],
       "level": 1,
@@ -847,7 +847,7 @@
     {
       "id": "nym-sample-hold-filter",
       "name": "Random Filter",
-      "ref": "In the style of Tangerine Dream — “Phaedra”",
+      "ref": "A resonant filter jumping somewhere new on every beat, the Berlin School burble of Tangerine Dream’s “Phaedra”",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin-school", "70s"],
       "level": 2,
@@ -914,7 +914,7 @@
     {
       "id": "nym-seaside",
       "name": "Seaside",
-      "ref": "In the style of ambient field recordings",
+      "ref": "Noise rising and falling like surf on a shore, an ambient field recording made on a synth",
       "artist": "Ambient",
       "tags": ["fx", "ambient"],
       "level": 2,
@@ -980,7 +980,7 @@
     {
       "id": "nym-filter-whistle",
       "name": "Filter Whistle",
-      "ref": "In the style of 1950s science-fiction film scores",
+      "ref": "A pure, gliding, theremin-like tone sung by the filter alone, for 1950s science-fiction scores",
       "artist": "Film score",
       "tags": ["lead", "sci-fi"],
       "level": 3,
@@ -1049,7 +1049,7 @@
     {
       "id": "nym-duo-pluck",
       "name": "Duo Pluck",
-      "ref": "In the style of synthwave arpeggios",
+      "ref": "Short, bright, detuned plucks washed in reverb, the arpeggio sound of synthwave",
       "artist": "Synthwave",
       "tags": ["pluck", "synthwave"],
       "level": 2,
@@ -1125,7 +1125,7 @@
     {
       "id": "nym-band-pass-bells",
       "name": "Band-Pass Bells",
-      "ref": "In the style of dream-pop keys",
+      "ref": "Thin, glassy bells from two filters squeezed together, for the soft keys of dream pop",
       "artist": "Dream pop",
       "tags": ["keys", "dream-pop"],
       "level": 2,
@@ -1199,7 +1199,7 @@
     {
       "id": "nym-arcade-zap",
       "name": "Arcade Zap",
-      "ref": "In the style of 1980s arcade sound effects",
+      "ref": "A pitch flung up two octaves and dropped at once: the laser zap of 1980s arcade games",
       "artist": "Sound design",
       "tags": ["fx", "80s"],
       "level": 1,
@@ -1258,7 +1258,7 @@
     {
       "id": "nym-chord-swell",
       "name": "Detuned Swell",
-      "ref": "In the style of Boards of Canada — “Roygbiv”",
+      "ref": "A warm swell that wobbles like old tape, the woozy detune of Boards of Canada’s “Roygbiv”",
       "artist": "Boards of Canada",
       "tags": ["pad", "electronica"],
       "level": 3,

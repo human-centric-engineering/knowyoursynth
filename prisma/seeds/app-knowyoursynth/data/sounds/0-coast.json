@@ -5,7 +5,7 @@
     {
       "id": "zc-default-sound",
       "name": "Default Sound",
-      "ref": "In the style of the manual’s Default Sound (Figure 8)",
+      "ref": "The manual’s Default Sound (Figure 8): a round, slightly biting tone that plucks and dies away",
       "artist": "Make Noise",
       "tags": ["lead", "west coast"],
       "level": 1,
@@ -67,7 +67,7 @@
     {
       "id": "zc-drone",
       "name": "Drone",
-      "ref": "In the style of the manual’s Drone (Figure 9)",
+      "ref": "A steady tone held open by a voltage so it never stops, the manual’s Drone (Figure 9)",
       "artist": "Make Noise",
       "tags": ["drone", "patched"],
       "level": 1,
@@ -125,7 +125,7 @@
     {
       "id": "zc-square-bass",
       "name": "Square Fundamental Bass",
-      "ref": "In the style of the manual’s square-as-fundamental patch",
+      "ref": "A hollow, woody bass with the square standing in for the triangle, a patch from the manual",
       "artist": "Make Noise",
       "tags": ["bass", "patched"],
       "level": 1,
@@ -187,7 +187,7 @@
     {
       "id": "zc-hearing-dynamics",
       "name": "Opening the Gate",
-      "ref": "In the style of the manual’s Hearing DYNAMICS exercise",
+      "ref": "The manual’s DYNAMICS exercise: a drone that grows louder and brighter together as the gate opens",
       "artist": "Make Noise",
       "tags": ["drone", "west coast"],
       "level": 1,
@@ -250,7 +250,7 @@
     {
       "id": "zc-random-overtone",
       "name": "Random Overtone",
-      "ref": "In the style of the manual’s random OVERTONE patch",
+      "ref": "Repeated notes whose tone lands somewhere new on every beat, from the manual’s random OVERTONE patch",
       "artist": "Make Noise",
       "tags": ["seq", "random", "patched"],
       "level": 2,
@@ -321,7 +321,7 @@
     {
       "id": "zc-vibrato",
       "name": "Variable Vibrato Lead",
-      "ref": "In the style of the manual’s variable-depth vibrato patch",
+      "ref": "A singing lead whose vibrato depth is set by Voltage MATH, patched as the manual shows it",
       "artist": "Make Noise",
       "tags": ["lead", "vibrato", "patched"],
       "level": 2,
@@ -395,7 +395,7 @@
     {
       "id": "zc-inverted-overtone",
       "name": "Overtone Against Contour",
-      "ref": "In the style of the manual’s inverted-CONTOUR OVERTONE patch",
+      "ref": "An electric-piano tone whose harmonic moves against its level: the manual’s inverted-CONTOUR patch",
       "artist": "Make Noise",
       "tags": ["keys", "patched"],
       "level": 2,
@@ -462,7 +462,7 @@
     {
       "id": "zc-slope-fm",
       "name": "Slope FM Bell",
-      "ref": "In the style of the manual’s SLOPE FM patch",
+      "ref": "Metallic and bell-like, a pluck with SLOPE modulating the oscillator, as the manual patches it",
       "artist": "Make Noise",
       "tags": ["pluck", "fm", "bell"],
       "level": 2,
@@ -533,7 +533,7 @@
     {
       "id": "zc-random-time",
       "name": "Random Slope Speeds",
-      "ref": "In the style of the manual’s random SLOPE TIME patch",
+      "ref": "A held tone whose folding cycles at a new random speed each time round, from the manual",
       "artist": "Make Noise",
       "tags": ["pad", "random", "patched"],
       "level": 3,
@@ -605,7 +605,7 @@
     {
       "id": "zc-random-multiply",
       "name": "Randomised Multiply",
-      "ref": "In the style of the manual’s randomised MULTIPLY patch",
+      "ref": "Folding that sweeps with SLOPE and jumps at random on top, the manual’s randomised MULTIPLY patch",
       "artist": "Make Noise",
       "tags": ["lead", "random", "patched"],
       "level": 3,
@@ -683,7 +683,7 @@
     {
       "id": "zc-velocity-timbre",
       "name": "Velocity Timbre",
-      "ref": "In the style of the manual’s velocity-to-MULTIPLY patch",
+      "ref": "A plucked key tone that brightens with every harder note, the manual’s velocity-to-MULTIPLY patch",
       "artist": "Make Noise",
       "tags": ["keys", "velocity", "patched"],
       "level": 1,
@@ -745,7 +745,7 @@
     {
       "id": "zc-simple-bass",
       "name": "Simple Bass with Brightness",
-      "ref": "In the style of Tony Rolando’s “Simple Bass with Brightness” patch for the 0-COAST",
+      "ref": "Tony Rolando’s “Simple Bass with Brightness”: a round, punchy bass shaped by BALANCE and DYNAMICS",
       "artist": "Tony Rolando",
       "tags": ["bass"],
       "level": 1,
@@ -809,7 +809,7 @@
     {
       "id": "zc-pitched-noise",
       "name": "Pitched Noise Orbit",
-      "ref": "In the style of Tony Rolando’s “Pitched Noise Orbit” patch for the 0-COAST",
+      "ref": "A tone that dissolves into pitched noise as LIN FM rises, from Tony Rolando’s “Pitched Noise Orbit” patch",
       "artist": "Tony Rolando",
       "tags": ["fx", "noise", "fm"],
       "level": 3,
@@ -879,7 +879,7 @@
     {
       "id": "zc-wobble-bass",
       "name": "Wobble Bass",
-      "ref": "In the style of Walker Farrell’s “Wobble Bass” patch for the 0-COAST",
+      "ref": "A throbbing bass that wobbles in level while CONTOUR moves its harmonic, Walker Farrell’s “Wobble Bass”",
       "artist": "Walker Farrell",
       "tags": ["bass", "wobble", "patched"],
       "level": 2,
@@ -944,7 +944,7 @@
     {
       "id": "zc-synced-slope",
       "name": "Synced Slope Bass",
-      "ref": "In the style of the Sound On Sound review’s SLOPE sync patch",
+      "ref": "SLOPE restarted on every oscillator cycle becomes the tone of this bass, a patch from Sound On Sound’s review",
       "artist": "Sound On Sound",
       "tags": ["bass", "sync", "patched"],
       "level": 3,
@@ -1009,7 +1009,7 @@
     {
       "id": "zc-krell",
       "name": "Krell Patch",
-      "ref": "In the style of Walker Farrell’s “Krell” patch for the 0-COAST, after Todd Barton",
+      "ref": "Walker Farrell’s take on Todd Barton’s self-playing “Krell” patch: random notes, each a slow swell",
       "artist": "Walker Farrell",
       "tags": ["fx", "generative", "patched"],
       "level": 3,
@@ -1081,7 +1081,7 @@
     {
       "id": "zc-west-coast-pluck",
       "name": "West Coast Pluck",
-      "ref": "In the style of Buchla-style low-pass-gate plucks and bongos",
+      "ref": "A short, woody pluck that loses brightness and level together, the low-pass-gate sound of Buchla bongos",
       "artist": "Various",
       "tags": ["perc", "west coast"],
       "level": 1,
@@ -1145,7 +1145,7 @@
     {
       "id": "zc-folding-pad",
       "name": "Slow Folding Pad",
-      "ref": "In the style of West Coast ambient drones",
+      "ref": "Harmonics folding and unfolding inside a slow swell, a West Coast ambient drone",
       "artist": "Various",
       "tags": ["pad", "ambient", "west coast"],
       "level": 2,
@@ -1215,7 +1215,7 @@
     {
       "id": "zc-sub-bass",
       "name": "Triangle Sub Bass",
-      "ref": "In the style of Burial’s sub-bass — “Untrue”",
+      "ref": "A deep, round, pure sub that rolls under the beat, as it does through Burial’s “Untrue”",
       "artist": "Burial",
       "tags": ["bass", "uk garage", "dubstep", "sub"],
       "level": 1,
@@ -1274,7 +1274,7 @@
     {
       "id": "zc-folded-growl",
       "name": "Folded Growl Bass",
-      "ref": "In the style of 2000s neurofunk basses",
+      "ref": "A snarling folded bass, bright at the strike and growling as it closes, for 2000s neurofunk",
       "artist": "Various",
       "tags": ["bass", "drum and bass", "wavefolder"],
       "level": 2,
@@ -1342,7 +1342,7 @@
     {
       "id": "zc-even-bass",
       "name": "Octave Overtone Bass",
-      "ref": "In the style of Stevie Wonder’s synth bass — “Boogie On Reggae Woman”",
+      "ref": "A rubbery funk bass with an octave singing on top, like Stevie Wonder’s Moog bass on “Boogie On Reggae Woman”",
       "artist": "Stevie Wonder",
       "tags": ["bass", "funk", "soul", "70s"],
       "level": 2,
@@ -1406,7 +1406,7 @@
     {
       "id": "zc-self-wah-bass",
       "name": "Rolling Fold Bass",
-      "ref": "In the style of Underworld’s rolling basslines — “Born Slippy .NUXX”",
+      "ref": "Brightness rolling up and down on its own over a driving bass, as in Underworld’s “Born Slippy .NUXX”",
       "artist": "Underworld",
       "tags": ["bass", "techno", "wavefolder", "90s"],
       "level": 2,
@@ -1488,8 +1488,8 @@
     {
       "id": "zc-dub-pluck",
       "name": "Dub Pluck Bass",
-      "ref": "In the style of Mad Professor’s dub productions",
-      "artist": "Mad Professor",
+      "ref": "A soft, round plucked bass that blooms and dies like a muted bass guitar in a dub mix",
+      "artist": "Dub reggae",
       "tags": ["bass", "dub", "reggae"],
       "level": 1,
       "blurb": "A soft, round, plucked bass that blooms and dies like a muted bass guitar.",
@@ -1549,7 +1549,7 @@
     {
       "id": "zc-velocity-acid",
       "name": "Velocity Acid",
-      "ref": "In the style of DJ Pierre’s acid house",
+      "ref": "An acid line whose hardest-hit notes fold and squeal, from the Chicago acid house DJ Pierre pioneered",
       "artist": "DJ Pierre",
       "tags": ["bass", "acid", "house", "patched"],
       "level": 3,
@@ -1629,7 +1629,7 @@
     {
       "id": "zc-fm-bass",
       "name": "Slope FM Bass",
-      "ref": "In the style of 1980s FM synth basses",
+      "ref": "A punchy, metallic bass from audio-rate FM, the sound of 1980s FM synth bass",
       "artist": "Various",
       "tags": ["bass", "fm", "80s", "patched"],
       "level": 3,
@@ -1710,7 +1710,7 @@
     {
       "id": "zc-ring-bass",
       "name": "Ring-Mod Bass",
-      "ref": "In the style of Nine Inch Nails’ industrial basses",
+      "ref": "A harsh, clanging bass with inharmonic overtones, as grinding as Nine Inch Nails’ industrial low end",
       "artist": "Nine Inch Nails",
       "tags": ["bass", "industrial", "ring mod"],
       "level": 3,
@@ -1786,7 +1786,7 @@
     {
       "id": "zc-deep-house-bass",
       "name": "Deep House Bass",
-      "ref": "In the style of Larry Heard’s deep house — “Can You Feel It”",
+      "ref": "Warm, soft and slightly hollow, a bass bouncing under chords like Larry Heard’s “Can You Feel It”",
       "artist": "Larry Heard",
       "tags": ["bass", "deep house", "80s"],
       "level": 1,
@@ -1846,7 +1846,7 @@
     {
       "id": "zc-balance-wobble",
       "name": "Overtone Wobble Bass",
-      "ref": "In the style of 2010s bass-music wobbles",
+      "ref": "A low bass swept between a plain triangle and its folded overtones: the 2010s bass-music wobble",
       "artist": "Various",
       "tags": ["bass", "dubstep", "wobble", "patched"],
       "level": 2,
@@ -1920,7 +1920,7 @@
     {
       "id": "zc-kick-bass",
       "name": "Sliding 808 Bass",
-      "ref": "In the style of trap 808 bass",
+      "ref": "A booming, long sub that punches in with a pitch drop, the 808 bass of trap",
       "artist": "Various",
       "tags": ["bass", "trap", "hip-hop", "patched"],
       "level": 3,
@@ -1986,8 +1986,8 @@
     {
       "id": "zc-flute-lead",
       "name": "Triangle Flute",
-      "ref": "In the style of Hubert Laws’s jazz flute",
-      "artist": "Hubert Laws",
+      "ref": "A soft, pure flute with a gentle swell and a slow vibrato, for jazz flute lines",
+      "artist": "Jazz flute",
       "tags": ["wind", "jazz", "flute", "beautiful"],
       "level": 2,
       "blurb": "A soft, pure flute with a gentle swell and a slow vibrato.",
@@ -2054,8 +2054,8 @@
     {
       "id": "zc-clarinet",
       "name": "Odd-Harmonic Clarinet",
-      "ref": "In the style of Sidney Bechet’s clarinet",
-      "artist": "Sidney Bechet",
+      "ref": "A woody, hollow clarinet built from the odd harmonics, warm enough for early New Orleans jazz",
+      "artist": "New Orleans jazz clarinet",
       "tags": ["wind", "jazz", "clarinet"],
       "level": 2,
       "blurb": "A woody, hollow clarinet from the odd harmonic.",
@@ -2118,7 +2118,7 @@
     {
       "id": "zc-ciani-lead",
       "name": "West Coast Lead",
-      "ref": "In the style of Suzanne Ciani’s Buchla performances",
+      "ref": "A rich, liquid lead whose harmonics shimmer as it sings, close to Suzanne Ciani’s Buchla performances",
       "artist": "Suzanne Ciani",
       "tags": ["lead", "west coast", "buchla", "beautiful"],
       "level": 2,
@@ -2193,7 +2193,7 @@
     {
       "id": "zc-fold-scream",
       "name": "Folding Scream",
-      "ref": "In the style of Aphex Twin’s acid leads",
+      "ref": "Raw, harsh and buzzing, with the folder near the top: the kind of acid lead Aphex Twin screams with",
       "artist": "Aphex Twin",
       "tags": ["lead", "idm", "wavefolder", "90s"],
       "level": 2,
@@ -2262,7 +2262,7 @@
     {
       "id": "zc-touch-lead",
       "name": "Touch-Sensitive Lead",
-      "ref": "In the style of Chick Corea’s Return to Forever synth solos",
+      "ref": "Soft notes come out as flutes and accents bite, as in Chick Corea’s Moog solos with Return to Forever",
       "artist": "Chick Corea",
       "tags": ["lead", "jazz fusion", "velocity", "70s"],
       "level": 3,
@@ -2340,8 +2340,8 @@
     {
       "id": "zc-brass-swell",
       "name": "Contour Brass",
-      "ref": "In the style of Earth, Wind & Fire’s horn stabs",
-      "artist": "Earth, Wind & Fire",
+      "ref": "A brassy stab that blares in with the envelope, a synth stand-in for a 1970s funk horn section",
+      "artist": "1970s funk horns",
       "tags": ["brass", "funk", "soul", "70s", "patched"],
       "level": 3,
       "blurb": "A brassy stab whose brightness blares in with the envelope.",
@@ -2411,7 +2411,7 @@
     {
       "id": "zc-sync-scream",
       "name": "Sync Scream Lead",
-      "ref": "In the style of Gary Numan’s hard synth leads",
+      "ref": "A tearing, sync-like lead fired from the oscillator’s own square, hard as Gary Numan’s synth leads",
       "artist": "Gary Numan",
       "tags": ["lead", "new wave", "sync", "80s", "patched"],
       "level": 3,
@@ -2483,7 +2483,7 @@
     {
       "id": "zc-rockmore",
       "name": "Singing Voice",
-      "ref": "In the style of Clara Rockmore’s theremin",
+      "ref": "A pure, singing voice that swells into each note with a slow vibrato, like Clara Rockmore’s theremin",
       "artist": "Clara Rockmore",
       "tags": ["lead", "theremin", "classical", "beautiful"],
       "level": 2,
@@ -2557,7 +2557,7 @@
     {
       "id": "zc-square-chip",
       "name": "Square Chip Lead",
-      "ref": "In the style of Koji Kondo’s 8-bit game themes",
+      "ref": "A bright, raw square-wave lead with the buzz of Koji Kondo’s 8-bit game themes",
       "artist": "Koji Kondo",
       "tags": ["lead", "chiptune", "game", "patched"],
       "level": 2,
@@ -2617,8 +2617,8 @@
     {
       "id": "zc-wurlitzer",
       "name": "Folded Electric Piano",
-      "ref": "In the style of Ray Charles’s Wurlitzer — “What’d I Say”",
-      "artist": "Ray Charles",
+      "ref": "A bright, barky electric piano, reedy when struck and mellowing as it fades, like a 1950s R&B Wurlitzer",
+      "artist": "1950s R&B",
       "tags": ["keys", "electric piano", "soul", "50s"],
       "level": 2,
       "blurb": "A bright, barky electric piano that is reedy when struck and mellows as it decays.",
@@ -2684,8 +2684,8 @@
     {
       "id": "zc-vibraphone",
       "name": "Vibraphone",
-      "ref": "In the style of Milt Jackson’s vibraphone",
-      "artist": "Milt Jackson",
+      "ref": "A soft, ringing mallet bar shimmering with the motor’s tremolo, the vibraphone of small-group jazz",
+      "artist": "Jazz vibraphone",
       "tags": ["keys", "jazz", "mallet", "beautiful"],
       "level": 2,
       "blurb": "A soft, ringing mallet bar with a gentle shimmer of the motor’s tremolo.",
@@ -2760,7 +2760,7 @@
     {
       "id": "zc-radiophonic-bell",
       "name": "Ring-Modulated Bell",
-      "ref": "In the style of Delia Derbyshire’s Radiophonic Workshop bells",
+      "ref": "A strange, clangorous bell with overtones from no scale, like Delia Derbyshire’s Radiophonic Workshop sounds",
       "artist": "Delia Derbyshire",
       "tags": ["keys", "bell", "ring mod", "radiophonic"],
       "level": 3,
@@ -2830,7 +2830,7 @@
     {
       "id": "zc-talking-drum",
       "name": "Talking Drum",
-      "ref": "In the style of Yoruba talking drums",
+      "ref": "A deep, woody drum whose pitch bends down as it rings, like a squeezed Yoruba talking drum",
       "artist": "Yoruba drumming tradition",
       "tags": ["perc", "african", "world", "patched"],
       "level": 3,
@@ -2902,7 +2902,7 @@
     {
       "id": "zc-gate-kick",
       "name": "Gate Kick",
-      "ref": "In the style of 808 kick drums",
+      "ref": "A deep, punchy kick from a low triangle with a falling pitch, the 808 kick sound",
       "artist": "Various",
       "tags": ["perc", "kick", "hip-hop", "patched"],
       "level": 2,
@@ -2969,7 +2969,7 @@
     {
       "id": "zc-simmons-tom",
       "name": "Electronic Toms",
-      "ref": "In the style of 1980s Simmons electronic toms",
+      "ref": "Hollow, zapping toms that drop in pitch, for the Simmons fills of 1980s pop",
       "artist": "Various",
       "tags": ["perc", "tom", "80s", "patched"],
       "level": 2,
@@ -3037,7 +3037,7 @@
     {
       "id": "zc-folded-woodblock",
       "name": "Folded Woodblock",
-      "ref": "In the style of Latin percussion woodblocks",
+      "ref": "A dry, hollow knock, the woodblock of Latin percussion",
       "artist": "Various",
       "tags": ["perc", "woodblock", "latin"],
       "level": 1,
@@ -3101,8 +3101,8 @@
     {
       "id": "zc-moondog-marimba",
       "name": "LPG Marimba",
-      "ref": "In the style of Moondog’s marimba counterpoint",
-      "artist": "Moondog",
+      "ref": "A soft, warm, woody mallet note that blooms and dies fast, made for marimba counterpoint",
+      "artist": "Marimba",
       "tags": ["pluck", "mallet", "minimalism", "beautiful"],
       "level": 1,
       "blurb": "A soft, warm, woody mallet note that blooms and dies quickly.",
@@ -3171,8 +3171,8 @@
     {
       "id": "zc-sanza",
       "name": "Thumb Piano",
-      "ref": "In the style of Francis Bebey’s sanza",
-      "artist": "Francis Bebey",
+      "ref": "A bright, buzzing thumb-piano note that rings on, as a Central African sanza does",
+      "artist": "Central African sanza",
       "tags": ["pluck", "african", "world", "beautiful"],
       "level": 1,
       "blurb": "A bright, buzzing, ringing thumb-piano note.",
@@ -3242,8 +3242,8 @@
     {
       "id": "zc-ashby-harp",
       "name": "Jazz Harp",
-      "ref": "In the style of Dorothy Ashby’s jazz harp",
-      "artist": "Dorothy Ashby",
+      "ref": "A bright, singing plucked string for the rippling arpeggios of jazz harp",
+      "artist": "Jazz harp",
       "tags": ["pluck", "jazz", "harp", "beautiful"],
       "level": 2,
       "blurb": "A bright, singing plucked string for rippling, jazzy arpeggios.",
@@ -3313,8 +3313,8 @@
     {
       "id": "zc-miyagi-koto",
       "name": "Koto",
-      "ref": "In the style of Michio Miyagi’s koto — “Haru no Umi”",
-      "artist": "Michio Miyagi",
+      "ref": "A bright, twanging string with a quick bend up at the strike, the sound of the Japanese koto",
+      "artist": "Japanese koto",
       "tags": ["pluck", "japanese", "world"],
       "level": 2,
       "blurb": "A twanging, bright plucked string with a quick bend up at the strike.",
@@ -3391,8 +3391,8 @@
     {
       "id": "zc-muted-guitar",
       "name": "Muted Guitar",
-      "ref": "In the style of The Cure’s muted guitar lines",
-      "artist": "The Cure",
+      "ref": "A short, chunky palm-muted pick, the clipped guitar of 1980s post-punk",
+      "artist": "Post-punk guitar",
       "tags": ["pluck", "post-punk", "guitar", "80s"],
       "level": 1,
       "blurb": "A short, chunky, palm-muted pick sound.",
@@ -3462,7 +3462,7 @@
     {
       "id": "zc-metal-hat",
       "name": "Metallic Hi-Hat",
-      "ref": "In the style of 1980s analogue drum-machine hats",
+      "ref": "A short, metallic tick from noise-like FM, for 1980s drum-machine hi-hats",
       "artist": "Various",
       "tags": ["perc", "hi-hat", "fm", "patched"],
       "level": 3,
@@ -3545,7 +3545,7 @@
     {
       "id": "zc-fm-snare",
       "name": "FM Snare",
-      "ref": "In the style of 1980s electro snares",
+      "ref": "A tonal body under a burst of FM noise: a snappy 1980s electro snare",
       "artist": "Various",
       "tags": ["perc", "snare", "electro", "patched"],
       "level": 3,
@@ -3617,7 +3617,7 @@
     {
       "id": "zc-clave",
       "name": "Clave",
-      "ref": "In the style of Afro-Cuban son clave",
+      "ref": "Two hard sticks clicking out the son clave at the heart of Afro-Cuban music",
       "artist": "Afro-Cuban tradition",
       "tags": ["perc", "clave", "latin"],
       "level": 1,
@@ -3677,7 +3677,7 @@
     {
       "id": "zc-ring-cowbell",
       "name": "Ring Cowbell",
-      "ref": "In the style of 808 cowbells",
+      "ref": "A clanking metallic cowbell from the oscillator ringing against SLOPE, as an 808 makes it",
       "artist": "Various",
       "tags": ["perc", "cowbell", "ring mod"],
       "level": 3,
@@ -3747,8 +3747,8 @@
     {
       "id": "zc-tabla",
       "name": "Tabla",
-      "ref": "In the style of Zakir Hussain’s tabla",
-      "artist": "Zakir Hussain",
+      "ref": "A ringing, pitched drum that bends up from below, like the heel-pressed bass drum of the tabla",
+      "artist": "Hindustani tabla",
       "tags": ["perc", "indian", "world", "patched"],
       "level": 3,
       "blurb": "A ringing, pitched drum that bends up from below, like the tabla’s bass drum played with the heel.",
@@ -3826,8 +3826,8 @@
     {
       "id": "zc-glass-armonica",
       "name": "Glass Armonica",
-      "ref": "In the style of Mozart’s music for glass armonica",
-      "artist": "Wolfgang Amadeus Mozart",
+      "ref": "A pure, glassy tone that swells in like a wet finger on glass, the sound of the glass armonica",
+      "artist": "Glass armonica",
       "tags": ["keys", "glass", "classical", "beautiful"],
       "level": 2,
       "blurb": "A pure, glassy, ringing tone that swells in like a wet finger on a glass bowl.",
@@ -3888,8 +3888,8 @@
     {
       "id": "zc-celesta",
       "name": "Celesta",
-      "ref": "In the style of Tchaikovsky — “Dance of the Sugar Plum Fairy”",
-      "artist": "Pyotr Ilyich Tchaikovsky",
+      "ref": "A sweet, tinkling celesta, high and delicate, as it rings out of a ballet score",
+      "artist": "Orchestral celesta",
       "tags": ["keys", "celesta", "classical", "beautiful"],
       "level": 1,
       "blurb": "A sweet, tinkling, bell-like celesta, high and delicate.",
@@ -3961,8 +3961,8 @@
     {
       "id": "zc-chameleon-clav",
       "name": "Folded Clavinet",
-      "ref": "In the style of Herbie Hancock’s clavinet — “Chameleon”",
-      "artist": "Herbie Hancock",
+      "ref": "Biting, nasal and percussive, a key tone for the clavinet riffs of 1970s jazz-funk",
+      "artist": "1970s funk clavinet",
       "tags": ["keys", "funk", "clavinet", "70s"],
       "level": 2,
       "blurb": "A biting, nasal, percussive key for funky clavinet riffs.",
@@ -4025,8 +4025,8 @@
     {
       "id": "zc-green-onions-organ",
       "name": "Two-Harmonic Organ",
-      "ref": "In the style of Booker T. & the M.G.’s — “Green Onions”",
-      "artist": "Booker T. & the M.G.’s",
+      "ref": "A round, two-drawbar organ with a fast, gentle wobble, the Hammond sound of 1960s soul",
+      "artist": "1960s soul organ",
       "tags": ["keys", "organ", "soul", "60s"],
       "level": 2,
       "blurb": "A round, two-drawbar organ with a gentle, fast wobble.",
@@ -4099,8 +4099,8 @@
     {
       "id": "zc-scarlatti-harpsichord",
       "name": "Folded Harpsichord",
-      "ref": "In the style of Domenico Scarlatti’s keyboard sonatas",
-      "artist": "Domenico Scarlatti",
+      "ref": "A bright, jangling plucked harpsichord for fast baroque runs",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "baroque", "harpsichord", "classical"],
       "level": 2,
       "blurb": "A bright, plucked, jangling harpsichord for fast baroque runs.",
@@ -4179,8 +4179,8 @@
     {
       "id": "zc-felt-piano",
       "name": "Felt Piano",
-      "ref": "In the style of Nils Frahm — “Says”",
-      "artist": "Nils Frahm",
+      "ref": "A soft, muffled, close-up piano that brightens a little when pressed, the felt piano of neo-classical music",
+      "artist": "Neo-classical piano",
       "tags": ["keys", "piano", "neo-classical", "beautiful"],
       "level": 3,
       "blurb": "A soft, intimate, muffled piano note: harder notes come out a little brighter.",
@@ -4258,7 +4258,7 @@
     {
       "id": "zc-music-box",
       "name": "Music Box",
-      "ref": "In the style of antique Swiss music boxes",
+      "ref": "A tiny, sweet comb tine plinking high, like an antique Swiss music box",
       "artist": "Various",
       "tags": ["keys", "music box", "lullaby", "beautiful"],
       "level": 1,
@@ -4327,8 +4327,8 @@
     {
       "id": "zc-scruggs-banjo",
       "name": "Banjo Roll",
-      "ref": "In the style of Earl Scruggs’s banjo rolls",
-      "artist": "Earl Scruggs",
+      "ref": "A bright, twangy pluck that dies fast, for bluegrass banjo rolls",
+      "artist": "Bluegrass banjo",
       "tags": ["pluck", "bluegrass", "banjo"],
       "level": 2,
       "blurb": "A bright, twangy, quickly dying plucked string for fast rolls.",
@@ -4398,8 +4398,8 @@
     {
       "id": "zc-sitar",
       "name": "Buzzing Sitar",
-      "ref": "In the style of Ravi Shankar’s sitar",
-      "artist": "Ravi Shankar",
+      "ref": "A long, ringing pluck with the jawari buzz of a Hindustani sitar",
+      "artist": "Hindustani sitar",
       "tags": ["pluck", "indian", "sitar", "patched"],
       "level": 3,
       "blurb": "A long, buzzing, ringing pluck with the sitar’s jawari buzz.",
@@ -4473,7 +4473,7 @@
     {
       "id": "zc-bonang",
       "name": "Gamelan Bonang",
-      "ref": "In the style of Javanese gamelan",
+      "ref": "Small shimmering kettle gongs with clashing, beating overtones, from the Javanese gamelan",
       "artist": "Javanese gamelan tradition",
       "tags": ["perc", "gamelan", "world", "ring mod"],
       "level": 3,
@@ -4553,7 +4553,7 @@
     {
       "id": "zc-frame-drum",
       "name": "Frame Drum",
-      "ref": "In the style of the Persian daf",
+      "ref": "A deep, booming frame drum with a bright slap on the edge strokes, like the Persian daf",
       "artist": "Persian classical tradition",
       "tags": ["perc", "persian", "world", "patched"],
       "level": 2,
@@ -4625,8 +4625,8 @@
     {
       "id": "zc-pizzicato",
       "name": "Pizzicato Strings",
-      "ref": "In the style of Leroy Anderson — “Plink, Plank, Plunk!”",
-      "artist": "Leroy Anderson",
+      "ref": "A short, round, plucked violin string, ready for light orchestral pizzicato",
+      "artist": "Orchestral strings",
       "tags": ["strings", "orchestral", "pizzicato"],
       "level": 1,
       "blurb": "A short, round, plucked violin string.",
@@ -4690,7 +4690,7 @@
     {
       "id": "zc-riley-repeats",
       "name": "Self-Repeating Notes",
-      "ref": "In the style of Terry Riley — “A Rainbow in Curved Air”",
+      "ref": "Held notes repeating in a steady pulse, like Terry Riley’s looping keyboards on “A Rainbow in Curved Air”",
       "artist": "Terry Riley",
       "tags": ["seq", "minimalism", "generative", "patched"],
       "level": 2,
@@ -4757,7 +4757,7 @@
     {
       "id": "zc-gas-pulse",
       "name": "Clocked Pulse",
-      "ref": "In the style of GAS — “Pop”",
+      "ref": "A soft, muffled pulse on every beat whatever the keys do, the ambient techno thud of GAS’s “Pop”",
       "artist": "GAS",
       "tags": ["seq", "ambient techno", "patched"],
       "level": 2,
@@ -4813,7 +4813,7 @@
     {
       "id": "zc-random-balance",
       "name": "Random Brightness Steps",
-      "ref": "In the style of Autechre’s generative patterns",
+      "ref": "Pulses whose brightness jumps at random from beat to beat, a small taste of Autechre’s generative patterns",
       "artist": "Autechre",
       "tags": ["seq", "idm", "random", "patched"],
       "level": 3,
@@ -4883,7 +4883,7 @@
     {
       "id": "zc-subotnick",
       "name": "Silver Apples",
-      "ref": "In the style of Morton Subotnick — “Silver Apples of the Moon”",
+      "ref": "A lopsided, self-playing run of bright plucks, close to Morton Subotnick’s Buchla on “Silver Apples of the Moon”",
       "artist": "Morton Subotnick",
       "tags": ["seq", "west coast", "generative", "patched"],
       "level": 3,
@@ -4958,8 +4958,8 @@
     {
       "id": "zc-oliveros-drone",
       "name": "Evolving Drone",
-      "ref": "In the style of Pauline Oliveros — “Deep Listening”",
-      "artist": "Pauline Oliveros",
+      "ref": "A held tone that never stops while its harmonics drift from odd to even and back, for slow drone music",
+      "artist": "Drone music",
       "tags": ["drone", "ambient", "patched", "beautiful"],
       "level": 3,
       "blurb": "A held tone that never stops, its harmonics slowly drifting from odd to even and back.",
@@ -5018,7 +5018,7 @@
     {
       "id": "zc-tanpura",
       "name": "Tanpura",
-      "ref": "In the style of the Hindustani tanpura",
+      "ref": "A buzzing string plucked over and over by itself, the tanpura drone beneath a Hindustani raga",
       "artist": "Hindustani classical tradition",
       "tags": ["drone", "indian", "patched", "beautiful"],
       "level": 3,
@@ -5087,8 +5087,8 @@
     {
       "id": "zc-budd-swell",
       "name": "Slow Swell Pad",
-      "ref": "In the style of Harold Budd — “The Pearl”",
-      "artist": "Harold Budd",
+      "ref": "A soft tone that blooms slowly with a gentle shimmer, each note a long breath, for slow ambient pieces",
+      "artist": "1980s ambient",
       "tags": ["pad", "ambient", "beautiful"],
       "level": 2,
       "blurb": "A soft, slow-blooming tone with a gentle shimmer, every note a long breath.",
@@ -5157,8 +5157,8 @@
     {
       "id": "zc-yoshimura-breath",
       "name": "Breathing Drone",
-      "ref": "In the style of Hiroshi Yoshimura — “Music for Nine Post Cards”",
-      "artist": "Hiroshi Yoshimura",
+      "ref": "A gentle tone that fades in and out on its own, slow as breathing, for Japanese environmental music",
+      "artist": "Japanese environmental music",
       "tags": ["drone", "ambient", "patched", "beautiful"],
       "level": 2,
       "blurb": "A gentle tone that fades in and out by itself, slowly, like breathing.",
@@ -5217,7 +5217,7 @@
     {
       "id": "zc-chant",
       "name": "Chant",
-      "ref": "In the style of Gregorian chant",
+      "ref": "A low, hollow, vowel-like voice swelling into each note, for slow Gregorian chant",
       "artist": "Gregorian chant tradition",
       "tags": ["pad", "choir", "sacred"],
       "level": 2,
@@ -5281,7 +5281,7 @@
     {
       "id": "zc-bubbles",
       "name": "Random Bubbles",
-      "ref": "In the style of 1970s science-fiction computer sounds",
+      "ref": "Quick, liquid bloops at random pitches, the computer burble of 1970s science fiction",
       "artist": "Various",
       "tags": ["fx", "random", "patched"],
       "level": 3,
@@ -5354,8 +5354,8 @@
     {
       "id": "zc-trance-gate",
       "name": "Sixteenth Gate",
-      "ref": "In the style of ATB — “9 PM (Till I Come)”",
-      "artist": "ATB",
+      "ref": "A held note chopped into fast, plucked sixteenths, the gated pad of late-1990s trance",
+      "artist": "Trance",
       "tags": ["seq", "trance", "patched", "90s"],
       "level": 3,
       "blurb": "A held note chopped into fast, plucked sixteenths by SLOPE, about trance tempo.",
@@ -5422,7 +5422,7 @@
     {
       "id": "zc-delayed-bloom",
       "name": "Delayed Bloom Lead",
-      "ref": "In the style of Vangelis — “Blade Runner Blues”",
+      "ref": "A soft lead whose harmonics bloom only once the note has swelled, as Vangelis’s lead does in “Blade Runner Blues”",
       "artist": "Vangelis",
       "tags": ["lead", "soundtrack", "patched", "beautiful"],
       "level": 3,
@@ -5487,7 +5487,7 @@
     {
       "id": "zc-sakamoto-fm-pad",
       "name": "FM Glass Pad",
-      "ref": "In the style of Ryuichi Sakamoto’s FM pads",
+      "ref": "A glassy, softly bell-like pad swelling in with the cool FM sheen of Ryuichi Sakamoto’s 1980s records",
       "artist": "Ryuichi Sakamoto",
       "tags": ["pad", "fm", "ambient", "beautiful"],
       "level": 3,
@@ -5548,7 +5548,7 @@
     {
       "id": "zc-hopkins-arp",
       "name": "Gentle Arpeggio",
-      "ref": "In the style of Jon Hopkins — “Immunity”",
+      "ref": "A soft, round plucked arpeggio that rings into itself, like the gentler synths of Jon Hopkins’s “Immunity”",
       "artist": "Jon Hopkins",
       "tags": ["seq", "ambient", "electronica", "beautiful"],
       "level": 1,
@@ -5618,7 +5618,7 @@
     {
       "id": "zc-berlin-seq",
       "name": "Berlin Sequence",
-      "ref": "In the style of Tangerine Dream — “Rubycon”",
+      "ref": "A hypnotic sixteenth-note sequence whose tone opens and closes slowly, like Tangerine Dream’s “Rubycon”",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "70s"],
       "level": 2,
@@ -5701,7 +5701,7 @@
     {
       "id": "zc-accent-seq",
       "name": "Accent Sequence",
-      "ref": "In the style of Kraftwerk — “Numbers”",
+      "ref": "Clipped machine steps that turn hollow and bright on the accents, like the sequences of Kraftwerk’s “Numbers”",
       "artist": "Kraftwerk",
       "tags": ["seq", "electronic", "velocity", "patched"],
       "level": 2,
@@ -5773,8 +5773,8 @@
     {
       "id": "zc-laraaji",
       "name": "Celestial Zither",
-      "ref": "In the style of Laraaji — “Ambient 3: Day of Radiance”",
-      "artist": "Laraaji",
+      "ref": "A shimmering hammered string that rings for seconds, for the cascading zither of new-age ambient",
+      "artist": "New-age zither",
       "tags": ["pluck", "ambient", "new age", "beautiful"],
       "level": 2,
       "blurb": "A shimmering, hammered string that rings for seconds, for cascades of notes.",
@@ -5855,7 +5855,7 @@
     {
       "id": "zc-harmonic-drone",
       "name": "Harmonic Series Drone",
-      "ref": "In the style of La Monte Young’s just-intonation drones",
+      "ref": "A held drone whose added harmonic sweeps slowly from odd to even, in the just-intonation world of La Monte Young",
       "artist": "La Monte Young",
       "tags": ["drone", "minimal", "patched"],
       "level": 3,
@@ -5913,8 +5913,8 @@
     {
       "id": "zc-doom-drone",
       "name": "Doom Drone",
-      "ref": "In the style of Sunn O)))",
-      "artist": "Sunn O)))",
+      "ref": "A crushing, low folded drone that grinds slowly, the weight of drone metal on a synth",
+      "artist": "Drone metal",
       "tags": ["drone", "doom", "dark", "patched"],
       "level": 2,
       "blurb": "A crushing, low, folded drone that slowly grinds.",
@@ -5982,7 +5982,7 @@
     {
       "id": "zc-reverse-swell",
       "name": "Reverse Swell",
-      "ref": "In the style of the reversed tapes on The Beatles’ “Revolver”",
+      "ref": "Notes that swell up and stop dead like a tape played backwards, the studio trick of The Beatles’ “Revolver”",
       "artist": "The Beatles",
       "tags": ["fx", "psychedelic", "reverse", "60s"],
       "level": 2,
@@ -6044,7 +6044,7 @@
     {
       "id": "zc-pulse-bass",
       "name": "Pulsing Bass",
-      "ref": "In the style of Giorgio Moroder — “I Feel Love”",
+      "ref": "One held bass note pulsing in fast, even steps, like the sequenced bass of Giorgio Moroder’s “I Feel Love”",
       "artist": "Giorgio Moroder",
       "tags": ["bass", "disco", "patched", "70s"],
       "level": 3,
@@ -6115,8 +6115,8 @@
     {
       "id": "zc-violin",
       "name": "Solo Violin",
-      "ref": "In the style of Jascha Heifetz’s violin",
-      "artist": "Jascha Heifetz",
+      "ref": "A singing, bowed violin line with a warm vibrato, for a solo concert part",
+      "artist": "Classical violin",
       "tags": ["strings", "classical", "violin", "beautiful"],
       "level": 3,
       "blurb": "A singing, bowed violin line with a warm vibrato.",
@@ -6192,8 +6192,8 @@
     {
       "id": "zc-cello",
       "name": "Cello",
-      "ref": "In the style of Jacqueline du Pré — Elgar’s Cello Concerto",
-      "artist": "Jacqueline du Pré",
+      "ref": "A deep, woody, bowed cello that swells slowly into each note",
+      "artist": "Classical cello",
       "tags": ["strings", "classical", "cello", "beautiful"],
       "level": 2,
       "blurb": "A deep, woody, bowed cello with a slow swell.",
@@ -6266,8 +6266,8 @@
     {
       "id": "zc-oboe",
       "name": "Folded Oboe",
-      "ref": "In the style of Heinz Holliger’s oboe",
-      "artist": "Heinz Holliger",
+      "ref": "A thin, reedy, nasal oboe line, folded out of a plain wave",
+      "artist": "Classical oboe",
       "tags": ["wind", "classical", "oboe"],
       "level": 2,
       "blurb": "A thin, reedy, nasal oboe line.",
@@ -6331,8 +6331,8 @@
     {
       "id": "zc-harmon-trumpet",
       "name": "Muted Trumpet",
-      "ref": "In the style of Miles Davis’s Harmon-muted trumpet — “Kind of Blue”",
-      "artist": "Miles Davis",
+      "ref": "A thin, buzzy, intimate Harmon-muted trumpet that brightens as each note swells, a cool-jazz sound",
+      "artist": "Cool jazz trumpet",
       "tags": ["brass", "jazz", "trumpet", "patched"],
       "level": 3,
       "blurb": "A thin, buzzy, intimate muted trumpet whose tone brightens as each note swells.",
@@ -6405,7 +6405,7 @@
     {
       "id": "zc-tuba",
       "name": "Tuba",
-      "ref": "In the style of New Orleans brass-band tuba",
+      "ref": "A round, puffing brass bass line with a soft blat on each note, like a New Orleans brass-band tuba",
       "artist": "New Orleans brass-band tradition",
       "tags": ["brass", "jazz", "tuba"],
       "level": 2,
@@ -6468,8 +6468,8 @@
     {
       "id": "zc-whistler",
       "name": "Whistler",
-      "ref": "In the style of Roger Whittaker’s whistling",
-      "artist": "Roger Whittaker",
+      "ref": "A pure, high, cheerful whistle with a quick vibrato, the sound of a human whistler",
+      "artist": "Whistling",
       "tags": ["lead", "whistle", "easy listening"],
       "level": 1,
       "blurb": "A pure, high, cheerful whistle with a quick vibrato.",
@@ -6542,7 +6542,7 @@
     {
       "id": "zc-ocarina",
       "name": "Ocarina",
-      "ref": "In the style of the Budrio ocarina ensembles",
+      "ref": "A round, hollow, slightly breathy clay flute, the ocarina of the Budrio ensembles",
       "artist": "Budrio ocarina tradition",
       "tags": ["wind", "ocarina", "folk", "beautiful"],
       "level": 1,
@@ -6604,8 +6604,8 @@
     {
       "id": "zc-clemons-sax",
       "name": "Folded Saxophone",
-      "ref": "In the style of Clarence Clemons’s tenor sax",
-      "artist": "Clarence Clemons",
+      "ref": "A growling, honking tenor sax with a fat, buzzy edge, for rock and roll sax breaks",
+      "artist": "Rock tenor sax",
       "tags": ["wind", "rock", "saxophone", "80s"],
       "level": 2,
       "blurb": "A growling, honking tenor sax with a fat, buzzy edge.",
@@ -6680,7 +6680,7 @@
     {
       "id": "zc-surf",
       "name": "Ocean Surf",
-      "ref": "In the style of 1970s new-age ocean recordings",
+      "ref": "Waves of hiss that roll in and break, one wave per note, like a 1970s new-age ocean record",
       "artist": "Various",
       "tags": ["fx", "water", "noise", "patched"],
       "level": 3,
@@ -6750,7 +6750,7 @@
     {
       "id": "zc-wind",
       "name": "Howling Wind",
-      "ref": "In the style of 1970s radio-drama wind effects",
+      "ref": "A whistling, gusting wind whose pitch wanders by itself, a radio-drama effect from the 1970s",
       "artist": "Various",
       "tags": ["fx", "weather", "noise", "patched"],
       "level": 3,
@@ -6821,7 +6821,7 @@
     {
       "id": "zc-laser",
       "name": "Laser Zap",
-      "ref": "In the style of 1980s arcade laser effects",
+      "ref": "A falling “pew” several octaves deep, the laser zap of 1980s arcade games",
       "artist": "Various",
       "tags": ["fx", "laser", "game", "patched"],
       "level": 2,
@@ -6882,7 +6882,7 @@
     {
       "id": "zc-siren",
       "name": "Slope Siren",
-      "ref": "In the style of American emergency sirens",
+      "ref": "A wailing siren rising and falling about once a second, American emergency style",
       "artist": "Various",
       "tags": ["fx", "siren", "patched"],
       "level": 1,
@@ -6942,7 +6942,7 @@
     {
       "id": "zc-droid",
       "name": "Droid Chatter",
-      "ref": "In the style of Ben Burtt’s droid voices",
+      "ref": "Quick, chirping beeps that jump all over the place, like the droid chatter Ben Burtt made for “Star Wars”",
       "artist": "Ben Burtt",
       "tags": ["fx", "robot", "sci-fi", "patched"],
       "level": 3,
@@ -7016,7 +7016,7 @@
     {
       "id": "zc-saucer",
       "name": "Flying Saucer",
-      "ref": "In the style of 1950s science-fiction flying saucers",
+      "ref": "A high, fast, eerie warble that hovers like a 1950s B-movie flying saucer",
       "artist": "Various",
       "tags": ["fx", "sci-fi", "patched"],
       "level": 1,
@@ -7075,7 +7075,7 @@
     {
       "id": "zc-thunder",
       "name": "Distant Thunder",
-      "ref": "In the style of 1970s synthesizer sound-effects records",
+      "ref": "A low, rolling rumble of far-off thunder, as heard on 1970s synthesizer sound-effects records",
       "artist": "Various",
       "tags": ["fx", "weather", "noise", "patched"],
       "level": 3,
@@ -7138,7 +7138,7 @@
     {
       "id": "zc-mills-stab",
       "name": "Hollow Techno Stab",
-      "ref": "In the style of Jeff Mills’s Detroit techno — “The Bells”",
+      "ref": "A short, hollow, ringing stab for hypnotic repeating figures, the Detroit techno of Jeff Mills’s “The Bells”",
       "artist": "Jeff Mills",
       "tags": ["keys", "techno", "stab", "90s"],
       "level": 2,
@@ -7202,8 +7202,8 @@
     {
       "id": "zc-glass-lead",
       "name": "Glass Lead",
-      "ref": "In the style of Craig Armstrong’s film themes",
-      "artist": "Craig Armstrong",
+      "ref": "A clear, glassy, gently ringing lead for a slow, sad film melody",
+      "artist": "Modern film themes",
       "tags": ["lead", "soundtrack", "beautiful"],
       "level": 1,
       "blurb": "A clear, glassy, gently ringing lead for a slow, sad melody.",
@@ -7265,7 +7265,7 @@
     {
       "id": "zc-synthwave-lead",
       "name": "Synthwave Lead",
-      "ref": "In the style of The Midnight — “Sunset”",
+      "ref": "A bright, warm singing lead with a slow vibrato, for neon synthwave like The Midnight’s",
       "artist": "The Midnight",
       "tags": ["lead", "synthwave", "2010s"],
       "level": 2,
@@ -7340,7 +7340,7 @@
     {
       "id": "zc-c64-arp",
       "name": "Chip Arpeggio",
-      "ref": "In the style of Rob Hubbard’s Commodore 64 music",
+      "ref": "Fast, raw square-wave arpeggios faking chords, as Rob Hubbard’s Commodore 64 music did",
       "artist": "Rob Hubbard",
       "tags": ["seq", "chiptune", "game", "patched"],
       "level": 2,
@@ -7425,7 +7425,7 @@
     {
       "id": "zc-worrell-wah",
       "name": "Wah Lead",
-      "ref": "In the style of Bernie Worrell’s Moog solos — “Flash Light”",
+      "ref": "A funky lead that says “wow” as each note rises and falls, like Bernie Worrell’s Moog on “Flash Light”",
       "artist": "Bernie Worrell",
       "tags": ["lead", "funk", "patched", "70s"],
       "level": 3,
@@ -7497,7 +7497,7 @@
     {
       "id": "zc-barbieri-arp",
       "name": "Shifting Arpeggio",
-      "ref": "In the style of Caterina Barbieri — “Fantas”",
+      "ref": "A fast, bright arpeggio whose harmonics shift slowly as it repeats, like Caterina Barbieri’s “Fantas”",
       "artist": "Caterina Barbieri",
       "tags": ["seq", "electronic", "west coast", "beautiful"],
       "level": 3,
@@ -7581,7 +7581,7 @@
     {
       "id": "zc-hollow-pulse-bass",
       "name": "Hollow Square Bass",
-      "ref": "In the style of Depeche Mode’s early basslines — “Just Can’t Get Enough”",
+      "ref": "A bouncy, hollow square with its octave on top, the early bass of Depeche Mode’s “Just Can’t Get Enough”",
       "artist": "Depeche Mode",
       "tags": ["bass", "synth-pop", "patched", "80s"],
       "level": 2,
@@ -7657,8 +7657,8 @@
     {
       "id": "zc-skank-organ",
       "name": "Reggae Organ Skank",
-      "ref": "In the style of Jackie Mittoo’s reggae organ",
-      "artist": "Jackie Mittoo",
+      "ref": "A short, round, hollow organ chop on the offbeats, the bubble of reggae organ",
+      "artist": "Reggae organ",
       "tags": ["keys", "reggae", "organ", "ska"],
       "level": 1,
       "blurb": "A short, round, hollow organ chop on the offbeats.",
@@ -7718,8 +7718,8 @@
     {
       "id": "zc-tape-keys",
       "name": "Wobbly Tape Keys",
-      "ref": "In the style of Nujabes’s lo-fi hip-hop keys",
-      "artist": "Nujabes",
+      "ref": "A mellow electric-piano pluck with a slow, seasick wobble like worn tape, for lo-fi hip-hop",
+      "artist": "Lo-fi hip-hop",
       "tags": ["keys", "lo-fi", "hip-hop", "beautiful"],
       "level": 2,
       "blurb": "A soft, mellow electric-piano pluck with a slow, seasick wobble like a worn tape.",
@@ -7794,7 +7794,7 @@
     {
       "id": "zc-vowel-lead",
       "name": "Vowel Lead",
-      "ref": "In the style of Daft Punk’s talk-box leads — “Digital Love”",
+      "ref": "A lead that morphs slowly between vowel colours as it sings, like the robot voices of Daft Punk’s “Digital Love”",
       "artist": "Daft Punk",
       "tags": ["lead", "french house", "patched"],
       "level": 3,
@@ -7869,7 +7869,7 @@
     {
       "id": "zc-ring-drone",
       "name": "Ring Drone",
-      "ref": "In the style of Coil’s drones — “Time Machines”",
+      "ref": "A held, beating, clangorous drone, SLOPE ringing against the note, as dark as Coil’s “Time Machines”",
       "artist": "Coil",
       "tags": ["drone", "dark", "ring mod", "patched"],
       "level": 3,
@@ -7935,7 +7935,7 @@
     {
       "id": "zc-fm-bell-lead",
       "name": "FM Bell Lead",
-      "ref": "In the style of 1980s FM bell leads",
+      "ref": "A clear, chiming FM bell to carry a 1980s pop melody",
       "artist": "Various",
       "tags": ["lead", "fm", "80s", "patched"],
       "level": 3,
@@ -8002,8 +8002,8 @@
     {
       "id": "zc-quickening-vibrato",
       "name": "Quickening Vibrato",
-      "ref": "In the style of Billie Holiday’s vibrato",
-      "artist": "Billie Holiday",
+      "ref": "A soft singing lead whose vibrato starts slow and quickens as the note swells, as a jazz singer’s does",
+      "artist": "Jazz vocal",
       "tags": ["lead", "jazz", "vocal", "patched"],
       "level": 3,
       "blurb": "A soft, singing lead whose vibrato starts slow and quickens as each note swells.",
@@ -8075,8 +8075,8 @@
     {
       "id": "zc-velocity-vibes",
       "name": "Velocity Ring Vibes",
-      "ref": "In the style of Gary Burton’s four-mallet vibraphone",
-      "artist": "Gary Burton",
+      "ref": "A mallet bar that rings on longer the harder it is struck, for four-mallet jazz vibes",
+      "artist": "Jazz vibraphone",
       "tags": ["keys", "jazz", "mallet", "patched"],
       "level": 3,
       "blurb": "A mallet bar that rings longer the harder it is struck.",
@@ -8153,7 +8153,7 @@
     {
       "id": "zc-feedback",
       "name": "Feedback Howl",
-      "ref": "In the style of David Tudor’s feedback works",
+      "ref": "A rough, unstable tone of output fed back into input, the territory of David Tudor’s feedback works",
       "artist": "David Tudor",
       "tags": ["drone", "experimental", "feedback", "patched"],
       "level": 3,
@@ -8219,7 +8219,7 @@
     {
       "id": "zc-self-fm",
       "name": "Self-FM Lead",
-      "ref": "In the style of Vince Clarke’s synth-pop leads",
+      "ref": "A buzzy, sawtooth-like lead from the oscillator bending its own pitch, bright as Vince Clarke’s synth-pop",
       "artist": "Vince Clarke",
       "tags": ["lead", "synth-pop", "fm", "patched"],
       "level": 3,
@@ -8286,7 +8286,7 @@
     {
       "id": "zc-square-overtone",
       "name": "Audio-Rate Overtone Bass",
-      "ref": "In the style of Cabaret Voltaire’s Sheffield electronics",
+      "ref": "A gnarly, buzzing bass with the industrial grit of Cabaret Voltaire’s Sheffield electronics",
       "artist": "Cabaret Voltaire",
       "tags": ["bass", "industrial", "patched", "80s"],
       "level": 3,
@@ -8355,7 +8355,7 @@
     {
       "id": "zc-square-fold",
       "name": "Square-Folded Bass",
-      "ref": "In the style of Peaches’s electroclash basslines",
+      "ref": "A brash, ripping bass folded on every cycle, as crude and loud as Peaches’s electroclash",
       "artist": "Peaches",
       "tags": ["bass", "electroclash", "patched", "2000s"],
       "level": 3,
@@ -8427,8 +8427,8 @@
     {
       "id": "zc-beat-wah",
       "name": "Beat Wah",
-      "ref": "In the style of Isaac Hayes — “Theme from Shaft”",
-      "artist": "Isaac Hayes",
+      "ref": "A held note that goes “wacka” on every beat, a synth take on 1970s funk wah-wah guitar",
+      "artist": "1970s funk wah guitar",
       "tags": ["seq", "funk", "wah", "patched"],
       "level": 3,
       "blurb": "A held note that goes “wacka” on every beat, like a wah-wah guitar.",
@@ -8495,8 +8495,8 @@
     {
       "id": "zc-steel-pan",
       "name": "FM Steel Pan",
-      "ref": "In the style of Andy Narell’s steel pan",
-      "artist": "Andy Narell",
+      "ref": "A bright, hollow pan note with a little metallic bloom, from the steelbands of Trinidad",
+      "artist": "Trinidadian steel pan",
       "tags": ["pluck", "caribbean", "fm", "patched"],
       "level": 3,
       "blurb": "A bright, hollow, ringing pan note with a little metallic bloom.",
@@ -8568,7 +8568,7 @@
     {
       "id": "zc-singing-bowl",
       "name": "Singing Bowl",
-      "ref": "In the style of Tibetan singing bowls",
+      "ref": "A struck bowl ringing for seconds with beating, shimmering overtones, like a Tibetan singing bowl",
       "artist": "Tibetan Buddhist tradition",
       "tags": ["perc", "meditation", "ring mod", "beautiful"],
       "level": 3,
@@ -8634,7 +8634,7 @@
     {
       "id": "zc-garage-organ-bass",
       "name": "Garage Organ Bass",
-      "ref": "In the style of MJ Cole’s 2-step garage",
+      "ref": "A warm, slightly hollow bass that skips around the beat, the 2-step garage of MJ Cole",
       "artist": "MJ Cole",
       "tags": ["bass", "uk garage", "2-step", "90s"],
       "level": 2,

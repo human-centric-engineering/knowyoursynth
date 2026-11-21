@@ -43,7 +43,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-coin-toss-rhythm',
       name: 'Coin-Toss Rhythm',
-      ref: 'In the style of a Buchla random-voltage rhythm',
+      ref: 'A melody that fires or skips at random on each clock, thrown like a Buchla random-voltage rhythm',
       artist: 'West Coast synthesis',
       tags: ['seq', 'patch', 'rhythm'],
       level: 3,
@@ -119,8 +119,8 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-accelerando',
       name: 'Accelerando',
-      ref: 'In the style of Conlon Nancarrow’s tempo canons',
-      artist: 'Conlon Nancarrow',
+      ref: 'A melody that speeds up through every bar over a steady beat, a tempo canon in miniature',
+      artist: 'Player-piano canons',
       tags: ['seq', 'patch', 'rhythm'],
       level: 3,
       blurb:
@@ -194,7 +194,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-feedback-rhythms',
       name: 'Feedback Rhythms',
-      ref: 'In the style of generative music',
+      ref: 'Two melodies setting each other’s pace, so the music keeps writing itself as generative music does',
       artist: 'Generative music',
       tags: ['seq', 'patch', 'rhythm'],
       level: 3,
@@ -277,8 +277,8 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-undertone-staircase',
       name: 'Undertone Staircase',
-      ref: 'In the style of Harry Partch’s undertone scales',
-      artist: 'Harry Partch',
+      ref: 'Subs climbing the undertone series one divisor at a time and falling back, a just-intonation staircase',
+      artist: 'Just intonation',
       tags: ['seq', 'patch', 'undertones'],
       level: 3,
       blurb:
@@ -351,7 +351,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-undertone-zap',
       name: 'Undertone Zap',
-      ref: 'In the style of a chiptune arpeggio',
+      ref: 'Each note tumbling down the undertones as it fades, a quick falling run like a chiptune arpeggio',
       artist: 'Chiptune',
       tags: ['pluck', 'patch', 'undertones'],
       level: 2,
@@ -424,7 +424,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-four-divisor-chords',
       name: 'Four-Divisor Chords',
-      ref: 'In the style of ambient chord changes',
+      ref: 'Four notes of undertone harmony changing together once a bar from a single cable, for slow ambient chords',
       artist: 'Ambient music',
       tags: ['pad', 'patch', 'undertones'],
       level: 3,
@@ -502,7 +502,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-audio-pwm-lead',
       name: 'Audio-Rate PWM Lead',
-      ref: 'In the style of a 1970s progressive-rock synth lead',
+      ref: 'A nasal, vowel-like buzzing lead that keeps its tone up and down the keys, for a 1970s prog-rock solo',
       artist: 'Progressive rock',
       tags: ['lead', 'patch', 'pwm'],
       level: 2,
@@ -566,7 +566,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-feedback-snarl',
       name: 'Feedback Snarl',
-      ref: 'In the style of a distorted industrial bass',
+      ref: 'A bass that bites itself, its own output driving the filter into a distorted industrial growl',
       artist: 'Industrial music',
       tags: ['bass', 'patch'],
       level: 2,
@@ -628,8 +628,8 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-undertone-bloom',
       name: 'Undertone Bloom',
-      ref: 'In the style of Gérard Grisey’s spectral music',
-      artist: 'Gérard Grisey',
+      ref: 'A pad whose upper chord climbs the undertone series as it swells, harmony grown from one note’s spectrum',
+      artist: 'Spectral music',
       tags: ['pad', 'patch', 'undertones'],
       level: 2,
       blurb:
@@ -694,7 +694,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-filter-fm-piano',
       name: 'Filter-FM Piano',
-      ref: 'In the style of a 1980s metallic electric piano',
+      ref: 'A bright, clanging electric piano with a metallic tine, the digital EP of 1980s pop',
       artist: '1980s pop',
       tags: ['keys', 'patch'],
       level: 2,
@@ -758,7 +758,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-nasal-clav',
       name: 'Nasal Clav',
-      ref: 'In the style of a funk clavinet',
+      ref: 'A pluck that starts thin and nasal and then rounds off, like the strike of a funk clavinet',
       artist: 'Funk',
       tags: ['keys', 'patch', 'pwm'],
       level: 2,
@@ -824,7 +824,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-trance-gate',
       name: 'Trance Gate',
-      ref: 'In the style of a 1990s trance gate',
+      ref: 'A chord chopped into sixteenths by the clock itself: the gated pad of 1990s trance',
       artist: 'Trance',
       tags: ['pad', 'patch', 'transposed'],
       level: 2,
@@ -890,7 +890,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-counter-bass',
       name: 'Counter-Bass',
-      ref: 'In the style of a Berlin-school sequence',
+      ref: 'A climbing melody whose bass takes its own path below, a Berlin School sequence with a mind of its own',
       artist: 'Berlin school',
       tags: ['seq', 'patch', 'transposed'],
       level: 3,
@@ -957,7 +957,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-clock-pump',
       name: 'Clock Pump',
-      ref: 'In the style of a French house filter',
+      ref: 'A bass whose filter flaps open on every sixteenth, the pumping filter of French house',
       artist: 'French house',
       tags: ['bass', 'patch', 'transposed'],
       level: 2,
@@ -1024,13 +1024,13 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-width-sequencer',
       name: 'Width Sequencer',
-      ref: 'In the style of La Monte Young’s just-tuned drones',
-      artist: 'La Monte Young',
+      ref: 'A just fifth whose upper voice changes vowel on every step, the timbre moving while the tuning holds',
+      artist: 'Just-intonation drones',
       tags: ['drone', 'patch', 'just intonation', 'pwm'],
       level: 3,
       blurb:
         'A just fifth whose upper voice changes vowel on every step: SEQ 2 OUT patched into VCO 2 PWM.',
-      how: 'Young’s drones hold just intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.',
+      how: 'Just-intonation drones hold their intervals and let the timbre move. Sequencer 2, assigned to nothing, sends its steps from SEQ 2 OUT into VCO 2’s PWM: at SEQ OCT ±5 a step is its own volts, so the four steps are four pulse widths, from thin to hollow to thin the other way. The fifth never moves; its colour changes like a voice saying four vowels.',
       bpm: 72,
       steps: [
         {
@@ -1096,7 +1096,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-leslie-chorale',
       name: 'Leslie Chorale',
-      ref: 'In the style of a gospel organ through a rotating speaker',
+      ref: 'Just-tuned organ chords throbbing as if through a rotating speaker, for gospel',
       artist: 'Gospel organ',
       tags: ['keys', 'patch', 'just intonation'],
       level: 3,
@@ -1173,7 +1173,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-hold-and-release',
       name: 'Hold and Release',
-      ref: 'In the style of minimalist pulse music',
+      ref: 'A melody that stalls on one repeated note, then runs free, for minimalist pulse music',
       artist: 'Minimalism',
       tags: ['seq', 'patch'],
       level: 3,
@@ -1246,7 +1246,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-stop-start',
       name: 'Stop-Start',
-      ref: 'In the style of a stop-time break',
+      ref: 'A sequence that stops dead on a held note and picks up where it left off, a jazz stop-time break',
       artist: 'Jazz',
       tags: ['seq', 'patch'],
       level: 3,
@@ -1320,7 +1320,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-ornamented-reel',
       name: 'Ornamented Reel',
-      ref: 'In the style of the ornaments of Irish traditional music',
+      ref: 'Every note flicked through a quick run of grace notes, the cuts and rolls of Irish traditional music',
       artist: 'Irish traditional music',
       tags: ['lead', 'patch', 'rhythm'],
       level: 3,
@@ -1406,7 +1406,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-fm-snare',
       name: 'FM Snare',
-      ref: 'In the style of a 1980s drum-machine snare',
+      ref: 'A noisy snare spray from a synth with no noise source, close to a 1980s drum-machine snare',
       artist: 'Electro',
       tags: ['perc', 'patch'],
       level: 2,
@@ -1468,7 +1468,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-build-up-roll',
       name: 'Build-Up Roll',
-      ref: 'In the style of a dance-music build-up',
+      ref: 'A tom roll that speeds up into a blur every bar: the dance-music build-up into the drop',
       artist: 'Electronic dance music',
       tags: ['perc', 'patch', 'rhythm'],
       level: 3,
@@ -1543,7 +1543,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-accent-pattern',
       name: 'Accent Pattern',
-      ref: 'In the style of West African drumming',
+      ref: 'Two drums from one voice, one with a slap on its attack, interlocking as in West African drumming',
       artist: 'West African drumming',
       tags: ['perc', 'patch', 'rhythm'],
       level: 3,
@@ -1618,7 +1618,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-didgeridoo',
       name: 'Didgeridoo',
-      ref: 'In the style of a didgeridoo drone',
+      ref: 'A low, buzzing drone whose resonance wah-wahs in rhythm, like a didgeridoo',
       artist: 'Yolŋu music',
       tags: ['drone', 'patch'],
       level: 2,
@@ -1686,7 +1686,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-timbre-sequence',
       name: 'Timbre Sequence',
-      ref: 'In the style of Morton Subotnick’s timbral sequences',
+      ref: 'One held note whose tone changes on every step, timbre sequenced as Morton Subotnick sequenced it',
       artist: 'Morton Subotnick',
       tags: ['drone', 'patch'],
       level: 3,
@@ -1758,7 +1758,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-feedback-pwm-drone',
       name: 'Feedback PWM Drone',
-      ref: 'In the style of Éliane Radigue’s feedback drones',
+      ref: 'A drone that churns as its own output moves its pulse width, close to Éliane Radigue’s feedback drones',
       artist: 'Éliane Radigue',
       tags: ['drone', 'patch', 'pwm'],
       level: 2,
@@ -1824,7 +1824,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-self-listening-rhythm',
       name: 'Self-Listening Rhythm',
-      ref: 'In the style of a self-patched modular',
+      ref: 'A rhythm thrown about by its own output, the pattern-making of a self-patched modular',
       artist: 'Modular synthesis',
       tags: ['seq', 'patch', 'rhythm'],
       level: 3,
@@ -1899,7 +1899,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-octave-flutter',
       name: 'Octave Flutter',
-      ref: 'In the style of an Italo-disco octave bass',
+      ref: 'A bass flipping between octaves twice every clock, the Italo disco bounce at double speed',
       artist: 'Italo disco',
       tags: ['bass', 'patch'],
       level: 2,
@@ -1965,7 +1965,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-slow-pwm-strings',
       name: 'Slow PWM Strings',
-      ref: 'In the style of a 1970s string machine',
+      ref: 'Lush strings shimmering as a slow wave sweeps every pulse width, like a 1970s string machine',
       artist: 'String synthesizers',
       tags: ['strings', 'patch', 'pwm'],
       level: 3,
@@ -2039,7 +2039,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-cicadas',
       name: 'Cicadas',
-      ref: 'In the style of cicadas on a summer night',
+      ref: 'A buzzing, chirping swarm, the subs swept sixteen times a second: cicadas on a summer night',
       artist: 'Sound effects',
       tags: ['fx', 'patch'],
       level: 2,
@@ -2107,7 +2107,7 @@ export const PATCHBAY: Insert[] = [
     sound: {
       id: 'shc-feedback-howl',
       name: 'Feedback Howl',
-      ref: 'In the style of Louis and Bebe Barron’s self-destructing circuits',
+      ref: 'Squeals and howls from a circuit fed its own pitch, like the Barrons’ overloading Forbidden Planet circuits',
       artist: 'Louis and Bebe Barron',
       tags: ['fx', 'patch'],
       level: 3,

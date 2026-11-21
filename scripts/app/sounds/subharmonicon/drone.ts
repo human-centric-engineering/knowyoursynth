@@ -9,7 +9,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-throat-singing',
     name: 'Throat Singing',
-    ref: 'In the style of Tuvan khoomei',
+    ref: 'A low drone with a whistling overtone melody picked out above it, like Tuvan khoomei',
     artist: 'Tuvan throat singing',
     tags: ['drone', 'patch', 'overtones'],
     level: 3,
@@ -64,7 +64,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-pipes-and-drones',
     name: 'Pipes and Drones',
-    ref: 'In the style of the Highland bagpipe',
+    ref: 'A reedy chanter tune over drones an octave and a twelfth below: the Highland bagpipe',
     artist: 'Highland bagpipe',
     tags: ['drone', 'lead'],
     level: 2,
@@ -129,7 +129,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-shruti-breath',
     name: 'Shruti Breath',
-    ref: 'In the style of a shruti box',
+    ref: 'A reed drone on Sa and Pa that swells once a bar, as a shruti box’s bellows push',
     artist: 'Indian classical music',
     tags: ['drone', 'pad'],
     level: 1,
@@ -191,7 +191,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-beating-unison',
     name: 'Beating Unison',
-    ref: 'In the style of Éliane Radigue’s slow drones',
+    ref: 'One held drone with slow waves rolling through it at several speeds, Éliane Radigue’s territory',
     artist: 'Éliane Radigue',
     tags: ['drone', 'ambient'],
     level: 2,
@@ -246,7 +246,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-deep-space-hum',
     name: 'Deep Space Hum',
-    ref: 'In the style of Louis and Bebe Barron’s Forbidden Planet',
+    ref: 'A huge sub-bass hum fluttering like distant machinery: the Barrons’ Forbidden Planet in miniature',
     artist: 'Louis and Bebe Barron',
     tags: ['drone', 'fx'],
     level: 2,
@@ -312,7 +312,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-filter-steps-drone',
     name: 'Filter Steps',
-    ref: 'In the style of minimalist drone music',
+    ref: 'A held chord whose colour steps in rhythm while its notes stay put, for minimalist drone music',
     artist: 'Drone music',
     tags: ['drone', 'patch'],
     level: 2,
@@ -373,7 +373,7 @@ export const DRONE: SoundSpec[] = [
   {
     id: 'shc-pedal-point',
     name: 'Pedal Point',
-    ref: 'In the style of a cathedral organ’s pedal point',
+    ref: 'A low C held for ever beneath slowly moving chords, the pedal point of a cathedral organ',
     artist: 'Cathedral organ',
     tags: ['drone', 'organ'],
     level: 2,

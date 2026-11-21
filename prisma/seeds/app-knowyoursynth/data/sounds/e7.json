@@ -5,7 +5,7 @@
     {
       "id": "e7-poly-brass",
       "name": "Analogue Brass",
-      "ref": "In the style of early-1980s analogue polysynth brass",
+      "ref": "Two beating sawtooths that swell open on every chord: early-1980s polysynth brass",
       "artist": "Various",
       "tags": ["brass", "synth-pop", "80s"],
       "level": 1,
@@ -102,7 +102,7 @@
     {
       "id": "e7-pwm-strings",
       "name": "PWM Strings",
-      "ref": "In the style of 1970s string-machine pads",
+      "ref": "Pulse waves sweeping in width until one oscillator sounds like a drifting 1970s string section",
       "artist": "Various",
       "tags": ["strings", "70s"],
       "level": 2,
@@ -209,7 +209,7 @@
     {
       "id": "e7-sub-bass",
       "name": "Tri-Saw Bass",
-      "ref": "In the style of 1980s analogue synth-pop basslines",
+      "ref": "Round, punchy mono bass with a square sub underneath, built for 1980s synth-pop lines",
       "artist": "Various",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -294,7 +294,7 @@
     {
       "id": "e7-sync-lead",
       "name": "Sync Lead",
-      "ref": "In the style of early-1980s hard-sync synth leads",
+      "ref": "Hard sync that tears downwards as each note starts, a lead heard all over early-1980s new wave",
       "artist": "Various",
       "tags": ["lead", "new-wave", "80s"],
       "level": 2,
@@ -390,7 +390,7 @@
     {
       "id": "e7-wheel-vibrato",
       "name": "Mod Wheel Vibrato",
-      "ref": "In the style of expressive analogue solo leads",
+      "ref": "Clean solo lead that stays straight until the mod wheel brings in vibrato and a touch of wah",
       "artist": "Various",
       "tags": ["lead", "solo"],
       "level": 2,
@@ -463,7 +463,7 @@
     {
       "id": "e7-unison-lead",
       "name": "Unison Lead",
-      "ref": "In the style of big analogue unison leads",
+      "ref": "Seven detuned voices piled on one note for a thick, singing lead",
       "artist": "Various",
       "tags": ["lead", "electronic"],
       "level": 1,
@@ -535,7 +535,7 @@
     {
       "id": "e7-moving-pad",
       "name": "Moving Pad",
-      "ref": "In the style of slow-evolving ambient analogue pads",
+      "ref": "Warm tri-saw chords that breathe as one while the filter rises and falls over several seconds",
       "artist": "Various",
       "tags": ["pad", "ambient"],
       "level": 2,
@@ -625,7 +625,7 @@
     {
       "id": "e7-clocked-bleeps",
       "name": "Clocked Random Bleeps",
-      "ref": "In the style of 1970s sample-and-hold sci-fi bleeps",
+      "ref": "Resonant random steps locked to the clock: the computer bleeps of 1970s science fiction",
       "artist": "Various",
       "tags": ["seq", "electronic", "70s"],
       "level": 3,
@@ -705,7 +705,7 @@
     {
       "id": "e7-velocity-keys",
       "name": "Velocity Keys",
-      "ref": "In the style of 1980s analogue electric-piano-like keys",
+      "ref": "Plucky keys that brighten and grow louder the harder they are struck, an analogue nod to the electric piano",
       "artist": "Various",
       "tags": ["keys", "80s"],
       "level": 2,
@@ -804,7 +804,7 @@
     {
       "id": "e7-key-sync-wobble",
       "name": "Key-Synced Wobble",
-      "ref": "In the style of 2010s wobble bass",
+      "ref": "Growling bass whose filter wobble restarts on each note and speeds up as it goes, as 2010s dubstep liked it",
       "artist": "Various",
       "tags": ["bass", "dubstep", "2010s"],
       "level": 3,
@@ -891,7 +891,7 @@
     {
       "id": "e7-warm-pad",
       "name": "Warm Pad",
-      "ref": "In the style of 1980s synth-pop pads",
+      "ref": "Slightly detuned saws fading in under a closed filter, the plain warm pad of 1980s synth-pop",
       "artist": "80s synth-pop",
       "tags": ["pad", "warm", "basics"],
       "level": 1,
@@ -980,7 +980,7 @@
     {
       "id": "e7-glass-pad",
       "name": "Glass Pad",
-      "ref": "In the style of 1980s ambient glass pads",
+      "ref": "Clear triangle chords an octave apart that hang in the air with almost no edge",
       "artist": "Ambient",
       "tags": ["pad", "ambient", "soft"],
       "level": 1,
@@ -1060,7 +1060,7 @@
     {
       "id": "e7-ensemble-strings",
       "name": "String Machine",
-      "ref": "In the style of the 1970s string ensembles (Solina, ARP)",
+      "ref": "One sawtooth multiplied by ensemble chorus into a 1970s string machine of the Solina and ARP kind",
       "artist": "Various",
       "tags": ["strings", "pad", "70s"],
       "level": 1,
@@ -1130,7 +1130,7 @@
     {
       "id": "e7-ob-pad",
       "name": "Brassy Pad",
-      "ref": "In the style of the early-1980s Oberheim pads",
+      "ref": "Fat two-saw chords with a soft brassy bloom: the Oberheim pad behind early-1980s rock and pop",
       "artist": "Various",
       "tags": ["pad", "brass", "80s"],
       "level": 2,
@@ -1220,7 +1220,7 @@
     {
       "id": "e7-pwm-pad",
       "name": "Shimmering PWM Pad",
-      "ref": "In the style of 1970s polysynth string pads",
+      "ref": "Soft pulse-width pad in which every note of the chord shimmers at its own pace",
       "artist": "Polysynth pads",
       "tags": ["pad", "pwm", "soft"],
       "level": 2,
@@ -1304,7 +1304,7 @@
     {
       "id": "e7-sweep-pad",
       "name": "Filter Sweep Pad",
-      "ref": "In the style of synthwave filter-sweep pads",
+      "ref": "Resonant chords rising and falling on one slow sweep, made for synthwave and trance",
       "artist": "Synthwave",
       "tags": ["pad", "filter", "lfo"],
       "level": 2,
@@ -1384,7 +1384,7 @@
     {
       "id": "e7-dark-drone-pad",
       "name": "Dark Drone Pad",
-      "ref": "In the style of dark ambient drones",
+      "ref": "Low and nearly closed, with both subs beneath: a drone that creeps in under a tense scene",
       "artist": "Dark ambient",
       "tags": ["pad", "drone", "dark", "ambient"],
       "level": 2,
@@ -1464,7 +1464,7 @@
     {
       "id": "e7-fifths-pad",
       "name": "Fifths Pad",
-      "ref": "In the style of 1970s cosmic synth records",
+      "ref": "Open, hollow fifths on every key, drifting through space as on 1970s kosmische records",
       "artist": "Kosmische / ambient",
       "tags": ["pad", "fifths"],
       "level": 1,
@@ -1525,7 +1525,7 @@
     {
       "id": "e7-tremolo-pad",
       "name": "Tremolo Pad",
-      "ref": "In the style of dream-pop tremolo keyboards",
+      "ref": "Soft chords pulsing in volume, the hazy tremolo keyboard of dream pop",
       "artist": "Dream pop",
       "tags": ["pad", "tremolo", "lfo"],
       "level": 1,
@@ -1596,7 +1596,7 @@
     {
       "id": "e7-breathing-pad",
       "name": "Breathing Pad",
-      "ref": "In the style of ambient pads with breath",
+      "ref": "Half voices, half wind: an airy pad with a breath of noise in every chord",
       "artist": "Ambient",
       "tags": ["pad", "noise", "ambient"],
       "level": 2,
@@ -1681,7 +1681,7 @@
     {
       "id": "e7-poly-lfo-pad",
       "name": "Drifting Voices Pad",
-      "ref": "In the style of vintage polysynths with drifting voices",
+      "ref": "Each note wandering in and out of tune on its own, as an ageing polysynth’s voices do",
       "artist": "Polysynth pads",
       "tags": ["pad", "lfo", "detune"],
       "level": 3,
@@ -1765,7 +1765,7 @@
     {
       "id": "e7-octave-pad",
       "name": "Octave Pad",
-      "ref": "In the style of 1980s synth-pop pads",
+      "ref": "Broad synth-pop pad with a soft triangle doubling every note an octave below",
       "artist": "80s synth-pop",
       "tags": ["pad", "octave"],
       "level": 1,
@@ -1831,7 +1831,7 @@
     {
       "id": "e7-vhs-pad",
       "name": "Worn Tape Pad",
-      "ref": "In the style of lo-fi and vaporwave",
+      "ref": "Dull, chorused chords that sag and recover in pitch, as if played off a stretched cassette",
       "artist": "Lo-fi",
       "tags": ["pad", "lo-fi", "chorus"],
       "level": 2,
@@ -1912,7 +1912,7 @@
     {
       "id": "e7-cinematic-swell",
       "name": "Cinematic Swell",
-      "ref": "In the style of modern film scores",
+      "ref": "A tense cluster that climbs from silence to a bright roar and falls away, as modern film scores build",
       "artist": "Film scores",
       "tags": ["pad", "film", "dark"],
       "level": 2,
@@ -1985,7 +1985,7 @@
     {
       "id": "e7-glide-chords",
       "name": "Gliding Chords",
-      "ref": "In the style of synthwave gliding chords",
+      "ref": "Woozy chords whose notes slide one by one into the next harmony, a synthwave favourite",
       "artist": "Synthwave",
       "tags": ["pad", "portamento", "chord"],
       "level": 2,
@@ -2062,7 +2062,7 @@
     {
       "id": "e7-choir-pad",
       "name": "Synth Choir",
-      "ref": "In the style of 1980s synth choirs",
+      "ref": "Vowel-shaped resonance and ensemble chorus turning oscillators into a soft 1980s synth choir",
       "artist": "80s ballads",
       "tags": ["pad", "choir", "vocal"],
       "level": 2,
@@ -2145,7 +2145,7 @@
     {
       "id": "e7-ambient-wash",
       "name": "Ambient Wash",
-      "ref": "In the style of ambient music",
+      "ref": "Chords drowned in long, high-feedback echoes until the harmony smears into one wash",
       "artist": "Ambient",
       "tags": ["pad", "ambient", "delay"],
       "level": 2,
@@ -2217,7 +2217,7 @@
     {
       "id": "e7-reverse-swell",
       "name": "Reverse Swell",
-      "ref": "In the style of 1960s backwards-tape psychedelia",
+      "ref": "Swells that rise from nothing and stop dead: the backwards-tape trick of 1960s psychedelia",
       "artist": "Psychedelia",
       "tags": ["pad", "fx", "reverse"],
       "level": 2,
@@ -2288,7 +2288,7 @@
     {
       "id": "e7-sub-pad",
       "name": "Deep Sub Pad",
-      "ref": "In the style of deep-house sub pads",
+      "ref": "Low, warm chords where the subs do half the work, a deep-house bed that fills a room",
       "artist": "Deep house",
       "tags": ["pad", "bass", "warm"],
       "level": 1,
@@ -2358,7 +2358,7 @@
     {
       "id": "e7-key-track-pad",
       "name": "Bright-Top Pad",
-      "ref": "In the style of 1980s polysynth pads",
+      "ref": "Polysynth pad that turns darker down the keyboard and clearer towards the top",
       "artist": "Polysynth pads",
       "tags": ["pad", "filter", "basics"],
       "level": 1,
@@ -2423,7 +2423,7 @@
     {
       "id": "e7-film-strings",
       "name": "Film Strings",
-      "ref": "In the style of synth string sections in 1980s film scores",
+      "ref": "Slow synth strings with a gentle vibrato and a sweet top, scored under a 1980s film scene",
       "artist": "Film scores",
       "tags": ["strings", "film", "80s"],
       "level": 2,
@@ -2517,7 +2517,7 @@
     {
       "id": "e7-pizzicato",
       "name": "Pizzicato Strings",
-      "ref": "In the style of orchestral pizzicato strings",
+      "ref": "Plucked string notes that pop open and die away, an orchestra’s pizzicato played on a synth",
       "artist": "Orchestral",
       "tags": ["strings", "pluck", "classical"],
       "level": 1,
@@ -2602,7 +2602,7 @@
     {
       "id": "e7-solo-violin",
       "name": "Synth Violin",
-      "ref": "In the style of 1970s fusion synth violin leads",
+      "ref": "Bowed mono line whose vibrato grows as each note is held, close to a jazz-fusion electric violin",
       "artist": "Jazz fusion",
       "tags": ["strings", "lead", "mono"],
       "level": 2,
@@ -2682,7 +2682,7 @@
     {
       "id": "e7-tremolo-strings",
       "name": "Tremolo Strings",
-      "ref": "In the style of suspense film-score tremolo strings",
+      "ref": "Strings shivering in fast tremolando: the sound film scores reach for in suspense",
       "artist": "Film scores",
       "tags": ["strings", "film", "tremolo"],
       "level": 2,
@@ -2756,7 +2756,7 @@
     {
       "id": "e7-cello-section",
       "name": "Cello Section",
-      "ref": "In the style of the orchestral cello section",
+      "ref": "Dark, woody bowed notes in the low register of an orchestral cello section",
       "artist": "Orchestral",
       "tags": ["strings", "classical", "dark"],
       "level": 1,
@@ -2830,7 +2830,7 @@
     {
       "id": "e7-staccato-strings",
       "name": "Staccato Strings",
-      "ref": "In the style of action film-score string stabs",
+      "ref": "Short, biting string stabs driving the ostinato under an action scene",
       "artist": "Film scores",
       "tags": ["strings", "stab", "film"],
       "level": 2,
@@ -2960,7 +2960,7 @@
     {
       "id": "e7-brass-stab",
       "name": "Brass Stab",
-      "ref": "In the style of 1980s pop brass stabs",
+      "ref": "Punchy chord hits that blare and stop: the synth horn section of 1980s pop",
       "artist": "Various",
       "tags": ["brass", "stab", "80s"],
       "level": 1,
@@ -3041,7 +3041,7 @@
     {
       "id": "e7-soft-horns",
       "name": "Soft Horns",
-      "ref": "In the style of film-score French horns",
+      "ref": "Mellow horns that swell gently into each chord, a warm French-horn section for film",
       "artist": "Film scores",
       "tags": ["brass", "soft", "film"],
       "level": 2,
@@ -3126,7 +3126,7 @@
     {
       "id": "e7-fanfare",
       "name": "Fanfare",
-      "ref": "In the style of heroic film-score fanfares",
+      "ref": "Bright brass chords with a lip-like lift at the start of each, ready for a heroic film fanfare",
       "artist": "Film scores",
       "tags": ["brass", "film", "bright"],
       "level": 2,
@@ -3220,7 +3220,7 @@
     {
       "id": "e7-jump-brass",
       "name": "Synth-Rock Brass",
-      "ref": "In the style of Van Halen — “Jump”",
+      "ref": "Big, bright, slightly blaring synth-brass chords punched out like the riff of Van Halen’s “Jump”",
       "artist": "Van Halen",
       "tags": ["brass", "rock", "80s"],
       "level": 2,
@@ -3316,7 +3316,7 @@
     {
       "id": "e7-trumpet-lead",
       "name": "Synth Trumpet",
-      "ref": "In the style of jazz trumpet leads",
+      "ref": "Bright mono lead that mimics a jazz trumpet: a blare on each note, a lip lift and vibrato",
       "artist": "Jazz",
       "tags": ["brass", "lead", "mono"],
       "level": 2,
@@ -3388,7 +3388,7 @@
     {
       "id": "e7-sax-lead",
       "name": "Synth Sax",
-      "ref": "In the style of 1980s pop saxophone solos",
+      "ref": "Reedy, breathy lead with a growl in it, the synth saxophone of 1980s pop ballads",
       "artist": "80s ballads",
       "tags": ["lead", "brass", "mono"],
       "level": 3,
@@ -3468,7 +3468,7 @@
     {
       "id": "e7-tuba-bass",
       "name": "Synth Tuba",
-      "ref": "In the style of brass-band tuba bass",
+      "ref": "Round, blowing low brass for an oompah line: a synth tuba from the brass band",
       "artist": "Brass band",
       "tags": ["bass", "brass"],
       "level": 1,
@@ -3532,7 +3532,7 @@
     {
       "id": "e7-final-brass",
       "name": "Arena Brass",
-      "ref": "In the style of Europe — “The Final Countdown”",
+      "ref": "Europe’s “The Final Countdown” writ large: very bright synth brass with a long echo behind it",
       "artist": "Europe",
       "tags": ["brass", "rock", "80s"],
       "level": 2,
@@ -3627,7 +3627,7 @@
     {
       "id": "e7-vangelis-brass",
       "name": "Expressive Brass",
-      "ref": "In the style of Vangelis — “Blade Runner”",
+      "ref": "Slow-blooming brass with vibrato and long echoes, the sound that sweeps through Vangelis’s “Blade Runner”",
       "artist": "Vangelis",
       "tags": ["brass", "film", "pad"],
       "level": 3,
@@ -3716,7 +3716,7 @@
     {
       "id": "e7-electric-piano",
       "name": "Electric Piano",
-      "ref": "In the style of 1970s soul electric pianos",
+      "ref": "Soft, round keys that bark when struck hard, an analogue sketch of a 1970s soul electric piano",
       "artist": "70s soul",
       "tags": ["keys", "piano", "70s"],
       "level": 1,
@@ -3810,7 +3810,7 @@
     {
       "id": "e7-clavinet",
       "name": "Synth Clav",
-      "ref": "In the style of 1970s funk clavinet",
+      "ref": "Snappy, nasal pluck that bites on the strike, standing in for a 1970s funk clavinet",
       "artist": "70s funk",
       "tags": ["keys", "funk", "70s"],
       "level": 2,
@@ -3886,7 +3886,7 @@
     {
       "id": "e7-organ",
       "name": "Square Organ",
-      "ref": "In the style of 1960s garage-rock combo organs",
+      "ref": "Buzzy square-wave organ that switches on and off with the key, straight out of 1960s garage rock",
       "artist": "60s garage rock",
       "tags": ["keys", "organ"],
       "level": 1,
@@ -3965,7 +3965,7 @@
     {
       "id": "e7-perc-organ",
       "name": "Percussive Organ",
-      "ref": "In the style of jazz organ trios",
+      "ref": "Organ tone with a decaying high click on each note, like the percussion tab of a jazz tonewheel",
       "artist": "Jazz",
       "tags": ["keys", "organ", "jazz"],
       "level": 2,
@@ -4038,7 +4038,7 @@
     {
       "id": "e7-harpsichord",
       "name": "Harpsichord",
-      "ref": "In the style of Baroque harpsichord music",
+      "ref": "Thin, bright pluck with no sustain and a second string beating against it: a Baroque harpsichord",
       "artist": "Baroque",
       "tags": ["keys", "baroque", "pluck"],
       "level": 1,
@@ -4113,7 +4113,7 @@
     {
       "id": "e7-vibraphone",
       "name": "Vibraphone",
-      "ref": "In the style of jazz vibraphone",
+      "ref": "Ringing mallet notes with a slow pulse in the volume, a jazz vibraphone with its motor on",
       "artist": "Jazz",
       "tags": ["keys", "mallet", "jazz"],
       "level": 2,
@@ -4189,7 +4189,7 @@
     {
       "id": "e7-bell-keys",
       "name": "Bell Keys",
-      "ref": "In the style of 1980s FM bell keys",
+      "ref": "Chiming notes with an inharmonic overtone ringing above each one, close to the FM bells of the 1980s",
       "artist": "80s FM",
       "tags": ["keys", "bell"],
       "level": 2,
@@ -4262,7 +4262,7 @@
     {
       "id": "e7-toy-piano",
       "name": "Toy Piano",
-      "ref": "In the style of indie-pop toy pianos",
+      "ref": "Tinny, high, slightly sour plinks from a child’s toy piano, a favourite prop of indie pop",
       "artist": "Indie pop",
       "tags": ["keys", "toy", "pluck"],
       "level": 1,
@@ -4334,7 +4334,7 @@
     {
       "id": "e7-house-piano",
       "name": "House Chord Stab",
-      "ref": "In the style of early-1990s house piano stabs",
+      "ref": "Short, barking chord stabs on the offbeat, where early-1990s house put its piano",
       "artist": "House",
       "tags": ["keys", "house", "90s"],
       "level": 2,
@@ -4433,7 +4433,7 @@
     {
       "id": "e7-dub-chord",
       "name": "Dub Chord",
-      "ref": "In the style of dub techno",
+      "ref": "Muffled minor chord flung into long, fading echoes, the basic gesture of dub techno",
       "artist": "Dub techno",
       "tags": ["keys", "techno", "delay"],
       "level": 2,
@@ -4507,7 +4507,7 @@
     {
       "id": "e7-classic-mono-bass",
       "name": "Classic Mono Bass",
-      "ref": "In the style of 1970s funk synth bass",
+      "ref": "Fat, round mono bass that plucks and settles on every note: bread and butter in 1970s funk",
       "artist": "70s funk",
       "tags": ["bass", "basics", "mono"],
       "level": 1,
@@ -4581,7 +4581,7 @@
     {
       "id": "e7-acid-bass",
       "name": "Acid Squelch",
-      "ref": "In the style of acid house",
+      "ref": "Rubbery, squelching saw line with slides between tied notes, from late-1980s Chicago acid house",
       "artist": "Acid house",
       "tags": ["bass", "acid", "house"],
       "level": 2,
@@ -4663,7 +4663,7 @@
     {
       "id": "e7-sub-sine-bass",
       "name": "Sub Bass",
-      "ref": "In the style of UK garage sub bass",
+      "ref": "An almost pure low tone, felt more than heard, under UK garage and hip-hop",
       "artist": "UK garage",
       "tags": ["bass", "sub", "electronic"],
       "level": 1,
@@ -4719,7 +4719,7 @@
     {
       "id": "e7-808-glide",
       "name": "808 Slide Bass",
-      "ref": "In the style of trap 808 bass",
+      "ref": "Booming low tone with a pitch punch and slides between notes: the trap 808",
       "artist": "Trap",
       "tags": ["bass", "trap", "hip-hop"],
       "level": 2,
@@ -4788,7 +4788,7 @@
     {
       "id": "e7-reese-bass",
       "name": "Reese Bass",
-      "ref": "In the style of drum and bass",
+      "ref": "Two far-detuned saws churning against each other, the Reese bass at the heart of drum and bass",
       "artist": "Drum & bass",
       "tags": ["bass", "dnb", "detune"],
       "level": 2,
@@ -4845,7 +4845,7 @@
     {
       "id": "e7-funk-bass",
       "name": "Funk Bass",
-      "ref": "In the style of 1970s funk synth bass",
+      "ref": "Punchy funk bass that says “wow” on every syncopated note through a quick resonant filter",
       "artist": "70s funk",
       "tags": ["bass", "funk", "70s"],
       "level": 2,
@@ -4920,7 +4920,7 @@
     {
       "id": "e7-synthpop-octaves",
       "name": "Octave Bass",
-      "ref": "In the style of early-1980s synth-pop",
+      "ref": "Root-and-octave eighths bouncing under the beat, the engine room of early-1980s synth-pop",
       "artist": "Synth-pop",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -4992,7 +4992,7 @@
     {
       "id": "e7-sync-bass",
       "name": "Sync Bass",
-      "ref": "In the style of 1980s electro sync bass",
+      "ref": "Hard sync used down low: a metallic electro bass that rips at the start of each note",
       "artist": "Electro",
       "tags": ["bass", "sync", "aggressive"],
       "level": 3,
@@ -5059,7 +5059,7 @@
     {
       "id": "e7-wobble-bass",
       "name": "LFO Wobble Bass",
-      "ref": "In the style of dubstep",
+      "ref": "Heavy unison bass chopped by a filter wobble locked to the tempo, for half-time dubstep",
       "artist": "Dubstep",
       "tags": ["bass", "dubstep", "lfo"],
       "level": 2,
@@ -5119,7 +5119,7 @@
     {
       "id": "e7-rolling-bass",
       "name": "Rolling Bass",
-      "ref": "In the style of psytrance",
+      "ref": "Tight sixteenth-note bass galloping in the gaps between psytrance kicks",
       "artist": "Psytrance",
       "tags": ["bass", "trance", "rhythm"],
       "level": 2,
@@ -5188,7 +5188,7 @@
     {
       "id": "e7-dub-bass",
       "name": "Dub Bass",
-      "ref": "In the style of reggae and dub",
+      "ref": "Deep reggae bass with no edge at all, its held notes dropping slightly into place",
       "artist": "Dub",
       "tags": ["bass", "reggae", "dub"],
       "level": 1,
@@ -5250,7 +5250,7 @@
     {
       "id": "e7-techno-rumble",
       "name": "Techno Rumble",
-      "ref": "In the style of modern techno",
+      "ref": "Dark low note echoing into a rolling rumble between the kicks of modern techno",
       "artist": "Techno",
       "tags": ["bass", "techno", "dark"],
       "level": 2,
@@ -5312,7 +5312,7 @@
     {
       "id": "e7-italo-bass",
       "name": "Italo Bass",
-      "ref": "In the style of Italo disco",
+      "ref": "Bright, tight octave jumps with an echo doubling the rhythm: the sequenced pulse of Italo disco",
       "artist": "Italo disco",
       "tags": ["bass", "disco", "80s"],
       "level": 1,
@@ -5384,7 +5384,7 @@
     {
       "id": "e7-house-organ-bass",
       "name": "Organ Bass",
-      "ref": "In the style of early-1990s house",
+      "ref": "Hollow, clicky organ bass of the kind early-1990s house took from the Korg M1",
       "artist": "House",
       "tags": ["bass", "house", "organ"],
       "level": 1,
@@ -5452,7 +5452,7 @@
     {
       "id": "e7-growl-bass",
       "name": "PWM Growl Bass",
-      "ref": "In the style of dubstep growl bass",
+      "ref": "Gritty low pulse whose width snarls fast and unevenly, a dubstep growl",
       "artist": "Dubstep",
       "tags": ["bass", "pwm", "aggressive"],
       "level": 2,
@@ -5517,7 +5517,7 @@
     {
       "id": "e7-pluck-bass",
       "name": "Pluck Bass",
-      "ref": "In the style of synth-pop pluck bass",
+      "ref": "Bright, clicky bass that dies at once, made for busy synth-pop lines",
       "artist": "Synth-pop",
       "tags": ["bass", "pluck", "electronic"],
       "level": 1,
@@ -5574,7 +5574,7 @@
     {
       "id": "e7-unison-saw-bass",
       "name": "Unison Saw Bass",
-      "ref": "In the style of electro-house unison bass",
+      "ref": "Fourteen slightly detuned saws on one note: electro-house bass for the big drop",
       "artist": "Electro house",
       "tags": ["bass", "unison", "big"],
       "level": 2,
@@ -5633,7 +5633,7 @@
     {
       "id": "e7-slap-bass",
       "name": "Synth Slap Bass",
-      "ref": "In the style of 1980s synth slap bass",
+      "ref": "A hard pop and then a round body, as synth slap bass went in 1980s pop and funk",
       "artist": "Various",
       "tags": ["bass", "funk", "80s"],
       "level": 2,
@@ -5709,7 +5709,7 @@
     {
       "id": "e7-filtered-disco-bass",
       "name": "Filtered Disco Bass",
-      "ref": "In the style of French house",
+      "ref": "Disco octave bass behind a filter that opens and closes over many bars, as French house does it",
       "artist": "French house",
       "tags": ["bass", "house", "filter"],
       "level": 2,
@@ -5783,7 +5783,7 @@
     {
       "id": "e7-deep-house-bass",
       "name": "Deep House Bass",
-      "ref": "In the style of deep house",
+      "ref": "Soft-edged, gently plucked bass in a lazy syncopated deep-house groove",
       "artist": "Deep house",
       "tags": ["bass", "house", "warm"],
       "level": 1,
@@ -5840,7 +5840,7 @@
     {
       "id": "e7-trance-offbeat-bass",
       "name": "Offbeat Bass",
-      "ref": "In the style of trance",
+      "ref": "One short, bright note between each kick: the trance offbeat bassline",
       "artist": "Trance",
       "tags": ["bass", "trance", "rhythm"],
       "level": 1,
@@ -5899,7 +5899,7 @@
     {
       "id": "e7-darkwave-bass",
       "name": "Darkwave Bass",
-      "ref": "In the style of 1980s darkwave and post-punk",
+      "ref": "Cold, chorused eighth notes driving darkwave and post-punk",
       "artist": "Darkwave",
       "tags": ["bass", "darkwave", "80s"],
       "level": 2,
@@ -5975,7 +5975,7 @@
     {
       "id": "e7-saw-lead",
       "name": "Saw Lead",
-      "ref": "In the style of 1970s progressive-rock synth leads",
+      "ref": "Bright sawtooth solo with a glide and a vibrato, the plain voice of 1970s prog-rock keyboards",
       "artist": "70s progressive rock",
       "tags": ["lead", "basics", "mono"],
       "level": 1,
@@ -6046,7 +6046,7 @@
     {
       "id": "e7-square-lead",
       "name": "Square Lead",
-      "ref": "In the style of 8-bit video game music",
+      "ref": "Hollow, woody square-wave lead, as at home on a clarinet line as in 8-bit game music",
       "artist": "Chiptune",
       "tags": ["lead", "square", "mono"],
       "level": 1,
@@ -6110,7 +6110,7 @@
     {
       "id": "e7-prog-lead",
       "name": "Prog Portamento Lead",
-      "ref": "In the style of 1970s progressive rock synth solos",
+      "ref": "Fat, slightly resonant lead that swoops slowly from note to note through a long prog-rock solo",
       "artist": "Prog rock",
       "tags": ["lead", "prog", "70s"],
       "level": 2,
@@ -6169,7 +6169,7 @@
     {
       "id": "e7-fifth-lead",
       "name": "Fifth Lead",
-      "ref": "In the style of 1970s rock synth leads in fifths",
+      "ref": "Mono lead with a fifth on every note, so each line rings out as a power-chord riff",
       "artist": "70s rock",
       "tags": ["lead", "fifths", "rock"],
       "level": 2,
@@ -6224,7 +6224,7 @@
     {
       "id": "e7-whistle-lead",
       "name": "Whistle Lead",
-      "ref": "In the style of G-funk whistle leads",
+      "ref": "Pure, high, sliding tone with a gentle vibrato: the whistling synth lead of G-funk",
       "artist": "G-funk",
       "tags": ["lead", "whistle", "soft"],
       "level": 1,
@@ -6285,7 +6285,7 @@
     {
       "id": "e7-flute",
       "name": "Synth Flute",
-      "ref": "In the style of the orchestral flute",
+      "ref": "Soft, breathy line with a chiff at each note’s start, a synth take on the orchestral flute",
       "artist": "Orchestral",
       "tags": ["lead", "flute", "soft"],
       "level": 2,
@@ -6360,7 +6360,7 @@
     {
       "id": "e7-oboe",
       "name": "Synth Oboe",
-      "ref": "In the style of the orchestral oboe",
+      "ref": "Thin, nasal double-reed line with a quick vibrato, as an orchestra’s oboe sounds",
       "artist": "Orchestral",
       "tags": ["lead", "reed", "classical"],
       "level": 2,
@@ -6424,7 +6424,7 @@
     {
       "id": "e7-chip-lead",
       "name": "Chiptune Lead",
-      "ref": "In the style of 8-bit video game music",
+      "ref": "Buzzy pulse lead trilling as fast as the arpeggios of 1980s console soundchips",
       "artist": "Chiptune",
       "tags": ["lead", "chiptune", "game"],
       "level": 1,
@@ -6488,7 +6488,7 @@
     {
       "id": "e7-screaming-lead",
       "name": "Screaming Lead",
-      "ref": "In the style of 1980s hard-rock synth leads",
+      "ref": "Seven stacked voices and a resonant peak: a piercing lead for 1980s hard rock",
       "artist": "Hard rock",
       "tags": ["lead", "aggressive", "rock"],
       "level": 2,
@@ -6551,7 +6551,7 @@
     {
       "id": "e7-lucky-lead",
       "name": "Glide Solo",
-      "ref": "In the style of Emerson, Lake & Palmer — “Lucky Man”",
+      "ref": "Fat square tone gliding very slowly, close to the Moog solo that ends Emerson, Lake & Palmer’s “Lucky Man”",
       "artist": "Emerson, Lake & Palmer",
       "tags": ["lead", "prog", "70s"],
       "level": 2,
@@ -6613,7 +6613,7 @@
     {
       "id": "e7-jarre-lead",
       "name": "Laser Harp Lead",
-      "ref": "In the style of Jean-Michel Jarre",
+      "ref": "Jean-Michel Jarre territory: a bright, vibrato-laden lead thrown side to side by long echoes",
       "artist": "Jean-Michel Jarre",
       "tags": ["lead", "electronic", "80s"],
       "level": 2,
@@ -6687,7 +6687,7 @@
     {
       "id": "e7-axel-lead",
       "name": "Staccato Pulse Lead",
-      "ref": "In the style of Harold Faltermeyer — “Axel F”",
+      "ref": "Staccato square hook with echoes filling the gaps, the bounce of Harold Faltermeyer’s “Axel F”",
       "artist": "Harold Faltermeyer",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 2,
@@ -6767,7 +6767,7 @@
     {
       "id": "e7-gfunk-lead",
       "name": "G-funk Whine",
-      "ref": "In the style of West Coast G-funk",
+      "ref": "High, thin near-sine that glides and quivers over 1990s West Coast hip-hop",
       "artist": "G-funk",
       "tags": ["lead", "hip-hop", "90s"],
       "level": 2,
@@ -6828,7 +6828,7 @@
     {
       "id": "e7-acid-lead",
       "name": "Resonant Lead",
-      "ref": "In the style of acid house",
+      "ref": "The acid squelch moved up an octave or two: a resonant line with slides",
       "artist": "Acid house",
       "tags": ["lead", "acid", "electronic"],
       "level": 2,
@@ -6901,7 +6901,7 @@
     {
       "id": "e7-sync-scream",
       "name": "Sync Scream",
-      "ref": "In the style of 1980s synth-rock sync leads",
+      "ref": "Sync harmonics sweeping back and forth by themselves until the lead screams like a voice in 1980s synth rock",
       "artist": "Synth-rock",
       "tags": ["lead", "sync", "aggressive"],
       "level": 3,
@@ -6964,7 +6964,7 @@
     {
       "id": "e7-theremin-lead",
       "name": "Theremin",
-      "ref": "In the style of 1950s science-fiction films",
+      "ref": "Eerie and stepless, with a wide, nervous vibrato: the theremin of 1950s science-fiction films",
       "artist": "1950s sci-fi",
       "tags": ["lead", "sci-fi", "vibrato"],
       "level": 2,
@@ -7026,7 +7026,7 @@
     {
       "id": "e7-detuned-lead",
       "name": "Supersaw Lead",
-      "ref": "In the style of trance leads",
+      "ref": "Huge detuned supersaw lead with synced echoes, the top line of 2000s trance",
       "artist": "Trance",
       "tags": ["lead", "trance", "unison"],
       "level": 2,
@@ -7092,7 +7092,7 @@
     {
       "id": "e7-funky-lead",
       "name": "Funky Mono Lead",
-      "ref": "In the style of 1970s funk synth leads",
+      "ref": "Snappy, squelchy mono lead with bends, built for a 1970s funk synth solo",
       "artist": "70s funk",
       "tags": ["lead", "funk", "70s"],
       "level": 2,
@@ -7153,7 +7153,7 @@
     {
       "id": "e7-pan-flute",
       "name": "Pan Flute",
-      "ref": "In the style of Andean pan pipes",
+      "ref": "Hollow, breathy pipe tone with a strong puff on each note, as in Andean pan-pipe music",
       "artist": "Andean music",
       "tags": ["lead", "flute", "world"],
       "level": 2,
@@ -7228,7 +7228,7 @@
     {
       "id": "e7-wah-lead",
       "name": "Auto-Wah Lead",
-      "ref": "In the style of 1970s funk auto-wah",
+      "ref": "A lead that wahs open on every note, much as a 1970s funk auto-wah would",
       "artist": "70s funk",
       "tags": ["lead", "wah", "lfo"],
       "level": 3,
@@ -7287,7 +7287,7 @@
     {
       "id": "e7-trance-pluck",
       "name": "Trance Pluck",
-      "ref": "In the style of trance",
+      "ref": "Short detuned chord plucks rolling in dotted-eighth echoes through a trance breakdown",
       "artist": "Trance",
       "tags": ["pluck", "trance", "delay"],
       "level": 1,
@@ -7387,7 +7387,7 @@
     {
       "id": "e7-harp",
       "name": "Synth Harp",
-      "ref": "In the style of the concert harp",
+      "ref": "Soft, ringing plucks that overlap as they cascade up and down: a synth harp glissando",
       "artist": "Orchestral",
       "tags": ["pluck", "harp", "soft"],
       "level": 1,
@@ -7458,7 +7458,7 @@
     {
       "id": "e7-koto",
       "name": "Synth Koto",
-      "ref": "In the style of the Japanese koto",
+      "ref": "Twanging pluck that mellows as it rings, bent through a pentatonic scale like a Japanese koto",
       "artist": "Japanese koto",
       "tags": ["pluck", "world", "japan"],
       "level": 2,
@@ -7525,7 +7525,7 @@
     {
       "id": "e7-marimba",
       "name": "Marimba",
-      "ref": "In the style of Central American marimba music",
+      "ref": "Short, woody, hollow knocks of the kind a Central American marimba makes",
       "artist": "Latin percussion",
       "tags": ["pluck", "mallet", "perc"],
       "level": 1,
@@ -7595,7 +7595,7 @@
     {
       "id": "e7-kalimba",
       "name": "Kalimba",
-      "ref": "In the style of the African mbira and kalimba",
+      "ref": "Round, high plinks with a buzz on the pluck: the African thumb piano",
       "artist": "African music",
       "tags": ["pluck", "world", "mallet"],
       "level": 2,
@@ -7662,11 +7662,11 @@
     {
       "id": "e7-dotted-pluck",
       "name": "Dotted Echo Guitar",
-      "ref": "In the style of U2’s The Edge",
-      "artist": "U2",
+      "ref": "Clean picked eighths whose dotted-eighth echoes fill the gaps: 1980s stadium-rock delay guitar on a synth",
+      "artist": "Stadium rock guitar",
       "tags": ["pluck", "rock", "delay"],
       "level": 2,
-      "blurb": "Clean, bright, picked notes in eighths with a dotted-eighth echo filling the gaps into a shimmering pattern: The Edge’s delay guitar, on a synth.",
+      "blurb": "Clean, bright, picked notes in eighths with a dotted-eighth echo filling the gaps into a shimmering pattern: the dotted-eighth delay guitar of 1980s rock, on a synth.",
       "how": "The Edge plays simple eighth notes into a delay set to a dotted eighth, so the echoes land between his notes and make a rhythm he never plays. A bright pluck and a synced ping-pong delay do it.",
       "phrase": {
         "bpm": 120,
@@ -7740,7 +7740,7 @@
     {
       "id": "e7-glass-pluck",
       "name": "Glass Pluck",
-      "ref": "In the style of IDM resonant plucks",
+      "ref": "Crystalline ping where the resonant filter itself rings like struck glass, an IDM favourite",
       "artist": "IDM",
       "tags": ["pluck", "glass", "resonance"],
       "level": 2,
@@ -7816,7 +7816,7 @@
     {
       "id": "e7-pizz-synth",
       "name": "Bubble Pluck",
-      "ref": "In the style of 1990s video-game plucks",
+      "ref": "Round bloops that start a little high and drop into place, heard in 1990s game music",
       "artist": "Video-game music",
       "tags": ["pluck", "electronic", "pitch"],
       "level": 2,
@@ -7891,7 +7891,7 @@
     {
       "id": "e7-poly-arp",
       "name": "Poly Arpeggio",
-      "ref": "In the style of 1980s synth-pop arpeggios",
+      "ref": "Fast broken chords bouncing through synced echoes behind countless 1980s synth-pop songs",
       "artist": "80s synth-pop",
       "tags": ["pluck", "arpeggio", "synth-pop"],
       "level": 1,
@@ -7964,7 +7964,7 @@
     {
       "id": "e7-berlin-sequence",
       "name": "Berlin School Sequence",
-      "ref": "In the style of Tangerine Dream",
+      "ref": "Tangerine Dream’s hypnotic method: a sixteenth-note pattern repeated while the filter slowly turns",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin", "70s"],
       "level": 2,
@@ -8066,7 +8066,7 @@
     {
       "id": "e7-laser",
       "name": "Laser Zap",
-      "ref": "In the style of 1970s sci-fi film lasers",
+      "ref": "A sharp, falling “pew” of pitch, as fired in 1970s science-fiction films",
       "artist": "Sci-fi films",
       "tags": ["fx", "sci-fi", "pitch"],
       "level": 1,
@@ -8130,7 +8130,7 @@
     {
       "id": "e7-wind",
       "name": "Wind",
-      "ref": "In the style of radio-drama wind effects",
+      "ref": "Filtered noise rising and falling in gusts that whistle at the peaks, a radio-drama wind",
       "artist": "Sound effects",
       "tags": ["fx", "noise", "nature"],
       "level": 1,
@@ -8185,7 +8185,7 @@
     {
       "id": "e7-surf",
       "name": "Ocean Surf",
-      "ref": "In the style of ambient nature recordings",
+      "ref": "Noise swelling and pulling back on a slow cycle, like waves breaking on a shore",
       "artist": "Ambient",
       "tags": ["fx", "noise", "nature"],
       "level": 1,
@@ -8239,7 +8239,7 @@
     {
       "id": "e7-siren",
       "name": "Siren",
-      "ref": "In the style of police-drama sirens",
+      "ref": "A slow, deep pitch sweep up and down, the siren every police drama needs",
       "artist": "Sound effects",
       "tags": ["fx", "siren"],
       "level": 1,
@@ -8284,7 +8284,7 @@
     {
       "id": "e7-bubbles",
       "name": "Random Bubbles",
-      "ref": "In the style of BBC Radiophonic Workshop bubbles",
+      "ref": "Each voice bubbling with random blips of pitch, a BBC Radiophonic Workshop sort of effect",
       "artist": "Radiophonic sound effects",
       "tags": ["fx", "sample and hold", "random"],
       "level": 2,
@@ -8341,7 +8341,7 @@
     {
       "id": "e7-ufo",
       "name": "UFO",
-      "ref": "In the style of 1950s science-fiction films",
+      "ref": "Fast wobble over a slow hover: a flying saucer from 1950s science-fiction films",
       "artist": "1950s sci-fi",
       "tags": ["fx", "sci-fi"],
       "level": 2,
@@ -8401,7 +8401,7 @@
     {
       "id": "e7-alarm",
       "name": "Alarm",
-      "ref": "In the style of sci-fi alarms",
+      "ref": "Harsh two-tone beeping, the sci-fi alarm that means the reactor is about to go",
       "artist": "Sound effects",
       "tags": ["fx", "alarm"],
       "level": 1,
@@ -8460,7 +8460,7 @@
     {
       "id": "e7-bird-chirps",
       "name": "Bird Chirps",
-      "ref": "In the style of synthesized birdsong",
+      "ref": "Quick, high, rising chirps: birdsong made from pitch sweeps on a synthesiser",
       "artist": "Sound effects",
       "tags": ["fx", "nature", "pitch"],
       "level": 2,
@@ -8527,7 +8527,7 @@
     {
       "id": "e7-explosion",
       "name": "Explosion",
-      "ref": "In the style of film sound design",
+      "ref": "Bright burst of noise collapsing into a low rumble, as film sound design builds an explosion",
       "artist": "Film sound design",
       "tags": ["fx", "noise", "impact"],
       "level": 1,
@@ -8583,7 +8583,7 @@
     {
       "id": "e7-sci-fi-drone",
       "name": "Spaceship Drone",
-      "ref": "In the style of sci-fi film spaceship drones",
+      "ref": "Low tritone hum shifting at random, the engine room of a film spaceship",
       "artist": "Sci-fi soundtracks",
       "tags": ["fx", "drone", "sci-fi"],
       "level": 2,
@@ -8645,7 +8645,7 @@
     {
       "id": "e7-rain",
       "name": "Rain",
-      "ref": "In the style of ambient nature recordings",
+      "ref": "Noise chopped into random patters, like rain against a window",
       "artist": "Ambient",
       "tags": ["fx", "noise", "nature"],
       "level": 2,
@@ -8700,7 +8700,7 @@
     {
       "id": "e7-engine",
       "name": "Engine Revving",
-      "ref": "In the style of synthesized engine effects",
+      "ref": "Buzzing motor that revs while a key is held and falls back on release, a synthesised engine",
       "artist": "Sound effects",
       "tags": ["fx", "engine"],
       "level": 2,
@@ -8770,7 +8770,7 @@
     {
       "id": "e7-heartbeat",
       "name": "Heartbeat",
-      "ref": "In the style of thriller-film heartbeats",
+      "ref": "Deep, muffled lub-dub once a second, the heartbeat under a thriller’s tensest scene",
       "artist": "Thriller film",
       "tags": ["fx", "perc", "film"],
       "level": 1,
@@ -8824,7 +8824,7 @@
     {
       "id": "e7-kick",
       "name": "Synth Kick",
-      "ref": "In the style of the TR-808 kick",
+      "ref": "Low tone dropping fast from a high start: an electronic kick in the TR-808 mould",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "kick"],
       "level": 1,
@@ -8878,7 +8878,7 @@
     {
       "id": "e7-snare",
       "name": "Synth Snare",
-      "ref": "In the style of 1980s electronic snares",
+      "ref": "Tonal thud plus a burst of noise, the snappy electronic snare of 1980s drum machines",
       "artist": "Synth drums",
       "tags": ["perc", "drum", "snare"],
       "level": 1,
@@ -8941,7 +8941,7 @@
     {
       "id": "e7-hihat",
       "name": "Hi-hat",
-      "ref": "In the style of the TR-808 hi-hat",
+      "ref": "Crisp ticks of high, resonant noise in sixteenths, close to a TR-808 hi-hat",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "hat"],
       "level": 1,
@@ -9005,7 +9005,7 @@
     {
       "id": "e7-tom-fill",
       "name": "Tom Fill",
-      "ref": "In the style of 1980s electronic drums",
+      "ref": "Pitch-swept electronic toms tumbling down a fill: the “pew” toms of 1980s pop",
       "artist": "80s electronic drums",
       "tags": ["perc", "drum", "80s"],
       "level": 1,
@@ -9064,7 +9064,7 @@
     {
       "id": "e7-clap",
       "name": "Hand Clap",
-      "ref": "In the style of the TR-808 hand clap",
+      "ref": "Noise flammed by a very short echo into the papery clap of the TR-808",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "clap"],
       "level": 2,
@@ -9127,7 +9127,7 @@
     {
       "id": "e7-cowbell",
       "name": "Cowbell",
-      "ref": "In the style of the 808 cowbell",
+      "ref": "Two inharmonic squares, short and clanky, as the 808 drum machine’s cowbell is made",
       "artist": "Various",
       "tags": ["perc", "drum", "80s"],
       "level": 1,
@@ -9190,7 +9190,7 @@
     {
       "id": "e7-congas",
       "name": "Conga",
-      "ref": "In the style of Afro-Cuban congas",
+      "ref": "Round, ringing hand-drum tones in an Afro-Cuban conga pattern",
       "artist": "Afro-Cuban percussion",
       "tags": ["perc", "drum", "latin"],
       "level": 2,
@@ -9248,7 +9248,7 @@
     {
       "id": "e7-claves",
       "name": "Claves",
-      "ref": "In the style of Cuban son claves",
+      "ref": "Short, high, woody clicks tapping out the son clave",
       "artist": "Cuban son",
       "tags": ["perc", "latin"],
       "level": 1,
@@ -9303,7 +9303,7 @@
     {
       "id": "e7-metal-perc",
       "name": "Metallic Hit",
-      "ref": "In the style of industrial metal percussion",
+      "ref": "Sync clang with a scrape of noise, struck like scrap metal in industrial music",
       "artist": "Industrial",
       "tags": ["perc", "industrial", "sync"],
       "level": 3,
@@ -9369,7 +9369,7 @@
     {
       "id": "e7-wurli",
       "name": "Tremolo Keys",
-      "ref": "In the style of a vintage reed electric piano",
+      "ref": "Barking reed electric piano with a gentle tremolo, at home in 1960s soul",
       "artist": "Various",
       "tags": ["keys", "piano", "tremolo"],
       "level": 2,
@@ -9451,7 +9451,7 @@
     {
       "id": "e7-celesta",
       "name": "Celesta",
-      "ref": "In the style of late-Romantic celesta",
+      "ref": "Soft, high, bell-like notes from the steel plates of a late-Romantic orchestra’s celesta",
       "artist": "Romantic",
       "tags": ["keys", "bell", "classical"],
       "level": 1,
@@ -9513,7 +9513,7 @@
     {
       "id": "e7-music-box",
       "name": "Music Box",
-      "ref": "In the style of the mechanical music box",
+      "ref": "Tiny glassy notes plucked from a steel comb: a wind-up music box",
       "artist": "Music box",
       "tags": ["keys", "bell", "toy"],
       "level": 1,
@@ -9583,7 +9583,7 @@
     {
       "id": "e7-gospel-organ",
       "name": "Gospel Organ",
-      "ref": "In the style of gospel organ",
+      "ref": "Full, swirling church organ with a fast vibrato standing in for the rotating speaker of gospel",
       "artist": "Gospel",
       "tags": ["keys", "organ", "gospel"],
       "level": 2,
@@ -9666,7 +9666,7 @@
     {
       "id": "e7-rave-stab",
       "name": "Rave Organ Stab",
-      "ref": "In the style of early-1990s rave",
+      "ref": "Short minor-chord organ hit with a pitch blip, as early-1990s hardcore rave stabbed it",
       "artist": "Rave",
       "tags": ["keys", "rave", "90s"],
       "level": 2,
@@ -9749,7 +9749,7 @@
     {
       "id": "e7-hoover",
       "name": "Hoover",
-      "ref": "In the style of early-1990s rave",
+      "ref": "Dark, swooping unison growl that bends down into each note: the rave “hoover”",
       "artist": "Rave",
       "tags": ["lead", "rave", "90s"],
       "level": 3,
@@ -9824,7 +9824,7 @@
     {
       "id": "e7-jupiter-pad",
       "name": "Lush 80s Pad",
-      "ref": "In the style of mid-1980s polysynth pads",
+      "ref": "Glossy, wide pulse-and-saw chords with a slow bloom, the polysynth sheen of mid-1980s pop",
       "artist": "Various",
       "tags": ["pad", "80s", "lush"],
       "level": 2,
@@ -9914,7 +9914,7 @@
     {
       "id": "e7-space-pad",
       "name": "Space Pad",
-      "ref": "In the style of space-ambient pads",
+      "ref": "Soft pad whose filter steps somewhere new now and then, each step echoing so the chord twinkles",
       "artist": "Space ambient",
       "tags": ["pad", "ambient", "sample and hold"],
       "level": 3,
@@ -9984,7 +9984,7 @@
     {
       "id": "e7-metal-bell-lead",
       "name": "Industrial Bell Lead",
-      "ref": "In the style of Depeche Mode",
+      "ref": "Cold, clangy sync melody struck like metal: Depeche Mode’s sampled-metal tunes on an analogue synth",
       "artist": "Depeche Mode",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 2,
@@ -10051,7 +10051,7 @@
     {
       "id": "e7-sixteenth-octave-bass",
       "name": "Sequenced Octave Bass",
-      "ref": "In the style of New Order",
+      "ref": "Relentless sixteenths jumping octaves, the sequenced pulse under New Order’s dance-rock",
       "artist": "New Order",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -10116,7 +10116,7 @@
     {
       "id": "e7-sweet-dreams-bass",
       "name": "Two-Part Sequence",
-      "ref": "In the style of Eurythmics",
+      "ref": "A dark sequenced riff answered an octave up, the two-line shape of Eurythmics’ “Sweet Dreams”",
       "artist": "Eurythmics",
       "tags": ["seq", "synth-pop", "80s"],
       "level": 2,
@@ -10191,7 +10191,7 @@
     {
       "id": "e7-computer-melody",
       "name": "Computer Melody",
-      "ref": "In the style of Kraftwerk",
+      "ref": "Dry, exact square melody with no vibrato at all: Kraftwerk’s computer music in a few notes",
       "artist": "Kraftwerk",
       "tags": ["lead", "electronic", "minimal"],
       "level": 1,
@@ -10253,7 +10253,7 @@
     {
       "id": "e7-miami-lead",
       "name": "Miami Lead",
-      "ref": "In the style of Jan Hammer — “Miami Vice”",
+      "ref": "Bending, guitar-minded saw solo with vibrato and a big echo, as Jan Hammer played on “Miami Vice”",
       "artist": "Jan Hammer",
       "tags": ["lead", "tv", "80s"],
       "level": 2,
@@ -10319,7 +10319,7 @@
     {
       "id": "e7-chase-bass",
       "name": "Midnight Chase",
-      "ref": "In the style of Giorgio Moroder — “Chase”",
+      "ref": "Giorgio Moroder’s “Chase” pulse: dark sequenced sixteenths, root and octave, thickened by echoes",
       "artist": "Giorgio Moroder",
       "tags": ["bass", "disco", "70s"],
       "level": 2,
@@ -10396,7 +10396,7 @@
     {
       "id": "e7-eighties-arp",
       "name": "Retro Arpeggio",
-      "ref": "In the style of S U R V I V E — “Stranger Things”",
+      "ref": "Rising major-seventh saw arpeggio glowing through echoes, near the “Stranger Things” theme by S U R V I V E",
       "artist": "S U R V I V E",
       "tags": ["seq", "synthwave", "arpeggio"],
       "level": 2,
@@ -10480,7 +10480,7 @@
     {
       "id": "e7-blinding-riff",
       "name": "Neon Riff",
-      "ref": "In the style of The Weeknd — “Blinding Lights”",
+      "ref": "Bright detuned saw hook with plenty of echo, the 1980s-revival riff of The Weeknd’s “Blinding Lights”",
       "artist": "The Weeknd",
       "tags": ["lead", "synthwave", "pop"],
       "level": 2,
@@ -10549,7 +10549,7 @@
     {
       "id": "e7-robot-funk",
       "name": "Robot Funk Lead",
-      "ref": "In the style of French house",
+      "ref": "Gliding, vocal sync lead that opens on every note, the robot funk of French house",
       "artist": "French house",
       "tags": ["lead", "house", "sync"],
       "level": 3,
@@ -10616,7 +10616,7 @@
     {
       "id": "e7-midnight-pad",
       "name": "Huge Retro Chords",
-      "ref": "In the style of M83",
+      "ref": "Oversized, chorused chords blooming slowly, as euphoric as M83 at full stretch",
       "artist": "M83",
       "tags": ["pad", "synthwave", "big"],
       "level": 2,
@@ -10705,7 +10705,7 @@
     {
       "id": "e7-psych-lead",
       "name": "Psychedelic Lead",
-      "ref": "In the style of Tame Impala",
+      "ref": "Warbling, heavily chorused lead bending lazily, the woozy synth of Tame Impala’s later records",
       "artist": "Tame Impala",
       "tags": ["lead", "psychedelic", "chorus"],
       "level": 2,
@@ -10769,7 +10769,7 @@
     {
       "id": "e7-indie-pluck",
       "name": "Indie Synth Pluck",
-      "ref": "In the style of CHVRCHES",
+      "ref": "Glassy, punchy chord plucks in a driving rhythm, as CHVRCHES use them in their indie synth-pop",
       "artist": "CHVRCHES",
       "tags": ["pluck", "synth-pop", "indie"],
       "level": 1,
@@ -10851,7 +10851,7 @@
     {
       "id": "e7-olympic-arp",
       "name": "Triumphant Arpeggio",
-      "ref": "In the style of Vangelis — “Chariots of Fire”",
+      "ref": "Vangelis’s “Chariots of Fire” in outline: a bright repeated pulse with soft brass swelling above",
       "artist": "Vangelis",
       "tags": ["keys", "film", "arpeggio"],
       "level": 2,
@@ -10930,7 +10930,7 @@
     {
       "id": "e7-horror-ostinato",
       "name": "Horror Ostinato",
-      "ref": "In the style of John Carpenter",
+      "ref": "John Carpenter’s kind of dread: a pulsing synth-bass ostinato under a slow, dark minor chord",
       "artist": "John Carpenter",
       "tags": ["bass", "horror", "film"],
       "level": 2,
@@ -11006,12 +11006,12 @@
     {
       "id": "e7-giallo-arp",
       "name": "Giallo Arpeggio",
-      "ref": "In the style of Goblin — “Suspiria”",
-      "artist": "Goblin",
+      "ref": "Fast minor arpeggio on an eerie bell tone, echoing through the world of 1970s Italian giallo films",
+      "artist": "Italian horror scores",
       "tags": ["seq", "horror", "70s"],
       "level": 2,
       "blurb": "A fast, eerie, minor arpeggio with a bell-like tone and echoes: the prog-rock horror of 1970s Italian giallo films.",
-      "how": "Goblin’s horror themes are fast, repeating minor arpeggios on bell-like keyboards over darkness. A triangle with a quiet sync overtone, a ringing decay and echo.",
+      "how": "1970s Italian horror themes run fast, repeating minor arpeggios on bell-like keyboards over darkness. A triangle with a quiet sync overtone, a ringing decay and echo.",
       "phrase": {
         "bpm": 140,
         "loop": true,
@@ -11080,7 +11080,7 @@
     {
       "id": "e7-minneapolis-stab",
       "name": "Minneapolis Stab",
-      "ref": "In the style of Prince — “1999”",
+      "ref": "Brassy synth stabs where the horn section would go: the Minneapolis sound of Prince’s “1999”",
       "artist": "Prince",
       "tags": ["brass", "funk", "80s"],
       "level": 2,
@@ -11147,7 +11147,7 @@
     {
       "id": "e7-new-wave-riff",
       "name": "New-Wave Riff",
-      "ref": "In the style of a-ha — “Take On Me”",
+      "ref": "Bright, plucky saw-and-square riff that bounces like the hook of a-ha’s “Take On Me”",
       "artist": "a-ha",
       "tags": ["lead", "new-wave", "80s"],
       "level": 1,
@@ -11209,7 +11209,7 @@
     {
       "id": "e7-vince-bass",
       "name": "Synth-Pop Pluck Bass",
-      "ref": "In the style of Vince Clarke",
+      "ref": "Clean, cheerful sequenced bass with every note distinct, as Vince Clarke programmed his lines",
       "artist": "Vince Clarke",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -11276,7 +11276,7 @@
     {
       "id": "e7-airport",
       "name": "Airport Ambience",
-      "ref": "In the style of Brian Eno — “Music for Airports”",
+      "ref": "Sparse, soft notes ringing into long echoes, never quite repeating, as on Brian Eno’s “Music for Airports”",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "delay"],
       "level": 2,
@@ -11340,7 +11340,7 @@
     {
       "id": "e7-kosmische",
       "name": "Kosmische Drift",
-      "ref": "In the style of Klaus Schulze",
+      "ref": "A chord held for minutes while a resonant filter wanders: Klaus Schulze’s cosmic drift",
       "artist": "Klaus Schulze",
       "tags": ["pad", "berlin", "70s"],
       "level": 3,
@@ -11409,7 +11409,7 @@
     {
       "id": "e7-fusion-lead",
       "name": "Fusion Lead",
-      "ref": "In the style of 1970s jazz fusion",
+      "ref": "Fast, fluid lead with quick slides and a vocal filter for 1970s jazz-fusion solos",
       "artist": "Jazz fusion",
       "tags": ["lead", "jazz", "70s"],
       "level": 2,
@@ -11478,7 +11478,7 @@
     {
       "id": "e7-detroit-strings",
       "name": "Detroit Strings",
-      "ref": "In the style of Detroit techno",
+      "ref": "Soaring string-machine chords stabbed against the beat, as Detroit techno set them",
       "artist": "Detroit techno",
       "tags": ["strings", "techno", "stab"],
       "level": 2,
@@ -11555,7 +11555,7 @@
     {
       "id": "e7-chicago-chords",
       "name": "Deep House Chords",
-      "ref": "In the style of Chicago deep house",
+      "ref": "Warm minor-ninth chords with a soft pluck, swung lazily in Chicago deep house",
       "artist": "Deep house",
       "tags": ["keys", "house", "chord"],
       "level": 2,
@@ -11635,7 +11635,7 @@
     {
       "id": "e7-lofi-keys",
       "name": "Lo-fi Keys",
-      "ref": "In the style of lo-fi hip-hop",
+      "ref": "Dusty, dull keys warbling slightly out of tune, as if sampled off old tape for a lo-fi beat",
       "artist": "Lo-fi hip-hop",
       "tags": ["keys", "lo-fi", "hip-hop"],
       "level": 2,
@@ -11710,7 +11710,7 @@
     {
       "id": "e7-chillwave-pad",
       "name": "Chillwave Pad",
-      "ref": "In the style of chillwave",
+      "ref": "Hazy, washed-out pad that wobbles and smears, straight from early-2010s chillwave",
       "artist": "Chillwave",
       "tags": ["pad", "chillwave", "lo-fi"],
       "level": 2,
@@ -11787,7 +11787,7 @@
     {
       "id": "e7-synthwave-bass",
       "name": "Synthwave Bass",
-      "ref": "In the style of synthwave",
+      "ref": "Bright, pumping sixteenth-note bass for a synthwave night drive",
       "artist": "Synthwave",
       "tags": ["bass", "synthwave", "retro"],
       "level": 1,
@@ -11854,7 +11854,7 @@
     {
       "id": "e7-pumping-pad",
       "name": "Pumping Pad",
-      "ref": "In the style of French-house pumping pads",
+      "ref": "A pad that ducks on every beat and swells back: French house’s sidechain pump, made by an LFO",
       "artist": "French house",
       "tags": ["pad", "house", "lfo"],
       "level": 2,
@@ -11926,7 +11926,7 @@
     {
       "id": "e7-trance-gate",
       "name": "Trance Gate",
-      "ref": "In the style of trance gated pads",
+      "ref": "Held chord switched on and off in sixteenths: the stuttering trance gate",
       "artist": "Trance",
       "tags": ["pad", "trance", "rhythm"],
       "level": 2,
@@ -11992,7 +11992,7 @@
     {
       "id": "e7-sitar",
       "name": "Synth Sitar",
-      "ref": "In the style of the Indian sitar",
+      "ref": "Buzzing, twangy pluck bending over a drone, a synth echo of the Indian sitar",
       "artist": "Indian classical",
       "tags": ["pluck", "world", "india"],
       "level": 3,
@@ -12064,7 +12064,7 @@
     {
       "id": "e7-bagpipes",
       "name": "Bagpipes",
-      "ref": "In the style of the Great Highland bagpipe",
+      "ref": "Loud, nasal chanter tune over fixed drones, as a Great Highland bagpipe plays",
       "artist": "Highland pipes",
       "tags": ["lead", "world", "scotland"],
       "level": 2,
@@ -12123,7 +12123,7 @@
     {
       "id": "e7-accordion",
       "name": "Musette Accordion",
-      "ref": "In the style of French musette",
+      "ref": "Reedy chords with a fast, wet shimmer from reeds tuned apart: a Parisian musette accordion",
       "artist": "French musette",
       "tags": ["keys", "world", "reed"],
       "level": 1,
@@ -12193,7 +12193,7 @@
     {
       "id": "e7-harmonica",
       "name": "Harmonica",
-      "ref": "In the style of blues harmonica",
+      "ref": "Wailing reedy blues line, bent and shaken by hand like a harmonica",
       "artist": "Blues",
       "tags": ["lead", "blues", "reed"],
       "level": 2,
@@ -12260,7 +12260,7 @@
     {
       "id": "e7-steel-drum",
       "name": "Steel Drum",
-      "ref": "In the style of Trinidadian steelband",
+      "ref": "Round, singing struck note with a metallic ring, the steel pan of a Trinidadian steelband",
       "artist": "Steelband",
       "tags": ["keys", "world", "mallet"],
       "level": 2,
@@ -12324,7 +12324,7 @@
     {
       "id": "e7-nylon-guitar",
       "name": "Nylon Guitar",
-      "ref": "In the style of bossa-nova nylon guitar",
+      "ref": "Soft, warm plucked string picking a pattern on a bossa-nova nylon guitar",
       "artist": "Bossa nova",
       "tags": ["pluck", "guitar", "acoustic"],
       "level": 1,
@@ -12388,7 +12388,7 @@
     {
       "id": "e7-banjo",
       "name": "Banjo",
-      "ref": "In the style of bluegrass banjo",
+      "ref": "Bright, twangy, fast-decaying rolls from a bluegrass banjo",
       "artist": "Bluegrass",
       "tags": ["pluck", "folk", "bright"],
       "level": 2,
@@ -12455,7 +12455,7 @@
     {
       "id": "e7-glass-harmonica",
       "name": "Glass Harmonica",
-      "ref": "In the style of the 18th-century glass harmonica",
+      "ref": "Pure, high tones that swell slowly, as a wet finger draws them from an 18th-century glass harmonica",
       "artist": "Classical",
       "tags": ["pad", "glass", "ethereal"],
       "level": 2,
@@ -12518,7 +12518,7 @@
     {
       "id": "e7-cathedral-organ",
       "name": "Cathedral Organ",
-      "ref": "In the style of the cathedral pipe organ",
+      "ref": "Majestic pipe organ with octave and twelfth stops ringing through a cathedral’s echo",
       "artist": "Church organ",
       "tags": ["keys", "organ", "church"],
       "level": 2,
@@ -12587,7 +12587,7 @@
     {
       "id": "e7-noise-riser",
       "name": "Noise Riser",
-      "ref": "In the style of EDM build-up risers",
+      "ref": "Whoosh of noise climbing to a resonant peak, building to the drop in EDM",
       "artist": "EDM",
       "tags": ["fx", "riser", "edm"],
       "level": 1,
@@ -12642,7 +12642,7 @@
     {
       "id": "e7-downlifter",
       "name": "Falling Sweep",
-      "ref": "In the style of EDM downlifters",
+      "ref": "Noise and pitch falling away after the impact: an EDM downlifter",
       "artist": "EDM",
       "tags": ["fx", "riser", "edm"],
       "level": 1,
@@ -12693,7 +12693,7 @@
     {
       "id": "e7-sync-pad",
       "name": "Sync Pad",
-      "ref": "In the style of synthwave sync pads",
+      "ref": "Each voice sweeping its own vowel-like sync harmonics in a slowly moving synthwave pad",
       "artist": "Synthwave",
       "tags": ["pad", "sync", "evolving"],
       "level": 3,
@@ -12767,7 +12767,7 @@
     {
       "id": "e7-kb-vibrato",
       "name": "Key-Tracked Vibrato",
-      "ref": "In the style of 1970s synth soloists",
+      "ref": "Vibrato that quickens on higher notes, as a 1970s synth soloist would play it",
       "artist": "70s synth soloists",
       "tags": ["lead", "lfo", "basics"],
       "level": 3,
@@ -12823,7 +12823,7 @@
     {
       "id": "e7-velocity-brass",
       "name": "Touch Brass",
-      "ref": "In the style of 1980s polysynth brass",
+      "ref": "Polysynth brass that stays mellow when played softly and blares when hit hard",
       "artist": "Prophet-style brass",
       "tags": ["brass", "velocity", "basics"],
       "level": 2,
@@ -12903,7 +12903,7 @@
     {
       "id": "e7-wheel-growl",
       "name": "Mod Wheel Growl",
-      "ref": "In the style of dubstep wobble bass",
+      "ref": "Fat bass waiting for the mod wheel to add a fast dubstep growl",
       "artist": "Dubstep",
       "tags": ["bass", "lfo", "wheel"],
       "level": 2,
@@ -12962,7 +12962,7 @@
     {
       "id": "e7-sub-lead",
       "name": "Sub Octave Lead",
-      "ref": "In the style of synth-pop leads",
+      "ref": "Thick synth-pop lead with a square sub doubling every note an octave down",
       "artist": "Synth-pop",
       "tags": ["lead", "sub", "basics"],
       "level": 1,
@@ -13014,7 +13014,7 @@
     {
       "id": "e7-ensemble-choir",
       "name": "Ensemble Choir",
-      "ref": "In the style of darkwave choirs",
+      "ref": "Hushed, dark “oo” choir with a breath of air, sung into darkwave gloom",
       "artist": "Darkwave",
       "tags": ["pad", "choir", "dark"],
       "level": 2,
@@ -13089,7 +13089,7 @@
     {
       "id": "e7-ice-pad",
       "name": "Ice Pad",
-      "ref": "In the style of cold ambient pads",
+      "ref": "Cold, high pad with a glassy resonant edge that glitters as it holds",
       "artist": "Ambient",
       "tags": ["pad", "cold", "ambient"],
       "level": 2,
@@ -13164,7 +13164,7 @@
     {
       "id": "e7-impact-boom",
       "name": "Impact Boom",
-      "ref": "In the style of film-trailer impacts",
+      "ref": "Low, pitch-dropping boom with a crack of noise and a long tail for a trailer hit",
       "artist": "Trailer scores",
       "tags": ["fx", "impact", "film"],
       "level": 1,
@@ -13217,7 +13217,7 @@
     {
       "id": "e7-chord-memory",
       "name": "Ninth Chord Stab",
-      "ref": "In the style of deep-house chord stabs",
+      "ref": "Two notes a minor seventh apart under every key, turning a melody into deep-house chord stabs",
       "artist": "Deep house",
       "tags": ["keys", "chord", "house"],
       "level": 2,
@@ -13273,7 +13273,7 @@
     {
       "id": "e7-tape-echo-lead",
       "name": "Tape Echo Lead",
-      "ref": "In the style of dub reggae tape echo",
+      "ref": "Short melody thrown into echoes that wobble and keep repeating, as on a dub tape delay",
       "artist": "Dub",
       "tags": ["lead", "delay", "dub"],
       "level": 2,
@@ -13338,7 +13338,7 @@
     {
       "id": "e7-pluck-pad",
       "name": "Pluck into Pad",
-      "ref": "In the style of future-bass pluck pads",
+      "ref": "Bright pluck that settles into a soft held pad on every chord, a future-bass hybrid",
       "artist": "Future bass",
       "tags": ["pad", "pluck", "hybrid"],
       "level": 2,
@@ -13410,7 +13410,7 @@
     {
       "id": "e7-bitter-fifths-bass",
       "name": "Fifths Bass",
-      "ref": "In the style of hard-rock bass in fifths",
+      "ref": "Bass line in parallel fifths, heavy as a hard-rock power chord",
       "artist": "Hard rock",
       "tags": ["bass", "fifths", "rock"],
       "level": 1,
@@ -13469,7 +13469,7 @@
     {
       "id": "e7-hollow-pad",
       "name": "Hollow Pad",
-      "ref": "In the style of ambient hollow pads",
+      "ref": "Hollow, woody pad of odd harmonics only, like a consort of recorders",
       "artist": "Ambient",
       "tags": ["pad", "soft", "hollow"],
       "level": 1,
@@ -13534,7 +13534,7 @@
     {
       "id": "e7-stab-and-echo",
       "name": "Rave Echo Stab",
-      "ref": "In the style of 1990s rave",
+      "ref": "One bright chord hit turned into a whole 1990s rave riff by ping-pong echoes",
       "artist": "Rave",
       "tags": ["keys", "rave", "delay"],
       "level": 2,
@@ -13601,7 +13601,7 @@
     {
       "id": "e7-soft-square-bass",
       "name": "Soft Square Bass",
-      "ref": "In the style of synth-pop square bass",
+      "ref": "Round, hollow square bass with a still filter, gentle under quiet synth-pop",
       "artist": "Synth-pop",
       "tags": ["bass", "soft", "basics"],
       "level": 1,
@@ -13654,7 +13654,7 @@
     {
       "id": "e7-bright-saw-chords",
       "name": "Bright Saw Chords",
-      "ref": "In the style of 1980s synth-pop chords",
+      "ref": "Two saws through a wide-open filter: the raw, buzzing chords of 1980s synth-pop",
       "artist": "80s synth-pop",
       "tags": ["keys", "basics", "bright"],
       "level": 1,
@@ -13715,7 +13715,7 @@
     {
       "id": "e7-slow-attack-lead",
       "name": "Bowed Lead",
-      "ref": "In the style of ambient bowed leads",
+      "ref": "Every note swells in slowly, as if bowed, for long ambient lines",
       "artist": "Ambient",
       "tags": ["lead", "soft", "strings"],
       "level": 1,
@@ -13767,7 +13767,7 @@
     {
       "id": "e7-pulse-pluck-arp",
       "name": "Pulse Arpeggio",
-      "ref": "In the style of 1970s Berlin-school sequences",
+      "ref": "Thin, clicky pulse plucks racing through a fast broken chord, as 1970s Berlin School sequencers ran",
       "artist": "Berlin school",
       "tags": ["pluck", "arpeggio", "electronic"],
       "level": 1,
@@ -13834,7 +13834,7 @@
     {
       "id": "e7-octave-lead",
       "name": "Octave Lead",
-      "ref": "In the style of synthwave octave leads",
+      "ref": "Bright synthwave lead doubled an octave above for a ringing edge",
       "artist": "Synthwave",
       "tags": ["lead", "octave", "bright"],
       "level": 1,
@@ -13887,7 +13887,7 @@
     {
       "id": "e7-random-filter-pad",
       "name": "Random Filter Pad",
-      "ref": "In the style of Berlin-school random filter patterns",
+      "ref": "A held chord whose filter leaps somewhere new on every eighth note, a Berlin School habit",
       "artist": "Berlin school",
       "tags": ["pad", "sample and hold", "rhythm"],
       "level": 2,
@@ -13951,7 +13951,7 @@
     {
       "id": "e7-soft-brass-pad",
       "name": "Brass Pad",
-      "ref": "In the style of 1980s polysynth brass pads",
+      "ref": "Halfway between horns and pad: warm polysynth brass chords that swell gently",
       "artist": "Polysynth pads",
       "tags": ["brass", "pad", "soft"],
       "level": 1,
@@ -14017,7 +14017,7 @@
     {
       "id": "e7-dark-pluck",
       "name": "Dark Pluck",
-      "ref": "In the style of minimal techno plucks",
+      "ref": "Short, dark, muted stab of the sort minimal techno is built from",
       "artist": "Minimal techno",
       "tags": ["pluck", "dark", "minimal"],
       "level": 1,
@@ -14077,7 +14077,7 @@
     {
       "id": "e7-vowel-lead",
       "name": "Vowel Lead",
-      "ref": "In the style of 1980s synth-funk talking leads",
+      "ref": "Talking lead whose vowel shifts slowly from “oo” to “ah”, heard in 1980s synth funk",
       "artist": "Synth-funk",
       "tags": ["lead", "vocal", "filter"],
       "level": 2,
@@ -14136,7 +14136,7 @@
     {
       "id": "e7-sine-keys",
       "name": "Soft Sine Keys",
-      "ref": "In the style of lo-fi hip-hop keys",
+      "ref": "Pure, soft, gently decaying keys, almost a sine-wave piano for lo-fi hip-hop",
       "artist": "Lo-fi hip-hop",
       "tags": ["keys", "soft", "basics"],
       "level": 1,

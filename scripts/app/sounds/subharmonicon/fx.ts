@@ -9,7 +9,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-trautonium-birds',
     name: 'Birds',
-    ref: 'In the style of Oskar Sala’s bird sounds for The Birds (1963)',
+    ref: 'Screeching, chattering cries on restless rhythms, a rough sketch of Oskar Sala’s birds for The Birds',
     artist: 'Oskar Sala',
     tags: ['fx', 'trautonium'],
     level: 3,
@@ -82,7 +82,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-two-tone-siren',
     name: 'Two-Tone Siren',
-    ref: 'In the style of a European police siren',
+    ref: 'Two brassy tones a fourth apart swapping every beat without a break: a European police siren',
     artist: 'Sound effects',
     tags: ['fx'],
     level: 1,
@@ -143,7 +143,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-sonar',
     name: 'Sonar',
-    ref: 'In the style of a submarine’s sonar',
+    ref: 'A pure ping ringing out into the deep once a bar, with a faint return: submarine sonar',
     artist: 'Sound effects',
     tags: ['fx'],
     level: 1,
@@ -197,7 +197,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-bubbles',
     name: 'Bubbles',
-    ref: 'In the style of the BBC Radiophonic Workshop',
+    ref: 'Rising, plopping bubbles from a pinged resonant filter, a BBC Radiophonic Workshop staple',
     artist: 'BBC Radiophonic Workshop',
     tags: ['fx', 'patch'],
     level: 2,
@@ -251,7 +251,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-laser-zaps',
     name: 'Laser Zaps',
-    ref: 'In the style of 1980s arcade sound effects',
+    ref: 'Pew-pew: pitches falling fast on dotted eighths, straight out of a 1980s arcade',
     artist: 'Arcade games',
     tags: ['fx', 'patch'],
     level: 1,
@@ -308,7 +308,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-clockwork',
     name: 'Clockwork',
-    ref: 'In the style of a clock shop',
+    ref: 'Tick, tock and tiny gears at three rates at once, a clock shop on a quiet afternoon',
     artist: 'Sound effects',
     tags: ['fx', 'perc'],
     level: 1,
@@ -364,7 +364,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-wobble-rates',
     name: 'Wobble Rates',
-    ref: 'In the style of dubstep wobble bass',
+    ref: 'A held bass whose filter wobbles at a new rate every beat, as a dubstep producer automates an LFO',
     artist: 'Dubstep',
     tags: ['bass', 'patch', 'wobble'],
     level: 3,
@@ -422,7 +422,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-geiger',
     name: 'Geiger Counter',
-    ref: 'In the style of a Geiger counter',
+    ref: 'Irregular clicks from four prime rhythms, random-sounding as a Geiger counter near something hot',
     artist: 'Sound effects',
     tags: ['fx', 'perc'],
     level: 1,
@@ -479,7 +479,7 @@ export const FX: SoundSpec[] = [
   {
     id: 'shc-robot-voice',
     name: 'Robot Voice',
-    ref: 'In the style of a 1950s film robot',
+    ref: 'A buzzing monotone that talks through shifting vowels, the voice of a 1950s film robot',
     artist: 'Sound effects',
     tags: ['fx', 'patch'],
     level: 2,

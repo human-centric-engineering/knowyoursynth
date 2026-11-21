@@ -5,7 +5,7 @@
     {
       "id": "acid-scream",
       "name": "Screaming Acid Bass",
-      "ref": "In the style of Aphex Twin — early ambient-techno bass lines",
+      "ref": "A snarling bass whose resonant filter squeals shut on every note, as on Aphex Twin’s early acid tracks",
       "artist": "Richard D. James",
       "tags": ["bass", "techno", "90s"],
       "level": 1,
@@ -92,7 +92,7 @@
     {
       "id": "ms20-lead",
       "name": "Two-Filter Lead",
-      "ref": "In the style of Vangelis — Blade Runner era leads",
+      "ref": "Two filters squeezed into a narrow, vocal band: a singing lead close to Vangelis’s Blade Runner solos",
       "artist": "Vangelis",
       "tags": ["lead", "soundtrack", "80s"],
       "level": 1,
@@ -184,7 +184,7 @@
     {
       "id": "ring-bell",
       "name": "Ring Mod Bell",
-      "ref": "In the style of 1970s sci-fi television stings",
+      "ref": "A metallic, inharmonic bell that rings out and fades, the sting of 1970s sci-fi television",
       "artist": "Classic technique",
       "tags": ["perc", "fx", "70s"],
       "level": 2,
@@ -266,7 +266,7 @@
     {
       "id": "sh-burble",
       "name": "Random Step Burble",
-      "ref": "In the style of 1960s and 70s computer sound effects",
+      "ref": "Hold one key and a random melody chatters away by itself, like a 1960s computer thinking",
       "artist": "Classic technique",
       "tags": ["fx", "ambient", "70s"],
       "level": 2,
@@ -339,7 +339,7 @@
     {
       "id": "delayed-sweep",
       "name": "Delayed Pitch Sweep",
-      "ref": "In the style of early electronic library music",
+      "ref": "Each note waits, then slides upward part way through, a trick of early electronic library music",
       "artist": "Classic technique",
       "tags": ["fx", "lead", "70s"],
       "level": 2,
@@ -421,7 +421,7 @@
     {
       "id": "noise-wind",
       "name": "Wind and Weather",
-      "ref": "In the style of 1970s radio drama atmospheres",
+      "ref": "No oscillators, just a resonant band of noise gusting like the wind in a 1970s radio drama",
       "artist": "Classic technique",
       "tags": ["fx", "ambient", "70s"],
       "level": 1,
@@ -494,7 +494,7 @@
     {
       "id": "rubber-funk",
       "name": "Rubber Funk Bass",
-      "ref": "In the style of Daft Punk — Homework-era basslines",
+      "ref": "A round, bouncing bass with a soft quack on every note, close to Daft Punk’s Homework basslines",
       "artist": "Daft Punk",
       "tags": ["bass", "house", "90s"],
       "level": 1,
@@ -588,7 +588,7 @@
     {
       "id": "wobble-bass",
       "name": "Wobble Bass",
-      "ref": "In the style of late-2000s dubstep",
+      "ref": "One held bass note growling open and shut in tempo, the wobble of late-2000s dubstep",
       "artist": "Classic technique",
       "tags": ["bass", "dubstep", "00s"],
       "level": 1,
@@ -672,7 +672,7 @@
     {
       "id": "filter-kick",
       "name": "Filter Kick Drum",
-      "ref": "In the style of 1980s electro and 1990s techno",
+      "ref": "A deep kick made from the filter alone, its pitch dropping fast, as 1980s electro and 1990s techno used",
       "artist": "Classic technique",
       "tags": ["perc", "techno", "80s"],
       "level": 2,
@@ -761,7 +761,7 @@
     {
       "id": "noise-snare",
       "name": "Noise Snare",
-      "ref": "In the style of early drum machines and electro",
+      "ref": "A short, bright crack of filtered noise, the snare of early drum machines and electro",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 1,
@@ -839,7 +839,7 @@
     {
       "id": "laser-zap",
       "name": "Laser Zap",
-      "ref": "In the style of 1970s and 80s arcade machines",
+      "ref": "A whistle that falls out of the top of the keyboard: the zap of 1970s and 1980s arcade machines",
       "artist": "Classic technique",
       "tags": ["fx", "games", "70s"],
       "level": 1,
@@ -926,7 +926,7 @@
     {
       "id": "vocal-pad",
       "name": "Vocal Band Pad",
-      "ref": "In the style of 1970s library and television music",
+      "ref": "A slow, breathy pad with a voice-like hump in the middle, for 1970s library and TV music",
       "artist": "Classic technique",
       "tags": ["pad", "ambient", "70s"],
       "level": 2,
@@ -1019,7 +1019,7 @@
     {
       "id": "fifth-stab",
       "name": "Hollow Fifth Stab",
-      "ref": "In the style of Detroit techno chord stabs",
+      "ref": "A short, hollow stab with a fifth built in, so one finger plays a Detroit techno chord",
       "artist": "Classic technique",
       "tags": ["keys", "techno", "90s"],
       "level": 1,
@@ -1109,7 +1109,7 @@
     {
       "id": "sh-melody",
       "name": "Stepped Bass Sequence",
-      "ref": "In the style of Tangerine Dream — sequencer-driven albums",
+      "ref": "A pattern that wanders over a held root by itself, Tangerine Dream’s sequencer albums on one key",
       "artist": "Tangerine Dream",
       "tags": ["seq", "ambient", "70s"],
       "level": 3,
@@ -1198,7 +1198,7 @@
     {
       "id": "feedback-howl",
       "name": "Feedback Howl",
-      "ref": "In the style of industrial and noise records",
+      "ref": "The synth listens to itself until the filter chases its own howl, as on industrial and noise records",
       "artist": "Classic technique",
       "tags": ["fx", "industrial", "90s"],
       "level": 3,
@@ -1293,7 +1293,7 @@
     {
       "id": "tremolo-drone",
       "name": "Held Drone with Tremolo",
-      "ref": "In the style of 1970s minimal and drone records",
+      "ref": "A continuous tone that swells and fades by itself, built for 1970s minimal and drone records",
       "artist": "Classic technique",
       "tags": ["drone", "ambient", "70s"],
       "level": 2,
@@ -1388,7 +1388,7 @@
     {
       "id": "growl-fm",
       "name": "Audio-Rate Growl",
-      "ref": "In the style of industrial synth textures",
+      "ref": "Pitch shaken faster than the ear can follow, so a lead turns harsh and metallic, for industrial textures",
       "artist": "Classic technique",
       "tags": ["lead", "industrial", "90s"],
       "level": 3,
@@ -1477,7 +1477,7 @@
     {
       "id": "oizo-flat-bass",
       "name": "Fat Buzzing Bass",
-      "ref": "In the style of Mr Oizo — \"Flat Beat\"",
+      "ref": "The thick, buzzing bass of Mr Oizo’s \"Flat Beat\", sitting low and refusing to move",
       "artist": "Mr Oizo",
       "tags": ["bass", "electro", "90s"],
       "level": 1,
@@ -1578,7 +1578,7 @@
     {
       "id": "prodigy-fuzz-bass",
       "name": "Distorted Riff Bass",
-      "ref": "In the style of The Prodigy — the fuzzed synth lines of \"Girls\"",
+      "ref": "Two saws fighting each other, driven until the filter fuzzes: the riff bass of The Prodigy’s \"Girls\"",
       "artist": "The Prodigy",
       "tags": ["bass", "rave", "00s"],
       "level": 2,
@@ -1672,7 +1672,7 @@
     {
       "id": "hopkins-driving-bass",
       "name": "Swelling Wobble Bass",
-      "ref": "In the style of Jon Hopkins — \"Open Eye Signal\"",
+      "ref": "A rolling bass whose wobble only grows into the long notes, as in Jon Hopkins’s \"Open Eye Signal\"",
       "artist": "Jon Hopkins",
       "tags": ["bass", "techno", "10s"],
       "level": 3,
@@ -1779,7 +1779,7 @@
     {
       "id": "chem-squiggle-line",
       "name": "Random Squiggle Line",
-      "ref": "In the style of The Chemical Brothers — the squiggling synth lines of \"The Big Jump\"",
+      "ref": "One held note whose resonant filter jumps several times a second, like The Chemical Brothers’ \"The Big Jump\"",
       "artist": "The Chemical Brothers",
       "tags": ["seq", "big beat", "00s"],
       "level": 2,
@@ -1870,7 +1870,7 @@
     {
       "id": "smd-hook-line",
       "name": "Plucked Hook Line",
-      "ref": "In the style of Simian Mobile Disco — the repeated hooks of Attack Decay Sustain Release",
+      "ref": "A short, bright pluck that stops dead, made for one repeated hook, as Simian Mobile Disco write them",
       "artist": "Simian Mobile Disco",
       "tags": ["seq", "house", "00s"],
       "level": 1,
@@ -1961,7 +1961,7 @@
     {
       "id": "soulwax-nite-bass",
       "name": "Pumping Electro Bass",
-      "ref": "In the style of Soulwax — the Nite Versions reworkings of their own records",
+      "ref": "Soulwax’s Nite Versions pump on basses like this: wide open for a moment, then clamped shut",
       "artist": "Soulwax",
       "tags": ["bass", "electro", "00s"],
       "level": 2,
@@ -2049,7 +2049,7 @@
     {
       "id": "boysnoize-square-bass",
       "name": "Ring-Edged Square Bass",
-      "ref": "In the style of Boys Noize — hard distorted electro bass",
+      "ref": "Blunt and square with a ring-mod edge on top: the hard, distorted electro bass of Boys Noize",
       "artist": "Boys Noize",
       "tags": ["bass", "electro", "00s"],
       "level": 1,
@@ -2129,7 +2129,7 @@
     {
       "id": "ymo-tight-bass",
       "name": "Tight Pop Bass",
-      "ref": "In the style of Yellow Magic Orchestra — late-70s Korg electro-pop",
+      "ref": "Clean and polite, a rounded bass with a short bloom, like Yellow Magic Orchestra’s late-1970s electro-pop",
       "artist": "Yellow Magic Orchestra",
       "tags": ["bass", "synth-pop", "70s"],
       "level": 1,
@@ -2226,7 +2226,7 @@
     {
       "id": "nin-mechanical-bass",
       "name": "Gated Machine Bass",
-      "ref": "In the style of Nine Inch Nails — mechanical, distorted synth bass",
+      "ref": "A held note chopped into hard on-off pieces, the mechanical synth bass of Nine Inch Nails",
       "artist": "Nine Inch Nails",
       "tags": ["bass", "industrial", "90s"],
       "level": 2,
@@ -2324,7 +2324,7 @@
     {
       "id": "dub-techno-sub",
       "name": "Deep Dub Sub",
-      "ref": "In the style of Basic Channel-era dub techno",
+      "ref": "A soft, nearly pure low tone you feel more than hear, under Basic Channel’s dub techno",
       "artist": "Dub techno",
       "tags": ["bass", "dub", "90s"],
       "level": 1,
@@ -2412,7 +2412,7 @@
     {
       "id": "ebm-sequence",
       "name": "Hard EBM Sequence",
-      "ref": "In the style of EBM — Front 242 and Nitzer Ebb",
+      "ref": "Short, clipped sequence notes that snap downward as they end, the EBM of Front 242 and Nitzer Ebb",
       "artist": "EBM",
       "tags": ["seq", "industrial", "80s"],
       "level": 2,
@@ -2509,7 +2509,7 @@
     {
       "id": "acid-303-line",
       "name": "Sliding Acid Line",
-      "ref": "In the style of Chicago acid house",
+      "ref": "A squelchy line where every note slides into the next, straight out of Chicago acid house",
       "artist": "Acid house",
       "tags": ["seq", "acid", "80s"],
       "level": 2,
@@ -2595,7 +2595,7 @@
     {
       "id": "royksopp-windup",
       "name": "Winding-Up Bass",
-      "ref": "In the style of Röyksopp — \"Vision One\"",
+      "ref": "A bass that keeps winding up and never arrives, the endless climb of Röyksopp’s \"Vision One\"",
       "artist": "Röyksopp",
       "tags": ["bass", "electronic", "00s"],
       "level": 2,
@@ -2683,7 +2683,7 @@
     {
       "id": "kimbie-lofi-bass",
       "name": "Lo-Fi Noise Bass",
-      "ref": "In the style of Mount Kimbie — \"Delta\"",
+      "ref": "A bass note with hiss filtered into it so it sounds recorded, as rough as Mount Kimbie make theirs",
       "artist": "Mount Kimbie",
       "tags": ["bass", "electronic", "10s"],
       "level": 2,
@@ -2776,7 +2776,7 @@
     {
       "id": "yorke-amok-lead",
       "name": "Unsteady Narrow Lead",
-      "ref": "In the style of Thom Yorke and Atoms for Peace — AMOK",
+      "ref": "A thin, nervous, slurring lead that never sits still, from the restless world of Atoms for Peace’s AMOK",
       "artist": "Thom Yorke",
       "tags": ["lead", "electronic", "10s"],
       "level": 2,
@@ -2878,7 +2878,7 @@
     {
       "id": "radiohead-warped-keys",
       "name": "Warped Electric Keys",
-      "ref": "In the style of Radiohead — the warped electronic keys of the Kid A era",
+      "ref": "Softly struck electric keys with a slow wow like stretched tape, the warped sound of Radiohead’s Kid A",
       "artist": "Radiohead",
       "tags": ["keys", "electronic", "00s"],
       "level": 2,
@@ -2978,7 +2978,7 @@
     {
       "id": "portishead-harsh-lead",
       "name": "Wiry Detuned Lead",
-      "ref": "In the style of Portishead — the harsher analogue tones of Third",
+      "ref": "Two oscillators pulled far apart to grind and sour: a wiry lead from Portishead’s harsher Third",
       "artist": "Portishead",
       "tags": ["lead", "electronic", "00s"],
       "level": 2,
@@ -3070,7 +3070,7 @@
     {
       "id": "aphex-glass-pad",
       "name": "Glass Fifths Pad",
-      "ref": "In the style of Aphex Twin — Selected Ambient Works-era pads",
+      "ref": "A clean, glassy pad of open fifths fading in and out with no edges, from Aphex Twin’s Selected Ambient Works",
       "artist": "Aphex Twin",
       "tags": ["pad", "ambient", "90s"],
       "level": 2,
@@ -3169,7 +3169,7 @@
     {
       "id": "ymo-bright-lead",
       "name": "Bright Melodic Lead",
-      "ref": "In the style of Yellow Magic Orchestra — bright melodic lead lines",
+      "ref": "Two saws an octave apart with a light vibrato, carrying a tune over a busy Yellow Magic Orchestra arrangement",
       "artist": "Yellow Magic Orchestra",
       "tags": ["lead", "electronic", "70s"],
       "level": 1,
@@ -3266,7 +3266,7 @@
     {
       "id": "clarke-erasure-lead",
       "name": "Tight Pop Lead",
-      "ref": "In the style of Vince Clarke — Erasure-era leads",
+      "ref": "Bright, dry and staccato, a pulse lead that stops dead between notes, as Vince Clarke wrote for Erasure",
       "artist": "Vince Clarke",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 1,
@@ -3367,7 +3367,7 @@
     {
       "id": "italo-lead",
       "name": "Octave-Jumping Disco Lead",
-      "ref": "In the style of early-80s Italo disco",
+      "ref": "Two slowly beating saws for melodies that leap an octave at a time in early-1980s Italo disco",
       "artist": "Italo disco",
       "tags": ["lead", "disco", "80s"],
       "level": 1,
@@ -3466,7 +3466,7 @@
     {
       "id": "ms20-brass",
       "name": "Synth Brass Section",
-      "ref": "In the style of 70s synth brass",
+      "ref": "Brass stabs that swell into their brightest moment just after they start, as 1970s synths made them",
       "artist": "Classic technique",
       "tags": ["brass", "70s", "funk"],
       "level": 2,
@@ -3570,7 +3570,7 @@
     {
       "id": "hollow-organ-keys",
       "name": "Hollow Combo Organ",
-      "ref": "In the style of 70s combo organ imitations",
+      "ref": "Two square waves an octave apart, on while held and gone on release: a 1970s combo organ imitation",
       "artist": "Classic technique",
       "tags": ["keys", "70s", "rock"],
       "level": 1,
@@ -3676,7 +3676,7 @@
     {
       "id": "flute-breath-lead",
       "name": "Breathy Flute",
-      "ref": "In the style of 70s flute imitations",
+      "ref": "A soft triangle with pink-noise breath behind it, the 1970s synth flute",
       "artist": "Classic technique",
       "tags": ["lead", "70s", "acoustic"],
       "level": 2,
@@ -3781,7 +3781,7 @@
     {
       "id": "scifi-drift-pad",
       "name": "Powering-Up Pad",
-      "ref": "In the style of 70s science-fiction soundtrack pads",
+      "ref": "A held chord that waits, then climbs in pitch and brightness as if powering up, for a 1970s sci-fi film",
       "artist": "Classic technique",
       "tags": ["pad", "sci-fi", "70s"],
       "level": 3,
@@ -3884,7 +3884,7 @@
     {
       "id": "slow-swell-drone",
       "name": "Slow Swelling Fifth",
-      "ref": "In the style of long-form ambient drones",
+      "ref": "One long, slowly beating fifth fading up out of nothing, for long-form ambient drones",
       "artist": "Classic technique",
       "tags": ["drone", "ambient", "minimal"],
       "level": 2,
@@ -3978,7 +3978,7 @@
     {
       "id": "detuned-choir-pad",
       "name": "Synthetic Choir",
-      "ref": "In the style of 70s and 80s synthetic choirs",
+      "ref": "A vowel that opens as the chord grows, like voices joining one by one: the 1970s and 1980s synth choir",
       "artist": "Classic technique",
       "tags": ["pad", "choral", "80s"],
       "level": 3,
@@ -4086,7 +4086,7 @@
     {
       "id": "resonant-whistle-lead",
       "name": "Playable Filter Whistle",
-      "ref": "In the style of whistling filter leads",
+      "ref": "The filter plays the tune by itself, a pure whistle with almost no oscillator behind it",
       "artist": "Classic technique",
       "tags": ["lead", "fx", "experimental"],
       "level": 2,
@@ -4185,7 +4185,7 @@
     {
       "id": "techno-hard-kick",
       "name": "Hard Techno Kick",
-      "ref": "In the style of hard techno kick drums",
+      "ref": "A short, hard kick with a click up front and a flat, driven body, for hard techno",
       "artist": "Techno",
       "tags": ["perc", "techno", "00s"],
       "level": 1,
@@ -4280,7 +4280,7 @@
     {
       "id": "skinny-puppy-hit",
       "name": "Industrial Metal Hit",
-      "ref": "In the style of Skinny Puppy and late-80s industrial percussion",
+      "ref": "A hard, tuneless clang like struck metal, the percussion of Skinny Puppy and late-1980s industrial",
       "artist": "Skinny Puppy",
       "tags": ["perc", "industrial", "80s"],
       "level": 2,
@@ -4378,7 +4378,7 @@
     {
       "id": "closed-hat",
       "name": "Closed Hi-Hat",
-      "ref": "In the style of synth-made closed hi-hats",
+      "ref": "A tight tick of bright noise, short enough to play in sixteenths: a synth-made closed hi-hat",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 1,
@@ -4459,7 +4459,7 @@
     {
       "id": "open-hat-cymbal",
       "name": "Open Hat and Cymbal",
-      "ref": "In the style of synth-made open hats and cymbals",
+      "ref": "A long wash of bright noise with a metallic ring that sweeps down as it dies, like an open hat or cymbal",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 1,
@@ -4541,7 +4541,7 @@
     {
       "id": "electro-clap",
       "name": "Chopped Handclap",
-      "ref": "In the style of early drum-machine handclaps",
+      "ref": "Several noise bursts a few milliseconds apart and a short tail: the early drum-machine handclap",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 2,
@@ -4642,7 +4642,7 @@
     {
       "id": "tom-drop",
       "name": "Falling Tom",
-      "ref": "In the style of electronic toms",
+      "ref": "A round drum whose pitch falls as it decays, tuned up and down the keys like a rack of electronic toms",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 1,
@@ -4739,7 +4739,7 @@
     {
       "id": "rimshot-click",
       "name": "Rimshot Click",
-      "ref": "In the style of electronic rimshots and clicks",
+      "ref": "A dry, wooden click ten milliseconds long, an electronic rimshot",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 2,
@@ -4824,7 +4824,7 @@
     {
       "id": "gunshot-fx",
       "name": "Gunshot",
-      "ref": "In the style of film and game gunshots",
+      "ref": "A hard crack with a low thump behind it, the gunshot of films and games",
       "artist": "Classic technique",
       "tags": ["fx", "games", "80s"],
       "level": 2,
@@ -4906,7 +4906,7 @@
     {
       "id": "siren-alarm",
       "name": "Two-Tone Klaxon",
-      "ref": "In the style of alarm and klaxon effects",
+      "ref": "A hard two-note alarm that switches back and forth by itself, like a klaxon",
       "artist": "Classic technique",
       "tags": ["fx", "sci-fi", "70s"],
       "level": 1,
@@ -4996,7 +4996,7 @@
     {
       "id": "random-gate-bleeps",
       "name": "Computer Room Chatter",
-      "ref": "In the style of 70s computer-room chatter",
+      "ref": "Separate bleeps at random pitches, one per tick: the chatter of a 1970s computer room",
       "artist": "Classic technique",
       "tags": ["seq", "sci-fi", "70s"],
       "level": 3,
@@ -5089,7 +5089,7 @@
     {
       "id": "water-drips",
       "name": "Dripping Water",
-      "ref": "In the style of dripping-water effects",
+      "ref": "Isolated plinks, each at a slightly different pitch, like water dripping into a sink",
       "artist": "Classic technique",
       "tags": ["fx", "ambient", "70s"],
       "level": 2,
@@ -5193,7 +5193,7 @@
     {
       "id": "engine-rumble",
       "name": "Engine Rumble",
-      "ref": "In the style of engine and machinery effects",
+      "ref": "A low mechanical chug with a loose rattle over the top, like an engine idling",
       "artist": "Classic technique",
       "tags": ["fx", "sci-fi", "70s"],
       "level": 2,
@@ -5292,7 +5292,7 @@
     {
       "id": "tape-stop",
       "name": "Tape Stop",
-      "ref": "In the style of tape and turntable spin-down effects",
+      "ref": "A note that slows to a halt as it fades, as if the power to a tape machine were cut",
       "artist": "Classic technique",
       "tags": ["fx", "electronic", "90s"],
       "level": 2,
@@ -5394,7 +5394,7 @@
     {
       "id": "radio-tuning",
       "name": "Tuning the Radio",
-      "ref": "In the style of radio-tuning and static effects",
+      "ref": "Static with squeals and half-heard stations drifting through it, as a radio dial turns",
       "artist": "Classic technique",
       "tags": ["fx", "ambient", "70s"],
       "level": 2,
@@ -5498,7 +5498,7 @@
     {
       "id": "short-pop-pluck",
       "name": "Short Pop Pluck",
-      "ref": "In the style of early-80s synth-pop plucked lines",
+      "ref": "A short, woody pluck that stops dead, for early-1980s synth-pop lines that stay out of the way",
       "artist": "Early synth-pop",
       "tags": ["pluck", "pop", "80s"],
       "level": 1,
@@ -5597,7 +5597,7 @@
     {
       "id": "bowed-string-line",
       "name": "Bowed String Line",
-      "ref": "In the style of 70s solo string imitations",
+      "ref": "A single string line where the bow arrives before the tone, a 1970s synth’s solo violin",
       "artist": "Classic technique",
       "tags": ["strings", "orchestral", "70s"],
       "level": 2,
@@ -5697,7 +5697,7 @@
     {
       "id": "boc-drifting-pad",
       "name": "Dark Pad that Drifts Sharp",
-      "ref": "In the style of Boards of Canada — \"Olson\"",
+      "ref": "A dull, warm pad with a rush of noise that creeps sharp as it holds, like Boards of Canada’s \"Olson\"",
       "artist": "Boards of Canada",
       "tags": ["pad", "ambient", "gentle", "soft", "90s"],
       "level": 2,
@@ -5808,7 +5808,7 @@
     {
       "id": "biosphere-filter-tones",
       "name": "Two Filter Tones",
-      "ref": "In the style of Biosphere — \"Poa Alpina\"",
+      "ref": "Two soft, nearly pure filter tones a fifth apart, one wavering, close to Biosphere’s \"Poa Alpina\"",
       "artist": "Biosphere",
       "tags": ["drone", "ambient", "calm", "soft", "90s"],
       "level": 3,
@@ -5906,8 +5906,8 @@
     {
       "id": "eno-soft-bell-keys",
       "name": "Soft Bell Keys",
-      "ref": "In the style of Brian Eno — \"1/1\"",
-      "artist": "Brian Eno",
+      "ref": "Softly struck notes with a faint bell inside, for slow, widely spaced playing in 1970s ambient",
+      "artist": "1970s ambient",
       "tags": ["keys", "ambient", "gentle", "soft", "70s"],
       "level": 2,
       "blurb": "Softly struck notes with a faint bell tone inside them, for slow, widely spaced playing.",
@@ -6000,8 +6000,8 @@
     {
       "id": "air-nylon-pluck",
       "name": "Soft Nylon Pluck",
-      "ref": "In the style of Air — \"Alone in Kyoto\"",
-      "artist": "Air",
+      "ref": "A rounded pluck that starts thin and fills out as it fades, a soft nylon-string sound for downtempo",
+      "artist": "Downtempo",
       "tags": ["pluck", "gentle", "soft", "acoustic", "00s"],
       "level": 2,
       "blurb": "A rounded pluck with no thump on the front: each note starts thin and fills out as it fades.",
@@ -6091,7 +6091,7 @@
     {
       "id": "jarre-shoreline",
       "name": "Waves on a Shore",
-      "ref": "In the style of Jean-Michel Jarre — \"Oxygène, Pt. 6\"",
+      "ref": "One wave per key, building, breaking and drawing back: the synth surf of Jean-Michel Jarre’s \"Oxygène, Pt. 6\"",
       "artist": "Jean-Michel Jarre",
       "tags": ["fx", "ambient", "calm", "nature", "70s"],
       "level": 2,
@@ -6189,8 +6189,8 @@
     {
       "id": "burial-rain-bed",
       "name": "Rain on a Window",
-      "ref": "In the style of Burial — \"Archangel\"",
-      "artist": "Burial",
+      "ref": "A quiet, uneven patter of noise that fades in and out like rain on a window",
+      "artist": "Sound effects",
       "tags": ["fx", "ambient", "gentle", "nature", "00s"],
       "level": 3,
       "blurb": "A quiet, uneven patter of noise that fades in while you hold a key and fades out when you let go.",
@@ -6297,7 +6297,7 @@
     {
       "id": "cluster-overtone-steps",
       "name": "Overtone Steps",
-      "ref": "In the style of Cluster & Eno — \"Ho Renomo\"",
+      "ref": "One low note whose overtones climb out in slow, even steps, as on Cluster & Eno’s \"Ho Renomo\"",
       "artist": "Cluster & Eno",
       "tags": ["seq", "ambient", "calm", "soft", "70s"],
       "level": 3,
@@ -6403,8 +6403,8 @@
     {
       "id": "goldfrapp-late-vibrato-cello",
       "name": "Muted Cello with Late Vibrato",
-      "ref": "In the style of Goldfrapp — \"Pilots\"",
-      "artist": "Goldfrapp",
+      "ref": "A dark, low string line whose vibrato arrives a second into each long note, like a muted cello",
+      "artist": "Orchestral strings",
       "tags": ["strings", "gentle", "soft", "orchestral", "00s"],
       "level": 3,
       "blurb": "A dark, low string line where long notes start plain and the vibrato arrives about a second in.",
@@ -6515,7 +6515,7 @@
     {
       "id": "sax-solo-line",
       "name": "Saxophone Solo Line",
-      "ref": "In the style of a solo tenor saxophone",
+      "ref": "A reedy, gritty solo voice whose vibrato waits until the note is held, like a tenor saxophone",
       "artist": "Classic technique",
       "tags": ["wind", "lead", "solo"],
       "level": 3,
@@ -6635,7 +6635,7 @@
     {
       "id": "trumpet-open-line",
       "name": "Open Trumpet Line",
-      "ref": "In the style of a solo open trumpet",
+      "ref": "A bright line where each note opens up as the lip takes hold, like an open trumpet",
       "artist": "Classic technique",
       "tags": ["wind", "lead", "solo"],
       "level": 1,
@@ -6742,7 +6742,7 @@
     {
       "id": "clarinet-hollow-line",
       "name": "Hollow Clarinet",
-      "ref": "In the style of a solo clarinet in its low register",
+      "ref": "One square wave and little else: the dark, woody low register of a clarinet",
       "artist": "Classic technique",
       "tags": ["wind", "lead", "solo"],
       "level": 1,
@@ -6842,7 +6842,7 @@
     {
       "id": "oboe-nasal-line",
       "name": "Nasal Oboe",
-      "ref": "In the style of a solo oboe",
+      "ref": "Both filters closed in on a narrow pulse for a thin, nasal double-reed line, like an oboe",
       "artist": "Classic technique",
       "tags": ["wind", "lead", "solo"],
       "level": 2,
@@ -6950,7 +6950,7 @@
     {
       "id": "recorder-chiff-line",
       "name": "Recorder with a Chiff",
-      "ref": "In the style of a solo treble recorder",
+      "ref": "A hollow, wooden tone with a puff of air on each note, like a treble recorder",
       "artist": "Classic technique",
       "tags": ["wind", "lead", "solo"],
       "level": 3,
@@ -7776,7 +7776,7 @@
     {
       "id": "k2-mandolin-tremolo",
       "name": "Tremolo Mandolin",
-      "ref": "In the style of a mandolin played with fast tremolo picking",
+      "ref": "A held note picked over and over on two strings a hair apart, a mandolin’s tremolo",
       "artist": "Classic technique",
       "tags": ["strings", "gentle", "acoustic", "modular"],
       "level": 3,
@@ -7883,7 +7883,7 @@
     {
       "id": "k2-koto-settling-pluck",
       "name": "Koto that Settles in Pitch",
-      "ref": "In the style of a Japanese koto",
+      "ref": "A plucked string that starts a little sharp and sinks to pitch as it fades, as a koto does",
       "artist": "Classic technique",
       "tags": ["pluck", "gentle", "acoustic", "modular"],
       "level": 3,
@@ -8077,7 +8077,7 @@
     {
       "id": "k2-vowel-singer",
       "name": "Wordless Singer",
-      "ref": "In the style of a wordless solo voice",
+      "ref": "A soft, wordless sung line whose vowel shifts a little on every note",
       "artist": "Classic technique",
       "tags": ["lead", "gentle", "vocal", "modular"],
       "level": 3,
@@ -8182,8 +8182,8 @@
     {
       "id": "k2-pedal-steel-bend",
       "name": "Pedal Steel with a Late Bend",
-      "ref": "In the style of Brian Eno and Daniel Lanois — \"Apollo\"",
-      "artist": "Brian Eno",
+      "ref": "Notes swell in softly, then lift a whole tone once settled, as a pedal steel does when its pedal goes down",
+      "artist": "Pedal steel",
       "tags": ["lead", "ambient", "gentle", "country", "80s"],
       "level": 2,
       "blurb": "A soft, swelling note that bends up a whole tone once it has settled, the way a pedal steel player presses a pedal.",
@@ -8378,7 +8378,7 @@
     {
       "id": "k2-pan-pipes",
       "name": "Pan Pipes",
-      "ref": "In the style of Andean pan pipes",
+      "ref": "A hollow, breathy pipe with the air audible around every note, as Andean pan pipes sound",
       "artist": "Classic technique",
       "tags": ["wind", "gentle", "acoustic", "solo"],
       "level": 2,
@@ -8468,7 +8468,7 @@
     {
       "id": "snarling-drive-riff",
       "name": "Snarling Driven Riff",
-      "ref": "In the style of Daft Punk — \"Derezzed\"",
+      "ref": "Driven until it tears, with a nasal bite on every note: the snarling riff of Daft Punk’s \"Derezzed\"",
       "artist": "Daft Punk",
       "tags": ["lead", "electro", "french house", "10s", "patch"],
       "level": 3,
@@ -8584,7 +8584,7 @@
     {
       "id": "clipped-count-bass",
       "name": "Clipped Machine Bass",
-      "ref": "In the style of Kraftwerk — \"Numbers\"",
+      "ref": "Short, identical bass notes ticking along like a machine, as in Kraftwerk’s \"Numbers\"",
       "artist": "Kraftwerk",
       "tags": ["bass", "electro", "german", "80s"],
       "level": 2,
@@ -8680,7 +8680,7 @@
     {
       "id": "k2-delayed-vibrato-glide-lead",
       "name": "Gliding Lead with Late Vibrato",
-      "ref": "In the style of Bernie Worrell — \"Dr. Funkenstein\" (The Clones of Dr. Funkenstein, 1976)",
+      "ref": "Rubbery and squelchy, sliding between notes and wobbling only when held: Bernie Worrell on \"Dr. Funkenstein\"",
       "artist": "Bernie Worrell",
       "tags": ["lead", "funk", "70s", "patch"],
       "level": 3,
@@ -8800,8 +8800,8 @@
     {
       "id": "k2-sawing-ring-line",
       "name": "Sawing Ring Line",
-      "ref": "In the style of Brian Eno — \"Sky Saw\" (Another Green World, 1975)",
-      "artist": "Brian Eno",
+      "ref": "A harsh, buzzing line that saws back and forth with a clanging ring-mod edge, for 1970s art rock",
+      "artist": "1970s art rock",
       "tags": ["lead", "art rock", "rough", "70s"],
       "level": 2,
       "blurb": "A harsh, buzzing line that saws back and forth on every held note, with a clanging edge from ring modulation.",
@@ -8897,12 +8897,12 @@
     {
       "id": "k2-sliding-steel-swell",
       "name": "Sliding Steel Swell",
-      "ref": "In the style of Daniel Lanois — \"Transmitter\" (Shine, 2003)",
-      "artist": "Daniel Lanois",
+      "ref": "Warm notes that swell in slowly and slide into each new pitch, like a pedal steel with a volume pedal",
+      "artist": "Pedal steel",
       "tags": ["lead", "ambient", "gentle", "00s"],
       "level": 1,
       "blurb": "A warm, slow-swelling note that slides into each new pitch and fades out over several seconds, like a pedal steel played with a volume pedal.",
-      "how": "Two sawtooths at the same octave, a few cents apart, beat slowly for warmth, and the low-pass takes off the top so nothing is sharp. Envelope 2 has an attack of about a second, so each note swells in rather than being plucked, and a long release lets it fade. PORTAMENTO makes the pitch slide from note to note like a steel bar moving along the strings, and a slight vibrato keeps held notes alive. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths at the same octave, a few cents apart, beat slowly for warmth, and the low-pass takes off the top so nothing is sharp. Envelope 2 has an attack of about a second, so each note swells in rather than being plucked, and a long release lets it fade. PORTAMENTO makes the pitch slide from note to note like a steel bar moving along the strings, and a slight vibrato keeps held notes alive.",
       "phrase": {
         "bpm": 58,
         "loop": true,
@@ -8998,7 +8998,7 @@
     {
       "id": "k2-warm-leatherette-drone-bass",
       "name": "Cold Semitone Stab Bass",
-      "ref": "In the style of The Normal — \"Warm Leatherette\" (1978)",
+      "ref": "A stark, buzzing stab bass rocking across a semitone, the cold pulse of The Normal’s \"Warm Leatherette\"",
       "artist": "The Normal",
       "tags": ["bass", "minimal wave", "post-punk", "70s"],
       "level": 1,
@@ -9075,7 +9075,7 @@
     {
       "id": "k2-los-ninos-ebm-bass",
       "name": "Marching Sequencer Bass",
-      "ref": "In the style of Liaisons Dangereuses — \"Los Niños del Parque\" (1981)",
+      "ref": "Liaisons Dangereuses’ \"Los Niños del Parque\" runs on a bass like this: rubbery sixteenths that snap",
       "artist": "Liaisons Dangereuses",
       "tags": ["bass", "ebm", "electronic body music", "80s"],
       "level": 2,
@@ -9166,7 +9166,7 @@
     {
       "id": "k2-ricky-hand-buzz-bass",
       "name": "Buzzsaw Ring Bass",
-      "ref": "In the style of Fad Gadget — \"Ricky’s Hand\" (1980)",
+      "ref": "A droning bass with a metallic rasp, the ring-mod buzzsaw under Fad Gadget’s \"Ricky’s Hand\"",
       "artist": "Fad Gadget",
       "tags": ["bass", "post-punk", "industrial", "80s"],
       "level": 2,
@@ -9250,7 +9250,7 @@
     {
       "id": "k2-silent-shout-pulse-bass",
       "name": "Haunted Pulse Bass",
-      "ref": "In the style of The Knife — \"Silent Shout\" (2006)",
+      "ref": "A dark, pumping bass whose filter wobbles slightly out of step, eerie as The Knife’s \"Silent Shout\"",
       "artist": "The Knife",
       "tags": ["bass", "electronic", "dark", "00s"],
       "level": 2,
@@ -9344,7 +9344,7 @@
     {
       "id": "k2-pursuit-dark-techno-bass",
       "name": "Grinding Dark-Techno Bass",
-      "ref": "In the style of Gesaffelstein — \"Pursuit\" (Aleph, 2013)",
+      "ref": "Fed back into itself for grit, a menacing off-beat bass for Gesaffelstein’s \"Pursuit\"",
       "artist": "Gesaffelstein",
       "tags": ["bass", "techno", "dark", "10s"],
       "level": 3,
@@ -9432,7 +9432,7 @@
     {
       "id": "k2-la-rock-overdrive-bass",
       "name": "Overdriven Rave Bass",
-      "ref": "In the style of Vitalic — \"La Rock 01\" (OK Cowboy, 2005)",
+      "ref": "A huge, saturated bass riff turned up until it breaks, as on Vitalic’s \"La Rock 01\"",
       "artist": "Vitalic",
       "tags": ["bass", "electro", "rave", "00s"],
       "level": 3,
@@ -9523,7 +9523,7 @@
     {
       "id": "k2-wormhole-reese-bass",
       "name": "Neurofunk Reese Bass",
-      "ref": "In the style of Ed Rush & Optical — \"Wormhole\" (1998)",
+      "ref": "Two detuned saws churning against each other, the Reese bass Ed Rush & Optical rode on \"Wormhole\"",
       "artist": "Ed Rush & Optical",
       "tags": ["bass", "drum and bass", "neurofunk", "90s"],
       "level": 2,
@@ -9613,7 +9613,7 @@
     {
       "id": "k2-trap-sliding-808",
       "name": "Sliding 808 Bass",
-      "ref": "In the style of trap",
+      "ref": "A deep, booming sub that drops at its start and slides between notes, a tuned 808 for trap",
       "artist": "Trap",
       "tags": ["bass", "trap", "hip hop", "10s"],
       "level": 2,
@@ -9697,7 +9697,7 @@
     {
       "id": "k2-hi-nrg-octave-bass",
       "name": "Hi-NRG Octave Bass",
-      "ref": "In the style of Bobby Orlando — \"She Has a Way\" (1983)",
+      "ref": "Bobby Orlando’s Hi-NRG on \"She Has a Way\": a bright, plucky bass leaping an octave every eighth note",
       "artist": "Bobby Orlando",
       "tags": ["bass", "hi-nrg", "disco", "80s"],
       "level": 1,
@@ -9775,7 +9775,7 @@
     {
       "id": "k2-i-luv-u-square-bass",
       "name": "Grime Square Bass",
-      "ref": "In the style of Dizzee Rascal — \"I Luv U\" (Boy in da Corner, 2003)",
+      "ref": "A raw, hollow square bass hitting in stark, syncopated bursts, as in Dizzee Rascal’s \"I Luv U\"",
       "artist": "Dizzee Rascal",
       "tags": ["bass", "grime", "uk", "00s"],
       "level": 2,
@@ -9855,7 +9855,7 @@
     {
       "id": "k2-chicago-deep-house-bass",
       "name": "Deep Chicago Bass",
-      "ref": "In the style of Legowelt — \"Disco Rout\" (2002)",
+      "ref": "A warm, round house bass with a soft pluck and a gentle bounce, like Legowelt’s \"Disco Rout\"",
       "artist": "Legowelt",
       "tags": ["bass", "deep house", "chicago", "00s"],
       "level": 1,
@@ -9934,7 +9934,7 @@
     {
       "id": "k2-metal-fingers-scream-lead",
       "name": "Screaming High-Pass Lead",
-      "ref": "In the style of Add N to (X) — \"Metal Fingers in My Body\" (Avant Hard, 1999)",
+      "ref": "Both filters peaking at once so the lead shrieks and whistles, as in Add N to (X)’s \"Metal Fingers in My Body\"",
       "artist": "Add N to (X)",
       "tags": ["lead", "electronic", "noise", "90s"],
       "level": 2,
@@ -10033,7 +10033,7 @@
     {
       "id": "k2-come-on-lets-go-wobble-lead",
       "name": "Wobbly Library-Music Lead",
-      "ref": "In the style of Broadcast — \"Come On Let’s Go\" (The Noise Made by People, 2000)",
+      "ref": "A seasick square lead with a too-slow, too-deep vibrato, as on Broadcast’s \"Come On Let’s Go\"",
       "artist": "Broadcast",
       "tags": ["lead", "indie", "retro", "00s"],
       "level": 1,
@@ -10120,7 +10120,7 @@
     {
       "id": "k2-electroclash-stiff-lead",
       "name": "Stiff Electroclash Lead",
-      "ref": "In the style of Miss Kittin & The Hacker — \"Frank Sinatra\" (1998)",
+      "ref": "Cold, deadpan, clipped notes, stiff and cheap on purpose, like Miss Kittin & The Hacker’s \"Frank Sinatra\"",
       "artist": "Miss Kittin & The Hacker",
       "tags": ["lead", "electroclash", "electro", "90s"],
       "level": 1,
@@ -10200,7 +10200,7 @@
     {
       "id": "k2-turbo-killer-glide-lead",
       "name": "Synthwave Glide Lead",
-      "ref": "In the style of Carpenter Brut — \"Turbo Killer\" (Leather Teeth, 2018)",
+      "ref": "A huge, gliding saw lead with a slight snarl for a heroic climb, Carpenter Brut’s \"Turbo Killer\"",
       "artist": "Carpenter Brut",
       "tags": ["lead", "synthwave", "darksynth", "10s"],
       "level": 2,
@@ -10309,7 +10309,7 @@
     {
       "id": "k2-number-one-song-lead",
       "name": "Falsetto Disco Lead",
-      "ref": "In the style of Sparks — \"The Number One Song in Heaven\" (1979)",
+      "ref": "A bright, singing lead climbing over a pulsing disco line, as on Sparks’ \"The Number One Song in Heaven\"",
       "artist": "Sparks",
       "tags": ["lead", "disco", "synth-pop", "70s"],
       "level": 2,
@@ -10397,7 +10397,7 @@
     {
       "id": "k2-1950s-saucer-theremin",
       "name": "Flying-Saucer Theremin",
-      "ref": "In the style of 1950s science-fiction film scores",
+      "ref": "An eerie, gliding tone whose deep vibrato arrives late: the theremin of 1950s science-fiction films",
       "artist": "1950s science-fiction films",
       "tags": ["lead", "sci-fi", "retro", "soundtrack"],
       "level": 3,
@@ -10502,12 +10502,12 @@
     {
       "id": "k2-zombie-zombie-road-lead",
       "name": "Night-Drive Lead",
-      "ref": "In the style of Zombie Zombie — \"Driving This Road Until Death Sets You Free\" (2008)",
+      "ref": "A dark, minor lead pulsing through a resonant filter, Zombie Zombie’s horror-score krautrock",
       "artist": "Zombie Zombie",
       "tags": ["lead", "krautrock", "horror", "00s"],
       "level": 2,
       "blurb": "A dark, repeating lead with a pulsing filter, like a horror-film score played by a krautrock band.",
-      "how": "A sawtooth through a resonant low-pass that the modulation generator’s square output opens and closes in time, so each held note pulses. The melody is a slow, minor figure over that pulse. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sawtooth through a resonant low-pass that the modulation generator’s square output opens and closes in time, so each held note pulses. The melody is a slow, minor figure over that pulse.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -10582,12 +10582,12 @@
     {
       "id": "k2-northern-wasteland-ostinato",
       "name": "Berlin-School Ostinato",
-      "ref": "In the style of Michael Hoenig — \"Departure from the Northern Wasteland\" (1978)",
+      "ref": "Michael Hoenig’s Berlin-School sequencing: rippling sixteenths whose filter rises and falls like a tide",
       "artist": "Michael Hoenig",
       "tags": ["seq", "berlin school", "ambient", "70s"],
       "level": 2,
       "blurb": "A rippling sixteenth-note sequence whose filter opens and closes over many bars, slow as a tide.",
-      "how": "A pulse wave through a resonant low-pass, each note plucked by envelope 2. A very slow triangle from the modulation generator moves the cutoff over about seven seconds, so the sequence keeps changing colour while the notes stay the same. This describes the style of playing, not the exact sound on the record.",
+      "how": "A pulse wave through a resonant low-pass, each note plucked by envelope 2. A very slow triangle from the modulation generator moves the cutoff over about seven seconds, so the sequence keeps changing colour while the notes stay the same.",
       "phrase": {
         "bpm": 120,
         "loop": true,
@@ -10682,7 +10682,7 @@
     {
       "id": "k2-rainbow-dome-glass-arp",
       "name": "Glassy Meditation Arpeggio",
-      "ref": "In the style of Steve Hillage — Rainbow Dome Musick (1979)",
+      "ref": "A soft, glassy arpeggio circling a chord, the meditative drift of Steve Hillage’s Rainbow Dome Musick",
       "artist": "Steve Hillage",
       "tags": ["seq", "ambient", "gentle", "calm", "70s"],
       "level": 1,
@@ -10783,7 +10783,7 @@
     {
       "id": "k2-harmonia-motorik-seq",
       "name": "Motorik Sequence",
-      "ref": "In the style of Harmonia — \"Deluxe (Immer Wieder)\" (Deluxe, 1975)",
+      "ref": "A bright, steady eighth-note figure with an open fifth, driving on like Harmonia’s \"Deluxe (Immer Wieder)\"",
       "artist": "Harmonia",
       "tags": ["seq", "krautrock", "motorik", "70s"],
       "level": 1,
@@ -10867,7 +10867,7 @@
     {
       "id": "k2-flaming-june-trance-gate",
       "name": "Trance-Gate Fifth",
-      "ref": "In the style of BT — \"Flaming June\" (ESCM, 1997)",
+      "ref": "BT’s \"Flaming June\" trance gate: a held fifth chopped into shimmering sixteenths",
       "artist": "BT",
       "tags": ["seq", "trance", "gated", "90s"],
       "level": 3,
@@ -10958,7 +10958,7 @@
     {
       "id": "k2-cybernaut-sampled-staircase",
       "name": "Sampled-Triangle Staircase",
-      "ref": "In the style of Tonto’s Expanding Head Band — \"Cybernaut\" (Zero Time, 1971)",
+      "ref": "Tonto’s Expanding Head Band’s \"Cybernaut\" in miniature: a melody that climbs and falls in little steps",
       "artist": "Tonto’s Expanding Head Band",
       "tags": ["seq", "electronic", "modular", "70s"],
       "level": 3,
@@ -11049,7 +11049,7 @@
     {
       "id": "k2-martyr-minimal-wave-arp",
       "name": "Cold Minimal-Wave Arpeggio",
-      "ref": "In the style of Oppenheimer Analysis — \"Martyr\" (New Mexico, 1982)",
+      "ref": "A cold, clipped minor arpeggio, the bedroom minimal synth of Oppenheimer Analysis’s \"Martyr\"",
       "artist": "Oppenheimer Analysis",
       "tags": ["seq", "minimal wave", "synth-pop", "80s"],
       "level": 1,
@@ -11131,7 +11131,7 @@
     {
       "id": "k2-eyen-ring-bell-seq",
       "name": "Ring-Mod Bell Sequence",
-      "ref": "In the style of Plaid — \"Eyen\" (Not for Threes, 1997)",
+      "ref": "Delicate, chiming bells that sit just off the scale, playful and strange like Plaid’s \"Eyen\"",
       "artist": "Plaid",
       "tags": ["seq", "idm", "bell", "gentle", "90s"],
       "level": 2,
@@ -11216,7 +11216,7 @@
     {
       "id": "k2-sun-swelling-sequence",
       "name": "Swelling Repetition",
-      "ref": "In the style of Caribou — \"Sun\" (Swim, 2010)",
+      "ref": "One short figure repeating while its filter swells open and resets, the hypnotic build of Caribou’s \"Sun\"",
       "artist": "Caribou",
       "tags": ["seq", "electronic", "psychedelic", "10s"],
       "level": 2,
@@ -11303,7 +11303,7 @@
     {
       "id": "k2-lsd-goa-rolling-seq",
       "name": "Rolling Goa Sequence",
-      "ref": "In the style of Hallucinogen — \"LSD\" (Twisted, 1995)",
+      "ref": "A relentless, squelching sixteenth line with both filters sweeping, as Hallucinogen’s \"LSD\" rolls",
       "artist": "Hallucinogen",
       "tags": ["seq", "goa trance", "psychedelic", "90s"],
       "level": 2,
@@ -11395,13 +11395,13 @@
     },
     {
       "id": "k2-song-to-the-siren-swell",
-      "name": "Siren-Song Swell",
-      "ref": "In the style of This Mortal Coil — \"Song to the Siren\" (It’ll End in Tears, 1984)",
-      "artist": "This Mortal Coil",
+      "name": "Far-Off Swell",
+      "ref": "A slow swell blooming out of silence and fading away, like a voice heard across water",
+      "artist": "1980s dream pop",
       "tags": ["pad", "ambient", "gentle", "soft", "80s"],
       "level": 2,
       "blurb": "A slow, haunting swell that blooms out of silence and fades away, like a voice heard across water.",
-      "how": "Two sawtooths an octave apart, slightly detuned, through a low-pass kept warm. Envelope 2 takes nearly two seconds to swell in and fades over several more, so the notes rise out of nothing. The high-pass and low-pass together leave a soft band, and a slow MG on the low-pass makes it breathe. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths an octave apart, slightly detuned, through a low-pass kept warm. Envelope 2 takes nearly two seconds to swell in and fades over several more, so the notes rise out of nothing. The high-pass and low-pass together leave a soft band, and a slow MG on the low-pass makes it breathe.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -11486,8 +11486,8 @@
     {
       "id": "k2-niblock-beating-drone",
       "name": "Beating Unison Drone",
-      "ref": "In the style of Phill Niblock — Touch Three (2006)",
-      "artist": "Phill Niblock",
+      "ref": "Two nearly identical tones held so long that their slow beating becomes the music",
+      "artist": "Drone music",
       "tags": ["drone", "minimal", "ambient", "calm", "00s"],
       "level": 1,
       "blurb": "Two nearly identical tones, held so long that their slow beating becomes the music.",
@@ -11558,8 +11558,8 @@
     {
       "id": "k2-still-way-kankyo-swell",
       "name": "Still-Water Tones",
-      "ref": "In the style of Satoshi Ashikawa — \"Still Way\" (Still Way (Wave Notation 2), 1982)",
-      "artist": "Satoshi Ashikawa",
+      "ref": "Soft, rounded tones appearing and fading like ripples, with space around each, as kankyō ongaku leaves it",
+      "artist": "Kankyō ongaku",
       "tags": ["keys", "ambient", "gentle", "calm", "80s"],
       "level": 1,
       "blurb": "Soft, rounded tones that appear and fade like ripples, with space between each one.",
@@ -11631,8 +11631,8 @@
     {
       "id": "k2-psychologically-ultimate-seashore",
       "name": "Synthesised Seashore",
-      "ref": "In the style of Irv Teibel — Environments: \"The Psychologically Ultimate Seashore\" (1969)",
-      "artist": "Irv Teibel",
+      "ref": "Noise swept slowly up and down so waves roll in and draw back: a seashore made on a synth",
+      "artist": "Nature recordings",
       "tags": ["fx", "ambient", "nature", "calm", "60s"],
       "level": 2,
       "blurb": "Waves rolling in and drawing back, made from noise and a slowly moving filter.",
@@ -11711,8 +11711,8 @@
     {
       "id": "k2-day-of-radiance-follower-bloom",
       "name": "Self-Brightening Bloom",
-      "ref": "In the style of Laraaji — \"Meditation #1\" (Ambient 3: Day of Radiance, 1980)",
-      "artist": "Laraaji",
+      "ref": "A tone that brightens as it swells, opening like a flower, for meditative 1980s ambient",
+      "artist": "1980s ambient",
       "tags": ["pad", "ambient", "gentle", "calm", "80s"],
       "level": 3,
       "blurb": "A tone that grows brighter as it grows louder, opening like a flower each time a note swells.",
@@ -11801,13 +11801,13 @@
     },
     {
       "id": "k2-summer-breath-flute",
-      "name": "Breathy Summer Flute",
-      "ref": "In the style of Joe Hisaishi — \"Summer\" (Kikujiro, 1999)",
-      "artist": "Joe Hisaishi",
+      "name": "Sunny Breathy Flute",
+      "ref": "A light, breathy flute with a little air on every note, playing a simple, sunny tune",
+      "artist": "Film music",
       "tags": ["wind", "gentle", "soft", "soundtrack", "90s"],
       "level": 2,
       "blurb": "A light, breathy flute that plays a simple, sunny melody, with a little air on every note.",
-      "how": "Oscillator 1 on its noise position gives the breath; Oscillator 2’s square, filtered soft, gives the tone. The high-pass keeps the noise light, so it sits on top of the note like air across a mouthpiece. A slight vibrato makes it sound played. This describes the style of playing, not the exact sound on the record.",
+      "how": "Oscillator 1 on its noise position gives the breath; Oscillator 2’s square, filtered soft, gives the tone. The high-pass keeps the noise light, so it sits on top of the note like air across a mouthpiece. A slight vibrato makes it sound played.",
       "phrase": {
         "bpm": 108,
         "loop": true,
@@ -11890,7 +11890,7 @@
     {
       "id": "k2-feel-it-all-around-haze",
       "name": "Chillwave Haze",
-      "ref": "In the style of Washed Out — \"Feel It All Around\" (Life of Leisure, 2009)",
+      "ref": "Warm, hazy saws wavering like a cassette left in the sun: Washed Out’s \"Feel It All Around\"",
       "artist": "Washed Out",
       "tags": ["pad", "chillwave", "warm", "soft", "00s"],
       "level": 2,
@@ -11974,12 +11974,12 @@
     {
       "id": "k2-aruarian-soft-keys",
       "name": "Lo-Fi Soft Keys",
-      "ref": "In the style of Nujabes — \"Aruarian Dance\" (Samurai Champloo, 2004)",
-      "artist": "Nujabes",
+      "ref": "A soft, round tone between a Rhodes and a vibraphone, playing a lazy jazz line for lo-fi hip hop",
+      "artist": "Lo-fi hip hop",
       "tags": ["keys", "lo-fi", "hip hop", "gentle", "00s"],
       "level": 1,
       "blurb": "A soft, round electric-piano-like tone playing a lazy, jazzy line.",
-      "how": "A triangle with a quiet square an octave up, plucked softly by the filter, with a medium decay. The result is somewhere between a Rhodes and a vibraphone, warm and unhurried. This describes the style of playing, not the exact sound on the record.",
+      "how": "A triangle with a quiet square an octave up, plucked softly by the filter, with a medium decay. The result is somewhere between a Rhodes and a vibraphone, warm and unhurried.",
       "phrase": {
         "bpm": 88,
         "loop": true,
@@ -12051,7 +12051,7 @@
     {
       "id": "k2-ever-new-glass-arp",
       "name": "Gentle Glass Arpeggio",
-      "ref": "In the style of Beverly Glenn-Copeland — \"Ever New\" (Keyboard Fantasies, 1986)",
+      "ref": "Shimmering, hopeful bell-like notes in a gentle arpeggio, as on Beverly Glenn-Copeland’s \"Ever New\"",
       "artist": "Beverly Glenn-Copeland",
       "tags": ["seq", "ambient", "gentle", "soft", "80s"],
       "level": 2,
@@ -12135,8 +12135,8 @@
     {
       "id": "k2-silence-is-the-answer-drone",
       "name": "Meditation Fifth Drone",
-      "ref": "In the style of Deuter — Silence Is the Answer (1980)",
-      "artist": "Deuter",
+      "ref": "A calm, open root and fifth breathing slowly through a soft filter, like a held tanpura",
+      "artist": "Meditation music",
       "tags": ["drone", "new age", "calm", "soft", "80s"],
       "level": 1,
       "blurb": "A calm, open drone of a root and a fifth, breathing slowly through a soft filter.",
@@ -12214,7 +12214,7 @@
     {
       "id": "k2-solaris-ocean-twinkle",
       "name": "Ocean-Planet Twinkle",
-      "ref": "In the style of Eduard Artemyev — Solaris (1972)",
+      "ref": "A held glassy tone scattered with slow, random resonant twinkles, eerie as Eduard Artemyev’s Solaris score",
       "artist": "Eduard Artemyev",
       "tags": ["fx", "soundtrack", "sci-fi", "calm", "70s"],
       "level": 3,
@@ -12307,12 +12307,12 @@
     {
       "id": "k2-heavy-water-haze-pad",
       "name": "Foggy Lullaby Pad",
-      "ref": "In the style of Grouper — \"Heavy Water/I’d Rather Be Sleeping\" (Dragging a Dead Deer Up a Hill, 2008)",
-      "artist": "Grouper",
+      "ref": "A dim, muffled pad drifting in under a lullaby, all softness and no edges",
+      "artist": "Dream pop",
       "tags": ["pad", "ambient", "dream pop", "soft", "00s"],
       "level": 1,
       "blurb": "A dim, foggy pad that drifts in under a lullaby, all softness and no edges.",
-      "how": "A square and a triangle through a low-pass turned well down, with a slow swell and a long fade. Most of the sound is removed: what is left is warm, muffled and far away. This describes the style of playing, not the exact sound on the record.",
+      "how": "A square and a triangle through a low-pass turned well down, with a slow swell and a long fade. Most of the sound is removed: what is left is warm, muffled and far away.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -12379,7 +12379,7 @@
     {
       "id": "k2-miami-bass-cowbell",
       "name": "Miami Bass Cowbell",
-      "ref": "In the style of Miami bass",
+      "ref": "Two clanking square waves a little over a fifth apart: the drum-machine cowbell of a Miami bass party",
       "artist": "Miami bass",
       "tags": ["perc", "miami bass", "electro", "80s"],
       "level": 2,
@@ -12454,12 +12454,12 @@
     {
       "id": "k2-neubauten-scrap-metal-hit",
       "name": "Scrap-Metal Hit",
-      "ref": "In the style of Einstürzende Neubauten — \"Yü-Gung\" (Halber Mensch, 1985)",
-      "artist": "Einstürzende Neubauten",
+      "ref": "Harsh, clanging hits at unmusical pitches, like struck sheet metal in 1980s industrial music",
+      "artist": "Industrial",
       "tags": ["perc", "industrial", "metallic", "80s"],
       "level": 2,
       "blurb": "Harsh, clanging hits like struck sheet metal, each at a different, unmusical pitch.",
-      "how": "The ring position multiplies the two oscillators at an awkward ratio, giving clangorous partials that belong to no scale. FILTER 2 and a high-pass peak make them harsh, and a short envelope makes each a hit. This describes the style of playing, not the exact sound on the record.",
+      "how": "The ring position multiplies the two oscillators at an awkward ratio, giving clangorous partials that belong to no scale. FILTER 2 and a high-pass peak make them harsh, and a short envelope makes each a hit.",
       "phrase": {
         "bpm": 110,
         "loop": true,
@@ -12528,8 +12528,8 @@
     {
       "id": "k2-scarlatti-sonata-harpsichord",
       "name": "Baroque Harpsichord",
-      "ref": "In the style of Domenico Scarlatti — the keyboard sonatas",
-      "artist": "Domenico Scarlatti",
+      "ref": "Bright, quill-plucked notes that die away with nothing held, for a busy Baroque harpsichord figure",
+      "artist": "Baroque",
       "tags": ["pluck", "baroque", "classical", "harpsichord"],
       "level": 1,
       "blurb": "A bright, plucked harpsichord tone playing a busy baroque figure.",
@@ -12628,7 +12628,7 @@
     {
       "id": "k2-invader-march-bass",
       "name": "Invader March Bass",
-      "ref": "In the style of late-1970s arcade games",
+      "ref": "A plodding four-note square-wave descent, the march of an alien fleet in a late-1970s arcade game",
       "artist": "Arcade games",
       "tags": ["bass", "games", "retro", "70s"],
       "level": 1,
@@ -12698,7 +12698,7 @@
     {
       "id": "k2-do-you-feel-talkbox-lead",
       "name": "Talk-Box Lead",
-      "ref": "In the style of Peter Frampton — \"Do You Feel Like We Do\" (Frampton Comes Alive!, 1976)",
+      "ref": "A buzzing lead that opens like a vowel on every note: Peter Frampton’s talk box on \"Do You Feel Like We Do\"",
       "artist": "Peter Frampton",
       "tags": ["lead", "rock", "talk box", "70s"],
       "level": 3,
@@ -12792,7 +12792,7 @@
     {
       "id": "k2-trinidad-steelpan",
       "name": "Ring-Mod Steelpan",
-      "ref": "In the style of Trinidad steelpan bands",
+      "ref": "A bright, ringing steel drum playing a sunny calypso line, as Trinidad’s pan bands do",
       "artist": "Trinidad steelpan",
       "tags": ["pluck", "caribbean", "world", "gentle"],
       "level": 2,
@@ -12872,8 +12872,8 @@
     {
       "id": "k2-raga-yaman-sitar",
       "name": "Bending Sitar",
-      "ref": "In the style of Ravi Shankar — raga Yaman",
-      "artist": "Ravi Shankar",
+      "ref": "A buzzing plucked line whose notes bend up after they are struck, like a sitar in a Hindustani raga",
+      "artist": "Hindustani classical music",
       "tags": ["pluck", "indian classical", "world", "60s"],
       "level": 3,
       "blurb": "A buzzing, plucked sitar line whose notes bend up after they are struck.",
@@ -12964,7 +12964,7 @@
     {
       "id": "k2-jah-shaka-dub-siren",
       "name": "Sound-System Dub Siren",
-      "ref": "In the style of Jah Shaka sound system",
+      "ref": "A warbling siren sweeping up while held and falling after, the dub siren of Jah Shaka’s sound system",
       "artist": "Jah Shaka",
       "tags": ["fx", "dub", "reggae", "sound system"],
       "level": 2,
@@ -13055,7 +13055,7 @@
     {
       "id": "k2-javanese-bonang",
       "name": "Gamelan Bonang",
-      "ref": "In the style of Javanese gamelan",
+      "ref": "Bright little gongs with off-key overtones interlocking in a pelog-like scale, as in Javanese gamelan",
       "artist": "Javanese gamelan",
       "tags": ["keys", "gamelan", "world", "gentle"],
       "level": 2,
@@ -13139,12 +13139,12 @@
     {
       "id": "k2-forest-nativity-sanza",
       "name": "Electric Sanza",
-      "ref": "In the style of Francis Bebey — \"Forest Nativity\" (Akwaaba, 1984)",
-      "artist": "Francis Bebey",
+      "ref": "A soft, woody thumb piano with a metallic twang, circling a gentle pattern like a Central African sanza",
+      "artist": "Central African sanza",
       "tags": ["pluck", "african", "world", "gentle", "80s"],
       "level": 1,
       "blurb": "A soft, woody thumb piano playing a gentle, circling pattern.",
-      "how": "A sanza, or thumb piano, is a row of tuned metal tongues plucked with the thumbs. A triangle with a touch of ring modulation gives the soft, slightly metallic tone, and a short pluck with a little ring after gives the tongue’s twang. This describes the style of playing, not the exact sound on the record.",
+      "how": "A sanza, or thumb piano, is a row of tuned metal tongues plucked with the thumbs. A triangle with a touch of ring modulation gives the soft, slightly metallic tone, and a short pluck with a little ring after gives the tongue’s twang.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -13223,7 +13223,7 @@
     {
       "id": "k2-chiptune-octave-flicker",
       "name": "Chiptune Octave Flicker",
-      "ref": "In the style of 8-bit chiptune",
+      "ref": "A thin pulse flicking to its octave and back so fast it fuses into one buzzing 8-bit tone",
       "artist": "Chiptune",
       "tags": ["lead", "chiptune", "games", "retro"],
       "level": 3,
@@ -13320,12 +13320,12 @@
     {
       "id": "k2-branca-feedback-guitar",
       "name": "Feedback Guitar Army",
-      "ref": "In the style of Glenn Branca — \"The Ascension\" (1981)",
-      "artist": "Glenn Branca",
+      "ref": "A roaring, tremolo-picked power fifth feeding back into a howl, like a wall of no-wave guitars",
+      "artist": "No wave",
       "tags": ["lead", "no wave", "noise rock", "80s"],
       "level": 3,
       "blurb": "A roaring, tremolo-picked fifth that feeds back into a howl, like a wall of electric guitars.",
-      "how": "Two sawtooths a fifth apart are a power chord. The output fed back into EXT SIGNAL IN overdrives the filters, and the peaked low-pass picks out a ringing overtone that sings above the roar. Fast repeated notes are the tremolo picking. This describes the style of playing, not the exact sound on the record.",
+      "how": "Two sawtooths a fifth apart are a power chord. The output fed back into EXT SIGNAL IN overdrives the filters, and the peaked low-pass picks out a ringing overtone that sings above the roar. Fast repeated notes are the tremolo picking.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -13411,12 +13411,12 @@
     {
       "id": "k2-the-bottle-soul-jazz-lead",
       "name": "Soul-Jazz Synth Flute",
-      "ref": "In the style of Brian Jackson — \"The Bottle\" (Gil Scott-Heron & Brian Jackson, Winter in America, 1974)",
-      "artist": "Brian Jackson",
+      "ref": "A soft, flute-like line with a gentle vibrato playing the blues, for early-1970s soul jazz",
+      "artist": "Soul jazz",
       "tags": ["lead", "soul jazz", "funk", "70s"],
       "level": 1,
       "blurb": "A soft, flute-like synth playing a bluesy line with a gentle vibrato.",
-      "how": "A triangle with a little square, through a soft low-pass, with a vibrato from the modulation generator. Early-70s soul jazz often put a synth or a flute on the hook; this is between the two. This describes the style of playing, not the exact sound on the record.",
+      "how": "A triangle with a little square, through a soft low-pass, with a vibrato from the modulation generator. Early-70s soul jazz often put a synth or a flute on the hook; this is between the two.",
       "phrase": {
         "bpm": 104,
         "loop": true,
@@ -13503,7 +13503,7 @@
     {
       "id": "k2-at-les-detroit-dyad-stab",
       "name": "Detroit Minor-Seventh Stab",
-      "ref": "In the style of Carl Craig — \"At Les\" (More Songs About Food and Revolutionary Art, 1997)",
+      "ref": "A soft, resonant minor-seventh stab hanging over a deep groove, as in Carl Craig’s \"At Les\"",
       "artist": "Carl Craig",
       "tags": ["keys", "detroit techno", "stab", "90s"],
       "level": 2,
@@ -13577,7 +13577,7 @@
     {
       "id": "k2-flesh-new-beat-bass",
       "name": "Slow New-Beat Bass",
-      "ref": "In the style of A Split-Second — \"Flesh\" (1986)",
+      "ref": "EBM slowed to a crawl: the heavy, menacing snarl of A Split-Second’s \"Flesh\" and Belgian new beat",
       "artist": "A Split-Second",
       "tags": ["bass", "new beat", "ebm", "80s"],
       "level": 2,
@@ -13731,12 +13731,12 @@
     {
       "id": "k2-mittoo-bubble-organ",
       "name": "Reggae Bubble Organ",
-      "ref": "In the style of Jackie Mittoo — \"Ram Jam\" (1967)",
-      "artist": "Jackie Mittoo",
+      "ref": "A hollow organ bouncing low and high in eighths: the bubble under a 1960s reggae groove",
+      "artist": "Reggae organ",
       "tags": ["keys", "reggae", "organ", "60s"],
       "level": 1,
       "blurb": "A bouncing, hollow organ “bubble”, the shuffling eighth-note pattern under a reggae groove.",
-      "how": "The bubble is an organ part that bounces between low and high notes in eighths. Two squares an octave apart sound like drawbar organ, with no filter movement and a quick cut-off between notes, so it bounces rather than drones. This describes the style of playing, not the exact sound on the record.",
+      "how": "The bubble is an organ part that bounces between low and high notes in eighths. Two squares an octave apart sound like drawbar organ, with no filter movement and a quick cut-off between notes, so it bounces rather than drones.",
       "phrase": {
         "bpm": 76,
         "loop": true,
@@ -13816,7 +13816,7 @@
     {
       "id": "k2-egypt-egypt-zap-bass",
       "name": "Electro Zap Bass",
-      "ref": "In the style of Egyptian Lover — \"Egypt, Egypt\" (1984)",
+      "ref": "Every note zaps down into place: Egyptian Lover’s \"Egypt, Egypt\" and early West Coast electro",
       "artist": "Egyptian Lover",
       "tags": ["bass", "electro", "west coast", "80s"],
       "level": 2,

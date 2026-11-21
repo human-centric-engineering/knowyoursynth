@@ -18,7 +18,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-berlin-transposed',
     name: 'Berlin Transposed',
-    ref: 'In the style of Tangerine Dream’s Phaedra sequences',
+    ref: 'A pumping eighth-note bass sequence moved a bar at a time from the keys, as Tangerine Dream played Phaedra',
     artist: 'Tangerine Dream',
     tags: ['bass', 'sequence', 'berlin school'],
     level: 2,
@@ -84,7 +84,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-rubycon-pulse',
     name: 'Rubycon Pulse',
-    ref: 'In the style of Tangerine Dream’s Rubycon',
+    ref: 'Tangerine Dream’s Rubycon machinery: a sixteenth-note pulse and a slower counter-line changing chord as one',
     artist: 'Tangerine Dream',
     tags: ['seq', 'sequence', 'berlin school'],
     level: 3,
@@ -159,7 +159,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-schulze-drift',
     name: 'Schulze Drift',
-    ref: 'In the style of Klaus Schulze’s Moondawn',
+    ref: 'A hypnotic minor arpeggio drifting over slow chords for bars on end, like Klaus Schulze’s Moondawn',
     artist: 'Klaus Schulze',
     tags: ['seq', 'sequence', 'berlin school'],
     level: 2,
@@ -232,7 +232,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-octave-bounce',
     name: 'Octave Bounce',
-    ref: 'In the style of Giorgio Moroder’s I Feel Love',
+    ref: 'The root-and-octave sixteenth bass that Giorgio Moroder set bouncing under “I Feel Love”',
     artist: 'Giorgio Moroder',
     tags: ['bass', 'sequence', 'disco'],
     level: 1,
@@ -293,7 +293,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-oxygene-arp',
     name: 'Oxygène Arpeggio',
-    ref: 'In the style of Jean-Michel Jarre’s Oxygène',
+    ref: 'Soft square-wave arpeggios rippling in parallel octaves over slow minor chords, as on Jarre’s Oxygène',
     artist: 'Jean-Michel Jarre',
     tags: ['seq', 'arpeggio'],
     level: 2,
@@ -362,7 +362,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-night-drive',
     name: 'Night Drive',
-    ref: 'In the style of Kavinsky’s Nightcall',
+    ref: 'Dark, resonant synthwave eighths with an octave kick, the moody drive of Kavinsky’s “Nightcall”',
     artist: 'Kavinsky',
     tags: ['bass', 'synthwave'],
     level: 1,
@@ -422,8 +422,8 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-motorik',
     name: 'Motorik',
-    ref: 'In the style of Neu!’s Hallogallo',
-    artist: 'Neu!',
+    ref: 'A relentless eighth-note figure over a drone, rocking between two chords: the motorik groove of krautrock',
+    artist: 'Krautrock',
     tags: ['seq', 'krautrock'],
     level: 2,
     blurb:
@@ -491,7 +491,7 @@ export const TRANSPOSED: SoundSpec[] = [
   {
     id: 'shc-trans-europe',
     name: 'Trans-Europe',
-    ref: 'In the style of Kraftwerk’s Trans-Europe Express',
+    ref: 'Kraftwerk’s “Trans-Europe Express” rattles like this: clanking squares, three against four',
     artist: 'Kraftwerk',
     tags: ['seq', 'electro'],
     level: 2,

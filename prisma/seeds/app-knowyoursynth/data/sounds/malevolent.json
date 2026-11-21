@@ -891,7 +891,7 @@
     {
       "id": "mal-acid-line",
       "name": "Acid Line",
-      "ref": "In the style of acid house",
+      "ref": "A squelchy, resonant saw bass that snaps shut on every note, the raw stuff of acid house",
       "artist": "Acid house",
       "tags": ["bass", "acid", "filter"],
       "level": 1,
@@ -975,7 +975,7 @@
     {
       "id": "mal-two-filters",
       "name": "Two Filters",
-      "ref": "In the style of ambient music",
+      "ref": "One filter darkening one oscillator while it thins the other, for slow-moving ambient textures",
       "artist": "Ambient",
       "tags": ["pad", "patched", "multimode"],
       "level": 2,
@@ -1049,7 +1049,7 @@
     {
       "id": "mal-drone",
       "name": "Beating Drone",
-      "ref": "In the style of drone music",
+      "ref": "Two saws beating slowly against each other with no key held, built for drone music",
       "artist": "Drone music",
       "tags": ["drone", "pwm", "ambient"],
       "level": 1,
@@ -1113,7 +1113,7 @@
     {
       "id": "mal-berlin-arp",
       "name": "Berlin Arp",
-      "ref": "In the style of Berlin-school sequencer music",
+      "ref": "Bright, plucky sequencing that breathes with a slow filter sweep, straight out of the Berlin School",
       "artist": "Berlin school",
       "tags": ["seq", "arp", "filter"],
       "level": 1,
@@ -1187,7 +1187,7 @@
     {
       "id": "mal-whistle",
       "name": "Filter Whistle",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "A pure filter tone played from the keys with no oscillator, a BBC Radiophonic Workshop trick",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["lead", "filter", "sine"],
       "level": 2,
@@ -1257,7 +1257,7 @@
     {
       "id": "mal-vibrato-lead",
       "name": "Vibrato Lead",
-      "ref": "In the style of 1970s synth soloists",
+      "ref": "A bright two-saw lead with a joystick vibrato, made for a 1970s keyboard solo",
       "artist": "70s synth soloists",
       "tags": ["lead", "vibrato", "joystick"],
       "level": 1,
@@ -1333,7 +1333,7 @@
     {
       "id": "mal-pfunk-bass",
       "name": "P-Funk Synth Bass",
-      "ref": "In the style of Parliament — “Flash Light”",
+      "ref": "Fat, rubbery and sliding: the Minimoog bass that bounces under Parliament’s “Flash Light”",
       "artist": "Parliament",
       "tags": ["bass", "funk", "filter"],
       "level": 2,
@@ -1405,7 +1405,7 @@
     {
       "id": "mal-drill-808",
       "name": "Drill 808",
-      "ref": "In the style of UK drill",
+      "ref": "A deep, gritty sub that thumps on each note and slides long between them, as UK drill uses it",
       "artist": "UK drill",
       "tags": ["bass", "drill", "glide"],
       "level": 2,
@@ -1481,7 +1481,7 @@
     {
       "id": "mal-neuro-bass",
       "name": "Neuro Bass",
-      "ref": "In the style of Noisia",
+      "ref": "A snarling, metallic, cross-modulated bass that tears as it moves, the territory of Noisia’s neurofunk",
       "artist": "Noisia",
       "tags": ["bass", "drum and bass", "patched"],
       "level": 3,
@@ -1548,7 +1548,7 @@
     {
       "id": "mal-techno-rumble",
       "name": "Techno Rumble",
-      "ref": "In the style of Berlin techno",
+      "ref": "A dark, saturated rumble rolling under the kick in a Berlin techno set",
       "artist": "Berlin techno",
       "tags": ["bass", "techno", "drive"],
       "level": 2,
@@ -1612,7 +1612,7 @@
     {
       "id": "mal-accent-acid",
       "name": "Accented Acid",
-      "ref": "In the style of Hardfloor — “Acperience 1”",
+      "ref": "Hardfloor’s “Acperience 1” turned into one patch: a screaming 303 line whose loud notes open wider",
       "artist": "Hardfloor",
       "tags": ["bass", "acid", "patched"],
       "level": 3,
@@ -1702,7 +1702,7 @@
     {
       "id": "mal-electro-bass",
       "name": "Electro Bass",
-      "ref": "In the style of Egyptian Lover",
+      "ref": "Short, hollow and bouncy, the synth bass Egyptian Lover set against an 808 groove",
       "artist": "Egyptian Lover",
       "tags": ["bass", "electro", "pulse"],
       "level": 1,
@@ -1763,7 +1763,7 @@
     {
       "id": "mal-just-cant-bass",
       "name": "Synth-Pop Bass",
-      "ref": "In the style of Vince Clarke",
+      "ref": "Chirpy, bright sequenced eighths, the early synth-pop bass Vince Clarke made his signature",
       "artist": "Vince Clarke",
       "tags": ["bass", "synth-pop", "pulse"],
       "level": 1,
@@ -1826,7 +1826,7 @@
     {
       "id": "mal-italo-octave-arp",
       "name": "Italo Octave Arp",
-      "ref": "In the style of Italo disco",
+      "ref": "Root and octave bouncing in sixteenths, the pumping bass of Italo disco",
       "artist": "Italo disco",
       "tags": ["bass", "italo disco", "arp"],
       "level": 1,
@@ -1889,7 +1889,7 @@
     {
       "id": "mal-feel-love-arp",
       "name": "Pulsing Sequence Bass",
-      "ref": "In the style of Giorgio Moroder — “I Feel Love”",
+      "ref": "Root, fifth and octave pulsing upward without end, as in Giorgio Moroder’s “I Feel Love”",
       "artist": "Giorgio Moroder",
       "tags": ["bass", "disco", "arp"],
       "level": 2,
@@ -1950,8 +1950,8 @@
     {
       "id": "mal-dub-sub",
       "name": "Dub Sub",
-      "ref": "In the style of King Tubby",
-      "artist": "King Tubby",
+      "ref": "A huge, round sub that swells rather than clicks, felt more than heard, as on a dub reggae record",
+      "artist": "Dub reggae",
       "tags": ["bass", "dub", "triangle"],
       "level": 1,
       "blurb": "A huge, round, deep sub bass, felt more than heard.",
@@ -2004,7 +2004,7 @@
     {
       "id": "mal-regulate-slide",
       "name": "West Coast Slide Bass",
-      "ref": "In the style of Dr. Dre — “Let Me Ride”",
+      "ref": "A warm, lazy, gliding synth bass, the smooth low end of Dr. Dre’s “Let Me Ride”",
       "artist": "Dr. Dre",
       "tags": ["bass", "g-funk", "glide"],
       "level": 2,
@@ -2058,7 +2058,7 @@
     {
       "id": "mal-deep-house-bass",
       "name": "Deep House Bass",
-      "ref": "In the style of Larry Heard — “Can You Feel It”",
+      "ref": "Soft and rounded, barely plucked: the late-night bass of Larry Heard’s “Can You Feel It”",
       "artist": "Larry Heard",
       "tags": ["bass", "deep house", "filter"],
       "level": 1,
@@ -2116,7 +2116,7 @@
     {
       "id": "mal-autobahn-bass",
       "name": "Autobahn Bass",
-      "ref": "In the style of Kraftwerk — “Autobahn”",
+      "ref": "Kraftwerk’s “Autobahn” in miniature: a warm, punchy bass that rolls steadily along",
       "artist": "Kraftwerk",
       "tags": ["bass", "krautrock", "70s"],
       "level": 1,
@@ -2179,7 +2179,7 @@
     {
       "id": "mal-ghost-rider-pulse",
       "name": "Ghost Rider Pulse",
-      "ref": "In the style of Suicide — “Ghost Rider”",
+      "ref": "A raw, fuzzy note that throbs by itself in eighths, the machine pulse Suicide built “Ghost Rider” on",
       "artist": "Suicide",
       "tags": ["seq", "post-punk", "patched"],
       "level": 3,
@@ -2246,7 +2246,7 @@
     {
       "id": "mal-headhunter-arp",
       "name": "EBM Sequence",
-      "ref": "In the style of Front 242 — “Headhunter”",
+      "ref": "Hard, metallic sixteenths marching up a minor chord: Front 242’s “Headhunter” and Belgian EBM",
       "artist": "Front 242",
       "tags": ["bass", "ebm", "arp"],
       "level": 2,
@@ -2309,7 +2309,7 @@
     {
       "id": "mal-dx-fm-bass",
       "name": "Cross-FM Bass",
-      "ref": "In the style of 1980s synth-funk",
+      "ref": "One VCO modulating the other for a metallic slap, the 1980s synth-funk bass done on analogue",
       "artist": "Synth-funk",
       "tags": ["bass", "funk", "fm"],
       "level": 3,
@@ -2380,7 +2380,7 @@
     {
       "id": "mal-growl-bass",
       "name": "Filter-FM Growl",
-      "ref": "In the style of Skrillex — “Scary Monsters and Nice Sprites”",
+      "ref": "The filter shaken at audio rate until it talks and roars, as on Skrillex’s “Scary Monsters and Nice Sprites”",
       "artist": "Skrillex",
       "tags": ["bass", "dubstep", "patched"],
       "level": 3,
@@ -2447,7 +2447,7 @@
     {
       "id": "mal-head-like-a-hole",
       "name": "Industrial Bass",
-      "ref": "In the style of Nine Inch Nails — “Head Like a Hole”",
+      "ref": "A grinding, saturated synth bass for late-1980s industrial rock such as Nine Inch Nails’ “Head Like a Hole”",
       "artist": "Nine Inch Nails",
       "tags": ["bass", "industrial", "drive"],
       "level": 2,
@@ -2510,7 +2510,7 @@
     {
       "id": "mal-turbo-arp",
       "name": "Darksynth Octaves",
-      "ref": "In the style of Carpenter Brut — “Turbo Killer”",
+      "ref": "Driven octaves racing in sixteenths, the pounding bass of Carpenter Brut’s “Turbo Killer”",
       "artist": "Carpenter Brut",
       "tags": ["bass", "darksynth", "arp"],
       "level": 2,
@@ -2575,7 +2575,7 @@
     {
       "id": "mal-spin-me-bass",
       "name": "Hi-NRG Gallop",
-      "ref": "In the style of Dead or Alive — “You Spin Me Round (Like a Record)”",
+      "ref": "Low, high, high: the galloping octave bass that drives Dead or Alive’s “You Spin Me Round (Like a Record)”",
       "artist": "Dead or Alive",
       "tags": ["bass", "hi-nrg", "pulse"],
       "level": 1,
@@ -2641,8 +2641,8 @@
     {
       "id": "mal-shout-bass",
       "name": "New Wave Bass",
-      "ref": "In the style of Tears for Fears — “Shout”",
-      "artist": "Tears for Fears",
+      "ref": "Long, thick bass notes that swell slowly and brood, for mid-1980s new wave",
+      "artist": "1980s new wave",
       "tags": ["bass", "new wave", "filter"],
       "level": 1,
       "blurb": "A thick, brooding, sustained synth bass with a slow filter swell.",
@@ -2701,8 +2701,8 @@
     {
       "id": "mal-steppers-bass",
       "name": "Roots Reggae Bass",
-      "ref": "In the style of Aston “Family Man” Barrett",
-      "artist": "Aston Barrett",
+      "ref": "A round, deep bass that thumps gently and sings, standing in for the bass guitar of roots reggae",
+      "artist": "Roots reggae",
       "tags": ["bass", "reggae", "triangle"],
       "level": 1,
       "blurb": "A round, deep, melodic reggae bass, soft at the front and full underneath.",
@@ -2756,7 +2756,7 @@
     {
       "id": "mal-jungle-sub",
       "name": "Jungle Sub",
-      "ref": "In the style of jungle",
+      "ref": "A sub that drops into each note like a tuned kick, under the chopped breaks of 1990s jungle",
       "artist": "Jungle",
       "tags": ["bass", "jungle", "fm"],
       "level": 2,
@@ -2821,7 +2821,7 @@
     {
       "id": "mal-lucky-man-glide",
       "name": "Gliding Solo",
-      "ref": "In the style of Emerson, Lake & Palmer — “Lucky Man”",
+      "ref": "Every note swooping slowly from the last, the Moog solo that ends Emerson, Lake & Palmer’s “Lucky Man”",
       "artist": "Emerson, Lake & Palmer",
       "tags": ["lead", "prog", "glide"],
       "level": 2,
@@ -2888,7 +2888,7 @@
     {
       "id": "mal-wright-solo",
       "name": "Singing Solo",
-      "ref": "In the style of Pink Floyd — “Shine On You Crazy Diamond”",
+      "ref": "A warm, mournful lead with vibrato under the thumb, Rick Wright’s Minimoog in “Shine On You Crazy Diamond”",
       "artist": "Pink Floyd",
       "tags": ["lead", "prog", "vibrato"],
       "level": 2,
@@ -2958,7 +2958,7 @@
     {
       "id": "mal-cars-lead",
       "name": "Cars Lead",
-      "ref": "In the style of Gary Numan — “Cars”",
+      "ref": "Cold, buzzing saws in octaves with the filter wide open, the lead of Gary Numan’s “Cars”",
       "artist": "Gary Numan",
       "tags": ["lead", "new wave", "70s"],
       "level": 1,
@@ -3014,7 +3014,7 @@
     {
       "id": "mal-tee-lead",
       "name": "Express Lead",
-      "ref": "In the style of Kraftwerk — “Trans-Europe Express”",
+      "ref": "Kraftwerk’s “Trans-Europe Express” lead: a hollow, slightly nasal pulse played clean and even",
       "artist": "Kraftwerk",
       "tags": ["lead", "krautrock", "pulse"],
       "level": 1,
@@ -3072,7 +3072,7 @@
     {
       "id": "mal-boogie-lead",
       "name": "Boogie Bass Lead",
-      "ref": "In the style of Stevie Wonder — “Boogie On Reggae Woman”",
+      "ref": "A squelchy, sliding Moog bassline that is also the hook, as in Stevie Wonder’s “Boogie On Reggae Woman”",
       "artist": "Stevie Wonder",
       "tags": ["lead", "funk", "glide"],
       "level": 2,
@@ -3137,7 +3137,7 @@
     {
       "id": "mal-high-whistle-lead",
       "name": "Funk Whistle",
-      "ref": "In the style of Bernie Worrell — “Aqua Boogie”",
+      "ref": "A piercing, near-sine lead wobbling high above the band, Bernie Worrell’s Minimoog on “Aqua Boogie”",
       "artist": "Bernie Worrell",
       "tags": ["lead", "funk", "vibrato"],
       "level": 2,
@@ -3194,7 +3194,7 @@
     {
       "id": "mal-stratosfear-lead",
       "name": "Cosmic Lead",
-      "ref": "In the style of Tangerine Dream — “Stratosfear”",
+      "ref": "A soaring, vocal lead that opens slowly the longer a note is held: Tangerine Dream’s “Stratosfear”",
       "artist": "Tangerine Dream",
       "tags": ["lead", "berlin school", "filter"],
       "level": 2,
@@ -3263,7 +3263,7 @@
     {
       "id": "mal-oxygene-lead",
       "name": "Oxygène Lead",
-      "ref": "In the style of Jean-Michel Jarre — “Oxygène (Part IV)”",
+      "ref": "Thin and wistful, a narrow pulse with a soft, even waver, as Jarre’s lead sings in “Oxygène (Part IV)”",
       "artist": "Jean-Michel Jarre",
       "tags": ["lead", "70s", "vibrato"],
       "level": 1,
@@ -3322,7 +3322,7 @@
     {
       "id": "mal-mysterons-theremin",
       "name": "Trip-Hop Theremin",
-      "ref": "In the style of Portishead — “Mysterons”",
+      "ref": "An eerie, swooping, nervous theremin line over a slow beat, like the one haunting Portishead’s “Mysterons”",
       "artist": "Portishead",
       "tags": ["lead", "trip-hop", "glide"],
       "level": 2,
@@ -3389,7 +3389,7 @@
     {
       "id": "mal-c64-chord-lead",
       "name": "C64 Chord Blur",
-      "ref": "In the style of Martin Galway",
+      "ref": "Three notes arpeggiated too fast to follow, blurring into a buzzing chord: Martin Galway’s C64 trick",
       "artist": "Martin Galway",
       "tags": ["seq", "chiptune", "arp"],
       "level": 2,
@@ -3451,7 +3451,7 @@
     {
       "id": "mal-trance-lead",
       "name": "Trance Lead",
-      "ref": "In the style of Armin van Buuren",
+      "ref": "One driven voice standing in for a stack of saws, cutting enough for an Armin van Buuren melody",
       "artist": "Armin van Buuren",
       "tags": ["lead", "trance", "drive"],
       "level": 2,
@@ -3513,7 +3513,7 @@
     {
       "id": "mal-shred-lead",
       "name": "Synth Shred Lead",
-      "ref": "In the style of Jordan Rudess",
+      "ref": "A screaming, distorted lead with a hair of glide, for prog-metal keyboard runs in Jordan Rudess’s vein",
       "artist": "Jordan Rudess",
       "tags": ["lead", "prog metal", "drive"],
       "level": 2,
@@ -3574,7 +3574,7 @@
     {
       "id": "mal-da-funk-lead",
       "name": "Squelch Lead",
-      "ref": "In the style of Daft Punk — “Da Funk”",
+      "ref": "Gritty and nasty, a squelching low-middle hook like Daft Punk’s “Da Funk”",
       "artist": "Daft Punk",
       "tags": ["lead", "french house", "filter"],
       "level": 2,
@@ -3640,8 +3640,8 @@
     {
       "id": "mal-breathy-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of Jethro Tull — Ian Anderson",
-      "artist": "Jethro Tull",
+      "ref": "Tone through the low-pass and breath through the band-pass: an overblown 1970s rock flute",
+      "artist": "1970s rock flute",
       "tags": ["wind", "rock", "patched"],
       "level": 3,
       "blurb": "A breathy, overblown rock flute: the tone through the low-pass, the breath through the band-pass.",
@@ -3707,8 +3707,8 @@
     {
       "id": "mal-baroque-oboe",
       "name": "Baroque Oboe",
-      "ref": "In the style of Alessandro Marcello — Oboe Concerto in D minor",
-      "artist": "Alessandro Marcello",
+      "ref": "A thin, plaintive double reed made from a nasal band of narrow pulse, for a Baroque oboe line",
+      "artist": "Baroque oboe",
       "tags": ["wind", "baroque", "patched"],
       "level": 3,
       "blurb": "A thin, plaintive, singing double reed.",
@@ -3776,8 +3776,8 @@
     {
       "id": "mal-klezmer-clarinet",
       "name": "Klezmer Clarinet",
-      "ref": "In the style of Giora Feidman",
-      "artist": "Giora Feidman",
+      "ref": "A woody clarinet that sobs and slides between notes, the crying voice of klezmer",
+      "artist": "Klezmer",
       "tags": ["wind", "klezmer", "glide"],
       "level": 2,
       "blurb": "A woody, crying clarinet that sobs and slides between notes.",
@@ -3836,8 +3836,8 @@
     {
       "id": "mal-muted-trumpet",
       "name": "Muted Trumpet",
-      "ref": "In the style of Miles Davis — “So What”",
-      "artist": "Miles Davis",
+      "ref": "A cool, breathy, buzzing tone with a lip at the front: a trumpet played into a mute, as in 1950s cool jazz",
+      "artist": "Cool jazz",
       "tags": ["brass", "jazz", "patched"],
       "level": 3,
       "blurb": "A cool, breathy, nasal muted trumpet with a soft lip at the start of each note.",
@@ -3904,8 +3904,8 @@
     {
       "id": "mal-schindler-violin",
       "name": "Lamenting Violin",
-      "ref": "In the style of John Williams — Schindler’s List",
-      "artist": "John Williams",
+      "ref": "Soft bow, short slides and an expressive vibrato: a tender solo violin",
+      "artist": "Solo violin",
       "tags": ["strings", "film", "vibrato"],
       "level": 2,
       "blurb": "A tender, singing violin with a soft bow and an expressive vibrato.",
@@ -3968,8 +3968,8 @@
     {
       "id": "mal-elgar-cello",
       "name": "Singing Cello",
-      "ref": "In the style of Elgar — Cello Concerto",
-      "artist": "Elgar",
+      "ref": "A deep, sorrowful cello line with a slow bow and rich vibrato",
+      "artist": "Solo cello",
       "tags": ["strings", "classical", "vibrato"],
       "level": 2,
       "blurb": "A deep, warm, sorrowful cello line with a slow bow and a rich vibrato.",
@@ -4034,8 +4034,8 @@
     {
       "id": "mal-blues-harp",
       "name": "Blues Harp",
-      "ref": "In the style of Little Walter",
-      "artist": "Little Walter",
+      "ref": "A reedy harmonica cupped round a microphone and pushed into a cranked amp, the Chicago blues sound",
+      "artist": "Chicago blues harmonica",
       "tags": ["wind", "blues", "drive"],
       "level": 2,
       "blurb": "A reedy, overdriven blues harmonica that bends into its notes.",
@@ -4101,7 +4101,7 @@
     {
       "id": "mal-regulate-whine",
       "name": "G-Funk Whine",
-      "ref": "In the style of Warren G — “Regulate”",
+      "ref": "The high, lazy, wobbling synth whine that floats over Warren G’s “Regulate”",
       "artist": "Warren G",
       "tags": ["lead", "g-funk", "vibrato"],
       "level": 1,
@@ -4158,7 +4158,7 @@
     {
       "id": "mal-switched-on-bach",
       "name": "Switched-On Lead",
-      "ref": "In the style of Wendy Carlos — Switched-On Bach",
+      "ref": "Crisp, articulate plucks for running counterpoint, the Moog voice of Wendy Carlos’s Switched-On Bach",
       "artist": "Wendy Carlos",
       "tags": ["lead", "baroque", "70s"],
       "level": 2,
@@ -4225,7 +4225,7 @@
     {
       "id": "mal-tomita-whistle",
       "name": "Moonlight Whistle",
-      "ref": "In the style of Isao Tomita — “Clair de lune”",
+      "ref": "An airy filter whistle riding on a soft tone, close to Isao Tomita’s synthesised “Clair de lune”",
       "artist": "Isao Tomita",
       "tags": ["lead", "classical", "filter"],
       "level": 3,
@@ -4295,7 +4295,7 @@
     {
       "id": "mal-electro-pop-pluck",
       "name": "Electro-Pop Pluck",
-      "ref": "In the style of Perfume — “Polyrhythm”",
+      "ref": "Glossy, cute and precise, a pluck for hyperactive Japanese electro-pop such as Perfume’s “Polyrhythm”",
       "artist": "Perfume",
       "tags": ["pluck", "j-pop", "pulse"],
       "level": 1,
@@ -4358,7 +4358,7 @@
     {
       "id": "mal-cumbia-lead",
       "name": "Cumbia Synth Lead",
-      "ref": "In the style of cumbia",
+      "ref": "Two reedy oscillators beating like an accordion, singing a cumbia melody with a waver",
       "artist": "Cumbia",
       "tags": ["lead", "latin", "vibrato"],
       "level": 1,
@@ -4420,7 +4420,7 @@
     {
       "id": "mal-rubycon-sequence",
       "name": "Rubycon Sequence",
-      "ref": "In the style of Tangerine Dream — “Rubycon”",
+      "ref": "Tangerine Dream’s “Rubycon” as a dark, churning sequence whose resonant filter slowly breathes",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "arp"],
       "level": 2,
@@ -4485,7 +4485,7 @@
     {
       "id": "mal-mindphaser-arp",
       "name": "Phasing Sequence",
-      "ref": "In the style of Klaus Schulze — “Mindphaser”",
+      "ref": "A hypnotic sequence with a shifting metallic edge, the cross-modulated shimmer of Klaus Schulze’s “Mindphaser”",
       "artist": "Klaus Schulze",
       "tags": ["seq", "berlin school", "fm"],
       "level": 3,
@@ -4559,7 +4559,7 @@
     {
       "id": "mal-equinoxe-arp",
       "name": "Équinoxe Arp",
-      "ref": "In the style of Jean-Michel Jarre — “Équinoxe (Part 5)”",
+      "ref": "Bright, bouncing sixteenths whose pulse width swims, as Jarre’s sequencer does in “Équinoxe (Part 5)”",
       "artist": "Jean-Michel Jarre",
       "tags": ["seq", "electronic", "pwm"],
       "level": 2,
@@ -4623,8 +4623,8 @@
     {
       "id": "mal-suspiria-arp",
       "name": "Witch Arp",
-      "ref": "In the style of Goblin — Suspiria",
-      "artist": "Goblin",
+      "ref": "A glassy, nagging arpeggio built round a tritone, the ominous lullaby of 1970s Italian horror scores",
+      "artist": "Italian horror scores",
       "tags": ["seq", "horror", "arp"],
       "level": 2,
       "blurb": "An eerie, nagging arpeggio with a tritone in it, ringing like a curse.",
@@ -4683,7 +4683,7 @@
     {
       "id": "mal-chase-arp",
       "name": "Chase Octaves",
-      "ref": "In the style of Giorgio Moroder — “Chase”",
+      "ref": "Low, middle, high in breathless sixteenths: the racing octaves of Giorgio Moroder’s “Chase”",
       "artist": "Giorgio Moroder",
       "tags": ["seq", "disco", "arp"],
       "level": 2,
@@ -4742,7 +4742,7 @@
     {
       "id": "mal-europe-endless",
       "name": "Endless Arp",
-      "ref": "In the style of Kraftwerk — “Europe Endless”",
+      "ref": "A serene, softly pulsing arpeggio with overlapping notes, like Kraftwerk’s “Europe Endless” gliding by",
       "artist": "Kraftwerk",
       "tags": ["seq", "krautrock", "arp"],
       "level": 1,
@@ -4805,7 +4805,7 @@
     {
       "id": "mal-lfo-trance-gate",
       "name": "LFO Trance Gate",
-      "ref": "In the style of trance",
+      "ref": "A held chord chopped into sixteenths by the LFO, the gated pad of 1990s trance",
       "artist": "Trance",
       "tags": ["seq", "trance", "patched"],
       "level": 3,
@@ -4860,7 +4860,7 @@
     {
       "id": "mal-expanding-universe",
       "name": "Self-Playing Pings",
-      "ref": "In the style of Laurie Spiegel — The Expanding Universe",
+      "ref": "Pinging tones that play their own rhythm while a note is held, as in Laurie Spiegel’s The Expanding Universe",
       "artist": "Laurie Spiegel",
       "tags": ["seq", "generative", "patched"],
       "level": 3,
@@ -4931,7 +4931,7 @@
     {
       "id": "mal-music-is-math-arp",
       "name": "Wobbly Arp",
-      "ref": "In the style of Boards of Canada — “Music Is Math”",
+      "ref": "A slow arpeggio that sags out of tune and back, warped-tape nostalgia from Boards of Canada’s “Music Is Math”",
       "artist": "Boards of Canada",
       "tags": ["seq", "electronica", "lfo"],
       "level": 2,
@@ -5003,7 +5003,7 @@
     {
       "id": "mal-bubblebath-arp",
       "name": "Bubblebath Arp",
-      "ref": "In the style of Aphex Twin — “Analogue Bubblebath”",
+      "ref": "Aphex Twin’s “Analogue Bubblebath” as one patch: playful, acidic squelches bubbling up a chord",
       "artist": "Aphex Twin",
       "tags": ["seq", "acid", "arp"],
       "level": 2,
@@ -5065,7 +5065,7 @@
     {
       "id": "mal-ciani-bubbles",
       "name": "Buchla Bubbles",
-      "ref": "In the style of Suzanne Ciani",
+      "ref": "Liquid, falling bloops tumbling over each other, the West Coast sound Suzanne Ciani made her own",
       "artist": "Suzanne Ciani",
       "tags": ["fx", "west coast", "patched"],
       "level": 3,
@@ -5133,7 +5133,7 @@
     {
       "id": "mal-west-coast-ping",
       "name": "West Coast Ping",
-      "ref": "In the style of Morton Subotnick — Silver Apples of the Moon",
+      "ref": "A bright, woody ping that closes almost at once, like the struck tones of Silver Apples of the Moon",
       "artist": "Morton Subotnick",
       "tags": ["pluck", "west coast", "fm"],
       "level": 3,
@@ -5197,7 +5197,7 @@
     {
       "id": "mal-roach-swell",
       "name": "Desert Swell",
-      "ref": "In the style of Steve Roach — Structures from Silence",
+      "ref": "Long notes breathing in and out over seconds, the desert ambience of Steve Roach’s Structures from Silence",
       "artist": "Steve Roach",
       "tags": ["pad", "ambient", "drone"],
       "level": 2,
@@ -5265,7 +5265,7 @@
     {
       "id": "mal-radigue-drone",
       "name": "Slow Beating Drone",
-      "ref": "In the style of Éliane Radigue — Trilogie de la Mort",
+      "ref": "So still it seems not to move, its overtones beating slowly: Éliane Radigue’s Trilogie de la Mort",
       "artist": "Éliane Radigue",
       "tags": ["drone", "ambient", "drone mode"],
       "level": 2,
@@ -5325,7 +5325,7 @@
     {
       "id": "mal-just-fifth-drone",
       "name": "Dream House Drone",
-      "ref": "In the style of La Monte Young",
+      "ref": "An endless pure fifth with a gently rippling pulse, for sitting inside as in La Monte Young’s Dream House",
       "artist": "La Monte Young",
       "tags": ["drone", "minimalism", "drone mode"],
       "level": 2,
@@ -5385,7 +5385,7 @@
     {
       "id": "mal-ocean-waves",
       "name": "Ocean Waves",
-      "ref": "In the style of ambient field recordings",
+      "ref": "Filtered noise swept slowly up and down, surf breaking and drawing back on a quiet shore",
       "artist": "Ambient",
       "tags": ["fx", "ambient", "noise"],
       "level": 1,
@@ -5442,7 +5442,7 @@
     {
       "id": "mal-whistling-wind",
       "name": "Whistling Wind",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "Resonant noise rising and falling like a gale round a tower, a BBC Radiophonic Workshop staple",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "radiophonic", "noise"],
       "level": 2,
@@ -5491,7 +5491,7 @@
     {
       "id": "mal-zeit-drone",
       "name": "Cosmic Drone",
-      "ref": "In the style of Tangerine Dream — Zeit",
+      "ref": "Two low saws bending against each other in a vast, dark churn, Tangerine Dream’s Zeit in a single voice",
       "artist": "Tangerine Dream",
       "tags": ["drone", "kosmische", "fm"],
       "level": 3,
@@ -5552,7 +5552,7 @@
     {
       "id": "mal-thursday-swell",
       "name": "Afternoon Swells",
-      "ref": "In the style of Brian Eno — Thursday Afternoon",
+      "ref": "Soft notes that swell out of silence and sink back, the unhurried calm of Brian Eno’s Thursday Afternoon",
       "artist": "Brian Eno",
       "tags": ["lead", "ambient", "envelope"],
       "level": 1,
@@ -5617,7 +5617,7 @@
     {
       "id": "mal-substrata-pulse",
       "name": "Arctic Pulse",
-      "ref": "In the style of Biosphere — Substrata",
+      "ref": "A cold, glassy tremolo flickering slowly, like light on the Arctic ice of Biosphere’s Substrata",
       "artist": "Biosphere",
       "tags": ["pad", "ambient", "lfo"],
       "level": 2,
@@ -5675,8 +5675,8 @@
     {
       "id": "mal-whale-song",
       "name": "Whale Song",
-      "ref": "In the style of Roger Payne — Songs of the Humpback Whale",
-      "artist": "Roger Payne",
+      "ref": "Long, moaning calls that glide a second between notes, like whale song echoing through deep water",
+      "artist": "Nature recordings",
       "tags": ["fx", "ambient", "glide"],
       "level": 2,
       "blurb": "Long, mournful, sliding calls echoing through deep water.",
@@ -5732,7 +5732,7 @@
     {
       "id": "mal-singing-bowl",
       "name": "Singing Bowl",
-      "ref": "In the style of Tibetan singing bowls",
+      "ref": "Clashing inharmonic partials humming and wavering long after the strike, a Tibetan singing bowl",
       "artist": "Singing bowls",
       "tags": ["perc", "world", "fm"],
       "level": 2,
@@ -5793,8 +5793,8 @@
     {
       "id": "mal-sacrificial-organ",
       "name": "Organ Drone",
-      "ref": "In the style of Kali Malone — The Sacrificial Code",
-      "artist": "Kali Malone",
+      "ref": "A grave pipe-organ chord in a fifth and an octave, its pipes beating very slowly, for long organ drones",
+      "artist": "Organ drone music",
       "tags": ["drone", "minimalism", "drone mode"],
       "level": 2,
       "blurb": "A grave, slowly beating pipe-organ drone in just a fifth and an octave.",
@@ -5847,8 +5847,8 @@
     {
       "id": "mal-dreamy-wobble-lead",
       "name": "Dream Pop Wobble",
-      "ref": "In the style of Slowdive — “Alison”",
-      "artist": "Slowdive",
+      "ref": "A hazy, warped lead that sounds heard through a swimming pool, at home in 1990s dream pop",
+      "artist": "Dream pop",
       "tags": ["lead", "dream pop", "lfo"],
       "level": 2,
       "blurb": "A soft, hazy, gently warped lead, as if heard through a swimming pool.",
@@ -5907,7 +5907,7 @@
     {
       "id": "mal-silver-machine",
       "name": "Space Rock Whoosh",
-      "ref": "In the style of Hawkwind — “Silver Machine”",
+      "ref": "Octave-wide swoops like a rocket overhead, the audio-generator whoosh of Hawkwind’s “Silver Machine”",
       "artist": "Hawkwind",
       "tags": ["fx", "space rock", "lfo"],
       "level": 2,
@@ -5959,8 +5959,8 @@
     {
       "id": "mal-superstition-clav",
       "name": "Funk Clav",
-      "ref": "In the style of Stevie Wonder — “Superstition”",
-      "artist": "Stevie Wonder",
+      "ref": "Spanky and bright, all twang and no body: a synth take on the 1970s funk clavinet",
+      "artist": "1970s funk",
       "tags": ["keys", "funk", "patched"],
       "level": 3,
       "blurb": "A spanky, bright, percussive clavinet, all twang and no body.",
@@ -6023,7 +6023,7 @@
     {
       "id": "mal-mbira",
       "name": "Mbira",
-      "ref": "In the style of the Shona mbira of Zimbabwe",
+      "ref": "A soft, buzzing thumb piano with a metallic shimmer, rolling through the interlocking figures of Shona mbira",
       "artist": "Mbira",
       "tags": ["pluck", "world", "fm"],
       "level": 2,
@@ -6085,8 +6085,8 @@
     {
       "id": "mal-glass-marimba",
       "name": "Ringing Filter Marimba",
-      "ref": "In the style of Philip Glass",
-      "artist": "Philip Glass",
+      "ref": "A woody, mallet-struck knock from a ringing filter, for the repeating figures of minimalism",
+      "artist": "Minimalism",
       "tags": ["perc", "minimalism", "filter"],
       "level": 2,
       "blurb": "A soft, woody, mallet-struck tone for an endlessly repeating minimalist figure.",
@@ -6151,7 +6151,7 @@
     {
       "id": "mal-steelpan",
       "name": "Steelpan",
-      "ref": "In the style of Trinidad steelpan",
+      "ref": "Strong, bright partials over a hollow, singing note, as a Trinidad steel pan rings",
       "artist": "Steelpan",
       "tags": ["perc", "caribbean", "fm"],
       "level": 2,
@@ -6215,8 +6215,8 @@
     {
       "id": "mal-tubular-bells",
       "name": "Tubular Bell",
-      "ref": "In the style of Mike Oldfield — Tubular Bells",
-      "artist": "Mike Oldfield",
+      "ref": "A deep, clanging metal tube that rings for seconds, an orchestral tubular bell",
+      "artist": "Orchestral percussion",
       "tags": ["perc", "prog", "fm"],
       "level": 3,
       "blurb": "A deep, clanging, long-ringing tubular bell.",
@@ -6271,7 +6271,7 @@
     {
       "id": "mal-music-box",
       "name": "Music Box",
-      "ref": "In the style of a wind-up music box",
+      "ref": "Tiny, high, tinkling plucks from the steel comb of a wind-up music box",
       "artist": "Music box",
       "tags": ["keys", "lullaby", "triangle"],
       "level": 1,
@@ -6330,8 +6330,8 @@
     {
       "id": "mal-rameau-harpsichord",
       "name": "Two-Filter Harpsichord",
-      "ref": "In the style of Jean-Philippe Rameau",
-      "artist": "Jean-Philippe Rameau",
+      "ref": "A bright, jangling harpsichord with two registers filtered two different ways, for Baroque keyboard music",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "baroque", "patched"],
       "level": 3,
       "blurb": "A bright, twangy, jangling harpsichord, its two registers filtered two different ways.",
@@ -6397,8 +6397,8 @@
     {
       "id": "mal-pizzicato",
       "name": "Pizzicato",
-      "ref": "In the style of Leroy Anderson — “Plink, Plank, Plunk!”",
-      "artist": "Leroy Anderson",
+      "ref": "Short, round, playful plucked strings, the pizzicato of light orchestral music",
+      "artist": "Light orchestral music",
       "tags": ["pluck", "light classical", "filter"],
       "level": 1,
       "blurb": "Short, round, playful plucked strings.",
@@ -6450,8 +6450,8 @@
     {
       "id": "mal-koto-twang",
       "name": "Koto Twang",
-      "ref": "In the style of Michio Miyagi — “Haru no Umi”",
-      "artist": "Michio Miyagi",
+      "ref": "A bright plucked zither with a flick of pitch as each silk string is pressed: the Japanese koto",
+      "artist": "Japanese koto music",
       "tags": ["pluck", "world", "fm"],
       "level": 2,
       "blurb": "A bright, twanging plucked zither with a little pitch flick at the start of each note.",
@@ -6524,8 +6524,8 @@
     {
       "id": "mal-sitar-drone",
       "name": "Sitar over a Drone",
-      "ref": "In the style of Ravi Shankar",
-      "artist": "Ravi Shankar",
+      "ref": "A buzzing, sliding plucked melody over a drone that stays put, as a sitar plays in Hindustani music",
+      "artist": "Hindustani classical music",
       "tags": ["pluck", "world", "patched"],
       "level": 3,
       "blurb": "A buzzing, sliding plucked melody over a drone that stays put whatever is played.",
@@ -6596,8 +6596,8 @@
     {
       "id": "mal-bansuri-drone",
       "name": "Bansuri over a Drone",
-      "ref": "In the style of Hariprasad Chaurasia",
-      "artist": "Hariprasad Chaurasia",
+      "ref": "A breathy bamboo flute that slides and wavers over an unchanging drone, the bansuri of north India",
+      "artist": "Hindustani classical music",
       "tags": ["wind", "world", "patched"],
       "level": 3,
       "blurb": "A breathy, sliding bamboo flute melody over a soft, unchanging drone.",
@@ -6669,7 +6669,7 @@
     {
       "id": "mal-highland-pipes",
       "name": "Highland Pipes",
-      "ref": "In the style of Scottish Highland pipes",
+      "ref": "A piercing chanter with a raw buzz over a steady drone, Scottish Highland pipes",
       "artist": "Highland pipes",
       "tags": ["wind", "world", "patched"],
       "level": 3,
@@ -6734,7 +6734,7 @@
     {
       "id": "mal-hurdy-gurdy",
       "name": "Hurdy-Gurdy",
-      "ref": "In the style of medieval dance music",
+      "ref": "A wheel-cranked drone rasping under a tune, ready for a medieval dance",
       "artist": "Medieval music",
       "tags": ["keys", "medieval", "patched"],
       "level": 3,
@@ -6807,8 +6807,8 @@
     {
       "id": "mal-angela-rhodes",
       "name": "Tremolo Electric Piano",
-      "ref": "In the style of Bob James — “Angela”",
-      "artist": "Bob James",
+      "ref": "A warm, bell-toned tine piano with a gentle tremolo, the electric piano of 1970s jazz-funk",
+      "artist": "1970s jazz-funk",
       "tags": ["keys", "jazz", "fm"],
       "level": 3,
       "blurb": "A warm, bell-toned electric piano with a gentle stereo-style tremolo.",
@@ -6876,7 +6876,7 @@
     {
       "id": "mal-techno-kick",
       "name": "Techno Kick",
-      "ref": "In the style of 1990s techno",
+      "ref": "A hard, driven kick whose pitch drops in a flash, with a click at the front for 1990s techno",
       "artist": "Techno",
       "tags": ["perc", "techno", "drums"],
       "level": 2,
@@ -6942,7 +6942,7 @@
     {
       "id": "mal-electro-snare",
       "name": "Electro Snare",
-      "ref": "In the style of electro",
+      "ref": "A tuned thwack and a burst of noise, the snappy machine snare of electro",
       "artist": "Electro",
       "tags": ["perc", "electro", "drums"],
       "level": 2,
@@ -7001,7 +7001,7 @@
     {
       "id": "mal-high-pass-hats",
       "name": "High-Pass Hats",
-      "ref": "In the style of 1990s house",
+      "ref": "Nothing but the top of the noise, ticking crisply on the off-beats of 1990s house",
       "artist": "House",
       "tags": ["perc", "house", "patched"],
       "level": 2,
@@ -7060,7 +7060,7 @@
     {
       "id": "mal-hand-clap",
       "name": "Hand Clap",
-      "ref": "In the style of Chicago house",
+      "ref": "A papery, snapping clap on the two and four of a Chicago house track",
       "artist": "Chicago house",
       "tags": ["perc", "house", "patched"],
       "level": 2,
@@ -7114,7 +7114,7 @@
     {
       "id": "mal-simmons-tom",
       "name": "Electronic Tom",
-      "ref": "In the style of 1980s electronic drums",
+      "ref": "The big round “doom” of a 1980s drum pad, its pitch falling as it rings",
       "artist": "1980s electronic drums",
       "tags": ["perc", "80s", "drums"],
       "level": 2,
@@ -7173,7 +7173,7 @@
     {
       "id": "mal-electro-cowbell",
       "name": "Cowbell",
-      "ref": "In the style of Miami bass",
+      "ref": "Two squares a fifth apart, band-passed into the clanky drum-machine cowbell of Miami bass",
       "artist": "Miami bass",
       "tags": ["perc", "electro", "drums"],
       "level": 2,
@@ -7233,7 +7233,7 @@
     {
       "id": "mal-claves",
       "name": "Claves",
-      "ref": "In the style of Cuban son",
+      "ref": "A hard, woody click with a short ring, tapping out the clave of Cuban son",
       "artist": "Cuban son",
       "tags": ["perc", "latin", "filter"],
       "level": 1,
@@ -7287,7 +7287,7 @@
     {
       "id": "mal-syndrum",
       "name": "Syndrum",
-      "ref": "In the style of disco",
+      "ref": "A ringing electronic drum that dives a long way on every hit: the late-1970s disco “pew”",
       "artist": "Disco",
       "tags": ["perc", "disco", "fm"],
       "level": 2,
@@ -7345,7 +7345,7 @@
     {
       "id": "mal-laser",
       "name": "Laser",
-      "ref": "In the style of 1970s sci-fi films",
+      "ref": "A piercing tone dropping two octaves in a flash, the blaster zap of 1970s science-fiction films",
       "artist": "Sci-fi films",
       "tags": ["fx", "sci-fi", "fm"],
       "level": 1,
@@ -7396,7 +7396,7 @@
     {
       "id": "mal-two-tone-siren",
       "name": "Two-Tone Siren",
-      "ref": "In the style of European emergency sirens",
+      "ref": "Two notes a fourth apart, in turn: the nee-naw of a European ambulance",
       "artist": "Sirens",
       "tags": ["fx", "sound effects", "patched"],
       "level": 2,
@@ -7444,7 +7444,7 @@
     {
       "id": "mal-dalek-voice",
       "name": "Ring-Modulated Voice",
-      "ref": "In the style of the BBC Radiophonic Workshop — the Daleks",
+      "ref": "A voice chopped thirty times a second into a grating robot: the Radiophonic Workshop’s ring-modulated Daleks",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "radiophonic", "patched"],
       "level": 3,
@@ -7509,7 +7509,7 @@
     {
       "id": "mal-droid-chirps",
       "name": "Droid Chirps",
-      "ref": "In the style of Ben Burtt — Star Wars",
+      "ref": "Burbling trills and swoops of a small robot trying to talk, the kind Ben Burtt made for Star Wars droids",
       "artist": "Ben Burtt",
       "tags": ["fx", "sci-fi", "patched"],
       "level": 3,
@@ -7576,7 +7576,7 @@
     {
       "id": "mal-ufo-warble",
       "name": "Saucer Warble",
-      "ref": "In the style of 1950s sci-fi films",
+      "ref": "A fast warble drifting slowly between pitches, the flying saucer of 1950s science-fiction films",
       "artist": "Sci-fi films",
       "tags": ["fx", "sci-fi", "lfo"],
       "level": 1,
@@ -7633,7 +7633,7 @@
     {
       "id": "mal-oramics-tones",
       "name": "Drawn Tones",
-      "ref": "In the style of Daphne Oram",
+      "ref": "Pure, gliding tones with a shimmering inharmonic edge, like the lines Daphne Oram drew on film",
       "artist": "Daphne Oram",
       "tags": ["fx", "radiophonic", "fm"],
       "level": 2,
@@ -7690,8 +7690,8 @@
     {
       "id": "mal-geiger-ticks",
       "name": "Geiger Ticks",
-      "ref": "In the style of Kraftwerk — “Radioactivity”",
-      "artist": "Kraftwerk",
+      "ref": "Dry, irregular-sounding ticks of high-passed noise, a Geiger counter clicking away",
+      "artist": "Electronic sound effects",
       "tags": ["fx", "electronic", "patched"],
       "level": 2,
       "blurb": "The dry, ticking clicks of a Geiger counter.",
@@ -7741,7 +7741,7 @@
     {
       "id": "mal-thunder",
       "name": "Thunder",
-      "ref": "In the style of film sound effects",
+      "ref": "A crack of noise that rolls away into a long, low rumble: thunder for a film soundtrack",
       "artist": "Film sound effects",
       "tags": ["fx", "film", "noise"],
       "level": 2,
@@ -7795,7 +7795,7 @@
     {
       "id": "mal-helicopter",
       "name": "Helicopter",
-      "ref": "In the style of Apocalypse Now — the opening helicopters",
+      "ref": "Rotor blades chopping overhead, the synthesised helicopters that open Apocalypse Now",
       "artist": "Apocalypse Now",
       "tags": ["fx", "film", "lfo"],
       "level": 2,
@@ -7847,7 +7847,7 @@
     {
       "id": "mal-steam-train",
       "name": "Steam Train",
-      "ref": "In the style of Pierre Schaeffer — “Étude aux chemins de fer”",
+      "ref": "Hissing pulses chuffing along, the steam engine Pierre Schaeffer cut up on tape in “Étude aux chemins de fer”",
       "artist": "Pierre Schaeffer",
       "tags": ["fx", "musique concrète", "patched"],
       "level": 2,
@@ -7899,7 +7899,7 @@
     {
       "id": "mal-dial-up",
       "name": "Dial-Up Handshake",
-      "ref": "In the style of 1990s dial-up internet",
+      "ref": "Screeching, warbling and chattering, the handshake of a 1990s dial-up modem",
       "artist": "Dial-up internet",
       "tags": ["fx", "90s", "patched"],
       "level": 3,
@@ -7959,7 +7959,7 @@
     {
       "id": "mal-cartoon-bloops",
       "name": "Cartoon Bloops",
-      "ref": "In the style of cartoon sound effects",
+      "ref": "A bubbling stream of round, falling bloops, straight from a cartoon sound-effects reel",
       "artist": "Cartoon sound effects",
       "tags": ["fx", "cartoon", "patched"],
       "level": 2,
@@ -8016,7 +8016,7 @@
     {
       "id": "mal-noise-riser",
       "name": "Noise Riser",
-      "ref": "In the style of EDM",
+      "ref": "Noise and saw climbing together for seconds, the build into an EDM drop",
       "artist": "EDM",
       "tags": ["fx", "edm", "envelope"],
       "level": 2,
@@ -8066,7 +8066,7 @@
     {
       "id": "mal-glitch-stutter",
       "name": "Glitch Stutter",
-      "ref": "In the style of Oval",
+      "ref": "A tone switched on and off fifteen times a second, skipping like the scratched-CD glitches of Oval",
       "artist": "Oval",
       "tags": ["fx", "glitch", "patched"],
       "level": 3,
@@ -8119,7 +8119,7 @@
     {
       "id": "mal-feedback-howl",
       "name": "Feedback Howl",
-      "ref": "In the style of Merzbow",
+      "ref": "A filter fed back into itself until it screams, the kind of unstable howl Merzbow builds walls from",
       "artist": "Merzbow",
       "tags": ["fx", "noise", "patched"],
       "level": 3,
@@ -8170,7 +8170,7 @@
     {
       "id": "mal-cross-mod-chaos",
       "name": "Cross-Mod Chaos",
-      "ref": "In the style of Throbbing Gristle",
+      "ref": "Two VCOs bending each other into a grinding, inharmonic din, as Throbbing Gristle’s machines did",
       "artist": "Throbbing Gristle",
       "tags": ["fx", "industrial", "patched"],
       "level": 3,
@@ -8236,7 +8236,7 @@
     {
       "id": "mal-escape-ostinato",
       "name": "Escape Ostinato",
-      "ref": "In the style of John Carpenter — Escape from New York",
+      "ref": "A menacing eighth-note figure that never resolves, the pulse of John Carpenter’s Escape from New York",
       "artist": "John Carpenter",
       "tags": ["bass", "film", "filter"],
       "level": 1,
@@ -8298,7 +8298,7 @@
     {
       "id": "mal-handheld-chip-lead",
       "name": "Handheld Chip Lead",
-      "ref": "In the style of Hirokazu Tanaka — Tetris (Game Boy)",
+      "ref": "A bare, hollow square wave with a little ping, Hirokazu Tanaka’s Game Boy Tetris",
       "artist": "Hirokazu Tanaka",
       "tags": ["lead", "chiptune", "pulse"],
       "level": 1,
@@ -8360,7 +8360,7 @@
     {
       "id": "mal-talkbox-wow",
       "name": "Talk-Box Wow",
-      "ref": "In the style of Roger Troutman",
+      "ref": "A funk lead that says “wow” on every note, the talk-box voice of Roger Troutman",
       "artist": "Roger Troutman",
       "tags": ["lead", "funk", "filter"],
       "level": 3,
@@ -8422,7 +8422,7 @@
     {
       "id": "mal-plantasia-lead",
       "name": "Plant Music Lead",
-      "ref": "In the style of Mort Garson — Mother Earth’s Plantasia",
+      "ref": "A sweet, gently wobbling Moog melody, made for house plants on Mort Garson’s Mother Earth’s Plantasia",
       "artist": "Mort Garson",
       "tags": ["lead", "70s", "vibrato"],
       "level": 1,
@@ -8483,7 +8483,7 @@
     {
       "id": "mal-hoedown-blip",
       "name": "Hoedown Blip",
-      "ref": "In the style of Perrey and Kingsley — “Baroque Hoedown”",
+      "ref": "Every note hopping up into place with a comic blip, as Perrey and Kingsley’s Moog does in “Baroque Hoedown”",
       "artist": "Perrey and Kingsley",
       "tags": ["lead", "space age pop", "fm"],
       "level": 2,
@@ -8547,7 +8547,7 @@
     {
       "id": "mal-popcorn-pluck",
       "name": "Popcorn Pluck",
-      "ref": "In the style of Hot Butter — “Popcorn”",
+      "ref": "A short, popping, resonant pluck: the jaunty Moog tune of Hot Butter’s “Popcorn”",
       "artist": "Hot Butter",
       "tags": ["pluck", "70s", "filter"],
       "level": 2,
@@ -8611,8 +8611,8 @@
     {
       "id": "mal-western-whistle",
       "name": "Western Whistle",
-      "ref": "In the style of Ennio Morricone — The Good, the Bad and the Ugly",
-      "artist": "Ennio Morricone",
+      "ref": "A lonely, pure whistle with slides and vibrato, echoing across the desert of a spaghetti western",
+      "artist": "Spaghetti western scores",
       "tags": ["lead", "film", "glide"],
       "level": 1,
       "blurb": "A lonely, pure whistle with vibrato and slides, echoing across a desert.",
@@ -8668,7 +8668,7 @@
     {
       "id": "mal-log-drum",
       "name": "Log Drum Bass",
-      "ref": "In the style of Kabza De Small",
+      "ref": "A woody thock before the boom, then a slide: the amapiano log drum Kabza De Small rides",
       "artist": "Kabza De Small",
       "tags": ["bass", "amapiano", "fm"],
       "level": 2,
@@ -8738,7 +8738,7 @@
     {
       "id": "mal-dembow-pluck",
       "name": "Dembow Pluck",
-      "ref": "In the style of reggaeton",
+      "ref": "A bright, bouncy pluck locked to the three-three-two of the reggaeton dembow",
       "artist": "Reggaeton",
       "tags": ["pluck", "reggaeton", "pulse"],
       "level": 1,
@@ -8799,7 +8799,7 @@
     {
       "id": "mal-whip-it-bass",
       "name": "Zappy New Wave Bass",
-      "ref": "In the style of Devo — “Whip It”",
+      "ref": "Jerky and robotic, every note snapping in with a zap, the synth bass of Devo’s “Whip It”",
       "artist": "Devo",
       "tags": ["bass", "new wave", "fm"],
       "level": 2,
@@ -8863,7 +8863,7 @@
     {
       "id": "mal-fade-to-grey-bass",
       "name": "New Romantic Bass",
-      "ref": "In the style of Visage — “Fade to Grey”",
+      "ref": "A cool eighth-note pulse whose width slowly swims, the aloof New Romantic bass of Visage’s “Fade to Grey”",
       "artist": "Visage",
       "tags": ["bass", "new wave", "pwm"],
       "level": 1,
@@ -8928,7 +8928,7 @@
     {
       "id": "mal-bells-arp",
       "name": "Ringing Bells Arp",
-      "ref": "In the style of Jeff Mills — “The Bells”",
+      "ref": "Metallic FM bells struck in fast sixteenths, the hypnotic ring of Jeff Mills’s “The Bells”",
       "artist": "Jeff Mills",
       "tags": ["seq", "techno", "fm"],
       "level": 3,
@@ -8989,8 +8989,8 @@
     {
       "id": "mal-walking-bass",
       "name": "Walking Bass",
-      "ref": "In the style of Ron Carter",
-      "artist": "Ron Carter",
+      "ref": "A warm, woody, finger-plucked tone walking in quarter notes, like a jazz upright bass",
+      "artist": "Jazz",
       "tags": ["bass", "jazz", "filter"],
       "level": 1,
       "blurb": "A warm, woody, plucked jazz bass walking in steady quarter notes.",
@@ -9049,8 +9049,8 @@
     {
       "id": "mal-radiance-zither",
       "name": "Hammered Zither Shimmer",
-      "ref": "In the style of Laraaji — Ambient 3: Day of Radiance",
-      "artist": "Laraaji",
+      "ref": "A fast cascade of hammered metallic strings, shimmering on and on, for bright ambient music",
+      "artist": "Ambient",
       "tags": ["seq", "ambient", "arp"],
       "level": 2,
       "blurb": "A bright, endlessly shimmering cascade of hammered strings, radiant and joyful.",
@@ -9111,9 +9111,9 @@
     },
     {
       "id": "mal-gymnopedie",
-      "name": "Gymnopédie",
-      "ref": "In the style of Erik Satie — Gymnopédie No. 1",
-      "artist": "Erik Satie",
+      "name": "Still Melody",
+      "ref": "A soft, slow lead with the faintest vibrato, for a simple, melancholy melody",
+      "artist": "Ambient",
       "tags": ["lead", "classical", "triangle"],
       "level": 1,
       "blurb": "A soft, slow, melancholy melody, simple and still.",
@@ -9175,8 +9175,8 @@
     {
       "id": "mal-looking-glass-arp",
       "name": "Marimba Arp",
-      "ref": "In the style of Midori Takada — Through the Looking Glass",
-      "artist": "Midori Takada",
+      "ref": "A gentle ripple of soft mallet strikes, the marimba patterns of minimalism",
+      "artist": "Minimalism",
       "tags": ["seq", "ambient", "filter"],
       "level": 2,
       "blurb": "A gentle, rippling, mallet-struck arpeggio, meditative and warm.",
@@ -9240,7 +9240,7 @@
     {
       "id": "mal-spiral-arp",
       "name": "Spiral Arp",
-      "ref": "In the style of Vangelis — “Spiral”",
+      "ref": "A sequence whirling upward in fifths with a spinning pulse width, as in Vangelis’s “Spiral”",
       "artist": "Vangelis",
       "tags": ["seq", "electronic", "pwm"],
       "level": 2,
@@ -9307,8 +9307,8 @@
     {
       "id": "mal-aruarian-pluck",
       "name": "Lo-Fi Jazz Pluck",
-      "ref": "In the style of Nujabes — “Aruarian Dance”",
-      "artist": "Nujabes",
+      "ref": "A soft, muffled pluck that wobbles like a worn sample, for a mellow jazz-hop loop",
+      "artist": "Jazz-hop",
       "tags": ["pluck", "lo-fi", "lfo"],
       "level": 1,
       "blurb": "A soft, warm, slightly wobbly plucked lead for a mellow jazz-hop loop.",
@@ -9371,7 +9371,7 @@
     {
       "id": "mal-mr-lawrence-bell",
       "name": "Snowfall Bell Lead",
-      "ref": "In the style of Ryuichi Sakamoto — “Merry Christmas Mr. Lawrence”",
+      "ref": "Delicate, wavering FM bells for the wintry synth melody of Ryuichi Sakamoto’s “Merry Christmas Mr. Lawrence”",
       "artist": "Ryuichi Sakamoto",
       "tags": ["lead", "film", "fm"],
       "level": 2,
@@ -9435,7 +9435,7 @@
     {
       "id": "mal-kosmische-lullaby",
       "name": "Kosmische Lullaby",
-      "ref": "In the style of Cluster — “Sowiesoso”",
+      "ref": "A warm, slowly rocking sequence that glows, like Cluster’s farmhouse electronics on “Sowiesoso”",
       "artist": "Cluster",
       "tags": ["seq", "kosmische", "arp"],
       "level": 1,
@@ -9495,8 +9495,8 @@
     {
       "id": "mal-trip-hop-bass",
       "name": "Trip-Hop Bass",
-      "ref": "In the style of Massive Attack — “Angel”",
-      "artist": "Massive Attack",
+      "ref": "Two low saws opening slowly and menacingly under a downtempo beat, the weight of 1990s trip hop",
+      "artist": "Trip hop",
       "tags": ["bass", "trip-hop", "filter"],
       "level": 2,
       "blurb": "A heavy, dark, brooding bass that slowly opens and menaces.",
@@ -9554,7 +9554,7 @@
     {
       "id": "mal-garage-bass",
       "name": "Two-Step Bass",
-      "ref": "In the style of Artful Dodger — “Re-Rewind”",
+      "ref": "Rubbery and skipping, the two-step garage bass of Artful Dodger’s “Re-Rewind”",
       "artist": "Artful Dodger",
       "tags": ["bass", "uk garage", "filter"],
       "level": 2,
@@ -9614,7 +9614,7 @@
     {
       "id": "mal-space-is-the-place",
       "name": "Cosmic Free Lead",
-      "ref": "In the style of Sun Ra — “Space Is the Place”",
+      "ref": "Wild squeals and howling swoops from a cross-modulated lead, the cosmic Moog of Sun Ra",
       "artist": "Sun Ra",
       "tags": ["lead", "free jazz", "fm"],
       "level": 3,
@@ -9674,8 +9674,8 @@
     {
       "id": "mal-bach-prelude-arp",
       "name": "Prelude Arp",
-      "ref": "In the style of Bach — Prelude in C major, The Well-Tempered Clavier",
-      "artist": "Bach",
+      "ref": "Broken chords rippling up five notes at a time in calm, even sixteenths, a Baroque keyboard prelude",
+      "artist": "Baroque keyboard music",
       "tags": ["seq", "baroque", "arp"],
       "level": 1,
       "blurb": "A calm, flowing, broken-chord arpeggio, each chord rippling up through five notes.",

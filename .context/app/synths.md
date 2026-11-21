@@ -367,8 +367,13 @@ matters to the sound gets a `context` line.
 - In the app, sounds are rows in the catalogue tables, not part of the definition (the prototype
   kept them on it; `SynthDef.presets` is optional for that reason). Every stored sound passes
   `validate.ts` against its definition.
-- Copy: plain English, British spelling, concrete actions, no hype. Say "in the style of",
-  never claim to be the exact patch.
+- Copy: plain English, British spelling, concrete actions, no hype. A `ref` says what the sound
+  is like, never "In the style of…", and never claims to be the exact patch. It credits a
+  person or work only when the patch's sound is the one they made: a synth or electronic part
+  (drum machine, sampler preset, vocoder, Mellotron, string machine, tape studio), or a named
+  sound effect that was itself synthesised. A synth imitation of an acoustic or electric
+  instrument credits neither its player nor its composer: it describes the instrument, and
+  `artist` names the genre, era or tradition (owner ruling, 2026-11-20, f-honest-attributions).
 - Run the synth check after adding or changing one (see `.context/app/check/README.md`): it
   validates every id, value and cable, checks each cable can be explained, and renders the riff
   through the real DSP.

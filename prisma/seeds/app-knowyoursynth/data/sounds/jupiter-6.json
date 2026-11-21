@@ -5,7 +5,7 @@
     {
       "id": "jp6-brass",
       "name": "Poly Brass",
-      "ref": "In the style of early-80s synth-pop brass stabs",
+      "ref": "Bright, thick chord stabs with a brassy push on every note, for early-1980s synth-pop",
       "artist": "Classic technique",
       "tags": ["brass", "synth-pop", "80s"],
       "level": 1,
@@ -83,7 +83,7 @@
     {
       "id": "jp6-strings",
       "name": "PWM Strings",
-      "ref": "In the style of early-80s string-machine pads",
+      "ref": "Soft string chords that swell in slowly and shimmer while they hold: an early-1980s string machine",
       "artist": "Classic technique",
       "tags": ["strings", "synth-pop", "80s"],
       "level": 1,
@@ -158,7 +158,7 @@
     {
       "id": "jp6-xmod-bell",
       "name": "Cross-Mod Bell",
-      "ref": "In the style of 80s digital-sounding bells, made on an analogue synth",
+      "ref": "A glassy, clanging bell that rings and fades: the digital 1980s sound, made on an analogue synth",
       "artist": "Classic technique",
       "tags": ["keys", "synth-pop", "80s"],
       "level": 2,
@@ -237,7 +237,7 @@
     {
       "id": "jp6-sync-lead",
       "name": "Sync Lead",
-      "ref": "In the style of new-wave sync leads",
+      "ref": "A tearing mono lead whose tone sweeps down at each note’s start, straight out of new wave",
       "artist": "Classic technique",
       "tags": ["lead", "new wave", "80s"],
       "level": 2,
@@ -310,7 +310,7 @@
     {
       "id": "jp6-unison-bass",
       "name": "Solo Unison Bass",
-      "ref": "In the style of 80s synth-pop bass lines",
+      "ref": "All six voices stacked on one note for a huge, punchy 1980s synth-pop bass",
       "artist": "Classic technique",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -386,7 +386,7 @@
     {
       "id": "jp6-arp",
       "name": "Arpeggio Pluck",
-      "ref": "In the style of 80s synth-pop arpeggios",
+      "ref": "Short plucks running over two octaves from a held chord, the arpeggio under countless 1980s pop songs",
       "artist": "Classic technique",
       "tags": ["seq", "synth-pop", "80s"],
       "level": 1,
@@ -454,7 +454,7 @@
     {
       "id": "jp6-hpf-glass",
       "name": "High-Pass Glass Pad",
-      "ref": "In the style of airy 80s soundtrack pads",
+      "ref": "Thin and glassy with no low end, a pad drifting brighter and darker under a 1980s soundtrack",
       "artist": "Classic technique",
       "tags": ["pad", "soundtrack", "80s"],
       "level": 2,
@@ -529,7 +529,7 @@
     {
       "id": "jp6-bpf-vowel",
       "name": "Band-Pass Vowel",
-      "ref": "In the style of talking-filter synth pads",
+      "ref": "A nasal pad whose aah slowly turns to ooh and back, as if the filter were talking",
       "artist": "Classic technique",
       "tags": ["pad", "synth-pop", "80s"],
       "level": 2,
@@ -588,7 +588,7 @@
     {
       "id": "jp6-ep",
       "name": "Key-Follow Electric Piano",
-      "ref": "In the style of early-80s synth electric pianos",
+      "ref": "A soft, bell-edged electric piano whose high notes die sooner, the way early-1980s synths faked one",
       "artist": "Classic technique",
       "tags": ["keys", "pop", "80s"],
       "level": 2,
@@ -664,7 +664,7 @@
     {
       "id": "jp6-reverse-swell",
       "name": "Inverted Swell",
-      "ref": "In the style of 80s ambient pads",
+      "ref": "Chords that start bright, close as they hold and open again on release, for slow 1980s ambient",
       "artist": "Classic technique",
       "tags": ["pad", "ambient", "80s"],
       "level": 3,
@@ -728,7 +728,7 @@
     {
       "id": "jp6-low-siren",
       "name": "Cross-Mod Siren",
-      "ref": "In the style of 80s sci-fi sound effects",
+      "ref": "A warbling alarm with a metallic rasp growing over each note, ready for a 1980s sci-fi film",
       "artist": "Classic technique",
       "tags": ["fx", "soundtrack", "80s"],
       "level": 3,
@@ -787,7 +787,7 @@
     {
       "id": "jp6-noise-snare",
       "name": "Noise Snare",
-      "ref": "In the style of early drum-machine snares",
+      "ref": "A pitched thump with a burst of noise on top: the snare of an early drum machine",
       "artist": "Classic technique",
       "tags": ["perc", "electro", "80s"],
       "level": 2,
@@ -856,7 +856,7 @@
     {
       "id": "jp6-clav",
       "name": "Funky Clav",
-      "ref": "In the style of 80s synth-funk clavinet parts",
+      "ref": "Short, nasal, plucked chords standing in for a clavinet in 1980s synth-funk",
       "artist": "Classic technique",
       "tags": ["pluck", "funk", "80s"],
       "level": 1,
@@ -925,7 +925,7 @@
     {
       "id": "jp6-organ",
       "name": "Square Organ",
-      "ref": "In the style of combo organs",
+      "ref": "A bright, steady square-wave organ with a gentle tremolo, close to a 1960s combo organ",
       "artist": "Classic technique",
       "tags": ["keys", "pop", "60s"],
       "level": 1,
@@ -992,7 +992,7 @@
     {
       "id": "jp6-vibrato-lead",
       "name": "Hand Vibrato Lead",
-      "ref": "In the style of 80s synth solos",
+      "ref": "A singing mono lead whose vibrato swells in on each note, for a 1980s synth solo",
       "artist": "Classic technique",
       "tags": ["lead", "rock", "80s"],
       "level": 1,
@@ -1062,7 +1062,7 @@
     {
       "id": "jp6-poly-glide",
       "name": "Poly Glide Pad",
-      "ref": "In the style of 80s film-score pads",
+      "ref": "Warm chords whose notes slide into one another as they change, under a 1980s film scene",
       "artist": "Classic technique",
       "tags": ["pad", "soundtrack", "80s"],
       "level": 2,
@@ -1129,7 +1129,7 @@
     {
       "id": "jp6-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of synth flute lines",
+      "ref": "A soft triangle flute with breath noise and a vibrato that waits, the synth’s stock woodwind",
       "artist": "Classic technique",
       "tags": ["wind", "pop", "80s"],
       "level": 1,
@@ -1190,7 +1190,7 @@
     {
       "id": "jp6-random-drone",
       "name": "Random-Step Drone",
-      "ref": "In the style of 70s and 80s electronic drones",
+      "ref": "A low drone whose resonant filter jumps somewhere new each beat, as 1970s electronic music did",
       "artist": "Classic technique",
       "tags": ["drone", "ambient", "80s"],
       "level": 3,
@@ -1258,7 +1258,7 @@
     {
       "id": "jp6-strings-of-life",
       "name": "Strings of Life Stabs",
-      "ref": "In the style of Derrick May — “Strings of Life”",
+      "ref": "Urgent, bright string stabs racing over a Detroit beat, as in Derrick May’s “Strings of Life”",
       "artist": "Derrick May",
       "tags": ["keys", "techno", "detroit", "80s"],
       "level": 2,
@@ -1361,7 +1361,7 @@
     {
       "id": "jp6-reese-bass",
       "name": "Reese Bass",
-      "ref": "In the style of Kevin Saunderson",
+      "ref": "Detuned saws growling and phasing against each other: the Reese bass Kevin Saunderson made",
       "artist": "Kevin Saunderson",
       "tags": ["bass", "techno", "detroit", "80s"],
       "level": 3,
@@ -1445,7 +1445,7 @@
     {
       "id": "jp6-can-you-feel-it",
       "name": "Deep Feeling Chords",
-      "ref": "In the style of Larry Heard — “Can You Feel It”",
+      "ref": "Warm, soulful held chords over a deep, hopeful groove, the mood of Larry Heard’s “Can You Feel It”",
       "artist": "Larry Heard",
       "tags": ["pad", "deep house", "house", "80s"],
       "level": 2,
@@ -1527,7 +1527,7 @@
     {
       "id": "jp6-model500-bass",
       "name": "Night Drive Electro",
-      "ref": "In the style of Model 500",
+      "ref": "Cold, syncopated, futurist electro bass, Juan Atkins’s Model 500 down to one line",
       "artist": "Model 500",
       "tags": ["bass", "electro", "detroit", "80s"],
       "level": 2,
@@ -1607,7 +1607,7 @@
     {
       "id": "jp6-orbital-chime",
       "name": "Chiming Riff",
-      "ref": "In the style of Orbital — “Chime”",
+      "ref": "Bright, joyful chiming chords for an early rave anthem, close to Orbital’s “Chime”",
       "artist": "Orbital",
       "tags": ["keys", "techno", "rave", "90s"],
       "level": 2,
@@ -1722,7 +1722,7 @@
     {
       "id": "jp6-bpf-wah",
       "name": "Band-Pass Wah",
-      "ref": "In the style of 1970s funk",
+      "ref": "Chords pushed through the band-pass so they wah like a 1970s funk rhythm part",
       "artist": "Funk",
       "tags": ["keys", "funk", "70s"],
       "level": 2,
@@ -1838,7 +1838,7 @@
     {
       "id": "jp6-noise-hats",
       "name": "High-Pass Hats",
-      "ref": "In the style of 1980s drum machines",
+      "ref": "Noise through the high-pass makes crisp, ticking hats, the 1980s drum-machine recipe",
       "artist": "Drum machines",
       "tags": ["perc", "electronic", "drums", "80s"],
       "level": 2,
@@ -1929,7 +1929,7 @@
     {
       "id": "jp6-reverse-sync",
       "name": "Reverse Sync Lead",
-      "ref": "In the style of 1980s new wave",
+      "ref": "A hollow, barking sync lead with VCO-1 locked to VCO-2, a sound of 1980s new wave",
       "artist": "New wave",
       "tags": ["lead", "new wave", "80s"],
       "level": 3,
@@ -2020,7 +2020,7 @@
     {
       "id": "jp6-env-xmod-bell",
       "name": "Decaying FM Bell",
-      "ref": "In the style of 1980s digital-era bells",
+      "ref": "A bright metal clang that dies into a pure tone, an analogue answer to 1980s digital bells",
       "artist": "Synth-pop",
       "tags": ["keys", "bells", "synth-pop", "80s"],
       "level": 3,
@@ -2107,7 +2107,7 @@
     {
       "id": "jp6-unison-lead",
       "name": "Detuned Unison Lead",
-      "ref": "In the style of 1990s trance",
+      "ref": "A huge, wide, detuned unison saw lead of the kind 1990s trance rode on",
       "artist": "Trance",
       "tags": ["lead", "trance", "90s"],
       "level": 2,
@@ -2195,8 +2195,8 @@
     {
       "id": "jp6-reggae-bubble",
       "name": "Reggae Bubble Organ",
-      "ref": "In the style of Jackie Mittoo",
-      "artist": "Jackie Mittoo",
+      "ref": "The bouncing offbeat organ bubble that keeps a reggae rhythm rolling",
+      "artist": "Reggae organ",
       "tags": ["keys", "reggae", "organ", "70s"],
       "level": 2,
       "blurb": "A bouncing, offbeat organ “bubble” that keeps a reggae rhythm rolling.",
@@ -2365,7 +2365,7 @@
     {
       "id": "jp6-erasure-seq",
       "name": "Synth-Pop Sequence",
-      "ref": "In the style of Erasure",
+      "ref": "Vince Clarke’s bright, bouncing sequenced bass, built for Erasure’s synth-pop dance floor",
       "artist": "Erasure",
       "tags": ["seq", "synth-pop", "80s"],
       "level": 1,
@@ -2465,7 +2465,7 @@
     {
       "id": "jp6-808-state-pad",
       "name": "Acid-Summer Pad",
-      "ref": "In the style of 808 State",
+      "ref": "A warm, sunny, gently moving pad from Manchester’s acid summer, in 808 State’s colours",
       "artist": "808 State",
       "tags": ["pad", "acid house", "ambient house", "80s"],
       "level": 2,
@@ -2551,7 +2551,7 @@
     {
       "id": "jp6-hpf-dub-chord",
       "name": "Thin Dub Chord",
-      "ref": "In the style of Basic Channel",
+      "ref": "A thin, filtered chord stab with all its weight taken out, the Berlin dub techno of Basic Channel",
       "artist": "Basic Channel",
       "tags": ["keys", "dub techno", "techno", "90s"],
       "level": 2,
@@ -2645,7 +2645,7 @@
     {
       "id": "jp6-pwm-env-bass",
       "name": "Envelope PWM Bass",
-      "ref": "In the style of 1980s synth-funk",
+      "ref": "A funky bass whose pulse width snaps open on every note, built for 1980s synth-funk",
       "artist": "Synth-funk",
       "tags": ["bass", "funk", "synth-funk", "80s"],
       "level": 3,
@@ -2733,7 +2733,7 @@
     {
       "id": "jp6-arp-down-twinkle",
       "name": "Falling Stars",
-      "ref": "In the style of 1980s new-age synth music",
+      "ref": "A soft arpeggio falling through three octaves like shooting stars, for 1980s new-age music",
       "artist": "New age",
       "tags": ["seq", "new age", "ambient", "arpeggio", "80s"],
       "level": 1,
@@ -2812,7 +2812,7 @@
     {
       "id": "jp6-minneapolis-stabs",
       "name": "Minneapolis Sync Stabs",
-      "ref": "In the style of Jimmy Jam and Terry Lewis",
+      "ref": "Hard, metallic, syncopated stabs: the mid-1980s Minneapolis sound Jimmy Jam and Terry Lewis produced",
       "artist": "Jam & Lewis",
       "tags": ["keys", "funk", "new jack swing", "80s"],
       "level": 3,
@@ -2934,7 +2934,7 @@
     {
       "id": "jp6-random-burble",
       "name": "Random Burble",
-      "ref": "In the style of 1970s science-fiction computers",
+      "ref": "Random resonant blips burbling away, a 1970s science-fiction computer thinking",
       "artist": "Science-fiction films",
       "tags": ["fx", "sci-fi", "film", "70s"],
       "level": 2,
@@ -3002,7 +3002,7 @@
     {
       "id": "jp6-glissando-strings",
       "name": "Gliding Strings",
-      "ref": "In the style of 1970s disco strings",
+      "ref": "Strings sweeping up into each chord, as they did on 1970s disco records",
       "artist": "Disco",
       "tags": ["strings", "disco", "70s"],
       "level": 2,
@@ -3099,7 +3099,7 @@
     {
       "id": "jp6-bpf-choir",
       "name": "Band-Pass Choir",
-      "ref": "In the style of 1980s ambient soundtracks",
+      "ref": "A hollow, distant choir conjured by the band-pass filter, for a 1980s ambient soundtrack",
       "artist": "Film scoring",
       "tags": ["pad", "choir", "ambient", "film"],
       "level": 2,
@@ -3185,7 +3185,7 @@
     {
       "id": "jp6-tangerine-seq",
       "name": "Tangram Sequence",
-      "ref": "In the style of Tangerine Dream — Tangram",
+      "ref": "A pulsing, hypnotic sequence with a slow filter sweep, close to Tangerine Dream’s “Tangram”",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin school", "electronic", "80s"],
       "level": 2,
@@ -3287,7 +3287,7 @@
     {
       "id": "jp6-voodoo-bass",
       "name": "Voodoo Bass",
-      "ref": "In the style of A Guy Called Gerald",
+      "ref": "A deep, rubbery, syncopated bass tinged with acid, near A Guy Called Gerald’s Manchester house",
       "artist": "A Guy Called Gerald",
       "tags": ["bass", "acid house", "house", "80s"],
       "level": 2,
@@ -3368,7 +3368,7 @@
     {
       "id": "jp6-arp-hold-pad",
       "name": "Latched Ripple",
-      "ref": "In the style of ambient electronica",
+      "ref": "A gentle latched ripple running up and down one chord, for ambient electronica",
       "artist": "Ambient electronica",
       "tags": ["seq", "ambient", "arpeggio"],
       "level": 2,
@@ -3453,7 +3453,7 @@
     {
       "id": "jp6-film-dread-pad",
       "name": "Dread Pad",
-      "ref": "In the style of 1980s horror film scores",
+      "ref": "A dark, dissonant pad breathing slowly and promising something bad, as 1980s horror scores did",
       "artist": "Horror films",
       "tags": ["pad", "horror", "film", "80s"],
       "level": 2,
@@ -3535,7 +3535,7 @@
     {
       "id": "jp6-italo-bass",
       "name": "Italo Gallop Bass",
-      "ref": "In the style of 1980s Italo disco",
+      "ref": "A galloping, bright octave bass in sixteenths, the engine of 1980s Italo disco",
       "artist": "Italo disco",
       "tags": ["bass", "italo disco", "disco", "80s"],
       "level": 1,
@@ -3626,7 +3626,7 @@
     {
       "id": "jp6-new-age-bells",
       "name": "Temple Bells",
-      "ref": "In the style of 1980s new-age music",
+      "ref": "Gentle, bright temple bells ringing over a pentatonic melody in 1980s new-age music",
       "artist": "New age",
       "tags": ["keys", "new age", "bells", "80s"],
       "level": 2,
@@ -3711,7 +3711,7 @@
     {
       "id": "jp6-house-organ",
       "name": "House Organ Bass",
-      "ref": "In the style of early-1990s house",
+      "ref": "A short, punchy, organ-like bass stab for early-1990s piano house",
       "artist": "House music",
       "tags": ["bass", "house", "organ", "90s"],
       "level": 1,
@@ -3791,7 +3791,7 @@
     {
       "id": "jp6-lofi-chords",
       "name": "Dusty Chords",
-      "ref": "In the style of lo-fi hip hop",
+      "ref": "Soft, dusty seventh chords that wobble slightly, for a lo-fi hip hop loop",
       "artist": "Lo-fi hip hop",
       "tags": ["keys", "lo-fi", "hip hop", "chill-out"],
       "level": 1,
@@ -3883,7 +3883,7 @@
     {
       "id": "jp6-hpf-air-pad",
       "name": "Thin Air",
-      "ref": "In the style of 1980s soundtrack pads",
+      "ref": "An airy, weightless pad with its low end cut away, for a 1980s soundtrack",
       "artist": "Film scoring",
       "tags": ["pad", "ambient", "film", "80s"],
       "level": 1,
@@ -3964,7 +3964,7 @@
     {
       "id": "jp6-electro-zap",
       "name": "Electro Zaps",
-      "ref": "In the style of early-1980s electro",
+      "ref": "Laser zaps from a pitch envelope sweeping down, all over early-1980s electro",
       "artist": "Electro",
       "tags": ["perc", "electro", "80s"],
       "level": 2,
@@ -4046,7 +4046,7 @@
     {
       "id": "jp6-sync-bass",
       "name": "Sync Bass",
-      "ref": "In the style of 1980s electro-funk",
+      "ref": "A growling, metallic bass with a sync sweep on every note, for 1980s electro-funk",
       "artist": "Electro-funk",
       "tags": ["bass", "electro", "funk", "80s"],
       "level": 3,
@@ -4139,7 +4139,7 @@
     {
       "id": "jp6-ultra-brass",
       "name": "Poly Brass Section",
-      "ref": "In the style of 1980s synth-pop brass",
+      "ref": "A punchy, bright six-voice brass section for a 1980s synth-pop chorus",
       "artist": "Synth-pop",
       "tags": ["brass", "synth-pop", "80s"],
       "level": 1,
@@ -4236,7 +4236,7 @@
     {
       "id": "jp6-west-end-stabs",
       "name": "West End Stabs",
-      "ref": "In the style of Pet Shop Boys — “West End Girls”",
+      "ref": "Moody, held minor chords for a cool late-night city groove, as in Pet Shop Boys’ “West End Girls”",
       "artist": "Pet Shop Boys",
       "tags": ["keys", "synth-pop", "80s"],
       "level": 1,
@@ -4327,7 +4327,7 @@
     {
       "id": "jp6-offshore-pluck",
       "name": "Balearic Pluck",
-      "ref": "In the style of Chicane — “Offshore”",
+      "ref": "A sunlit, guitar-like synth pluck rippling through a sunset riff, close to Chicane’s “Offshore”",
       "artist": "Chicane",
       "tags": ["pluck", "balearic trance", "trance", "90s"],
       "level": 2,
@@ -4417,7 +4417,7 @@
     {
       "id": "jp6-low-fm-growl",
       "name": "Low-Range Growl",
-      "ref": "In the style of Noisia",
+      "ref": "A snarling, gnarled bass from VCO-2 running as a fast modulator, near Noisia’s drum and bass",
       "artist": "Noisia",
       "tags": ["bass", "neurofunk", "drum and bass", "2010s"],
       "level": 3,
@@ -4505,7 +4505,7 @@
     {
       "id": "jp6-electronic-birdsong",
       "name": "Electronic Birdsong",
-      "ref": "In the style of Isao Tomita",
+      "ref": "Birds chirping and warbling from synthesis alone, as Isao Tomita made them",
       "artist": "Isao Tomita",
       "tags": ["fx", "ambient", "electronic", "70s"],
       "level": 3,
@@ -4600,7 +4600,7 @@
     {
       "id": "jp6-1431-pad",
       "name": "Fourteen Thirty-One Pad",
-      "ref": "In the style of Global Communication — “14:31”",
+      "ref": "A vast, warm pad turning slowly, built for the long calm of Global Communication’s “14:31”",
       "artist": "Global Communication",
       "tags": ["pad", "ambient", "ambient techno", "90s"],
       "level": 2,
@@ -4689,7 +4689,7 @@
     {
       "id": "jp6-porcelain-strings",
       "name": "Porcelain Strings",
-      "ref": "In the style of Moby — “Porcelain”",
+      "ref": "Soft, sad, sweeping strings under a gentle beat, the way they sit in Moby’s “Porcelain”",
       "artist": "Moby",
       "tags": ["strings", "chill-out", "downtempo", "90s"],
       "level": 1,
@@ -4774,7 +4774,7 @@
     {
       "id": "jp6-moon-safari-lead",
       "name": "Moon Safari Lead",
-      "ref": "In the style of Air — Moon Safari",
+      "ref": "A smooth, gliding late-summer lead whose vibrato waits, close to Air’s “Moon Safari”",
       "artist": "Air",
       "tags": ["lead", "downtempo", "chill-out", "90s"],
       "level": 2,
@@ -4866,7 +4866,7 @@
     {
       "id": "jp6-hi-nrg-octaves",
       "name": "Hi-NRG Octaves",
-      "ref": "In the style of Stock Aitken Waterman",
+      "ref": "Relentless bright octaves in sixteenths, the bass under Stock Aitken Waterman’s late-1980s hits",
       "artist": "Stock Aitken Waterman",
       "tags": ["bass", "hi-nrg", "pop", "80s"],
       "level": 1,
@@ -4997,7 +4997,7 @@
     {
       "id": "jp6-new-jack-bass",
       "name": "New Jack Bass",
-      "ref": "In the style of Teddy Riley",
+      "ref": "Teddy Riley’s new jack swing in one line: a thick, punchy, syncopated bass",
       "artist": "Teddy Riley",
       "tags": ["bass", "new jack swing", "r&b", "80s"],
       "level": 2,
@@ -5085,7 +5085,7 @@
     {
       "id": "jp6-g-funk-whine",
       "name": "G-Funk Whine",
-      "ref": "In the style of DJ Quik",
+      "ref": "A high, sliding whine over a laid-back West Coast groove, the G-funk lead of DJ Quik",
       "artist": "DJ Quik",
       "tags": ["lead", "g-funk", "hip hop", "90s"],
       "level": 2,
@@ -5164,7 +5164,7 @@
     {
       "id": "jp6-your-love-seq",
       "name": "Your Love Sequence",
-      "ref": "In the style of Frankie Knuckles — “Your Love”",
+      "ref": "Frankie Knuckles’s “Your Love” turns on a yearning, rolling eighth-note sequence like this",
       "artist": "Frankie Knuckles",
       "tags": ["seq", "chicago house", "house", "80s"],
       "level": 2,
@@ -5270,7 +5270,7 @@
     {
       "id": "jp6-dream-trance-gate",
       "name": "Dream Trance Gate",
-      "ref": "In the style of Robert Miles — “Children”",
+      "ref": "A soft pad chopped into a pulsing, dreamy rhythm, the dream house Robert Miles is known for",
       "artist": "Robert Miles",
       "tags": ["pad", "dream trance", "trance", "90s"],
       "level": 3,
@@ -5361,7 +5361,7 @@
     {
       "id": "jp6-midnight-lead",
       "name": "Neon Night Lead",
-      "ref": "In the style of The Midnight",
+      "ref": "A warm, wide, nostalgic lead for a neon-lit drive with The Midnight",
       "artist": "The Midnight",
       "tags": ["lead", "synthwave", "2010s"],
       "level": 2,
@@ -5446,8 +5446,8 @@
     {
       "id": "jp6-plastic-love-keys",
       "name": "City Pop Keys",
-      "ref": "In the style of Mariya Takeuchi — “Plastic Love”",
-      "artist": "Mariya Takeuchi",
+      "ref": "Glossy, bright, jazzy chords for a night drive through Tokyo in 1980s city pop",
+      "artist": "1980s Japanese city pop",
       "tags": ["keys", "city pop", "j-pop", "80s"],
       "level": 2,
       "blurb": "Glossy, bright, jazzy chords for a night drive through Tokyo.",
@@ -5564,7 +5564,7 @@
     {
       "id": "jp6-mr-lawrence-bells",
       "name": "Winter Bells",
-      "ref": "In the style of Ryuichi Sakamoto — “Merry Christmas Mr. Lawrence”",
+      "ref": "A delicate bell melody, cold and beautiful, like Ryuichi Sakamoto’s “Merry Christmas Mr. Lawrence”",
       "artist": "Ryuichi Sakamoto",
       "tags": ["keys", "bells", "film", "80s"],
       "level": 2,
@@ -5652,7 +5652,7 @@
     {
       "id": "jp6-word-up-bass",
       "name": "Word Up Bass",
-      "ref": "In the style of Cameo — “Word Up!”",
+      "ref": "Cameo’s “Word Up!” sits on a sparse, rubbery bass with a blip of pitch on every note",
       "artist": "Cameo",
       "tags": ["bass", "funk", "80s"],
       "level": 3,
@@ -5737,7 +5737,7 @@
     {
       "id": "jp6-electro-boom",
       "name": "Electro Boom Bass",
-      "ref": "In the style of Mantronix",
+      "ref": "A deep, booming bass that drops in pitch like a drum machine, from Mantronix’s electro",
       "artist": "Mantronix",
       "tags": ["bass", "electro", "hip hop", "80s"],
       "level": 2,
@@ -5815,7 +5815,7 @@
     {
       "id": "jp6-talking-funk-lead",
       "name": "Talking Funk Lead",
-      "ref": "In the style of Chromeo",
+      "ref": "A talking lead that says wow on every note, the talk-box funk Chromeo revived",
       "artist": "Chromeo",
       "tags": ["lead", "electro-funk", "funk", "2000s"],
       "level": 3,
@@ -5901,13 +5901,13 @@
     },
     {
       "id": "jp6-deep-listening-drone",
-      "name": "Deep Listening Drone",
-      "ref": "In the style of Pauline Oliveros — Deep Listening",
-      "artist": "Pauline Oliveros",
+      "name": "Cavernous Beating Drone",
+      "ref": "A slow, beating drone in a cavernous space, made to be listened into",
+      "artist": "Drone music",
       "tags": ["drone", "ambient", "experimental", "minimalism"],
       "level": 3,
       "blurb": "A slow, beating, cavernous drone to listen into.",
-      "how": "Pauline Oliveros’s Deep Listening drones beat and shimmer slowly in a resonant space. VCO-2 in LOW at its slowest bends VCO-1 gently through the cross mod, so the fifth beats and shifts.",
+      "how": "Slow drones beat and shimmer slowly in a resonant space. VCO-2 in LOW at its slowest bends VCO-1 gently through the cross mod, so the fifth beats and shifts.",
       "phrase": {
         "bpm": 50,
         "loop": true,
@@ -5981,7 +5981,7 @@
     {
       "id": "jp6-e2-e4-pulse",
       "name": "Two-Chord Pulse",
-      "ref": "In the style of Manuel Göttsching — “E2-E4”",
+      "ref": "A gentle, hypnotic eighth-note pulse rocking between two chords, as in Manuel Göttsching’s “E2-E4”",
       "artist": "Manuel Göttsching",
       "tags": ["seq", "krautrock", "ambient", "80s"],
       "level": 1,
@@ -6115,7 +6115,7 @@
     {
       "id": "jp6-curved-air",
       "name": "Rainbow Organ Arpeggio",
-      "ref": "In the style of Terry Riley — “A Rainbow in Curved Air”",
+      "ref": "A dazzling organ arpeggio rippling over held chords, close to Terry Riley’s “A Rainbow in Curved Air”",
       "artist": "Terry Riley",
       "tags": ["seq", "minimalism", "organ", "arpeggio", "60s"],
       "level": 2,
@@ -6200,7 +6200,7 @@
     {
       "id": "jp6-balafon",
       "name": "Buzzing Balafon",
-      "ref": "In the style of West African balafon music",
+      "ref": "Woody, buzzing pentatonic patterns interlocking like a West African balafon",
       "artist": "West African balafon",
       "tags": ["pluck", "west african", "world"],
       "level": 2,
@@ -6294,8 +6294,8 @@
     {
       "id": "jp6-harrys-game-pad",
       "name": "Celtic Mist Pad",
-      "ref": "In the style of Clannad — “Theme from Harry’s Game”",
-      "artist": "Clannad",
+      "ref": "A soft, misty pad swaying slowly beneath a haunting Celtic choir",
+      "artist": "Celtic new age",
       "tags": ["pad", "celtic", "ambient", "80s"],
       "level": 2,
       "blurb": "A soft, misty, slowly swaying pad for a haunting Celtic choir.",
@@ -6384,7 +6384,7 @@
     {
       "id": "jp6-build-up-riser",
       "name": "Build-Up Riser",
-      "ref": "In the style of Swedish House Mafia",
+      "ref": "A rising, hissing sweep that tightens towards the drop, the build Swedish House Mafia made famous",
       "artist": "Swedish House Mafia",
       "tags": ["fx", "progressive house", "edm", "2010s"],
       "level": 3,
@@ -6460,8 +6460,8 @@
     {
       "id": "jp6-smooth-tremolo-keys",
       "name": "Smooth Tremolo Keys",
-      "ref": "In the style of Sade",
-      "artist": "Sade",
+      "ref": "Soft, warm keys pulsing gently for a smooth late-night soul song",
+      "artist": "Late-night soul",
       "tags": ["keys", "soul", "smooth", "80s"],
       "level": 1,
       "blurb": "Soft, warm, gently pulsing keys for a smooth late-night soul song.",
@@ -6557,8 +6557,8 @@
     {
       "id": "jp6-baroque-harpsichord",
       "name": "Baroque Harpsichord",
-      "ref": "In the style of Antonio Vivaldi",
-      "artist": "Antonio Vivaldi",
+      "ref": "Bright, plucked broken chords running in sixteenths on a Baroque harpsichord",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "baroque", "classical"],
       "level": 2,
       "blurb": "A bright, plucked harpsichord running broken chords in sixteenths.",
@@ -6664,7 +6664,7 @@
     {
       "id": "jp6-lets-go-sync",
       "name": "Wowing Sync Lead",
-      "ref": "In the style of The Cars — “Let’s Go”",
+      "ref": "A bright sync lead whose tone wows back and forth, Greg Hawkes’s sound in The Cars’ “Let’s Go”",
       "artist": "The Cars",
       "tags": ["lead", "new wave", "rock", "70s"],
       "level": 3,
@@ -6758,8 +6758,8 @@
     {
       "id": "jp6-insistent-chords",
       "name": "Insistent Chords",
-      "ref": "In the style of LCD Soundsystem — “All My Friends”",
-      "artist": "LCD Soundsystem",
+      "ref": "A relentless eighth-note chord figure that keeps building, the drive of 2000s dance-punk",
+      "artist": "2000s dance-punk",
       "tags": ["keys", "dance-punk", "indie", "2000s"],
       "level": 1,
       "blurb": "A relentless, building eighth-note chord figure.",
@@ -6939,12 +6939,12 @@
     {
       "id": "jp6-cosmic-harp",
       "name": "Cosmic Harp Glissando",
-      "ref": "In the style of Alice Coltrane",
-      "artist": "Alice Coltrane",
+      "ref": "Shimmering harp sweeps pouring over four octaves, as in spiritual jazz",
+      "artist": "Spiritual jazz harp",
       "tags": ["seq", "spiritual jazz", "jazz", "arpeggio", "70s"],
       "level": 2,
       "blurb": "Shimmering harp sweeps pouring over four octaves.",
-      "how": "Alice Coltrane’s spiritual jazz pours harp glissandi over held chords. The arpeggiator, UP over four octaves at a fast rate, sweeps the chord; a ringing pluck lets the notes overlap.",
+      "how": "Spiritual jazz pours harp glissandi over held chords. The arpeggiator, UP over four octaves at a fast rate, sweeps the chord; a ringing pluck lets the notes overlap.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7024,8 +7024,8 @@
     {
       "id": "jp6-pan-flute",
       "name": "Lonely Pan Flute",
-      "ref": "In the style of Gheorghe Zamfir",
-      "artist": "Gheorghe Zamfir",
+      "ref": "A breathy, wistful pan flute whose vibrato comes in late, as Romanian folk players sound",
+      "artist": "Romanian pan flute",
       "tags": ["wind", "folk", "romanian", "70s"],
       "level": 2,
       "blurb": "A breathy, wistful pan flute with a vibrato that comes in late.",
@@ -7112,7 +7112,7 @@
     {
       "id": "jp6-its-my-life-hook",
       "name": "Bright Hook",
-      "ref": "In the style of Talk Talk — “It’s My Life”",
+      "ref": "Talk Talk’s “It’s My Life” rides a bright, bouncing synth hook much like this",
       "artist": "Talk Talk",
       "tags": ["lead", "new wave", "synth-pop", "80s"],
       "level": 1,
@@ -7200,7 +7200,7 @@
     {
       "id": "jp6-enola-hook",
       "name": "Toy-Box Lead",
-      "ref": "In the style of OMD — “Enola Gay”",
+      "ref": "OMD’s “Enola Gay” bounces on a perky, toy-like synth hook over a fast beat",
       "artist": "OMD",
       "tags": ["lead", "synth-pop", "80s"],
       "level": 1,
@@ -7289,7 +7289,7 @@
     {
       "id": "jp6-aquatic-electro",
       "name": "Aquatic Electro",
-      "ref": "In the style of Drexciya",
+      "ref": "A bubbling underwater sequence with a restless filter, the Detroit electro of Drexciya",
       "artist": "Drexciya",
       "tags": ["seq", "electro", "detroit", "90s"],
       "level": 2,
@@ -7375,7 +7375,7 @@
     {
       "id": "jp6-log-drum",
       "name": "Log Drum Bass",
-      "ref": "In the style of amapiano",
+      "ref": "A woody, bouncing, pitched log-drum bass, the signature low end of amapiano",
       "artist": "Amapiano",
       "tags": ["bass", "amapiano", "south african", "2010s"],
       "level": 2,
@@ -7457,8 +7457,8 @@
     {
       "id": "jp6-trip-hop-keys",
       "name": "Dusty Trip-Hop Keys",
-      "ref": "In the style of Morcheeba",
-      "artist": "Morcheeba",
+      "ref": "Mellow, warm, slightly hissy jazz chords for a slow trip-hop groove",
+      "artist": "1990s trip hop",
       "tags": ["keys", "trip hop", "downtempo", "90s"],
       "level": 1,
       "blurb": "Mellow, warm, slightly hissy jazz chords for a slow trip-hop groove.",
@@ -7558,7 +7558,7 @@
     {
       "id": "jp6-psy-roller",
       "name": "Psytrance Roller",
-      "ref": "In the style of Infected Mushroom",
+      "ref": "A tight, galloping bass that fills every gap between kicks, the psytrance roll of Infected Mushroom",
       "artist": "Infected Mushroom",
       "tags": ["bass", "psytrance", "trance", "2000s"],
       "level": 2,
@@ -7650,12 +7650,12 @@
     {
       "id": "jp6-dream-pop-shimmer",
       "name": "Dream-Pop Shimmer",
-      "ref": "In the style of Cocteau Twins",
-      "artist": "Cocteau Twins",
+      "ref": "Shimmering, chorused chords that seem to float, a synth take on 1980s dream pop",
+      "artist": "Dream pop",
       "tags": ["pad", "dream pop", "shoegaze", "80s"],
       "level": 3,
       "blurb": "Shimmering, chorused, ethereal chords that seem to float.",
-      "how": "Cocteau Twins’ dream pop shimmers like a chorused guitar in a cathedral. UNISON without SOLO puts two detuned voices on every note, so three-note chords shimmer; a fast PWM adds to it.",
+      "how": "1980s dream pop shimmers like a chorused guitar in a cathedral. UNISON without SOLO puts two detuned voices on every note, so three-note chords shimmer; a fast PWM adds to it.",
       "phrase": {
         "bpm": 100,
         "loop": true,
@@ -7744,8 +7744,8 @@
     {
       "id": "jp6-post-rock-swell",
       "name": "Post-Rock Swell",
-      "ref": "In the style of Mogwai",
-      "artist": "Mogwai",
+      "ref": "A huge, slow-building swell that crests and falls away, post-rock’s favourite arc",
+      "artist": "Post-rock",
       "tags": ["pad", "post-rock", "rock", "2000s"],
       "level": 2,
       "blurb": "A huge, slowly building swell that crests and falls away.",
@@ -7825,7 +7825,7 @@
     {
       "id": "jp6-streets-of-rage",
       "name": "Arcade House Riff",
-      "ref": "In the style of Yuzo Koshiro — “Streets of Rage”",
+      "ref": "A punchy, club-ready game riff with a resonant bite, for Yuzo Koshiro’s house-flavoured “Streets of Rage”",
       "artist": "Yuzo Koshiro",
       "tags": ["seq", "video game", "house", "90s"],
       "level": 2,
@@ -7920,7 +7920,7 @@
     {
       "id": "jp6-grime-square",
       "name": "Grime Square",
-      "ref": "In the style of Dizzee Rascal",
+      "ref": "Raw, buzzing, unfiltered square bass in short hits, straight from Dizzee Rascal’s early grime",
       "artist": "Dizzee Rascal",
       "tags": ["bass", "grime", "uk", "2000s"],
       "level": 1,
@@ -8006,7 +8006,7 @@
     {
       "id": "jp6-disco-dancer-lead",
       "name": "Bollywood Disco Lead",
-      "ref": "In the style of Bappi Lahiri",
+      "ref": "A bright, bouncing, gliding lead from 1980s Bollywood disco, as Bappi Lahiri scored it",
       "artist": "Bappi Lahiri",
       "tags": ["lead", "bollywood", "disco", "80s"],
       "level": 2,
@@ -8100,7 +8100,7 @@
     {
       "id": "jp6-onyeabor-wobble",
       "name": "Afro-Funk Wobble Lead",
-      "ref": "In the style of William Onyeabor",
+      "ref": "A joyful, wobbly, home-made synth line, close to William Onyeabor’s Nigerian synth-funk",
       "artist": "William Onyeabor",
       "tags": ["lead", "afro-funk", "nigerian", "70s"],
       "level": 3,
@@ -8193,12 +8193,12 @@
     {
       "id": "jp6-bandoneon",
       "name": "Tango Bandoneon",
-      "ref": "In the style of Astor Piazzolla",
-      "artist": "Astor Piazzolla",
+      "ref": "A reedy, beating, nasal squeezebox marking a tango rhythm like a bandoneon",
+      "artist": "Tango",
       "tags": ["wind", "tango", "argentine", "60s"],
       "level": 2,
       "blurb": "A reedy, beating, nasal squeezebox marking a tango rhythm.",
-      "how": "Piazzolla’s tango drives on the bandoneon’s reedy, beating chords. A narrow pulse and a saw tuned apart so they beat, through the band-pass for the nasal reed.",
+      "how": "Nuevo tango drives on the bandoneon’s reedy, beating chords. A narrow pulse and a saw tuned apart so they beat, through the band-pass for the nasal reed.",
       "phrase": {
         "bpm": 112,
         "loop": true,
@@ -8325,7 +8325,7 @@
     {
       "id": "jp6-industrial-strings",
       "name": "Industrial Strings",
-      "ref": "In the style of Rammstein",
+      "ref": "Dark, staccato synth strings pounding in eighths over the guitars of Rammstein",
       "artist": "Rammstein",
       "tags": ["strings", "industrial metal", "metal", "90s"],
       "level": 1,
@@ -8449,7 +8449,7 @@
     {
       "id": "jp6-idm-mallets",
       "name": "Glassy IDM Mallets",
-      "ref": "In the style of Plaid",
+      "ref": "Glassy, ringing mallets tumbling through a melodic, off-kilter pattern, as in Plaid’s IDM",
       "artist": "Plaid",
       "tags": ["keys", "idm", "electronic", "90s"],
       "level": 2,
@@ -8539,7 +8539,7 @@
     {
       "id": "jp6-chillwave-haze",
       "name": "Chillwave Haze",
-      "ref": "In the style of Washed Out",
+      "ref": "Hazy, muffled chords warbling like a sun-faded tape, the chillwave of Washed Out",
       "artist": "Washed Out",
       "tags": ["pad", "chillwave", "indie", "2010s"],
       "level": 1,
@@ -8633,8 +8633,8 @@
     {
       "id": "jp6-sailing-strings",
       "name": "Yacht Strings",
-      "ref": "In the style of Christopher Cross — “Sailing”",
-      "artist": "Christopher Cross",
+      "ref": "Smooth, glassy strings drifting softly on a calm sea, for late-1970s yacht rock",
+      "artist": "Yacht rock",
       "tags": ["strings", "yacht rock", "soft rock", "80s"],
       "level": 1,
       "blurb": "Smooth, glassy, softly drifting strings on a calm sea.",
@@ -8731,7 +8731,7 @@
     {
       "id": "jp6-eurobeat-brass",
       "name": "Eurobeat Brass",
-      "ref": "In the style of Eurobeat",
+      "ref": "Fast, bright, punchy brass stabs racing over a high-speed Eurobeat track",
       "artist": "Eurobeat",
       "tags": ["brass", "eurobeat", "dance", "90s"],
       "level": 1,
@@ -8844,7 +8844,7 @@
     {
       "id": "jp6-pale-arp",
       "name": "Pale Dream Arpeggio",
-      "ref": "In the style of Edgar Froese",
+      "ref": "A slow, dreamy, resonant arpeggio drifting under a breathing filter, near Edgar Froese’s solo albums",
       "artist": "Edgar Froese",
       "tags": ["seq", "berlin school", "ambient", "arpeggio", "70s"],
       "level": 2,
@@ -8932,13 +8932,13 @@
     },
     {
       "id": "jp6-arrival-drone",
-      "name": "Heptapod Drone",
-      "ref": "In the style of Jóhann Jóhannsson — “Arrival”",
-      "artist": "Jóhann Jóhannsson",
+      "name": "Vast Alien Drone",
+      "ref": "A deep, dark drone opening slowly, vast and unknowable, for a modern science-fiction score",
+      "artist": "Modern film scores",
       "tags": ["drone", "modern classical", "film", "2010s"],
       "level": 2,
       "blurb": "A deep, dark, slowly opening drone, vast and unknowable.",
-      "how": "Jóhannsson’s scores open with deep, dark, slowly blooming drones. A low cluster of saws; ENV-1’s slow attack opens the filter over many seconds.",
+      "how": "Modern film scores often open with deep, dark, slowly blooming drones. A low cluster of saws; ENV-1’s slow attack opens the filter over many seconds.",
       "phrase": {
         "bpm": 54,
         "loop": true,
@@ -9009,12 +9009,12 @@
     {
       "id": "jp6-amelie-waltz",
       "name": "Toy Piano Waltz",
-      "ref": "In the style of Yann Tiersen — “Amélie”",
-      "artist": "Yann Tiersen",
+      "ref": "A wistful, tinkling toy-piano waltz that belongs in a Paris café",
+      "artist": "French café waltz",
       "tags": ["keys", "french", "film", "waltz"],
       "level": 1,
       "blurb": "A wistful, tinkling toy-piano waltz from a Paris café.",
-      "how": "Yann Tiersen’s Amélie music tinkles with toy piano and accordion waltzes. A triangle and square with a triangle an octave up, a quick, short ring.",
+      "how": "French café waltzes tinkle with toy piano and accordion. A triangle and square with a triangle an octave up, a quick, short ring.",
       "phrase": {
         "bpm": 132,
         "loop": true,
@@ -9096,7 +9096,7 @@
     {
       "id": "jp6-dub-siren",
       "name": "Dub Siren",
-      "ref": "In the style of Lee “Scratch” Perry",
+      "ref": "Lee “Scratch” Perry’s desk trick: a rising, wailing siren fired across the dub mix",
       "artist": "Lee “Scratch” Perry",
       "tags": ["fx", "dub", "reggae", "70s"],
       "level": 2,
@@ -9171,7 +9171,7 @@
     {
       "id": "jp6-ooh-choir",
       "name": "Soft Ooh Choir",
-      "ref": "In the style of 10cc — “I’m Not in Love”",
+      "ref": "A soft, enveloping wall of ooh voices, a synth echo of the tape-loop choir in 10cc’s “I’m Not in Love”",
       "artist": "10cc",
       "tags": ["pad", "choir", "soft rock", "70s"],
       "level": 2,
@@ -9261,7 +9261,7 @@
     {
       "id": "jp6-inner-city-pad",
       "name": "Jungle Atmosphere Pad",
-      "ref": "In the style of Goldie — “Inner City Life”",
+      "ref": "A lush, soulful, sweeping pad floating above the breakbeats of Goldie’s “Inner City Life”",
       "artist": "Goldie",
       "tags": ["pad", "jungle", "drum and bass", "90s"],
       "level": 2,
@@ -9349,7 +9349,7 @@
     {
       "id": "jp6-minimal-stab",
       "name": "Minimal Techno Stab",
-      "ref": "In the style of Robert Hood",
+      "ref": "A short, clipped stab repeating with tiny shifts, Robert Hood’s minimal techno in one sound",
       "artist": "Robert Hood",
       "tags": ["keys", "minimal techno", "techno", "90s"],
       "level": 1,
@@ -9459,7 +9459,7 @@
     {
       "id": "jp6-league-bass",
       "name": "Synth-Pop Root and Fifth",
-      "ref": "In the style of The Human League — “Don’t You Want Me”",
+      "ref": "A firm, bouncing root-and-fifth synth bass, as in The Human League’s “Don’t You Want Me”",
       "artist": "The Human League",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -9557,8 +9557,8 @@
     {
       "id": "jp6-i-ran-arp",
       "name": "Chorused New-Wave Arpeggio",
-      "ref": "In the style of A Flock of Seagulls — “I Ran”",
-      "artist": "A Flock of Seagulls",
+      "ref": "A bright, chiming, racing arpeggio with a chorused shimmer, for early-1980s new wave",
+      "artist": "Early-1980s new wave",
       "tags": ["seq", "new wave", "arpeggio", "80s"],
       "level": 2,
       "blurb": "A bright, chiming, racing arpeggio with a chorused shimmer.",
@@ -9647,7 +9647,7 @@
     {
       "id": "jp6-ocean-surf",
       "name": "Ocean Surf",
-      "ref": "In the style of synthesized nature sounds",
+      "ref": "Waves rolling in and washing out, made from noise alone",
       "artist": "Sound effects",
       "tags": ["fx", "nature", "ambient"],
       "level": 2,
@@ -9725,8 +9725,8 @@
     {
       "id": "jp6-space-fanfare",
       "name": "Starship Fanfare",
-      "ref": "In the style of Jerry Goldsmith",
-      "artist": "Jerry Goldsmith",
+      "ref": "A noble open-fifth brass fanfare for a starship setting out, as orchestral sci-fi scores sound",
+      "artist": "Orchestral sci-fi scores",
       "tags": ["brass", "film", "sci-fi", "70s"],
       "level": 2,
       "blurb": "A noble, open-fifth brass fanfare for a starship setting out.",
@@ -9817,8 +9817,8 @@
     {
       "id": "jp6-world-of-echo-cello",
       "name": "Electronic Cello",
-      "ref": "In the style of Arthur Russell — “World of Echo”",
-      "artist": "Arthur Russell",
+      "ref": "A dark, woody, bowed cello line whose vibrato rises slowly, for experimental cello music",
+      "artist": "Experimental cello",
       "tags": ["strings", "avant-garde", "cello", "80s"],
       "level": 3,
       "blurb": "A dark, woody, bowed cello line with a slowly rising vibrato.",
@@ -9903,7 +9903,7 @@
     {
       "id": "jp6-mike-dean-lead",
       "name": "Stadium Trap Lead",
-      "ref": "In the style of Mike Dean",
+      "ref": "A huge, gliding, wide saw lead soaring over a half-time beat, Mike Dean’s stadium-rap signature",
       "artist": "Mike Dean",
       "tags": ["lead", "trap", "hip hop", "2010s"],
       "level": 2,
@@ -9987,7 +9987,7 @@
     {
       "id": "jp6-cold-wave-lead",
       "name": "Cold Wave Lead",
-      "ref": "In the style of Molchat Doma",
+      "ref": "A thin, cold, melancholy synth melody, the Eastern European post-punk of Molchat Doma",
       "artist": "Molchat Doma",
       "tags": ["lead", "darkwave", "post-punk", "2010s"],
       "level": 2,
@@ -10067,7 +10067,7 @@
     {
       "id": "jp6-filter-disco",
       "name": "Filter Disco Loop",
-      "ref": "In the style of Alan Braxe",
+      "ref": "A disco chord loop sweeping in and out of a resonant filter, the French touch of Alan Braxe",
       "artist": "Alan Braxe",
       "tags": ["keys", "french house", "house", "90s"],
       "level": 2,
@@ -10204,8 +10204,8 @@
     {
       "id": "jp6-chill-out-slide",
       "name": "Pedal-Steel Slide Chords",
-      "ref": "In the style of The KLF — “Chill Out”",
-      "artist": "The KLF",
+      "ref": "Dreamy chords sliding into each other like a pedal steel at dawn, for ambient house",
+      "artist": "Ambient house",
       "tags": ["pad", "ambient house", "ambient", "90s"],
       "level": 2,
       "blurb": "Dreamy chords sliding into each other like a pedal steel at dawn.",
@@ -10295,7 +10295,7 @@
     {
       "id": "jp6-hyperpop-pluck",
       "name": "Hyperpop Glass Pluck",
-      "ref": "In the style of A. G. Cook",
+      "ref": "A high, glassy pluck with a snap of pitch, pushed to A. G. Cook’s hyperpop limit",
       "artist": "A. G. Cook",
       "tags": ["pluck", "hyperpop", "pop", "2010s"],
       "level": 2,
@@ -10384,7 +10384,7 @@
     {
       "id": "jp6-computer-love",
       "name": "Clean Computer Melody",
-      "ref": "In the style of Kraftwerk — “Computer Love”",
+      "ref": "A clean, pure, gently melancholy melody, close to the synth line of Kraftwerk’s “Computer Love”",
       "artist": "Kraftwerk",
       "tags": ["lead", "electronic", "synth-pop", "80s"],
       "level": 1,
@@ -10476,7 +10476,7 @@
     {
       "id": "jp6-yanni-lead",
       "name": "Soaring New-Age Lead",
-      "ref": "In the style of Yanni",
+      "ref": "A soaring, romantic synth lead with a gentle glide, the new age Yanni played",
       "artist": "Yanni",
       "tags": ["lead", "new age", "80s"],
       "level": 2,
@@ -10565,7 +10565,7 @@
     {
       "id": "jp6-sweet-dreams-seq",
       "name": "Sweet Dreams Sequence",
-      "ref": "In the style of Eurythmics — “Sweet Dreams (Are Made of This)”",
+      "ref": "Eurythmics’ “Sweet Dreams (Are Made of This)” runs on a cool, octave-leaping sequence like this",
       "artist": "Eurythmics",
       "tags": ["seq", "synth-pop", "new wave", "80s"],
       "level": 2,
@@ -10666,7 +10666,7 @@
     {
       "id": "jp6-blue-monday-bass",
       "name": "Galloping Monday Bass",
-      "ref": "In the style of New Order — “Blue Monday”",
+      "ref": "Cold, galloping and never letting up, the sequenced bass of New Order’s “Blue Monday”",
       "artist": "New Order",
       "tags": ["bass", "new wave", "synth-pop", "80s"],
       "level": 1,
@@ -10765,7 +10765,7 @@
     {
       "id": "jp6-smalltown-lead",
       "name": "Plaintive Hi-NRG Lead",
-      "ref": "In the style of Bronski Beat — “Smalltown Boy”",
+      "ref": "A plaintive, ringing synth hook falling over a driving beat, as in Bronski Beat’s “Smalltown Boy”",
       "artist": "Bronski Beat",
       "tags": ["lead", "synth-pop", "hi-nrg", "80s"],
       "level": 2,
@@ -10853,7 +10853,7 @@
     {
       "id": "jp6-running-up-strings",
       "name": "Brooding Cello Chords",
-      "ref": "In the style of Kate Bush — “Running Up That Hill”",
+      "ref": "Dark, brooding chords turning over and over, the Fairlight cellos of Kate Bush’s “Running Up That Hill”",
       "artist": "Kate Bush",
       "tags": ["strings", "art pop", "80s"],
       "level": 2,
@@ -10949,7 +10949,7 @@
     {
       "id": "jp6-cant-go-bass",
       "name": "Mellow Soul Bass",
-      "ref": "In the style of Hall & Oates — “I Can’t Go for That (No Can Do)”",
+      "ref": "A round, muted synth bass with plenty of space, under Hall & Oates’s “I Can’t Go for That (No Can Do)”",
       "artist": "Hall & Oates",
       "tags": ["bass", "blue-eyed soul", "pop", "80s"],
       "level": 1,
@@ -11037,8 +11037,8 @@
     {
       "id": "jp6-higher-love-brass",
       "name": "Rasping Pop Brass",
-      "ref": "In the style of Steve Winwood — “Higher Love”",
-      "artist": "Steve Winwood",
+      "ref": "Bright, rasping synth-brass hits for a joyful mid-1980s pop record",
+      "artist": "Mid-1980s pop",
       "tags": ["brass", "pop", "80s"],
       "level": 3,
       "blurb": "Bright, rasping synth brass hits for a joyful mid-1980s pop record.",
@@ -11144,7 +11144,7 @@
     {
       "id": "jp6-take-a-bow-arp",
       "name": "Rising Rock Arpeggio",
-      "ref": "In the style of Muse — “Take a Bow”",
+      "ref": "A dramatic, biting arpeggio climbing over minor chords, near the opening of Muse’s “Take a Bow”",
       "artist": "Muse",
       "tags": ["seq", "alternative rock", "rock", "arpeggio", "2000s"],
       "level": 2,
@@ -11233,7 +11233,7 @@
     {
       "id": "jp6-kids-hook",
       "name": "Wonky Indie Hook",
-      "ref": "In the style of MGMT — “Kids”",
+      "ref": "A joyful, slightly wonky chorused hook, the synth line of MGMT’s “Kids”",
       "artist": "MGMT",
       "tags": ["lead", "indie", "synth-pop", "2000s"],
       "level": 1,
@@ -11321,7 +11321,7 @@
     {
       "id": "jp6-rave-ripple",
       "name": "Rippling Rave Riff",
-      "ref": "In the style of Underworld — “Born Slippy .NUXX”",
+      "ref": "A euphoric rippling sixteenth-note riff for the end of the night, like Underworld’s “Born Slippy .NUXX”",
       "artist": "Underworld",
       "tags": ["seq", "techno", "rave", "90s"],
       "level": 2,
@@ -11427,7 +11427,7 @@
     {
       "id": "jp6-insomnia-pizz",
       "name": "Trance Pizzicato",
-      "ref": "In the style of Faithless — “Insomnia”",
+      "ref": "A short, plucked, string-like riff with a dark, driving edge, the hook of Faithless’s “Insomnia”",
       "artist": "Faithless",
       "tags": ["pluck", "trance", "house", "90s"],
       "level": 1,
@@ -11515,7 +11515,7 @@
     {
       "id": "jp6-9pm-lead",
       "name": "Wah Trance Pluck",
-      "ref": "In the style of ATB — “9 PM (Till I Come)”",
+      "ref": "A twangy, wah-filtered pluck that sounds half guitar, as in ATB’s “9 PM (Till I Come)”",
       "artist": "ATB",
       "tags": ["pluck", "trance", "90s"],
       "level": 2,
@@ -11603,7 +11603,7 @@
     {
       "id": "jp6-sandstorm-lead",
       "name": "Sandstorm Lead",
-      "ref": "In the style of Darude — “Sandstorm”",
+      "ref": "A relentless, hammering sixteenth-note lead that refuses to stop: Darude’s “Sandstorm”",
       "artist": "Darude",
       "tags": ["lead", "trance", "90s"],
       "level": 1,
@@ -11707,7 +11707,7 @@
     {
       "id": "jp6-big-beat-squelch",
       "name": "Big Beat Squelch",
-      "ref": "In the style of The Chemical Brothers",
+      "ref": "A squelching, high-resonance riff whose filter heaves up and down, The Chemical Brothers’ big beat",
       "artist": "The Chemical Brothers",
       "tags": ["seq", "big beat", "electronic", "90s"],
       "level": 2,
@@ -11796,7 +11796,7 @@
     {
       "id": "jp6-leftfield-bass",
       "name": "Deep Rolling Bass",
-      "ref": "In the style of Leftfield",
+      "ref": "A deep, rolling, tied bass pulling a long progressive groove along, from Leftfield’s playbook",
       "artist": "Leftfield",
       "tags": ["bass", "progressive house", "house", "90s"],
       "level": 1,
@@ -11881,12 +11881,12 @@
     {
       "id": "jp6-ethereal-chant",
       "name": "Ethereal Chant Drone",
-      "ref": "In the style of Dead Can Dance",
-      "artist": "Dead Can Dance",
+      "ref": "A slowly changing vowel held over a deep fifth, like a chant ringing in a stone hall",
+      "artist": "Ethereal wave",
       "tags": ["drone", "ethereal wave", "darkwave", "80s"],
       "level": 3,
       "blurb": "A resonant, slowly changing vowel held over a deep fifth, like a chant in a stone hall.",
-      "how": "Dead Can Dance’s music echoes ancient chant. A band-pass with high resonance gives a vowel; a slow LFO moves it, so the drone seems to sing different vowels.",
+      "how": "This drone echoes ancient chant. A band-pass with high resonance gives a vowel; a slow LFO moves it, so the drone seems to sing different vowels.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -11961,7 +11961,7 @@
     {
       "id": "jp6-reactor-groan",
       "name": "Reactor Groan",
-      "ref": "In the style of Hildur Guðnadóttir — “Chernobyl”",
+      "ref": "A grinding drone like machinery under strain, near Hildur Guðnadóttir’s “Chernobyl” score",
       "artist": "Hildur Guðnadóttir",
       "tags": ["drone", "film", "industrial", "2010s"],
       "level": 3,
@@ -12041,12 +12041,12 @@
     {
       "id": "jp6-phasing-felt",
       "name": "Phasing Felt Pattern",
-      "ref": "In the style of Ólafur Arnalds",
-      "artist": "Ólafur Arnalds",
+      "ref": "A soft, felted five-note pattern drifting against the bar, as in neoclassical felt-piano music",
+      "artist": "Neoclassical piano",
       "tags": ["keys", "modern classical", "ambient", "2010s"],
       "level": 2,
       "blurb": "A soft, felted, five-note pattern drifting against the bar, never quite repeating.",
-      "how": "Ólafur Arnalds writes for pianos that play themselves in slowly shifting patterns. A five-note cell in sixteenths against a four-beat bar lands somewhere new each time; a soft, ringing tone lets the notes overlap.",
+      "how": "Some neo-classical pieces have pianos that play themselves in slowly shifting patterns. A five-note cell in sixteenths against a four-beat bar lands somewhere new each time; a soft, ringing tone lets the notes overlap.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -12178,7 +12178,7 @@
     {
       "id": "jp6-an-ending",
       "name": "Ascent Pad",
-      "ref": "In the style of Brian Eno — “An Ending (Ascent)”",
+      "ref": "A slow, weightless swell rising like a craft leaving Earth, as in Brian Eno’s “An Ending (Ascent)”",
       "artist": "Brian Eno",
       "tags": ["pad", "ambient", "80s"],
       "level": 1,
@@ -12264,12 +12264,12 @@
     {
       "id": "jp6-western-whistle",
       "name": "Western Whistle",
-      "ref": "In the style of Ennio Morricone",
-      "artist": "Ennio Morricone",
+      "ref": "A lonely whistled melody echoing across the desert of a spaghetti western",
+      "artist": "Spaghetti western",
       "tags": ["lead", "western", "film", "60s"],
       "level": 2,
       "blurb": "A lonely, whistled melody echoing across a desert.",
-      "how": "Morricone’s westerns made the whistle a lead instrument. A pure triangle an octave up, a vibrato that waits, a quick glide.",
+      "how": "Spaghetti-western scores made the whistle a lead instrument. A pure triangle an octave up, a vibrato that waits, a quick glide.",
       "phrase": {
         "bpm": 96,
         "loop": true,
@@ -12347,8 +12347,8 @@
     {
       "id": "jp6-spooky-celesta",
       "name": "Spooky Celesta Waltz",
-      "ref": "In the style of Danny Elfman",
-      "artist": "Danny Elfman",
+      "ref": "A twinkling, spooky fairy-tale waltz on celesta, for a gothic film score",
+      "artist": "Gothic film scores",
       "tags": ["keys", "film", "celesta", "waltz"],
       "level": 2,
       "blurb": "A twinkling, spooky, fairy-tale celesta waltz.",
@@ -12434,7 +12434,7 @@
     {
       "id": "jp6-last-christmas-keys",
       "name": "Christmas Bell Chords",
-      "ref": "In the style of Wham! — “Last Christmas”",
+      "ref": "Bright, ringing, bell-like synth chords, as Wham! used for the wistful “Last Christmas”",
       "artist": "Wham!",
       "tags": ["keys", "pop", "christmas", "80s"],
       "level": 1,
@@ -12533,7 +12533,7 @@
     {
       "id": "jp6-into-the-groove-bass",
       "name": "Dance-Pop Bass",
-      "ref": "In the style of Madonna — “Into the Groove”",
+      "ref": "A punchy, syncopated sixteenth-note synth bass under Madonna’s “Into the Groove”",
       "artist": "Madonna",
       "tags": ["bass", "dance-pop", "pop", "80s"],
       "level": 1,
@@ -12626,8 +12626,8 @@
     {
       "id": "jp6-lounge-skank",
       "name": "Lounge Dub Skank",
-      "ref": "In the style of Thievery Corporation",
-      "artist": "Thievery Corporation",
+      "ref": "A soft, nasal offbeat skank for a smoky lounge-dub groove",
+      "artist": "Lounge dub",
       "tags": ["keys", "dub", "lounge", "2000s"],
       "level": 1,
       "blurb": "A soft, nasal, offbeat chord skank for a smoky lounge-dub groove.",
@@ -12764,8 +12764,8 @@
     {
       "id": "jp6-smoker-bass",
       "name": "Laid-Back Downtempo Bass",
-      "ref": "In the style of Nightmares on Wax",
-      "artist": "Nightmares on Wax",
+      "ref": "A warm, round, laid-back bass for a slow, smoky downtempo groove",
+      "artist": "Downtempo",
       "tags": ["bass", "downtempo", "chill-out", "90s"],
       "level": 1,
       "blurb": "A warm, round, laid-back bass for a slow, smoky groove.",
@@ -12850,8 +12850,8 @@
     {
       "id": "jp6-melodica",
       "name": "Melodica Line",
-      "ref": "In the style of Gorillaz — “Clint Eastwood”",
-      "artist": "Gorillaz",
+      "ref": "A reedy, breathy melodica line drifting over a laid-back beat in dub-tinged pop",
+      "artist": "Dub melodica",
       "tags": ["wind", "alternative hip hop", "trip hop", "2000s"],
       "level": 2,
       "blurb": "A reedy, breathy melodica line drifting over a laid-back beat.",
@@ -12934,7 +12934,7 @@
     {
       "id": "jp6-mid-fi-lead",
       "name": "Mid-Fi Wonk Lead",
-      "ref": "In the style of Com Truise",
+      "ref": "A slow, warped, detuned lead sliding through a hazy funk, the mid-fi synthwave of Com Truise",
       "artist": "Com Truise",
       "tags": ["lead", "synthwave", "chillwave", "2010s"],
       "level": 2,
@@ -13026,7 +13026,7 @@
     {
       "id": "jp6-gentle-krautrock-keys",
       "name": "Gentle Garden Keys",
-      "ref": "In the style of Hans-Joachim Roedelius",
+      "ref": "A gentle, naive broken-chord pattern, warm and unhurried, near Hans-Joachim Roedelius’s solo records",
       "artist": "Hans-Joachim Roedelius",
       "tags": ["keys", "ambient", "krautrock", "70s"],
       "level": 1,
@@ -13125,7 +13125,7 @@
     {
       "id": "jp6-flutter-sun",
       "name": "Fluttering Sun",
-      "ref": "In the style of Caribou — “Sun”",
+      "ref": "Held notes fluttering in sixteenths through a pulsing filter, close to Caribou’s “Sun”",
       "artist": "Caribou",
       "tags": ["seq", "psychedelic", "house", "2010s"],
       "level": 3,
@@ -13206,7 +13206,7 @@
     {
       "id": "jp6-evolving-pulse",
       "name": "Evolving Analogue Pulse",
-      "ref": "In the style of Rival Consoles",
+      "ref": "Pulsing chords whose filter opens and closes over many bars, as Rival Consoles builds a track",
       "artist": "Rival Consoles",
       "tags": ["keys", "electronica", "ambient", "2010s"],
       "level": 2,
@@ -13419,7 +13419,7 @@
     {
       "id": "jp6-ney-flute",
       "name": "Sufi Ney",
-      "ref": "In the style of the Sufi ney",
+      "ref": "The Sufi ney’s breathy, hollow reed tone, sliding through an old mode",
       "artist": "Sufi ney",
       "tags": ["wind", "sufi", "turkish", "world"],
       "level": 2,
@@ -13511,8 +13511,8 @@
     {
       "id": "jp6-overtone-singer",
       "name": "Overtone Singer",
-      "ref": "In the style of Huun-Huur-Tu",
-      "artist": "Huun-Huur-Tu",
+      "ref": "A low drone with a whistling overtone singing its own melody: Tuvan throat singing, on a synth",
+      "artist": "Tuvan throat singing",
       "tags": ["drone", "tuvan", "throat singing", "world"],
       "level": 3,
       "blurb": "A low drone with a whistling overtone that sings its own melody.",
@@ -13582,7 +13582,7 @@
     {
       "id": "jp6-arena-chords",
       "name": "Arena Unison Chords",
-      "ref": "In the style of Asia — “Heat of the Moment”",
+      "ref": "Big, bright, fat synth chord hits for a stadium chorus, as in Asia’s “Heat of the Moment”",
       "artist": "Asia",
       "tags": ["brass", "arena rock", "prog rock", "80s"],
       "level": 2,
@@ -13689,7 +13689,7 @@
     {
       "id": "jp6-mariachi-trumpets",
       "name": "Mariachi Trumpets",
-      "ref": "In the style of mariachi",
+      "ref": "Two bright trumpets in thirds with a quick, singing vibrato, from a mariachi band",
       "artist": "Mariachi",
       "tags": ["brass", "mariachi", "mexican", "world"],
       "level": 2,

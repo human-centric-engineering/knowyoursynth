@@ -966,7 +966,7 @@
     {
       "id": "solar-open-fifths",
       "name": "Open Fifths",
-      "ref": "In the style of drone music built on open fifths, after the organum of medieval church music",
+      "ref": "Stacked open fifths on D, neither major nor minor, with the hollow ring of medieval organum",
       "artist": "Classic technique",
       "tags": ["drone", "classic drone", "chord", "delay", "chorus", "melody"],
       "level": 1,
@@ -1066,7 +1066,7 @@
     {
       "id": "solar-dusk-pad",
       "name": "Dusk Pad",
-      "ref": "In the style of 1970s ambient drone records",
+      "ref": "A wide ninth chord held a hair out of tune across the stereo, breathing like a 1970s ambient drone",
       "artist": "Classic technique",
       "tags": ["pad", "classic drone", "chord", "stereo", "reverb", "melody"],
       "level": 2,
@@ -1189,7 +1189,7 @@
     {
       "id": "solar-drone-choir",
       "name": "Drone Choir",
-      "ref": "In the style of the vocal drones of 1970s and 1980s ambient records",
+      "ref": "Two drones sung through vowel filters, one dark and one bright, for a wordless ambient choir",
       "artist": "Classic technique",
       "tags": ["pad", "classic drone", "filter", "bandpass", "reverb", "melody"],
       "level": 2,
@@ -1596,7 +1596,7 @@
     {
       "id": "solar-warm-pad",
       "name": "Warm Pad",
-      "ref": "In the style of 1980s ambient synth pads",
+      "ref": "Two saws a few cents apart, slow to swell and soaked in reverb: a soft 1980s ambient pad",
       "artist": "Classic technique",
       "tags": ["pad", "vco", "stereo", "reverb", "melody"],
       "level": 1,
@@ -1697,7 +1697,7 @@
     {
       "id": "solar-glass-pad",
       "name": "Glass Pad",
-      "ref": "In the style of 1990s ambient glass pads",
+      "ref": "High, pure sine and triangle tones melted into a glassy, shimmering cloud, as 1990s ambient pads were",
       "artist": "Classic technique",
       "tags": ["pad", "vco", "reverb", "shimmer", "melody"],
       "level": 1,
@@ -1780,7 +1780,7 @@
     {
       "id": "solar-string-ensemble",
       "name": "String Ensemble",
-      "ref": "In the style of 1970s string machines",
+      "ref": "Moving pulse waves and a chorus that bow in slowly, the thick shimmer of a 1970s string machine",
       "artist": "Classic technique",
       "tags": ["pad", "strings", "vco", "pwm", "chorus", "melody"],
       "level": 2,
@@ -1885,7 +1885,7 @@
     {
       "id": "solar-fifths-pad",
       "name": "Fifths Pad",
-      "ref": "In the style of 1970s cosmic synth records",
+      "ref": "An open fifth under every key, falling through a minor progression in a dark, spacious cosmic haze",
       "artist": "Classic technique",
       "tags": ["pad", "vco", "fifths", "reverb", "melody"],
       "level": 2,
@@ -3035,7 +3035,7 @@
     {
       "id": "solar-polivoks-acid",
       "name": "Polivoks Acid",
-      "ref": "In the style of late-80s acid house basslines",
+      "ref": "A resonant saw that squelches open on every note and bites through distortion, for late-1980s acid house",
       "artist": "Acid house",
       "tags": ["bass", "vco", "filter", "acid", "distortion"],
       "level": 2,
@@ -3119,7 +3119,7 @@
     {
       "id": "solar-reese-bass",
       "name": "Reese Bass",
-      "ref": "In the style of 1990s drum & bass Reese basses",
+      "ref": "Two saws a hair apart that churn and hollow as they hold, the Reese bass of 1990s drum & bass",
       "artist": "Drum & bass",
       "tags": ["bass", "vco", "detune", "sub", "stereo"],
       "level": 2,
@@ -3198,7 +3198,7 @@
     {
       "id": "solar-wobble-bass",
       "name": "Wobble Bass",
-      "ref": "In the style of 2010s dubstep wobble basses",
+      "ref": "A growling bass whose filter swings open and shut in rhythm, the wobble at the heart of 2010s dubstep",
       "artist": "Dubstep",
       "tags": ["bass", "vco", "lfo", "filter", "distortion"],
       "level": 2,
@@ -3286,7 +3286,7 @@
     {
       "id": "solar-synthwave-brass",
       "name": "Synthwave Brass",
-      "ref": "In the style of 1980s poly brass revived in synthwave",
+      "ref": "Detuned saws that swell open just behind each note, bright 1980s poly brass as synthwave revives it",
       "artist": "Synthwave",
       "tags": ["brass", "vco", "detune", "chorus", "melody"],
       "level": 2,
@@ -3375,7 +3375,7 @@
     {
       "id": "solar-house-pluck",
       "name": "House Pluck",
-      "ref": "In the style of 2010s deep-house chord plucks",
+      "ref": "A short, rounded off-beat pluck with an echo filling the gaps, made for deep-house chords",
       "artist": "Deep house",
       "tags": ["pluck", "vco", "filter", "delay", "melody"],
       "level": 1,
@@ -3452,7 +3452,7 @@
     {
       "id": "solar-chip-lead",
       "name": "Chiptune Lead",
-      "ref": "In the style of 8-bit video-game music",
+      "ref": "A thin, bare pulse with the filter wide open, high and bouncy like an 8-bit game tune",
       "artist": "Chiptune",
       "tags": ["lead", "vco", "pulse", "melody"],
       "level": 1,
@@ -3542,7 +3542,7 @@
     {
       "id": "solar-phased-keys",
       "name": "Phased Keys",
-      "ref": "In the style of 1970s phased electric pianos",
+      "ref": "Soft, bell-edged keys that fade as they hold and swirl through a slow phaser, for 1970s soul",
       "artist": "70s soul",
       "tags": ["keys", "vco", "phaser", "melody"],
       "level": 2,
@@ -3625,7 +3625,7 @@
     {
       "id": "solar-dub-chord",
       "name": "Dub Techno Chord",
-      "ref": "In the style of 1990s Berlin dub techno chord stabs",
+      "ref": "One minor-ninth chord stabbed and sent echoing into the distance, the building block of Berlin dub techno",
       "artist": "Dub techno",
       "tags": ["keys", "classic drone", "chord", "delay", "melody"],
       "level": 2,
@@ -3719,7 +3719,7 @@
     {
       "id": "solar-drawbar-drone",
       "name": "Drawbar Drone",
-      "ref": "In the style of the pipe organ’s drawbar drones",
+      "ref": "Organ harmonics stacked on one note, each MUTE button a stop, with a fast swirl for the spinning speaker",
       "artist": "Church organ",
       "tags": ["drone", "classic drone", "organ", "phaser"],
       "level": 1,
@@ -3807,7 +3807,7 @@
     {
       "id": "solar-pulser-gate",
       "name": "Pulser Gate",
-      "ref": "In the style of trance gated pads",
+      "ref": "A held chord sliced into sixteenths by a square wave on the filter, the stuttering gated pad of trance",
       "artist": "Trance",
       "tags": ["pad", "classic drone", "chord", "rhythm", "delay"],
       "level": 2,
@@ -3890,7 +3890,7 @@
     {
       "id": "solar-drone-relay",
       "name": "Drone Relay",
-      "ref": "In the style of 1970s ambient tape-loop music",
+      "ref": "Four drones that open one after another and fade in turn, a chord blooming like 1970s tape-loop ambient",
       "artist": "Ambient",
       "tags": ["pad", "classic drone", "chord", "stereo", "reverb", "melody"],
       "level": 3,
@@ -4010,7 +4010,7 @@
     {
       "id": "solar-chord-sequencer",
       "name": "Chord Sequencer",
-      "ref": "In the style of 1970s Berlin-school sequencer music",
+      "ref": "Parallel chords stepped by the sequencer over a still fifth: a progression from a voice with no keyboard",
       "artist": "Berlin school",
       "tags": ["seq", "classic drone", "sequencer", "photosensor", "chord"],
       "level": 3,
@@ -4112,7 +4112,7 @@
     {
       "id": "solar-berlin-school",
       "name": "Berlin School",
-      "ref": "In the style of 1970s Berlin-school sequencer music",
+      "ref": "A five-step sequence left running, brighter on its higher notes, transposed from the keys: Berlin school",
       "artist": "Berlin school",
       "tags": ["seq", "vco", "sequencer", "filter", "delay"],
       "level": 3,
@@ -4212,7 +4212,7 @@
     {
       "id": "solar-random-computer",
       "name": "Random Computer",
-      "ref": "In the style of BBC Radiophonic Workshop computers",
+      "ref": "Every key a random blip with an echo an octave up, like a 1970s film computer thinking aloud",
       "artist": "Radiophonic sound effects",
       "tags": ["seq", "vco", "sample and hold", "papa srapa", "delay"],
       "level": 2,
@@ -4302,7 +4302,7 @@
     {
       "id": "solar-drone-listens",
       "name": "The Drone Listens",
-      "ref": "In the style of live-electronic feedback music",
+      "ref": "Your playing heard only as a voltage, opening a band-pass filter on a drone chord in your rhythm",
       "artist": "Experimental",
       "tags": ["drone", "classic drone", "envelope follower", "filter", "bandpass"],
       "level": 3,
@@ -4407,7 +4407,7 @@
     {
       "id": "solar-filter-fm",
       "name": "Filter FM Growl",
-      "ref": "In the style of drone metal",
+      "ref": "A drone whose filter is shaken at audio rate, so the keys change its clangorous growl and not its pitch",
       "artist": "Drone metal",
       "tags": ["drone", "classic drone", "filter", "fm", "noisy"],
       "level": 2,
@@ -4494,7 +4494,7 @@
     {
       "id": "solar-night-insects",
       "name": "Night Insects",
-      "ref": "In the style of ambient nature recordings",
+      "ref": "Two high, chopped chirps that never line up, one each side, like crickets and tree frogs on a warm night",
       "artist": "Ambient",
       "tags": ["fx", "papa srapa", "am", "fm", "ambient", "stereo"],
       "level": 2,
@@ -4586,7 +4586,7 @@
     {
       "id": "solar-laser-battle",
       "name": "Laser Battle",
-      "ref": "In the style of 1970s sci-fi film lasers",
+      "ref": "Falling laser zaps that ricochet through a pitch delay, straight out of a 1970s space-battle film",
       "artist": "Sci-fi films",
       "tags": ["fx", "papa srapa", "envelope", "sci-fi", "delay"],
       "level": 2,
@@ -4667,7 +4667,7 @@
     {
       "id": "solar-resonator-pings",
       "name": "Resonator Pings",
-      "ref": "In the style of IDM resonator percussion",
+      "ref": "Bursts of noise ring a tiny feedback delay into metallic, spiralling pings, for IDM percussion",
       "artist": "IDM",
       "tags": ["perc", "papa srapa", "noise", "resonator", "infinity"],
       "level": 3,
@@ -4753,7 +4753,7 @@
     {
       "id": "solar-warped-tape",
       "name": "Warped Tape",
-      "ref": "In the style of lo-fi hip-hop warped tape",
+      "ref": "A soft melody whose echoes drift sharp and flat like a stretched cassette, for lo-fi hip-hop",
       "artist": "Lo-fi hip-hop",
       "tags": ["keys", "vco", "lfo", "delay", "lo-fi", "melody"],
       "level": 2,
@@ -4833,7 +4833,7 @@
     {
       "id": "solar-two-sides",
       "name": "Two Sides",
-      "ref": "In the style of 1960s psychedelic stereo mixes",
+      "ref": "One melody in two rooms, thin and swirling on the left, full and glowing on the right, like 1960s stereo",
       "artist": "Psychedelia",
       "tags": ["keys", "vco", "stereo", "bandpass", "flanger", "melody"],
       "level": 2,
@@ -4927,7 +4927,7 @@
     {
       "id": "solar-loop-polyrhythm",
       "name": "Envelope Polyrhythm",
-      "ref": "In the style of minimalist phasing loops",
+      "ref": "Two self-pulsing notes at unrelated speeds that fall in and out of step, as minimalist phase music does",
       "artist": "Minimalism",
       "tags": ["seq", "vco", "envelope", "loop", "rhythm", "stereo"],
       "level": 3,
@@ -5016,7 +5016,7 @@
     {
       "id": "solar-drone-metal",
       "name": "Drone Metal",
-      "ref": "In the style of 2000s drone metal",
+      "ref": "A low, distorted power chord that churns and swells into the wall of amplified noise drone metal holds",
       "artist": "Drone metal",
       "tags": ["drone", "classic drone", "distortion", "power chord", "reverb"],
       "level": 2,
@@ -5114,7 +5114,7 @@
     {
       "id": "solar-joystick-bend",
       "name": "Joystick Bend",
-      "ref": "In the style of 1970s synth soloists",
+      "ref": "A sine lead bent by hand on the joystick, with a vibrato that deepens as you push, for 1970s synth solos",
       "artist": "70s synth soloists",
       "tags": ["lead", "vco", "joystick", "portamento", "vibrato", "melody"],
       "level": 2,
@@ -5196,7 +5196,7 @@
     {
       "id": "solar-octave-ghosts",
       "name": "Octave Ghosts",
-      "ref": "In the style of BBC Radiophonic Workshop melodies",
+      "ref": "A square-wave tune trailed by ghostly echoes climbing octaves, like a BBC Radiophonic Workshop melody",
       "artist": "Radiophonic sound effects",
       "tags": ["lead", "papa srapa", "delay", "melody"],
       "level": 2,
@@ -5282,7 +5282,7 @@
     {
       "id": "solar-shortwave",
       "name": "Shortwave",
-      "ref": "In the style of shortwave radio listening",
+      "ref": "Static, whistling carriers and a mains hum swept past by a slow band-pass, like tuning a shortwave radio",
       "artist": "Shortwave radio",
       "tags": ["fx", "papa srapa", "noise", "am", "bandpass", "lfo"],
       "level": 2,
@@ -5376,7 +5376,7 @@
     {
       "id": "solar-sunrise",
       "name": "Sunrise",
-      "ref": "In the style of 1970s cosmic synth records",
+      "ref": "A whole dawn from eight voices: a rising chord, surf, birdsong and two lines singing over the top",
       "artist": "Kosmische / ambient",
       "tags": ["pad", "classic drone", "papa srapa", "vco", "stereo", "reverb", "melody"],
       "level": 3,
@@ -5533,7 +5533,7 @@
     {
       "id": "solar-808-glide",
       "name": "808 Glide Bass",
-      "ref": "In the style of trap’s gliding 808 basses",
+      "ref": "A deep sine that slides from note to note and growls a little, the gliding 808 bass of trap",
       "artist": "Trap",
       "tags": ["bass", "vco", "sub", "portamento", "distortion"],
       "level": 1,
@@ -5604,7 +5604,7 @@
     {
       "id": "solar-italo-bass",
       "name": "Italo Octave Bass",
-      "ref": "In the style of early-80s Italo disco octave basslines",
+      "ref": "A punchy saw bass leaping between octaves on every eighth note, the engine of early-1980s Italo disco",
       "artist": "Italo disco",
       "tags": ["bass", "vco", "filter", "delay"],
       "level": 1,
@@ -5692,7 +5692,7 @@
     {
       "id": "solar-trance-lead",
       "name": "Trance Lead",
-      "ref": "In the style of late-90s trance leads",
+      "ref": "Two bright, detuned saws thrown wide into a long delay, soaring like a late-1990s trance anthem",
       "artist": "Trance",
       "tags": ["lead", "vco", "detune", "delay", "melody"],
       "level": 2,
@@ -5779,7 +5779,7 @@
     {
       "id": "solar-funky-clav",
       "name": "Funky Clav",
-      "ref": "In the style of 70s funk clavinet",
+      "ref": "A narrow pulse struck short through the band-pass filter, a quacking synth take on 1970s funk clavinet",
       "artist": "70s funk",
       "tags": ["keys", "vco", "bandpass", "pulse", "melody"],
       "level": 2,
@@ -5871,7 +5871,7 @@
     {
       "id": "solar-rave-hoover",
       "name": "Rave Hoover",
-      "ref": "In the style of early-90s hardcore rave “hoover” sounds",
+      "ref": "A thick, swooping saw that slides menacingly into every note: the hoover of early-1990s hardcore rave",
       "artist": "Rave",
       "tags": ["lead", "vco", "pwm", "portamento", "distortion"],
       "level": 3,
@@ -5964,7 +5964,7 @@
     {
       "id": "solar-techno-blip",
       "name": "Techno Blip",
-      "ref": "In the style of 90s minimal techno blips",
+      "ref": "A tiny resonant click with a pitch and a dub echo behind it, for 1990s minimal techno",
       "artist": "Minimal techno",
       "tags": ["perc", "vco", "filter", "resonance", "delay"],
       "level": 1,
@@ -6040,7 +6040,7 @@
     {
       "id": "solar-breathy-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of synthesised flutes in 70s library music",
+      "ref": "A soft sine flute with a puff of noise on every note, the kind of synth flute 1970s library music used",
       "artist": "70s library music",
       "tags": ["wind", "vco", "papa srapa", "noise", "melody"],
       "level": 2,
@@ -6133,7 +6133,7 @@
     {
       "id": "solar-horror-cluster",
       "name": "Horror Cluster",
-      "ref": "In the style of 70s horror film scores",
+      "ref": "Five tones a semitone apart, grinding and sagging slowly flat in a dark hall, for 1970s horror-film tension",
       "artist": "Horror scores",
       "tags": ["drone", "classic drone", "cluster", "volt", "reverb"],
       "level": 2,
@@ -6220,7 +6220,7 @@
     {
       "id": "solar-split-drone",
       "name": "Bass and Drone Split",
-      "ref": "In the style of Hindustani music over a tanpura drone",
+      "ref": "The left hand plays a bass while the right opens a whole drone chord, bassline and pad from one keyboard",
       "artist": "Hindustani classical",
       "tags": ["keys", "classic drone", "split", "bass", "chord"],
       "level": 2,
@@ -6313,7 +6313,7 @@
     {
       "id": "solar-endless-oscillator",
       "name": "Endless Oscillator",
-      "ref": "In the style of 1960s drone music",
+      "ref": "A tone that never stops, gliding to each new key under plucked notes, as in 1960s drone music",
       "artist": "Drone music",
       "tags": ["pad", "vco", "drone", "portamento", "melody"],
       "level": 2,
@@ -6398,7 +6398,7 @@
     {
       "id": "solar-modulator-sync",
       "name": "Modulator Sync",
-      "ref": "In the style of noise music",
+      "ref": "A fixed, buzzing synced pulse whose tone the keys colour rather than pitch, harsh enough for noise music",
       "artist": "Noise",
       "tags": ["lead", "vco", "sync", "papa srapa", "noisy"],
       "level": 3,
@@ -6477,7 +6477,7 @@
     {
       "id": "solar-srapa-sequence",
       "name": "Srapa Sequence",
-      "ref": "In the style of Berlin-school sequencer music",
+      "ref": "A burbling, trilling five-note bassline that runs by itself, in the Berlin-school mould",
       "artist": "Berlin school",
       "tags": ["seq", "papa srapa", "sequencer", "fm", "delay"],
       "level": 2,
@@ -6571,7 +6571,7 @@
     {
       "id": "solar-wandering-chords",
       "name": "Wandering Chords",
-      "ref": "In the style of generative ambient music",
+      "ref": "An upper chord that jumps somewhere new every few seconds over a still bass: music that composes itself",
       "artist": "Ambient",
       "tags": ["drone", "classic drone", "sample and hold", "photosensor", "reverb"],
       "level": 3,
@@ -6660,7 +6660,7 @@
     {
       "id": "solar-glitch-echo",
       "name": "Glitch Echo",
-      "ref": "In the style of glitch electronica",
+      "ref": "A clean melody whose echoes leap in pitch and stutter like a skipping CD, for glitch electronica",
       "artist": "Glitch",
       "tags": ["fx", "vco", "sample and hold", "delay", "glitch", "melody"],
       "level": 2,
@@ -6738,7 +6738,7 @@
     {
       "id": "solar-audio-pwm",
       "name": "Pulse-Width FM",
-      "ref": "In the style of IDM keys",
+      "ref": "A reedy, ring-modulated tone from a pulse width moved at audio rate, its colour retuned with VCO B",
       "artist": "IDM",
       "tags": ["keys", "vco", "pwm", "fm", "melody"],
       "level": 2,
@@ -6827,7 +6827,7 @@
     {
       "id": "solar-srapa-scrape",
       "name": "Metal Scrape",
-      "ref": "In the style of industrial metal scrapes",
+      "ref": "A square thrown across ten octaves at audio rate, scraping and clanging like industrial metal",
       "artist": "Industrial",
       "tags": ["fx", "papa srapa", "vco", "fm", "noisy"],
       "level": 3,
@@ -6906,7 +6906,7 @@
     {
       "id": "solar-envelope-eye",
       "name": "Envelope on the Eye",
-      "ref": "In the style of 1960s drone music",
+      "ref": "A drone whose top generators throb up and down while a key is held, its bass still beneath",
       "artist": "Drone music",
       "tags": ["drone", "classic drone", "envelope", "loop", "photosensor"],
       "level": 2,
@@ -6996,7 +6996,7 @@
     {
       "id": "solar-follower-pump",
       "name": "Pumping Pad",
-      "ref": "In the style of French-house pumping pads",
+      "ref": "A drone pad that pumps in time with a thump on the other side, as French house pads breathe with the kick",
       "artist": "French house",
       "tags": ["pad", "classic drone", "papa srapa", "envelope follower", "rhythm"],
       "level": 3,
@@ -7099,7 +7099,7 @@
     {
       "id": "solar-key-wobble",
       "name": "Wobble That Follows",
-      "ref": "In the style of dubstep wobble bass",
+      "ref": "A dubstep wobble whose speed follows the keys, fast on high notes and slow on low ones",
       "artist": "Dubstep",
       "tags": ["bass", "vco", "lfo", "filter", "keyboard tracking"],
       "level": 3,
@@ -7181,7 +7181,7 @@
     {
       "id": "solar-buzzing-eye",
       "name": "Buzzing Eye",
-      "ref": "In the style of drone metal",
+      "ref": "A drone growling with fast FM from an LFO pushed into audio, abrasive enough for drone metal",
       "artist": "Drone metal",
       "tags": ["drone", "classic drone", "lfo", "fm", "photosensor"],
       "level": 2,
@@ -7268,7 +7268,7 @@
     {
       "id": "solar-thunderstorm",
       "name": "Thunderstorm",
-      "ref": "In the style of radio-drama thunder",
+      "ref": "A cross-modulated low drone rolling nearer and further, with hissing rain on the other side",
       "artist": "Sound effects",
       "tags": ["fx", "classic drone", "volt", "noise", "papa srapa"],
       "level": 3,
@@ -7365,7 +7365,7 @@
     {
       "id": "solar-joystick-siren",
       "name": "Joystick Siren",
-      "ref": "In the style of synthesized sirens",
+      "ref": "A hand-played siren: the stick throws the pitch across octaves and brightens it as it climbs",
       "artist": "Sound effects",
       "tags": ["fx", "papa srapa", "joystick", "filter", "siren"],
       "level": 2,
@@ -7454,7 +7454,7 @@
     {
       "id": "solar-opening-bloom",
       "name": "Opening Bloom",
-      "ref": "In the style of ambient swells",
+      "ref": "A drone chord that brightens as it swells in, opening from dark to bright like an ambient swell",
       "artist": "Ambient",
       "tags": ["pad", "classic drone", "envelope", "filter", "reverb"],
       "level": 1,
@@ -7538,7 +7538,7 @@
     {
       "id": "solar-jet-drone",
       "name": "Jet Drone",
-      "ref": "In the style of 1960s psychedelic jet flanging",
+      "ref": "A thick drone swept by a resonant flanger into the roar of a passing jet, the effect 1960s psychedelia loved",
       "artist": "Psychedelia",
       "tags": ["drone", "classic drone", "flanger", "stereo"],
       "level": 1,
@@ -7627,7 +7627,7 @@
     {
       "id": "solar-stepping-echoes",
       "name": "Stepping Echoes",
-      "ref": "In the style of dub-techno echoes",
+      "ref": "Echoes that step to a new interval every beat, so one held note spells out a shifting dub chord",
       "artist": "Dub techno",
       "tags": ["keys", "vco", "sequencer", "delay", "magic", "melody"],
       "level": 3,
@@ -7708,7 +7708,7 @@
     {
       "id": "solar-rhythm-section",
       "name": "Rhythm Section",
-      "ref": "In the style of early drum-machine rhythm sections",
+      "ref": "A ticking hi-hat and a sequenced bass running off one clock, a self-playing groove like an early drum machine’s",
       "artist": "Early electro",
       "tags": ["seq", "papa srapa", "vco", "sequencer", "rhythm"],
       "level": 3,
@@ -7803,7 +7803,7 @@
     {
       "id": "solar-robot-chatter",
       "name": "Robot Chatter",
-      "ref": "In the style of 1950s science-fiction robots",
+      "ref": "A stream of random beeps broken into phrases, the burbling chatter of a 1950s film robot",
       "artist": "1950s sci-fi",
       "tags": ["fx", "papa srapa", "sample and hold", "sci-fi"],
       "level": 2,
@@ -7893,7 +7893,7 @@
     {
       "id": "solar-airport-loops",
       "name": "Airport Loops",
-      "ref": "In the style of Brian Eno — “Music for Airports”",
+      "ref": "Two soft tones on loops of different lengths, meeting anew, as the tape loops of Eno’s “Music for Airports” do",
       "artist": "Brian Eno",
       "tags": ["pad", "vco", "envelope", "loop", "ambient", "stereo"],
       "level": 2,
@@ -7980,12 +7980,12 @@
     {
       "id": "solar-bowed-haze",
       "name": "Bowed Haze",
-      "ref": "In the style of Stars of the Lid — slow, bowed drones",
-      "artist": "Stars of the Lid",
+      "ref": "Two drones a breath apart that fade in like bowed strings and dissolve into a long, dark reverb",
+      "artist": "Drone ambient",
       "tags": ["pad", "classic drone", "chord", "stereo", "reverb"],
       "level": 2,
       "blurb": "Two classic drones on the same chord, one a breath sharp, fading in like bowed strings and dissolving into a long, dark reverb.",
-      "how": "Stars of the Lid stretch bowed strings and horns into slow, glowing haze. Two classic drones tuned to the same chord, one a fraction sharp and each on its own side, beat gently against each other as an ensemble does. Long attacks, a low filter to take off the saws’ edge, and CATHEDRAL’s Space reverb at its longest.",
+      "how": "Drone ambient stretches bowed strings and horns into slow, glowing haze. Two classic drones tuned to the same chord, one a fraction sharp and each on its own side, beat gently against each other as an ensemble does. Long attacks, a low filter to take off the saws’ edge, and CATHEDRAL’s Space reverb at its longest.",
       "phrase": {
         "bpm": 36,
         "loop": true,
@@ -8078,7 +8078,7 @@
     {
       "id": "solar-slow-beating",
       "name": "Slow Beating",
-      "ref": "In the style of Éliane Radigue — slow beating drones",
+      "ref": "Éliane Radigue’s ARP drones in miniature: near-unison tones beating slowly, with nothing else moving",
       "artist": "Éliane Radigue",
       "tags": ["drone", "classic drone", "beating", "minimal"],
       "level": 3,
@@ -8154,12 +8154,12 @@
     {
       "id": "solar-soft-pedal-piano",
       "name": "Soft Pedal Piano",
-      "ref": "In the style of Harold Budd — “The Plateaux of Mirror”",
-      "artist": "Harold Budd",
+      "ref": "Soft, struck notes that sink into a shimmering halo, like ambient piano played with the soft pedal down",
+      "artist": "Ambient piano",
       "tags": ["keys", "vco", "ambient", "shimmer", "melody"],
       "level": 1,
       "blurb": "Soft, struck notes that fade slowly into a cloud of shimmering reverb: a piano played with the soft pedal down, in an endless room.",
-      "how": "Harold Budd played sparse, gentle piano into Eno’s treatments, each note dissolving into the next. VCO A’s sine-to-triangle morph is soft but not dull; an envelope that strikes and fades with no sustain plays it like a piano; CATHEDRAL’s Shimmer adds the halo. Play few notes and leave space.",
+      "how": "Ambient piano is sparse and gentle, each note dissolving into the next. VCO A’s sine-to-triangle morph is soft but not dull; an envelope that strikes and fades with no sustain plays it like a piano; CATHEDRAL’s Shimmer adds the halo. Play few notes and leave space.",
       "phrase": {
         "bpm": 56,
         "loop": true,
@@ -8228,7 +8228,7 @@
     {
       "id": "solar-disintegrating-loop",
       "name": "Disintegrating Loop",
-      "ref": "In the style of William Basinski — “The Disintegration Loops”",
+      "ref": "A phrase that repeats and wears away, duller and grainier each pass, as on Basinski’s “The Disintegration Loops”",
       "artist": "William Basinski",
       "tags": ["keys", "vco", "loop", "delay", "lo-fi", "melody"],
       "level": 2,
@@ -8312,12 +8312,12 @@
     {
       "id": "solar-water-garden",
       "name": "Water Garden",
-      "ref": "In the style of Hiroshi Yoshimura — “Music for Nine Postcards”",
-      "artist": "Hiroshi Yoshimura",
+      "ref": "Clear, bright sine notes in a light chorus, pentatonic phrases floating like Japanese environmental music",
+      "artist": "Japanese environmental music",
       "tags": ["keys", "vco", "chorus", "ambient", "melody"],
       "level": 1,
       "blurb": "Bright, clear sine notes in a light chorus, a few pentatonic phrases floating like reflections on a pond.",
-      "how": "Hiroshi Yoshimura’s environmental music is light and clear: simple phrases on soft electric tones, plenty of air between them. A sine an octave up, a short, ringing envelope and TIME’s Delay chorus program keep it bright and watery; nothing is heavy and nothing is loud.",
+      "how": "Japanese environmental music is light and clear: simple phrases on soft electric tones, plenty of air between them. A sine an octave up, a short, ringing envelope and TIME’s Delay chorus program keep it bright and watery; nothing is heavy and nothing is loud.",
       "phrase": {
         "bpm": 88,
         "loop": true,
@@ -8399,7 +8399,7 @@
     {
       "id": "solar-tears-in-rain",
       "name": "Tears in Rain",
-      "ref": "In the style of Vangelis — “Blade Runner”",
+      "ref": "A slow brass-string lead swelling and wavering in a vast hall, the CS-80 of Vangelis’s “Blade Runner”",
       "artist": "Vangelis",
       "tags": ["pad", "vco", "papa srapa", "noise", "reverb", "melody"],
       "level": 2,
@@ -8505,7 +8505,7 @@
     {
       "id": "solar-arctic-dawn",
       "name": "Arctic Dawn",
-      "ref": "In the style of Biosphere — “Substrata”",
+      "ref": "A near-subsonic rumble, a far-off tone and icy wind: the frozen stillness of Biosphere’s “Substrata”",
       "artist": "Biosphere",
       "tags": ["drone", "classic drone", "papa srapa", "noise", "reverb", "cold"],
       "level": 2,
@@ -8594,7 +8594,7 @@
     {
       "id": "solar-forest-pulse",
       "name": "Forest Pulse",
-      "ref": "In the style of Gas — “Pop”",
+      "ref": "Gas’s “Pop” as a sketch, a muffled four-to-the-floor thump buried deep under a hazy drone chord",
       "artist": "Gas",
       "tags": ["pad", "classic drone", "papa srapa", "rhythm", "reverb"],
       "level": 3,
@@ -8704,7 +8704,7 @@
     {
       "id": "solar-desert-breath",
       "name": "Desert Breath",
-      "ref": "In the style of Steve Roach — “Structures from Silence”",
+      "ref": "A dark drone breathing through a ringing filter over half a minute, close to Steve Roach’s early ambient",
       "artist": "Steve Roach",
       "tags": ["drone", "classic drone", "bandpass", "lfo", "reverb"],
       "level": 2,
@@ -8794,7 +8794,7 @@
     {
       "id": "solar-distorted-cathedral",
       "name": "Distorted Cathedral",
-      "ref": "In the style of Tim Hecker — “Ravedeath, 1972”",
+      "ref": "Organ drones crushed and smeared until they glow, the battered beauty of Tim Hecker’s “Ravedeath, 1972”",
       "artist": "Tim Hecker",
       "tags": ["drone", "classic drone", "organ", "distortion", "reverb"],
       "level": 2,
@@ -8881,13 +8881,13 @@
     },
     {
       "id": "solar-deep-listening",
-      "name": "Deep Listening",
-      "ref": "In the style of Pauline Oliveros — “Deep Listening”",
-      "artist": "Pauline Oliveros",
+      "name": "Cistern Reeds",
+      "ref": "Two reedy, accordion-like tones held long in a cavernous reverb, their overtones blooming as in a cistern",
+      "artist": "Experimental drone",
       "tags": ["pad", "vco", "accordion", "reverb", "resonance"],
       "level": 2,
-      "blurb": "A reedy, accordion-like pair of tones held long in a resonant, cavernous reverb, like Oliveros’s accordion in the Fort Worden cistern.",
-      "how": "Pauline Oliveros recorded Deep Listening in an empty cistern with a 45-second reverb, her accordion’s held tones blooming into overtones. Two pulse waves, one a hair sharp like an accordion’s musette reeds, held with slow envelopes; INFINITY’s Resonance reverb at its longest makes the cistern.",
+      "blurb": "A reedy, accordion-like pair of tones held long in a resonant, cavernous reverb, like an accordion played in an empty cistern.",
+      "how": "In an empty cistern a reverb can last 45 seconds, and an accordion’s held tones bloom into overtones. Two pulse waves, one a hair sharp like an accordion’s musette reeds, held with slow envelopes; INFINITY’s Resonance reverb at its longest makes the cistern.",
       "phrase": {
         "bpm": 30,
         "loop": true,
@@ -8962,12 +8962,12 @@
     {
       "id": "solar-deep-sleep",
       "name": "Deep Sleep",
-      "ref": "In the style of Max Richter — “Sleep”",
-      "artist": "Max Richter",
+      "ref": "A very low, soft drone under a slow, plain melody: a lullaby meant to fall asleep to",
+      "artist": "Sleep music",
       "tags": ["pad", "classic drone", "vco", "lullaby", "melody"],
       "level": 1,
       "blurb": "A very low, soft drone under a slow, simple melody, made to fall asleep to.",
-      "how": "Max Richter’s Sleep is eight hours of slow, quiet music under deep bass. A classic drone gives a low octave and fifth, filtered soft enough to feel more than hear, and VCO A plays a slow, plain melody on triangle. Everything is gentle; nothing starts or stops sharply.",
+      "how": "Music for sleep is slow and quiet, over deep bass. A classic drone gives a low octave and fifth, filtered soft enough to feel more than hear, and VCO A plays a slow, plain melody on triangle. Everything is gentle; nothing starts or stops sharply.",
       "phrase": {
         "bpm": 44,
         "loop": true,
@@ -9046,7 +9046,7 @@
     {
       "id": "solar-kosmische-drift",
       "name": "Kosmische Drift",
-      "ref": "In the style of Tangerine Dream — “Zeit”",
+      "ref": "A dark drone, a distant beacon calling between two pitches and slow phasing, Tangerine Dream’s “Zeit” in outline",
       "artist": "Tangerine Dream",
       "tags": ["drone", "classic drone", "papa srapa", "fm", "phaser", "stereo"],
       "level": 3,
@@ -9134,8 +9134,8 @@
     {
       "id": "solar-just-intonation",
       "name": "Just Intonation",
-      "ref": "In the style of La Monte Young — “The Well-Tuned Piano”",
-      "artist": "La Monte Young",
+      "ref": "A major seventh tuned to whole-number ratios, with no beating at all, stiller than a keyboard can play",
+      "artist": "Just intonation",
       "tags": ["drone", "classic drone", "chord", "just intonation", "reverb"],
       "level": 3,
       "blurb": "A classic drone’s five generators tuned to pure, whole-number ratios: a major seventh chord with no beating at all, stiller and brighter than a keyboard can play.",
@@ -9221,7 +9221,7 @@
     {
       "id": "solar-harmonic-series",
       "name": "Harmonic Series",
-      "ref": "In the style of spectral music built on the harmonic series",
+      "ref": "One note’s overtones played as a chord, the 7th and 13th far from any keyboard, as spectral composers build them",
       "artist": "Spectral music",
       "tags": ["drone", "classic drone", "harmonics", "just intonation", "reverb"],
       "level": 3,
@@ -9296,7 +9296,7 @@
     {
       "id": "solar-shimmering-choir",
       "name": "Shimmering Choir",
-      "ref": "In the style of 1980s ambient choirs",
+      "ref": "Two drones on one chord, their top voices wavering at different speeds: a choir that never quite agrees",
       "artist": "Ambient",
       "tags": ["pad", "classic drone", "photosensor", "lfo", "stereo", "reverb"],
       "level": 2,
@@ -9396,7 +9396,7 @@
     {
       "id": "solar-generative-bells",
       "name": "Generative Bells",
-      "ref": "In the style of Brian Eno — “Music for Airports”",
+      "ref": "Five pentatonic notes struck by two unrelated clocks, the self-renewing music Brian Eno called generative",
       "artist": "Brian Eno",
       "tags": ["seq", "vco", "sequencer", "papa srapa", "ambient", "reverb"],
       "level": 3,
@@ -9491,7 +9491,7 @@
     {
       "id": "solar-tide-pool",
       "name": "Tide Pool",
-      "ref": "In the style of ambient nature recordings",
+      "ref": "Surf swelling in and drawing back every few seconds with gulls far off, a quiet stretch of shore",
       "artist": "Ambient",
       "tags": ["fx", "papa srapa", "noise", "ambient", "reverb"],
       "level": 2,
@@ -9588,7 +9588,7 @@
     {
       "id": "solar-aurora",
       "name": "Aurora",
-      "ref": "In the style of space-ambient pads",
+      "ref": "Pale, weightless top notes rippling through a flanger and glowing in shimmer, a space-ambient night sky",
       "artist": "Space ambient",
       "tags": ["pad", "classic drone", "flanger", "shimmer", "stereo"],
       "level": 2,
@@ -9682,7 +9682,7 @@
     {
       "id": "solar-underwater",
       "name": "Underwater",
-      "ref": "In the style of deep-sea ambient",
+      "ref": "A muffled, swaying melody, each note answered by an echo an octave below, as if off the sea floor",
       "artist": "Deep-sea ambient",
       "tags": ["keys", "vco", "filter", "delay", "magic", "melody"],
       "level": 2,
@@ -9761,7 +9761,7 @@
     {
       "id": "solar-snowfall",
       "name": "Snowfall",
-      "ref": "In the style of generative ambient music",
+      "ref": "Soft high notes falling at random pitches over a warm drone, gathered into drifts by the reverb",
       "artist": "Ambient",
       "tags": ["pad", "vco", "sample and hold", "classic drone", "ambient", "reverb"],
       "level": 3,
@@ -9850,7 +9850,7 @@
     {
       "id": "solar-glacier",
       "name": "Glacier",
-      "ref": "In the style of slow-moving drone music",
+      "ref": "Two drone chords, one sinking and rising too slowly to hear, so the harmony slides from calm to strange",
       "artist": "Drone music",
       "tags": ["drone", "classic drone", "photosensor", "lfo", "chord"],
       "level": 3,
@@ -9951,7 +9951,7 @@
     {
       "id": "solar-starfield",
       "name": "Starfield",
-      "ref": "In the style of space-ambient music",
+      "ref": "Four lone high tones placed across the stereo field, two of them twinkling, for a sparse space-ambient sky",
       "artist": "Space ambient",
       "tags": ["pad", "classic drone", "photosensor", "lfo", "stereo", "phaser"],
       "level": 2,
@@ -10076,7 +10076,7 @@
     {
       "id": "solar-moonlight-harp",
       "name": "Moonlight Harp",
-      "ref": "In the style of 1980s new-age harp",
+      "ref": "Slow, rising harp-like arpeggios that bloom and ripple, the soft-focus sound of 1980s new-age records",
       "artist": "New age",
       "tags": ["pluck", "vco", "arpeggio", "shimmer", "stereo", "melody"],
       "level": 1,
@@ -10158,7 +10158,7 @@
     {
       "id": "solar-breathing-filter",
       "name": "Breathing Filter",
-      "ref": "In the style of ambient breathing pads",
+      "ref": "A soft chord brightening and darkening every few seconds, like slow breathing, for as long as a key is held",
       "artist": "Ambient",
       "tags": ["pad", "classic drone", "envelope", "loop", "filter", "reverb"],
       "level": 2,
@@ -10247,7 +10247,7 @@
     {
       "id": "solar-evening-bell",
       "name": "Evening Bell",
-      "ref": "In the style of English church-bell ringing",
+      "ref": "Five tones tuned to a church bell’s partials, tierce and all, struck by each key and left to ring",
       "artist": "Church bells",
       "tags": ["perc", "classic drone", "bell", "just intonation", "reverb"],
       "level": 3,
@@ -10338,7 +10338,7 @@
     {
       "id": "solar-galloping-bass",
       "name": "Galloping Bass",
-      "ref": "In the style of Delia Derbyshire — the “Doctor Who” theme",
+      "ref": "A plucked da-da-DUM gallop with a little tape-room echo, the bass under Delia Derbyshire’s “Doctor Who” theme",
       "artist": "Delia Derbyshire",
       "tags": ["bass", "vco", "sub", "delay"],
       "level": 1,
@@ -10420,7 +10420,7 @@
     {
       "id": "solar-carpenter-ostinato",
       "name": "Carpenter Ostinato",
-      "ref": "In the style of John Carpenter’s film scores",
+      "ref": "A relentless eighth-note saw bass under an unresolved minor chord, the pulsing dread of John Carpenter’s scores",
       "artist": "John Carpenter",
       "tags": ["bass", "vco", "classic drone", "horror", "melody"],
       "level": 2,
@@ -10518,7 +10518,7 @@
     {
       "id": "solar-eighties-arp",
       "name": "80s Arpeggio",
-      "ref": "In the style of S U R V I V E — the “Stranger Things” theme",
+      "ref": "A seventh-chord arpeggio up and back in sixteenths, snapping like S U R V I V E’s “Stranger Things” theme",
       "artist": "S U R V I V E",
       "tags": ["seq", "vco", "arpeggio", "filter", "delay"],
       "level": 2,
@@ -10622,7 +10622,7 @@
     {
       "id": "solar-oxygene-strings",
       "name": "Oxygène Strings",
-      "ref": "In the style of Jean-Michel Jarre — “Oxygène”",
+      "ref": "Jean-Michel Jarre’s “Oxygène” in a nutshell: a string-machine pad, a deep slow phaser and a wash of wind",
       "artist": "Jean-Michel Jarre",
       "tags": ["strings", "vco", "papa srapa", "phaser", "noise", "melody"],
       "level": 2,
@@ -10709,7 +10709,7 @@
     {
       "id": "solar-rolling-bass",
       "name": "Rolling Bass",
-      "ref": "In the style of 2000s psytrance basslines",
+      "ref": "Three tight sixteenths to every beat, the first left for the kick: the rolling bass of 2000s psytrance",
       "artist": "Psytrance",
       "tags": ["bass", "vco", "filter", "sub"],
       "level": 2,
@@ -10790,7 +10790,7 @@
     {
       "id": "solar-fm-bass",
       "name": "FM Bass",
-      "ref": "In the style of 1980s FM synth basses",
+      "ref": "A bright, slappy, slightly metallic bass from one sine modulating another, as 1980s FM synths made it",
       "artist": "80s FM",
       "tags": ["bass", "vco", "fm"],
       "level": 2,
@@ -10868,7 +10868,7 @@
     {
       "id": "solar-industrial-grind",
       "name": "Industrial Grind",
-      "ref": "In the style of late-70s industrial music",
+      "ref": "Chopped noise and a low square pushed through hard distortion, the factory-floor grind of late-1970s industrial",
       "artist": "Industrial",
       "tags": ["fx", "papa srapa", "noise", "distortion", "am"],
       "level": 2,
@@ -10954,7 +10954,7 @@
     {
       "id": "solar-radiophonic-swoops",
       "name": "Radiophonic Swoops",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "A pure sine sliding slowly between far-apart notes, the swooping test-tone tunes of the BBC Radiophonic Workshop",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["lead", "vco", "portamento", "sci-fi", "delay", "melody"],
       "level": 1,
@@ -11029,7 +11029,7 @@
     {
       "id": "solar-tomita-whistle",
       "name": "Tomita Whistle",
-      "ref": "In the style of Isao Tomita — “Snowflakes Are Dancing”",
+      "ref": "A high, whistling voice with vibrato and a little glide, the singing Moog of Tomita’s “Snowflakes Are Dancing”",
       "artist": "Isao Tomita",
       "tags": ["lead", "vco", "portamento", "vibrato", "phaser", "melody"],
       "level": 2,
@@ -11109,7 +11109,7 @@
     {
       "id": "solar-house-organ",
       "name": "House Organ Bass",
-      "ref": "In the style of early-90s house organ basslines",
+      "ref": "A bouncing, staccato organ bass with a click on top, the preset-organ basslines of early-1990s house",
       "artist": "90s house",
       "tags": ["bass", "vco", "organ", "sub"],
       "level": 1,
@@ -11187,7 +11187,7 @@
     {
       "id": "solar-lofi-keys",
       "name": "Lo-fi Keys",
-      "ref": "In the style of lo-fi hip-hop",
+      "ref": "Soft, slightly wobbly electric-piano keys, warm and worn as if sampled off old tape, for lo-fi hip-hop",
       "artist": "Lo-fi hip-hop",
       "tags": ["keys", "vco", "lo-fi", "chorus", "melody"],
       "level": 2,
@@ -11287,7 +11287,7 @@
     {
       "id": "solar-synth-kick",
       "name": "Synth Kick",
-      "ref": "In the style of the TR-808 kick",
+      "ref": "A sine that thumps in high and drops fast to a low boom, the electronic kick the TR-808 made famous",
       "artist": "808-style drums",
       "tags": ["perc", "vco", "envelope", "drum"],
       "level": 2,
@@ -11359,7 +11359,7 @@
     {
       "id": "solar-synth-snare",
       "name": "Synth Snare",
-      "ref": "In the style of 1980s electronic snares",
+      "ref": "A short pitched tone and a burst of noise struck together, the crisp electronic snare of 1980s drum machines",
       "artist": "Synth drums",
       "tags": ["perc", "vco", "papa srapa", "noise", "drum"],
       "level": 2,
@@ -11442,7 +11442,7 @@
     {
       "id": "solar-cowbell",
       "name": "Cowbell",
-      "ref": "In the style of the TR-808 cowbell",
+      "ref": "Two square waves at a clashing interval, struck short through a band-pass: the TR-808’s clanky cowbell",
       "artist": "808-style drums",
       "tags": ["perc", "vco", "bandpass", "drum"],
       "level": 1,
@@ -11521,7 +11521,7 @@
     {
       "id": "solar-bagpipes",
       "name": "Bagpipes",
-      "ref": "In the style of the Great Highland bagpipe",
+      "ref": "A reedy chanter with quick grace notes over three droning As, a synth take on the Great Highland bagpipe",
       "artist": "Scottish pipes",
       "tags": ["wind", "classic drone", "vco", "pulse", "melody"],
       "level": 2,
@@ -11622,7 +11622,7 @@
     {
       "id": "solar-tanpura",
       "name": "Tanpura",
-      "ref": "In the style of the tanpura drone in Hindustani classical music",
+      "ref": "Pa and Sa held as a buzzing, shimmering drone, with a melody sliding above it as Hindustani singers do",
       "artist": "Hindustani classical",
       "tags": ["drone", "classic drone", "vco", "portamento", "melody"],
       "level": 3,
@@ -11722,7 +11722,7 @@
     {
       "id": "solar-didgeridoo",
       "name": "Didgeridoo",
-      "ref": "In the style of the didgeridoo",
+      "ref": "One low, buzzing note whose throaty formant swings up and down in rhythm: a synth didgeridoo",
       "artist": "Didgeridoo",
       "tags": ["wind", "classic drone", "bandpass", "lfo"],
       "level": 2,
@@ -11802,7 +11802,7 @@
     {
       "id": "solar-preamp-fuzz",
       "name": "Preamp Fuzz",
-      "ref": "In the style of 1960s fuzz-pedal guitar",
+      "ref": "A lead squared off by an overdriven preamp into a buzzing, sustaining tone, like 1960s fuzz-pedal guitar",
       "artist": "60s garage rock",
       "tags": ["lead", "vco", "distortion", "preamp", "melody"],
       "level": 2,
@@ -11882,7 +11882,7 @@
     {
       "id": "solar-drone-stabs",
       "name": "Drone Stabs",
-      "ref": "In the style of techno chord stabs",
+      "ref": "A drone chord stabbed in a syncopated rhythm while its top notes shift each step, a self-playing techno riff",
       "artist": "Techno",
       "tags": ["seq", "classic drone", "sequencer", "chord", "delay"],
       "level": 3,
@@ -11979,7 +11979,7 @@
     {
       "id": "solar-echo-throws",
       "name": "Echo Throws",
-      "ref": "In the style of dub reggae echo throws",
+      "ref": "Echoes that swell up after every note and die away in the gaps, a dub engineer’s throws played from the keys",
       "artist": "Dub",
       "tags": ["keys", "vco", "delay", "dub", "envelope", "melody"],
       "level": 2,
@@ -12053,7 +12053,7 @@
     {
       "id": "solar-drone-bell-fm",
       "name": "Drone Bell FM",
-      "ref": "In the style of 1980s FM bells",
+      "ref": "A drone ringing with bell-like, clangorous partials that change with each key, like a 1980s FM bell",
       "artist": "80s FM",
       "tags": ["keys", "classic drone", "vco", "fm", "photosensor", "bell"],
       "level": 3,
@@ -12147,7 +12147,7 @@
     {
       "id": "solar-melody-from-the-eye",
       "name": "Melody From the Eye",
-      "ref": "In the style of melody over a drone",
+      "ref": "A drone that plays its own little tune, one generator stepped above a chord held by the other four",
       "artist": "Drone music",
       "tags": ["seq", "classic drone", "sequencer", "photosensor", "melody"],
       "level": 3,
@@ -12240,7 +12240,7 @@
     {
       "id": "solar-two-axis-filter",
       "name": "Two-Axis Filter",
-      "ref": "In the style of ambient filter performance",
+      "ref": "One hand on the joystick sculpts a chord in stereo, low-pass on the left and band-pass on the right",
       "artist": "Ambient",
       "tags": ["pad", "classic drone", "joystick", "filter", "stereo"],
       "level": 2,
@@ -12332,7 +12332,7 @@
     {
       "id": "solar-quartal-organ",
       "name": "Quartal Organ",
-      "ref": "In the style of 1960s modal-jazz quartal voicings",
+      "ref": "Four-note chords in fourths under every key, swirling through a fast phaser like a modal-jazz organ",
       "artist": "Jazz",
       "tags": ["keys", "vco", "organ", "sub", "phaser", "melody"],
       "level": 2,
@@ -12416,7 +12416,7 @@
     {
       "id": "solar-vowel-sweep",
       "name": "Vowel Sweep",
-      "ref": "In the style of talking synth filters",
+      "ref": "A slow, two-coloured sweep: the left side opens into a bright pad while the right mouths a changing vowel",
       "artist": "Synth-funk",
       "tags": ["pad", "vco", "filter", "bandpass", "stereo", "lfo"],
       "level": 2,
@@ -12509,7 +12509,7 @@
     {
       "id": "solar-bee-swarm",
       "name": "Bee Swarm",
-      "ref": "In the style of tone-cluster drone music",
+      "ref": "Tones bunched within a fraction of a semitone, each wavering on its own and buzzing like a hive",
       "artist": "Experimental",
       "tags": ["fx", "classic drone", "cluster", "photosensor", "lfo"],
       "level": 2,
@@ -12618,7 +12618,7 @@
     {
       "id": "solar-random-filter",
       "name": "Random Filter Steps",
-      "ref": "In the style of Berlin-school random filter patterns",
+      "ref": "A held chord whose filter jumps to a new random brightness on every tick, the old sample-and-hold burble",
       "artist": "Berlin school",
       "tags": ["pad", "classic drone", "sample and hold", "filter", "delay"],
       "level": 2,
@@ -12710,7 +12710,7 @@
     {
       "id": "solar-pocket-calculator",
       "name": "Pocket Calculator",
-      "ref": "In the style of Kraftwerk — “Pocket Calculator”",
+      "ref": "Short, dry square bleeps with a slapback, the toy-computer melodies of Kraftwerk’s “Pocket Calculator”",
       "artist": "Kraftwerk",
       "tags": ["lead", "vco", "pluck", "melody"],
       "level": 1,
@@ -12792,7 +12792,7 @@
     {
       "id": "solar-hazy-nostalgia",
       "name": "Hazy Nostalgia",
-      "ref": "In the style of Boards of Canada",
+      "ref": "Two soft saws drifting in and out of tune as if off stretched tape, the faded warmth of Boards of Canada",
       "artist": "Boards of Canada",
       "tags": ["pad", "vco", "lo-fi", "detune", "chorus", "melody"],
       "level": 2,
@@ -12888,7 +12888,7 @@
     {
       "id": "solar-switched-on-bach",
       "name": "Switched-On Bach",
-      "ref": "In the style of Wendy Carlos — “Switched-On Bach”",
+      "ref": "Two-part counterpoint, a reedy square below and a bright saw above, as Wendy Carlos voiced “Switched-On Bach”",
       "artist": "Wendy Carlos",
       "tags": ["keys", "vco", "split", "melody", "baroque"],
       "level": 2,
@@ -12997,7 +12997,7 @@
     {
       "id": "solar-filter-house",
       "name": "Filter House",
-      "ref": "In the style of French house",
+      "ref": "A syncopated minor-seventh stab swept open and shut by an LFO, the filtered-disco loop of French house",
       "artist": "French house",
       "tags": ["keys", "chord", "classic drone", "filter", "lfo", "phaser"],
       "level": 2,
@@ -13105,7 +13105,7 @@
     {
       "id": "solar-octave-sequence",
       "name": "Octave Sequence",
-      "ref": "In the style of Giorgio Moroder — “I Feel Love”",
+      "ref": "Root, octave and fifth bouncing in fast sixteenths, the hypnotic sequenced bass of Moroder’s “I Feel Love”",
       "artist": "Giorgio Moroder",
       "tags": ["bass", "vco", "sequencer", "seq", "disco"],
       "level": 2,
@@ -13193,7 +13193,7 @@
     {
       "id": "solar-ciani-bubbles",
       "name": "Ciani Bubbles",
-      "ref": "In the style of Suzanne Ciani — “Seven Waves”",
+      "ref": "Round, wet blips at random pitches flung between two echoes, the liquid Buchla bubbling of Suzanne Ciani",
       "artist": "Suzanne Ciani",
       "tags": ["fx", "vco", "sample and hold", "delay", "stereo"],
       "level": 3,
@@ -13275,13 +13275,13 @@
     },
     {
       "id": "solar-fourth-world-horn",
-      "name": "Fourth World Horn",
-      "ref": "In the style of Jon Hassell — “Fourth World”",
-      "artist": "Jon Hassell",
+      "name": "Harmonised Horn",
+      "ref": "A soft, breathy horn line shadowed a fifth below by a pitch-shifting delay, slow and modal",
+      "artist": "Ambient jazz",
       "tags": ["lead", "vco", "magic", "pitch shift", "ambient", "melody"],
       "level": 3,
-      "blurb": "A soft, breathy horn line doubled a fifth below by a pitch-shifting delay, slow and modal: the treated trumpet of Jon Hassell’s Fourth World music.",
-      "how": "Jon Hassell played trumpet through a harmoniser that added voices below his own, so one breathy line became a strange, chord-like horn. VCO A on saw, its filter opened by its own envelope, gives a muted, brassy swell; LFO B a slow vibrato; and MAGIC’s Pitch delay adds an echo a fifth below every note.",
+      "blurb": "A soft, breathy horn line doubled a fifth below by a pitch-shifting delay, slow and modal: a horn treated so one line sounds like a chord.",
+      "how": "A harmoniser adds voices below a horn’s own, so one breathy line becomes a strange, chord-like sound. VCO A on saw, its filter opened by its own envelope, gives a muted, brassy swell; LFO B a slow vibrato; and MAGIC’s Pitch delay adds an echo a fifth below every note.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -13363,7 +13363,7 @@
     {
       "id": "solar-night-bus",
       "name": "Night Bus",
-      "ref": "In the style of Burial — “Untrue”",
+      "ref": "Deep sub, a faint minor chord and rain-like hiss in a vast dark reverb: Burial’s “Untrue” after midnight",
       "artist": "Burial",
       "tags": ["bass", "vco", "classic drone", "papa srapa", "noise", "reverb"],
       "level": 2,
@@ -13460,7 +13460,7 @@
     {
       "id": "solar-on-the-run",
       "name": "On the Run",
-      "ref": "In the style of Pink Floyd — “On the Run”",
+      "ref": "A frantic sequence with a tick of noise on every step, flanged and racing, like Pink Floyd’s “On the Run”",
       "artist": "Pink Floyd",
       "tags": ["seq", "sequencer", "vco", "papa srapa", "flanger", "noise"],
       "level": 3,
@@ -13552,7 +13552,7 @@
     {
       "id": "solar-braam",
       "name": "Braam",
-      "ref": "In the style of film-trailer scores",
+      "ref": "A huge low brass blast that blooms open and growls in a vast hall: the film-trailer braam",
       "artist": "Trailer scores",
       "tags": ["bass", "vco", "classic drone", "brass", "distortion", "reverb"],
       "level": 2,
@@ -13656,12 +13656,12 @@
     {
       "id": "solar-glide-guitar",
       "name": "Glide Guitar",
-      "ref": "In the style of My Bloody Valentine — “Loveless”",
-      "artist": "My Bloody Valentine",
+      "ref": "Fuzzed oscillators bending slowly in and out of tune in a backwards wash, a synth take on shoegaze glide guitar",
+      "artist": "Shoegaze",
       "tags": ["lead", "vco", "distortion", "magic", "detune", "melody"],
       "level": 3,
       "blurb": "A fuzzed pair of oscillators slowly bending in and out of tune, washed in a reverse pitch delay: the woozy \"glide guitar\" wall of shoegaze.",
-      "how": "Kevin Shields of My Bloody Valentine held his guitar’s tremolo arm while strumming, so every chord bent in and out of tune, then buried it in fuzz and reverse reverb. Here a saw and a square a little apart are bent slowly by LFO A on VCO A only, so they wobble against each other; the distortion supplies the fuzz, and MAGIC’s Reverse pitch delay the backwards wash.",
+      "how": "Shoegaze guitarists held the tremolo arm while strumming, so every chord bent in and out of tune, then buried it in fuzz and reverse reverb. Here a saw and a square a little apart are bent slowly by LFO A on VCO A only, so they wobble against each other; the distortion supplies the fuzz, and MAGIC’s Reverse pitch delay the backwards wash.",
       "phrase": {
         "bpm": 90,
         "loop": true,
@@ -13753,12 +13753,12 @@
     {
       "id": "solar-phase-music",
       "name": "Phase Music",
-      "ref": "In the style of Steve Reich — “Piano Phase”",
-      "artist": "Steve Reich",
+      "ref": "Two pulsing tones at almost the same speed, sliding out of step and back in over about fifteen seconds",
+      "artist": "Minimalism",
       "tags": ["perc", "papa srapa", "am", "rhythm", "stereo", "minimal"],
       "level": 2,
-      "blurb": "Two pulsing tones, one on each side, at almost the same speed, slowly sliding out of step and back in: the gradual phasing of Steve Reich.",
-      "how": "Steve Reich’s phase pieces play the same pattern on two instruments, one slightly faster, so they drift apart and slowly realign. The 42N’s two Papa Srapa voices do it on their own: each one’s AM chops its tone at its modulator’s rate. Set the two rates a hair apart and the pulses slide out of step, make new rhythms against each other, and come back together about every fifteen seconds.",
+      "blurb": "Two pulsing tones, one on each side, at almost the same speed, slowly sliding out of step and back in: the gradual phasing of minimalist music.",
+      "how": "Phase music plays the same pattern on two instruments, one slightly faster, so they drift apart and slowly realign. The 42N’s two Papa Srapa voices do it on their own: each one’s AM chops its tone at its modulator’s rate. Set the two rates a hair apart and the pulses slide out of step, make new rhythms against each other, and come back together about every fifteen seconds.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -13836,7 +13836,7 @@
     {
       "id": "solar-curved-air",
       "name": "Curved Air",
-      "ref": "In the style of Terry Riley — “A Rainbow in Curved Air”",
+      "ref": "Fast organ patterns piling up in a looping echo: Terry Riley’s “A Rainbow in Curved Air” in miniature",
       "artist": "Terry Riley",
       "tags": ["keys", "vco", "sequencer", "seq", "delay", "organ"],
       "level": 2,
@@ -13919,7 +13919,7 @@
     {
       "id": "solar-silver-apples",
       "name": "Silver Apples",
-      "ref": "In the style of Morton Subotnick — “Silver Apples of the Moon”",
+      "ref": "A lopsided, jumpy sequence whose tone never settles, like Subotnick’s Buchla on “Silver Apples of the Moon”",
       "artist": "Morton Subotnick",
       "tags": ["seq", "sequencer", "vco", "sample and hold", "filter", "papa srapa"],
       "level": 3,
@@ -14014,7 +14014,7 @@
     {
       "id": "solar-vaporwave-mall",
       "name": "Vaporwave Mall",
-      "ref": "In the style of vaporwave",
+      "ref": "A sagging major-ninth chord and a lazy, warped tune, the slowed shopping-mall muzak of vaporwave",
       "artist": "Vaporwave",
       "tags": ["pad", "classic drone", "vco", "chorus", "photosensor", "reverb"],
       "level": 2,
@@ -14118,7 +14118,7 @@
     {
       "id": "solar-frippertronics",
       "name": "Frippertronics",
-      "ref": "In the style of Robert Fripp and Brian Eno — “(No Pussyfooting)”",
+      "ref": "Each phrase looped back under the next by a long echo, the tape trick of Fripp and Eno’s “(No Pussyfooting)”",
       "artist": "Robert Fripp and Brian Eno",
       "tags": ["lead", "vco", "delay", "distortion", "loop", "ambient"],
       "level": 2,
@@ -14198,7 +14198,7 @@
     {
       "id": "solar-g-funk-whine",
       "name": "G-funk Whine",
-      "ref": "In the style of West Coast G-funk",
+      "ref": "A high, thin, whining lead that swoops between notes with a fast vibrato, over 1990s West Coast G-funk",
       "artist": "G-funk",
       "tags": ["lead", "vco", "portamento", "vibrato", "melody"],
       "level": 2,
@@ -14285,7 +14285,7 @@
     {
       "id": "solar-gabber-kick",
       "name": "Gabber Kick",
-      "ref": "In the style of Rotterdam gabber",
+      "ref": "A kick driven so far into distortion it rings as a pitched boom, the pounding core of Rotterdam gabber",
       "artist": "Gabber",
       "tags": ["perc", "vco", "drum", "distortion", "envelope"],
       "level": 2,
@@ -14365,7 +14365,7 @@
     {
       "id": "solar-sun-ra-organ",
       "name": "Cosmic Organ",
-      "ref": "In the style of Sun Ra",
+      "ref": "Wild, trilling organ runs over a metallic, cross-modulated cluster, for the spaced-out keyboards of Sun Ra",
       "artist": "Sun Ra",
       "tags": ["keys", "organ", "vco", "classic drone", "volt", "phaser"],
       "level": 3,
@@ -14469,7 +14469,7 @@
     {
       "id": "solar-theremin",
       "name": "Theremin",
-      "ref": "In the style of 1950s science-fiction film scores",
+      "ref": "A pure, wavering sine slid anywhere by the joystick: the eerie theremin of 1950s science-fiction films",
       "artist": "1950s sci-fi",
       "tags": ["lead", "vco", "joystick", "vibrato", "sci-fi"],
       "level": 2,
@@ -14551,7 +14551,7 @@
     {
       "id": "solar-musette-accordion",
       "name": "Musette Accordion",
-      "ref": "In the style of French musette",
+      "ref": "Two reedy pulses tuned a little apart and beating fast, the wet shimmer of a Parisian musette accordion",
       "artist": "French musette",
       "tags": ["keys", "vco", "detune", "melody"],
       "level": 1,
@@ -14640,7 +14640,7 @@
     {
       "id": "solar-steel-pan",
       "name": "Steel Pan",
-      "ref": "In the style of Trinidadian steelband",
+      "ref": "A round tone with a quick metallic clang at the strike, the singing ring of a Trinidadian steel pan",
       "artist": "Steelband",
       "tags": ["keys", "vco", "fm", "pluck", "melody"],
       "level": 2,
@@ -14725,7 +14725,7 @@
     {
       "id": "solar-marimba",
       "name": "Marimba",
-      "ref": "In the style of Central American marimba music",
+      "ref": "Short, woody, hollow notes with a soft mallet knock, like a marimba’s rosewood bars played low",
       "artist": "Latin percussion",
       "tags": ["keys", "vco", "pluck", "perc", "melody"],
       "level": 1,
@@ -14812,7 +14812,7 @@
     {
       "id": "solar-harpsichord",
       "name": "Harpsichord",
-      "ref": "In the style of Baroque harpsichord music",
+      "ref": "A bright, nasal twang that dies at once and cannot be held, the quilled pluck of a Baroque harpsichord",
       "artist": "Baroque",
       "tags": ["keys", "vco", "pluck", "baroque", "melody"],
       "level": 1,
@@ -14906,7 +14906,7 @@
     {
       "id": "solar-cello",
       "name": "Cello",
-      "ref": "In the style of the orchestral cello",
+      "ref": "A dark saw bowed in slowly with a warm vibrato, singing low like a solo orchestral cello",
       "artist": "Orchestral",
       "tags": ["strings", "vco", "vibrato", "melody"],
       "level": 2,
@@ -14993,7 +14993,7 @@
     {
       "id": "solar-kalimba",
       "name": "Kalimba",
-      "ref": "In the style of the African mbira and kalimba",
+      "ref": "A soft, high plink with a brief metallic buzz, the plucked tines of an African thumb piano",
       "artist": "African music",
       "tags": ["keys", "vco", "fm", "pluck", "melody"],
       "level": 2,
@@ -15080,7 +15080,7 @@
     {
       "id": "solar-music-box",
       "name": "Music Box",
-      "ref": "In the style of the mechanical music box",
+      "ref": "Tiny glassy notes on a slightly tired spring, glowing in reverb: an old wind-up music box",
       "artist": "Music box",
       "tags": ["keys", "vco", "bell", "shimmer", "melody"],
       "level": 1,
@@ -15163,7 +15163,7 @@
     {
       "id": "solar-fretless-bass",
       "name": "Fretless Bass",
-      "ref": "In the style of 1970s jazz fusion",
+      "ref": "A round bass that slides between notes and says “mwah” as each opens, the fretless sound of 1970s jazz fusion",
       "artist": "Jazz fusion",
       "tags": ["bass", "vco", "portamento", "sub", "chorus"],
       "level": 2,
@@ -15254,7 +15254,7 @@
     {
       "id": "solar-leslie-organ",
       "name": "Leslie Organ",
-      "ref": "In the style of jazz organ through a Leslie speaker",
+      "ref": "A buzzy jazz organ that throbs and wobbles as if through a spinning speaker on its fast setting",
       "artist": "Jazz",
       "tags": ["keys", "organ", "vco", "lfo", "phaser", "melody"],
       "level": 2,
@@ -15353,7 +15353,7 @@
     {
       "id": "solar-throat-singing",
       "name": "Throat Singing",
-      "ref": "In the style of Tuvan throat singing",
+      "ref": "A deep drone with a whistling overtone walking along its harmonics and a growl below, as Tuvan singers make it",
       "artist": "Tuvan throat singing",
       "tags": ["drone", "classic drone", "bandpass", "filter", "lfo", "harmonics"],
       "level": 2,
@@ -15448,7 +15448,7 @@
     {
       "id": "solar-hurdy-gurdy",
       "name": "Hurdy-Gurdy",
-      "ref": "In the style of medieval folk",
+      "ref": "A nasal tune over buzzing open-string drones with a rattle on every note: the medieval hurdy-gurdy",
       "artist": "Medieval folk",
       "tags": ["drone", "classic drone", "papa srapa", "vco", "am", "melody"],
       "level": 3,
@@ -15555,7 +15555,7 @@
     {
       "id": "solar-erhu",
       "name": "Erhu",
-      "ref": "In the style of the Chinese erhu",
+      "ref": "A thin, nasal bowed line that slides and wavers on every note, the vocal tone of the Chinese erhu",
       "artist": "Chinese erhu",
       "tags": ["lead", "vco", "bandpass", "portamento", "vibrato", "melody"],
       "level": 2,
@@ -15646,7 +15646,7 @@
     {
       "id": "solar-gamelan",
       "name": "Gamelan",
-      "ref": "In the style of Balinese gamelan",
+      "ref": "Paired metallic notes beating against each other over a low clanging gong, the shimmer of Balinese gamelan",
       "artist": "Balinese gamelan",
       "tags": ["perc", "bell", "vco", "classic drone", "volt", "fm"],
       "level": 3,
@@ -15748,7 +15748,7 @@
     {
       "id": "solar-koto",
       "name": "Koto",
-      "ref": "In the style of the Japanese koto",
+      "ref": "A bright twang that mellows as it rings, with a sighing bend, in the pentatonic scale of the Japanese koto",
       "artist": "Japanese koto",
       "tags": ["keys", "vco", "pluck", "filter", "melody"],
       "level": 2,
@@ -15839,7 +15839,7 @@
     {
       "id": "solar-hihat",
       "name": "Sequenced Hi-hat",
-      "ref": "In the style of the TR-808 hi-hat",
+      "ref": "Crisp ticks of high noise on every sequencer step, with rests on the gate switches, like a drum-machine hi-hat",
       "artist": "808-style drums",
       "tags": ["perc", "papa srapa", "noise", "drum", "sequencer", "bandpass"],
       "level": 2,
@@ -15926,7 +15926,7 @@
     {
       "id": "solar-hand-clap",
       "name": "Hand Clap",
-      "ref": "In the style of the TR-808 hand clap",
+      "ref": "A snappy noise burst flammed three or four times by a tiny echo: the TR-808 clap on two and four",
       "artist": "808-style drums",
       "tags": ["perc", "papa srapa", "noise", "drum", "delay", "bandpass"],
       "level": 2,
@@ -16007,7 +16007,7 @@
     {
       "id": "solar-electronic-toms",
       "name": "Electronic Toms",
-      "ref": "In the style of 1980s electronic drums",
+      "ref": "Sine toms whose pitch dives on each hit, tumbling into the “pew” fills of 1980s electronic drum pads",
       "artist": "80s electronic drums",
       "tags": ["perc", "vco", "papa srapa", "drum", "envelope"],
       "level": 2,
@@ -16094,7 +16094,7 @@
     {
       "id": "solar-heartbeat",
       "name": "Heartbeat",
-      "ref": "In the style of thriller-film heartbeats",
+      "ref": "A deep, muffled lub-dub once a second, the heartbeat heard from inside in a thriller’s tensest scenes",
       "artist": "Thriller film",
       "tags": ["fx", "vco", "sequencer", "seq", "sub", "rhythm"],
       "level": 2,
@@ -16170,7 +16170,7 @@
     {
       "id": "solar-helicopter",
       "name": "Helicopter",
-      "ref": "In the style of synthesized helicopter effects",
+      "ref": "A thudding rotor and a turbine whine passing slowly overhead, all from one self-chopping noise voice",
       "artist": "Sound effects",
       "tags": ["fx", "papa srapa", "noise", "filter", "stereo"],
       "level": 2,
@@ -16254,7 +16254,7 @@
     {
       "id": "solar-steam-train",
       "name": "Steam Train",
-      "ref": "In the style of radio-drama steam trains",
+      "ref": "Puffing chuffs of steam on one side and a mournful three-note whistle on the other: a steam train in a valley",
       "artist": "Sound effects",
       "tags": ["fx", "papa srapa", "classic drone", "noise", "stereo"],
       "level": 2,
@@ -16352,7 +16352,7 @@
     {
       "id": "solar-morse-beacon",
       "name": "Morse Beacon",
-      "ref": "In the style of wartime radio Morse code",
+      "ref": "A high tone keyed in dots and gaps over static, wavering like a wartime Morse beacon on shortwave",
       "artist": "Old-time radio",
       "tags": ["fx", "papa srapa", "sequencer", "noise", "bandpass", "radio"],
       "level": 2,
@@ -16444,7 +16444,7 @@
     {
       "id": "solar-old-telephone",
       "name": "Old Telephone",
-      "ref": "In the style of old telephone bells",
+      "ref": "A shrill, rattling double ring trilled twenty times a second, tinny like an old telephone in the hall",
       "artist": "Sound effects",
       "tags": ["fx", "papa srapa", "fm", "bandpass"],
       "level": 1,
@@ -16531,7 +16531,7 @@
     {
       "id": "solar-starship-bridge",
       "name": "Starship Bridge",
-      "ref": "In the style of 1960s sci-fi television",
+      "ref": "Engine hum, hissing air and a looping computer readout: the bridge of a 1960s television starship",
       "artist": "Sci-fi soundtracks",
       "tags": ["fx", "ambient", "classic drone", "vco", "sequencer", "sci-fi"],
       "level": 3,
@@ -16634,7 +16634,7 @@
     {
       "id": "solar-sonar",
       "name": "Sonar",
-      "ref": "In the style of submarine-film sonar",
+      "ref": "One high ping fading into dark space, answered late and a little lower, like a submarine film’s sonar",
       "artist": "Film sound design",
       "tags": ["fx", "vco", "reverb", "magic", "stereo", "ambient"],
       "level": 2,
@@ -16699,7 +16699,7 @@
     {
       "id": "solar-dial-up",
       "name": "Dial-up Modem",
-      "ref": "In the style of 1990s dial-up modems",
+      "ref": "An answer tone, a warbling screech and bursts of hiss squeezed into a phone line: two 1990s modems handshaking",
       "artist": "Sound effects",
       "tags": ["fx", "vco", "papa srapa", "noise", "fm", "bandpass"],
       "level": 3,
@@ -16790,7 +16790,7 @@
     {
       "id": "solar-flying-saucer",
       "name": "Flying Saucer",
-      "ref": "In the style of 1950s science-fiction film scores",
+      "ref": "Two sines a quarter-tone apart, wobbling and swooping through a metallic flanger, a 1950s B-movie saucer",
       "artist": "1950s sci-fi",
       "tags": ["fx", "vco", "lfo", "portamento", "flanger", "sci-fi"],
       "level": 2,
@@ -16881,7 +16881,7 @@
     {
       "id": "solar-clockwork",
       "name": "Clockwork",
-      "ref": "In the style of clockwork and ticking effects",
+      "ref": "A tick and a tock of different pitch twice a second and a slow chime: an old clock in a quiet room",
       "artist": "Sound effects",
       "tags": ["fx", "papa srapa", "vco", "sequencer", "bandpass", "bell"],
       "level": 3,
@@ -16983,7 +16983,7 @@
     {
       "id": "solar-arcade-coin",
       "name": "Arcade Coin",
-      "ref": "In the style of 1980s arcade games",
+      "ref": "Two quick square notes, the second a fourth up and ringing, the coin pick-up of a 1980s arcade game",
       "artist": "80s arcade",
       "tags": ["fx", "vco", "chiptune", "pluck"],
       "level": 1,
@@ -17057,7 +17057,7 @@
     {
       "id": "solar-whistling-filter",
       "name": "Whistling Filter",
-      "ref": "In the style of BBC Radiophonic Workshop whistles",
+      "ref": "Noise whistled into a tune by a ringing filter that follows the keys, like wind across a bottle",
       "artist": "Radiophonic sound effects",
       "tags": ["lead", "papa srapa", "noise", "bandpass", "filter", "melody"],
       "level": 3,
@@ -17151,7 +17151,7 @@
     {
       "id": "solar-key-stepped-harmony",
       "name": "Stepped Harmony",
-      "ref": "In the style of synth-pop harmonies",
+      "ref": "A harmony note above every key that changes interval with each press, for synth-pop counterpoint",
       "artist": "Synth-pop",
       "tags": ["keys", "vco", "sequencer", "chord", "melody"],
       "level": 3,

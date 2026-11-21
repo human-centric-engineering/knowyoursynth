@@ -934,7 +934,7 @@
     {
       "id": "syntrx-saw-bass",
       "name": "Saw Bass",
-      "ref": "In the style of 1970s funk synth bass",
+      "ref": "A fat, warm sawtooth bass that speaks only while the key is down, the way 1970s funk used it",
       "artist": "70s funk",
       "tags": ["bass", "basics", "filter"],
       "level": 1,
@@ -1010,7 +1010,7 @@
     {
       "id": "syntrx-sub-bass",
       "name": "Sub Bass",
-      "ref": "In the style of UK garage sub bass",
+      "ref": "A pure sine sitting under the beat, felt more than heard: the UK garage sub",
       "artist": "UK garage",
       "tags": ["bass", "sub", "electronic"],
       "level": 1,
@@ -1066,7 +1066,7 @@
     {
       "id": "syntrx-acid-bass",
       "name": "Acid Bass",
-      "ref": "In the style of acid house",
+      "ref": "Squelching, resonant saw with the filter snapping open on every step of an acid house line",
       "artist": "Acid house",
       "tags": ["bass", "acid", "filter"],
       "level": 2,
@@ -1146,7 +1146,7 @@
     {
       "id": "syntrx-pulse-bass",
       "name": "Pulse Bass",
-      "ref": "In the style of synth-pop pulse bass",
+      "ref": "Hollow, woody square-wave bass of the kind that drives early synth-pop",
       "artist": "Synth-pop",
       "tags": ["bass", "pulse", "basics"],
       "level": 1,
@@ -1214,7 +1214,7 @@
     {
       "id": "syntrx-super-saw-bass",
       "name": "Super Saw Bass",
-      "ref": "In the style of trance supersaw bass",
+      "ref": "Two saws churning against each other at the very bottom of a trance track",
       "artist": "Trance",
       "tags": ["bass", "super-saw", "big"],
       "level": 2,
@@ -1275,7 +1275,7 @@
     {
       "id": "syntrx-sync-bass",
       "name": "Sync Bass",
-      "ref": "In the style of 1980s electro sync bass",
+      "ref": "A biting, metallic bass that tears open on each note, straight out of 1980s electro",
       "artist": "Electro",
       "tags": ["bass", "sync", "aggressive"],
       "level": 3,
@@ -1351,7 +1351,7 @@
     {
       "id": "syntrx-ring-bass",
       "name": "Ring Mod Bass",
-      "ref": "In the style of industrial ring-mod bass",
+      "ref": "Clanging, inharmonic bass whose overtones lurch with every note, made for industrial grooves",
       "artist": "Industrial",
       "tags": ["bass", "ring", "industrial"],
       "level": 3,
@@ -1414,7 +1414,7 @@
     {
       "id": "syntrx-fm-bass",
       "name": "FM Bass",
-      "ref": "In the style of 1980s FM bass",
+      "ref": "Punchy, growling bass with the metallic edge of 1980s FM synthesis",
       "artist": "80s FM",
       "tags": ["bass", "fm", "electronic"],
       "level": 3,
@@ -1487,7 +1487,7 @@
     {
       "id": "syntrx-dub-bass",
       "name": "Dub Bass",
-      "ref": "In the style of dub",
+      "ref": "Deep, round and soft at the front: a bass that sits low in a dub mix",
       "artist": "Dub",
       "tags": ["bass", "dub", "reggae"],
       "level": 1,
@@ -1551,7 +1551,7 @@
     {
       "id": "syntrx-octave-bass",
       "name": "Octave Bass",
-      "ref": "In the style of 1980s synth-pop octave bass",
+      "ref": "Bright bass bouncing between two octaves, the engine of much 1980s synth-pop",
       "artist": "80s synth-pop",
       "tags": ["bass", "octave", "synth-pop"],
       "level": 1,
@@ -1633,7 +1633,7 @@
     {
       "id": "syntrx-noise-bass",
       "name": "Gritty Bass",
-      "ref": "In the style of industrial gritty bass",
+      "ref": "A bass with breath and grit on its edge, rough enough for an industrial track",
       "artist": "Industrial",
       "tags": ["bass", "noise", "aggressive"],
       "level": 2,
@@ -1701,7 +1701,7 @@
     {
       "id": "syntrx-wobble-bass",
       "name": "Wobble Bass",
-      "ref": "In the style of dubstep",
+      "ref": "Heavy saw bass with its filter wobbling fast: the dubstep growl",
       "artist": "Dubstep",
       "tags": ["bass", "dubstep", "lfo"],
       "level": 2,
@@ -1771,7 +1771,7 @@
     {
       "id": "syntrx-pulse-lead",
       "name": "Pulse Lead",
-      "ref": "In the style of synth-pop pulse leads",
+      "ref": "A nasal, reedy pulse with a gentle vibrato, the plain everyday lead of synth-pop",
       "artist": "Synth-pop",
       "tags": ["lead", "pulse", "basics"],
       "level": 1,
@@ -1844,7 +1844,7 @@
     {
       "id": "syntrx-sine-lead",
       "name": "Sine Lead",
-      "ref": "In the style of soft ambient sine leads",
+      "ref": "A pure, soft sine that whistles a melody over an ambient bed",
       "artist": "Ambient",
       "tags": ["lead", "sine", "soft"],
       "level": 1,
@@ -1916,7 +1916,7 @@
     {
       "id": "syntrx-detuned-lead",
       "name": "Detuned Lead",
-      "ref": "In the style of 1970s synth soloists",
+      "ref": "Two oscillators slightly out of tune, beating into a thick 1970s solo lead",
       "artist": "70s synth soloists",
       "tags": ["lead", "detune", "thick"],
       "level": 2,
@@ -1980,7 +1980,7 @@
     {
       "id": "syntrx-resonant-lead",
       "name": "Resonant Lead",
-      "ref": "In the style of talking synth filters",
+      "ref": "A lead with the filter’s resonance singing above it, half voice and half synth",
       "artist": "Synth-funk",
       "tags": ["lead", "filter", "vocal"],
       "level": 2,
@@ -2050,7 +2050,7 @@
     {
       "id": "syntrx-sync-lead",
       "name": "Sync Lead",
-      "ref": "In the style of 1980s synth-rock sync leads",
+      "ref": "Hard-sync lead whose tone drifts like a vowel changing, heard all over 1980s synth-rock",
       "artist": "Synth-rock",
       "tags": ["lead", "sync", "lfo"],
       "level": 3,
@@ -2121,7 +2121,7 @@
     {
       "id": "syntrx-fifths-lead",
       "name": "Fifths Lead",
-      "ref": "In the style of 1970s rock synth leads in fifths",
+      "ref": "Every note doubled a fifth up for the broad, powerful rock synth lead of the 1970s",
       "artist": "70s rock",
       "tags": ["lead", "fifths", "rock"],
       "level": 1,
@@ -2186,7 +2186,7 @@
     {
       "id": "syntrx-whistle-lead",
       "name": "Filter Whistle",
-      "ref": "In the style of BBC Radiophonic Workshop whistles",
+      "ref": "The filter ringing on its own as a pure whistle, a Radiophonic Workshop sound-effects trick",
       "artist": "Radiophonic sound effects",
       "tags": ["lead", "filter", "drone"],
       "level": 2,
@@ -2257,7 +2257,7 @@
     {
       "id": "syntrx-noise-flute",
       "name": "Breathy Flute",
-      "ref": "In the style of the orchestral flute",
+      "ref": "A sine with a breath of filtered noise around it: a soft orchestral flute",
       "artist": "Orchestral",
       "tags": ["lead", "flute", "noise"],
       "level": 2,
@@ -2333,7 +2333,7 @@
     {
       "id": "syntrx-portamento-lead",
       "name": "Gliding Lead",
-      "ref": "In the style of early electronic music’s stepped glides",
+      "ref": "Bright saw whose pitch wobbles in small steps, like the stepped glides of early electronic music",
       "artist": "Experimental",
       "tags": ["lead", "lfo", "saw"],
       "level": 2,
@@ -2408,7 +2408,7 @@
     {
       "id": "syntrx-pluck",
       "name": "Pluck",
-      "ref": "In the style of synth-pop plucks",
+      "ref": "Short, bright and gone almost at once: the everyday synth-pop pluck",
       "artist": "Synth-pop",
       "tags": ["pluck", "basics", "envelope"],
       "level": 1,
@@ -2479,7 +2479,7 @@
     {
       "id": "syntrx-harp",
       "name": "Harp",
-      "ref": "In the style of the concert harp",
+      "ref": "Soft plucked notes cascading into reverb, a synth sketch of a concert harp",
       "artist": "Orchestral",
       "tags": ["pluck", "harp", "soft"],
       "level": 1,
@@ -2563,7 +2563,7 @@
     {
       "id": "syntrx-ring-bells-2",
       "name": "Clock Tower",
-      "ref": "In the style of clock-tower bells",
+      "ref": "Heavy, clanging bells ringing out over the rooftops from a clock tower",
       "artist": "Church bells",
       "tags": ["keys", "ring", "bell"],
       "level": 2,
@@ -2639,7 +2639,7 @@
     {
       "id": "syntrx-organ",
       "name": "Matrix Organ",
-      "ref": "In the style of 1960s garage-rock combo organs",
+      "ref": "Hollow, reedy organ from three oscillators in octaves, close to a 1960s garage-band combo organ",
       "artist": "60s garage rock",
       "tags": ["keys", "organ", "basics"],
       "level": 2,
@@ -2706,7 +2706,7 @@
     {
       "id": "syntrx-clav",
       "name": "Clav",
-      "ref": "In the style of 1970s funk clavinet",
+      "ref": "Snappy, nasal pluck for funk rhythm parts, modelled on the clavinet",
       "artist": "70s funk",
       "tags": ["keys", "funk", "pluck"],
       "level": 2,
@@ -2783,7 +2783,7 @@
     {
       "id": "syntrx-mallet",
       "name": "Mallet",
-      "ref": "In the style of Central American marimba music",
+      "ref": "A soft, woody strike with little sustain, close to a marimba",
       "artist": "Latin percussion",
       "tags": ["keys", "mallet", "perc"],
       "level": 1,
@@ -2847,7 +2847,7 @@
     {
       "id": "syntrx-ring-keys",
       "name": "Ring Mod Keys",
-      "ref": "In the style of 1970s fusion ring-modulated electric piano",
+      "ref": "Bell-like electric piano from ring modulation an octave apart, a 1970s fusion colour",
       "artist": "Jazz fusion",
       "tags": ["keys", "ring", "piano"],
       "level": 3,
@@ -2911,7 +2911,7 @@
     {
       "id": "syntrx-strings",
       "name": "Super Saw Strings",
-      "ref": "In the style of trance supersaw strings",
+      "ref": "Two drifting saws swelling slowly into a trance string section",
       "artist": "Trance",
       "tags": ["strings", "super-saw", "pad"],
       "level": 2,
@@ -2987,7 +2987,7 @@
     {
       "id": "syntrx-brass",
       "name": "Synth Brass",
-      "ref": "In the style of 1980s polysynth brass",
+      "ref": "A blaring note that opens bright and then settles: 1980s polysynth brass",
       "artist": "Prophet-style brass",
       "tags": ["brass", "basics", "filter"],
       "level": 2,
@@ -3060,7 +3060,7 @@
     {
       "id": "syntrx-warm-pad",
       "name": "Warm Pad",
-      "ref": "In the style of warm ambient pads",
+      "ref": "A slow, warm, wide pad for ambient beds, its reverb panned against the dry sound",
       "artist": "Ambient",
       "tags": ["pad", "warm", "reverb"],
       "level": 1,
@@ -3134,7 +3134,7 @@
     {
       "id": "syntrx-pulsing-drone",
       "name": "Pulsing Drone",
-      "ref": "In the style of minimalist pulsing drones",
+      "ref": "A deep saw drone that throbs by itself, pulse after pulse, with no keys, as minimalists liked",
       "artist": "Minimalism",
       "tags": ["drone", "envelope", "rhythm"],
       "level": 1,
@@ -3205,7 +3205,7 @@
     {
       "id": "syntrx-tremolo-drone",
       "name": "Tremolo Drone",
-      "ref": "In the style of tremolo drone music",
+      "ref": "A held drone that swells and fades in volume over and over, for long drone pieces",
       "artist": "Drone music",
       "tags": ["drone", "tremolo", "lfo"],
       "level": 1,
@@ -3269,7 +3269,7 @@
     {
       "id": "syntrx-slow-sweep",
       "name": "Slow Filter Sweep",
-      "ref": "In the style of 1970s cosmic synth records",
+      "ref": "Cosmic 1970s drone: a buzzing tone under a resonant filter rising and falling every few seconds",
       "artist": "Kosmische / ambient",
       "tags": ["drone", "filter", "lfo"],
       "level": 1,
@@ -3334,7 +3334,7 @@
     {
       "id": "syntrx-bandpass-sweep",
       "name": "Band-pass Sweep",
-      "ref": "In the style of 1970s cosmic synth records",
+      "ref": "A thin band of sound sliding up and down, saying “ee-oo” over a kosmische drone",
       "artist": "Kosmische / ambient",
       "tags": ["drone", "filter", "bandpass"],
       "level": 2,
@@ -3403,7 +3403,7 @@
     {
       "id": "syntrx-pwm-drone",
       "name": "PWM Drone",
-      "ref": "In the style of PWM drone music",
+      "ref": "A hollow drone shimmering with pulse-width modulation, as if several oscillators played it",
       "artist": "Drone music",
       "tags": ["drone", "pwm", "lfo"],
       "level": 2,
@@ -3468,7 +3468,7 @@
     {
       "id": "syntrx-sh-filter-drone",
       "name": "Random Filter Drone",
-      "ref": "In the style of Berlin-school random filter patterns",
+      "ref": "Random filter jumps several times a second: the Berlin School sample-and-hold burble",
       "artist": "Berlin school",
       "tags": ["drone", "sample-and-hold", "filter"],
       "level": 2,
@@ -3539,7 +3539,7 @@
     {
       "id": "syntrx-bitcrusher",
       "name": "Bit-Crushed Saw",
-      "ref": "In the style of lo-fi bit-crushed sound",
+      "ref": "A saw chopped into coarse digital steps, gritty and aliased like a lo-fi bit-crusher",
       "artist": "Lo-fi",
       "tags": ["lead", "lo-fi", "sample-and-hold"],
       "level": 3,
@@ -3599,7 +3599,7 @@
     {
       "id": "syntrx-random-melody",
       "name": "Random Melody",
-      "ref": "In the style of Berlin-school random sequences",
+      "ref": "Short notes at random pitches that play themselves, a Berlin School habit",
       "artist": "Berlin school",
       "tags": ["seq", "random", "sample-and-hold"],
       "level": 2,
@@ -3682,7 +3682,7 @@
     {
       "id": "syntrx-staircase",
       "name": "Staircase Arpeggio",
-      "ref": "In the style of Berlin-school sequencer music",
+      "ref": "A rising staircase of notes that climbs and resets, sequencer music from 1970s Berlin",
       "artist": "Berlin school",
       "tags": ["seq", "sample-and-hold", "arpeggio"],
       "level": 3,
@@ -3751,7 +3751,7 @@
     {
       "id": "syntrx-laser",
       "name": "Laser",
-      "ref": "In the style of 1970s sci-fi film lasers",
+      "ref": "A sharp, falling “pew”: the ray gun of 1970s science-fiction films",
       "artist": "Sci-fi films",
       "tags": ["fx", "sci-fi", "pitch"],
       "level": 1,
@@ -3830,7 +3830,7 @@
     {
       "id": "syntrx-siren",
       "name": "Siren",
-      "ref": "In the style of police-drama sirens",
+      "ref": "A siren wailing up and down, the sound of a television police chase",
       "artist": "Sound effects",
       "tags": ["fx", "siren", "lfo"],
       "level": 1,
@@ -3894,7 +3894,7 @@
     {
       "id": "syntrx-ufo",
       "name": "UFO",
-      "ref": "In the style of 1950s science-fiction films",
+      "ref": "A wobbling, hovering tone for a flying saucer in a 1950s science-fiction film",
       "artist": "1950s sci-fi",
       "tags": ["fx", "sci-fi", "lfo"],
       "level": 2,
@@ -3971,7 +3971,7 @@
     {
       "id": "syntrx-wind",
       "name": "Wind",
-      "ref": "In the style of radio-drama wind effects",
+      "ref": "Gusting, whistling wind from swept noise, as a radio-drama effects team would make it",
       "artist": "Sound effects",
       "tags": ["fx", "noise", "nature"],
       "level": 1,
@@ -4039,7 +4039,7 @@
     {
       "id": "syntrx-surf",
       "name": "Surf",
-      "ref": "In the style of ambient nature recordings",
+      "ref": "Noise rising, breaking and drawing back like waves on a shore",
       "artist": "Ambient",
       "tags": ["fx", "noise", "nature"],
       "level": 1,
@@ -4104,7 +4104,7 @@
     {
       "id": "syntrx-thunder",
       "name": "Thunder",
-      "ref": "In the style of radio-drama thunder",
+      "ref": "A crack and a long, rolling rumble from the radio-drama effects room",
       "artist": "Sound effects",
       "tags": ["fx", "noise", "nature"],
       "level": 2,
@@ -4175,7 +4175,7 @@
     {
       "id": "syntrx-helicopter",
       "name": "Helicopter",
-      "ref": "In the style of synthesized helicopter effects",
+      "ref": "Dark noise chopped six or seven times a second into a thudding helicopter rotor",
       "artist": "Sound effects",
       "tags": ["fx", "noise", "machine"],
       "level": 2,
@@ -4231,7 +4231,7 @@
     {
       "id": "syntrx-steam",
       "name": "Steam Engine",
-      "ref": "In the style of radio-drama steam trains",
+      "ref": "Chuffing puffs of noise with a whistle on top: a steam train in a radio play",
       "artist": "Sound effects",
       "tags": ["fx", "noise", "machine"],
       "level": 2,
@@ -4288,7 +4288,7 @@
     {
       "id": "syntrx-robot",
       "name": "Robot Voice",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "A buzzing, metallic tone wavering like speech, the ring-modulated robot voice of the Radiophonic Workshop",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "ring", "sci-fi"],
       "level": 3,
@@ -4359,7 +4359,7 @@
     {
       "id": "syntrx-alarm",
       "name": "Alarm",
-      "ref": "In the style of sci-fi alarms",
+      "ref": "A harsh two-tone alarm flipping between notes on a starship bridge",
       "artist": "Sound effects",
       "tags": ["fx", "alarm"],
       "level": 1,
@@ -4425,7 +4425,7 @@
     {
       "id": "syntrx-birds",
       "name": "Birds",
-      "ref": "In the style of synthesized birdsong",
+      "ref": "Quick, high chirps calling out one after another like synthesised birdsong",
       "artist": "Sound effects",
       "tags": ["fx", "nature", "pitch"],
       "level": 2,
@@ -4502,7 +4502,7 @@
     {
       "id": "syntrx-crickets",
       "name": "Crickets",
-      "ref": "In the style of ambient nature recordings",
+      "ref": "Fast, high, chirring pulses in bursts: crickets on a summer night",
       "artist": "Ambient",
       "tags": ["fx", "nature", "night"],
       "level": 2,
@@ -4565,7 +4565,7 @@
     {
       "id": "syntrx-heartbeat",
       "name": "Heartbeat",
-      "ref": "In the style of thriller-film heartbeats",
+      "ref": "A deep, muffled pulse about once a second, the heartbeat under a thriller’s tense scene",
       "artist": "Thriller film",
       "tags": ["fx", "perc", "film"],
       "level": 1,
@@ -4628,7 +4628,7 @@
     {
       "id": "syntrx-kick",
       "name": "Kick",
-      "ref": "In the style of the TR-808 kick",
+      "ref": "A short, punchy sine thump with a fast pitch drop, close to the TR-808 kick",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "kick"],
       "level": 1,
@@ -4694,7 +4694,7 @@
     {
       "id": "syntrx-snare",
       "name": "Snare",
-      "ref": "In the style of 1980s electronic snares",
+      "ref": "A snappy blend of noise and tone, the electronic snare of 1980s drum machines",
       "artist": "Synth drums",
       "tags": ["perc", "drum", "snare"],
       "level": 1,
@@ -4765,7 +4765,7 @@
     {
       "id": "syntrx-hihat",
       "name": "Hi-hat",
-      "ref": "In the style of the TR-808 hi-hat",
+      "ref": "Crisp, ticking high-passed noise in sixteenths, near to the TR-808 hat",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "hat"],
       "level": 1,
@@ -4821,7 +4821,7 @@
     {
       "id": "syntrx-metal-hit",
       "name": "Metal Hit",
-      "ref": "In the style of industrial metal percussion",
+      "ref": "A sour, clanging strike like a sheet of metal in industrial percussion",
       "artist": "Industrial",
       "tags": ["perc", "ring", "industrial"],
       "level": 2,
@@ -4894,7 +4894,7 @@
     {
       "id": "syntrx-tom",
       "name": "Tom",
-      "ref": "In the style of 1980s Simmons toms",
+      "ref": "Pitch-swept electronic toms tumbling down a fill, in the Simmons mould",
       "artist": "Simmons drums",
       "tags": ["perc", "drum", "tom"],
       "level": 1,
@@ -4963,7 +4963,7 @@
     {
       "id": "syntrx-dub-echo",
       "name": "Dub Echo",
-      "ref": "In the style of dub",
+      "ref": "A short stab thrown into echoes that keep returning, the dub engineer’s favourite move",
       "artist": "Dub",
       "tags": ["fx", "delay", "dub"],
       "level": 2,
@@ -5037,7 +5037,7 @@
     {
       "id": "syntrx-delay-howl",
       "name": "Delay Howl",
-      "ref": "In the style of dub reggae runaway echo",
+      "ref": "Echo pushed past its limit until it howls and builds, as dub mixers ran their tape delays",
       "artist": "Dub",
       "tags": ["fx", "delay", "noise"],
       "level": 2,
@@ -5104,7 +5104,7 @@
     {
       "id": "syntrx-shimmer-pad",
       "name": "Reverb Pad",
-      "ref": "In the style of ambient reverb pads",
+      "ref": "Only the reverb of a chord, blurred and far away: an ambient wash",
       "artist": "Ambient",
       "tags": ["pad", "reverb", "ambient"],
       "level": 2,
@@ -5172,7 +5172,7 @@
     {
       "id": "syntrx-ping-pong",
       "name": "Wide Echo",
-      "ref": "In the style of dub-techno stereo echoes",
+      "ref": "Plucks on the left answered by their echoes on the right, a dub-techno spread",
       "artist": "Dub techno",
       "tags": ["pluck", "delay", "stereo"],
       "level": 1,
@@ -5248,7 +5248,7 @@
     {
       "id": "syntrx-joystick-wah",
       "name": "Joystick Wah",
-      "ref": "In the style of 1970s funk wah",
+      "ref": "A lead filtered by hand on the joystick, rocking like a funk wah pedal",
       "artist": "70s funk",
       "tags": ["lead", "joystick", "filter"],
       "level": 2,
@@ -5318,7 +5318,7 @@
     {
       "id": "syntrx-joystick-theremin",
       "name": "Joystick Theremin",
-      "ref": "In the style of 1950s science-fiction theremin",
+      "ref": "A pure tone slid anywhere by the joystick with a nervous vibrato: the sci-fi theremin",
       "artist": "1950s sci-fi",
       "tags": ["lead", "joystick", "sci-fi"],
       "level": 2,
@@ -5400,7 +5400,7 @@
     {
       "id": "syntrx-joystick-ring",
       "name": "Joystick Ring Mod",
-      "ref": "In the style of BBC Radiophonic Workshop ring modulation",
+      "ref": "Metallic, alien tones the joystick bends into strange chords, Radiophonic ring modulation",
       "artist": "Radiophonic sound effects",
       "tags": ["fx", "ring", "joystick"],
       "level": 3,
@@ -5466,7 +5466,7 @@
     {
       "id": "syntrx-joystick-pan",
       "name": "Joystick Pan",
-      "ref": "In the style of 1960s psychedelic stereo mixes",
+      "ref": "A drone steered from speaker to speaker by hand, the way 1960s psychedelic mixes moved sound",
       "artist": "Psychedelia",
       "tags": ["drone", "joystick", "stereo"],
       "level": 3,
@@ -5541,7 +5541,7 @@
     {
       "id": "syntrx-three-osc-lead",
       "name": "Three-Oscillator Lead",
-      "ref": "In the style of 1970s three-oscillator synth solos",
+      "ref": "All three oscillators on one note, a thick lead for a 1970s synth solo",
       "artist": "70s synth soloists",
       "tags": ["lead", "thick", "oscillator"],
       "level": 2,
@@ -5609,7 +5609,7 @@
     {
       "id": "syntrx-cross-mod",
       "name": "Cross-Mod Clang",
-      "ref": "In the style of industrial metallic clangs",
+      "ref": "One oscillator jarring the other’s pitch at audio rate into a harsh industrial clang",
       "artist": "Industrial",
       "tags": ["fx", "fm", "metallic"],
       "level": 3,
@@ -5675,7 +5675,7 @@
     {
       "id": "syntrx-random-decay",
       "name": "Random Lengths",
-      "ref": "In the style of Berlin-school random sequences",
+      "ref": "A steady pulse where every note lasts a different time, from a tick to a long ring",
       "artist": "Berlin school",
       "tags": ["seq", "sample-and-hold", "envelope"],
       "level": 3,
@@ -5746,7 +5746,7 @@
     {
       "id": "syntrx-follower-wah",
       "name": "Envelope Follower Wah",
-      "ref": "In the style of 1970s funk envelope filters",
+      "ref": "An auto-wah that opens with each note’s loudness: the funk envelope filter rebuilt",
       "artist": "70s funk",
       "tags": ["lead", "envelope-follower", "filter"],
       "level": 3,
@@ -5820,7 +5820,7 @@
     {
       "id": "syntrx-feedback-loop",
       "name": "Feedback Howl",
-      "ref": "In the style of noise music",
+      "ref": "The filter feeding back into itself until it howls and screeches, raw material for noise music",
       "artist": "Noise",
       "tags": ["fx", "feedback", "experimental"],
       "level": 3,
@@ -5882,7 +5882,7 @@
     {
       "id": "syntrx-ring-tremolo",
       "name": "Ring Tremolo",
-      "ref": "In the style of ring-modulated drone music",
+      "ref": "A drone pulsing through the ring modulator, slow at first, then buzzing as it speeds up",
       "artist": "Drone music",
       "tags": ["drone", "ring", "tremolo"],
       "level": 2,
@@ -5937,7 +5937,7 @@
     {
       "id": "syntrx-sci-fi-computer",
       "name": "Computer Readout",
-      "ref": "In the style of 1950s science-fiction computers",
+      "ref": "Fast, chirping random beeps from a room-sized computer in a 1950s science-fiction film",
       "artist": "1950s sci-fi",
       "tags": ["fx", "sci-fi", "random"],
       "level": 2,
@@ -6005,7 +6005,7 @@
     {
       "id": "syntrx-tape-warble",
       "name": "Tape Warble Keys",
-      "ref": "In the style of lo-fi hip-hop warped tape",
+      "ref": "Soft keys sagging in pitch like a worn cassette, a lo-fi hip-hop texture",
       "artist": "Lo-fi hip-hop",
       "tags": ["keys", "lo-fi", "tape"],
       "level": 2,
@@ -6084,7 +6084,7 @@
     {
       "id": "syntrx-on-the-run",
       "name": "Running Sequence",
-      "ref": "In the style of Pink Floyd — “On the Run”",
+      "ref": "The frantic, hissing eight-note run of Pink Floyd’s “On the Run”, swept by the filter",
       "artist": "Pink Floyd",
       "tags": ["seq", "rock", "70s"],
       "level": 2,
@@ -6183,7 +6183,7 @@
     {
       "id": "syntrx-space-whoosh",
       "name": "Space Whoosh",
-      "ref": "In the style of Hawkwind",
+      "ref": "Swirling whooshes of noise and detuned saw, the audio-generator swoops of Hawkwind’s live shows",
       "artist": "Hawkwind",
       "tags": ["fx", "space-rock", "70s"],
       "level": 2,
@@ -6263,7 +6263,7 @@
     {
       "id": "syntrx-oxygene",
       "name": "Oxygène Wind",
-      "ref": "In the style of Jean-Michel Jarre — “Oxygène”",
+      "ref": "Jean-Michel Jarre’s “Oxygène” in outline: filtered wind gusting over a soft, swelling chord",
       "artist": "Jean-Michel Jarre",
       "tags": ["fx", "ambient", "70s"],
       "level": 2,
@@ -6337,7 +6337,7 @@
     {
       "id": "syntrx-berlin",
       "name": "Berlin Sequence",
-      "ref": "In the style of Tangerine Dream",
+      "ref": "A hypnotic sixteenth-note pattern under a slowly turning filter, as Tangerine Dream sequenced",
       "artist": "Tangerine Dream",
       "tags": ["seq", "berlin", "70s"],
       "level": 2,
@@ -6442,7 +6442,7 @@
     {
       "id": "syntrx-eno-treatment",
       "name": "Eno Treatment",
-      "ref": "In the style of Brian Eno with Roxy Music",
+      "ref": "A plain tone ring-modulated, crushed and echoed, the way Brian Eno treated Roxy Music on his Synthi",
       "artist": "Brian Eno",
       "tags": ["fx", "glam", "70s"],
       "level": 3,
@@ -6529,7 +6529,7 @@
     {
       "id": "syntrx-who-organ",
       "name": "Pulsing Organ",
-      "ref": "In the style of The Who — “Won’t Get Fooled Again”",
+      "ref": "Organ chopped into pulses by a filter and VCA, the VCS3 rhythm of The Who’s “Won’t Get Fooled Again”",
       "artist": "The Who",
       "tags": ["keys", "rock", "70s"],
       "level": 2,
@@ -6601,7 +6601,7 @@
     {
       "id": "syntrx-radiophonic-whoosh",
       "name": "Radiophonic Swoop",
-      "ref": "In the style of the BBC Radiophonic Workshop",
+      "ref": "A howling swoop drowned in echo: the BBC Radiophonic Workshop’s sound for 1960s TV science fiction",
       "artist": "BBC Radiophonic Workshop",
       "tags": ["fx", "sci-fi", "tv"],
       "level": 2,
@@ -6672,7 +6672,7 @@
     {
       "id": "syntrx-schulze",
       "name": "Cosmic Drift",
-      "ref": "In the style of Klaus Schulze",
+      "ref": "Klaus Schulze’s long cosmic drift: a resonant drone that wanders slowly and steps at random",
       "artist": "Klaus Schulze",
       "tags": ["drone", "berlin", "70s"],
       "level": 3,
@@ -6753,7 +6753,7 @@
     {
       "id": "syntrx-derbyshire",
       "name": "Tape Loop Bells",
-      "ref": "In the style of Delia Derbyshire",
+      "ref": "Inharmonic bells repeating in a loop, close to Delia Derbyshire’s hand-built tape music",
       "artist": "Delia Derbyshire",
       "tags": ["fx", "bell", "radiophonic"],
       "level": 3,
@@ -6829,7 +6829,7 @@
     {
       "id": "syntrx-industrial",
       "name": "Industrial Noise",
-      "ref": "In the style of Throbbing Gristle",
+      "ref": "A grinding wall of ring-modulated noise and low drones, as Throbbing Gristle made it",
       "artist": "Throbbing Gristle",
       "tags": ["fx", "industrial", "noise"],
       "level": 3,
@@ -6890,7 +6890,7 @@
     {
       "id": "syntrx-suicide",
       "name": "Primitive Pulse",
-      "ref": "In the style of Suicide",
+      "ref": "A raw, echoing pulse repeated without mercy: the minimal, menacing electronics of Suicide",
       "artist": "Suicide",
       "tags": ["seq", "punk", "70s"],
       "level": 2,
@@ -6962,7 +6962,7 @@
     {
       "id": "syntrx-silver-apples",
       "name": "Oscillator Rock",
-      "ref": "In the style of Silver Apples",
+      "ref": "Three oscillators droning and pulsing in a fixed pattern, the hand-played rig of Silver Apples",
       "artist": "Silver Apples",
       "tags": ["seq", "psychedelic", "60s"],
       "level": 2,
@@ -7024,7 +7024,7 @@
     {
       "id": "syntrx-subotnick",
       "name": "Silver Bubbles",
-      "ref": "In the style of Morton Subotnick",
+      "ref": "A bubbling, jumping stream of notes and colours like Morton Subotnick’s 1960s Buchla pieces",
       "artist": "Morton Subotnick",
       "tags": ["seq", "random", "60s"],
       "level": 3,
@@ -7099,7 +7099,7 @@
     {
       "id": "syntrx-radigue",
       "name": "Feedback Drone",
-      "ref": "In the style of Éliane Radigue",
+      "ref": "Close tones beating slowly and barely changing: Éliane Radigue’s patient synthesiser drones",
       "artist": "Éliane Radigue",
       "tags": ["drone", "minimal", "ambient"],
       "level": 3,
@@ -7178,7 +7178,7 @@
     {
       "id": "syntrx-oliveros",
       "name": "Delay Meditation",
-      "ref": "In the style of Pauline Oliveros",
+      "ref": "Slow tones piling up in a long feedback delay, the tape-delay method of Pauline Oliveros",
       "artist": "Pauline Oliveros",
       "tags": ["drone", "delay", "ambient"],
       "level": 2,
@@ -7250,12 +7250,12 @@
     {
       "id": "syntrx-reich",
       "name": "Phasing Pulses",
-      "ref": "In the style of Steve Reich",
-      "artist": "Steve Reich",
+      "ref": "Two pulses at almost the same speed slipping out of step and back: the idea behind phase music",
+      "artist": "Minimalist phase music",
       "tags": ["seq", "minimal", "phase"],
       "level": 3,
       "blurb": "Two pulses at almost the same speed, one on each side, slowly sliding out of step and back.",
-      "how": "Reich’s phase music plays one pattern at two speeds. The trapezoid pulses one oscillator on the left; Oscillator 3’s pulse, a hair slower, chops the other on the right through the ring modulator.",
+      "how": "Phase music plays one pattern at two speeds. The trapezoid pulses one oscillator on the left; Oscillator 3’s pulse, a hair slower, chops the other on the right through the ring modulator.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -7320,7 +7320,7 @@
     {
       "id": "syntrx-riley",
       "name": "Organ Loops",
-      "ref": "In the style of Terry Riley",
+      "ref": "A fast modal organ figure layered up by long echoes, Terry Riley’s time-lag tape method",
       "artist": "Terry Riley",
       "tags": ["keys", "minimal", "delay"],
       "level": 2,
@@ -7408,7 +7408,7 @@
     {
       "id": "syntrx-young-drone",
       "name": "Just Drone",
-      "ref": "In the style of La Monte Young",
+      "ref": "Three pure sine tones in just intonation, held for ever like La Monte Young’s Dream House",
       "artist": "La Monte Young",
       "tags": ["drone", "minimal", "just-intonation"],
       "level": 2,
@@ -7468,7 +7468,7 @@
     {
       "id": "syntrx-aphex-acid",
       "name": "Twisted Acid",
-      "ref": "In the style of Aphex Twin",
+      "ref": "Acid bass gone strange, each squelch twisted at random as Aphex Twin liked it",
       "artist": "Aphex Twin",
       "tags": ["bass", "acid", "90s"],
       "level": 3,
@@ -7556,7 +7556,7 @@
     {
       "id": "syntrx-autechre",
       "name": "Glitch Texture",
-      "ref": "In the style of Autechre",
+      "ref": "Clicks, crushed bursts and stuttering metal fragments: the abstract glitch of Autechre",
       "artist": "Autechre",
       "tags": ["fx", "glitch", "idm"],
       "level": 3,
@@ -7626,7 +7626,7 @@
     {
       "id": "syntrx-chemical-squelch",
       "name": "Big Beat Squelch",
-      "ref": "In the style of The Chemical Brothers",
+      "ref": "A distorted, squelching riff swept up for the build, big beat as The Chemical Brothers played it",
       "artist": "The Chemical Brothers",
       "tags": ["lead", "big-beat", "90s"],
       "level": 2,
@@ -7716,7 +7716,7 @@
     {
       "id": "syntrx-prodigy-rave",
       "name": "Rave Siren Riff",
-      "ref": "In the style of The Prodigy",
+      "ref": "A harsh, ripping sync riff with the urgency of The Prodigy’s early rave records",
       "artist": "The Prodigy",
       "tags": ["lead", "rave", "90s"],
       "level": 2,
@@ -7791,7 +7791,7 @@
     {
       "id": "syntrx-hopkins-pulse",
       "name": "Pulsing Build",
-      "ref": "In the style of Jon Hopkins",
+      "ref": "A warm chord that pulses and slowly brightens, the emotional build of Jon Hopkins’s electronica",
       "artist": "Jon Hopkins",
       "tags": ["pad", "electronic", "build"],
       "level": 2,
@@ -7866,7 +7866,7 @@
     {
       "id": "syntrx-barbieri",
       "name": "Evolving Pattern",
-      "ref": "In the style of Caterina Barbieri",
+      "ref": "Caterina Barbieri’s hypnotic modular minimalism: an arpeggio whose colour never settles",
       "artist": "Caterina Barbieri",
       "tags": ["seq", "minimal", "modular"],
       "level": 3,
@@ -7978,7 +7978,7 @@
     {
       "id": "syntrx-ciani-waves",
       "name": "Buchla Waves",
-      "ref": "In the style of Suzanne Ciani",
+      "ref": "Liquid blips bouncing between the speakers over swells of noise, Suzanne Ciani’s synthesised sea",
       "artist": "Suzanne Ciani",
       "tags": ["fx", "ambient", "stereo"],
       "level": 3,
@@ -8054,7 +8054,7 @@
     {
       "id": "syntrx-spiegel",
       "name": "Expanding Pattern",
-      "ref": "In the style of Laurie Spiegel",
+      "ref": "A gentle, consonant pattern in soft bell tones, close to Laurie Spiegel’s early algorithmic music",
       "artist": "Laurie Spiegel",
       "tags": ["seq", "minimal", "algorithmic"],
       "level": 2,
@@ -8136,7 +8136,7 @@
     {
       "id": "syntrx-cabaret",
       "name": "Industrial Funk",
-      "ref": "In the style of Cabaret Voltaire",
+      "ref": "Cold, gritty bass riff with a slapback echo, for Cabaret Voltaire’s industrial funk",
       "artist": "Cabaret Voltaire",
       "tags": ["bass", "industrial", "80s"],
       "level": 2,
@@ -8222,7 +8222,7 @@
     {
       "id": "syntrx-coil",
       "name": "Ritual Drone",
-      "ref": "In the style of Coil",
+      "ref": "A dark, throbbing drone with a ghostly whistle above, from the esoteric world of Coil",
       "artist": "Coil",
       "tags": ["drone", "dark", "ritual"],
       "level": 3,
@@ -8301,7 +8301,7 @@
     {
       "id": "syntrx-radio-tuning",
       "name": "Radio Tuning",
-      "ref": "In the style of shortwave radio listening",
+      "ref": "Whistles, static and stations jumping in as a shortwave dial is turned",
       "artist": "Shortwave radio",
       "tags": ["fx", "radio", "noise"],
       "level": 2,
@@ -8378,7 +8378,7 @@
     {
       "id": "syntrx-geiger",
       "name": "Geiger Counter",
-      "ref": "In the style of Cold War film sound design",
+      "ref": "Irregular clicks, mostly tiny and some loud: a Geiger counter in a Cold War film",
       "artist": "Film sound design",
       "tags": ["fx", "noise", "random"],
       "level": 2,
@@ -8435,7 +8435,7 @@
     {
       "id": "syntrx-engine",
       "name": "Engine",
-      "ref": "In the style of synthesized engine effects",
+      "ref": "An idling engine juddering away, with the joystick working the throttle",
       "artist": "Sound effects",
       "tags": ["fx", "machine"],
       "level": 1,
@@ -8506,7 +8506,7 @@
     {
       "id": "syntrx-teleport",
       "name": "Teleporter",
-      "ref": "In the style of 1960s sci-fi television",
+      "ref": "A shimmering, sparkling rise as someone is beamed away in 1960s television science fiction",
       "artist": "Sci-fi soundtracks",
       "tags": ["fx", "sci-fi"],
       "level": 2,
@@ -8582,7 +8582,7 @@
     {
       "id": "syntrx-power-down",
       "name": "Power Down",
-      "ref": "In the style of power-down effects",
+      "ref": "A machine’s whine sliding down and fading away as it powers off",
       "artist": "Sound effects",
       "tags": ["fx", "machine", "pitch"],
       "level": 1,
@@ -8642,7 +8642,7 @@
     {
       "id": "syntrx-glitch-scratch",
       "name": "Scratch",
-      "ref": "In the style of hip-hop turntable scratching",
+      "ref": "A tone pushed back and forth on the joystick like a record under a hip-hop DJ’s hand",
       "artist": "Hip-hop",
       "tags": ["fx", "hip-hop", "joystick"],
       "level": 3,
@@ -8715,7 +8715,7 @@
     {
       "id": "syntrx-sonar",
       "name": "Sonar",
-      "ref": "In the style of submarine-film sonar",
+      "ref": "A lone, pure ping fading into a dark, vast space: the sonar of a submarine film",
       "artist": "Film sound design",
       "tags": ["fx", "ambient", "water"],
       "level": 1,
@@ -8782,7 +8782,7 @@
     {
       "id": "syntrx-ship-horn",
       "name": "Ship’s Horn",
-      "ref": "In the style of ship horns in a harbour",
+      "ref": "Two low tones a fifth apart, blowing like a ship’s foghorn across a harbour",
       "artist": "Harbour sounds",
       "tags": ["fx", "brass", "low"],
       "level": 1,
@@ -8856,7 +8856,7 @@
     {
       "id": "syntrx-motorbike",
       "name": "Motorbike",
-      "ref": "In the style of synthesized engine effects",
+      "ref": "A buzzing engine that revs, judders and pulls away like a motorbike",
       "artist": "Sound effects",
       "tags": ["fx", "machine"],
       "level": 2,
@@ -8923,7 +8923,7 @@
     {
       "id": "syntrx-electric-piano",
       "name": "Electric Piano",
-      "ref": "In the style of 1970s soul electric pianos",
+      "ref": "Soft, round tine-piano keys with a faint bark at the strike, warm as 1970s soul",
       "artist": "70s soul",
       "tags": ["keys", "piano", "soft"],
       "level": 2,
@@ -8995,7 +8995,7 @@
     {
       "id": "syntrx-vibraphone",
       "name": "Vibraphone",
-      "ref": "In the style of jazz vibraphone",
+      "ref": "Ringing mallet notes with the pulsing tremolo of a jazz vibraphone’s motor",
       "artist": "Jazz",
       "tags": ["keys", "mallet", "jazz"],
       "level": 2,
@@ -9068,7 +9068,7 @@
     {
       "id": "syntrx-celesta",
       "name": "Celesta",
-      "ref": "In the style of late-Romantic celesta",
+      "ref": "Soft, high, glassy bell notes, a celesta as late-Romantic composers used it",
       "artist": "Romantic",
       "tags": ["keys", "bell", "classical"],
       "level": 1,
@@ -9146,7 +9146,7 @@
     {
       "id": "syntrx-music-box",
       "name": "Music Box",
-      "ref": "In the style of the mechanical music box",
+      "ref": "Tiny, high notes slightly unsteady in pitch, like a clockwork music box",
       "artist": "Music box",
       "tags": ["keys", "toy", "bell"],
       "level": 1,
@@ -9223,7 +9223,7 @@
     {
       "id": "syntrx-kalimba",
       "name": "Kalimba",
-      "ref": "In the style of the African mbira and kalimba",
+      "ref": "A soft, round plink with a buzz on each pluck, as on an African mbira or kalimba",
       "artist": "African music",
       "tags": ["pluck", "world", "mallet"],
       "level": 2,
@@ -9289,7 +9289,7 @@
     {
       "id": "syntrx-steel-pan",
       "name": "Steel Pan",
-      "ref": "In the style of Trinidadian steelpan",
+      "ref": "Bright, singing metallic notes that stay in tune, a Trinidadian steelpan",
       "artist": "Steelpan",
       "tags": ["keys", "world", "mallet"],
       "level": 2,
@@ -9356,7 +9356,7 @@
     {
       "id": "syntrx-koto",
       "name": "Koto",
-      "ref": "In the style of the Japanese koto",
+      "ref": "A bright twang that mellows as it rings: a koto line in the hirajōshi scale",
       "artist": "Japanese koto",
       "tags": ["pluck", "world", "japan"],
       "level": 2,
@@ -9429,7 +9429,7 @@
     {
       "id": "syntrx-banjo",
       "name": "Banjo",
-      "ref": "In the style of bluegrass banjo",
+      "ref": "Bright, twangy, fast-dying plucks rolling along like a bluegrass banjo",
       "artist": "Bluegrass",
       "tags": ["pluck", "folk", "bright"],
       "level": 1,
@@ -9510,7 +9510,7 @@
     {
       "id": "syntrx-harpsichord",
       "name": "Harpsichord",
-      "ref": "In the style of Baroque harpsichord music",
+      "ref": "Thin, bright plucks with no sustain, a harpsichord for Baroque counterpoint",
       "artist": "Baroque",
       "tags": ["keys", "baroque", "pluck"],
       "level": 1,
@@ -9593,7 +9593,7 @@
     {
       "id": "syntrx-accordion",
       "name": "Accordion",
-      "ref": "In the style of French musette accordion",
+      "ref": "A reedy tone with the fast, wet beating of a French musette accordion",
       "artist": "French musette",
       "tags": ["keys", "world", "reed"],
       "level": 1,
@@ -9662,7 +9662,7 @@
     {
       "id": "syntrx-harmonica",
       "name": "Harmonica",
-      "ref": "In the style of blues harmonica",
+      "ref": "A reedy, wailing line with breath and vibrato, the voice of a blues harmonica",
       "artist": "Blues",
       "tags": ["lead", "blues", "reed"],
       "level": 2,
@@ -9731,7 +9731,7 @@
     {
       "id": "syntrx-bagpipes",
       "name": "Bagpipes",
-      "ref": "In the style of the Great Highland bagpipe",
+      "ref": "A nasal chanter tune over an unchanging drone, as on the Great Highland bagpipe",
       "artist": "Highland pipes",
       "tags": ["lead", "world", "drone"],
       "level": 3,
@@ -9811,7 +9811,7 @@
     {
       "id": "syntrx-sitar",
       "name": "Sitar",
-      "ref": "In the style of the Indian sitar",
+      "ref": "A buzzing, twangy pluck over fixed drone strings, a synth nod to the Indian sitar",
       "artist": "Indian classical",
       "tags": ["pluck", "world", "india"],
       "level": 3,
@@ -9896,7 +9896,7 @@
     {
       "id": "syntrx-cello",
       "name": "Cello",
-      "ref": "In the style of the orchestral cello",
+      "ref": "A dark, bowed, singing low line with vibrato, standing in for an orchestral cello",
       "artist": "Orchestral",
       "tags": ["strings", "classical", "bowed"],
       "level": 2,
@@ -9976,7 +9976,7 @@
     {
       "id": "syntrx-violin",
       "name": "Violin",
-      "ref": "In the style of the orchestral violin",
+      "ref": "A bright bowed line with a vibrato, for a solo orchestral violin part",
       "artist": "Orchestral",
       "tags": ["strings", "lead", "bowed"],
       "level": 2,
@@ -10056,7 +10056,7 @@
     {
       "id": "syntrx-pizzicato",
       "name": "Pizzicato",
-      "ref": "In the style of orchestral pizzicato strings",
+      "ref": "Short plucked strings that pop and die away: orchestral pizzicato",
       "artist": "Orchestral",
       "tags": ["strings", "pluck", "classical"],
       "level": 1,
@@ -10135,7 +10135,7 @@
     {
       "id": "syntrx-trumpet",
       "name": "Trumpet",
-      "ref": "In the style of jazz trumpet leads",
+      "ref": "A bright, blaring line with a lift of the lip on each note, as a jazz trumpet plays it",
       "artist": "Jazz",
       "tags": ["brass", "lead", "bright"],
       "level": 2,
@@ -10211,7 +10211,7 @@
     {
       "id": "syntrx-french-horn",
       "name": "French Horn",
-      "ref": "In the style of film-score French horns",
+      "ref": "A mellow, round, noble horn swell for a film-score brass line",
       "artist": "Film scores",
       "tags": ["brass", "soft", "film"],
       "level": 1,
@@ -10289,7 +10289,7 @@
     {
       "id": "syntrx-tuba",
       "name": "Tuba",
-      "ref": "In the style of brass-band oom-pah bass",
+      "ref": "A round, puffing oom-pah bass from the back row of a brass band",
       "artist": "Brass band",
       "tags": ["bass", "brass", "comic"],
       "level": 1,
@@ -10359,7 +10359,7 @@
     {
       "id": "syntrx-808",
       "name": "808 Bass",
-      "ref": "In the style of trap 808 bass",
+      "ref": "Booming sine bass with a punch of pitch and a long tail: the trap 808",
       "artist": "Trap",
       "tags": ["bass", "trap", "hip-hop"],
       "level": 2,
@@ -10424,7 +10424,7 @@
     {
       "id": "syntrx-techno-rumble",
       "name": "Techno Rumble",
-      "ref": "In the style of modern techno",
+      "ref": "A dark, echoing rumble rolling between the kicks of modern techno",
       "artist": "Techno",
       "tags": ["bass", "techno", "dark"],
       "level": 2,
@@ -10499,7 +10499,7 @@
     {
       "id": "syntrx-trance-bass",
       "name": "Offbeat Bass",
-      "ref": "In the style of trance",
+      "ref": "Short, bright super-saw bass notes landing on every offbeat in trance",
       "artist": "Trance",
       "tags": ["bass", "trance", "rhythm"],
       "level": 1,
@@ -10572,7 +10572,7 @@
     {
       "id": "syntrx-house-bass",
       "name": "Organ Bass",
-      "ref": "In the style of early-1990s house",
+      "ref": "A short, hollow organ bass bouncing under early-1990s house",
       "artist": "House",
       "tags": ["bass", "house", "organ"],
       "level": 1,
@@ -10634,7 +10634,7 @@
     {
       "id": "syntrx-reese",
       "name": "Reese Bass",
-      "ref": "In the style of drum and bass",
+      "ref": "Two saws far apart in tune, churning slowly: the Reese bass of drum and bass",
       "artist": "Drum & bass",
       "tags": ["bass", "dnb", "detune"],
       "level": 2,
@@ -10697,7 +10697,7 @@
     {
       "id": "syntrx-funk-bass",
       "name": "Funk Bass",
-      "ref": "In the style of 1970s funk",
+      "ref": "A rubbery, syncopated bass whose resonant filter wahs on every note, pure 1970s funk",
       "artist": "70s funk",
       "tags": ["bass", "funk", "70s"],
       "level": 2,
@@ -10774,7 +10774,7 @@
     {
       "id": "syntrx-chip-lead",
       "name": "Chiptune Lead",
-      "ref": "In the style of 8-bit video game music",
+      "ref": "Buzzy pulse lead trilling fast like an 8-bit games console’s arpeggio",
       "artist": "Chiptune",
       "tags": ["lead", "chiptune", "game"],
       "level": 1,
@@ -10845,7 +10845,7 @@
     {
       "id": "syntrx-vocal-lead",
       "name": "Vocal Lead",
-      "ref": "In the style of 1980s synth-funk talking leads",
+      "ref": "A narrow resonant band that makes the lead sing “ah”, a 1980s synth-funk trick",
       "artist": "Synth-funk",
       "tags": ["lead", "vocal", "bandpass"],
       "level": 2,
@@ -10924,7 +10924,7 @@
     {
       "id": "syntrx-screaming-lead",
       "name": "Screaming Lead",
-      "ref": "In the style of 1980s hard-rock synth leads",
+      "ref": "A piercing, resonant wall of saws for a 1980s hard-rock synth solo",
       "artist": "Hard rock",
       "tags": ["lead", "aggressive", "rock"],
       "level": 2,
@@ -11001,7 +11001,7 @@
     {
       "id": "syntrx-wah-lead",
       "name": "Envelope Wah Lead",
-      "ref": "In the style of 1970s funk envelope filters",
+      "ref": "Every note quacks open through a narrow band: the 1970s funk envelope-filter sound",
       "artist": "70s funk",
       "tags": ["lead", "wah", "funk"],
       "level": 2,
@@ -11073,7 +11073,7 @@
     {
       "id": "syntrx-bell-lead",
       "name": "Bell Lead",
-      "ref": "In the style of ring-modulated bells of early electronic music",
+      "ref": "A bright, tuned, metallic bell line from ring modulation, a sound early electronic music loved",
       "artist": "Experimental",
       "tags": ["lead", "bell", "ring"],
       "level": 2,
@@ -11150,7 +11150,7 @@
     {
       "id": "syntrx-flute-lead",
       "name": "Pan Flute",
-      "ref": "In the style of Andean pan pipes",
+      "ref": "A hollow, breathy flute with a puff at the start of each note, like Andean pan pipes",
       "artist": "Andean music",
       "tags": ["lead", "flute", "world"],
       "level": 2,
@@ -11233,7 +11233,7 @@
     {
       "id": "syntrx-clap",
       "name": "Hand Clap",
-      "ref": "In the style of the TR-808 hand clap",
+      "ref": "A papery clap smeared into a flam of several hands, close to the TR-808’s",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "clap"],
       "level": 2,
@@ -11306,7 +11306,7 @@
     {
       "id": "syntrx-cowbell",
       "name": "Cowbell",
-      "ref": "In the style of the TR-808 cowbell",
+      "ref": "Two clanky square tones at an odd interval: the TR-808 cowbell",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "80s"],
       "level": 1,
@@ -11368,7 +11368,7 @@
     {
       "id": "syntrx-conga",
       "name": "Conga",
-      "ref": "In the style of Afro-Cuban congas",
+      "ref": "Round, ringing hand drums pinged from a nearly self-oscillating filter, for Afro-Cuban rhythms",
       "artist": "Afro-Cuban percussion",
       "tags": ["perc", "drum", "latin"],
       "level": 2,
@@ -11430,7 +11430,7 @@
     {
       "id": "syntrx-rimshot",
       "name": "Rimshot",
-      "ref": "In the style of the TR-808 rimshot",
+      "ref": "A sharp, woody click of pulse and noise, near to the TR-808 rimshot",
       "artist": "808-style drums",
       "tags": ["perc", "drum", "rim"],
       "level": 1,
@@ -11487,7 +11487,7 @@
     {
       "id": "syntrx-zap-kick",
       "name": "Zap Kick",
-      "ref": "In the style of 1980s electro zap kicks",
+      "ref": "A kick that zaps a long way down in pitch, fast, as 1980s electro tracks used it",
       "artist": "Electro",
       "tags": ["perc", "drum", "electro"],
       "level": 1,
@@ -11551,7 +11551,7 @@
     {
       "id": "syntrx-drum-loop",
       "name": "Random Drum Machine",
-      "ref": "In the style of early drum-machine rhythm sections",
+      "ref": "A looping beat where each hit lands as a different drum, like an early rhythm machine let loose",
       "artist": "Early electro",
       "tags": ["perc", "random", "rhythm"],
       "level": 3,
@@ -11626,7 +11626,7 @@
     {
       "id": "syntrx-snare-roll",
       "name": "Snare Roll",
-      "ref": "In the style of EDM build-up snare rolls",
+      "ref": "A fast snare roll swelling up towards the drop of an EDM build",
       "artist": "EDM",
       "tags": ["perc", "drum", "build"],
       "level": 2,
@@ -11691,7 +11691,7 @@
     {
       "id": "syntrx-octave-drone",
       "name": "Octave Drone",
-      "ref": "In the style of 1960s drone music",
+      "ref": "A full, steady drone stacked in octaves, as 1960s drone music held them",
       "artist": "Drone music",
       "tags": ["drone", "basics", "octave"],
       "level": 1,
@@ -11755,7 +11755,7 @@
     {
       "id": "syntrx-fifths-drone",
       "name": "Fifths Drone",
-      "ref": "In the style of medieval organum drones",
+      "ref": "A stark, open fifth sustained like the drone under medieval organum",
       "artist": "Medieval",
       "tags": ["drone", "fifths", "medieval"],
       "level": 1,
@@ -11815,7 +11815,7 @@
     {
       "id": "syntrx-beating-drone",
       "name": "Beating Drone",
-      "ref": "In the style of beating-tone drone music",
+      "ref": "Two tones almost in tune, beating slowly like a singing bowl",
       "artist": "Drone music",
       "tags": ["drone", "detune", "meditative"],
       "level": 1,
@@ -11875,7 +11875,7 @@
     {
       "id": "syntrx-noise-drone",
       "name": "Noise Drone",
-      "ref": "In the style of dark ambient drones",
+      "ref": "A hissing drone ringing at one pitch, wind in a pipe for dark ambient",
       "artist": "Dark ambient",
       "tags": ["drone", "noise", "dark"],
       "level": 2,
@@ -11949,7 +11949,7 @@
     {
       "id": "syntrx-shimmer-drone",
       "name": "Shimmer Drone",
-      "ref": "In the style of shimmering ambient drones",
+      "ref": "A wide, shimmering super-saw drone lost in a huge ambient space",
       "artist": "Ambient",
       "tags": ["drone", "ambient", "reverb"],
       "level": 1,
@@ -12014,7 +12014,7 @@
     {
       "id": "syntrx-pulsar",
       "name": "Pulsar",
-      "ref": "In the style of space-ambient music",
+      "ref": "A distant, regular tick in deep space, heard mostly through the reverb",
       "artist": "Space ambient",
       "tags": ["fx", "space", "rhythm"],
       "level": 2,
@@ -12073,7 +12073,7 @@
     {
       "id": "syntrx-ring-cluster",
       "name": "Ring Cluster",
-      "ref": "In the style of ring-modulated tone clusters",
+      "ref": "A dense, shifting cluster of metallic sum and difference tones, for experimental drones",
       "artist": "Experimental",
       "tags": ["drone", "ring", "experimental"],
       "level": 2,
@@ -12140,7 +12140,7 @@
     {
       "id": "syntrx-underwater",
       "name": "Underwater",
-      "ref": "In the style of deep-sea ambient",
+      "ref": "A muffled, bubbling drone from deep under the sea, dark and resonant",
       "artist": "Deep-sea ambient",
       "tags": ["drone", "ambient", "water"],
       "level": 2,
@@ -12217,7 +12217,7 @@
     {
       "id": "syntrx-hpf-sweep",
       "name": "High-pass Sweep",
-      "ref": "In the style of EDM high-pass build-ups",
+      "ref": "A lead that thins as each note holds, the bass draining away as in an EDM build",
       "artist": "EDM",
       "tags": ["lead", "filter", "hpf"],
       "level": 2,
@@ -12288,7 +12288,7 @@
     {
       "id": "syntrx-decay-cv",
       "name": "Stretching Notes",
-      "ref": "In the style of IDM plucks of shifting length",
+      "ref": "Plucks whose length slowly stretches and shrinks, an IDM texture",
       "artist": "IDM",
       "tags": ["pluck", "envelope", "lfo"],
       "level": 2,
@@ -12362,7 +12362,7 @@
     {
       "id": "syntrx-scope-loop",
       "name": "Scope Loop",
-      "ref": "In the style of patch-feedback experimental music",
+      "ref": "A drone pushed by a wave sent out of the matrix and back in, a feedback-patching experiment",
       "artist": "Experimental",
       "tags": ["fx", "matrix", "experimental"],
       "level": 3,
@@ -12431,7 +12431,7 @@
     {
       "id": "syntrx-ef-duck",
       "name": "Ducking Drone",
-      "ref": "In the style of French-house pumping pads",
+      "ref": "A pad that ducks under every pulse, the pumping sidechain sound of French house",
       "artist": "French house",
       "tags": ["drone", "envelope-follower", "pump"],
       "level": 3,
@@ -12509,7 +12509,7 @@
     {
       "id": "syntrx-in2-crunch",
       "name": "Crunch",
-      "ref": "In the style of industrial distorted leads",
+      "ref": "A lead overdriven into a hard crunch, distorted enough for industrial tracks",
       "artist": "Industrial",
       "tags": ["lead", "distortion", "matrix"],
       "level": 2,
@@ -12583,7 +12583,7 @@
     {
       "id": "syntrx-sh-bitcrush-drums",
       "name": "Crushed Beat",
-      "ref": "In the style of lo-fi hip-hop crushed beats",
+      "ref": "A thumping loop crushed into dusty grit, the lo-fi hip-hop beat",
       "artist": "Lo-fi hip-hop",
       "tags": ["perc", "lo-fi", "sample-and-hold"],
       "level": 3,
@@ -12645,7 +12645,7 @@
     {
       "id": "syntrx-fm-bell",
       "name": "FM Bell",
-      "ref": "In the style of 1980s FM bells",
+      "ref": "A bright, clear, glassy bell from audio-rate FM, the bell tone of 1980s FM synths",
       "artist": "80s FM",
       "tags": ["keys", "fm", "bell"],
       "level": 3,
@@ -12718,7 +12718,7 @@
     {
       "id": "syntrx-two-channel-duet",
       "name": "Two-Channel Duet",
-      "ref": "In the style of two-voice electronic duets",
+      "ref": "Two sounds from one key, a sine on the left and a plucked saw on the right",
       "artist": "Experimental",
       "tags": ["keys", "stereo", "matrix"],
       "level": 2,
@@ -12785,7 +12785,7 @@
     {
       "id": "syntrx-osc3-audio-fm",
       "name": "Growl Pad",
-      "ref": "In the style of drone metal",
+      "ref": "A growling, gritty pad from audio-rate filter FM, heavy enough for drone metal",
       "artist": "Drone metal",
       "tags": ["pad", "filter", "fm"],
       "level": 3,
@@ -12853,7 +12853,7 @@
     {
       "id": "syntrx-joystick-xy-pad",
       "name": "XY Pad",
-      "ref": "In the style of ambient pad performance",
+      "ref": "A pad shaped live on two axes, brightness one way and shimmer the other",
       "artist": "Ambient",
       "tags": ["pad", "joystick", "performance"],
       "level": 2,
@@ -12926,7 +12926,7 @@
     {
       "id": "syntrx-sh-noise-melody",
       "name": "Random Pluck Melody",
-      "ref": "In the style of Berlin-school random sequences",
+      "ref": "Random plucked notes echoing away, a Berlin School sequence left to chance",
       "artist": "Berlin school",
       "tags": ["pluck", "random", "delay"],
       "level": 2,
@@ -13002,7 +13002,7 @@
     {
       "id": "syntrx-ring-sweep",
       "name": "Ring Sweep",
-      "ref": "In the style of BBC Radiophonic Workshop ring modulation",
+      "ref": "Sum and difference tones sliding past each other in a metallic Radiophonic sweep",
       "artist": "Radiophonic sound effects",
       "tags": ["fx", "ring", "sweep"],
       "level": 2,
@@ -13068,7 +13068,7 @@
     {
       "id": "syntrx-reverse-swell",
       "name": "Reverse Swell",
-      "ref": "In the style of 1960s backwards-tape psychedelia",
+      "ref": "Notes that swell up and stop dead, like the backwards tape of 1960s psychedelia",
       "artist": "Psychedelia",
       "tags": ["pad", "reverse", "envelope"],
       "level": 1,
@@ -13137,7 +13137,7 @@
     {
       "id": "syntrx-slow-pulse-pad",
       "name": "Breathing Pad",
-      "ref": "In the style of ambient breathing pads",
+      "ref": "A pad that breathes in and out by itself, slow enough for ambient",
       "artist": "Ambient",
       "tags": ["pad", "envelope", "ambient"],
       "level": 1,
@@ -13208,7 +13208,7 @@
     {
       "id": "syntrx-hollow-pad",
       "name": "Hollow Pad",
-      "ref": "In the style of ambient hollow pads",
+      "ref": "A soft, hollow, woody pad from a sine and a square an octave apart, swelling in",
       "artist": "Ambient",
       "tags": ["pad", "soft", "hollow"],
       "level": 1,
@@ -13276,7 +13276,7 @@
     {
       "id": "syntrx-dark-pluck",
       "name": "Dark Pluck",
-      "ref": "In the style of minimal techno plucks",
+      "ref": "A muted, dull stab into an echo: the dark pluck of minimal techno",
       "artist": "Minimal techno",
       "tags": ["pluck", "dark", "minimal"],
       "level": 1,
@@ -13355,7 +13355,7 @@
     {
       "id": "syntrx-glass-ping",
       "name": "Glass Ping",
-      "ref": "In the style of IDM resonant plucks",
+      "ref": "A pure, glassy ping from the filter ringing by itself, an IDM favourite",
       "artist": "IDM",
       "tags": ["pluck", "glass", "filter"],
       "level": 2,
@@ -13419,7 +13419,7 @@
     {
       "id": "syntrx-wobble-lead",
       "name": "Wobble Lead",
-      "ref": "In the style of dubstep wobble",
+      "ref": "A lead with a wide, wobbling vibrato and a matching wah, borrowed from dubstep",
       "artist": "Dubstep",
       "tags": ["lead", "lfo", "wobble"],
       "level": 2,
@@ -13490,7 +13490,7 @@
     {
       "id": "syntrx-sub-drop",
       "name": "Sub Drop",
-      "ref": "In the style of EDM sub drops",
+      "ref": "A deep sub falling slowly away after the impact of an EDM drop",
       "artist": "EDM",
       "tags": ["fx", "bass", "edm"],
       "level": 1,
@@ -13550,7 +13550,7 @@
     {
       "id": "syntrx-noise-riser",
       "name": "Noise Riser",
-      "ref": "In the style of EDM build-up risers",
+      "ref": "A rising whoosh of resonant noise that builds tension before an EDM drop",
       "artist": "EDM",
       "tags": ["fx", "riser", "edm"],
       "level": 1,
@@ -13607,7 +13607,7 @@
     {
       "id": "syntrx-arp-delay",
       "name": "Echo Arpeggio",
-      "ref": "In the style of 1980s synth-pop arpeggios",
+      "ref": "A bright arpeggio multiplied by echoes into a 1980s synth-pop shimmer",
       "artist": "80s synth-pop",
       "tags": ["pluck", "arpeggio", "delay"],
       "level": 1,
@@ -13682,7 +13682,7 @@
     {
       "id": "syntrx-sci-fi-hum",
       "name": "Spaceship Hum",
-      "ref": "In the style of sci-fi film spaceship drones",
+      "ref": "The low, shifting hum of a starship’s engines in a science-fiction film",
       "artist": "Sci-fi soundtracks",
       "tags": ["drone", "sci-fi", "dark"],
       "level": 2,
@@ -13759,7 +13759,7 @@
     {
       "id": "syntrx-cathedral-bell",
       "name": "Cathedral Bell",
-      "ref": "In the style of cathedral bells",
+      "ref": "A deep, heavy bell tolling in the vast space of a cathedral",
       "artist": "Church bells",
       "tags": ["keys", "bell", "reverb"],
       "level": 2,
@@ -13832,7 +13832,7 @@
     {
       "id": "syntrx-gated-pad",
       "name": "Gated Pad",
-      "ref": "In the style of trance gated pads",
+      "ref": "A held super saw chopped into a fast rhythm: the trance gated pad",
       "artist": "Trance",
       "tags": ["pad", "rhythm", "trance"],
       "level": 2,
@@ -13903,7 +13903,7 @@
     {
       "id": "syntrx-joy-bass",
       "name": "Joystick Bass",
-      "ref": "In the style of acid house basslines",
+      "ref": "A resonant saw bass whose brightness you play with the stick: acid house by hand",
       "artist": "Acid house",
       "tags": ["bass", "joystick", "filter"],
       "level": 1,
@@ -13980,7 +13980,7 @@
     {
       "id": "syntrx-ambient-bells",
       "name": "Ambient Bells",
-      "ref": "In the style of Brian Eno — “Music for Airports”",
+      "ref": "Soft bells chiming at random into a long reverb, like the generative ambient music of Brian Eno",
       "artist": "Brian Eno",
       "tags": ["fx", "ambient", "bell"],
       "level": 2,
@@ -14057,7 +14057,7 @@
     {
       "id": "syntrx-square-organ-bass",
       "name": "Square Bass",
-      "ref": "In the style of synth-pop square bass",
+      "ref": "A plain, round square bass two octaves down, a synth-pop staple",
       "artist": "Synth-pop",
       "tags": ["bass", "basics", "pulse"],
       "level": 1,
@@ -14125,7 +14125,7 @@
     {
       "id": "syntrx-soft-lead",
       "name": "Soft Lead",
-      "ref": "In the style of soft ambient leads",
+      "ref": "A soft, rounded lead from a sine bent into a sharkfin, gentle enough for ambient",
       "artist": "Ambient",
       "tags": ["lead", "soft", "basics"],
       "level": 1,
@@ -14194,7 +14194,7 @@
     {
       "id": "syntrx-noise-snare-hall",
       "name": "Big Room Snare",
-      "ref": "In the style of 1980s gated-reverb snares",
+      "ref": "A huge noise-and-tone snare booming in a big room, the 1980s big-reverb snare",
       "artist": "80s rock",
       "tags": ["perc", "drum", "80s"],
       "level": 1,
@@ -14266,7 +14266,7 @@
     {
       "id": "syntrx-trill-flute",
       "name": "Trilling Flute",
-      "ref": "In the style of Baroque flute trills",
+      "ref": "A breathy flute trilling between two notes, the way Baroque flute music decorates a line",
       "artist": "Baroque",
       "tags": ["lead", "flute", "trill"],
       "level": 2,
@@ -14334,7 +14334,7 @@
     {
       "id": "syntrx-matrix-tour",
       "name": "Matrix Tour",
-      "ref": "In the style of 1960s electronic music studios",
+      "ref": "One note through filter, ring modulator, VCA and effects, the way a 1960s studio chained its gear",
       "artist": "Electronic music studios",
       "tags": ["fx", "matrix", "basics"],
       "level": 3,

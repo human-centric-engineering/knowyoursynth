@@ -58,8 +58,8 @@ export function Wordmark({ lit, lesson = false }: { lit: boolean; lesson?: boole
  * before Play (t-279; under the panel from t-207 until then, where the name now only reads). It opens the library as a drawer down the left of the screen (`SoundsDrawer`), over the
  * panel and the Play deck, so it has the screen's height whatever the deck holds (a bottom sheet below `lg`). Its LED
  * pulses while a patch loads, when the keys are silent (`f-default-patch` t-172), so a dead key reads as "wait", not as
- * broken. Its text is the name alone, which a long one can run past: its tooltip is the whole name, with its "In the
- * style of…" where it has one. What is loading is said in its label.
+ * broken. Its text is the name alone, which a long one can run past: its tooltip is the whole name, with its one-line
+ * reference where it has one. What is loading is said in its label.
  */
 export function SoundPicker({
   soundName,
@@ -72,7 +72,7 @@ export function SoundPicker({
 }: {
   /** What is on the panel: a library sound, one of the user's, or "Default patch". */
   soundName: string;
-  /** "In the style of…", where the sound has one. */
+  /** The sound's one-line reference (what it is like), where it has one. */
   soundRef: string | null;
   /** Opens (or closes) the sound library. */
   onChooseSound: () => void;

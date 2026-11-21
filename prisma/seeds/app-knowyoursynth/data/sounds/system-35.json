@@ -982,7 +982,7 @@
     {
       "id": "s35-italo-gallop",
       "name": "Italo Gallop Bass",
-      "ref": "In the style of Alexander Robotnick — “Problèmes d’amour”, Florence, 1983",
+      "ref": "A sawtooth with a square an octave below, galloping like the bass of Alexander Robotnick’s “Problèmes d’amour”",
       "artist": "Alexander Robotnick",
       "tags": ["bass", "italo-disco", "gallop", "1980s"],
       "level": 2,
@@ -1104,7 +1104,7 @@
     {
       "id": "s35-word-up-bass",
       "name": "Word Up Pulse Bass",
-      "ref": "In the style of Cameo — “Word Up!”, New York, 1986",
+      "ref": "A tight, reedy pulse bass with a sine for weight, clipped short for the funk of Cameo’s “Word Up!”",
       "artist": "Cameo",
       "tags": ["bass", "funk", "pulse", "1980s"],
       "level": 2,
@@ -1207,7 +1207,7 @@
     {
       "id": "s35-dillinja-reese",
       "name": "Four-Saw Reese",
-      "ref": "In the style of Dillinja — London drum & bass, mid-1990s",
+      "ref": "Four sawtooths churning against each other in the dark: the Reese of Dillinja’s 1990s drum & bass",
       "artist": "Dillinja",
       "tags": ["bass", "drum-and-bass", "reese", "detuned"],
       "level": 2,
@@ -1303,7 +1303,7 @@
     {
       "id": "s35-ceephax-acid",
       "name": "Switched Acid Line",
-      "ref": "In the style of Ceephax Acid Crew — London acid, 2000s",
+      "ref": "One sawtooth squelching through a ringing ladder, London acid as Ceephax Acid Crew plays it",
       "artist": "Ceephax Acid Crew",
       "tags": ["bass", "acid", "squelch", "resonant"],
       "level": 3,
@@ -1419,7 +1419,7 @@
     {
       "id": "s35-minneapolis-sync",
       "name": "Minneapolis Sync Bass",
-      "ref": "In the style of Jimmy Jam & Terry Lewis — the Minneapolis sound, mid-1980s",
+      "ref": "Punchy synced bass with a zap at the front of each note, a mainstay of Jam and Lewis’s Minneapolis sound",
       "artist": "Jimmy Jam & Terry Lewis",
       "tags": ["bass", "funk", "sync", "minneapolis"],
       "level": 3,
@@ -1531,7 +1531,7 @@
     {
       "id": "s35-egyptian-boom",
       "name": "Electro Boom Bass",
-      "ref": "In the style of Egyptian Lover — “Egypt, Egypt”, Los Angeles, 1984",
+      "ref": "Egyptian Lover’s “Egypt, Egypt” boom: a deep, round bass whose pitch drops in like a tuned kick",
       "artist": "Egyptian Lover",
       "tags": ["bass", "electro", "boom", "1980s"],
       "level": 3,
@@ -1637,8 +1637,8 @@
     {
       "id": "s35-woody-walk",
       "name": "Woody Walking Bass",
-      "ref": "In the style of Roni Size & Reprazent — “New Forms”, Bristol, 1997",
-      "artist": "Roni Size",
+      "ref": "A hollow, knocking walking bass with the wood of a double bass, set at drum & bass tempo",
+      "artist": "Jazzy drum & bass",
       "tags": ["bass", "drum-and-bass", "jazz", "band-pass"],
       "level": 2,
       "blurb": "A woody, plucked walking bass at drum & bass tempo, a sawtooth squeezed between a high-pass and a low-pass.",
@@ -1737,7 +1737,7 @@
     {
       "id": "s35-surgeon-drive",
       "name": "Driven Techno Bass",
-      "ref": "In the style of Surgeon — Birmingham techno, mid-1990s",
+      "ref": "Two banks clipping the mixer into a hard, saturated growl, for the Birmingham techno of Surgeon",
       "artist": "Surgeon",
       "tags": ["bass", "techno", "distorted", "industrial"],
       "level": 3,
@@ -1852,7 +1852,7 @@
     {
       "id": "s35-smalltown-parallel",
       "name": "Parallel Filter Bass",
-      "ref": "In the style of Bronski Beat — “Smalltown Boy”, London, 1984",
+      "ref": "Driving eighths with a round body and a buzzing edge, the synth-pop pulse under Bronski Beat’s “Smalltown Boy”",
       "artist": "Bronski Beat",
       "tags": ["bass", "synth-pop", "eighths", "parallel-filters"],
       "level": 3,
@@ -1969,7 +1969,7 @@
     {
       "id": "s35-juicy-three-osc",
       "name": "Three-Oscillator Funk Bass",
-      "ref": "In the style of Mtume — “Juicy Fruit”, New York, 1983",
+      "ref": "Warm, rubbery boogie bass from three oscillators, the bounce Mtume’s “Juicy Fruit” is built on",
       "artist": "Mtume",
       "tags": ["bass", "funk", "boogie", "three-oscillator"],
       "level": 3,
@@ -2086,8 +2086,8 @@
     {
       "id": "s35-dusseldorf-fifths",
       "name": "Motorik Fifths Bass",
-      "ref": "In the style of La Düsseldorf — Klaus Dinger’s krautrock, 1976",
-      "artist": "La Düsseldorf",
+      "ref": "A relentless eighth-note bass of bare fifths, the power-chord drive of motorik krautrock",
+      "artist": "Motorik krautrock",
       "tags": ["bass", "krautrock", "motorik", "fifths"],
       "level": 1,
       "blurb": "A relentless motorik eighth-note bass, each note a bare fifth: a root and the note seven semitones above.",
@@ -2181,7 +2181,7 @@
     {
       "id": "s35-five-osc-wall",
       "name": "Five-Oscillator Wall",
-      "ref": "In the style of Mike Dean — Houston hip-hop production, 2010s",
+      "ref": "Every oscillator on one slow note: an enormous, blooming bass of the kind Mike Dean stacks under Houston hip-hop",
       "artist": "Mike Dean",
       "tags": ["bass", "hip-hop", "unison", "huge"],
       "level": 3,
@@ -2303,7 +2303,7 @@
     {
       "id": "s35-opposed-pwm",
       "name": "Opposed Width Bass",
-      "ref": "In the style of Sparks — “The Number One Song in Heaven”, 1979",
+      "ref": "Octave-bouncing pulse bass with shimmering widths, the Moroder disco of Sparks’s “The Number One Song in Heaven”",
       "artist": "Sparks",
       "tags": ["bass", "disco", "pwm", "octaves"],
       "level": 3,
@@ -2417,7 +2417,7 @@
     {
       "id": "s35-murder-tracked",
       "name": "Key-Tracked Synthwave Bass",
-      "ref": "In the style of Mitch Murder — Swedish synthwave, 2010s",
+      "ref": "Rolling sixteenth octaves of slightly detuned saws, the retro synthwave bass Mitch Murder rides",
       "artist": "Mitch Murder",
       "tags": ["bass", "synthwave", "sixteenths", "retro"],
       "level": 2,
@@ -2523,7 +2523,7 @@
     {
       "id": "s35-terry-914-bass",
       "name": "Filter-Bank House Bass",
-      "ref": "In the style of Todd Terry — New York house, late 1980s",
+      "ref": "Round offbeat bass with a fixed, organ-like colour, at home in Todd Terry’s late-1980s New York house",
       "artist": "Todd Terry",
       "tags": ["bass", "house", "organ", "fixed-filter"],
       "level": 2,
@@ -2631,7 +2631,7 @@
     {
       "id": "s35-filter-fm-growl",
       "name": "Filter-FM Growl",
-      "ref": "In the style of Noisia — Dutch neurofunk, late 2000s",
+      "ref": "A snarling, metallic growl from a cutoff shaken at audio rate, the neurofunk sound Noisia made their own",
       "artist": "Noisia",
       "tags": ["bass", "neurofunk", "growl", "fm"],
       "level": 3,
@@ -2752,7 +2752,7 @@
     {
       "id": "s35-baumann-two-places",
       "name": "One Sum, Two Places",
-      "ref": "In the style of Peter Baumann — “Romance 76”, Berlin, 1976",
+      "ref": "A sixteenth sequence that brightens and fattens on every note, Berlin School as on Peter Baumann’s “Romance 76”",
       "artist": "Peter Baumann",
       "tags": ["seq", "berlin-school", "pwm", "1970s"],
       "level": 3,
@@ -2873,7 +2873,7 @@
     {
       "id": "s35-schroeder-tide",
       "name": "Octave Tide Sequence",
-      "ref": "In the style of Robert Schroeder — “Harmonic Ascendant”, Aachen, 1979",
+      "ref": "Robert Schroeder’s “Harmonic Ascendant” in outline: a sequence with an octave washing in and out like a tide",
       "artist": "Robert Schroeder",
       "tags": ["seq", "berlin-school", "octaves", "tremolo"],
       "level": 3,
@@ -2984,7 +2984,7 @@
     {
       "id": "s35-boots-comb",
       "name": "Comb-Filter Sequence",
-      "ref": "In the style of Ron Boots — Dutch electronic music, 1990s",
+      "ref": "A glassy sequence cut by a comb of fixed bands, each note a new colour, for Ron Boots’s Dutch Berlin School",
       "artist": "Ron Boots",
       "tags": ["seq", "berlin-school", "filter-bank", "metallic"],
       "level": 2,
@@ -3090,7 +3090,7 @@
     {
       "id": "s35-klein-sync-arp",
       "name": "Cross-Bank Sync Arp",
-      "ref": "In the style of Klein + M.B.O. — “Dirty Talk”, Milan, 1982",
+      "ref": "Octave-jumping arp with a hard, tearing sync edge: the Italo bounce of Klein + M.B.O.’s “Dirty Talk”",
       "artist": "Klein + M.B.O.",
       "tags": ["seq", "italo-disco", "sync", "octaves"],
       "level": 3,
@@ -3197,7 +3197,7 @@
     {
       "id": "s35-kano-width-env",
       "name": "Width-Swept Italo Arp",
-      "ref": "In the style of Kano — “I’m Ready”, Milan, 1980",
+      "ref": "Springy sixteenths that pinch from fat square to thin pulse, made for Italo disco like Kano’s “I’m Ready”",
       "artist": "Kano",
       "tags": ["seq", "italo-disco", "pwm", "plucky"],
       "level": 3,
@@ -3304,7 +3304,7 @@
     {
       "id": "s35-lindstrom-cosmic",
       "name": "Cosmic Four-Pulse Arp",
-      "ref": "In the style of Lindstrøm — Norwegian space disco, late 2000s",
+      "ref": "Three pulse waves breathing together under a soft filter, a cosmic arp for Lindstrøm’s Norwegian space disco",
       "artist": "Lindstrøm",
       "tags": ["seq", "space-disco", "lovely", "pwm"],
       "level": 3,
@@ -3423,7 +3423,7 @@
     {
       "id": "s35-terje-bounce",
       "name": "Bouncy Disco Arp",
-      "ref": "In the style of Todd Terje — “Inspector Norse”, Oslo, 2012",
+      "ref": "Todd Terje’s “Inspector Norse” bounce: a rubbery arp that keeps the same snap at every height",
       "artist": "Todd Terje",
       "tags": ["seq", "nu-disco", "bouncy", "bright"],
       "level": 2,
@@ -3532,7 +3532,7 @@
     {
       "id": "s35-energy52-fifths",
       "name": "Fifths Trance Arp",
-      "ref": "In the style of Energy 52 — “Café del Mar”, Frankfurt, 1993",
+      "ref": "Every note an open chord of root, fifth and octave, floating like the riff of Energy 52’s “Café del Mar”",
       "artist": "Energy 52",
       "tags": ["seq", "trance", "lovely", "fifths"],
       "level": 3,
@@ -3652,7 +3652,7 @@
     {
       "id": "s35-stella-inverted",
       "name": "Inverted-Envelope Pluck",
-      "ref": "In the style of Jam & Spoon — “Stella”, Frankfurt, 1992",
+      "ref": "Notes that start dark and swell open, a backwards pluck for trance arps like Jam & Spoon’s “Stella”",
       "artist": "Jam & Spoon",
       "tags": ["seq", "trance", "inverted-envelope", "1990s"],
       "level": 2,
@@ -3754,7 +3754,7 @@
     {
       "id": "s35-bt-trance-gate",
       "name": "Clamped Trance Gate",
-      "ref": "In the style of BT — “Flaming June”, 1997",
+      "ref": "Wide chords chopped into a sixteenth-note stutter that lands on the beat: the trance gate of BT’s “Flaming June”",
       "artist": "BT",
       "tags": ["seq", "trance", "gate", "rhythmic"],
       "level": 3,
@@ -3860,7 +3860,7 @@
     {
       "id": "s35-clarke-noise-pulse",
       "name": "Pulse and Noise Sequence",
-      "ref": "In the style of Dave Clarke — “Red 2”, Brighton, 1995",
+      "ref": "Hard, hissing sixteenths from a needle-thin pulse and noise, for techno like Dave Clarke’s “Red 2”",
       "artist": "Dave Clarke",
       "tags": ["seq", "techno", "noise", "hard"],
       "level": 2,
@@ -3962,7 +3962,7 @@
     {
       "id": "s35-jonzun-tick",
       "name": "Electro Line with a Hi-Hat",
-      "ref": "In the style of Jonzun Crew — “Pack Jam”, Boston, 1982",
+      "ref": "Jonzun Crew’s “Pack Jam” electro: a bouncing line with a crisp noise tick riding every note",
       "artist": "Jonzun Crew",
       "tags": ["seq", "electro", "noise", "two-voice"],
       "level": 3,
@@ -4094,7 +4094,7 @@
     {
       "id": "s35-octave-one-stab",
       "name": "Minor-Seventh Chord Stab",
-      "ref": "In the style of Octave One — Detroit techno, late 1990s",
+      "ref": "A dark minor-seventh stab moving in parallel, the Detroit chord Octave One built late-1990s tracks on",
       "artist": "Octave One",
       "tags": ["keys", "detroit-techno", "chord-stab", "four-voice"],
       "level": 3,
@@ -4208,7 +4208,7 @@
     {
       "id": "s35-fm84-shimmer",
       "name": "Shimmering Synthwave Arp",
-      "ref": "In the style of FM-84 — “Running in the Night”, California, 2016",
+      "ref": "Soft sixteenths with a faint shimmer of vibrato, the hazy synthwave of FM-84’s “Running in the Night”",
       "artist": "FM-84",
       "tags": ["seq", "synthwave", "lovely", "vibrato"],
       "level": 3,
@@ -4326,7 +4326,7 @@
     {
       "id": "s35-moebius-crossclock",
       "name": "Cross-Clocked Filter Blips",
-      "ref": "In the style of Moebius & Plank — “Rastakraut Pasta”, 1980",
+      "ref": "Filter blips on a clock of their own slide past a seven-beat riff, Moebius & Plank’s krautrock game",
       "artist": "Moebius & Plank",
       "tags": ["seq", "krautrock", "polyrhythm", "clock"],
       "level": 3,
@@ -4438,7 +4438,7 @@
     {
       "id": "s35-emerald-glass",
       "name": "Glass Harp Arp",
-      "ref": "In the style of Emerald Web — American new age, 1980s",
+      "ref": "Slow, glassy sine and triangle notes left to ring into each other, the 1980s new age of Emerald Web",
       "artist": "Emerald Web",
       "tags": ["seq", "new-age", "lovely", "gentle"],
       "level": 2,
@@ -4533,7 +4533,7 @@
     {
       "id": "s35-isham-bloom",
       "name": "Pluck and Bloom Arp",
-      "ref": "In the style of Mark Isham — “Vapor Drawings”, 1983",
+      "ref": "A delicate plucked arp with a dark pad blooming under it, from the synth side of Mark Isham’s “Vapor Drawings”",
       "artist": "Mark Isham",
       "tags": ["seq", "ambient", "lovely", "two-voice"],
       "level": 3,
@@ -4666,7 +4666,7 @@
     {
       "id": "s35-rival-breath",
       "name": "Breathing Noise Arp",
-      "ref": "In the style of Rival Consoles — “Persona”, London, 2018",
+      "ref": "An airy arp with a breath of noise in it and a filter drifting open, close to Rival Consoles’ “Persona”",
       "artist": "Rival Consoles",
       "tags": ["seq", "electronica", "lovely", "noise"],
       "level": 3,
@@ -4776,7 +4776,7 @@
     {
       "id": "s35-downes-octave-swell",
       "name": "Octave Swell Lead",
-      "ref": "In the style of Geoff Downes — Yes, “Drama”, 1980",
+      "ref": "A bold sawtooth lead that grows a ringing octave on long notes, prog synth as Geoff Downes played it on “Drama”",
       "artist": "Geoff Downes",
       "tags": ["lead", "prog-rock", "octaves", "swell"],
       "level": 3,
@@ -4887,7 +4887,7 @@
     {
       "id": "s35-triumvirat-scoop",
       "name": "Scooped Prog Lead",
-      "ref": "In the style of Triumvirat — “Illusions on a Double Dimple”, Cologne, 1974",
+      "ref": "Brassy Moog prog that scoops up a minor third into every note, from Triumvirat’s “Illusions on a Double Dimple”",
       "artist": "Triumvirat",
       "tags": ["lead", "prog-rock", "pitch-envelope", "1970s"],
       "level": 3,
@@ -4997,7 +4997,7 @@
     {
       "id": "s35-pfm-settembre",
       "name": "Autumn Moog Melody",
-      "ref": "In the style of PFM — “Impressioni di settembre”, Milan, 1972",
+      "ref": "A warm, singing Moog melody whose vibrato sways the tone too, like the theme of PFM’s “Impressioni di settembre”",
       "artist": "PFM",
       "tags": ["lead", "prog-rock", "italian", "vibrato"],
       "level": 2,
@@ -5090,7 +5090,7 @@
     {
       "id": "s35-rudess-sync-shred",
       "name": "Synced Shred Lead",
-      "ref": "In the style of Jordan Rudess — Dream Theater, “Metropolis Pt. 2”, 1999",
+      "ref": "Screaming sync lead with a power fifth under it, fast enough for Jordan Rudess’s runs in Dream Theater",
       "artist": "Jordan Rudess",
       "tags": ["lead", "prog-metal", "sync", "fast"],
       "level": 3,
@@ -5206,7 +5206,7 @@
     {
       "id": "s35-tsquare-breath",
       "name": "Breathy Wind Lead",
-      "ref": "In the style of T-Square — “Truth”, Tokyo, 1987",
+      "ref": "Bright, breathy wind-synth lead with a quick vibrato, the EWI melody sound of T-Square’s “Truth”",
       "artist": "T-Square",
       "tags": ["lead", "jazz-fusion", "wind", "breath"],
       "level": 3,
@@ -5319,7 +5319,7 @@
     {
       "id": "s35-kinsey-vowel",
       "name": "Talking Fusion Lead",
-      "ref": "In the style of Scott Kinsey — Tribal Tech, Los Angeles, 1990s",
+      "ref": "A talking lead whose wah comes out as a vowel, the vocal synth solos Scott Kinsey played in Tribal Tech",
       "artist": "Scott Kinsey",
       "tags": ["lead", "jazz-fusion", "formant", "wah"],
       "level": 3,
@@ -5438,7 +5438,7 @@
     {
       "id": "s35-damfunk-squelch",
       "name": "Squelchy Boogie Lead",
-      "ref": "In the style of Dâm-Funk — “Toeachizown”, Los Angeles, 2009",
+      "ref": "A squelchy, resonant boogie lead with a lazy vibrato, at home on Dâm-Funk’s “Toeachizown”",
       "artist": "Dâm-Funk",
       "tags": ["lead", "boogie", "funk", "squelch"],
       "level": 3,
@@ -5558,7 +5558,7 @@
     {
       "id": "s35-annihilation-fm",
       "name": "Shimmering Alien Lead",
-      "ref": "In the style of Ben Salisbury & Geoff Barrow — “Annihilation”, 2018",
+      "ref": "A slow lead that glitters and wobbles off the harmonic series, eerie as Salisbury and Barrow’s “Annihilation”",
       "artist": "Ben Salisbury & Geoff Barrow",
       "tags": ["lead", "film", "fm", "eerie"],
       "level": 3,
@@ -5652,7 +5652,7 @@
     {
       "id": "s35-goldsmith-trill",
       "name": "Trilling Sci-Fi Lead",
-      "ref": "In the style of Jerry Goldsmith — “Logan’s Run”, 1976",
+      "ref": "Each note flutters in a fast trill: a bright lead for the electronic future of Jerry Goldsmith’s “Logan’s Run”",
       "artist": "Jerry Goldsmith",
       "tags": ["lead", "film", "trill", "sci-fi"],
       "level": 2,
@@ -5742,7 +5742,7 @@
     {
       "id": "s35-koshiro-square",
       "name": "Arcade Square Lead",
-      "ref": "In the style of Yuzo Koshiro — “Streets of Rage 2”, 1992",
+      "ref": "A bare, hollow square-wave game lead with an octave on top, for Yuzo Koshiro’s “Streets of Rage 2”",
       "artist": "Yuzo Koshiro",
       "tags": ["lead", "game", "square", "chiptune"],
       "level": 2,
@@ -5841,7 +5841,7 @@
     {
       "id": "s35-galway-pwm",
       "name": "Sweeping Pulse Lead",
-      "ref": "In the style of Martin Galway — “Wizball”, Commodore 64, 1987",
+      "ref": "Martin Galway’s C64 sound on “Wizball”: a thin, buzzy pulse whose width sweeps back and forth",
       "artist": "Martin Galway",
       "tags": ["lead", "game", "pwm", "chiptune"],
       "level": 2,
@@ -5933,7 +5933,7 @@
     {
       "id": "s35-hulsbeck-hero",
       "name": "Four-Saw Hero Lead",
-      "ref": "In the style of Chris Hülsbeck — “Turrican II”, Amiga, 1991",
+      "ref": "Four detuned saws soaring, vibrato growing on the long notes: the hero lead of Hülsbeck’s “Turrican II”",
       "artist": "Chris Hülsbeck",
       "tags": ["lead", "game", "unison", "soaring"],
       "level": 3,
@@ -6055,7 +6055,7 @@
     {
       "id": "s35-camel-three-osc",
       "name": "Three-Oscillator Prog Lead",
-      "ref": "In the style of Camel — Peter Bardens on “Lunar Sea”, 1976",
+      "ref": "A flowing, rounded three-oscillator lead, the Minimoog sound Peter Bardens ran through Camel’s “Lunar Sea”",
       "artist": "Camel",
       "tags": ["lead", "prog-rock", "three-oscillator", "flowing"],
       "level": 3,
@@ -6173,12 +6173,12 @@
     {
       "id": "s35-niblock-beating",
       "name": "Three-Rate Beating Drone",
-      "ref": "In the style of Phill Niblock — the “Touch” drone records, New York, 2000s",
-      "artist": "Phill Niblock",
+      "ref": "Near-unison sines on one held note, beating in slow, overlapping waves that themselves drift",
+      "artist": "Drone minimalism",
       "tags": ["drone", "minimal", "beating", "meditative"],
       "level": 2,
       "blurb": "Four near-unison sine and triangle tones on one held note, beating against each other at three different slow rates that themselves drift.",
-      "how": "Both 921A drivers take the keyboard, and each 921B is set a few cents from the others with its FREQUENCY knob, so every pair beats at its own rate: the sound pulses in slow, overlapping waves with no LFO on the level at all. A slow 921 triangle, turned right down in a CP35 attenuator, nudges one oscillator’s pitch so even the beat rates speed up and slow down, the shifting beat patterns Niblock builds from many slightly detuned tones.",
+      "how": "Both 921A drivers take the keyboard, and each 921B is set a few cents from the others with its FREQUENCY knob, so every pair beats at its own rate: the sound pulses in slow, overlapping waves with no LFO on the level at all. A slow 921 triangle, turned right down in a CP35 attenuator, nudges one oscillator’s pitch so even the beat rates speed up and slow down, the shifting beat patterns that many slightly detuned tones build.",
       "phrase": {
         "bpm": 60,
         "loop": true,
@@ -6277,8 +6277,8 @@
     {
       "id": "s35-bryars-tape-swell",
       "name": "Tape-Swell Fifths",
-      "ref": "In the style of Gavin Bryars — “The Sinking of the Titanic”, 1975",
-      "artist": "Gavin Bryars",
+      "ref": "Open fifths swelling up and sinking back, muffled like a worn tape of brass and strings",
+      "artist": "Ambient drone",
       "tags": ["drone", "ambient", "swell", "warm"],
       "level": 3,
       "blurb": "A warm, muffled drone of open fifths, swelling up and sinking back like a slowed-down tape of brass and strings.",
@@ -6393,7 +6393,7 @@
     {
       "id": "s35-lamonte-seventh",
       "name": "Seventh-Harmonic Drone",
-      "ref": "In the style of La Monte Young — the Theatre of Eternal Music, New York, 1960s",
+      "ref": "A still chord of pure-tuned harmonics with nothing beating, like La Monte Young’s just-intonation sine drones",
       "artist": "La Monte Young",
       "tags": ["drone", "just-intonation", "minimal", "harmonics"],
       "level": 2,
@@ -6487,7 +6487,7 @@
     {
       "id": "s35-koner-permafrost",
       "name": "Singing Ice Wind",
-      "ref": "In the style of Thomas Köner — “Permafrost”, Dortmund, 1993",
+      "ref": "Low hum under whistling, slowly drifting noise: the frozen dark ambient of Thomas Köner’s “Permafrost”",
       "artist": "Thomas Köner",
       "tags": ["drone", "dark-ambient", "noise", "cold"],
       "level": 3,
@@ -6578,7 +6578,7 @@
     {
       "id": "s35-deathprod-cancel",
       "name": "Cancelling Saws Drone",
-      "ref": "In the style of Deathprod — “Morals and Dogma”, Tromsø, 2004",
+      "ref": "Two near-identical saws cancelling into a hollow drone that empties and fills, dark as Deathprod",
       "artist": "Deathprod",
       "tags": ["drone", "dark-ambient", "phasing", "hollow"],
       "level": 3,
@@ -6669,7 +6669,7 @@
     {
       "id": "s35-coil-halfwave",
       "name": "Half-Wave Time Machine",
-      "ref": "In the style of Coil — “Time Machines”, London, 1998",
+      "ref": "A sine chord chopped into clangorous, drifting tones, the hypnotic drone of Coil’s “Time Machines”",
       "artist": "Coil",
       "tags": ["drone", "dark-ambient", "am", "hypnotic"],
       "level": 3,
@@ -6762,8 +6762,8 @@
     {
       "id": "s35-pharoah-harmonium",
       "name": "Harmonium Fifths",
-      "ref": "In the style of Pharoah Sanders — “Karma”, New York, 1969",
-      "artist": "Pharoah Sanders",
+      "ref": "A reedy harmonium chord of root, fifth and low octave that breathes with its bellows",
+      "artist": "Spiritual jazz",
       "tags": ["drone", "spiritual-jazz", "reed", "fifths"],
       "level": 3,
       "blurb": "A reedy harmonium chord of root, fifth and low octave, breathing with the pumping of its bellows.",
@@ -6880,7 +6880,7 @@
     {
       "id": "s35-popol-aguirre",
       "name": "Aguirre Choir",
-      "ref": "In the style of Popol Vuh — “Aguirre”, Munich, 1975",
+      "ref": "A ghostly “ah” of slightly unsteady voices, the tape-choir sound Popol Vuh laid over “Aguirre”",
       "artist": "Popol Vuh",
       "tags": ["pad", "choir", "film-score", "krautrock"],
       "level": 3,
@@ -7001,8 +7001,8 @@
     {
       "id": "s35-clannad-drone-choir",
       "name": "Choir Over a Drone",
-      "ref": "In the style of Clannad — “Theme from Harry’s Game”, Gweedore, 1982",
-      "artist": "Clannad",
+      "ref": "One soft “oo” voice singing a Celtic air over a steady open-fifth drone",
+      "artist": "Celtic song",
       "tags": ["pad", "choir", "celtic", "drone"],
       "level": 3,
       "blurb": "A soft “oo” voice singing a Celtic air over a steady open-fifth drone, both through the same vowel filter.",
@@ -7120,12 +7120,12 @@
     {
       "id": "s35-scelsi-cluster",
       "name": "Single-Note Cluster",
-      "ref": "In the style of Giacinto Scelsi — “Quattro pezzi su una nota sola”, Rome, 1959",
-      "artist": "Giacinto Scelsi",
+      "ref": "Four voices a semitone apart seething around one note in a dark, shimmering cluster",
+      "artist": "Modern classical",
       "tags": ["pad", "dark", "cluster", "modern-classical"],
       "level": 3,
       "blurb": "An eerie, shimmering cluster of four voices a semitone apart, hovering and slowly shifting inside a dark vowel.",
-      "how": "Each 921B is tuned by its FREQUENCY knob to a different semitone around the note, so one key plays a dense cluster. A slow 921 triangle goes into CP35 IN 1, and because that input also feeds the attenuators below it until they are patched, OUT 1 and OUT 2 carry it at two different depths to two voices: they drift by different amounts, and the cluster seethes around its one note, the way Scelsi’s music circles a single pitch and the semitones either side of it.",
+      "how": "Each 921B is tuned by its FREQUENCY knob to a different semitone around the note, so one key plays a dense cluster. A slow 921 triangle goes into CP35 IN 1, and because that input also feeds the attenuators below it until they are patched, OUT 1 and OUT 2 carry it at two different depths to two voices: they drift by different amounts, and the cluster seethes around its one note, circling a single pitch and the semitones either side of it.",
       "phrase": {
         "bpm": 40,
         "loop": true,
@@ -7238,7 +7238,7 @@
     {
       "id": "s35-serrie-planetarium",
       "name": "Planetarium Slow Bloom",
-      "ref": "In the style of Jonn Serrie — “And the Stars Go with You”, Atlanta, 1987",
+      "ref": "A vast pad that keeps brightening for seconds after each note, planetarium space music as Jonn Serrie made it",
       "artist": "Jonn Serrie",
       "tags": ["pad", "space-music", "new-age", "swell"],
       "level": 3,
@@ -7345,7 +7345,7 @@
     {
       "id": "s35-braheny-lfo-on-lfo",
       "name": "LFO-on-LFO Drift Pad",
-      "ref": "In the style of Kevin Braheny — “The Way Home”, Los Angeles, 1984",
+      "ref": "Resonant pad with a sweep that rushes and lingers, never repeating, out of Kevin Braheny’s new-age synth work",
       "artist": "Kevin Braheny",
       "tags": ["pad", "new-age", "evolving", "resonant"],
       "level": 3,
@@ -7449,8 +7449,8 @@
     {
       "id": "s35-kilar-breath-choir",
       "name": "Breathing Dark Choir",
-      "ref": "In the style of Wojciech Kilar — “Bram Stoker’s Dracula”, 1992",
-      "artist": "Wojciech Kilar",
+      "ref": "A low, breathy male choir moaning “oh” through a slow minor line, for gothic film scores",
+      "artist": "Gothic film choirs",
       "tags": ["pad", "dark", "choir", "film-score"],
       "level": 3,
       "blurb": "A low, breathy male choir singing “oh” in a slow minor line: dark and gothic.",
@@ -7549,7 +7549,7 @@
     {
       "id": "s35-orb-ramp-sweep",
       "name": "Ramp-Swept Ambient Pad",
-      "ref": "In the style of The Orb — “Little Fluffy Clouds”, London, 1990",
+      "ref": "An airy pad that rolls open again and again and snaps shut, ambient house like The Orb’s “Little Fluffy Clouds”",
       "artist": "The Orb",
       "tags": ["pad", "ambient-house", "sweep", "chill"],
       "level": 3,
@@ -7650,8 +7650,8 @@
     {
       "id": "s35-bulgarian-seconds",
       "name": "Bulgarian Seconds Choir",
-      "ref": "In the style of Le Mystère des Voix Bulgares — Bulgarian women’s choir, 1975",
-      "artist": "Le Mystère des Voix Bulgares",
+      "ref": "Bright, nasal voices ringing against each other in close seconds, as Bulgarian women’s choirs sing",
+      "artist": "Bulgarian women’s choirs",
       "tags": ["pad", "choir", "folk", "dissonant"],
       "level": 2,
       "blurb": "A bright, nasal women’s choir singing in close seconds, the clashing voices ringing against each other.",
@@ -7748,13 +7748,13 @@
     },
     {
       "id": "s35-hillage-glissando",
-      "name": "Rainbow Glissando Pad",
-      "ref": "In the style of Steve Hillage — “Rainbow Dome Musick”, London, 1979",
-      "artist": "Steve Hillage",
+      "name": "Rising Glissando Pad",
+      "ref": "Under a still sine pad, a glassy layer glides up through the overtones and falls back",
+      "artist": "Ambient glissando guitar",
       "tags": ["pad", "ambient", "glissando", "shimmer"],
       "level": 3,
       "blurb": "A soft sine pad with a glassy upper layer that slowly glides up through the overtones and falls back, over and over.",
-      "how": "The banks are tuned and played separately: the first holds the note, the second, two octaves up, also takes a very slow 921 sawtooth in its driver’s FREQUENCY IN 2, so it glides up about an octave over several seconds and drops back. That rising shimmer over a still note is what a glissando guitar does on Rainbow Dome.",
+      "how": "The banks are tuned and played separately: the first holds the note, the second, two octaves up, also takes a very slow 921 sawtooth in its driver’s FREQUENCY IN 2, so it glides up about an octave over several seconds and drops back. That rising shimmer over a still note is what a glissando guitar does.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -7850,7 +7850,7 @@
     {
       "id": "s35-jarre-parallel",
       "name": "Barn-Raising Parallel Filters",
-      "ref": "In the style of Maurice Jarre — “Witness”, 1985",
+      "ref": "A warm, hymn-like pad with a separate airy shimmer, the synth ensemble of Maurice Jarre’s “Witness” score",
       "artist": "Maurice Jarre",
       "tags": ["pad", "film-score", "warm", "parallel"],
       "level": 3,
@@ -7967,8 +7967,8 @@
     {
       "id": "s35-lonnie-quartal",
       "name": "Quartal Cosmic Pad",
-      "ref": "In the style of Lonnie Liston Smith and the Cosmic Echoes — “Expansions”, 1975",
-      "artist": "Lonnie Liston Smith",
+      "ref": "Every key an open chord in fourths, gliding in parallel under a slowly moving filter",
+      "artist": "1970s cosmic jazz",
       "tags": ["pad", "cosmic-jazz", "chords", "warm"],
       "level": 3,
       "blurb": "A warm, open jazz chord stacked in fourths, every key a whole voicing, gliding in the slow light of a moving filter.",
@@ -8062,7 +8062,7 @@
     {
       "id": "s35-beachhouse-organ",
       "name": "Dream-Pop Organ",
-      "ref": "In the style of Beach House — “Teen Dream”, Baltimore, 2010",
+      "ref": "A hazy organ whose tone and pulse width breathe together, like Beach House’s worn keyboards on “Teen Dream”",
       "artist": "Beach House",
       "tags": ["pad", "dream-pop", "organ", "pwm"],
       "level": 3,
@@ -8170,7 +8170,7 @@
     {
       "id": "s35-cruise-sigh",
       "name": "Sighing Detune Pad",
-      "ref": "In the style of Julee Cruise — “Floating into the Night”, 1989",
+      "ref": "A floating pad with one layer sighing flat as each chord blooms, the haze behind Julee Cruise’s songs",
       "artist": "Julee Cruise",
       "tags": ["pad", "dream-pop", "detune", "sigh"],
       "level": 3,
@@ -8276,8 +8276,8 @@
     {
       "id": "s35-gorecki-ensemble",
       "name": "Sorrowful Ensemble",
-      "ref": "In the style of Henryk Górecki — Symphony No. 3, “of Sorrowful Songs”, 1976",
-      "artist": "Henryk Górecki",
+      "ref": "Many bows on a slow, aching line, the section’s tuning swaying so it never beats in step",
+      "artist": "Orchestral strings",
       "tags": ["strings", "classical", "ensemble", "slow"],
       "level": 3,
       "blurb": "A slow, aching string section, many players wide, its tuning swaying gently like a real ensemble.",
@@ -8389,8 +8389,8 @@
     {
       "id": "s35-barber-adagio",
       "name": "Adagio Delayed Vibrato",
-      "ref": "In the style of Samuel Barber — “Adagio for Strings”, 1936",
-      "artist": "Samuel Barber",
+      "ref": "A long-bowed string line that starts each note pure and leans into a warm vibrato",
+      "artist": "Orchestral strings",
       "tags": ["strings", "classical", "vibrato", "elegy"],
       "level": 3,
       "blurb": "A long-bowed string line that starts each note pure and lets a warm vibrato bloom in as it is held.",
@@ -8501,8 +8501,8 @@
     {
       "id": "s35-armstrong-two-lfo",
       "name": "Two-LFO Pulse Strings",
-      "ref": "In the style of Craig Armstrong — “The Space Between Us”, Glasgow, 1998",
-      "artist": "Craig Armstrong",
+      "ref": "Pulse-wave strings whose widths move at two speeds, so the ensemble never quite repeats",
+      "artist": "Synth string pads",
       "tags": ["strings", "film-score", "pwm", "lush"],
       "level": 3,
       "blurb": "A lush string pad of three pulse waves whose widths move at two different speeds, so the ensemble never quite repeats.",
@@ -8610,8 +8610,8 @@
     {
       "id": "s35-adams-shaker",
       "name": "Shaker-Loop Tremolo Strings",
-      "ref": "In the style of John Adams — “Shaker Loops”, San Francisco, 1978",
-      "artist": "John Adams",
+      "ref": "A fast, even tremolo of bowed strings, the shivering pulse of American minimalism",
+      "artist": "American minimalism",
       "tags": ["strings", "minimalism", "tremolo", "pulse"],
       "level": 3,
       "blurb": "Strings shivering in a fast, even tremolo, the bow restarting many times a second under long held notes.",
@@ -8716,8 +8716,8 @@
     {
       "id": "s35-vaughan-lark",
       "name": "Lark Violin",
-      "ref": "In the style of Ralph Vaughan Williams — “The Lark Ascending”, 1920",
-      "artist": "Ralph Vaughan Williams",
+      "ref": "High solo violin whose vibrato quickens as the line climbs, in an English pastoral mood",
+      "artist": "English pastoral music",
       "tags": ["strings", "classical", "violin", "pastoral"],
       "level": 3,
       "blurb": "A solo violin climbing high in a pastoral pentatonic line, its vibrato quickening as it rises.",
@@ -8831,8 +8831,8 @@
     {
       "id": "s35-budd-pearl",
       "name": "Pearl Halo Keys",
-      "ref": "In the style of Harold Budd — “The Pearl”, with Brian Eno, 1984",
-      "artist": "Harold Budd",
+      "ref": "Struck, fading notes that grow a faint halo a twelfth above, the soft treated piano of 1980s ambient",
+      "artist": "Ambient piano",
       "tags": ["keys", "ambient", "soft", "halo"],
       "level": 3,
       "blurb": "Soft, slow piano-like notes, each followed by a faint halo a twelfth above that blooms after the strike.",
@@ -8940,7 +8940,7 @@
     {
       "id": "s35-platonos-two-speed",
       "name": "Two-Speed Bell",
-      "ref": "In the style of Lena Platonos — “Masks of the Sun”, Athens, 1984",
+      "ref": "A bell whose clangy overtones die fast while the fundamental rings on, for the synth pop of Lena Platonos",
       "artist": "Lena Platonos",
       "tags": ["keys", "bells", "synth-pop", "stereo"],
       "level": 3,
@@ -9036,7 +9036,7 @@
     {
       "id": "s35-change-ringing",
       "name": "Change-Ringing Tower Bells",
-      "ref": "In the style of English change ringing — a village tower ringing rounds and call changes",
+      "ref": "A peal of tower bells ringing rounds and call changes, each with its hum, tierce and quint",
       "artist": "English change-ringing tradition",
       "tags": ["keys", "bells", "church", "folk"],
       "level": 3,
@@ -9161,7 +9161,7 @@
     {
       "id": "s35-sakamoto-fm-bell",
       "name": "Index-Envelope FM Bell",
-      "ref": "In the style of Ryuichi Sakamoto — “Merry Christmas Mr. Lawrence”, 1983",
+      "ref": "Glassy FM bell notes that strike metallic and mellow, for Sakamoto’s “Merry Christmas Mr. Lawrence” theme",
       "artist": "Ryuichi Sakamoto",
       "tags": ["keys", "bells", "fm", "film-score"],
       "level": 3,
@@ -9260,9 +9260,9 @@
     },
     {
       "id": "s35-sunra-saturn-organ",
-      "name": "Saturn Organ",
-      "ref": "In the style of Sun Ra — “Space Is the Place”, 1973",
-      "artist": "Sun Ra",
+      "name": "Space-Jazz Organ",
+      "ref": "A four-footage drawbar organ with its top ranks warbling as if through a Leslie",
+      "artist": "Cosmic jazz organ",
       "tags": ["keys", "cosmic-jazz", "organ", "leslie"],
       "level": 3,
       "blurb": "A drawbar-style organ of four footages, its upper ranks wobbling as if through a rotating speaker, playing a bluesy space-jazz line.",
@@ -9369,7 +9369,7 @@
     {
       "id": "s35-advisory-wow",
       "name": "Public-Information Organ",
-      "ref": "In the style of The Advisory Circle — “Mind How You Go”, Ghost Box, 2005",
+      "ref": "A small organ whose pitch warps like stretched tape, the hauntological library sound of The Advisory Circle",
       "artist": "The Advisory Circle",
       "tags": ["keys", "hauntology", "library-music", "wow"],
       "level": 3,
@@ -9467,8 +9467,8 @@
     {
       "id": "s35-broadcast-vibes",
       "name": "Motor Tremolo Vibes",
-      "ref": "In the style of Broadcast — “The Noise Made by People”, Birmingham, 2000",
-      "artist": "Broadcast",
+      "ref": "A soft vibraphone with its motor running, each note pulsing gently as it fades",
+      "artist": "Dream pop",
       "tags": ["keys", "dream-pop", "vibraphone", "tremolo"],
       "level": 3,
       "blurb": "A soft vibraphone with its motor on: each struck note rings and pulses gently as it fades.",
@@ -9563,8 +9563,8 @@
     {
       "id": "s35-menitrust-rhodes",
       "name": "Tine-and-Body Electric Piano",
-      "ref": "In the style of Men I Trust — “Oncle Jazz”, Montreal, 2019",
-      "artist": "Men I Trust",
+      "ref": "Warm, lazy electric piano with a soft bark on each note, dulled like an old cassette",
+      "artist": "Lo-fi pop",
       "tags": ["keys", "lo-fi", "electric-piano", "chill"],
       "level": 3,
       "blurb": "A warm, lazy electric piano with a soft bell-like bark on each note, dulled as if from an old cassette.",
@@ -9675,8 +9675,8 @@
     {
       "id": "s35-nyman-hammer",
       "name": "Hammered Unison Piano",
-      "ref": "In the style of Michael Nyman — “The Piano”, 1993",
-      "artist": "Michael Nyman",
+      "ref": "Bright, driving piano-like figures with a felt-hammer knock at the front of every note",
+      "artist": "Minimalist film scores",
       "tags": ["keys", "film-score", "piano", "minimalism"],
       "level": 3,
       "blurb": "A bright, driving piano-like arpeggio with a felt-hammer knock at the start of every note.",
@@ -9792,8 +9792,8 @@
     {
       "id": "s35-brion-celesta",
       "name": "Silver-Ping Celesta",
-      "ref": "In the style of Jon Brion — “Eternal Sunshine of the Spotless Mind”, 2004",
-      "artist": "Jon Brion",
+      "ref": "A celesta made from a silvery synced ping over a soft, round tone that rings on",
+      "artist": "Film-score celesta",
       "tags": ["keys", "celesta", "film-score", "sync"],
       "level": 3,
       "blurb": "A delicate celesta: a silvery ping at each note over a soft, round, bell-like tone.",
@@ -9898,8 +9898,8 @@
     {
       "id": "s35-takada-marimba",
       "name": "Woody Marimba Pulse",
-      "ref": "In the style of Midori Takada — “Through the Looking Glass”, Tokyo, 1983",
-      "artist": "Midori Takada",
+      "ref": "Warm, wooden marimba strokes for interlocking, hypnotic patterns in twelve",
+      "artist": "Japanese ambient minimalism",
       "tags": ["pluck", "minimalism", "marimba", "kankyo"],
       "level": 2,
       "blurb": "A warm, wooden marimba playing an interlocking, hypnotic pattern in twelve.",
@@ -10004,7 +10004,7 @@
     {
       "id": "s35-twinkle-music-box",
       "name": "Twinkle Music Box",
-      "ref": "In the style of the French nursery song “Ah ! vous dirai-je, maman” (“Twinkle, Twinkle, Little Star”)",
+      "ref": "A tiny music box plucking “Twinkle, Twinkle” on thin metal teeth with a faint inharmonic ring",
       "artist": "French nursery-song tradition",
       "tags": ["pluck", "lullaby", "music-box", "gentle"],
       "level": 2,
@@ -10095,7 +10095,7 @@
     {
       "id": "s35-spiegel-two-lfo",
       "name": "Two-LFO Evolving Arp",
-      "ref": "In the style of Laurie Spiegel — “The Expanding Universe”, Bell Labs, 1980",
+      "ref": "A rippling arp that changes slowly from bar to bar, the patient computer music of Laurie Spiegel",
       "artist": "Laurie Spiegel",
       "tags": ["seq", "ambient", "evolving", "gentle"],
       "level": 3,
@@ -10208,7 +10208,7 @@
     {
       "id": "s35-lynch-soda-arp",
       "name": "Celestial Fifths Arp",
-      "ref": "In the style of Ray Lynch — “Celestial Soda Pop”, 1984",
+      "ref": "Ray Lynch’s “Celestial Soda Pop” in sparkling triplets: an arp with a soft fifth over every note",
       "artist": "Ray Lynch",
       "tags": ["seq", "new-age", "bright", "fifths"],
       "level": 3,
@@ -10335,7 +10335,7 @@
     {
       "id": "s35-neonindian-warp",
       "name": "Warped Chillwave Arp",
-      "ref": "In the style of Neon Indian — “Psychic Chasms”, Denton, 2009",
+      "ref": "A sun-faded arp with one layer bending out of tune and back, like Neon Indian’s warped chillwave",
       "artist": "Neon Indian",
       "tags": ["seq", "chillwave", "lo-fi", "detune"],
       "level": 3,
@@ -10446,9 +10446,9 @@
     },
     {
       "id": "s35-floatingpoints-harpsichord",
-      "name": "Promises Harpsichord Figure",
-      "ref": "In the style of Floating Points with Pharoah Sanders — “Promises”, 2021",
-      "artist": "Floating Points",
+      "name": "Patient Harpsichord Figure",
+      "ref": "Bright, thin harpsichord-like plucks in 8’ and 4’ choirs, turning over one figure patiently",
+      "artist": "Modern spiritual jazz",
       "tags": ["seq", "cosmic-jazz", "harpsichord", "minimalism"],
       "level": 3,
       "blurb": "A delicate harpsichord-like figure, repeating patiently: bright, thin plucks with an 8’ and a 4’ choir.",
@@ -10562,8 +10562,8 @@
     {
       "id": "s35-tenholt-two-pianos",
       "name": "Two-Piano Ostinato",
-      "ref": "In the style of Simeon ten Holt — “Canto Ostinato”, 1979",
-      "artist": "Simeon ten Holt",
+      "ref": "One ostinato on two instruments at once: short and bright on the left, deep and ringing on the right",
+      "artist": "Minimalist piano",
       "tags": ["seq", "minimalism", "stereo", "ostinato"],
       "level": 3,
       "blurb": "A rippling ostinato played by two instruments at once: a bright, short one on the left and a deep, ringing one on the right.",
@@ -10666,8 +10666,8 @@
     {
       "id": "s35-seefeel-noise-shimmer",
       "name": "Noise-Shimmer Dream Arp",
-      "ref": "In the style of Seefeel — “Quique”, London, 1993",
-      "artist": "Seefeel",
+      "ref": "A dreamy sixteenth arp wrapped in a halo of fine hiss that rises and falls with each note",
+      "artist": "Ambient shoegaze",
       "tags": ["seq", "ambient", "shoegaze", "shimmer"],
       "level": 3,
       "blurb": "A dreamy, shimmering sixteenth-note arp with a halo of high, airy noise around every note.",
@@ -10763,7 +10763,7 @@
     {
       "id": "s35-tomita-whistle",
       "name": "Self-Oscillating Whistle",
-      "ref": "In the style of Isao Tomita — “Snowflakes Are Dancing”, Tokyo, 1974",
+      "ref": "A pure, whistling filter singing the tune with gentle vibrato, Moog arranging as on Tomita’s “Snowflakes”",
       "artist": "Isao Tomita",
       "tags": ["lead", "whistle", "classical", "gentle"],
       "level": 3,
@@ -10860,7 +10860,7 @@
     {
       "id": "s35-appalachian-flute",
       "name": "Hush-a-Bye Flute",
-      "ref": "In the style of the Appalachian lullaby “Hush, Little Baby”",
+      "ref": "Soft, breathy flute with a little chiff of air on each note, for an old Appalachian lullaby",
       "artist": "Appalachian lullaby tradition",
       "tags": ["wind", "lullaby", "folk", "breathy"],
       "level": 3,
@@ -10976,12 +10976,12 @@
     {
       "id": "s35-molvaer-trumpet",
       "name": "Shadowed Nu-Jazz Trumpet",
-      "ref": "In the style of Nils Petter Molvær — “Khmer”, Oslo, 1997",
-      "artist": "Nils Petter Molvær",
+      "ref": "A breathy, muted trumpet with a ghostly harmonizer voice shadowing it a fourth below",
+      "artist": "Nordic nu-jazz",
       "tags": ["brass", "nu-jazz", "ambient", "harmonizer"],
       "level": 3,
       "blurb": "A breathy, muted trumpet shadowed by a ghostly voice a fourth below, as if through a harmonizer.",
-      "how": "Molvær’s trumpet often has an electronic shadow beside it, a harmonizer a fixed interval away. The second bank is that shadow, five semitones below the first. Both get the same slow, wide vibrato: one LFO through CP35 IN 1, and attenuators 1 and 2 to the two 921As. The second 911 swells the 904A, and pink noise in the mix is the breath.",
+      "how": "Nu-jazz trumpet often has an electronic shadow beside it, a harmonizer a fixed interval away. The second bank is that shadow, five semitones below the first. Both get the same slow, wide vibrato: one LFO through CP35 IN 1, and attenuators 1 and 2 to the two 921As. The second 911 swells the 904A, and pink noise in the mix is the breath.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -11086,8 +11086,8 @@
     {
       "id": "s35-rich-rainforest",
       "name": "Rainforest Night Insects",
-      "ref": "In the style of Robert Rich — “Rainforest”, 1989",
-      "artist": "Robert Rich",
+      "ref": "Insects buzzing in short, regular bursts high above a warm night-time fifth",
+      "artist": "Ambient soundscapes",
       "tags": ["fx", "ambient", "nature", "noise"],
       "level": 3,
       "blurb": "A warm night-time drone with insects buzzing and chirping in short, regular bursts high above it.",
@@ -11195,7 +11195,7 @@
     {
       "id": "s35-basic-channel-kick",
       "name": "Dub-Techno Kick",
-      "ref": "In the style of Basic Channel — “Phylyps Trak”, Berlin, 1993",
+      "ref": "Basic Channel’s “Phylyps Trak” low end: a round sine kick thumping down into a soft boom",
       "artist": "Basic Channel",
       "tags": ["perc", "kick", "dub-techno", "deep"],
       "level": 2,
@@ -11291,7 +11291,7 @@
     {
       "id": "s35-shannon-snare",
       "name": "Freestyle Snare",
-      "ref": "In the style of Shannon — “Let the Music Play”, New York, 1983",
+      "ref": "A crisp electro snare of short tuned body and white-noise hiss, the crack of Shannon’s “Let the Music Play”",
       "artist": "Shannon",
       "tags": ["perc", "snare", "freestyle", "electro"],
       "level": 3,
@@ -11413,7 +11413,7 @@
     {
       "id": "s35-bruford-toms",
       "name": "Electronic Tom Fill",
-      "ref": "In the style of Bill Bruford — the electronic toms of King Crimson’s “Discipline”, 1981",
+      "ref": "Tuned toms falling down the kit, each a pitched “pew”, like Bill Bruford’s electronic kit on “Discipline”",
       "artist": "Bill Bruford",
       "tags": ["perc", "toms", "prog", "electronic"],
       "level": 3,
@@ -11529,7 +11529,7 @@
     {
       "id": "s35-hashim-hats",
       "name": "Electro Noise Hats",
-      "ref": "In the style of Hashim — “Al-Naafiysh (The Soul)”, New York, 1983",
+      "ref": "Tight, metallic noise hats on sixteenths, brighter up the keyboard: the electro tick of Hashim’s “Al-Naafiysh”",
       "artist": "Hashim",
       "tags": ["perc", "hi-hat", "electro", "noise"],
       "level": 2,
@@ -11638,7 +11638,7 @@
     {
       "id": "s35-saunders-clap",
       "name": "Burst Handclap",
-      "ref": "In the style of Jesse Saunders — “On and On”, Chicago, 1984",
+      "ref": "Drum-machine clap of rapid slaps and a short tail, the early Chicago house of Jesse Saunders’s “On and On”",
       "artist": "Jesse Saunders",
       "tags": ["perc", "clap", "house", "noise"],
       "level": 3,
@@ -11757,8 +11757,8 @@
     {
       "id": "s35-liquid-cowbell",
       "name": "Two-Square Cowbell",
-      "ref": "In the style of Liquid Liquid — “Cavern”, New York, 1983",
-      "artist": "Liquid Liquid",
+      "ref": "Two squares at a clashing interval make the clanky drum-machine cowbell, here on a syncopated funk figure",
+      "artist": "1980s drum machines",
       "tags": ["perc", "cowbell", "post-punk", "funk"],
       "level": 2,
       "blurb": "A clanky drum-machine cowbell playing a syncopated funk figure.",
@@ -11854,8 +11854,8 @@
     {
       "id": "s35-olatunji-bongos",
       "name": "Bongo Pair",
-      "ref": "In the style of Babatunde Olatunji — “Drums of Passion”, 1960",
-      "artist": "Babatunde Olatunji",
+      "ref": "Two bright, tight hand drums tuned from the keyboard, trading a quick, rolling pattern",
+      "artist": "Afro-Cuban percussion",
       "tags": ["perc", "bongos", "world", "hand-drum"],
       "level": 2,
       "blurb": "A pair of bright, tight hand drums trading a quick, rolling pattern.",
@@ -11962,8 +11962,8 @@
     {
       "id": "s35-harrison-gong",
       "name": "Stack-FM Gong",
-      "ref": "In the style of Lou Harrison — “La Koro Sutro”, 1972, with his American gamelan",
-      "artist": "Lou Harrison",
+      "ref": "A big, clangorous gong strike that mellows into a hum as it dies away",
+      "artist": "Gamelan",
       "tags": ["perc", "gong", "gamelan", "fm"],
       "level": 3,
       "blurb": "A big, shimmering gong: a clangorous strike that mellows and hums as it dies away.",
@@ -12074,8 +12074,8 @@
     {
       "id": "s35-orff-timpani",
       "name": "Ringing Timpani",
-      "ref": "In the style of Carl Orff — “O Fortuna”, Carmina Burana, 1937",
-      "artist": "Carl Orff",
+      "ref": "A soft mallet thud and a deep note left hanging: orchestral timpani from a ringing filter",
+      "artist": "Orchestral percussion",
       "tags": ["perc", "timpani", "orchestral", "classical"],
       "level": 3,
       "blurb": "Tuned kettledrums: a soft thud and a deep, ringing note that hangs in the air.",
@@ -12188,8 +12188,8 @@
     {
       "id": "s35-zakir-tabla",
       "name": "Tabla Bayan Glide",
-      "ref": "In the style of Zakir Hussain — Shakti, “A Handful of Beauty”, 1976",
-      "artist": "Zakir Hussain",
+      "ref": "Bright ringing strokes on the small drum, and low ones on the big drum that swoop up in pitch",
+      "artist": "Hindustani tabla",
       "tags": ["perc", "tabla", "hindustani", "world"],
       "level": 3,
       "blurb": "A tabla pattern: bright ringing strokes on the small drum and low strokes on the big drum that bend up in pitch.",
@@ -12310,7 +12310,7 @@
     {
       "id": "s35-otis-rhythm-box",
       "name": "One-Line Rhythm Box",
-      "ref": "In the style of Shuggie Otis — the rhythm-box grooves of “Inspiration Information”, 1974",
+      "ref": "A whole rhythm-box groove in one line of notes, as Shuggie Otis ran his on “Inspiration Information”",
       "artist": "Shuggie Otis",
       "tags": ["perc", "drum-machine", "soul", "rhythm-box"],
       "level": 3,
@@ -12415,7 +12415,7 @@
     {
       "id": "s35-meek-ufo",
       "name": "Flying-Saucer Warble",
-      "ref": "In the style of Joe Meek — “I Hear a New World”, London, 1960",
+      "ref": "A flying saucer of two warbling tones a fifth apart, climbing and speeding up: Joe Meek’s studio space age",
       "artist": "Joe Meek",
       "tags": ["fx", "sci-fi", "ufo", "space"],
       "level": 3,
@@ -12528,7 +12528,7 @@
     {
       "id": "s35-oram-splinters",
       "name": "Falling Sine Splinters",
-      "ref": "In the style of Daphne Oram — “Four Aspects”, 1960",
+      "ref": "Sine tones dropping from far above into place, the radiophonic glass of Daphne Oram’s “Four Aspects”",
       "artist": "Daphne Oram",
       "tags": ["fx", "radiophonic", "sine", "experimental"],
       "level": 2,
@@ -12627,8 +12627,8 @@
     {
       "id": "s35-westerkamp-wind",
       "name": "Whistling Wind",
-      "ref": "In the style of Hildegard Westerkamp — the soundscape compositions of “Kits Beach Soundwalk”, 1989",
-      "artist": "Hildegard Westerkamp",
+      "ref": "Whistling wind that gusts and falls on three unrelated currents, never quite repeating",
+      "artist": "Soundscape composition",
       "tags": ["fx", "wind", "soundscape", "noise"],
       "level": 3,
       "blurb": "Wind gusting and whistling round a building, rising and falling in an uneven, never-repeating way.",
@@ -12738,8 +12738,8 @@
     {
       "id": "s35-watson-rain",
       "name": "Rain on a Tin Roof",
-      "ref": "In the style of Chris Watson — “Weather Report”, 2003",
-      "artist": "Chris Watson",
+      "ref": "Uneven raindrops, loud and quiet, pattering on a tin roof over a soft bed of hiss",
+      "artist": "Nature soundscapes",
       "tags": ["fx", "rain", "field-recording", "noise"],
       "level": 3,
       "blurb": "Raindrops pattering unevenly on a roof over a soft hiss of rain, loud drops and quiet ones mixed.",
@@ -12842,9 +12842,9 @@
     },
     {
       "id": "s35-varese-siren",
-      "name": "Ionisation Siren",
-      "ref": "In the style of Edgard Varèse — the two sirens of “Ionisation”, 1931",
-      "artist": "Edgard Varèse",
+      "name": "Hand-Cranked Siren",
+      "ref": "A hollow tone that winds up slowly like a cranked siren and sinks back when let go",
+      "artist": "Modernist percussion",
       "tags": ["fx", "siren", "modernist", "classical"],
       "level": 2,
       "blurb": "A hand-cranked siren: a hollow tone that winds slowly up and sinks back down when let go.",
@@ -12950,9 +12950,9 @@
     },
     {
       "id": "s35-grofe-thunder",
-      "name": "Cloudburst Thunder",
-      "ref": "In the style of Ferde Grofé — “Cloudburst” from the Grand Canyon Suite, 1931",
-      "artist": "Ferde Grofé",
+      "name": "Rolling Thunder",
+      "ref": "A sharp crack collapsing into a long, rolling rumble of low noise",
+      "artist": "Storm sound effects",
       "tags": ["fx", "thunder", "weather", "orchestral"],
       "level": 3,
       "blurb": "A thunderclap: a sharp crack that collapses into a long, rolling rumble.",
@@ -13065,8 +13065,8 @@
     {
       "id": "s35-rautavaara-birds",
       "name": "Arctic Birdsong",
-      "ref": "In the style of Einojuhani Rautavaara — “Cantus Arcticus”, 1972",
-      "artist": "Einojuhani Rautavaara",
+      "ref": "Little trilling calls high above the keyboard, each swooping down at its start",
+      "artist": "Birdsong",
       "tags": ["fx", "birdsong", "nature", "classical"],
       "level": 3,
       "blurb": "Little trilling, chirping calls high above the keyboard, each one swooping down at the start.",
@@ -13174,8 +13174,8 @@
     {
       "id": "s35-shangrilas-motorbike",
       "name": "Revving Motorbike",
-      "ref": "In the style of the motorbike on the Shangri-Las’ “Leader of the Pack”, 1964",
-      "artist": "The Shangri-Las",
+      "ref": "A low putter that revs to a snarling roar and drops back, an engine built from a chopped buzz",
+      "artist": "1960s pop sound effects",
       "tags": ["fx", "engine", "vehicle", "sixties"],
       "level": 3,
       "blurb": "A motorbike: a low putter that revs up to a snarling roar and drops back.",
@@ -13294,8 +13294,8 @@
     {
       "id": "s35-schaeffer-train",
       "name": "Steam Train Chuff",
-      "ref": "In the style of Pierre Schaeffer — “Étude aux chemins de fer”, Paris, 1948",
-      "artist": "Pierre Schaeffer",
+      "ref": "Slow chuffs of steam speeding into a steady rhythm over a low rumble, as a train pulls away",
+      "artist": "Musique concrète",
       "tags": ["fx", "train", "musique-concrète", "noise"],
       "level": 3,
       "blurb": "A steam engine pulling away: slow chuffs of steam that speed up into a steady rhythm over a low rumble.",
@@ -13407,7 +13407,7 @@
     {
       "id": "s35-xenakis-stack-fm",
       "name": "Stack-on-Stack FM",
-      "ref": "In the style of Iannis Xenakis — “Bohor”, 1962",
+      "ref": "Hard-struck metallic clangs leaping across the keyboard, a nod to the tape music of Xenakis’s “Bohor”",
       "artist": "Iannis Xenakis",
       "tags": ["fx", "fm", "experimental", "metallic"],
       "level": 3,
@@ -13529,7 +13529,7 @@
     {
       "id": "s35-teitelbaum-cross-sync",
       "name": "Cross-Bank Sync Duet",
-      "ref": "In the style of Richard Teitelbaum — Musica Elettronica Viva, “Spacecraft”, 1967",
+      "ref": "Two tearing synced voices tangled together, the free-improvised Moog of Richard Teitelbaum in MEV",
       "artist": "Richard Teitelbaum",
       "tags": ["lead", "sync", "experimental", "free-improv"],
       "level": 3,
@@ -13645,7 +13645,7 @@
     {
       "id": "s35-oliveros-filter-osc",
       "name": "Filter-Oscillator Drift",
-      "ref": "In the style of Pauline Oliveros — “Bye Bye Butterfly”, 1965",
+      "ref": "A self-ringing filter tone whose sidebands shimmer and drift, near the oscillator music of Pauline Oliveros",
       "artist": "Pauline Oliveros",
       "tags": ["drone", "experimental", "sine", "feedback"],
       "level": 3,
@@ -13743,7 +13743,7 @@
     {
       "id": "s35-tudor-feedback",
       "name": "Self-FM Feedback Loop",
-      "ref": "In the style of David Tudor — “Toneburst”, 1975",
+      "ref": "A tone that feeds back on itself until it breaks into squealing chaos, David Tudor’s live-electronics territory",
       "artist": "David Tudor",
       "tags": ["fx", "feedback", "experimental", "noise"],
       "level": 3,
@@ -13851,7 +13851,7 @@
     {
       "id": "s35-white-stepped",
       "name": "Summed-LFO Stepped Melody",
-      "ref": "In the style of Ruth White — “Flowers of Evil”, 1969",
+      "ref": "An eerie line leaping by octaves and tritones, never quite repeating, Moog strangeness from Ruth White",
       "artist": "Ruth White",
       "tags": ["seq", "stepped", "experimental", "vintage"],
       "level": 3,
@@ -13986,7 +13986,7 @@
     {
       "id": "s35-parmegiani-sum",
       "name": "Six-Source Summing Machine",
-      "ref": "In the style of Bernard Parmegiani — “De Natura Sonorum”, 1975",
+      "ref": "A restless tone that blips, wobbles and wah-wahs as its movements switch in and out, for Parmegiani’s music",
       "artist": "Bernard Parmegiani",
       "tags": ["fx", "acousmatic", "experimental", "modulation"],
       "level": 3,
@@ -14127,7 +14127,7 @@
     {
       "id": "s35-stockhausen-am",
       "name": "Audio-Rate 902 Modulation",
-      "ref": "In the style of Karlheinz Stockhausen — “Mixtur”, 1964",
+      "ref": "Bell-like clangs of sum and difference tones, the ring-modulated orchestra of Stockhausen’s “Mixtur”",
       "artist": "Karlheinz Stockhausen",
       "tags": ["fx", "ring-mod", "experimental", "bell"],
       "level": 3,
@@ -14231,8 +14231,8 @@
     {
       "id": "s35-basie-stab",
       "name": "Big-Band Brass Stab",
-      "ref": "In the style of the Count Basie Orchestra — “April in Paris”, 1955",
-      "artist": "Count Basie Orchestra",
+      "ref": "Punchy big-band brass chords that blare on each hit and drop back fast",
+      "artist": "Big-band jazz",
       "tags": ["brass", "big-band", "jazz", "stab"],
       "level": 3,
       "blurb": "Punchy big-band brass chords, a bright blare on each hit that drops back fast.",
@@ -14342,8 +14342,8 @@
     {
       "id": "s35-clifford-trumpet",
       "name": "Bebop Trumpet",
-      "ref": "In the style of Clifford Brown — “Joy Spring”, 1954",
-      "artist": "Clifford Brown",
+      "ref": "A bright, warm trumpet running a quick bebop line, a little blat at the front of each note",
+      "artist": "Bebop trumpet",
       "tags": ["brass", "bebop", "jazz", "trumpet"],
       "level": 3,
       "blurb": "A bright, warm jazz trumpet running a quick bebop line, each note with a little blat at the start.",
@@ -14482,8 +14482,8 @@
     {
       "id": "s35-bruckner-horns",
       "name": "Chorale of Horns",
-      "ref": "In the style of Anton Bruckner — the horn chorales of the Seventh Symphony, 1883",
-      "artist": "Anton Bruckner",
+      "ref": "A warm, covered choir of horns swelling chord by chord through a slow chorale",
+      "artist": "Romantic orchestral horns",
       "tags": ["brass", "horn", "romantic", "chorale"],
       "level": 3,
       "blurb": "A warm, noble choir of horns moving through a slow chorale, each chord swelling gently into place.",
@@ -14615,8 +14615,8 @@
     {
       "id": "s35-johnson-tuba",
       "name": "Jazz Tuba",
-      "ref": "In the style of Howard Johnson and his tuba choir Gravity, “Arrival”, 1996",
-      "artist": "Howard Johnson",
+      "ref": "A round, buzzy tuba walking a bouncing bass line, each note opening with a puff",
+      "artist": "Jazz tuba",
       "tags": ["bass", "tuba", "jazz", "brass"],
       "level": 2,
       "blurb": "A round, buzzy tuba playing a bouncing bass line, each note starting with a soft puff.",
@@ -14719,8 +14719,8 @@
     {
       "id": "s35-dibango-sax",
       "name": "Makossa Saxophone",
-      "ref": "In the style of Manu Dibango — “Soul Makossa”, 1972",
-      "artist": "Manu Dibango",
+      "ref": "Reedy tenor-sax grit for punchy Afro-funk riffs, breath and all",
+      "artist": "Afro-funk saxophone",
       "tags": ["wind", "saxophone", "afro-funk", "reed"],
       "level": 3,
       "blurb": "A gritty, reedy tenor sax punching out a funky riff, with breath in the tone.",
@@ -14856,8 +14856,8 @@
     {
       "id": "s35-goodman-clarinet",
       "name": "Swing Clarinet",
-      "ref": "In the style of Benny Goodman — “Sing, Sing, Sing”, 1937",
-      "artist": "Benny Goodman",
+      "ref": "A woody, hollow clarinet built from odd harmonics, swinging a minor-key line",
+      "artist": "Swing clarinet",
       "tags": ["wind", "clarinet", "swing", "reed"],
       "level": 2,
       "blurb": "A woody, hollow clarinet swinging a minor-key line, with a gentle vibrato.",
@@ -14958,8 +14958,8 @@
     {
       "id": "s35-zamfir-panpipes",
       "name": "Breathy Panpipes",
-      "ref": "In the style of Gheorghe Zamfir — “The Lonely Shepherd”, 1977",
-      "artist": "Gheorghe Zamfir",
+      "ref": "A soft, airy pan flute with a puff of breath opening every slow note",
+      "artist": "Romanian pan flute",
       "tags": ["wind", "pan-flute", "romanian", "breathy"],
       "level": 3,
       "blurb": "A soft, airy pan flute singing a slow melody, a puff of breath at the start of each note.",
@@ -15076,8 +15076,8 @@
     {
       "id": "s35-gasparyan-duduk",
       "name": "Apricot-Wood Duduk",
-      "ref": "In the style of Djivan Gasparyan — “I Will Not Be Sad in This World”, 1983",
-      "artist": "Djivan Gasparyan",
+      "ref": "The dark, nasal double reed of the Armenian duduk, swelling softly through a lament",
+      "artist": "Armenian duduk",
       "tags": ["wind", "duduk", "armenian", "lament"],
       "level": 3,
       "blurb": "A dark, nasal, mournful reed singing a slow lament, its notes swelling softly.",
@@ -15209,8 +15209,8 @@
     {
       "id": "s35-casals-cello",
       "name": "Song of the Birds Cello",
-      "ref": "In the style of Pablo Casals — “El Cant dels Ocells”, Catalan folk song",
-      "artist": "Pablo Casals",
+      "ref": "A warm cello singing low in its range, each stroke swelling into vibrato, for the Catalan “Song of the Birds”",
+      "artist": "Catalan folk song",
       "tags": ["strings", "cello", "catalan", "lyrical"],
       "level": 3,
       "blurb": "A warm, singing cello in its low register, each bow stroke swelling into a gentle vibrato.",
@@ -15345,8 +15345,8 @@
     {
       "id": "s35-herrmann-stabs",
       "name": "Shrieking Violin Stabs",
-      "ref": "In the style of Bernard Herrmann — the shower scene of “Psycho”, 1960",
-      "artist": "Bernard Herrmann",
+      "ref": "Harsh, screeching violin stabs in grinding sevenths, repeated like a knife",
+      "artist": "Horror film strings",
       "tags": ["strings", "stabs", "horror", "film"],
       "level": 2,
       "blurb": "Shrieking, dissonant violin stabs, high and harsh, repeated like a knife.",
@@ -15452,8 +15452,8 @@
     {
       "id": "s35-coltrane-harp",
       "name": "Turiya Harp Glissando",
-      "ref": "In the style of Alice Coltrane — “Journey in Satchidananda”, 1971",
-      "artist": "Alice Coltrane",
+      "ref": "A shimmering harp sweeping up a pentatonic glissando, every string left ringing",
+      "artist": "Spiritual jazz harp",
       "tags": ["pluck", "harp", "spiritual-jazz", "glissando"],
       "level": 2,
       "blurb": "A shimmering harp sweeping up a pentatonic glissando and letting the strings ring.",
@@ -15563,8 +15563,8 @@
     {
       "id": "s35-shankar-sitar",
       "name": "Jawari Sitar",
-      "ref": "In the style of Ravi Shankar — “Three Ragas”, 1956",
-      "artist": "Ravi Shankar",
+      "ref": "A buzzing sitar pluck whose overtones sweep down at each note, over a soft tonic drone",
+      "artist": "Hindustani sitar",
       "tags": ["pluck", "sitar", "hindustani", "buzz"],
       "level": 3,
       "blurb": "A buzzing, shimmering sitar pluck playing a raga phrase over a soft drone.",
@@ -15692,8 +15692,8 @@
     {
       "id": "s35-toure-guitar",
       "name": "Desert-Blues Guitar",
-      "ref": "In the style of Ali Farka Touré — “Talking Timbuktu”, 1994",
-      "artist": "Ali Farka Touré",
+      "ref": "Dry, twangy picking for the hypnotic pentatonic figures of Malian desert blues",
+      "artist": "Malian desert blues",
       "tags": ["pluck", "guitar", "desert-blues", "malian"],
       "level": 2,
       "blurb": "A dry, twangy guitar picking a hypnotic pentatonic figure.",
@@ -15814,8 +15814,8 @@
     {
       "id": "s35-scott-organ",
       "name": "Soul-Jazz Organ Line",
-      "ref": "In the style of Shirley Scott — “The Soul Is Willing”, 1963",
-      "artist": "Shirley Scott",
+      "ref": "A churchy drawbar organ swinging the blues, with a percussion click on top and a slow rotary shimmer",
+      "artist": "Soul jazz organ",
       "tags": ["keys", "organ", "soul-jazz", "drawbar"],
       "level": 3,
       "blurb": "A churchy jazz organ swinging a blues line, with a percussive click on top and a slow shimmer.",
@@ -15939,8 +15939,8 @@
     {
       "id": "s35-piazzolla-bandoneon",
       "name": "Tango Bandoneón",
-      "ref": "In the style of Astor Piazzolla — “Libertango”, 1974",
-      "artist": "Astor Piazzolla",
+      "ref": "Paired free reeds a hair apart, beating as a bandoneón does, to drive a tango",
+      "artist": "Tango",
       "tags": ["keys", "bandoneon", "tango", "reed"],
       "level": 2,
       "blurb": "A reedy, slightly beating bandoneón marking a driving tango rhythm.",
@@ -16053,8 +16053,8 @@
     {
       "id": "s35-hutcherson-vibes",
       "name": "Two-Partial Vibraphone",
-      "ref": "In the style of Bobby Hutcherson — “Little B’s Poem”, 1966",
-      "artist": "Bobby Hutcherson",
+      "ref": "A bright mallet ping fading fast into a long, pure ring: the vibraphone in two partials",
+      "artist": "Jazz vibraphone",
       "tags": ["keys", "vibraphone", "jazz", "mallet"],
       "level": 3,
       "blurb": "A soft, glowing vibraphone, a bright ping fading quickly into a long, pure ring.",
@@ -16162,8 +16162,8 @@
     {
       "id": "s35-couperin-harpsichord",
       "name": "Two-Voice Harpsichord",
-      "ref": "In the style of François Couperin — “Les Barricades Mystérieuses”, 1717",
-      "artist": "François Couperin",
+      "ref": "A bright, quilled harpsichord in running counterpoint, two lines implied by one",
+      "artist": "Baroque harpsichord",
       "tags": ["keys", "harpsichord", "baroque", "counterpoint"],
       "level": 2,
       "blurb": "A bright, quilled harpsichord in running baroque counterpoint, a bass line and a tune implied by one line of notes.",
@@ -16279,8 +16279,8 @@
     {
       "id": "s35-sufjan-glock",
       "name": "Folk-Pop Glockenspiel",
-      "ref": "In the style of Sufjan Stevens — “Chicago”, 2005",
-      "artist": "Sufjan Stevens",
+      "ref": "A tinkling glockenspiel with a little metal tick on each note, for a cheerful folk-pop waltz",
+      "artist": "Indie folk",
       "tags": ["keys", "glockenspiel", "indie-folk", "mallet"],
       "level": 2,
       "blurb": "A bright, tinkling glockenspiel playing a cheerful waltz tune, each note with a little metal tick.",
@@ -16383,8 +16383,8 @@
     {
       "id": "s35-jaco-fretless",
       "name": "Singing Fretless Bass",
-      "ref": "In the style of Jaco Pastorius — “Continuum”, 1976",
-      "artist": "Jaco Pastorius",
+      "ref": "A fretless bass that slides up into every note with a vocal “mwah”",
+      "artist": "Jazz-fusion fretless bass",
       "tags": ["bass", "fretless", "jazz-fusion", "mwah"],
       "level": 3,
       "blurb": "A singing fretless bass, every note sliding up into pitch with a vocal “mwah”.",
@@ -16510,7 +16510,7 @@
     {
       "id": "s35-yidaki-drone",
       "name": "Circular-Breath Didgeridoo",
-      "ref": "In the style of the yidaki (didgeridoo) of the Yolŋu people, Arnhem Land",
+      "ref": "A deep, buzzing yidaki drone whose vowel keeps shifting, pulsing with circular breath",
       "artist": "Yolŋu yidaki tradition",
       "tags": ["drone", "didgeridoo", "australian", "formant"],
       "level": 3,

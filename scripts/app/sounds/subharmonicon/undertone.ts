@@ -10,7 +10,7 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-undertone-arpeggio',
     name: 'Undertone Arpeggio',
-    ref: 'In the style of Oskar Sala’s Mixtur-Trautonium studies',
+    ref: 'Arpeggios climbing the undertone series while the oscillators stand still, Oskar Sala’s Mixtur-Trautonium idea',
     artist: 'Oskar Sala',
     tags: ['seq', 'undertones', 'arpeggio'],
     level: 2,
@@ -82,8 +82,8 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-falling-divisors',
     name: 'Falling Divisors',
-    ref: 'In the style of Harry Partch’s just intonation',
-    artist: 'Harry Partch',
+    ref: 'Pairs of notes sliding down the undertone series together, each interval shrinking as it falls',
+    artist: 'Just intonation',
     tags: ['seq', 'undertones'],
     level: 3,
     blurb: 'Dyads sliding down the undertone series together, over a slow bass on VCO 2.',
@@ -152,7 +152,7 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-undertone-drone-melody',
     name: 'Undertone Drone Melody',
-    ref: 'In the style of a hurdy-gurdy',
+    ref: 'An unbroken drone whose middle voice sings a slow undertone tune, like the strings of a hurdy-gurdy',
     artist: 'Hurdy-gurdy',
     tags: ['drone', 'undertones'],
     level: 2,
@@ -219,8 +219,8 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-two-undertone-lines',
     name: 'Two Undertone Lines',
-    ref: 'In the style of a two-part invention',
-    artist: 'Johann Sebastian Bach',
+    ref: 'Two independent voices on their own rhythms, a two-part invention sung in the undertone series',
+    artist: 'Baroque counterpoint',
     tags: ['seq', 'undertones', 'counterpoint'],
     level: 3,
     blurb:
@@ -291,7 +291,7 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-divisor-bells',
     name: 'Divisor Bells',
-    ref: 'In the style of English change ringing',
+    ref: 'A peal on running sixteenths as the subs ring the changes, like the bells of an English church tower',
     artist: 'Change ringing',
     tags: ['seq', 'bell', 'undertones'],
     level: 2,
@@ -362,8 +362,8 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-undertone-bass-walk',
     name: 'Undertone Bass Walk',
-    ref: 'In the style of a dub bass line',
-    artist: 'King Tubby',
+    ref: 'A deep, round bass walking through the minor-sounding undertones of C, heavy enough for dub',
+    artist: 'Dub reggae',
     tags: ['bass', 'undertones'],
     level: 2,
     blurb: 'A deep bass that walks through the undertones of C: ÷4, ÷5, ÷6, ÷3.',
@@ -427,7 +427,7 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-undertone-chorale',
     name: 'Undertone Chorale',
-    ref: 'In the style of a Lutheran chorale',
+    ref: 'Slow, breathing chords voice-led by whole divisors: a Lutheran chorale sung in the undertone series',
     artist: 'Chorale',
     tags: ['pad', 'undertones'],
     level: 2,
@@ -501,7 +501,7 @@ export const UNDERTONE: SoundSpec[] = [
   {
     id: 'shc-mixtur-fanfare',
     name: 'Mixtur Fanfare',
-    ref: 'In the style of Oskar Sala’s fanfares',
+    ref: 'A brassy fanfare in parallel undertone chords, the Mixtur sound of Oskar Sala’s Trautonium',
     artist: 'Oskar Sala',
     tags: ['brass', 'undertones', 'seq'],
     level: 3,

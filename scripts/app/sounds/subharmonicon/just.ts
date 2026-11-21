@@ -9,7 +9,7 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-just-fifths-drone',
     name: 'Just Fifths Drone',
-    ref: 'In the style of a tanpura drone',
+    ref: 'A still, glowing drone on a pure fifth, its upper string moving between Pa and Ma like a tanpura',
     artist: 'Hindustani classical music',
     tags: ['drone', 'just intonation'],
     level: 1,
@@ -73,8 +73,8 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-pure-major-chimes',
     name: 'Pure Major Chimes',
-    ref: 'In the style of Terry Riley’s just-intonation keyboard music',
-    artist: 'Terry Riley',
+    ref: 'Chiming major-seventh arpeggios in just intonation, every pair of notes landing pure',
+    artist: 'Just intonation',
     tags: ['seq', 'just intonation', 'bell'],
     level: 2,
     blurb: 'Chiming major-seventh arpeggios in just C major, eighths against dotted eighths.',
@@ -145,7 +145,7 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-just-thirds-pulse',
     name: 'Just Thirds Pulse',
-    ref: 'In the style of La Monte Young’s tuned sustained tones',
+    ref: 'Two saws a beatless major third apart, pulsing in parallel through a mode, for just-tuned drone music',
     artist: 'Drone music',
     tags: ['seq', 'just intonation'],
     level: 2,
@@ -218,8 +218,8 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-augmentation-canon',
     name: 'Augmentation Canon',
-    ref: 'In the style of a Bach augmentation canon',
-    artist: 'Johann Sebastian Bach',
+    ref: 'One four-note theme played against itself at half speed, an octave lower: a canon by augmentation',
+    artist: 'Baroque counterpoint',
     tags: ['seq', 'just intonation', 'counterpoint'],
     level: 3,
     blurb:
@@ -293,8 +293,8 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-just-organum',
     name: 'Just Organum',
-    ref: 'In the style of Pérotin’s organum',
-    artist: 'Pérotin',
+    ref: 'A chant in pure parallel fifths over a long held note, as sung at Notre-Dame around 1200',
+    artist: 'Medieval organum',
     tags: ['seq', 'just intonation', 'drone'],
     level: 2,
     blurb: 'A melody in pure parallel fifths over a held drone, as at Notre-Dame around 1200.',
@@ -365,8 +365,8 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-just-minor-cycle',
     name: 'Just Minor Cycle',
-    ref: 'In the style of Ben Johnston’s just-intonation quartets',
-    artist: 'Ben Johnston',
+    ref: 'A dark minor figure in 5-limit just tuning, its pure intervals colliding three against two',
+    artist: 'Just intonation',
     tags: ['seq', 'just intonation'],
     level: 3,
     blurb:
@@ -437,8 +437,8 @@ export const JUST: SoundSpec[] = [
   {
     id: 'shc-beatless-pad',
     name: 'Beatless Pad',
-    ref: 'In the style of Stars of the Lid',
-    artist: 'Stars of the Lid',
+    ref: 'A slow held pad whose chords are tuned so pure they never shimmer, for still ambient drone',
+    artist: 'Ambient drone',
     tags: ['pad', 'just intonation'],
     level: 2,
     blurb: 'A slow, held pad whose chords change twice a bar, every one of them perfectly still.',

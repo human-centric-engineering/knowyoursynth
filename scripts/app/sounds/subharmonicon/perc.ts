@@ -10,7 +10,7 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-zap-kick',
     name: 'Zap Kick',
-    ref: 'In the style of an electro kick drum',
+    ref: 'A four-on-the-floor kick zapping down from high into the sub, the electro drum-machine kick',
     artist: 'Electro',
     tags: ['perc', 'drums', 'patch'],
     level: 2,
@@ -76,7 +76,7 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-electro-toms',
     name: 'Electro Toms',
-    ref: 'In the style of the Roland TR-808’s toms',
+    ref: 'Falling, tuned toms rolling round the kit, the TR-808 toms that tumble through Afrika Bambaataa’s electro',
     artist: 'Afrika Bambaataa',
     tags: ['perc', 'drums', 'patch'],
     level: 2,
@@ -142,7 +142,7 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-pinged-log-drum',
     name: 'Pinged Log Drum',
-    ref: 'In the style of a slit log drum',
+    ref: 'A filter rung like hollow wood and tuned to four pitches by a sequencer, like a slit log drum',
     artist: 'Slit drum',
     tags: ['perc', 'patch'],
     level: 3,
@@ -200,7 +200,7 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-metal-hats',
     name: 'Metal Hats',
-    ref: 'In the style of a cymbal’s chatter',
+    ref: 'Metallic hi-hat ticks on every sixteenth from high undertone clusters, chattering like a jazz cymbal',
     artist: 'Jazz drumming',
     tags: ['perc', 'drums'],
     level: 2,
@@ -252,7 +252,7 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-woodblocks',
     name: 'Woodblocks',
-    ref: 'In the style of Leroy Anderson’s woodblock writing',
+    ref: 'Two tuned woodblocks a fifth apart knocking three against two, hollow and dry, from the orchestra’s percussion',
     artist: 'Orchestral percussion',
     tags: ['perc'],
     level: 1,
@@ -303,7 +303,7 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-drum-circle',
     name: 'Drum Circle',
-    ref: 'In the style of a djembe circle',
+    ref: 'Bass, tone and slap on four interlocking divisions from one voice, a djembe circle in full swing',
     artist: 'West African drumming',
     tags: ['perc', 'drums', 'polyrhythm'],
     level: 2,
@@ -377,8 +377,8 @@ export const PERC: SoundSpec[] = [
   {
     id: 'shc-tabla-bols',
     name: 'Tabla Bols',
-    ref: 'In the style of tabla in teental',
-    artist: 'Zakir Hussain',
+    ref: 'Ringing dayan strokes over a deep bayan boom, talking like tabla in teental',
+    artist: 'Hindustani tabla',
     tags: ['perc', 'drums'],
     level: 2,
     blurb: 'Ringing, talking drum strokes: a resonant dayan tone and a deep bayan from the subs.',

@@ -5,7 +5,7 @@
     {
       "id": "j4-rio-arp",
       "name": "Bright Arpeggio",
-      "ref": "In the style of Duran Duran — \"Rio\"",
+      "ref": "Duran Duran’s “Rio” opens on an arpeggio like this: a held chord run off as fast, bright plucks",
       "artist": "Duran Duran",
       "tags": ["seq", "new wave", "80s"],
       "level": 2,
@@ -83,7 +83,7 @@
     {
       "id": "j4-strings",
       "name": "Ensemble Strings",
-      "ref": "In the style of the Jupiter-4’s STRINGS preset",
+      "ref": "Soft string chords that swell, shimmer and fade slowly, as the Jupiter-4’s STRINGS preset played them",
       "artist": "Classic technique",
       "tags": ["strings", "synth-pop", "70s"],
       "level": 1,
@@ -146,7 +146,7 @@
     {
       "id": "j4-unison-bass",
       "name": "Unison Bass",
-      "ref": "In the style of early-80s synth-pop bass",
+      "ref": "All four voices stacked on one note for a heavy, punchy early-1980s synth-pop bass",
       "artist": "Classic technique",
       "tags": ["bass", "synth-pop", "80s"],
       "level": 1,
@@ -211,7 +211,7 @@
     {
       "id": "j4-brass",
       "name": "Synth Brass",
-      "ref": "In the style of the Jupiter-4’s TRUMPET preset",
+      "ref": "Brassy chords that bite at the front of each stab, built like the Jupiter-4’s TRUMPET preset",
       "artist": "Classic technique",
       "tags": ["brass", "pop", "70s"],
       "level": 1,
@@ -282,7 +282,7 @@
     {
       "id": "j4-burble",
       "name": "Computer Burble",
-      "ref": "In the style of 70s science-fiction computers",
+      "ref": "A filter leaping to a new random setting many times a second: a 1970s film computer at work",
       "artist": "Classic technique",
       "tags": ["fx", "soundtrack", "70s"],
       "level": 2,
@@ -337,7 +337,7 @@
     {
       "id": "j4-clav",
       "name": "Clavichord",
-      "ref": "In the style of the Jupiter-4’s CLAVICHORD preset",
+      "ref": "A thin, plucky, nasal keyboard for funky chords, modelled on the Jupiter-4’s CLAVICHORD preset",
       "artist": "Classic technique",
       "tags": ["keys", "funk", "70s"],
       "level": 1,
@@ -407,7 +407,7 @@
     {
       "id": "j4-pwm-pad",
       "name": "Slow PWM Pad",
-      "ref": "In the style of late-70s Roland string pads",
+      "ref": "A wide pad that breathes slowly and takes a second to arrive, like a late-1970s Roland string machine",
       "artist": "Classic technique",
       "tags": ["pad", "ambient", "70s"],
       "level": 1,
@@ -483,7 +483,7 @@
     {
       "id": "j4-voice",
       "name": "Synth Voice",
-      "ref": "In the style of the Jupiter-4’s VOICE preset",
+      "ref": "The Jupiter-4’s VOICE preset rebuilt: a soft, vowel-like choir with vibrato that arrives late",
       "artist": "Classic technique",
       "tags": ["pad", "synth-pop", "70s"],
       "level": 2,
@@ -551,7 +551,7 @@
     {
       "id": "j4-sax",
       "name": "Reedy Sax",
-      "ref": "In the style of the Jupiter-4’s SAX preset",
+      "ref": "A breathy, reedy solo line that growls at the start of each note, from the Jupiter-4’s SAX preset",
       "artist": "Classic technique",
       "tags": ["wind", "jazz", "70s"],
       "level": 2,
@@ -626,7 +626,7 @@
     {
       "id": "j4-piano",
       "name": "Synth Piano",
-      "ref": "In the style of the Jupiter-4’s PIANO preset",
+      "ref": "A bright struck tone that dies away like a piano note, rebuilt from the Jupiter-4’s PIANO preset",
       "artist": "Classic technique",
       "tags": ["keys", "pop", "70s"],
       "level": 1,
@@ -683,7 +683,7 @@
     {
       "id": "j4-wind",
       "name": "Wind",
-      "ref": "In the style of 70s synth sound effects",
+      "ref": "Noise and a slowly drifting resonant filter make gusting wind, a 1970s synth sound effect",
       "artist": "Classic technique",
       "tags": ["fx", "soundtrack", "70s"],
       "level": 1,
@@ -732,7 +732,7 @@
     {
       "id": "j4-trill",
       "name": "Trill Lead",
-      "ref": "In the style of late-70s synth leads",
+      "ref": "A singing lead that flips quickly between two notes when the wheel goes up, as late-1970s solos did",
       "artist": "Classic technique",
       "tags": ["lead", "prog", "70s"],
       "level": 2,
@@ -789,7 +789,7 @@
     {
       "id": "j4-poly-glide",
       "name": "Gliding Chords",
-      "ref": "In the style of Jupiter-4 polyphonic portamento",
+      "ref": "Whole chords sliding into each other, the Jupiter-4’s rare polyphonic portamento at work",
       "artist": "Classic technique",
       "tags": ["pad", "synth-pop", "80s"],
       "level": 2,
@@ -851,7 +851,7 @@
     {
       "id": "j4-reverse",
       "name": "Reverse Swell",
-      "ref": "In the style of 70s ambient keyboards",
+      "ref": "Notes that start dark, close further, then open as they fade, for slow 1970s ambient keyboards",
       "artist": "Classic technique",
       "tags": ["pad", "ambient", "70s"],
       "level": 3,
@@ -909,7 +909,7 @@
     {
       "id": "j4-tom",
       "name": "Synth Tom",
-      "ref": "In the style of late-70s disco synth drums",
+      "ref": "A short, round hit with a ringing filter: the synth tom of late-1970s disco",
       "artist": "Classic technique",
       "tags": ["perc", "disco", "70s"],
       "level": 2,
@@ -971,7 +971,7 @@
     {
       "id": "j4-bell",
       "name": "Audio-Rate Bell",
-      "ref": "In the style of 70s synth bells",
+      "ref": "Running the LFO at audio rate turns the tone into a metallic, clanging 1970s synth bell",
       "artist": "Classic technique",
       "tags": ["keys", "ambient", "70s"],
       "level": 3,
@@ -1033,7 +1033,7 @@
     {
       "id": "j4-random-arp",
       "name": "Random Sequence",
-      "ref": "In the style of Tangerine Dream sequences",
+      "ref": "A held chord played back at random while the filter jumps each step, close to Tangerine Dream’s sequences",
       "artist": "Classic technique",
       "tags": ["seq", "electronic", "70s"],
       "level": 3,
@@ -1102,7 +1102,7 @@
     {
       "id": "j4-solo-lead",
       "name": "Delayed-Vibrato Lead",
-      "ref": "In the style of late-70s synth solos",
+      "ref": "A bright, singing solo line whose vibrato comes in on long notes, for a late-1970s synth break",
       "artist": "Classic technique",
       "tags": ["lead", "rock", "70s"],
       "level": 1,
@@ -1163,7 +1163,7 @@
     {
       "id": "j4-organ",
       "name": "Combo Organ",
-      "ref": "In the style of 60s combo organs",
+      "ref": "A buzzy, sustained tone with an octave below each note, as 1960s combo organs sounded",
       "artist": "Classic technique",
       "tags": ["keys", "rock", "60s"],
       "level": 1,
@@ -1227,7 +1227,7 @@
     {
       "id": "j4-heart-of-glass-seq",
       "name": "Bubbling Disco Sequence",
-      "ref": "In the style of Blondie — “Heart of Glass”",
+      "ref": "Glassy sixteenths bubbling under a disco–new-wave groove, as they tick through Blondie’s “Heart of Glass”",
       "artist": "Blondie",
       "tags": ["seq", "disco", "new wave", "arpeggio", "70s"],
       "level": 1,
@@ -1299,7 +1299,7 @@
     {
       "id": "j4-genius-of-love",
       "name": "Bouncy Funk Hook",
-      "ref": "In the style of Tom Tom Club — “Genius of Love”",
+      "ref": "A cheerful, bouncing synth line that glides a little, like the hook of Tom Tom Club’s “Genius of Love”",
       "artist": "Tom Tom Club",
       "tags": ["lead", "new wave", "funk", "80s"],
       "level": 2,
@@ -1383,7 +1383,7 @@
     {
       "id": "j4-funkytown-riff",
       "name": "Funky Town Riff",
-      "ref": "In the style of Lipps Inc. — “Funkytown”",
+      "ref": "The punchy, resonant disco riff that carries Lipps Inc.’s “Funkytown”",
       "artist": "Lipps Inc.",
       "tags": ["lead", "disco", "80s"],
       "level": 1,
@@ -1457,7 +1457,7 @@
     {
       "id": "j4-supernature-arp",
       "name": "Supernatural Arpeggio",
-      "ref": "In the style of Cerrone — “Supernature”",
+      "ref": "A spooky falling arpeggio, its filter landing somewhere new each step, close to Cerrone’s “Supernature”",
       "artist": "Cerrone",
       "tags": ["seq", "space disco", "disco", "arpeggio", "70s"],
       "level": 3,
@@ -1531,7 +1531,7 @@
     {
       "id": "j4-magic-fly-lead",
       "name": "Space Disco Glide",
-      "ref": "In the style of Space — “Magic Fly”",
+      "ref": "A smooth, cosmic lead gliding over a disco beat, as on Space’s “Magic Fly”",
       "artist": "Space",
       "tags": ["lead", "space disco", "disco", "70s"],
       "level": 2,
@@ -1608,7 +1608,7 @@
     {
       "id": "j4-menergy-octaves",
       "name": "Hi-NRG Arpeggio Bass",
-      "ref": "In the style of Patrick Cowley — “Menergy”",
+      "ref": "Relentless octave bass bounced by the arpeggiator: the hi-NRG drive of Patrick Cowley’s “Menergy”",
       "artist": "Patrick Cowley",
       "tags": ["bass", "hi-nrg", "disco", "80s"],
       "level": 2,
@@ -1678,7 +1678,7 @@
     {
       "id": "j4-oh-yeah-bass",
       "name": "Rubbery Swiss Bass",
-      "ref": "In the style of Yello — “Oh Yeah”",
+      "ref": "A deep, rubbery bass that slides with a knowing wink, made for Yello’s “Oh Yeah”",
       "artist": "Yello",
       "tags": ["bass", "electronic", "synth-pop", "80s"],
       "level": 2,
@@ -1752,7 +1752,7 @@
     {
       "id": "j4-daf-bass",
       "name": "EBM Sequence Bass",
-      "ref": "In the style of D.A.F. — “Der Mussolini”",
+      "ref": "D.A.F.’s “Der Mussolini” in miniature: a hard sixteenth-note sequencer bass for a sweaty floor",
       "artist": "D.A.F.",
       "tags": ["bass", "ebm", "neue deutsche welle", "80s"],
       "level": 2,
@@ -1847,7 +1847,7 @@
     {
       "id": "j4-clanging-minimal",
       "name": "Clanging Minimal Synth",
-      "ref": "In the style of The Normal — “Warm Leatherette”",
+      "ref": "Cold, harsh and metallic, a clanging pulse straight from The Normal’s “Warm Leatherette”",
       "artist": "The Normal",
       "tags": ["perc", "minimal synth", "post-punk", "70s"],
       "level": 3,
@@ -1928,7 +1928,7 @@
     {
       "id": "j4-problemes-damour",
       "name": "Italo Electro Bounce",
-      "ref": "In the style of Alexander Robotnick — “Problèmes d’amour”",
+      "ref": "A playful, bouncing resonant bass, the Italo electro of Alexander Robotnick’s “Problèmes d’amour”",
       "artist": "Alexander Robotnick",
       "tags": ["bass", "italo disco", "electro", "80s"],
       "level": 2,
@@ -2008,7 +2008,7 @@
     {
       "id": "j4-sirius-arp",
       "name": "Prog Prelude Arpeggio",
-      "ref": "In the style of The Alan Parsons Project — “Sirius”",
+      "ref": "A bright arpeggio rising and falling to build tension, as in The Alan Parsons Project’s “Sirius”",
       "artist": "The Alan Parsons Project",
       "tags": ["seq", "prog rock", "arpeggio", "80s"],
       "level": 2,
@@ -2084,7 +2084,7 @@
     {
       "id": "j4-sunshine-pad",
       "name": "Sunshine Pad",
-      "ref": "In the style of Roy Ayers — “Everybody Loves the Sunshine”",
+      "ref": "Warm, hazy chords gliding gently for a lazy summer afternoon, near Roy Ayers’s “Everybody Loves the Sunshine”",
       "artist": "Roy Ayers",
       "tags": ["pad", "jazz-funk", "soul", "70s"],
       "level": 2,
@@ -2168,7 +2168,7 @@
     {
       "id": "j4-jazz-carnival-lead",
       "name": "Samba-Funk Lead",
-      "ref": "In the style of Azymuth — “Jazz Carnival”",
+      "ref": "A fast, bright, gliding Minimoog-style lead dancing over samba-funk, as in Azymuth’s “Jazz Carnival”",
       "artist": "Azymuth",
       "tags": ["lead", "jazz-funk", "brazilian", "70s"],
       "level": 2,
@@ -2250,8 +2250,8 @@
     {
       "id": "j4-ethio-vibes",
       "name": "Ethio-Jazz Vibes",
-      "ref": "In the style of Mulatu Astatke",
-      "artist": "Mulatu Astatke",
+      "ref": "Cool and mysterious, a line that rings like a vibraphone in an Ethiopian mode, for 1970s Ethio-jazz",
+      "artist": "Ethio-jazz",
       "tags": ["keys", "ethio-jazz", "ethiopian", "70s"],
       "level": 2,
       "blurb": "A cool, mysterious, ringing vibraphone line in an Ethiopian mode.",
@@ -2332,7 +2332,7 @@
     {
       "id": "j4-dabke-lead",
       "name": "Dabke Keyboard Lead",
-      "ref": "In the style of Omar Souleyman",
+      "ref": "A frantic, nasal, whirling keyboard lead for a Syrian wedding dance, as played behind Omar Souleyman",
       "artist": "Omar Souleyman",
       "tags": ["lead", "dabke", "syrian", "2010s"],
       "level": 2,
@@ -2429,7 +2429,7 @@
     {
       "id": "j4-machine-clank",
       "name": "Machine Clank",
-      "ref": "In the style of Brad Fiedel — “The Terminator”",
+      "ref": "Cold metal hammering out a relentless rhythm, like the clanks of Brad Fiedel’s “The Terminator” score",
       "artist": "Brad Fiedel",
       "tags": ["perc", "film", "industrial", "80s"],
       "level": 3,
@@ -2514,7 +2514,7 @@
     {
       "id": "j4-truth-whistle",
       "name": "Eerie Whistle",
-      "ref": "In the style of Mark Snow — “The X-Files”",
+      "ref": "A lonely whistled melody echoing away, the synth whistle of Mark Snow’s “The X-Files” theme",
       "artist": "Mark Snow",
       "tags": ["lead", "tv themes", "sci-fi", "90s"],
       "level": 2,
@@ -2585,7 +2585,7 @@
     {
       "id": "j4-zombi-ostinato",
       "name": "Horror Ostinato Bass",
-      "ref": "In the style of Fabio Frizzi — “Zombi 2”",
+      "ref": "A dark, plodding eighth-note bass that menaces, close to Fabio Frizzi’s synth score for “Zombi 2”",
       "artist": "Fabio Frizzi",
       "tags": ["bass", "horror", "film", "70s"],
       "level": 1,
@@ -2680,8 +2680,8 @@
     {
       "id": "j4-ghibli-flute",
       "name": "Nostalgic Flute",
-      "ref": "In the style of Joe Hisaishi",
-      "artist": "Joe Hisaishi",
+      "ref": "A gentle, breathy flute melody drifting over a summer field, as heard in Japanese animated film scores",
+      "artist": "Anime film scores",
       "tags": ["wind", "film", "anime", "80s"],
       "level": 2,
       "blurb": "A gentle, nostalgic, breathy flute melody over a summer field.",
@@ -2755,7 +2755,7 @@
     {
       "id": "j4-sweden-chords",
       "name": "Blocky World Chords",
-      "ref": "In the style of C418",
+      "ref": "Soft, sparse chords that fade into long silences, the quiet calm of C418’s game music",
       "artist": "C418",
       "tags": ["keys", "ambient", "video game", "2010s"],
       "level": 1,
@@ -2829,7 +2829,7 @@
     {
       "id": "j4-glitter-arp",
       "name": "Glittering Mountain Arpeggio",
-      "ref": "In the style of Lena Raine — “Celeste”",
+      "ref": "A hopeful up-and-down arpeggio glittering like snow in sunlight, near Lena Raine’s “Celeste” score",
       "artist": "Lena Raine",
       "tags": ["seq", "video game", "arpeggio", "2010s"],
       "level": 2,
@@ -2910,7 +2910,7 @@
     {
       "id": "j4-fog-drone",
       "name": "Fog Drone",
-      "ref": "In the style of Akira Yamaoka — “Silent Hill”",
+      "ref": "A thick, uneasy drone whose filter lurches at random, in the foggy dread of Akira Yamaoka’s “Silent Hill”",
       "artist": "Akira Yamaoka",
       "tags": ["drone", "video game", "horror", "90s"],
       "level": 3,
@@ -2977,7 +2977,7 @@
     {
       "id": "j4-pixel-dream-arp",
       "name": "Pixel Dream Arpeggio",
-      "ref": "In the style of Disasterpeace — “Fez”",
+      "ref": "Scattered square-wave notes drifting like pixels, as in Disasterpeace’s dreamy score for “Fez”",
       "artist": "Disasterpeace",
       "tags": ["seq", "chiptune", "video game", "arpeggio", "2010s"],
       "level": 2,
@@ -3046,7 +3046,7 @@
     {
       "id": "j4-chip-square-melody",
       "name": "Chip Square Melody",
-      "ref": "In the style of Toby Fox — “Undertale”",
+      "ref": "A plain, friendly square-wave tune of the kind Toby Fox wrote for “Undertale”",
       "artist": "Toby Fox",
       "tags": ["lead", "chiptune", "video game", "2010s"],
       "level": 1,
@@ -3121,12 +3121,12 @@
     {
       "id": "j4-fourth-world-trumpet",
       "name": "Fourth World Trumpet",
-      "ref": "In the style of Jon Hassell — Fourth World",
-      "artist": "Jon Hassell",
+      "ref": "A breathy, smeared horn line bending and floating in haze, a synth answer to Fourth World ambient trumpet",
+      "artist": "Fourth World ambient",
       "tags": ["wind", "fourth world", "ambient", "80s"],
       "level": 3,
       "blurb": "A breathy, smeared, bending horn line floating in a hazy space.",
-      "how": "Jon Hassell’s “Fourth World” music smears and bends a processed trumpet. A wide pulse and noise in UNISON 1, a soft, blown attack, a long portamento and vibrato that waits.",
+      "how": "A processed ambient trumpet smears and bends its notes. A wide pulse and noise in UNISON 1, a soft, blown attack, a long portamento and vibrato that waits.",
       "phrase": {
         "bpm": 70,
         "loop": true,
@@ -3198,7 +3198,7 @@
     {
       "id": "j4-celestial-pad",
       "name": "Celestial Shimmer Pad",
-      "ref": "In the style of Iasos",
+      "ref": "An airy, shimmering pad that seems lit from within, for the new-age electronics of Iasos",
       "artist": "Iasos",
       "tags": ["pad", "new age", "ambient", "70s"],
       "level": 2,
@@ -3282,7 +3282,7 @@
     {
       "id": "j4-shakuhachi-breath",
       "name": "Breathy Bamboo Flute",
-      "ref": "In the style of Enigma — “Sadeness (Part I)”",
+      "ref": "A breathy, swooping bamboo-flute cry, close to the sampled shakuhachi in Enigma’s “Sadeness (Part I)”",
       "artist": "Enigma",
       "tags": ["wind", "new age", "worldbeat", "90s"],
       "level": 2,
@@ -3358,7 +3358,7 @@
     {
       "id": "j4-toy-techno-pop",
       "name": "Toy Techno-Pop Melody",
-      "ref": "In the style of Haruomi Hosono",
+      "ref": "A playful, toy-like sixteenth-note melody with a resonant edge, the techno-pop of Haruomi Hosono",
       "artist": "Haruomi Hosono",
       "tags": ["seq", "techno-pop", "japanese", "80s"],
       "level": 1,
@@ -3452,7 +3452,7 @@
     {
       "id": "j4-oscillations",
       "name": "Warbling Oscillator Line",
-      "ref": "In the style of Silver Apples — “Oscillations”",
+      "ref": "Silver Apples’ “Oscillations” in outline: a primitive, trilling oscillator line from the first electronic rock",
       "artist": "Silver Apples",
       "tags": ["lead", "psychedelic", "experimental", "60s"],
       "level": 2,
@@ -3525,7 +3525,7 @@
     {
       "id": "j4-outstanding-bass",
       "name": "Smooth Boogie Bass",
-      "ref": "In the style of The Gap Band — “Outstanding”",
+      "ref": "A smooth, round synth bass gliding through a slow-burning boogie groove, as on The Gap Band’s “Outstanding”",
       "artist": "The Gap Band",
       "tags": ["bass", "boogie", "funk", "80s"],
       "level": 2,
@@ -3601,7 +3601,7 @@
     {
       "id": "j4-love-come-down-keys",
       "name": "Boogie Chord Stabs",
-      "ref": "In the style of Evelyn “Champagne” King — “Love Come Down”",
+      "ref": "Bright, chorused, syncopated synth stabs: the early-1980s boogie of Evelyn “Champagne” King’s “Love Come Down”",
       "artist": "Evelyn “Champagne” King",
       "tags": ["keys", "boogie", "r&b", "80s"],
       "level": 1,
@@ -3706,7 +3706,7 @@
     {
       "id": "j4-video-hook",
       "name": "Radio Star Hook",
-      "ref": "In the style of The Buggles — “Video Killed the Radio Star”",
+      "ref": "A bright, chiming, drawbar-like hook, like the cheerful synth pop of The Buggles",
       "artist": "The Buggles",
       "tags": ["keys", "new wave", "synth-pop", "70s"],
       "level": 1,
@@ -3780,8 +3780,8 @@
     {
       "id": "j4-still-air",
       "name": "Still Air Tones",
-      "ref": "In the style of Satoshi Ashikawa — “Still Way”",
-      "artist": "Satoshi Ashikawa",
+      "ref": "Single, soft, slow tones hanging one at a time in still air, for Japanese environmental music",
+      "artist": "Japanese environmental music",
       "tags": ["keys", "ambient", "japanese", "80s"],
       "level": 1,
       "blurb": "Single, soft, slow tones hanging in still air, one at a time.",
@@ -3846,7 +3846,7 @@
     {
       "id": "j4-heavenly-pulse",
       "name": "Heavenly Disco Pulse",
-      "ref": "In the style of Sparks — “The Number One Song in Heaven”",
+      "ref": "Moroder’s euphoric sixteenth-note pulse driving Sparks’ “The Number One Song in Heaven” upwards",
       "artist": "Sparks",
       "tags": ["seq", "disco", "art pop", "arpeggio", "70s"],
       "level": 1,
@@ -3922,7 +3922,7 @@
     {
       "id": "j4-mighty-real-chords",
       "name": "Mighty Real Chords",
-      "ref": "In the style of Sylvester — “You Make Me Feel (Mighty Real)”",
+      "ref": "Swooshing disco chords that open and close on every hit, as in Sylvester’s “You Make Me Feel (Mighty Real)”",
       "artist": "Sylvester",
       "tags": ["keys", "disco", "hi-nrg", "70s"],
       "level": 2,
@@ -4017,7 +4017,7 @@
     {
       "id": "j4-flash-brass",
       "name": "Saviour Brass",
-      "ref": "In the style of Queen — “Flash”",
+      "ref": "Huge, heroic synth-brass chords fit for a comic-book hero, as Brian May played them on Queen’s “Flash”",
       "artist": "Queen",
       "tags": ["brass", "rock", "film", "80s"],
       "level": 1,
@@ -4095,7 +4095,7 @@
     {
       "id": "j4-lessons-stabs",
       "name": "Jazz-Funk Pop Stabs",
-      "ref": "In the style of Level 42 — “Lessons in Love”",
+      "ref": "Bright, thin, syncopated chord stabs for slick jazz-funk pop, as in Level 42’s “Lessons in Love”",
       "artist": "Level 42",
       "tags": ["keys", "jazz-funk", "pop", "80s"],
       "level": 1,
@@ -4193,7 +4193,7 @@
     {
       "id": "j4-illusion-bass",
       "name": "Mysterious Britfunk Bass",
-      "ref": "In the style of Imagination — “Just an Illusion”",
+      "ref": "A deep, walking synth bass that keeps its secrets, under Imagination’s hazy “Just an Illusion”",
       "artist": "Imagination",
       "tags": ["bass", "britfunk", "boogie", "80s"],
       "level": 1,
@@ -4269,8 +4269,8 @@
     {
       "id": "j4-forget-me-nots",
       "name": "Sparkling Boogie Keys",
-      "ref": "In the style of Patrice Rushen — “Forget Me Nots”",
-      "artist": "Patrice Rushen",
+      "ref": "Sparkling offbeat chords answering a bouncing bass line in an early-1980s boogie groove",
+      "artist": "Early-1980s boogie",
       "tags": ["keys", "boogie", "r&b", "80s"],
       "level": 1,
       "blurb": "Sparkling, offbeat chords answering a bouncing bass line.",
@@ -4367,7 +4367,7 @@
     {
       "id": "j4-quiet-storm-pad",
       "name": "Quiet-Storm Pad",
-      "ref": "In the style of Mtume — “Juicy Fruit”",
+      "ref": "A warm, slow, sultry synth pad for a late-night slow jam, as in Mtume’s “Juicy Fruit”",
       "artist": "Mtume",
       "tags": ["pad", "r&b", "quiet storm", "80s"],
       "level": 1,
@@ -4448,7 +4448,7 @@
     {
       "id": "j4-dtrain-brass",
       "name": "Post-Disco Brass Riff",
-      "ref": "In the style of D Train — “You’re the One for Me”",
+      "ref": "A punchy, blatting synth-brass riff, the post-disco club sound of D Train’s “You’re the One for Me”",
       "artist": "D Train",
       "tags": ["brass", "boogie", "post-disco", "80s"],
       "level": 2,
@@ -4544,8 +4544,8 @@
     {
       "id": "j4-super-freak-riff",
       "name": "Freaky Funk Riff",
-      "ref": "In the style of Rick James — “Super Freak”",
-      "artist": "Rick James",
+      "ref": "A cocky, strutting riff in fat synth bass, made for early-1980s funk",
+      "artist": "Early-1980s funk",
       "tags": ["bass", "funk", "80s"],
       "level": 2,
       "blurb": "A cocky, strutting funk riff in fat synth bass.",
@@ -4620,7 +4620,7 @@
     {
       "id": "j4-moskow-diskow",
       "name": "Night Train Sequence",
-      "ref": "In the style of Telex — “Moskow Diskow”",
+      "ref": "Chugging eighth notes whose brightness jostles every beat, as the train rolls through Telex’s “Moskow Diskow”",
       "artist": "Telex",
       "tags": ["seq", "synth-pop", "disco", "70s"],
       "level": 3,
@@ -4715,7 +4715,7 @@
     {
       "id": "j4-living-on-video",
       "name": "Deep Octave-Down Arpeggio",
-      "ref": "In the style of Trans-X — “Living on Video”",
+      "ref": "A deep, bouncing arpeggio an octave down under bright synth-pop, close to Trans-X’s “Living on Video”",
       "artist": "Trans-X",
       "tags": ["seq", "synth-pop", "hi-nrg", "arpeggio", "80s"],
       "level": 2,
@@ -4793,7 +4793,7 @@
     {
       "id": "j4-dirty-talk-bass",
       "name": "Proto-House Bounce",
-      "ref": "In the style of Klein + M.B.O. — “Dirty Talk”",
+      "ref": "A bouncing offbeat-octave bass that points towards house, as it did in Klein + M.B.O.’s “Dirty Talk”",
       "artist": "Klein + M.B.O.",
       "tags": ["bass", "italo disco", "proto-house", "80s"],
       "level": 1,
@@ -4880,7 +4880,7 @@
     {
       "id": "j4-kano-zap-lead",
       "name": "Zappy Italo Lead",
-      "ref": "In the style of Kano — “I’m Ready”",
+      "ref": "Zappy, resonant and syncopated, an Italo lead with the swagger of Kano’s “I’m Ready”",
       "artist": "Kano",
       "tags": ["lead", "italo disco", "funk", "80s"],
       "level": 2,
@@ -4958,7 +4958,7 @@
     {
       "id": "j4-power-drill",
       "name": "Power-Drill Synth",
-      "ref": "In the style of Fad Gadget — “Ricky’s Hand”",
+      "ref": "A harsh, buzzing synth that snarls like a power drill over a cold beat, for Fad Gadget’s industrial synth-pop",
       "artist": "Fad Gadget",
       "tags": ["fx", "industrial", "minimal synth", "80s"],
       "level": 2,
@@ -5030,7 +5030,7 @@
     {
       "id": "j4-ninos-bass",
       "name": "Dark Minimal Wave Bass",
-      "ref": "In the style of Liaisons Dangereuses — “Los Niños del Parque”",
+      "ref": "A dark, driving sixteenth bass, each step its own colour, close to Liaisons Dangereuses’ “Los Niños del Parque”",
       "artist": "Liaisons Dangereuses",
       "tags": ["bass", "ebm", "minimal synth", "80s"],
       "level": 3,
@@ -5127,7 +5127,7 @@
     {
       "id": "j4-noise-rhythm",
       "name": "Sample-and-Hold Noise Rhythm",
-      "ref": "In the style of Cabaret Voltaire — “Nag Nag Nag”",
+      "ref": "Clattering tuned noise, every hit a different pitch of hiss, close to Cabaret Voltaire’s “Nag Nag Nag”",
       "artist": "Cabaret Voltaire",
       "tags": ["perc", "industrial", "post-punk", "70s"],
       "level": 3,
@@ -5213,7 +5213,7 @@
     {
       "id": "j4-hosianna-drone",
       "name": "Mantra Drone",
-      "ref": "In the style of Popol Vuh — “Hosianna Mantra”",
+      "ref": "A slowly breathing drone for contemplation, like the Moog meditations on Popol Vuh’s early albums",
       "artist": "Popol Vuh",
       "tags": ["drone", "krautrock", "spiritual", "70s"],
       "level": 2,
@@ -5284,8 +5284,8 @@
     {
       "id": "j4-silver-cloud-chords",
       "name": "Euphoric Motorik Chords",
-      "ref": "In the style of La Düsseldorf — “Silver Cloud”",
-      "artist": "La Düsseldorf",
+      "ref": "Bright, euphoric eighth-note chords pushing ever onward over a motorik beat",
+      "artist": "Krautrock",
       "tags": ["keys", "krautrock", "70s"],
       "level": 1,
       "blurb": "Bright, euphoric, driving eighth-note chords pushing ever onward.",
@@ -5442,8 +5442,8 @@
     {
       "id": "j4-flammende-lead",
       "name": "Dreamy Krautrock Lead",
-      "ref": "In the style of Michael Rother — “Flammende Herzen”",
-      "artist": "Michael Rother",
+      "ref": "A dreamy, singing, chorused line that drifts over a motorik beat in late-1970s krautrock",
+      "artist": "Krautrock",
       "tags": ["lead", "krautrock", "70s"],
       "level": 2,
       "blurb": "A dreamy, singing, chorused lead drifting over a motorik beat.",
@@ -5519,7 +5519,7 @@
     {
       "id": "j4-random-clang-blips",
       "name": "Clangorous Random Blips",
-      "ref": "In the style of Conrad Schnitzler",
+      "ref": "Raw metallic blips scattered at random, the untamed electronics of Conrad Schnitzler",
       "artist": "Conrad Schnitzler",
       "tags": ["fx", "experimental", "electronic", "70s"],
       "level": 3,
@@ -5592,7 +5592,7 @@
     {
       "id": "j4-playful-kids-melody",
       "name": "Playful Kids’ Electronic Melody",
-      "ref": "In the style of Bruce Haack",
+      "ref": "A bouncy, wobbly, cheerful tune of the home-made kind Bruce Haack built for children’s records",
       "artist": "Bruce Haack",
       "tags": ["lead", "children’s", "electronic", "60s"],
       "level": 1,
@@ -5669,8 +5669,8 @@
     {
       "id": "j4-electric-sanza",
       "name": "Electric Sanza",
-      "ref": "In the style of Francis Bebey",
-      "artist": "Francis Bebey",
+      "ref": "Bright, buzzing thumb-piano plinks rolling in a gentle pattern, a synth take on the African sanza",
+      "artist": "African thumb piano",
       "tags": ["pluck", "african electronic", "cameroonian", "80s"],
       "level": 3,
       "blurb": "Bright, buzzing, thumb-piano plinks in a gentle, rolling pattern.",
@@ -5750,8 +5750,8 @@
     {
       "id": "j4-ethiopian-organ",
       "name": "Ethiopian Organ Groove",
-      "ref": "In the style of Hailu Mergia",
-      "artist": "Hailu Mergia",
+      "ref": "A bright, wavering organ melody in a haunting Ethiopian mode, as 1970s Addis Ababa bands played",
+      "artist": "1970s Ethiopian groove",
       "tags": ["keys", "ethiopian", "organ", "70s"],
       "level": 2,
       "blurb": "A bright, wavering organ melody in a haunting Ethiopian mode.",
@@ -5831,8 +5831,8 @@
     {
       "id": "j4-brazilian-boogie-keys",
       "name": "Brazilian Boogie Keys",
-      "ref": "In the style of Marcos Valle — “Estrelar”",
-      "artist": "Marcos Valle",
+      "ref": "Bright, jazzy, syncopated chords bouncing through sunny Brazilian boogie",
+      "artist": "Brazilian boogie",
       "tags": ["keys", "brazilian", "boogie", "80s"],
       "level": 1,
       "blurb": "Bright, jazzy, syncopated chords bouncing through a sunny Brazilian boogie.",
@@ -5934,8 +5934,8 @@
     {
       "id": "j4-expansions-pad",
       "name": "Cosmic Jazz Pad",
-      "ref": "In the style of Lonnie Liston Smith — “Expansions”",
-      "artist": "Lonnie Liston Smith",
+      "ref": "A floating, glowing pad that seems to widen outwards, for 1970s cosmic jazz",
+      "artist": "1970s cosmic jazz",
       "tags": ["pad", "cosmic jazz", "spiritual jazz", "70s"],
       "level": 2,
       "blurb": "A floating, glowing, cosmic pad that seems to expand outward.",
@@ -6009,7 +6009,7 @@
     {
       "id": "j4-moments-pad",
       "name": "Glassy Dream Pad",
-      "ref": "In the style of Art of Noise — “Moments in Love”",
+      "ref": "A glassy, slowly swelling pad, dreamy and sensual, near the Fairlight haze of Art of Noise’s “Moments in Love”",
       "artist": "Art of Noise",
       "tags": ["pad", "ambient pop", "80s"],
       "level": 1,
@@ -6080,7 +6080,7 @@
     {
       "id": "j4-dr-mabuse-seq",
       "name": "Dramatic Sequencer Bass",
-      "ref": "In the style of Propaganda — “Dr. Mabuse”",
+      "ref": "A dark, resonant sixteenth-note sequence full of menace, the drama of Propaganda’s “Dr. Mabuse”",
       "artist": "Propaganda",
       "tags": ["seq", "synth-pop", "german", "80s"],
       "level": 2,
@@ -6175,8 +6175,8 @@
     {
       "id": "j4-tv-action-brass",
       "name": "TV Action Fanfare",
-      "ref": "In the style of Mike Post",
-      "artist": "Mike Post",
+      "ref": "A bold, punchy, triumphant brass fanfare for the titles of a 1980s action show",
+      "artist": "1980s TV action themes",
       "tags": ["brass", "tv themes", "80s"],
       "level": 1,
       "blurb": "A bold, punchy, triumphant brass fanfare for a 1980s action show.",
@@ -6258,7 +6258,7 @@
     {
       "id": "j4-northern-wasteland",
       "name": "Shimmering Wasteland Sequence",
-      "ref": "In the style of Michael Hoenig — “Departure from the Northern Wasteland”",
+      "ref": "An endless latched sequence slowly brightening and darkening, near Michael Hoenig’s “Northern Wasteland”",
       "artist": "Michael Hoenig",
       "tags": ["seq", "berlin school", "ambient", "arpeggio", "70s"],
       "level": 2,
@@ -6330,8 +6330,8 @@
     {
       "id": "j4-glissando-dome",
       "name": "Glissando Dome Pad",
-      "ref": "In the style of Steve Hillage — “Rainbow Dome Musick”",
-      "artist": "Steve Hillage",
+      "ref": "Open chords gliding into one another the way a glissando guitar does, for drifting ambient space rock",
+      "artist": "Ambient space rock",
       "tags": ["pad", "ambient", "space rock", "70s"],
       "level": 2,
       "blurb": "Shimmering, open chords gliding into one another like a glissando guitar.",
@@ -6410,7 +6410,7 @@
     {
       "id": "j4-magnificat-choir",
       "name": "Doubled Choir Fifths",
-      "ref": "In the style of Constance Demby — “Novus Magnificat”",
+      "ref": "Constance Demby’s “Novus Magnificat” fills a cathedral with synth choirs; this one sings in bare fifths",
       "artist": "Constance Demby",
       "tags": ["pad", "new age", "choir", "80s"],
       "level": 3,
@@ -6488,8 +6488,8 @@
     {
       "id": "j4-sweet-lullaby",
       "name": "Rainforest Lullaby",
-      "ref": "In the style of Deep Forest — “Sweet Lullaby”",
-      "artist": "Deep Forest",
+      "ref": "A soft, rocking lullaby tune, warm and gently fading, for 1990s world ambient",
+      "artist": "1990s world ambient",
       "tags": ["keys", "worldbeat", "ambient", "90s"],
       "level": 1,
       "blurb": "A soft, rocking lullaby melody, warm and gently fading.",
@@ -6562,13 +6562,13 @@
     },
     {
       "id": "j4-naive-melody",
-      "name": "Naive Melody",
-      "ref": "In the style of Talking Heads — “This Must Be the Place (Naive Melody)”",
-      "artist": "Talking Heads",
+      "name": "Looping Tender Melody",
+      "ref": "A simple, tender line that loops round and round, the gentle side of 1980s new wave",
+      "artist": "1980s new wave",
       "tags": ["lead", "new wave", "art rock", "80s"],
       "level": 1,
       "blurb": "A simple, looping, tender synth melody that goes round and round.",
-      "how": "Talking Heads’ “This Must Be the Place” loops a simple, tender melody. A square through a soft filter with vibrato that waits, and the ensemble.",
+      "how": "A simple, tender melody loops round and round. A square through a soft filter with vibrato that waits, and the ensemble.",
       "phrase": {
         "bpm": 114,
         "loop": true,
@@ -6644,7 +6644,7 @@
     {
       "id": "j4-good-life-strings",
       "name": "Good Life Strings",
-      "ref": "In the style of Inner City — “Good Life”",
+      "ref": "Joyful, syncopated string-synth stabs lifting Inner City’s “Good Life”",
       "artist": "Inner City",
       "tags": ["strings", "detroit house", "house", "80s"],
       "level": 1,
@@ -6744,7 +6744,7 @@
     {
       "id": "j4-french-kiss-riff",
       "name": "Hypnotic House Riff",
-      "ref": "In the style of Lil Louis — “French Kiss”",
+      "ref": "A hypnotic one-finger riff circling round and round, close to the one in Lil Louis’s “French Kiss”",
       "artist": "Lil Louis",
       "tags": ["lead", "chicago house", "house", "80s"],
       "level": 2,
@@ -6821,7 +6821,7 @@
     {
       "id": "j4-cybotron-bass",
       "name": "Robotic Electro Bass",
-      "ref": "In the style of Cybotron — “Clear”",
+      "ref": "Cold, robotic, syncopated bass from Detroit electro, as on Cybotron’s “Clear”",
       "artist": "Cybotron",
       "tags": ["bass", "electro", "detroit", "80s"],
       "level": 1,
@@ -6896,7 +6896,7 @@
     {
       "id": "j4-at-les-arp",
       "name": "Lush Techno Arpeggio",
-      "ref": "In the style of Carl Craig — “At Les”",
+      "ref": "A flowing latched arpeggio breathing under a resonant filter, near Carl Craig’s “At Les”",
       "artist": "Carl Craig",
       "tags": ["seq", "ambient techno", "detroit", "arpeggio", "90s"],
       "level": 2,
@@ -6973,7 +6973,7 @@
     {
       "id": "j4-deep-house-bass",
       "name": "Deep House Bass",
-      "ref": "In the style of Kerri Chandler",
+      "ref": "Deep, round and swinging, the bass Kerri Chandler sets under warm house chords",
       "artist": "Kerri Chandler",
       "tags": ["bass", "deep house", "house", "90s"],
       "level": 1,
@@ -7047,8 +7047,8 @@
     {
       "id": "j4-rose-rouge-keys",
       "name": "Jazz-House Chord Loop",
-      "ref": "In the style of St Germain — “Rose Rouge”",
-      "artist": "St Germain",
+      "ref": "Cool, clipped minor chords loop over a shuffling beat in late-1990s jazz house",
+      "artist": "Jazz house",
       "tags": ["keys", "jazz house", "nu jazz", "2000s"],
       "level": 1,
       "blurb": "Cool, clipped, jazzy minor chords looping over a shuffling house beat.",
@@ -7141,13 +7141,13 @@
     },
     {
       "id": "j4-destiny-pad",
-      "name": "Chill-Out Destiny Pad",
-      "ref": "In the style of Zero 7 — “Destiny”",
-      "artist": "Zero 7",
+      "name": "Chill-Out Pad",
+      "ref": "Warm, gentle chords turning slowly for a lazy Sunday, in early-2000s chill-out",
+      "artist": "Early-2000s chill-out",
       "tags": ["pad", "chill-out", "downtempo", "2000s"],
       "level": 1,
       "blurb": "Warm, gentle, slowly turning chords for a lazy Sunday.",
-      "how": "Zero 7’s chill-out drifts on warm, gentle chords. A saw through a soft filter, slow envelopes, a little vibrato that waits, and the ensemble.",
+      "how": "Early-2000s chill-out drifts on warm, gentle chords. A saw through a soft filter, slow envelopes, a little vibrato that waits, and the ensemble.",
       "phrase": {
         "bpm": 86,
         "loop": true,
@@ -7224,7 +7224,7 @@
     {
       "id": "j4-dilla-wobble-bass",
       "name": "Wobbly Beat-Tape Bass",
-      "ref": "In the style of J Dilla",
+      "ref": "A warm, wonky synth bass that wobbles and slides behind the beat, as J Dilla played it",
       "artist": "J Dilla",
       "tags": ["bass", "hip hop", "neo soul", "2000s"],
       "level": 2,
@@ -7300,9 +7300,9 @@
     },
     {
       "id": "j4-canon-strings",
-      "name": "Canon Strings",
-      "ref": "In the style of Johann Pachelbel — “Canon in D”",
-      "artist": "Johann Pachelbel",
+      "name": "Stately Strings",
+      "ref": "Warm, stately strings walking through the best-known chord sequence in Baroque music",
+      "artist": "Baroque strings",
       "tags": ["strings", "baroque", "classical"],
       "level": 1,
       "blurb": "Warm, stately strings walking through the most famous chord sequence of all.",
@@ -7390,13 +7390,13 @@
     },
     {
       "id": "j4-aquarium-glass",
-      "name": "Aquarium Glass Ripples",
-      "ref": "In the style of Camille Saint-Saëns — “Aquarium”",
-      "artist": "Camille Saint-Saëns",
+      "name": "Glassy Water Ripples",
+      "ref": "Glassy arpeggios rippling like light through water, as a celesta or glass harmonica shimmers",
+      "artist": "Orchestral celesta",
       "tags": ["seq", "classical", "romantic", "arpeggio"],
       "level": 2,
       "blurb": "Glassy, rippling arpeggios shimmering like light through water.",
-      "how": "Saint-Saëns’s “Aquarium” ripples with glassy arpeggios. UP/DOWN in sixteenths through held chords; a narrow pulse with the high-pass, a ringing, key-following filter and the ensemble.",
+      "how": "Glassy arpeggios ripple like light through water. UP/DOWN in sixteenths through held chords; a narrow pulse with the high-pass, a ringing, key-following filter and the ensemble.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7469,9 +7469,9 @@
     },
     {
       "id": "j4-bolero-reed",
-      "name": "Boléro Reed Melody",
-      "ref": "In the style of Maurice Ravel — “Boléro”",
-      "artist": "Maurice Ravel",
+      "name": "Sinuous Reed Melody",
+      "ref": "A sinuous, reedy, Spanish-tinged line coiling round and round, as orchestral woodwinds play",
+      "artist": "Orchestral woodwind",
       "tags": ["wind", "classical", "orchestral"],
       "level": 2,
       "blurb": "A sinuous, reedy, Spanish-tinged melody that coils round and round.",
@@ -7555,12 +7555,12 @@
     {
       "id": "j4-far-east-melodica",
       "name": "Far East Melodica",
-      "ref": "In the style of Augustus Pablo",
-      "artist": "Augustus Pablo",
+      "ref": "A reedy, haunting minor-key melodica line drifting through a 1970s dub",
+      "artist": "Dub melodica",
       "tags": ["wind", "dub", "reggae", "70s"],
       "level": 2,
       "blurb": "A reedy, haunting, minor-key melodica line drifting through a dub.",
-      "how": "Augustus Pablo played haunting minor melodies on melodica over dub rhythms. A pulse with a little noise, the high-pass for the reed, UNISON 1.",
+      "how": "In dub, the melodica plays haunting minor melodies over the rhythm. A pulse with a little noise, the high-pass for the reed, UNISON 1.",
       "phrase": {
         "bpm": 72,
         "loop": true,
@@ -7628,7 +7628,7 @@
     {
       "id": "j4-dub-laser",
       "name": "Dub Laser Sweep",
-      "ref": "In the style of Scientist",
+      "ref": "Falling laser sweeps fired across a heavy dub mix, as Scientist fired them from the desk",
       "artist": "Scientist",
       "tags": ["fx", "dub", "reggae", "80s"],
       "level": 2,
@@ -7697,7 +7697,7 @@
     {
       "id": "j4-sleng-teng-bass",
       "name": "Digital Dancehall Bass",
-      "ref": "In the style of Prince Jammy — “Under Mi Sleng Teng”",
+      "ref": "A cheap, bouncy, digital bass riff, the Casio preset behind Prince Jammy’s “Under Mi Sleng Teng”",
       "artist": "Prince Jammy",
       "tags": ["bass", "dancehall", "reggae", "80s"],
       "level": 1,
@@ -7771,9 +7771,9 @@
     },
     {
       "id": "j4-ghost-town-wail",
-      "name": "Ghost Town Wail",
-      "ref": "In the style of The Specials — “Ghost Town”",
-      "artist": "The Specials",
+      "name": "Eerie Falling Wail",
+      "ref": "An eerie wail falling chromatically over an empty city: the gloom of early-1980s 2 Tone",
+      "artist": "2 Tone",
       "tags": ["lead", "ska", "2 tone", "80s"],
       "level": 2,
       "blurb": "An eerie, wailing, chromatically falling line over an empty city.",
@@ -7848,8 +7848,8 @@
     {
       "id": "j4-qawwali-harmonium",
       "name": "Qawwali Harmonium",
-      "ref": "In the style of Nusrat Fateh Ali Khan",
-      "artist": "Nusrat Fateh Ali Khan",
+      "ref": "A reedy, pumping harmonium holding a devotional drone, as it does under Sufi qawwali",
+      "artist": "Qawwali",
       "tags": ["keys", "qawwali", "pakistani", "world"],
       "level": 2,
       "blurb": "A reedy, droning, pumping harmonium holding a devotional chord.",
@@ -7921,8 +7921,8 @@
     {
       "id": "j4-cyber-lullaby-arp",
       "name": "Cyber Lullaby Arpeggio",
-      "ref": "In the style of Yoko Kanno",
-      "artist": "Yoko Kanno",
+      "ref": "A gentle, wistful eighth-note arpeggio for a rain-soaked future city in a 1990s anime",
+      "artist": "Cyberpunk anime scores",
       "tags": ["seq", "anime", "film", "arpeggio", "2000s"],
       "level": 1,
       "blurb": "A gentle, wistful eighth-note arpeggio for a rain-soaked future city.",
@@ -8002,7 +8002,7 @@
     {
       "id": "j4-vapor-pad",
       "name": "Vapor Pad",
-      "ref": "In the style of Mark Isham — “Vapor Drawings”",
+      "ref": "A thin, cool, drifting pad like breath on a cold window, close to Mark Isham’s “Vapor Drawings”",
       "artist": "Mark Isham",
       "tags": ["pad", "ambient", "jazz", "80s"],
       "level": 2,
@@ -8078,7 +8078,7 @@
     {
       "id": "j4-outrun-pulse",
       "name": "Outrun Night Pulse",
-      "ref": "In the style of FM-84 — “Running in the Night”",
+      "ref": "A pulsing octave-bouncing arpeggio bass for a night drive, as in FM-84’s “Running in the Night”",
       "artist": "FM-84",
       "tags": ["seq", "synthwave", "outrun", "arpeggio", "2010s"],
       "level": 2,
@@ -8152,7 +8152,7 @@
     {
       "id": "j4-dreamwave-pad",
       "name": "Breathing Dreamwave Pad",
-      "ref": "In the style of Timecop1983",
+      "ref": "A nostalgic pad that closes as you hold and opens as you let go, the dreamwave of Timecop1983",
       "artist": "Timecop1983",
       "tags": ["pad", "dreamwave", "synthwave", "2010s"],
       "level": 3,
@@ -8229,7 +8229,7 @@
     {
       "id": "j4-synthwave-brass",
       "name": "Synthwave Power Brass",
-      "ref": "In the style of Gunship",
+      "ref": "Gunship-sized synth brass: huge, swelling, cinematic chords for a neon anthem",
       "artist": "Gunship",
       "tags": ["brass", "synthwave", "2010s"],
       "level": 1,
@@ -8310,7 +8310,7 @@
     {
       "id": "j4-real-hero-arp",
       "name": "Real Hero Arpeggio",
-      "ref": "In the style of College — “A Real Hero”",
+      "ref": "A dreamy, rocking eighth-note arpeggio, hopeful and bittersweet, like College’s “A Real Hero”",
       "artist": "College",
       "tags": ["seq", "synthwave", "dreamwave", "arpeggio", "2010s"],
       "level": 1,
@@ -8382,7 +8382,7 @@
     {
       "id": "j4-runaway-lead",
       "name": "Dreamy Synth-Pop Lead",
-      "ref": "In the style of Electric Youth — “Runaway”",
+      "ref": "A soft, glassy lead gliding above starlit synth-pop, close to Electric Youth’s “Runaway”",
       "artist": "Electric Youth",
       "tags": ["lead", "dreamwave", "synth-pop", "2010s"],
       "level": 2,
@@ -8458,8 +8458,8 @@
     {
       "id": "j4-groove-heart-organ",
       "name": "Groovy Organ Stabs",
-      "ref": "In the style of Deee-Lite — “Groove Is in the Heart”",
-      "artist": "Deee-Lite",
+      "ref": "Bright, bouncy, funky organ stabs for a psychedelic early-1990s dance party",
+      "artist": "Early-1990s dance-pop",
       "tags": ["keys", "dance-pop", "house", "90s"],
       "level": 1,
       "blurb": "Bright, bouncy, funky organ stabs for a psychedelic dance party.",
@@ -8557,7 +8557,7 @@
     {
       "id": "j4-rhythm-dancer-lead",
       "name": "Eurodance Lead",
-      "ref": "In the style of Snap! — “Rhythm Is a Dancer”",
+      "ref": "A bright, sweeping riff to fill a 1990s dance floor, the hook of Snap!’s “Rhythm Is a Dancer”",
       "artist": "Snap!",
       "tags": ["lead", "eurodance", "dance", "90s"],
       "level": 1,
@@ -8632,7 +8632,7 @@
     {
       "id": "j4-what-is-love-stabs",
       "name": "Eurodance Minor Stabs",
-      "ref": "In the style of Haddaway — “What Is Love”",
+      "ref": "Driving, dramatic minor-key stabs, the Eurodance chords of Haddaway’s “What Is Love”",
       "artist": "Haddaway",
       "tags": ["keys", "eurodance", "dance", "90s"],
       "level": 1,
@@ -8731,7 +8731,7 @@
     {
       "id": "j4-reggae-pop-pluck",
       "name": "Reggae-Pop Offbeat Pluck",
-      "ref": "In the style of Ace of Base — “All That She Wants”",
+      "ref": "A short, bright offbeat pluck skanking under moody Europop, close to Ace of Base’s “All That She Wants”",
       "artist": "Ace of Base",
       "tags": ["pluck", "reggae-pop", "europop", "90s"],
       "level": 1,
@@ -8842,7 +8842,7 @@
     {
       "id": "j4-sexual-healing-keys",
       "name": "Soft Soul Chimes",
-      "ref": "In the style of Marvin Gaye — “Sexual Healing”",
+      "ref": "Soft, chiming synth chords fading over a drum-machine groove, as on Marvin Gaye’s “Sexual Healing”",
       "artist": "Marvin Gaye",
       "tags": ["keys", "soul", "r&b", "80s"],
       "level": 1,
@@ -8939,8 +8939,8 @@
     {
       "id": "j4-le-freak-strings",
       "name": "Disco String Stabs",
-      "ref": "In the style of Chic — “Le Freak”",
-      "artist": "Chic",
+      "ref": "Sharp, bright, syncopated stabs as a 1970s disco string section played them",
+      "artist": "1970s disco strings",
       "tags": ["strings", "disco", "70s"],
       "level": 1,
       "blurb": "Sharp, bright, syncopated disco string stabs.",
@@ -9048,7 +9048,7 @@
     {
       "id": "j4-lay-all-your-love",
       "name": "Europop Falling Arpeggio",
-      "ref": "In the style of ABBA — “Lay All Your Love on Me”",
+      "ref": "An urgent falling sixteenth-note arpeggio under the drama of ABBA’s “Lay All Your Love on Me”",
       "artist": "ABBA",
       "tags": ["seq", "europop", "disco", "arpeggio", "80s"],
       "level": 2,
@@ -9125,8 +9125,8 @@
     {
       "id": "j4-bottle-flute",
       "name": "Jazz-Funk Flute Riff",
-      "ref": "In the style of Gil Scott-Heron & Brian Jackson — “The Bottle”",
-      "artist": "Gil Scott-Heron & Brian Jackson",
+      "ref": "A punchy, breathy, syncopated flute riff driving a 1970s jazz-funk groove",
+      "artist": "1970s jazz-funk",
       "tags": ["wind", "jazz-funk", "soul", "70s"],
       "level": 2,
       "blurb": "A punchy, breathy, syncopated flute riff driving a jazz-funk groove.",
@@ -9205,8 +9205,8 @@
     {
       "id": "j4-bossa-strings",
       "name": "Bossa Nova Strings",
-      "ref": "In the style of Astrud Gilberto — “The Girl from Ipanema”",
-      "artist": "Astrud Gilberto",
+      "ref": "Soft, cool strings swaying gently under a breezy bossa nova",
+      "artist": "Bossa nova",
       "tags": ["strings", "bossa nova", "brazilian", "60s"],
       "level": 1,
       "blurb": "Soft, cool, gently swaying strings under a breezy bossa nova.",
@@ -9287,8 +9287,8 @@
     {
       "id": "j4-flamenco-pluck",
       "name": "Flamenco Pluck",
-      "ref": "In the style of Paco de Lucía",
-      "artist": "Paco de Lucía",
+      "ref": "Fast, dark plucked runs in the Phrygian mode, a synth sketch of flamenco guitar",
+      "artist": "Flamenco",
       "tags": ["pluck", "flamenco", "spanish"],
       "level": 2,
       "blurb": "Fast, dark, plucked runs in the Phrygian mode of flamenco.",
@@ -9375,7 +9375,7 @@
     {
       "id": "j4-telstar-lead",
       "name": "Space-Age Clavioline",
-      "ref": "In the style of The Tornados — “Telstar”",
+      "ref": "A thin, quavering, futuristic lead, the clavioline that sang The Tornados’ “Telstar”",
       "artist": "The Tornados",
       "tags": ["lead", "space-age pop", "instrumental", "60s"],
       "level": 2,
@@ -9455,8 +9455,8 @@
     {
       "id": "j4-peter-gunn-bass",
       "name": "Detective Bass Ostinato",
-      "ref": "In the style of Henry Mancini — “Peter Gunn”",
-      "artist": "Henry Mancini",
+      "ref": "A cool, prowling eighth-note bass ostinato for a private eye in 1950s crime jazz",
+      "artist": "1950s crime jazz",
       "tags": ["bass", "jazz", "tv themes", "50s"],
       "level": 1,
       "blurb": "A cool, prowling, eighth-note bass ostinato for a private eye.",
@@ -9550,8 +9550,8 @@
     {
       "id": "j4-five-four-spy",
       "name": "Spy Bass in Five",
-      "ref": "In the style of Lalo Schifrin — “Mission: Impossible”",
-      "artist": "Lalo Schifrin",
+      "ref": "A tense, limping bass that counts in five, straight from the 1960s spy theme",
+      "artist": "1960s spy themes",
       "tags": ["bass", "tv themes", "spy", "60s"],
       "level": 2,
       "blurb": "A tense, limping spy-theme bass that counts in five.",
@@ -9630,7 +9630,7 @@
     {
       "id": "j4-tv-siren-stab",
       "name": "TV Siren Stab",
-      "ref": "In the style of Quincy Jones — “Ironside”",
+      "ref": "A blaring synth chord that wails like a siren, as in Quincy Jones’s theme for “Ironside”",
       "artist": "Quincy Jones",
       "tags": ["fx", "tv themes", "funk", "60s"],
       "level": 2,
@@ -9699,7 +9699,7 @@
     {
       "id": "j4-minotaur-bass",
       "name": "Space-Age Novelty Bass",
-      "ref": "In the style of Dick Hyman — “The Minotaur”",
+      "ref": "Dick Hyman’s “The Minotaur” runs on a quacking, funky early-Moog novelty bass like this one",
       "artist": "Dick Hyman",
       "tags": ["bass", "space-age pop", "novelty", "60s"],
       "level": 2,
@@ -9781,7 +9781,7 @@
     {
       "id": "j4-space-whoosh",
       "name": "Space Whoosh",
-      "ref": "In the style of Gong",
+      "ref": "A swirling chord whooshing through space, the synth glissandi of Gong’s space rock",
       "artist": "Gong",
       "tags": ["fx", "space rock", "psychedelic", "70s"],
       "level": 2,
@@ -9851,7 +9851,7 @@
     {
       "id": "j4-psychedelic-sweep-arp",
       "name": "Psychedelic Sweep Arpeggio",
-      "ref": "In the style of Ozric Tentacles",
+      "ref": "A fast, bubbling arpeggio through a filter that sweeps up again and again, as Ozric Tentacles do",
       "artist": "Ozric Tentacles",
       "tags": ["seq", "space rock", "psychedelic", "arpeggio", "90s"],
       "level": 2,
@@ -9926,7 +9926,7 @@
     {
       "id": "j4-krautpop-organ",
       "name": "Krautpop Organ Drone",
-      "ref": "In the style of Stereolab",
+      "ref": "A warm, buzzing vintage organ drone holding steady under a motorik groove, as Stereolab use it",
       "artist": "Stereolab",
       "tags": ["keys", "krautpop", "indie", "90s"],
       "level": 1,
@@ -10000,7 +10000,7 @@
     {
       "id": "j4-haunted-library-organ",
       "name": "Haunted Library Organ",
-      "ref": "In the style of Broadcast",
+      "ref": "An eerie, warped, slightly seasick organ off an old library record, the haunted pop of Broadcast",
       "artist": "Broadcast",
       "tags": ["keys", "hauntology", "psychedelic", "2000s"],
       "level": 2,
@@ -10078,7 +10078,7 @@
     {
       "id": "j4-public-info-pad",
       "name": "Public Information Pad",
-      "ref": "In the style of The Advisory Circle",
+      "ref": "An uneasy pad flicking between bright and dark like a faded 1970s warning film, for The Advisory Circle",
       "artist": "The Advisory Circle",
       "tags": ["pad", "hauntology", "electronic", "2000s"],
       "level": 2,
@@ -10152,7 +10152,7 @@
     {
       "id": "j4-pumping-chords",
       "name": "Pumping Future-Bass Chords",
-      "ref": "In the style of Flume",
+      "ref": "Lush chords pumping on every beat as if ducking under a kick, the future bass Flume made his own",
       "artist": "Flume",
       "tags": ["keys", "future bass", "electronic", "2010s"],
       "level": 3,
@@ -10235,7 +10235,7 @@
     {
       "id": "j4-chill-chop-pluck",
       "name": "Chill Chop Pluck",
-      "ref": "In the style of Odesza",
+      "ref": "Soft, bright plucks chopped up and bouncing like a cut-up vocal, a signature of Odesza",
       "artist": "Odesza",
       "tags": ["pluck", "chillwave", "future bass", "2010s"],
       "level": 1,
@@ -10311,7 +10311,7 @@
     {
       "id": "j4-garage-organ-bass",
       "name": "Garage Organ Bass",
-      "ref": "In the style of Disclosure — “Latch”",
+      "ref": "A short, punchy organ-like bass bouncing under UK garage, as in Disclosure’s “Latch”",
       "artist": "Disclosure",
       "tags": ["bass", "uk garage", "house", "2010s"],
       "level": 1,
@@ -10386,7 +10386,7 @@
     {
       "id": "j4-minimal-pulse-arp",
       "name": "Minimal Glow Arpeggio",
-      "ref": "In the style of Kiasmos",
+      "ref": "A soft, slow, glowing arpeggio, minimal and patient, for the electronica of Kiasmos",
       "artist": "Kiasmos",
       "tags": ["seq", "minimal", "electronic", "arpeggio", "2010s"],
       "level": 1,
@@ -10463,7 +10463,7 @@
     {
       "id": "j4-haunting-rave-pad",
       "name": "Haunting Rave Pad",
-      "ref": "In the style of Bicep — “Glue”",
+      "ref": "A haunting pad like a memory of an old rave, the ache of Bicep’s “Glue”",
       "artist": "Bicep",
       "tags": ["pad", "breakbeat", "uk bass", "2010s"],
       "level": 2,
@@ -10545,7 +10545,7 @@
     {
       "id": "j4-fractal-shimmer",
       "name": "Fractal Shimmer",
-      "ref": "In the style of Max Cooper",
+      "ref": "A blur of thirty-second notes, each a different shade, shimmering like one of Max Cooper’s fractals",
       "artist": "Max Cooper",
       "tags": ["seq", "idm", "electronic", "arpeggio", "2010s"],
       "level": 3,
@@ -10616,7 +10616,7 @@
     {
       "id": "j4-jazzy-electronic-chords",
       "name": "Jazzy Electronic Chords",
-      "ref": "In the style of Floating Points",
+      "ref": "Soft, warm, wavering jazz chords somewhere between club and concert hall, as Floating Points writes",
       "artist": "Floating Points",
       "tags": ["keys", "electronic", "jazz", "2010s"],
       "level": 2,
@@ -10698,9 +10698,9 @@
     },
     {
       "id": "j4-morning-mood-flute",
-      "name": "Morning Mood Flute",
-      "ref": "In the style of Edvard Grieg — “Morning Mood”",
-      "artist": "Edvard Grieg",
+      "name": "Dawn Flute Melody",
+      "ref": "A fresh, gentle flute melody that rocks like the sun coming up, as the Romantic orchestra painted dawn",
+      "artist": "Orchestral flute",
       "tags": ["wind", "classical", "romantic"],
       "level": 1,
       "blurb": "A fresh, gentle, rocking flute melody like the sun rising.",
@@ -10788,8 +10788,8 @@
     {
       "id": "j4-nocturne-keys",
       "name": "Nocturne Keys",
-      "ref": "In the style of Frédéric Chopin",
-      "artist": "Frédéric Chopin",
+      "ref": "A tender, singing melody over rippling broken chords, shaped like a Romantic piano nocturne",
+      "artist": "Romantic piano",
       "tags": ["keys", "classical", "romantic"],
       "level": 2,
       "blurb": "A tender, singing melody over a rippling broken-chord accompaniment.",
@@ -10890,8 +10890,8 @@
     {
       "id": "j4-sorrowful-strings",
       "name": "Sorrowful Strings",
-      "ref": "In the style of Henryk Górecki — “Symphony No. 3”",
-      "artist": "Henryk Górecki",
+      "ref": "Slow, deep strings moving with great patience and sorrow, as in modern sacred minimalism",
+      "artist": "Orchestral strings",
       "tags": ["strings", "modern classical", "70s"],
       "level": 2,
       "blurb": "Slow, deep, sorrowful strings moving with great patience.",
@@ -10969,8 +10969,8 @@
     {
       "id": "j4-rockers-bass",
       "name": "Rockers Synth Bass",
-      "ref": "In the style of Sly & Robbie",
-      "artist": "Sly & Robbie",
+      "ref": "A deep, heavy, round reggae bass you feel more than hear, the low end of rockers reggae",
+      "artist": "Rockers reggae",
       "tags": ["bass", "reggae", "dancehall", "80s"],
       "level": 1,
       "blurb": "A deep, heavy, round reggae bass you feel more than hear.",
@@ -11041,12 +11041,12 @@
     {
       "id": "j4-green-onions-organ",
       "name": "Soul Organ Riff",
-      "ref": "In the style of Booker T. & the M.G.’s — “Green Onions”",
-      "artist": "Booker T. & the M.G.’s",
+      "ref": "A cool, bluesy, swaggering organ riff from 1960s Memphis soul",
+      "artist": "1960s soul organ",
       "tags": ["keys", "soul", "organ", "60s"],
       "level": 1,
       "blurb": "A cool, bluesy, swaggering organ riff.",
-      "how": "Booker T.’s “Green Onions” swaggers on a cool, bluesy organ riff. A square and the sub like drawbars, a quick vibrato and the ensemble standing in for a rotating speaker.",
+      "how": "1960s soul organ swaggers on cool, bluesy riffs. A square and the sub like drawbars, a quick vibrato and the ensemble standing in for a rotating speaker.",
       "phrase": {
         "bpm": 136,
         "loop": true,
@@ -11123,7 +11123,7 @@
     {
       "id": "j4-gnawa-guembri",
       "name": "Gnawa Guembri Bass",
-      "ref": "In the style of Gnawa music",
+      "ref": "A deep, buzzing plucked bass that loops into trance, like the guembri at a Moroccan Gnawa ritual",
       "artist": "Gnawa",
       "tags": ["bass", "gnawa", "moroccan", "world"],
       "level": 2,
@@ -11202,7 +11202,7 @@
     {
       "id": "j4-highlife-guitar",
       "name": "Highlife Guitar Lines",
-      "ref": "In the style of Ghanaian highlife",
+      "ref": "Bright, interlocking guitar-like lines in a lilting groove, from sunny Ghanaian highlife",
       "artist": "Highlife",
       "tags": ["pluck", "highlife", "ghanaian", "world"],
       "level": 1,
@@ -11285,7 +11285,7 @@
     {
       "id": "j4-roboto-riff",
       "name": "Robot Rock Riff",
-      "ref": "In the style of Styx — “Mr. Roboto”",
+      "ref": "A stiff, stuttering robot riff from arena-rock concept-album synths, as in Styx’s “Mr. Roboto”",
       "artist": "Styx",
       "tags": ["lead", "arena rock", "prog rock", "80s"],
       "level": 1,
@@ -11368,8 +11368,8 @@
     {
       "id": "j4-blue-sky-strings",
       "name": "Sunny Symphonic Strings",
-      "ref": "In the style of Electric Light Orchestra — “Mr. Blue Sky”",
-      "artist": "Electric Light Orchestra",
+      "ref": "Bright, bouncing string chords that push a joyful 1970s symphonic-pop song along",
+      "artist": "1970s symphonic pop",
       "tags": ["strings", "symphonic pop", "rock", "70s"],
       "level": 1,
       "blurb": "Bright, bouncing, sunny string chords pushing a joyful pop song along.",
@@ -11530,8 +11530,8 @@
     {
       "id": "j4-snow-goose-lead",
       "name": "Symphonic Prog Lead",
-      "ref": "In the style of Camel — “The Snow Goose”",
-      "artist": "Camel",
+      "ref": "A gentle, lyrical lead soaring over a pastoral landscape, for 1970s symphonic prog",
+      "artist": "1970s symphonic prog",
       "tags": ["lead", "prog rock", "symphonic", "70s"],
       "level": 2,
       "blurb": "A gentle, lyrical, singing lead soaring over a pastoral prog landscape.",
@@ -11608,7 +11608,7 @@
     {
       "id": "j4-kashif-bass",
       "name": "Boogie Pop Bass",
-      "ref": "In the style of Kashif",
+      "ref": "A bouncy, staccato synth bass popping between octaves, the 1980s R&B Kashif produced",
       "artist": "Kashif",
       "tags": ["bass", "boogie", "r&b", "80s"],
       "level": 1,
@@ -11687,8 +11687,8 @@
     {
       "id": "j4-synthwave-sax",
       "name": "Synthwave Sax Lead",
-      "ref": "In the style of Mitch Murder",
-      "artist": "Mitch Murder",
+      "ref": "A breathy, blown, sax-like lead for a neon-lit montage, the synthwave nod to 1980s film scores",
+      "artist": "Synthwave",
       "tags": ["lead", "synthwave", "2010s"],
       "level": 2,
       "blurb": "A breathy, blown, saxophone-like lead for a neon-lit montage.",
@@ -11767,7 +11767,7 @@
     {
       "id": "j4-rave-stab-lead",
       "name": "Rave Stab Lead",
-      "ref": "In the style of 2 Unlimited — “No Limit”",
+      "ref": "A stabbing, hammering, no-nonsense rave riff, close to 2 Unlimited’s “No Limit”",
       "artist": "2 Unlimited",
       "tags": ["lead", "eurodance", "rave", "90s"],
       "level": 1,
@@ -11846,7 +11846,7 @@
     {
       "id": "j4-euphoric-chords",
       "name": "Euphoric Eighth Chords",
-      "ref": "In the style of Porter Robinson — “Language”",
+      "ref": "Bright, soaring chords driving in eighths towards the drop, the lift of Porter Robinson’s “Language”",
       "artist": "Porter Robinson",
       "tags": ["keys", "electro house", "progressive house", "2010s"],
       "level": 1,
@@ -12004,7 +12004,7 @@
     {
       "id": "j4-outrun-octave-bass",
       "name": "Outrun Octave Bass",
-      "ref": "In the style of Lazerhawk",
+      "ref": "A rolling eighth-note octave bass for a midnight highway, Lazerhawk’s outrun drive",
       "artist": "Lazerhawk",
       "tags": ["bass", "synthwave", "outrun", "2010s"],
       "level": 1,
