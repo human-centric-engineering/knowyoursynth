@@ -15,7 +15,7 @@
  * - The tool row: Euclidean fill, rotate, octave and scale-degree shifts, reverse, randomise and mutate, copy and
  *   paste of a step or a page, clear, and Undo.
  * - The step inspector: the chosen step's values on encoders (`step-inspector.tsx`).
- * - Mod lanes (`mod-lanes.tsx`, t-82): a value per step for panel controls, under the keys. **Mod** shows them.
+ * - Mod lanes (`mod-lanes.tsx`, t-82): a value per step for panel controls, under the keys. **Mod lanes** shows them.
  *
  * - The patterns strip (`pattern-library.tsx`, t-81): save to My patterns, open one, or start from any synth's library.
  * - Playing into it (t-86): the Keys row says what notes played do. They edit the chosen step, step record (a note or
@@ -195,7 +195,7 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ],
   [
     'Mod lanes',
-    'Mod shows them. Each lane moves one panel control, step by step: draw values across its cells, double-press a cell to clear it, and the control plays the panel’s value there (the dashed line). Stop puts the panel back. A lane for a control this synth lacks is kept, silent.',
+    'Mod lanes shows them. Each lane moves one panel control, step by step: draw values across its cells, double-press a cell to clear it, and the control plays the panel’s value there (the dashed line). Stop puts the panel back. A lane for a control this synth lacks is kept, silent.',
   ],
 ];
 
@@ -1011,15 +1011,17 @@ export function Sequencer({
                   name="Mod lanes"
                   help="Per-step values for any panel control: the control moves as the pattern plays."
                 >
+                  {/* Drawn in the accent, and always in words, unlike the quiet tools around it: the lanes are a part
+                      of the module people missed when it was one of them (t-299). */}
                   <button
                     type="button"
-                    className={`kys-seq-tool ${lanesOpen ? 'is-open' : ''}`}
+                    className={`kys-seq-tool kys-seq-mod-tool ${lanesOpen ? 'is-open' : ''}`}
                     aria-label="Mod lanes"
                     aria-pressed={lanesOpen}
                     onClick={() => setLanesOpen(!lanesOpen)}
                   >
                     <SlidersVertical size={15} aria-hidden="true" />
-                    <span className="kys-seq-tool-text">Mod</span>
+                    <span>Mod lanes</span>
                     {laneCount > 0 && <span className="kys-seq-tool-count">{laneCount}</span>}
                   </button>
                 </PlayerTip>

@@ -345,6 +345,16 @@ describe('the lane tabs', () => {
 });
 
 describe('editing around the lanes', () => {
+  it('names Mod lanes in full, in its own class, apart from the quiet tools (t-299)', () => {
+    render(<Harness />);
+    const mod = screen.getByRole('button', { name: 'Mod lanes' });
+    // Its words are not the class the narrow tool row hides, so they stay at any width.
+    expect(mod).toHaveTextContent('Mod lanes');
+    expect(mod.querySelector('.kys-seq-tool-text')).toBeNull();
+    expect(mod).toHaveClass('kys-seq-mod-tool');
+    expect(screen.getByRole('button', { name: 'Randomise' })).not.toHaveClass('kys-seq-mod-tool');
+  });
+
   it('shows the lanes of a pattern opened while they were hidden', () => {
     render(<Harness />);
     const mod = screen.getByRole('button', { name: 'Mod lanes' });
