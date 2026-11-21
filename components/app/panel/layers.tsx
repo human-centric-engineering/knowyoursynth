@@ -168,8 +168,9 @@ export function AreaLayer({ def }: { def: SynthDef }) {
 /**
  * The sections the open lesson step is about, tinted as Explain sections tints them and outlined, under the controls
  * so they stay crisp. Nothing here takes the pointer. The lesson card stands beside them (`data-lesson-area`).
+ * `quiet` while Explain sections tints every section: drawn unseen, so the card still has them to stand beside.
  */
-export function LessonAreaLayer({ def }: { def: SynthDef }) {
+export function LessonAreaLayer({ def, quiet = false }: { def: SynthDef; quiet?: boolean }) {
   const ids = useStore(lessonAreaStore, (a) => a.join('|'));
   if (!ids) return null;
   const amap = areaMap(def);
@@ -193,15 +194,17 @@ export function LessonAreaLayer({ def }: { def: SynthDef }) {
                 height={r.h}
                 rx={a.rects.length > 1 ? 0 : 8}
                 fill={color}
-                fillOpacity={0.2}
+                fillOpacity={quiet ? 0 : 0.2}
               />
             ))}
-            <AreaOutline
-              rects={a.rects}
-              color={color}
-              view={def.view}
-              id={`kysLessonEdge-${a.id}`}
-            />
+            {!quiet && (
+              <AreaOutline
+                rects={a.rects}
+                color={color}
+                view={def.view}
+                id={`kysLessonEdge-${a.id}`}
+              />
+            )}
           </g>
         );
       })}

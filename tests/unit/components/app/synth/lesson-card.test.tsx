@@ -611,9 +611,9 @@ describe("LessonCard beside the step's sections (t-297)", () => {
   });
 
   it('docks from ⇆ on the side away from the sections, and stays docked', async () => {
-    panelAt([100, 500]);
+    panelAt([900, 1300]);
     const { card, onSide } = open();
-    await waitFor(() => expect(card.style.left).toBe('516px'));
+    await waitFor(() => expect(card.style.left).toBe('484px'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Move the card to the left' }));
 
@@ -622,15 +622,44 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     expect(card.style.left).toBe('');
   });
 
-  it('docks as before with ⇆ when it already sits away from them', async () => {
-    panelAt([900, 1300]);
+  it('docks on its own side with ⇆ when the sections are on the other half', async () => {
+    // The card stands just right of the screen's middle, but the sections are on the left half: it docks right.
+    panelAt([100, 500]);
     const { card, onSide } = open();
-    await waitFor(() => expect(card.style.left).toBe('484px'));
+    await waitFor(() => expect(card.style.left).toBe('516px'));
 
     fireEvent.click(screen.getByRole('button', { name: 'Move the card to the right' }));
 
     expect(onSide).not.toHaveBeenCalled();
     expect(card).not.toHaveAttribute('data-beside');
+  });
+
+  it('stands beside nothing while the panel is turned away for the routing view', async () => {
+    const away = document.createElement('div');
+    away.className = 'kys-panel-scroller is-away';
+    document.body.appendChild(away);
+    drawn.push(away);
+    const [area] = panelAt([100, 500]);
+    away.appendChild(area);
+    const { card } = open();
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(card).not.toHaveAttribute('data-beside');
+  });
+
+  it("does not re-measure for a scroll of the card's own text", async () => {
+    const [area] = panelAt([100, 500]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+
+    area.getBoundingClientRect = () => new DOMRect(200, 200, 400, 300);
+    const body = card.querySelector('.kys-card-body');
+    if (!body) throw new Error('no card body');
+    fireEvent.scroll(body);
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(card.style.left).toBe('516px');
+
+    fireEvent.scroll(window);
+    await waitFor(() => expect(card.style.left).toBe('616px'));
   });
 
   it('follows the sections when the window or the panel changes size', async () => {

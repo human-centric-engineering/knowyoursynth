@@ -570,7 +570,7 @@ export function SynthPanel({
         <StaticDecor decor={decor} ctx={ctx} />
         <Leds decor={decor} ctx={ctx} values={values} />
         {heatOn && !areasOn && <HeatLayer def={shown} values={values} outline={outline} />}
-        {!areasOn && <LessonAreaLayer def={def} />}
+        <LessonAreaLayer def={shown} quiet={areasOn} />
         {def.controls.map((c) => {
           if (!isShown(c, values)) return null;
           const value = drawn(c.id);

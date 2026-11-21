@@ -234,9 +234,10 @@ export function LessonCard({
     let frame = 0;
     const place = () => {
       const el = ref.current;
-      const rects = [...document.querySelectorAll('[data-lesson-area]')].map((r) =>
-        r.getBoundingClientRect()
-      );
+      // Not while the panel is turned away for the routing view: its sections are still laid out, unseen.
+      const rects = [...document.querySelectorAll('[data-lesson-area]')]
+        .filter((r) => !r.closest('.is-away'))
+        .map((r) => r.getBoundingClientRect());
       if (!el || rects.length === 0) return setBeside(null);
       const left = Math.min(...rects.map((r) => r.left));
       const right = Math.max(...rects.map((r) => r.right));
@@ -255,26 +256,34 @@ export function LessonCard({
           : 2 * EDGE;
       // Kept on screen when the panel is scrolled or zoomed past the sections.
       const x = Math.round(Math.min(Math.max(at, EDGE), Math.max(EDGE, vw - w - EDGE)));
-      const dock = x + w / 2 < vw / 2 ? 'right' : 'left';
+      // ⇆ docks it on the half of the screen the sections are not on.
+      const dock = (left + right) / 2 < vw / 2 ? 'right' : 'left';
       setBeside((b) => (b && b.x === x && b.dock === dock ? b : { x, dock }));
     };
     const later = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(place);
     };
+    // Scrolling the card's own text moves nothing it stands beside.
+    const onScroll = (e: Event) => {
+      if (e.target instanceof Node && ref.current?.contains(e.target)) return;
+      later();
+    };
     later();
-    // The panel changes size without the window when it is zoomed or its layout changes.
-    const frameEl = document.querySelector('[data-testid="panel-frame"]');
-    const seen =
-      frameEl && typeof ResizeObserver !== 'undefined' ? new ResizeObserver(later) : null;
-    if (frameEl) seen?.observe(frameEl);
+    // The panel changes size without the window when it is zoomed or its layout changes; the scroller around it, when
+    // a drawer or column beside it does, which can move the panel without resizing it.
+    const seen = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(later) : null;
+    for (const sel of ['[data-testid="panel-frame"]', '.kys-panel-scroller']) {
+      const el = document.querySelector(sel);
+      if (el) seen?.observe(el);
+    }
     window.addEventListener('resize', later);
-    window.addEventListener('scroll', later, true);
+    window.addEventListener('scroll', onScroll, true);
     return () => {
       cancelAnimationFrame(frame);
       seen?.disconnect();
       window.removeEventListener('resize', later);
-      window.removeEventListener('scroll', later, true);
+      window.removeEventListener('scroll', onScroll, true);
     };
   }, [placing, areaKey, sizeW]);
   const besideX = placing ? (beside?.x ?? null) : null;

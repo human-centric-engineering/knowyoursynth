@@ -72,6 +72,17 @@ describe('LessonAreaLayer (t-297)', () => {
     act(() => lessonAreaStore.set([]));
     expect(container.querySelector('[data-lesson-area]')).toBeNull();
   });
+
+  it('draws them unseen and unoutlined while Explain sections tints every section', () => {
+    const { container } = inSvg(<LessonAreaLayer def={def} quiet />);
+    act(() => lessonAreaStore.set(['right']));
+
+    const lit = [...container.querySelectorAll('[data-lesson-area]')];
+    expect(lit.length).toBeGreaterThan(0);
+    expect(lit.every((r) => r.getAttribute('fill-opacity') === '0')).toBe(true);
+    expect(container.querySelector('mask#kysLessonEdge-right')).toBeNull();
+    act(() => lessonAreaStore.set([]));
+  });
 });
 
 describe('AreaLayer', () => {
