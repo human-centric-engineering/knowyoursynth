@@ -538,13 +538,15 @@ describe("LessonCard beside the step's sections (t-297)", () => {
   // The panel's lit sections, as `LessonAreaLayer` draws them, at the given screen spans (happy-dom lays nothing out).
   let drawn: HTMLElement[] = [];
   const panelAt = (...spans: [number, number][]) => {
-    drawn = spans.map(([left, right]) => {
+    const made = spans.map(([left, right]) => {
       const el = document.createElement('div');
       el.setAttribute('data-lesson-area', 'x');
       el.getBoundingClientRect = () => new DOMRect(left, 200, right - left, 300);
       document.body.appendChild(el);
       return el;
     });
+    drawn.push(...made);
+    return made;
   };
 
   afterEach(() => {
@@ -629,6 +631,54 @@ describe("LessonCard beside the step's sections (t-297)", () => {
 
     expect(onSide).not.toHaveBeenCalled();
     expect(card).not.toHaveAttribute('data-beside');
+  });
+
+  it('follows the sections when the window or the panel changes size', async () => {
+    const frame = document.createElement('div');
+    frame.setAttribute('data-testid', 'panel-frame');
+    document.body.appendChild(frame);
+    drawn.push(frame);
+    const [area] = panelAt([100, 500]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+
+    area.getBoundingClientRect = () => new DOMRect(200, 200, 400, 300);
+    fireEvent(window, new Event('resize'));
+    await waitFor(() => expect(card.style.left).toBe('616px'));
+  });
+
+  it('keeps on screen when the sections are scrolled off it', async () => {
+    panelAt([-900, -500]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe('8px'));
+  });
+
+  it('docks as before when no sections are drawn, or the step moves nothing on the panel', async () => {
+    const { card } = open();
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(card).not.toHaveAttribute('data-beside');
+    expect(card.style.left).toBe('');
+    cleanup();
+
+    open({ set: { 'not.a.control': 1 } });
+    expect(lessonAreaStore.get()).toEqual([]);
+  });
+
+  it('stays where it is dragged to', async () => {
+    panelAt([100, 500]);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+    card.getBoundingClientRect = () => new DOMRect(516, 300, 400, 500);
+    const head = card.querySelector('header');
+    if (!head) throw new Error('no header');
+
+    drag(head, [600, 320], [300, 120]);
+
+    expect(card).toHaveAttribute('data-detached');
+    expect(card).not.toHaveAttribute('data-beside');
+    expect(card.style.left).toBe('216px');
+    // The sections stay lit; the card just no longer stands beside them.
+    expect(lessonAreaStore.get()).toEqual(areasOf(def, ids));
   });
 
   it('lights nothing for the effects, nor on a synth not trying it yet', () => {
