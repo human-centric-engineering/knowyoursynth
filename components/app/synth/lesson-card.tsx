@@ -224,7 +224,8 @@ export function LessonCard({
 
   // Beside the lit sections, on the side with more room, at the height the card docks at. With no room either side it
   // keeps to the far edge, over as little of them as it can. Measured from the panel as drawn, after the sections
-  // are, and again as the window or the panel moves.
+  // are, and again as the window or the panel moves. Only the pieces in the card's own height count: a modular or
+  // compact layout splits a section across rows, and a piece above or below the card is not one it could cover.
   const placing = !!areaKey && !pinned && pos == null;
   const sizeW = size?.w;
   useEffect(() => {
@@ -233,10 +234,13 @@ export function LessonCard({
     const place = () => {
       const el = ref.current;
       // Not while the panel is turned away for the routing view: its sections are still laid out, unseen.
-      const rects = [...document.querySelectorAll('[data-lesson-area]')]
+      const all = [...document.querySelectorAll('[data-lesson-area]')]
         .filter((r) => !r.closest('.is-away'))
         .map((r) => r.getBoundingClientRect());
-      if (!el || rects.length === 0) return setBeside(null);
+      if (!el || all.length === 0) return setBeside(null);
+      const band = el.getBoundingClientRect();
+      const level = all.filter((r) => r.bottom > band.top && r.top < band.bottom);
+      const rects = level.length ? level : all;
       const left = Math.min(...rects.map((r) => r.left));
       const right = Math.max(...rects.map((r) => r.right));
       const w = el.offsetWidth;

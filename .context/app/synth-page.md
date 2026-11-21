@@ -526,9 +526,10 @@ icons` (the toggles' icons and LEDs without their words, which stay in their too
   bottom right sizes it, by pointer or the arrow keys, down to 280×180, the size kept when ⇆ docks it again (t-203).
   ⇆ docks it on the other side (`kys.cardSide`). On a step that moves something, the panel sections its controls and
   jacks are in are lit (`lessonAreaStore`, drawn by `LessonAreaLayer`) and the card stands beside them, on the side
-  with more room, at its docked height, or at the far edge when it fits on neither side (t-297 on the Model D, every
-  synth since t-298); dragged or docked with ⇆, it stays where it is put until closed. Turning the panel over to the Diagram closes it, whatever it shows
-  (t-205). Showing the lesson, its header is a strip of the faceplate (the face roles above) and the card sits in a
+  with more room, at its docked height, or at the far edge when it fits on neither side; only the pieces in the card's
+  own height count, since a modular or compact layout splits a section across rows (t-297 on the Model D, every synth
+  since t-298). Dragged or docked with ⇆, it stays where it is put until closed. Turning the panel over to the Diagram
+  closes it, whatever it shows (t-205). Showing the lesson, its header is a strip of the faceplate (the face roles above) and the card sits in a
   desk-tone bezel, opaque, so it lifts off a panel of its own colour (t-201). Docked, it stands
   above the dock and, with a pointer, above the Sound Design drawer while that is open: the drawer
   stands on the dock outside its height, so the page measures it into `--kys-strip-h` as it slides,

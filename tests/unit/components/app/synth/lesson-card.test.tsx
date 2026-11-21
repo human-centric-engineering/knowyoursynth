@@ -19,6 +19,7 @@ import {
   moveStore,
 } from '@/components/app/synth/stores';
 import { areaOf } from '@/lib/app/synths/lib/areas';
+import { layoutDef } from '@/lib/app/synths/lib/layout';
 import { controlMap } from '@/lib/app/synths/lib/patch';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
@@ -716,8 +717,11 @@ describe("LessonCard beside the step's sections (t-297)", () => {
   });
 
   it('lights the sections and stands beside them on every synth, not just the Model D (t-298)', async () => {
-    const other = getSynthDef('grandmother');
-    if (!other) throw new Error('grandmother is not registered');
+    // The Grandmother as the page draws it: its compact layout, sections moved and split.
+    const long = getSynthDef('grandmother');
+    if (!long) throw new Error('grandmother is not registered');
+    const other = layoutDef(long);
+    expect(other).not.toBe(long);
     const c = other.controls.find((x) => areaOf(other, x));
     if (!c) throw new Error('grandmother has no control in an area');
     panelAt([100, 500]);
@@ -746,8 +750,9 @@ describe("LessonCard beside the step's sections (t-297)", () => {
       name: 'Across',
       steps: [{ title: 'Patch it', module: 'mixer', why: 'Why.', cables: [[from.id, into.id]] }],
     };
-    // The two sections as drawn, far apart: no room for the card either side of them.
-    panelAt([40, 300], [1000, 1360]);
+    // The two sections as drawn, far apart: no room for the card either side of them, and more to the right.
+    window.innerWidth = 1400;
+    panelAt([40, 300], [1000, 1300]);
     render(
       <LessonCard
         def={d}
@@ -767,5 +772,16 @@ describe("LessonCard beside the step's sections (t-297)", () => {
 
     expect([...lessonAreaStore.get()].sort()).toEqual([fromArea.id, intoArea.id].sort());
     await waitFor(() => expect(card.style.left).toBe(`${1400 - 400 - 16}px`));
+  });
+
+  it("stands beside the pieces in its own height, not a section's piece in another row", async () => {
+    // A modular layout puts a section's pieces in different rows: one in the card's height at the left, one in the row
+    // above it at the right, which would leave no room either side if both counted.
+    const [inRow, above] = panelAt([100, 500], [900, 1300]);
+    inRow.getBoundingClientRect = () => new DOMRect(100, 400, 400, 200);
+    above.getBoundingClientRect = () => new DOMRect(900, 50, 400, 200);
+    const { card } = open();
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+    await waitFor(() => expect(card.style.left).toBe('516px'));
   });
 });
