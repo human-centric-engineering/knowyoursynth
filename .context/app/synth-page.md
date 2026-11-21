@@ -524,7 +524,10 @@ icons` (the toggles' icons and LEDs without their words, which stay in their too
   does not block the panel, since it tells you to turn the knobs under it. It can be dragged by its
   header anywhere on the screen, and once moved it floats over the dock and the tutor's drawer (t-202); its grip at the
   bottom right sizes it, by pointer or the arrow keys, down to 280×180, the size kept when ⇆ docks it again (t-203).
-  ⇆ docks it on the other side (`kys.cardSide`). Turning the panel over to the Diagram closes it, whatever it shows
+  ⇆ docks it on the other side (`kys.cardSide`). On a step that moves something, the panel sections its controls and
+  jacks are in are lit (`lessonAreaStore`, drawn by `LessonAreaLayer`) and the card stands beside them, on the side
+  with more room, at its docked height, or at the far edge when it fits on neither side (t-297 on the Model D, every
+  synth since t-298); dragged or docked with ⇆, it stays where it is put until closed. Turning the panel over to the Diagram closes it, whatever it shows
   (t-205). Showing the lesson, its header is a strip of the faceplate (the face roles above) and the card sits in a
   desk-tone bezel, opaque, so it lifts off a panel of its own colour (t-201). Docked, it stands
   above the dock and, with a pointer, above the Sound Design drawer while that is open: the drawer
