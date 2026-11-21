@@ -12,9 +12,9 @@
  * not in use; moved, it floats over the dock too (t-202). The ⇆ button docks it again, on the other side. Its grip at
  * the bottom right sizes it, by pointer or by the arrow keys (t-203), and the size is kept when it is docked again.
  *
- * On a synth trying it (`BESIDE`), a step's sections are lit on the panel (`lessonAreaStore`, drawn by
- * `LessonAreaLayer`) and the card stands beside them rather than over them, at the height it docks at, moving along as
- * the steps go. Dragged, or docked with ⇆, it stays where it is put until it is closed.
+ * A step's sections are lit on the panel (`lessonAreaStore`, drawn by `LessonAreaLayer`) and the card stands beside
+ * them rather than over them, at the height it docks at, moving along as the steps go (t-297, on every synth since
+ * t-298). Dragged, or docked with ⇆, it stays where it is put until it is closed.
  *
  * The lesson hangs from a strip of the faceplate (`face`, t-201): its header is the panel's colour and silkscreen
  * ink, as the rails along the panel's head and foot are, so the card reads as part of the instrument; its body is the
@@ -65,8 +65,6 @@ export type CardId = 'build' | 'inspector' | 'fx';
 /** The controls a sound's tweaks are about, once each, in their order. */
 const tweakBadges = (p: Preset): string[] => [...new Set(p.tweaks.map((t) => t.id))];
 
-/** The synths whose lesson card lights a step's sections and stands beside them: tried on the Model D first. */
-const BESIDE = new Set(['model-d']);
 /** How far the card stands off the sections it is beside, in px. */
 const GAP = 16;
 
@@ -206,9 +204,9 @@ export function LessonCard({
   }, [badgeKey]);
   useEffect(() => () => badgeStore.set([]), []);
 
-  // The sections the step's moves are in, lit on the panel: on a synth trying it, for a step that moves something.
+  // The sections the step's moves are in, lit on the panel, for a step that moves something.
   const areaKey = useMemo(() => {
-    if (!BESIDE.has(def.id) || section !== 'build' || !current) return '';
+    if (section !== 'build' || !current) return '';
     const cm = controlMap(def);
     const jm = jackMap(def);
     const ids = new Set<string>();
@@ -226,7 +224,9 @@ export function LessonCard({
 
   // Beside the lit sections, on the side with more room, at the height the card docks at. With no room either side it
   // keeps to the far edge, over as little of them as it can. Measured from the panel as drawn, after the sections
-  // are, and again as the window or the panel moves.
+  // are, and again as the window, the panel or the card moves. Only the pieces in the card's own height count: a modular
+  // or compact layout splits a section across rows, and a piece above or below the card is not one it could cover; with
+  // none level with it, it docks.
   const placing = !!areaKey && !pinned && pos == null;
   const sizeW = size?.w;
   useEffect(() => {
@@ -235,12 +235,15 @@ export function LessonCard({
     const place = () => {
       const el = ref.current;
       // Not while the panel is turned away for the routing view: its sections are still laid out, unseen.
-      const rects = [...document.querySelectorAll('[data-lesson-area]')]
+      const all = [...document.querySelectorAll('[data-lesson-area]')]
         .filter((r) => !r.closest('.is-away'))
         .map((r) => r.getBoundingClientRect());
-      if (!el || rects.length === 0) return setBeside(null);
-      const left = Math.min(...rects.map((r) => r.left));
-      const right = Math.max(...rects.map((r) => r.right));
+      if (!el || all.length === 0) return setBeside(null);
+      const band = el.getBoundingClientRect();
+      const level = all.filter((r) => r.bottom > band.top && r.top < band.bottom);
+      if (level.length === 0) return setBeside(null);
+      const left = Math.min(...level.map((r) => r.left));
+      const right = Math.max(...level.map((r) => r.right));
       const w = el.offsetWidth;
       const vw = window.innerWidth;
       const roomR = vw - EDGE - right;
@@ -271,8 +274,14 @@ export function LessonCard({
     };
     later();
     // The panel changes size without the window when it is zoomed or its layout changes; the scroller around it, when
-    // a drawer or column beside it does, which can move the panel without resizing it.
+    // a drawer or column beside it does, which can move the panel without resizing it. The card grows with a longer
+    // step, which changes the rows it is level with; and it stands on the dock and the Sound Design drawer, so it
+    // rises and falls, unresized, as the page writes their heights (`--kys-dock-h`, `--kys-strip-h`) on its root.
     const seen = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(later) : null;
+    if (ref.current) seen?.observe(ref.current);
+    const lifted = typeof MutationObserver !== 'undefined' ? new MutationObserver(later) : null;
+    const root = ref.current?.closest('.kys-synth');
+    if (root) lifted?.observe(root, { attributes: true, attributeFilter: ['style'] });
     for (const sel of ['[data-testid="panel-frame"]', '.kys-panel-scroller']) {
       const el = document.querySelector(sel);
       if (el) seen?.observe(el);
@@ -282,6 +291,7 @@ export function LessonCard({
     return () => {
       cancelAnimationFrame(frame);
       seen?.disconnect();
+      lifted?.disconnect();
       window.removeEventListener('resize', later);
       window.removeEventListener('scroll', onScroll, true);
     };

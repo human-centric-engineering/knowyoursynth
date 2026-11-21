@@ -19,6 +19,7 @@ import {
   moveStore,
 } from '@/components/app/synth/stores';
 import { areaOf } from '@/lib/app/synths/lib/areas';
+import { layoutDef } from '@/lib/app/synths/lib/layout';
 import { controlMap } from '@/lib/app/synths/lib/patch';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { START_STEP, defaultPatchSound, startStep } from '@/lib/app/synths/default-patch';
@@ -549,7 +550,28 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     return made;
   };
 
+  // What each ResizeObserver watches, and a way to fire it: happy-dom lays nothing out, so nothing resizes on its own.
+  let observed: { els: Element[]; fire: () => void }[] = [];
+  beforeEach(() => {
+    observed = [];
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        els: Element[] = [];
+        constructor(cb: () => void) {
+          observed.push({ els: this.els, fire: cb });
+        }
+        observe(el: Element) {
+          this.els.push(el);
+        }
+        unobserve() {}
+        disconnect() {}
+      }
+    );
+  });
+
   afterEach(() => {
+    vi.unstubAllGlobals();
     drawn.forEach((el) => el.remove());
     drawn = [];
     cleanup();
@@ -577,6 +599,8 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     );
     const card = screen.getByTestId('lesson-card');
     Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    // Docked at the height the sections are drawn at (happy-dom lays nothing out), so they are level with it.
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
     return { card, onSide, view };
   }
 
@@ -710,18 +734,127 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     expect(lessonAreaStore.get()).toEqual(areasOf(def, ids));
   });
 
-  it('lights nothing for the effects, nor on a synth not trying it yet', () => {
+  it('lights nothing for the effects', () => {
     open({ section: 'fx' });
     expect(lessonAreaStore.get()).toEqual([]);
-    cleanup();
+  });
 
-    const other = getSynthDef('grandmother');
-    if (!other) throw new Error('grandmother is not registered');
+  it('lights the sections and stands beside them on every synth, not just the Model D (t-298)', async () => {
+    // The Grandmother as the page draws it: its compact layout, sections moved and split.
+    const long = getSynthDef('grandmother');
+    if (!long) throw new Error('grandmother is not registered');
+    const other = layoutDef(long);
+    expect(other).not.toBe(long);
     const c = other.controls.find((x) => areaOf(other, x));
     if (!c) throw new Error('grandmother has no control in an area');
     panelAt([100, 500]);
     const { card } = open({ d: other, set: { [c.id]: 5 } });
-    expect(lessonAreaStore.get()).toEqual([]);
+    expect(lessonAreaStore.get()).toEqual(areasOf(other, [c.id]));
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+    expect(card).toHaveAttribute('data-beside');
+  });
+
+  it("lights every section a patchbay step's cables run between, and keeps to the far edge when they span the panel", async () => {
+    const d = getSynthDef('system-55');
+    if (!d) throw new Error('system-55 is not registered');
+    // An output and an input in different sections of the case: the cable crosses the panel.
+    const from = d.jacks.find((j) => j.dir === 'out' && areaOf(d, j));
+    const fromArea = from && areaOf(d, from);
+    const into = d.jacks.find(
+      (j) => j.dir === 'in' && areaOf(d, j) && areaOf(d, j)?.id !== fromArea?.id
+    );
+    if (!from || !fromArea || !into) throw new Error('system-55 has no cable across two sections');
+    const intoArea = areaOf(d, into);
+    if (!intoArea) throw new Error('no area');
+
+    const patched: Preset = {
+      ...defaultPatchSound(d),
+      id: 'across',
+      name: 'Across',
+      steps: [{ title: 'Patch it', module: 'mixer', why: 'Why.', cables: [[from.id, into.id]] }],
+    };
+    // The two sections as drawn, far apart: no room for the card either side of them, and more to the right.
+    panelAt([40, 300], [1000, 1300]);
+    render(
+      <LessonCard
+        def={d}
+        preset={patched}
+        step={0}
+        onStep={vi.fn()}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+      />
+    );
+    const card = screen.getByTestId('lesson-card');
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+
+    expect([...lessonAreaStore.get()].sort()).toEqual([fromArea.id, intoArea.id].sort());
+    await waitFor(() => expect(card.style.left).toBe(`${1400 - 400 - 16}px`));
+  });
+
+  it("stands beside the pieces in its own height, not a section's piece in another row", async () => {
+    // A modular layout puts a section's pieces in different rows: one in the card's height at the left, one in the row
+    // above it at the right, which would leave no room either side if both counted.
+    const [inRow, above] = panelAt([100, 500], [900, 1300]);
+    inRow.getBoundingClientRect = () => new DOMRect(100, 400, 400, 200);
+    above.getBoundingClientRect = () => new DOMRect(900, 50, 400, 200);
+    const { card } = open();
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+  });
+
+  it('docks when none of the lit pieces are level with it, and moves beside them once it grows into their row', async () => {
+    const [area] = panelAt([100, 500]);
+    area.getBoundingClientRect = () => new DOMRect(100, 50, 400, 200);
+    const { card } = open();
+    await new Promise((r) => requestAnimationFrame(r));
     expect(card).not.toHaveAttribute('data-beside');
+    expect(card.style.left).toBe('');
+
+    // A longer step's text grows the docked card up into the row above: the card's own size is watched.
+    card.getBoundingClientRect = () => new DOMRect(960, 100, 400, 700);
+    const watched = observed.find((o) => o.els.includes(card));
+    if (!watched) throw new Error('the card is not watched for its size');
+    act(() => watched.fire());
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+  });
+
+  it('moves beside them when the Sound Design drawer lifts it into their row, unresized', async () => {
+    const page = document.createElement('div');
+    page.className = 'kys-synth';
+    document.body.appendChild(page);
+    drawn.push(page);
+    const [area] = panelAt([100, 500]);
+    area.getBoundingClientRect = () => new DOMRect(100, 50, 400, 200);
+    const d = def;
+    render(
+      <LessonCard
+        def={d}
+        preset={sound(d, Object.fromEntries(ids.map((id) => [id, 5])))}
+        step={0}
+        onStep={vi.fn()}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+      />,
+      { container: page }
+    );
+    const card = screen.getByTestId('lesson-card');
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(card).not.toHaveAttribute('data-beside');
+
+    // The page writes the drawer's height on its root, and the card, standing on it, rises into the row above.
+    card.getBoundingClientRect = () => new DOMRect(960, 100, 400, 500);
+    page.style.setProperty('--kys-strip-h', '200px');
+    await waitFor(() => expect(card.style.left).toBe('516px'));
   });
 });
