@@ -8038,8 +8038,8 @@
     {
       "id": "gm-einstein-organ-arp",
       "name": "Minimalist Organ Arpeggio",
-      "ref": "Relentless organ arpeggios cycling one set of notes through the chords of Glass's \"Einstein on the Beach\"",
-      "artist": "Philip Glass",
+      "ref": "Relentless organ arpeggios cycling one set of notes through changing chords, as 1970s minimalism did",
+      "artist": "Minimalism",
       "tags": ["seq", "arp", "minimalism", "70s", "organ"],
       "level": 1,
       "blurb": "A relentless, organ-like arpeggio that cycles the same notes as it changes chords.",
