@@ -1,6 +1,7 @@
 /**
  * Researched patterns (`f-pattern-library` t-127, t-128, t-159, t-129, t-160, t-161, t-162, t-163, t-164, t-165, t-166, t-167, t-168, t-169, t-192): the research batches under the seed's `data/patterns/`, and
- * the seed that puts them on their sounds.
+ * the seed that puts them on their sounds. The same folder holds batches composed for their sounds (`f-lane-sounds`
+ * t-301), checked by sound rather than by artist roster.
  *
  * First the real batches, against the real catalogue and databank data: every pattern parses and plays, every sound a
  * batch names is in the catalogue and is looked at by one batch (one or more patterns, or a reason it has none), every
@@ -19,7 +20,10 @@ import { compileLoop, seededRng, SLIDE_OVERLAP } from '@/lib/app/sequencer/compi
 import { MAX_STEPS, PatternSchema, stepsPerBeat, type Pattern } from '@/lib/app/sequencer/pattern';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
-import { loadPatternData } from '@/prisma/seeds/app-knowyoursynth/pattern-data';
+import {
+  loadPatternData,
+  loadPatternDefaults,
+} from '@/prisma/seeds/app-knowyoursynth/pattern-data';
 import { riffKey, syncRiffPatterns, type LibraryDb } from '@/lib/app/patterns/library';
 import { ambientPlacement, firstLoop } from '@/lib/app/patterns/library-facts';
 import {
@@ -503,8 +507,47 @@ describe('the research batches', () => {
     ],
   ];
 
-  it('has a roster for every batch, so none goes unchecked below', () => {
-    expect(batches.map((b) => b.task).sort()).toEqual(rosters.map(([task]) => task).sort());
+  /**
+   * Batches of songs composed for their own sounds (`f-lane-sounds` t-301), not researched from an artist's work. Their
+   * sounds are credited to a genre that sounds on other synths share, so an artist roster cannot hold them: each is
+   * checked below, pattern by sound, instead.
+   */
+  const composed = ['t-301'];
+
+  it('has a roster for every researched batch, so none goes unchecked below', () => {
+    expect(
+      batches
+        .map((b) => b.task)
+        .filter((t) => !composed.includes(t))
+        .sort()
+    ).toEqual(rosters.map(([task]) => task).sort());
+  });
+
+  it('gives each composed pattern one sound, which plays it by default, with mod lanes and a part B (t-301)', () => {
+    const defaults = new Map(loadPatternDefaults().defaults.map((d) => [d.sound, d.pattern]));
+    const made = batches.filter((b) => composed.includes(b.task));
+    expect(made.map((b) => b.task)).toEqual(composed);
+    for (const b of made) {
+      expect(b.patterns.length, b.task).toBeGreaterThan(0);
+      expect(b.notRecreated, b.task).toEqual([]);
+      for (const p of b.patterns) {
+        expect(p.sounds, p.key).toHaveLength(1);
+        expect(defaults.get(p.sounds[0]), p.key).toBe(p.key);
+        const pattern = PatternSchema.parse(p.pattern);
+        expect(pattern.lanes?.length, p.key).toBeGreaterThan(0);
+        expect(new Set(pattern.chain).size, p.key).toBe(2);
+        // Every lane moves its control somewhere in the song, and names one of the sound's tweaks.
+        const tweaks = sounds.get(p.sounds[0])!.tweaks.map((t) => t.id);
+        for (const id of pattern.lanes!) {
+          const values = pattern.parts.flatMap((part) => part.steps.map((st) => st.mod?.[id]));
+          expect(
+            new Set(values.filter((v) => v !== undefined)).size,
+            `${p.key} ${id}`
+          ).toBeGreaterThan(1);
+          expect(tweaks, `${p.key} ${id}`).toContain(id);
+        }
+      }
+    }
   });
 
   it('places each sound in one batch at most', () => {

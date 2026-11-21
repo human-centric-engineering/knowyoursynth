@@ -39,7 +39,7 @@ const EXPORTED: {
   unusual: number;
   limits: number;
 }[] = [
-  { id: 'model-d', sounds: 200, timeline: 9, relatives: 5, unusual: 38, limits: 2 },
+  { id: 'model-d', sounds: 230, timeline: 9, relatives: 5, unusual: 38, limits: 2 },
   { id: 'neutron', sounds: 200, timeline: 11, relatives: 5, unusual: 42, limits: 3 },
   { id: 'pro-1', sounds: 150, timeline: 7, relatives: 5, unusual: 33, limits: 4 },
   { id: 'k2', sounds: 150, timeline: 8, relatives: 5, unusual: 30, limits: 5 },

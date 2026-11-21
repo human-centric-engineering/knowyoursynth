@@ -490,6 +490,11 @@ with nothing set plays. In the light theme the module is a light unit with pale 
   panel's (Page Up and Page Down by more; a switch or a choice by one option a press), Home and End go to either end, and Delete clears.
 - Hovering or focusing a cell shows its value at the head of the lane.
 
+**Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
+(t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once
+([`pattern-library.md`](./pattern-library.md#composed-batches-sounds-played-by-their-lanes)). The Model D has thirty
+(t-301).
+
 ## Sharing and publishing patterns
 
 A pattern can be private, shared by a link, or published, as a sound can (t-83, owner ruling: patterns too). The rules

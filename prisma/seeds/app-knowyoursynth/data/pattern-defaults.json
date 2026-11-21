@@ -4961,6 +4961,126 @@
     {
       "sound": "wasp-deluxe/wasp-steel-swell",
       "pattern": "researched:daniel-lanois/aquatic-steel"
+    },
+    {
+      "sound": "model-d/lane-acid-walk",
+      "pattern": "researched:model-d-lanes/acid-cutoff-walk"
+    },
+    {
+      "sound": "model-d/lane-berlin-sweep",
+      "pattern": "researched:model-d-lanes/berlin-sweep-sequence"
+    },
+    {
+      "sound": "model-d/lane-glide-funk",
+      "pattern": "researched:model-d-lanes/glide-lane-funk-bass"
+    },
+    {
+      "sound": "model-d/lane-dub-pressure",
+      "pattern": "researched:model-d-lanes/dub-pressure-bass"
+    },
+    {
+      "sound": "model-d/lane-interval-stabs",
+      "pattern": "researched:model-d-lanes/interval-stab-riff"
+    },
+    {
+      "sound": "model-d/lane-wave-switch",
+      "pattern": "researched:model-d-lanes/wave-switch-lead"
+    },
+    {
+      "sound": "model-d/lane-breath-flute",
+      "pattern": "researched:model-d-lanes/breath-lane-flute"
+    },
+    {
+      "sound": "model-d/lane-talking-bass",
+      "pattern": "researched:model-d-lanes/talking-emphasis-bass"
+    },
+    {
+      "sound": "model-d/lane-trance-gate",
+      "pattern": "researched:model-d-lanes/gated-trance-pulse"
+    },
+    {
+      "sound": "model-d/lane-rate-wobble",
+      "pattern": "researched:model-d-lanes/rate-step-wobble-bass"
+    },
+    {
+      "sound": "model-d/lane-fm-growl",
+      "pattern": "researched:model-d-lanes/fm-growl-riff"
+    },
+    {
+      "sound": "model-d/lane-overdrive-riff",
+      "pattern": "researched:model-d-lanes/overdrive-lane-rock-riff"
+    },
+    {
+      "sound": "model-d/lane-glass-arp",
+      "pattern": "researched:model-d-lanes/glass-arpeggio"
+    },
+    {
+      "sound": "model-d/lane-garage-sub",
+      "pattern": "researched:model-d-lanes/two-step-garage-bass"
+    },
+    {
+      "sound": "model-d/lane-italo-octaves",
+      "pattern": "researched:model-d-lanes/italo-octave-bass"
+    },
+    {
+      "sound": "model-d/lane-motorik-drift",
+      "pattern": "researched:model-d-lanes/motorik-drift"
+    },
+    {
+      "sound": "model-d/lane-pulse-shuffle",
+      "pattern": "researched:model-d-lanes/pulse-width-shuffle"
+    },
+    {
+      "sound": "model-d/lane-contour-marimba",
+      "pattern": "researched:model-d-lanes/contour-marimba-cells"
+    },
+    {
+      "sound": "model-d/lane-glitch-ratchet",
+      "pattern": "researched:model-d-lanes/glitch-ratchet-line"
+    },
+    {
+      "sound": "model-d/lane-theremin-glide",
+      "pattern": "researched:model-d-lanes/theremin-glide-melody"
+    },
+    {
+      "sound": "model-d/lane-blues-bend",
+      "pattern": "researched:model-d-lanes/bending-blues-lead"
+    },
+    {
+      "sound": "model-d/lane-octave-leap",
+      "pattern": "researched:model-d-lanes/octave-leap-electro"
+    },
+    {
+      "sound": "model-d/lane-noise-kit",
+      "pattern": "researched:model-d-lanes/one-voice-drum-kit"
+    },
+    {
+      "sound": "model-d/lane-bowed-cello",
+      "pattern": "researched:model-d-lanes/bowed-cello-line"
+    },
+    {
+      "sound": "model-d/lane-shifting-drone",
+      "pattern": "researched:model-d-lanes/shifting-drone"
+    },
+    {
+      "sound": "model-d/lane-boom-bap",
+      "pattern": "researched:model-d-lanes/boom-bap-moog-bass"
+    },
+    {
+      "sound": "model-d/lane-electro-zap",
+      "pattern": "researched:model-d-lanes/electro-zap-bass"
+    },
+    {
+      "sound": "model-d/lane-night-drive",
+      "pattern": "researched:model-d-lanes/night-drive-lead"
+    },
+    {
+      "sound": "model-d/lane-arcade-trill",
+      "pattern": "researched:model-d-lanes/arcade-trill-lead"
+    },
+    {
+      "sound": "model-d/lane-fusion-unison",
+      "pattern": "researched:model-d-lanes/fusion-unison-line"
     }
   ],
   "notDefault": [
