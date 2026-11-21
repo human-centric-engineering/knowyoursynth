@@ -1287,7 +1287,7 @@ unit.
 #### Researched defaults
 
 t-254. The batches put every researched pattern behind its sounds' riffs, and no admin reorder followed, so even the
-TEO-5's _Jump Brass_ ("In the style of Van Halen — “Jump”") opened with its own riff while _Jump: synth riff, an
+TEO-5's _Jump Brass_ (whose ref then read "In the style of Van Halen — “Jump”") opened with its own riff while _Jump: synth riff, an
 octave down_ sat second on its list. The owner's 2026-11-15 ruling ([Reviewing the current riffs](#reviewing-the-current-riffs)) is carried out by
 `prisma/seeds/app-knowyoursynth/data/pattern-defaults.json`, read by `pattern-data.ts`'s `loadPatternDefaults` and
 checked by `PatternDefaultsSchema`:

@@ -1,6 +1,6 @@
 {
   "task": "t-254",
-  "ruling": "Owner ruling, 2026-11-15: a sound whose ref names a song, artist or style, and that a researched pattern of that song, artist or style already names, plays that pattern as its default, without waiting for the owner’s listen.",
+  "ruling": "Owner ruling, 2026-11-15: a sound whose ref names a song, artist or style, and that a researched pattern of that song, artist or style already names, plays that pattern as its default, without waiting for the owner’s listen. Owner ruling, 2026-11-21 (f-honest-attributions t-294): a default earned under that ruling stands when the sound’s credit later moves to a genre, because the pattern still credits its own work.",
   "defaults": [
     {
       "sound": "0-coast/zc-accent-seq",

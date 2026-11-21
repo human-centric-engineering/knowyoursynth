@@ -13980,7 +13980,7 @@
     {
       "id": "syntrx-ambient-bells",
       "name": "Ambient Bells",
-      "ref": "Soft bells chiming at random into a long reverb, in the generative spirit of Brian Eno’s ambient music",
+      "ref": "Soft bells chiming at random into a long reverb, like the generative ambient music of Brian Eno",
       "artist": "Brian Eno",
       "tags": ["fx", "ambient", "bell"],
       "level": 2,

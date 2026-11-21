@@ -199,10 +199,13 @@ describe('the exported content', () => {
   });
 
   // A ref says what the sound is like, never "In the style of…" (`.context/app/synths.md`, f-honest-attributions t-294).
-  it('has no sound whose ref is "In the style of…" or "In the spirit of…"', () => {
+  it('has no sound whose ref says "in the style of" or "in the spirit of"', () => {
     const styled = data.sounds.flatMap((file) =>
       file.sounds
-        .filter((s) => typeof s.ref === 'string' && /^in the (style|spirit) of\b/i.test(s.ref))
+        .filter(
+          (s) =>
+            typeof s.ref === 'string' && /\bin the (?:[a-z]+ )?(?:style|spirit) of\b/i.test(s.ref)
+        )
         .map((s) => `${file.synth}/${String(s.id)}`)
     );
     expect(styled).toEqual([]);
