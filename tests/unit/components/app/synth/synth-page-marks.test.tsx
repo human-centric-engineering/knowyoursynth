@@ -277,7 +277,7 @@ describe('lesson progress', () => {
     );
     fireEvent.click(walk('Build it step by step'));
     // Step 0, the Default patch, is no step of the lesson's: it records nothing.
-    expect(lesson().textContent).toContain('Set your synth to the Default patch');
+    expect(lesson().textContent).toContain('Set your synth to the Default Saw');
     expect(progressPuts()).toEqual([]);
     fireEvent.click(walk('Next step'));
     fireEvent.click(walk('Next step'));
@@ -307,7 +307,7 @@ describe('lesson progress', () => {
     fireEvent.click(walk('Next step'));
     fireEvent.click(walk('Next step'));
     await waitFor(() => expect(progressPuts()).toHaveLength(3));
-    fireEvent.click(screen.getByRole('button', { name: 'Lesson step 0: Default patch' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Lesson step 0: Default Saw' }));
     expect(lesson().textContent).toContain('Step 0 of 3');
     expect(progressPuts().map(([, body]) => body)).toEqual([{ step: 0 }, { step: 1 }, { step: 2 }]);
   });

@@ -1841,6 +1841,76 @@ const mantis: SynthDef & { version: number } = {
   init,
   // Init is the Mantis's own INIT, a single sawtooth: Oscillator 1 alone, the filter open, Envelope 1 an organ gate.
   // That is the Default patch already, so it has none of its own.
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Start from an initialised program, and set the output',
+        module: 'out',
+        why: 'The Mantis keeps settings in its menus that the knobs do not show, so if you can, start from an initialised program. VOLUME at 7 is the level every patch here assumes, and MASTER TUNE at the centre keeps it at concert pitch. VOICING on Quad with no VOICE SPREAD plays a note per key, in the middle. ARP, HOLD and GLIDE AUTO unlit, GLIDE fully down, and the joystick centred.',
+        controls: ['out.*', 'kbd.*', 'arp.*', 'joy.*'],
+      },
+      {
+        title: 'Set both oscillators to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Both WAVE knobs on sawtooth, the buzzy wave with every harmonic, at OCTAVE 0, with SHAPE at the centre. SEMITONE and CENT at the centre keep OSC 2 in tune. SUB LEVEL, DENSITY and DRIFT fully anticlockwise add nothing.',
+        controls: [
+          'osc1.wave',
+          'osc1.shape',
+          'osc1.octave',
+          'osc2.wave',
+          'osc2.shape',
+          'osc2.octave',
+          'sub.*',
+          'osc2.density*',
+          'osc2.semitone',
+          'osc2.cent',
+          'drift.*',
+        ],
+      },
+      {
+        title: 'Hear OSC 1 alone',
+        module: 'mixer',
+        why: 'OSC BALANCE fully anticlockwise is OSC 1 alone, and NOISE BALANCE and RM BALANCE fully anticlockwise keep the noise and ring modulator out: one plain saw.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'Each MOD knob at the centre means its source moves nothing, whatever the routing says. Set the routes and the two LFOs as shown so your Mantis matches.',
+        controls: [
+          'osc1.*Mod',
+          'osc2.*Mod',
+          'vcf.cutoffMod',
+          'vcf.widthMod',
+          'route.*',
+          'lfo1.*',
+          'lfo2.*',
+        ],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. On LP12 with CUT OFF fully clockwise, and RESONANCE, DRIVE and KEY TRACK fully anticlockwise, it lets the saw through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'Envelope 1 opens the amplifier for each note. ATTACK fully anticlockwise starts it at once, SUSTAIN fully clockwise holds it while the key is down, and a short RELEASE stops it soon after you let go. REPEAT and LEGATO unlit, VELOCITY at the centre and no SUST FALL. Envelope 2 is set too, though it does nothing while the filter’s CUT OFF MOD is at the centre.',
+        controls: ['env1.*', 'env2.*'],
+      },
+      {
+        title: 'Switch the effects off',
+        module: 'fx',
+        why: 'REVERB LEVEL and CHORUS LEVEL fully anticlockwise keep the sound dry. Set the rest as shown.',
+        controls: ['fx.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 

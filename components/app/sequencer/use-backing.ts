@@ -11,10 +11,11 @@
  * default pattern, for the sound's own riff), then by the tempo and swing (`drumStyleFor`).
  *
  * Every patch chosen starts with the drums on Match and the Count-in on (t-277), whatever was set on the last one, Off
- * included: the beat is the one that suits the new patch. The Metronome is left as it was. The page calls `newPatch`
- * where the visitor picks a patch, not on a change of what is open: a reload, the stored panel arriving after the first
- * render, the account's copy arriving later, or another tab writing the setting is not a patch chosen, and leaves the
- * choices made on the panel as they were.
+ * included: the beat is the one that suits the new patch. The Default Saw is the exception: it starts with the drums
+ * off (t-295, owner 2026-11-21), as it is the plain tone to check by ear, playing a scale. The Metronome is left as
+ * it was. The page calls `newPatch` where the visitor picks a patch, not on a change of what is open: a reload, the
+ * stored panel arriving after the first render, the account's copy arriving later, or another tab writing the setting
+ * is not a patch chosen, and leaves the choices made on the panel as they were.
  *
  * The stored setting is read by `useBackingPref`, apart from the rest.
  */
@@ -56,8 +57,8 @@ export interface Backing {
   matched: DrumStyle;
   /** The beat that plays, or null for none. */
   beat: DrumBeatId | null;
-  /** A patch was chosen: the drums go to Match and the Count-in comes on. */
-  newPatch: () => void;
+  /** A patch was chosen: the drums go to Match (or `drums`, Off for the Default Saw) and the Count-in comes on. */
+  newPatch: (drums?: 'auto' | 'off') => void;
 }
 
 const parsePref = (raw: unknown): BackingPref => {
@@ -108,6 +109,6 @@ export function useBacking(
     setDrums: (d) => setPref({ ...pref, drums: d }),
     matched,
     beat,
-    newPatch: () => setPref((p) => ({ ...p, drums: 'auto', countIn: true })),
+    newPatch: (drums = 'auto') => setPref((p) => ({ ...p, drums, countIn: true })),
   };
 }

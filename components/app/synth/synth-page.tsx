@@ -56,11 +56,12 @@ import type { PublicPattern } from '@/lib/app/patterns/data';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
 import {
-  DEFAULT_PATCH_NAME,
   START_STEP,
+  defaultPatchName,
   defaultPatchSound,
   hasStartStep,
   isDefaultPatch,
+  isSawDefault,
   lessonState,
   startStep,
 } from '@/lib/app/synths/default-patch';
@@ -583,12 +584,13 @@ function Synth({
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
   // A synth switched to, or a sound opened by `?sound=`, is a patch chosen (t-277): the backing goes to Match and the
-  // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`).
-  const arrivedOnPatch = useRef(false);
+  // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`). The Default patch it
+  // opens on starts with the drums off where it is the Default Saw (t-295); a sound from `?sound=` with them on Match.
+  const arrivedOnPatch = useRef<'auto' | 'off' | null>(null);
   useEffect(() => {
     if (switchedTo.current) {
       setSess(() => freshSession(synthDef, defaultSound));
-      arrivedOnPatch.current = true;
+      arrivedOnPatch.current = isSawDefault(synthDef) ? 'off' : 'auto';
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
@@ -604,7 +606,7 @@ function Synth({
     const p = sounds.find((x) => x.id === soundParam);
     if (p) {
       glide(() => freshSession(synthDef, p));
-      arrivedOnPatch.current = true;
+      arrivedOnPatch.current = isDefaultPatch(p.id) && isSawDefault(synthDef) ? 'off' : 'auto';
     }
     const url = new URL(window.location.href);
     url.searchParams.delete('sound');
@@ -1574,7 +1576,7 @@ function Synth({
         ? designed.name
         : preset
           ? preset.name
-          : DEFAULT_PATCH_NAME;
+          : defaultPatchName(synthDef);
   // A library sound on the panel, as it came, whatever pattern a link has put in the sequencer.
   const libraryPreset =
     !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset ? preset : null;
@@ -1630,9 +1632,10 @@ function Synth({
   // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
   const { newPatch } = backing;
   useEffect(() => {
-    if (!arrivedOnPatch.current) return;
-    arrivedOnPatch.current = false;
-    newPatch();
+    const drums = arrivedOnPatch.current;
+    if (!drums) return;
+    arrivedOnPatch.current = null;
+    newPatch(drums);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
@@ -2015,7 +2018,9 @@ function Synth({
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     // Restore, or the same sound picked again, is not another patch: the drums and Count-in stay as set.
-    if (id !== sess.presetId || sess.soundId || designed || sharedPanel) backing.newPatch();
+    // The Default Saw plays its scale with no drums (t-295).
+    if (id !== sess.presetId || sess.soundId || designed || sharedPanel)
+      backing.newPatch(isDefaultPatch(id) && isSawDefault(synthDef) ? 'off' : 'auto');
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
   };
@@ -2361,7 +2366,8 @@ function Synth({
       return;
     }
     leaveShared();
-    // Progress is kept for the catalogue's lessons, not the Default patch's one step.
+    // Progress is kept for the catalogue's lessons, not the Default patch's checklist: it is no library sound, so the
+    // server has nowhere to keep it.
     const kept = preset && !isDefaultPatch(preset.id) ? preset : null;
     if (kept && k != null && k !== START_STEP) progress.record(kept.id, k);
     else if (k == null && kept && step != null && step === kept.steps.length - 1)

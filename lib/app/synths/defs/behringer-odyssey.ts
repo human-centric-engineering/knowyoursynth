@@ -1631,6 +1631,50 @@ const behringerOdyssey: SynthDef & { version: number } = {
   init,
   // no Default patch: init is already VCO-1's sawtooth alone at middle C into the open 4-pole filter, with no
   // resonance or envelope on it, the loudness the AR at its shortest attack and a short release, and no modulation
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Set the keyboard, with no portamento or effects',
+        module: 'glide',
+        why: 'PORTAMENTO all the way down and its MODE unlit mean notes land on their pitch at once. TRANSPOSE on NORMAL. FX off with FX SEND fully anticlockwise keeps the sound dry.',
+        controls: ['kbd.*', 'fx.*'],
+      },
+      {
+        title: 'Set both VCOs in tune, with no modulation',
+        module: 'osc',
+        why: 'The VCOs make the raw tone. COARSE a little above half way puts both at middle C, with FINE at half way. Every FM and PULSE WIDTH slider all the way down, so nothing moves the pitch. VCO-1 on AUDIO KYBD ON follows the keyboard, and SYNC stays off.',
+        controls: ['vco1.*', 'vco2.*'],
+      },
+      {
+        title: 'Mix in VCO-1’s sawtooth alone',
+        module: 'mixer',
+        why: 'In the mixer, VCO-1’s switch on its sawtooth, the buzzy wave with every harmonic, with its slider all the way up. VCO-2 and NOISE or RING MOD all the way down: one plain saw goes into the filter.',
+        controls: ['mixer.*', 'noise.*'],
+      },
+      {
+        title: 'Open the filters all the way',
+        module: 'filter',
+        why: 'The high-pass filter takes away bass, so HPF CUTOFF goes all the way down. The low-pass filter takes away treble, so VCF FREQ goes all the way up. No RESONANCE, and every VCF modulation slider all the way down, so it does not move on each note.',
+        controls: ['vcf.*', 'hpf.*'],
+      },
+      {
+        title: 'Take the LFO and sample and hold out of the way',
+        module: 'lfo',
+        why: 'Nothing listens to the LFO or the sample and hold once every FM and VCF slider is down. Set them as shown so your ODYSSEY matches.',
+        controls: ['lfo.*', 'snh.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The VCA’s envelope switch on AR, with its slider all the way up, lets the AR envelope open the amplifier. AR ATTACK all the way down starts each note at once; it holds while the key is down and the short AR RELEASE stops it soon after you let go. VCA GAIN all the way down keeps it shut between notes, and DRIVE off. The ADSR is set too, though nothing listens to it here.',
+        controls: ['vca.*', 'drive.*', 'ar.*', 'adsr.*', 'repeat.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 

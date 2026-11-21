@@ -1672,6 +1672,73 @@ const cs80: SynthDef & { version: number } = {
   // Init is already Channel I's sawtooth alone, with its loudness an organ gate. The Default patch opens Channel I's
   // low-pass filter all the way and takes its resonance off.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume, the tuning, and the tone selectors to PANEL',
+        module: 'out',
+        why: 'VOLUME at 7 is the level every patch here assumes, and both PITCH knobs at the centre keep it at concert pitch. Both TONE SELECTORS on PANEL make the sliders set the sound, rather than a stored preset.',
+        controls: ['out.*', 'tune.coarse', 'tune.fine', 'ch1.tone', 'ch2.tone'],
+      },
+      {
+        title: 'Hear channel I alone, with nothing on top',
+        module: 'mixer',
+        why: 'The CS-80 has two channels, I and II, each a whole synth voice. MIX I-II pushed all the way up plays channel I alone. DETUNE CH II at the centre keeps channel II in tune for later. Push the levers on the left all the way up: SUSTAIN, PORTAMENTO and the three SUB OSCILLATOR depths, so there is no hold, no slide and no wobble.',
+        controls: ['mix.*', 'tune.detune', 'sustain.*', 'porta.*', 'sub.*', 'touch.*'],
+      },
+      {
+        title: 'Set channel I to the sawtooth alone',
+        module: 'osc',
+        why: 'The sawtooth button on, square off, at 8′: the buzzy wave with every harmonic. PWM and PW all the way down, NOISE down, SINE WAVE LEVEL down, so the saw is the only sound.',
+        controls: [
+          'ch1.feet',
+          'ch1.saw',
+          'ch1.square',
+          'ch1.pwm',
+          'ch1.pw',
+          'ch1.speed',
+          'ch1.noise',
+          'ch1.sine',
+        ],
+      },
+      {
+        title: 'Open channel I’s filters all the way',
+        module: 'filter',
+        why: 'HPF I all the way down lets all the bass through, LPF I all the way up lets all the treble through, and both resonance sliders all the way down. With IL, AL and the VCF envelope sliders down, the filter does not move on each note.',
+        controls: [
+          'ch1.hpf',
+          'ch1.resH',
+          'ch1.lpf',
+          'ch1.resL',
+          'ch1.il',
+          'ch1.al',
+          'ch1.fa',
+          'ch1.fd',
+          'ch1.fr',
+          'ch1.vcfLevel',
+          'ch1.initBrill',
+        ],
+      },
+      {
+        title: 'Make channel I’s loudness a plain gate',
+        module: 'amp',
+        why: 'The VCA envelope: A and D all the way down start each note at once, S all the way up holds it at full while the key is down, and a short R stops it soon after you let go. LEVEL I at 8. INITIAL-TOUCH LEVEL down, so how hard you press makes no difference.',
+        controls: ['ch1.a', 'ch1.d', 'ch1.s', 'ch1.r', 'ch1.level', 'ch1.initLevel'],
+      },
+      {
+        title: 'Set channel II to match, ready for later patches',
+        module: 'osc',
+        why: 'Channel II is not heard while MIX I-II is all the way up. Set it as shown: the same sawtooth, with its filter a little lower, so it is ready when a patch brings it in.',
+        controls: ['ch2.*'],
+      },
+      {
+        title: 'Set the overall controls, and switch the effects off',
+        module: 'fx',
+        why: 'BRILLIANCE and the keyboard control sliders at the centre change nothing, and RESONANCE and the ring modulator levers all the way up are off. TREMOLO, CHORUS and TREMOLO ON/OFF off keep the sound dry.',
+        controls: ['global.*', 'kbd.*', 'ring.*', 'trem.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
     values: { 'ch1.lpf': 10, 'ch1.resL': 0 },
   },
   toEngine,

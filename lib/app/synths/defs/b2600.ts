@@ -2833,6 +2833,81 @@ const b2600: SynthDef & { version: number } = {
   // the Default patch swaps VCO 1's slider for VCO 3's, opens the filter all the way with no keyboard tracking, and
   // makes the ADSR (the loudness) an organ gate with a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out and set the keyboard modes',
+        module: 'mode',
+        why: 'The 2600 plays through its own internal connections when nothing is patched, so take out any cable first. The keyboard plays one note at a time, with no repeat and no portamento (glide), so each note lands on its pitch at once. PHONES at 7 is the level every patch here assumes.',
+        controls: ['kbd.*', 'porta.*', 'out.*'],
+      },
+      {
+        title: 'Set the three VCOs in tune, in the audio range',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Each one is switched to AUDIO, with its INITIAL OSCILLATOR FREQUENCY slider a little below half way, around middle C, and FINE TUNE at the centre. SYNC stays off. The 2600 has no waveform switch: the sawtooth is wired to the filter inside, and the pulse width only matters for the pulse wave.',
+        controls: [
+          'vco1.freq',
+          'vco1.fine',
+          'vco1.pw',
+          'vco1.range',
+          'vco2.freq',
+          'vco2.fine',
+          'vco2.pw',
+          'vco2.range',
+          'vco2.sync',
+          'vco3.freq',
+          'vco3.fine',
+          'vco3.pw',
+          'vco3.range',
+          'vco3.sync',
+        ],
+      },
+      {
+        title: 'Pull every modulation slider down',
+        module: 'mod',
+        why: 'Each oscillator has sliders that let another oscillator, the noise, the sample and hold or the envelope move its pitch or pulse width. With every one of them all the way down, the pitch only follows the keyboard.',
+        controls: ['vco1.fm*', 'vco2.fm*', 'vco2.pwm', 'vco3.fm*', 'vco3.pwm'],
+      },
+      {
+        title: 'Send VCO 3 alone into the filter',
+        module: 'mixer',
+        why: 'The filter’s audio mixer picks what you hear. VCO 3 goes up to 8; VCO 1, VCO 2, the ring modulator and the noise go all the way down. Set the ring modulator and noise generator sliders too, though nothing hears them now.',
+        controls: [
+          'vcf.ring',
+          'vcf.vco1',
+          'vcf.vco2',
+          'vcf.vco3',
+          'vcf.noise',
+          'ring.*',
+          'noise.*',
+        ],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. INITIAL FILTER FREQUENCY all the way up, with no RESONANCE and every control slider down, lets the saw through untouched and stops it changing from note to note.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'The ADSR opens the amplifier for each note. ATTACK all the way down starts the note at once, SUS LEVEL all the way up holds it at full volume while the key is down, and the short RELEASE stops it soon after you let go. The AR envelope is set too, though nothing listens to it in this patch.',
+        controls: ['adsr.*', 'ar.*', 'env.*'],
+      },
+      {
+        title: 'Let the ADSR open the amplifier, and the amplifier out',
+        module: 'amp',
+        why: 'In the VCA, the filter’s sound comes in with VCF all the way up, and the ADSR (EXP’L) slider all the way up lets the envelope open and close it. INITIAL GAIN all the way down keeps it silent between notes. In the output mixer, VCA goes up to 8, the plain filter all the way down, and both reverb sliders down for a dry sound, panned to the centre.',
+        controls: ['vca.*', 'mix.*', 'rev.*'],
+      },
+      {
+        title: 'Leave the LFO and the utilities alone',
+        module: 'util',
+        why: 'Nothing here is patched into the sound, so these do nothing, but set them so your 2600 matches. VIB DEPTH only matters once vibrato is brought in by a cable.',
+        controls: ['lfo.*', 'pre.*', 'envf.*', 'vp.*', 'sh.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'vcf.vco1': 0,
       'vcf.vco3': 8,

@@ -22,7 +22,7 @@ import { modularDef } from '@/lib/app/synths/lib/layout';
 import { faceView, isShown, presetState } from '@/lib/app/synths/lib/patch';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { importPhrase } from '@/lib/app/sequencer/import';
-import { DEFAULT_PATCH_NAME, defaultPatchSound } from '@/lib/app/synths/default-patch';
+import { defaultPatchName, defaultPatchSound } from '@/lib/app/synths/default-patch';
 import { patternLength } from '@/lib/app/sequencer/pattern';
 import { expectedParams, lastParams } from '@/tests/helpers/synth-engine';
 import { catalogueData, synthRows } from '@/tests/helpers/synth-detail';
@@ -166,7 +166,7 @@ describe.each(LISTED)('the %s page', (id) => {
       screen.getByRole('heading', { name: `About this ${def.name}`, hidden: true })
     ).toBeTruthy();
     expect(soundRows().map((r) => r.querySelector('.font-semibold')?.textContent)).toEqual([
-      DEFAULT_PATCH_NAME,
+      defaultPatchName(def),
       ...detail.sounds.map((s) => s.name),
     ]);
     // A pin matrix's jacks are its row and column legends.

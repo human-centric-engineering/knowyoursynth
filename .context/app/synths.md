@@ -101,6 +101,32 @@ definition reaches the page's up-front bundle.
   built from one kit share one (`MOOG900_DEFAULT_PATCH`, `SYNCUSSION_DEFAULT_PATCH`). The comment above each one says
   what it changes from `init`.
 
+  **It is the Default Saw where it is a sawtooth** (t-295, owner 2026-11-21). `defaultPatchName(def)` gives "Default
+  Saw" unless the patch has `listen`, and "Default patch" there. The library, the player, step 0 and the Lesson's
+  start button all read it from there. A patch that is not a sawtooth also has `notSaw`: one or two sentences on what
+  the synth has instead and why this is its plainest start. `validateDefaultPatch` refuses `listen` without it. It
+  opens the sound's `how` and its first step.
+
+  **Its lesson is a starter checklist** (`checklist`, every registered synth has one). It lets a newcomer set the
+  Default patch on their hardware wherever its knobs were left. Each step is a part of the panel: a `title`, a
+  `module`, a `why` for a newcomer, the `controls` it covers, and an optional `listen` at its end. A step that plugs
+  the patch's cables in has `cables: true`. Controls are ids or patterns, where `*` is any run of characters
+  (`osc1.*`). A control goes to the first step that names it, so a broad pattern after a narrow one picks up the rest.
+  A `*` pattern leaves out a control behind a menu (`deep`); only its own id brings one in.
+  `lib/app/synths/lib/checklist.ts` writes one line per control from the definition, saying where to put it: "fully
+  anticlockwise", "about 2 o'clock", "all the way up", "on (lit)", "set to Sawtooth". A matrix connection reads as a
+  Pin (VCS3) or a Point (SYNTRX II) instead of a Cable. Each step sets its controls to the Default patch's own values,
+  so the panel stays on the Default patch at every step.
+
+  `validateDefaultPatch` holds it to its synth. Every control that is not `ui` and not `deep` must be covered
+  exactly once. Every pattern must match something, no step may be left empty, and where the patch has cables they
+  go in at exactly one step. A programmable synth (DeepMind, Take 5, e7, JP-8080 and others) says in its first step to
+  start from an initialised program if the hardware can, because its menus hold settings that no step can name. Kits
+  narrow a shared checklist to the modules a system has (`moog900DefaultPatch(controls)`,
+  `syncussionDefaultPatch(behringer)`). A synth whose `init` is already the Default patch carries
+  `defaultPatch: { values: {}, checklist }`. Step 0 of every other lesson stays one compact step (`startStep`) that
+  sets the whole patch and points to the checklist in the library.
+
 - **Panel values are `number | string | boolean`.** Read a continuous control as a number with a
   local `num(v, id)`, and narrow an enum to the engine's type explicitly
   (`v['filter.mode'] === 'hp' ? 'hp' : 'lp'`). For the values a valid sound holds, the result

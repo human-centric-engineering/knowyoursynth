@@ -1379,6 +1379,52 @@ const polyD: SynthDef & { version: number } = {
   // Init already plays each note on one oscillator's sawtooth: in POLY mode the four oscillators are four voices. The
   // Default patch opens the filter all the way and gives the loudness a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the output, and switch the effects and arpeggiator off',
+        module: 'out',
+        why: 'VOLUME at 7 is the level every patch here assumes. With distortion, chorus and the arpeggiator all off you hear the plain synth; set their knobs anyway so your Poly D matches when you switch them on.',
+        controls: ['out.*', 'fx.*', 'arp.*'],
+      },
+      {
+        title: 'Play in POLY mode, in tune, with no glide',
+        module: 'mode',
+        why: 'In POLY mode each of the four oscillators plays a note of its own, so you can play up to four notes at once. TUNE at the centre and TRANSPOSE on NORM keep the synth at concert pitch. The GLIDE switch off means notes land on their pitch at once, whatever the GLIDE knob says. AUTO DAMP stays off.',
+        controls: ['voice.*', 'kbd.*', 'ctl.*', 'glide.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'With both modulation switches off, nothing wobbles the pitch or the filter. Set the mix, sources and LFO anyway so your Poly D matches.',
+        controls: ['mod.*', 'lfo.*'],
+      },
+      {
+        title: 'Set all four oscillators to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. All four go to the sawtooth, the buzzy wave with every harmonic, at 8′, with the FREQUENCY knobs at the centre so they stay in tune with each other. OSC 4 CONTROL on lets Oscillator 4 follow the keyboard.',
+        controls: ['osc*'],
+      },
+      {
+        title: 'Mix in all four oscillators, and nothing else',
+        module: 'mixer',
+        why: 'In POLY mode each oscillator is one voice, so all four are switched on, each at 6. External input and noise are switched off with their volumes down.',
+        controls: ['mix.*', 'noise.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. Fully open, with no EMPHASIS (resonance), no AMOUNT OF CONTOUR and keyboard control off, it lets the saws through untouched.',
+        controls: ['filter.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The loudness contour shapes each note. ATTACK at 0 starts it at once and SUSTAIN at 10 holds it for as long as you hold the key. With the DECAY switch on, the short DECAY also stops it soon after you let go. The filter contour is set too, though it does nothing while AMOUNT OF CONTOUR is at 0.',
+        controls: ['env.*', 'fenv.*', 'aenv.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
     values: { 'filter.cutoff': 5, 'aenv.decay': 1 },
   },
   toEngine,

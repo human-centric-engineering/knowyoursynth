@@ -1505,6 +1505,46 @@ const grandmother: SynthDef & { version: number } = {
   // resonance and the envelope off the low-pass, makes the envelope (which also sets the loudness) an organ gate with a
   // short release, and turns the reverb down.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull the cables out, set the volume and switch the arpeggiator off',
+        module: 'mode',
+        why: 'Volume at 7 is the level every patch here assumes. Pull any patch cable out first: the Grandmother plays through its own internal connections when nothing is patched. With Play and Hold not lit the arpeggiator and sequencer are stopped, so each key plays one note while you hold it. Glide fully down means each note lands on its pitch at once.',
+        controls: ['out.*', 'arp.*', 'glide'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'The LFO can wobble the pitch, the cutoff or the pulse width. With every amount fully down, nothing moves the sound but your playing.',
+        controls: ['lfo.*', 'att.*'],
+      },
+      {
+        title: 'Set both oscillators to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Both go to the sawtooth, the buzzy wave with every harmonic, at 8. Oscillator 2’s frequency sits at the centre so both stay in tune, and Sync stays off.',
+        controls: ['osc*'],
+      },
+      {
+        title: 'Mix in Oscillator 1 alone',
+        module: 'mixer',
+        why: 'The mixer’s Oscillator 1 at 7, with Oscillator 2 and noise fully down: one plain saw goes into the filters.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Open both filters all the way',
+        module: 'filter',
+        why: 'The high-pass filter takes away bass, so it goes fully anticlockwise to let everything through. The low-pass filter takes away treble, so its cutoff goes fully clockwise. No resonance, no key tracking, and envelope amount at the centre, which on this panel means none.',
+        controls: ['hpf.*', 'vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate, with no spring reverb',
+        module: 'env',
+        why: 'With the VCA set to ENV, the envelope opens the amplifier for each note. Attack fully down starts the note at once, sustain fully up holds it while the key is down, and the short release stops it soon after you let go. Reverb mix fully down keeps the sound dry.',
+        controls: ['env.*', 'vca.*', 'rev.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'hpf.cutoff': 0,
       'vcf.cutoff': 10,

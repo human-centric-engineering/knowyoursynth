@@ -350,7 +350,7 @@ describe('Lesson moving between steps and tabs', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ways to make it yours' }));
     expect(tab(/Make it yours/).getAttribute('aria-selected')).toBe('true');
     fireEvent.click(tab(/Build it/));
-    fireEvent.click(screen.getByRole('button', { name: 'Start from the Default patch' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Start from the Default Saw' }));
     expect(onStep).toHaveBeenLastCalledWith(START_STEP);
   });
 
@@ -384,7 +384,7 @@ describe('Lesson moving between steps and tabs', () => {
 
 describe('Lesson step 0', () => {
   const startLine = () =>
-    screen.getByRole('button', { name: /^0 Set your synth to the Default patch/ });
+    screen.getByRole('button', { name: /^0 Set your synth to the Default Saw/ });
 
   it('is one line before step 1 saying what to set and what to hear, and choosing it sets the Default patch', () => {
     const { onStep } = setup(1);

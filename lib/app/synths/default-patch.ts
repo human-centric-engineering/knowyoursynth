@@ -13,13 +13,32 @@ import { patternFacts } from '@/lib/app/patterns/library-facts';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
-import type { Phrase, PhraseNote, Preset, PresetStep, SynthDef } from '@/lib/app/synths/contract';
-import { presetState, type PanelState } from '@/lib/app/synths/lib/patch';
+import type {
+  DefaultPatch,
+  DefaultPatchStep,
+  Phrase,
+  PhraseNote,
+  Preset,
+  PresetStep,
+  SynthDef,
+} from '@/lib/app/synths/contract';
+import { checklistControls, controlLine } from '@/lib/app/synths/lib/checklist';
+import { jackMap, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { START_STEP } from '@/lib/app/sounds/preference-data';
 
 /** The Default patch's id where a library sound's slug goes: the session, the library and the sequencer. */
 export const DEFAULT_PATCH_ID = 'default-patch';
+/** What the Default patch is called where it is not a sawtooth (it has `listen`). */
 export const DEFAULT_PATCH_NAME = 'Default patch';
+/** What it is called where it is: most synths. */
+export const DEFAULT_SAW_NAME = 'Default Saw';
+
+/** Whether a synth's Default patch is a plain sawtooth: it is unless it says what to listen for instead. */
+export const isSawDefault = (def: SynthDef): boolean => !def.defaultPatch?.listen?.trim();
+
+/** The Default patch's name on this synth: "Default Saw" where it is a sawtooth, "Default patch" where it is not. */
+export const defaultPatchName = (def: SynthDef): string =>
+  isSawDefault(def) ? DEFAULT_SAW_NAME : DEFAULT_PATCH_NAME;
 
 export const isDefaultPatch = (id: string | null | undefined): boolean => id === DEFAULT_PATCH_ID;
 
@@ -70,38 +89,101 @@ export const SCALE_PATTERN_VIEW: LibraryPatternView = {
   facts: patternFacts(SCALE_PATTERN),
 };
 
+/** What to listen for once the Default patch is set: the patch's own words, or a sawtooth's. */
+const listenFor = (def: SynthDef): string =>
+  def.defaultPatch?.listen?.trim() ||
+  'Play a few notes and listen for a bright, steady buzz that starts and stops with the key.';
+
 /**
- * The Default patch as the library lists a sound: one step, which sets the patch. A synth without a `defaultPatch` of
- * its own gets `init` with no cables. A patch that is not a sawtooth (it has `listen`) is described as the synth's
- * plainest tone, and says what to listen for in its own words. It lists as a lead unless it names its own category.
+ * The checklist as lesson steps (`DefaultPatch.checklist`): each step's text, then a line per control it covers saying
+ * where to put it, then its cables and what to listen for. Each step sets its controls to the Default patch's values,
+ * so the panel stays on the Default patch from the first step to the last and only the lit controls move along.
+ */
+function checklistSteps(
+  def: SynthDef,
+  patch: DefaultPatch,
+  checklist: DefaultPatchStep[]
+): PresetStep[] {
+  const values = defaultPatchState(def).values;
+  const groups = checklistControls(def, checklist);
+  const jacks = jackMap(def);
+  const jack = (id: string): string => {
+    const j = jacks[id];
+    return j ? j.name || j.label : id;
+  };
+  const notSaw = patch.listen?.trim() ? patch.notSaw?.trim() : undefined;
+  // a pin matrix joins a row to a column with a pin (or sets a point on a lamp grid), not a cable
+  const link = !def.matrix ? 'Cable' : def.matrix.look === 'led' ? 'Point' : 'Pin';
+  return checklist.map((s, i): PresetStep => {
+    const cs = groups[i].filter((c) => values[c.id] !== undefined);
+    const cables = s.cables ? [...(patch.cables ?? [])] : [];
+    const why = [
+      ...(i === 0 && notSaw ? [notSaw] : []),
+      s.why,
+      ...cs.map((c) => controlLine(def, c, values[c.id], values)),
+      ...cables.map(([from, to]) => `- ${link}: ${jack(from)} to ${jack(to)}`),
+      ...(s.listen ? [`- Listen for: ${s.listen}`] : []),
+    ].join('\n');
+    return {
+      title: s.title,
+      module: s.module,
+      why,
+      set: Object.fromEntries(cs.map((c) => [c.id, values[c.id]])),
+      ...(cables.length ? { cables } : {}),
+    };
+  });
+}
+
+/**
+ * The Default patch as one step: everything it sets, and what to listen for. It is step 0 of every other lesson, and
+ * the Default patch's own lesson on a synth whose patch has no checklist.
+ */
+function wholeStep(def: SynthDef, own: boolean): PresetStep {
+  const patch = def.defaultPatch;
+  const name = defaultPatchName(def);
+  const what = isSawDefault(def)
+    ? 'A plain sawtooth with nothing shaping it: what every patch here starts from.'
+    : 'The plainest tone this synth makes: what every patch here starts from.';
+  const more =
+    !own && patch?.checklist?.length
+      ? ` The ${name} in the library sets it up one part of the panel at a time.`
+      : '';
+  return {
+    title: name,
+    module: 'osc',
+    why: `${what} ${listenFor(def)}${more}`,
+    ...(patch ? { set: { ...patch.values } } : {}),
+    ...(patch?.cables ? { cables: [...patch.cables] } : {}),
+  };
+}
+
+/**
+ * The Default patch as the library lists a sound. Its lesson is the patch's checklist, a part of the panel at a time,
+ * or one step that sets the whole patch where it has none. A synth without a `defaultPatch` of its own gets `init`
+ * with no cables. A patch that is not a sawtooth (it has `listen`) is called the Default patch rather than the Default
+ * Saw, says why (`notSaw`), and says what to listen for in its own words. It lists as a lead unless it names its own
+ * category.
  */
 export function defaultPatchSound(def: SynthDef): CatalogueSound {
   const patch = def.defaultPatch;
-  const listen = patch?.listen?.trim() || null;
+  const saw = isSawDefault(def);
+  const notSaw = saw ? '' : `${patch?.notSaw?.trim() ?? ''} `.trimStart();
   return {
     id: DEFAULT_PATCH_ID,
     version: def.version ?? 1,
-    name: DEFAULT_PATCH_NAME,
+    name: defaultPatchName(def),
     ref: 'The starting point every patch here is explained from',
     artist: 'Know Your Synth',
     tags: [patch?.category ?? 'lead'],
     level: 1,
-    blurb: `${listen ? 'The plainest tone' : 'A plain sawtooth'} on the ${def.name}: set your own synth to this, and check it sounds the same.`,
-    how: listen
-      ? 'The plainest tone the synth makes, with no modulation and no effects. Every other patch here starts from this one.'
-      : 'One oscillator’s sawtooth goes through the filter, left open, to the amplifier, which opens while a key is held. Every other patch here starts from this one.',
+    blurb: `${saw ? 'A plain sawtooth' : 'The plainest tone'} on the ${def.name}: set your own synth to this, a step at a time, and check it sounds the same.`,
+    how: saw
+      ? 'One oscillator’s sawtooth goes through the filter, left open, to the amplifier, which opens while a key is held. Every other patch here starts from this one.'
+      : `${notSaw}The plainest tone the synth makes, with no modulation and no effects. Every other patch here starts from this one.`,
     phrase: SCALE_PHRASE,
-    steps: [
-      {
-        title: DEFAULT_PATCH_NAME,
-        module: 'osc',
-        why: listen
-          ? `The plainest tone this synth makes: what every patch here starts from. ${listen}`
-          : 'A plain sawtooth with nothing shaping it: what every patch here starts from. Play a few notes and listen for a bright, steady buzz that starts and stops with the key.',
-        ...(patch ? { set: { ...patch.values } } : {}),
-        ...(patch?.cables ? { cables: [...patch.cables] } : {}),
-      },
-    ],
+    steps: patch?.checklist?.length
+      ? checklistSteps(def, patch, patch.checklist)
+      : [wholeStep(def, true)],
     context: {},
     tweaks: [],
     // its one pattern is the riff it plays (t-224)
@@ -123,12 +205,12 @@ export const defaultPatchState = (def: SynthDef): PanelState =>
  */
 export { START_STEP };
 
-/** Whether a lesson has step 0: every one but the Default patch's own, which is that step already. */
+/** Whether a lesson has step 0: every one but the Default patch's own, which sets that patch already. */
 export const hasStartStep = (preset: { id: string } | null | undefined): boolean =>
   !!preset && !isDefaultPatch(preset.id);
 
-/** Step 0 as a step: what it sets, and what to listen for. */
-export const startStep = (def: SynthDef): PresetStep => defaultPatchSound(def).steps[0];
+/** Step 0 as a step: the whole Default patch, what to listen for, and where its checklist is. */
+export const startStep = (def: SynthDef): PresetStep => wholeStep(def, false);
 
 /** The panel at a lesson's step: step 0 is the Default patch, the rest are the sound as far as that step. */
 export const lessonState = (

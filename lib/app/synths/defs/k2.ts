@@ -373,6 +373,7 @@ decor.push({
   gapW: 140,
 });
 knob('tune.master', 344, 640, 28, {
+  name: 'Master tune',
   kind: 'cont',
   min: -5,
   max: 5,
@@ -1495,6 +1496,52 @@ const k2: SynthDef & { version: number } = {
   // Init is already VCO 1's sawtooth alone. The Default patch opens the low-pass filter all the way, and makes EG 2 (the
   // loudness) an organ gate with a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out and set the volume',
+        module: 'out',
+        why: 'The K-2 plays through its own internal connections when nothing is patched, so take out any cable in the patch panel first. VOLUME at 7 is the level every patch here assumes, and the master tune at the centre keeps it at concert pitch.',
+        controls: ['out.*', 'tune.*'],
+      },
+      {
+        title: 'Set both VCOs to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. The K-2’s sawtooth ramps down rather than up, which sounds the same. Both go to it at 8′, with VCO 2’s PITCH at the centre. PORTAMENTO TIME fully down means notes land on their pitch at once.',
+        controls: ['vco1.*', 'vco2.*', 'porta.*'],
+      },
+      {
+        title: 'Mix in VCO 1 alone',
+        module: 'mixer',
+        why: 'VCO1 LEVEL at 7 and VCO2 LEVEL fully down: one plain saw goes into the filters.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Open both filters all the way',
+        module: 'filter',
+        why: 'The K-2 has two filters in a row. The high-pass takes away bass, so its CUTOFF goes fully anticlockwise to let everything through. The low-pass takes away treble, so its CUTOFF goes fully clockwise. Both PEAK (resonance) knobs go fully down.',
+        controls: ['hpf.*', 'lpf.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'These knobs let the MG (the K-2’s LFO) and the envelopes move the pitch and the filters. With all of them fully down, nothing moves the sound but your playing.',
+        controls: ['fmod.*', 'hpmod.*', 'lpmod.*', 'mg.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'Envelope 2 opens the amplifier for each note. ATTACK at 0 starts the note at once, SUSTAIN LEVEL fully up holds it at full volume while the key is down, and the short RELEASE stops it soon after you let go. Envelope 1 is set too, though nothing listens to it in this patch.',
+        controls: ['eg1.*', 'eg2.*'],
+      },
+      {
+        title: 'Leave the external signal processor alone',
+        module: 'util',
+        why: 'This section turns an outside sound into notes. Nothing is plugged into it here, so it does nothing, but set it so your K-2 matches.',
+        controls: ['trig.*', 'esp.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'lpf.cutoff': 10, 'eg2.sustain': 10, 'eg2.release': 1 },
   },
   toEngine,

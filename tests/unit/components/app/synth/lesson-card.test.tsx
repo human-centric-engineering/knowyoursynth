@@ -377,7 +377,7 @@ describe('LessonCard step 0', () => {
   it('asks for the Default patch on the user’s synth, numbers no moves, and Next goes to step 1', () => {
     const { onStep, el } = card(sound, START_STEP);
     expect(el.textContent).toMatch(/Step 0 of 2 · Start/);
-    expect(el.textContent).toContain('Set your synth to the Default patch');
+    expect(el.textContent).toContain('Set your synth to the Default Saw');
     expect(el.textContent).toContain(startStep(def).why);
     // The whole panel is the Default patch: no ①②③, where the finished sound would number its tweaks.
     expect(badgeStore.get()).toEqual([]);

@@ -809,6 +809,28 @@ const tb303: SynthDef & { version: number } = {
   // which is as plain as the filter gets: as on the hardware, its envelope still moves the filter a little on each note.
   // The TB-303 has no sustain: its loudness always dies away, slowly, over a held note.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume and the sawtooth',
+        module: 'osc',
+        why: 'The WAVEFORM switch picks the raw tone: sawtooth is the buzzy one. TUNING at the centre keeps it in tune. VOLUME at 7 is the level every patch here assumes.',
+        controls: ['osc.*', 'out.*'],
+      },
+      {
+        title: 'Open the filter as far as it goes',
+        module: 'filter',
+        why: 'CUT OFF FREQ fully clockwise lets the most brightness through. RESONANCE and ENV MOD fully anticlockwise take the squelch out. On a TB-303 the envelope still moves the filter a little on each note even here: that is the hardware, not a mistake.',
+        controls: ['filter.*'],
+      },
+      {
+        title: 'Set the decay and take the accent off',
+        module: 'env',
+        why: 'The TB-303 has no sustain: every note fades away. DECAY a little below the middle sets how quickly the filter closes after each note. ACCENT fully anticlockwise, and no ACCENT or SLIDE on the steps you play, keep every note the same.',
+        controls: ['env.*', 'amp.*', 'seq.*'],
+        listen:
+          'play a few notes: a bright buzz that starts at once and fades away slowly while you hold the key.',
+      },
+    ],
     values: { 'filter.cutoff': 10, 'filter.res': 0, 'filter.envMod': 0, 'amp.accent': 0 },
   },
   toEngine,

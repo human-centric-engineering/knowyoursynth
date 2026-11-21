@@ -276,7 +276,7 @@ describe('Chapters: step 0', () => {
   const steps: PresetStep[] = [
     { title: 'Open the mixer', module: 'mixer', why: 'Loud.', set: { 'mix.osc1': 9 } },
   ];
-  const chapter0 = () => screen.getByRole('button', { name: 'Lesson step 0: Default patch' });
+  const chapter0 = () => screen.getByRole('button', { name: 'Lesson step 0: Default Saw' });
 
   afterEach(() => act(() => highlightStore.set([])));
 
@@ -285,7 +285,7 @@ describe('Chapters: step 0', () => {
     render(<Chapters steps={steps} start={start} step={0} onStep={onStep} lit={['mix.osc1']} />);
     const li = chapter0().closest('li');
     expect(li).toHaveClass('kys-chapter-start');
-    expect(li?.textContent).toBe('0StartDefault patch');
+    expect(li?.textContent).toBe('0StartDefault Saw');
     // Past it, it is done; the step the panel is at is current.
     expect(li).toHaveAttribute('data-state', 'done');
     expect(chapter0()).not.toHaveAttribute('aria-current');

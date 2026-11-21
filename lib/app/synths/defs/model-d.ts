@@ -1124,6 +1124,54 @@ const modelD: SynthDef & { version: number } = {
   // Init is already Osc 1's sawtooth alone at 8′. The Default patch opens the filter all the way and takes the
   // contour off it, so nothing shapes the saw, and makes the loudness an organ gate with a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the output',
+        module: 'out',
+        why: 'MAIN OUT on sends the sound to your amp or speakers, and A-440 off stops the tuning tone. VOLUME at 7 is the level every patch here assumes; on loud speakers, start lower and bring it up once the patch is set.',
+        controls: ['out.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'The modulation section wobbles the pitch or the filter. With MOD DEPTH fully down and both modulation switches off, nothing moves the sound but your playing. The other settings here do nothing while depth is at zero, but set them anyway so your synth matches.',
+        controls: ['mod.*', 'lfo.*'],
+      },
+      {
+        title: 'Set the controllers: no glide, in tune',
+        module: 'glide',
+        why: 'GLIDE fully down means each note lands on its pitch at once instead of sliding up to it. TUNE at the centre keeps the whole synth at concert pitch.',
+        controls: ['ctl.*'],
+      },
+      {
+        title: 'Set the three oscillators to sawtooths',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. All three go to the sawtooth wave, the buzzy one with every harmonic in it, though only Oscillator 1 will be heard. Centring the two FREQUENCY knobs keeps Osc 2 and 3 in tune, ready for later patches.',
+        controls: ['osc*'],
+      },
+      {
+        title: 'Mix in Oscillator 1 alone',
+        module: 'mixer',
+        why: 'The mixer decides what goes into the filter. Only Oscillator 1 is switched on, with its VOLUME at 8. Everything else is switched off with its volume down, so you hear one plain saw and nothing on top.',
+        controls: ['mix.*', 'noise.*'],
+        listen:
+          'a held note should now buzz, though the filter and contour steps below may still change it.',
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. Fully open, with no EMPHASIS (resonance) and no AMOUNT OF CONTOUR, it lets the whole saw through untouched. Keyboard control and modulation are off, so the filter does not change from note to note.',
+        controls: ['filter.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'The loudness contour shapes each note. ATTACK at 0 starts the note at once and SUSTAIN at 10 holds it at full volume for as long as you hold the key. The short DECAY sets how quickly the note stops after you let go, because the DECAY switch is on. The filter contour is set too, though it does nothing while AMOUNT OF CONTOUR is at 0.',
+        controls: ['fenv.*', 'aenv.*', 'env.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'filter.cutoff': 5,
       'filter.emphasis': 0,

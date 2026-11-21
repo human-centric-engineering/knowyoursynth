@@ -17,6 +17,7 @@
  */
 import { z } from 'zod';
 import { controlMap, jackMap, presetState } from '@/lib/app/synths/lib/patch';
+import { checklistControls, checklistRequired, patternTest } from '@/lib/app/synths/lib/checklist';
 import {
   PRESET_CATEGORIES,
   SYNTH_MODULES,
@@ -59,7 +60,16 @@ export type SoundProblemCode =
   /** A step takes out a cable that is not in at that step. */
   | 'not-plugged-in'
   /** A Default patch whose `listen` is empty: it would be described as a sawtooth. */
-  | 'blank-listen';
+  | 'blank-listen'
+  /** A Default patch that is not a sawtooth and does not say why (`notSaw`). */
+  | 'no-not-saw'
+  /** A Default patch checklist that would not leave the hardware on the Default patch. */
+  | 'empty-checklist'
+  | 'blank-step'
+  | 'unmatched-pattern'
+  | 'empty-step'
+  | 'uncovered-control'
+  | 'cable-step';
 
 export interface SoundProblem {
   /** Where in the input, dot-separated (`steps.0.cables.1`). Empty for the input as a whole. */
@@ -288,6 +298,71 @@ export function validateSound(def: SynthDef, input: unknown): ValidationResult<S
 }
 
 /**
+ * A Default patch's checklist against its synth (`DefaultPatch.checklist`): every pattern matches a control, every
+ * control that shapes the sound and is on the panel is covered, and the patch's cables go in at one step, so someone
+ * following it from any state ends up on the Default patch.
+ */
+function checkChecklist(def: SynthDef, patch: DefaultPatch): SoundProblem[] {
+  const steps = patch.checklist ?? [];
+  const problems: SoundProblem[] = [];
+  if (!steps.length)
+    problems.push({
+      path: 'defaultPatch.checklist',
+      code: 'empty-checklist',
+      message: `${def.id}'s Default patch checklist has no steps`,
+    });
+  const live = def.controls.filter((c) => !c.ui);
+  steps.forEach((s, i) => {
+    if (!s.title.trim() || !s.why.trim())
+      problems.push({
+        path: join('defaultPatch.checklist', i),
+        code: 'blank-step',
+        message: `Step ${i + 1} of ${def.id}'s Default patch checklist has no title or no text`,
+      });
+    s.controls.forEach((p, k) => {
+      const test = patternTest(p);
+      // a `*` pattern only reaches controls on the panel, not behind a menu (`stepControls`)
+      if (!live.some((c) => test(c.id) && (!p.includes('*') || !c.deep)))
+        problems.push({
+          path: join('defaultPatch.checklist', i, 'controls', k),
+          code: 'unmatched-pattern',
+          message: `Step ${i + 1} of ${def.id}'s Default patch checklist names ${p}, which matches no control`,
+        });
+    });
+  });
+  const groups = checklistControls(def, steps);
+  groups.forEach((cs, i) => {
+    if (!cs.length && !steps[i].cables)
+      problems.push({
+        path: join('defaultPatch.checklist', i),
+        code: 'empty-step',
+        message: `Step ${i + 1} of ${def.id}'s Default patch checklist covers no control an earlier step did not`,
+      });
+  });
+  const covered = new Set(groups.flat().map((c) => c.id));
+  checklistRequired(def)
+    .filter((c) => !covered.has(c.id))
+    .forEach((c) =>
+      problems.push({
+        path: 'defaultPatch.checklist',
+        code: 'uncovered-control',
+        message: `${def.id}'s Default patch checklist does not set ${c.id}`,
+      })
+    );
+  const cableSteps = steps.filter((s) => s.cables).length;
+  const hasCables = (patch.cables?.length ?? 0) > 0;
+  if (hasCables ? cableSteps !== 1 : cableSteps > 0)
+    problems.push({
+      path: 'defaultPatch.checklist',
+      code: 'cable-step',
+      message: hasCables
+        ? `${def.id}'s Default patch checklist must plug its cables in at exactly one step`
+        : `${def.id}'s Default patch checklist plugs cables in, but the patch has none`,
+    });
+  return problems;
+}
+
+/**
  * Validate a synth's own Default patch (`SynthDef.defaultPatch`) against it, as a sound's step is checked: every value
  * legal for its control and every cable well-formed. A synth with none passes, since its Default patch is `init`.
  */
@@ -304,12 +379,22 @@ export function validateDefaultPatch(def: SynthDef): ValidationResult<DefaultPat
       code: 'blank-listen',
       message: `${def.id}'s Default patch has a blank listen`,
     });
+  // A patch that is not a sawtooth says why the synth starts from something else.
+  if (patch.listen?.trim() && !patch.notSaw?.trim())
+    problems.push({
+      path: 'defaultPatch.notSaw',
+      code: 'no-not-saw',
+      message: `${def.id}'s Default patch is not a sawtooth and does not say why`,
+    });
+  if (patch.checklist) problems.push(...checkChecklist(def, patch));
   return done<DefaultPatch>(
     {
       values,
       ...(patch.cables ? { cables } : {}),
       ...(patch.listen !== undefined ? { listen: patch.listen } : {}),
       ...(patch.category ? { category: patch.category } : {}),
+      ...(patch.notSaw !== undefined ? { notSaw: patch.notSaw } : {}),
+      ...(patch.checklist ? { checklist: patch.checklist } : {}),
     },
     problems
   );

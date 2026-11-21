@@ -1077,6 +1077,46 @@ const ubXaD: SynthDef & { version: number } = {
   // Init is already Oscillator 1's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
   // all the way.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the output and switch the arpeggiator and unison off',
+        module: 'out',
+        why: 'VOLUME at 7 is the level every patch here assumes. BALANCE at the centre and MASTER TUNE at the centre keep things level and at concert pitch. With UNISON and the arpeggiator unlit, each key plays one note of its own, and PORTAMENTO fully down means notes land on their pitch at once.',
+        controls: ['out.*', 'voice.*', 'arp.*', 'glide.*'],
+      },
+      {
+        title: 'Set both oscillators to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. On each, only the saw button is lit, the buzzy wave with every harmonic. Their frequency knobs at the centre and OSC 2 DETUNE fully down keep them in tune. SYNC and F-ENV stay off.',
+        controls: ['osc*'],
+      },
+      {
+        title: 'Mix in OSC 1 alone',
+        module: 'mixer',
+        why: 'OSC 1 into the filter is lit, both OSC 2 level buttons are unlit, and NOISE is fully down: one plain saw goes into the filter.',
+        controls: ['mix.*', 'noise.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'The UB-Xa has two LFOs: one for performance, one for modulation. With both depth knobs fully down and their destination buttons unlit, nothing wobbles the sound. The performance LFO stays assigned to both patches, as it is when the synth starts.',
+        controls: ['plfo.*', 'mlfo.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. Frequency fully clockwise, with no RESONANCE and no envelope amount, lets the saw through untouched. 4 POLE and keyboard tracking stay unlit.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'The loudness envelope shapes each note. Attack fully down starts it at once, sustain fully up holds it while the key is down, and a short release stops it soon after you let go. The filter envelope is set too, though it does nothing while its amount is at 0.',
+        controls: ['fenv.*', 'lenv.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'vcf.freq': 10 },
   },
   toEngine,

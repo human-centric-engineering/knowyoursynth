@@ -25,6 +25,7 @@ import type {
   ControlValues,
   Decor,
   DefaultPatch,
+  DefaultPatchStep,
   EngineParams,
   EngineRoute,
   FaderControl,
@@ -160,7 +161,64 @@ export const SYNCUSSION_DEFAULT_PATCH: DefaultPatch = {
   category: 'perc',
   listen:
     'Play a few notes and listen for a short, round drum hit, a tom, that holds one pitch as it dies away. The keys below middle C play channel 1, middle C and above channel 2.',
+  notSaw:
+    'The Syncussion is a drum synth. It has no sawtooth to choose and no sustain: each hit dies away on its own. Its plainest sound is one oscillator per channel with the pitch sweep off, a plain tom at one pitch, and that is where every patch here starts.',
 };
+
+/**
+ * The Syncussions' checklist. The Pearl original has a POWER switch; Behringer's has FINE tuning and a SENSE knob for
+ * each channel's trigger input instead, set before the last step so its listen comes once the patch is set.
+ */
+const syncussionChecklist = (behringer: boolean): DefaultPatchStep[] => [
+  {
+    title: behringer ? 'Set both channel outputs' : 'Switch it on, and set both channel outputs',
+    module: 'out',
+    why: `The Syncussion has two channels, each a drum voice of its own. ${behringer ? '' : 'POWER on, and '}${behringer ? 'Both' : 'both'} OUTPUT faders at 8, the level every patch here assumes.`,
+    controls: [...(behringer ? [] : ['sys.*']), 'ch1.output', 'ch2.output'],
+  },
+  {
+    title: 'Set each channel to one plain oscillator',
+    module: 'osc',
+    why: `OSC MODE on A plays one oscillator. TUNE a little below a third of the way up puts both channels on the same low tom pitch${behringer ? ', with FINE at the centre' : ''}.`,
+    controls: [
+      'ch1.mode',
+      'ch1.tune',
+      'ch2.mode',
+      'ch2.tune',
+      ...(behringer ? ['ch1.fine', 'ch2.fine'] : []),
+    ],
+  },
+  {
+    title: 'Turn the pitch sweep and the LFO off',
+    module: 'mod',
+    why: 'SWEEP off keeps each hit at one pitch rather than falling or rising. LFO WAVE off, S/H off and LFO DEPTH all the way down mean nothing wobbles it. Set the sweep and LFO speeds as shown, ready for later patches.',
+    controls: ['ch1.sweep*', 'ch1.lfo*', 'ch1.sh', 'ch2.sweep*', 'ch2.lfo*', 'ch2.sh'],
+  },
+  ...(behringer
+    ? [
+        {
+          title: 'Set the trigger inputs’ sense',
+          module: 'util' as const,
+          why: 'SENSE sets how hard a hit on a drum pad has to be to trigger each channel. Nothing is plugged in here, so set both at the centre.',
+          controls: ['ch1.sense', 'ch2.sense'],
+        },
+      ]
+    : []),
+  {
+    title: 'Set how each hit sounds and fades',
+    module: 'env',
+    why: 'DECAY a little below a third of the way up gives a short hit, and WIDTH sets how much the filter’s own per-hit movement brightens it: that is part of the drum’s voice, so it stays.',
+    controls: ['ch1.decay', 'ch1.width', 'ch2.decay', 'ch2.width'],
+    listen:
+      'play a few notes below and above middle C: a short, round drum hit, a tom, on each channel, holding one pitch as it dies away.',
+  },
+];
+
+/** One Syncussion's Default patch: the shared one, with the checklist for its panel. */
+export const syncussionDefaultPatch = (behringer: boolean): DefaultPatch => ({
+  ...SYNCUSSION_DEFAULT_PATCH,
+  checklist: syncussionChecklist(behringer),
+});
 
 export function syncussionEngine(v: ControlValues, volume: number): EngineParams {
   return {

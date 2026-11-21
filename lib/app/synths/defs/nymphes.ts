@@ -1088,6 +1088,44 @@ const nymphes: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Start from an initialised preset, and set the volume',
+        module: 'mode',
+        why: 'The Nymphes keeps settings in its menus that the faders do not show, so if you can, start from an initialised preset. VOLUME at 8 is the level every patch here assumes. Play MODE on POLY, with DTN and CHORD all the way down, plays a plain note per key. GLD and LEGATO down: notes land on their pitch at once.',
+        controls: ['out.*', 'voice.*', 'glide.*'],
+      },
+      {
+        title: 'Set the oscillator to the sawtooth',
+        module: 'osc',
+        why: 'WAVE all the way down is the sawtooth on the Nymphes, the buzzy wave with every harmonic. LVL all the way up; PW, SUB and NOISE all the way down, so the saw is the only sound. The pitch LFO and EG faders go all the way down too.',
+        controls: ['osc.*', 'noise.*', 'lfo1.pitch', 'env1.pitch'],
+      },
+      {
+        title: 'Open both filters all the way',
+        module: 'filter',
+        why: 'CUT all the way up lets all the treble through and HPF all the way down all the bass. RES, TRACK and the filter’s EG and LFO all the way down: the saw goes through untouched.',
+        controls: ['vcf.*', 'hpf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The amp envelope shapes each note. A all the way down starts it at once, S all the way up holds it while the key is down, and a short R stops it soon after you let go. The filter envelope is set too, though it does nothing while the filter’s EG fader is down.',
+        controls: ['env1.*', 'env2.*'],
+      },
+      {
+        title: 'Take the LFOs out of the way, and the reverb off',
+        module: 'lfo',
+        why: 'Every LFO 2 destination fader all the way down means it moves nothing; set the LFOs’ rates and types as shown. Reverb MIX all the way down keeps the sound dry.',
+        controls: ['lfo1.*', 'lfo2.*', 'rev.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 

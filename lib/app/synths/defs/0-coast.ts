@@ -1001,6 +1001,28 @@ const zeroCoast: SynthDef & { version: number } = {
   // no sawtooth: the Default patch is its plainest tone, the triangle on its own (BALANCE fully on FUND), with CONTOUR
   // a plain gate (full sustain, a short decay that is also the release) opening DYNAMICS all the way.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out, and set the level',
+        module: 'out',
+        why: 'The 0-COAST plays through its own internal connections when nothing is patched, so take out any cable first. LEVEL at 7 is the level every patch here assumes. The Voltage MATH knob at the centre does nothing to the sound.',
+        controls: ['out.*', 'vmath.*'],
+      },
+      {
+        title: 'Set the oscillator to its plain triangle',
+        module: 'osc',
+        why: 'PITCH and FINE at the centre keep it in tune. OVERTONE and MULTIPLY fully anticlockwise, and their CV depths and LIN FM at none, add nothing to the wave. BALANCE fully anticlockwise sends the plain triangle (FUND) alone.',
+        controls: ['osc.*', 'overtone.*', 'multiply.*', 'balance.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'CONTOUR opens DYNAMICS, the 0-COAST’s amplifier, on each note. ONSET fully anticlockwise starts it at once, SUSTAIN fully clockwise holds it while the key is down, and the short DECAY also lets it go soon after. DYNAMICS fully clockwise lets CONTOUR open it all the way. SLOPE, the other envelope, is not patched to anything; set it as shown, with CYCLE unlit.',
+        controls: ['contour.*', 'dynamics.*', 'slope.*'],
+        listen:
+          'play a few notes: a soft, round tone, like a flute with no breath, that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'balance.amount': 0,
       'contour.sustain': 10,
@@ -1009,6 +1031,8 @@ const zeroCoast: SynthDef & { version: number } = {
     },
     listen:
       'The plain triangle, soft and round like a flute with no breath: the 0-COAST has no sawtooth, and its triangle is the tone everything else is added to.',
+    notSaw:
+      'The 0-COAST has no sawtooth. Its one oscillator starts from a triangle and builds every brighter tone on top of it, with OVERTONE folding the wave and MULTIPLY multiplying it. So its plainest tone is the triangle on its own, and that is where every patch here starts.',
   },
   toEngine,
 };

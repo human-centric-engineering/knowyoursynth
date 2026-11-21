@@ -1970,6 +1970,56 @@ const sub37: SynthDef & { version: number } = {
   init,
   // no Default patch: init is already Osc 1's sawtooth alone at 8′ through the open filter, with no resonance and no
   // envelope sweep, the loudness a gate with a short release, and the mod buses at rest
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Start from an initialised preset, and set the output',
+        module: 'out',
+        why: 'The Sub 37 keeps settings in its menus that the knobs do not show, so if you can, start from an initialised preset. VOLUME and HEADPHONES VOLUME at 7, the level every patch here assumes, with MUTE unlit. FINE TUNE at the centre keeps it at concert pitch.',
+        controls: ['out.*', 'osc.fineTune'],
+      },
+      {
+        title: 'Switch the arpeggiator and glide off',
+        module: 'mode',
+        why: 'With ARP ON, LATCH and GLIDE ON unlit, each key plays one note and lands on its pitch at once. Set the rest of the arpeggiator and glide controls as shown, so your Sub 37 matches when you switch them on.',
+        controls: ['arp.*', 'glide.*'],
+      },
+      {
+        title: 'Take both modulation buses off',
+        module: 'mod',
+        why: 'The Sub 37 has two modulation buses, each with its LFO. With every AMT knob (PITCH, FILTER and the destination amount) at the centre, which is zero, neither moves the sound.',
+        controls: ['lfo1.*', 'mod1.*', 'lfo2.*', 'mod2.*'],
+      },
+      {
+        title: 'Set both oscillators to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. The WAVE knob sweeps from triangle through sawtooth to square; set it to the sawtooth, the buzzy wave with every harmonic, at 8′. OSC 2 FREQUENCY and BEAT FREQ at the centre keep it in tune. HARD SYNC, KB RESET and DUO MODE unlit.',
+        controls: ['osc*'],
+      },
+      {
+        title: 'Mix in OSC 1 alone',
+        module: 'mixer',
+        why: 'OSC 1 level at the centre; SUB 1, OSC 2, NOISE and FDBK/EXT IN fully anticlockwise. Their on buttons can stay lit, as a level at zero is silent: one plain saw goes into the filter.',
+        controls: ['mixer.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. CUTOFF fully clockwise, with RESONANCE, MULTIDRIVE and KB TRACK fully anticlockwise and FILTER EG AMT at the centre (none), lets the saw through untouched.',
+        controls: ['vcf.*', 'drive.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The amp envelope shapes each note. ATTACK fully anticlockwise starts it at once, SUSTAIN fully clockwise holds it while the key is down, and a short RELEASE stops it soon after you let go. DELAY, HOLD, VEL AMT and KB TRACK fully anticlockwise, and every envelope button unlit. The filter envelope is set the same, though it does nothing while FILTER EG AMT is at the centre.',
+        controls: ['envF.*', 'envA.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 

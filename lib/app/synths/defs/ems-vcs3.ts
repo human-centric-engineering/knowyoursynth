@@ -232,6 +232,7 @@ tab(150, 707, 'NOISE GENERATOR');
 text(125, 762, 'COLOUR', 13);
 text(125, 790, 'White', 11);
 knob('noise.colour', 125, 850, 'white', {
+  name: 'Noise COLOUR',
   def: 5,
   module: 'osc',
   scale: {
@@ -302,6 +303,7 @@ knob('vcf.freq', 810, 158, 'green', {
 });
 text(935, 85, 'RESPONSE', 13);
 knob('vcf.response', 935, 158, 'yellow', {
+  name: 'Filter RESPONSE',
   def: 0,
   module: 'filter',
   scale: {
@@ -372,6 +374,7 @@ knob('env.decay', 925, ENV_Y, 'red', {
   help: 'How long the envelope takes to fall back, from 3 ms to 15 seconds. Pins in column L lengthen or shorten it.',
 });
 knob('env.off', 1050, ENV_Y, 'red', {
+  name: 'Envelope OFF',
   def: 10,
   module: 'env',
   scale: tScale('0', 'Manual'),
@@ -1433,6 +1436,47 @@ const emsVcs3: SynthDef & { version: number } = {
   // VCA to both outputs, so it sits in the middle, and the keyboard to Oscillator 1's pitch: four pins. The filter is
   // left out, which is as open as it gets. The envelope opens on a key and stays up while it is held, then falls fast.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Take every pin out, and set the outputs',
+        module: 'out',
+        why: 'The VCS3 makes no sound until a pin in the matrix joins a row (where a sound comes from) to a column (where it goes). Start by taking every pin out. Then set both output channels the same: level at 8, filters at the centre (flat), speakers on, channel 1 panned left and channel 2 right.',
+        controls: ['power', 'out*'],
+      },
+      {
+        title: 'Set Oscillator 1 to its ramp (sawtooth), and silence the rest',
+        module: 'osc',
+        why: 'The ramp is the VCS3’s sawtooth, the buzzy wave with every harmonic. Oscillator 1’s ramp LEVEL goes to the centre and its sine level fully down. Every other sound source, Oscillators 2 and 3, the noise and the ring modulator, is turned fully down so nothing else gets in.',
+        controls: ['osc1.*', 'osc2.*', 'osc3.*', 'noise.*', 'ring.*'],
+      },
+      {
+        title: 'Set the inputs, the filter and the reverb',
+        module: 'filter',
+        why: 'INPUT LEVEL CHANNEL 1 at the centre sets how far the keyboard moves the pitch: one semitone a key. The filter and the reverb are left out of the patch, which is as open and as dry as the VCS3 gets, but turn their LEVEL knobs fully down so nothing leaks in.',
+        controls: ['in.*', 'vcf.*', 'rev.*'],
+      },
+      {
+        title: 'Set the envelope to open while a key is held',
+        module: 'env',
+        why: 'The envelope’s amplifier is what lets the sound out on each note. ATTACK and ON fully down start it at once, OFF fully clockwise holds it open until you let go, and the short DECAY closes it quickly after. SIGNAL LEVEL at 6 sets how loud it lets the sound through; TRAPEZOID LEVEL fully down, as nothing uses that here.',
+        controls: ['env.*'],
+      },
+      {
+        title: 'Centre the joystick',
+        module: 'mod',
+        why: 'The joystick moves whatever its pins send it to. Nothing is pinned to it here, but centre it, with both RANGE knobs at the centre, so your VCS3 matches.',
+        controls: ['joy.*'],
+      },
+      {
+        title: 'Put the four pins in',
+        module: 'patch',
+        why: 'Each line below is one pin: the row first, then the column. Together they send the keyboard to Oscillator 1’s pitch, Oscillator 1’s ramp into the envelope, and the envelope out to both output channels.',
+        controls: [],
+        cables: true,
+        listen:
+          'play a few notes: a bright, steady buzz from both speakers that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'osc1.ramp': 5,
       'env.attack': 0,

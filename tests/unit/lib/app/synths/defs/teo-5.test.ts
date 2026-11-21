@@ -96,7 +96,8 @@ describe('TEO-5 toEngine at the init patch', () => {
   });
 
   it('has a Default patch that only opens the filter', () => {
-    expect(teo5.defaultPatch).toEqual({ values: { 'vcf.cutoff': 10 } });
+    expect(teo5.defaultPatch?.values).toEqual({ 'vcf.cutoff': 10 });
+    expect(teo5.defaultPatch?.cables).toBeUndefined();
   });
 });
 

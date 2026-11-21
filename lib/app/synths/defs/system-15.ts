@@ -23,7 +23,7 @@ import {
   cp3am,
   createRack,
   initOf,
-  MOOG900_DEFAULT_PATCH,
+  moog900DefaultPatch,
   m902,
   m904a,
   m904b,
@@ -107,7 +107,7 @@ const system15: SynthDef & { version: number } = {
   controls,
   jacks,
   init: initOf(controls),
-  defaultPatch: MOOG900_DEFAULT_PATCH,
+  defaultPatch: moog900DefaultPatch(controls),
   compact: {
     pieces: [
       // top row: 914 to the second 911, the case's left edge and the rail under them

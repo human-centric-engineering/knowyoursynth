@@ -899,6 +899,46 @@ const waspDeluxe: SynthDef & { version: number } = {
   // Init is already Oscillator 1's sawtooth alone. The Default patch opens the filter all the way with no resonance and
   // takes the contour off it, and makes the loudness an organ gate with a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume, the tuning and no glide',
+        module: 'out',
+        why: 'Volume at 7 is the level every patch here assumes. Tune and bend at the centre keep the synth at concert pitch, and glide fully down means each note lands on its pitch at once.',
+        controls: ['out.*', 'pitch.*'],
+      },
+      {
+        title: 'Set Oscillator 1 to the sawtooth, Oscillator 2 off',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Oscillator 1 goes to the sawtooth, the buzzy wave with every harmonic, at 8. Oscillator 2’s waveform switch goes to off, with its pitch at the centre for later patches.',
+        controls: ['osc1.*', 'osc2.*'],
+      },
+      {
+        title: 'Mix in Oscillator 1 alone',
+        module: 'mixer',
+        why: 'Mix OSC 1 at 8, with OSC 2, EXT and noise fully down: one plain saw goes into the filter.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Take the control oscillator off',
+        module: 'lfo',
+        why: 'The control oscillator is the WASP’s LFO. With pitch mod fully down it moves nothing; set its rate and wave anyway so your WASP matches.',
+        controls: ['ctrl.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. In lo (low-pass) with frequency fully clockwise and Q fully down, it lets the saw through. Both filter control knobs sit at the centre, which on the WASP means no movement either way.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The VCA envelope opens the amplifier for each note. Attack fully down starts the note at once, sustain fully up holds it while the key is down, and the short decay stops it soon after you let go. Hold stays off. The control envelope is set too, though it does nothing while the filter’s control knob is at the centre.',
+        controls: ['vca.*', 'cenv.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'vcf.freq': 10, 'vcf.q': 0, 'vcf.envAmt': 0, 'vca.sustain': 10, 'vca.decay': 1 },
   },
   toEngine,

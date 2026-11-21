@@ -226,6 +226,15 @@ describe('drums', () => {
     expect(lastOf('pattern')?.countIn).toBe(COUNT_IN_BEATS);
   });
 
+  it('turns the drums off and the Count-in on for a patch that wants no drums, the Default Saw (t-295)', () => {
+    render(<Harness />);
+    pickDrums('Funk');
+    fireEvent.click(button('Count-in'));
+    act(() => backingNow.newPatch('off'));
+    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
+    expect(button('Count-in').getAttribute('aria-pressed')).toBe('true');
+  });
+
   it('keeps Drums and Count-in off through a reload, which is not a patch chosen', async () => {
     const first = render(<Harness />);
     pickDrums('Off');

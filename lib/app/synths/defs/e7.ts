@@ -1525,6 +1525,46 @@ const e7: SynthDef & { version: number } = {
   // Init is already OSC1's sawtooth alone, with EG2 (the loudness) an organ gate. The Default patch opens the filter all
   // the way.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Start from an initialised program, and set the output',
+        module: 'out',
+        why: 'The e7 keeps settings in its menus that the knobs do not show, so if you can, start from an initialised program. MASTER VOLUME at 7 is the level every patch here assumes. MODE on Poly lets each key play a note of its own, and PORTAMENTO TIME fully anticlockwise means notes land on their pitch at once.',
+        controls: ['out.*', 'kbd.*'],
+      },
+      {
+        title: 'Set both VCOs to the sawtooth, with no modulation',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Both WAVEFORM switches go to the sawtooth, the buzzy wave with every harmonic, with TUNE and TRANSPOSE at the centre so they stay in tune. PULSE and SYNC unlit. Every MOD and PWM knob fully anticlockwise, so nothing moves the pitch.',
+        controls: ['osc1.*', 'osc2.*'],
+      },
+      {
+        title: 'Mix in OSC1 alone',
+        module: 'mixer',
+        why: 'Mixer OSC1 at 7, with SUB1, OSC2, SUB2 and NOISE/EXT fully anticlockwise: one plain saw goes into the filter.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. CUTOFF fully clockwise, with RESONANCE and every MOD, tracking and wheel knob fully anticlockwise, lets the saw through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'EG 2 opens the amplifier for each note. ATTACK fully anticlockwise starts it at once, SUSTAIN fully clockwise holds it while the key is down, and a short RELEASE stops it soon after you let go. LEVEL fully clockwise, and no LFO, tracking or velocity on it. EG 1 is set too, though nothing listens to it in this patch.',
+        controls: ['vca.*', 'env1.*', 'env2.*'],
+      },
+      {
+        title: 'Take the LFOs out of the way, and the effects off',
+        module: 'fx',
+        why: 'Nothing listens to the three LFOs once every MOD knob is down; set them as shown. Chorus MIX and Delay MIX fully anticlockwise keep the sound dry.',
+        controls: ['lfo1.*', 'lfo2.*', 'lfo3.*', 'chorus.*', 'delay.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
     values: { 'vcf.cutoff': 10 },
   },
   toEngine,

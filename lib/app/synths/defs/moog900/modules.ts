@@ -17,6 +17,7 @@ import type {
   ControlValues,
   Decor,
   DefaultPatch,
+  DefaultPatchStep,
   EngineParams,
   Jack,
   KnobControl,
@@ -27,6 +28,7 @@ import type {
   Theme,
   WaveShape,
 } from '@/lib/app/synths/contract';
+import { patternTest } from '@/lib/app/synths/lib/checklist';
 import { type OmitEach, num } from '@/lib/app/synths/lib/def-kit';
 import { expMap, fmtHz, fmtSemi, fmtTime } from '@/lib/app/synths/lib/maps';
 
@@ -2658,3 +2660,73 @@ export const MOOG900_DEFAULT_PATCH: DefaultPatch = {
     ['j.m911_1.out', 'j.m902_1.cv_1'],
   ],
 };
+
+/** The Default patch's checklist on the 900 systems: every step, with patterns for the modules any system has. */
+const MOOG900_CHECKLIST: DefaultPatchStep[] = [
+  {
+    title: 'Pull every cable out, and shut the amplifiers',
+    module: 'amp',
+    why: 'A modular makes no sound until it is patched, so start with no cables in at all. Every 902 amplifier goes to LIN, with its FIXED CONTROL VOLTAGE fully anticlockwise, so it stays shut until an envelope opens it.',
+    controls: ['m902_*'],
+  },
+  {
+    title: 'Set the 921 oscillator to play in tune, in the audio range',
+    module: 'osc',
+    why: 'The 921 makes the tone in this patch: its sawtooth output is the buzzy wave with every harmonic. COARSE RNG on AUDIO, RANGE on 8′ and FREQUENCY at the centre put it at the pitch the keyboard plays. Its other settings shape outputs that are not patched; set them as shown.',
+    controls: ['m921.*'],
+  },
+  {
+    title: 'Set the other oscillators, ready for later patches',
+    module: 'osc',
+    why: 'The 921A drivers and 921B oscillators are not patched here, so they make no sound. Set their FREQUENCY knobs at the centre and their ranges at 8′, so they start in tune with the 921 when a patch brings them in.',
+    controls: ['m921a_*', 'm921b_*'],
+  },
+  {
+    title: 'Set the filters, which this patch leaves out',
+    module: 'filter',
+    why: 'No filter is patched in, which is as open as the sound gets. Set them anyway, so your system matches: every 914 band fully clockwise, the 923 low pass fully clockwise and high pass fully anticlockwise, and no REGENERATION on the 904A.',
+    controls: ['m904a.*', 'm904b.*', 'm914.*', 'm923.*'],
+  },
+  {
+    title: 'Set the 911 (1) envelope to open at once and hold',
+    module: 'env',
+    why: 'The 911 (1) envelope opens the amplifier on each note. T1 (attack) fully anticlockwise opens it at once, E SUS fully clockwise holds it at full while the key is down, and the short T3 closes it fast when you let go. The other envelopes are not patched; set them as shown.',
+    controls: ['m911_*', 'm911a.*'],
+  },
+  {
+    title: 'Set the mixers, attenuators and switches',
+    module: 'util',
+    why: 'None of these is in the patch, so they do nothing here. Set them as shown so your system matches when a patch uses them. The keyboard’s CM1A trigger mode stays on S-TRIG, the trigger the 911 expects.',
+    controls: ['cp3am_*', 'cp3ao_*', 'cp35.*', 'm961.*', 'm962.*', 'm992.*', 'm995_*', 'cm1a.*'],
+  },
+  {
+    title: 'Set the 960 sequencer',
+    module: 'mod',
+    why: 'The sequencer is not patched in, so it plays nothing. Set it as shown, so it starts from the same place as the panel when a patch uses it.',
+    controls: ['m960.*'],
+  },
+  {
+    title: 'Patch the five cables',
+    module: 'patch',
+    why: 'These send the keyboard’s pitch to the 921, its sawtooth into 902 (1) and on to the output, and the keyboard’s trigger to the 911 (1) envelope, which opens 902 (1) on each note.',
+    controls: [],
+    cables: true,
+    listen:
+      'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+  },
+];
+
+/**
+ * The 900 systems' Default patch for one system's controls: the shared patch with the checklist's steps narrowed to
+ * the modules that system has (the System 15 has no sequencer), and any step left with none dropped.
+ */
+export function moog900DefaultPatch(controls: readonly Control[]): DefaultPatch {
+  // as `stepControls` reads a pattern: a `*` one does not reach a control behind a menu
+  const has = (p: string) =>
+    controls.some((c) => !c.ui && (!p.includes('*') || !c.deep) && patternTest(p)(c.id));
+  const checklist = MOOG900_CHECKLIST.map((s) => ({
+    ...s,
+    controls: s.controls.filter(has),
+  })).filter((s) => s.controls.length > 0 || s.cables);
+  return { ...MOOG900_DEFAULT_PATCH, checklist };
+}

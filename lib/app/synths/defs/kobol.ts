@@ -1059,6 +1059,46 @@ const kobol: SynthDef & { version: number } = {
   // Init is already VCO 1 alone, its WAVEFORM at the sawtooth, with the loudness an organ gate. The Default patch opens
   // the filter all the way, with no keyboard tracking.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume and the tuning',
+        module: 'out',
+        why: 'Volume at 7 is the level every patch here assumes. Master tune at the centre keeps the synth at concert pitch, and both gain knobs at the centre leave the signal as it is.',
+        controls: ['out.*', 'pitch.*', 'vp.*'],
+      },
+      {
+        title: 'Set both VCOs to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. The Kobol’s waveform knob sweeps through its shapes; at the centre it is the sawtooth, the buzzy wave with every harmonic. Both frequency knobs and the beat knob at the centre keep them in tune, and Synchro stays off.',
+        controls: ['vco1.*', 'vco2.*', 'noise.*'],
+      },
+      {
+        title: 'Mix in VCO 1 alone',
+        module: 'mixer',
+        why: 'VCO 1 volume at 8, VCO 2 volume fully down: one plain saw goes into the filter.',
+        controls: ['vca1.*', 'vca2.*'],
+      },
+      {
+        title: 'Take the modulation off',
+        module: 'mod',
+        why: 'LFO volume fully down means the LFO moves nothing. Its other settings, and the PWM and VCO 1 MOD switches, do nothing while it is silent, but set them so your Kobol matches.',
+        controls: ['lfo.*', 'mod.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. Frequency fully clockwise, with no resonance and no keyboard control, lets the saw through untouched. ADS control at the centre means the envelope does not move the filter either way.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'ADS 1 opens the amplifier for each note. Attack fully down starts the note at once and sustain fully up holds it at full volume while the key is down. ADS 2 is set too, though it does nothing while the filter’s ADS control is at the centre.',
+        controls: ['ads1.*', 'ads2.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'vcf.freq': 10, 'vcf.kbd': 0 },
   },
   toEngine,

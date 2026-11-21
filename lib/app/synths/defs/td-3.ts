@@ -877,6 +877,34 @@ const td3: SynthDef & { version: number } = {
   // and ENV MOD fully down, which is as plain as the filter gets: as on the hardware, its envelope still moves the filter
   // a little on each note. The TD-3 has no sustain: its loudness always dies away over a held note.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume and the sawtooth',
+        module: 'osc',
+        why: 'The WAVEFORM switch picks the raw tone: sawtooth is the buzzy one. TUNE at the centre keeps it in tune. VOLUME at 7 is the level every patch here assumes.',
+        controls: ['osc.*', 'out.*'],
+      },
+      {
+        title: 'Open the filter as far as it goes',
+        module: 'filter',
+        why: 'CUTOFF fully clockwise lets the most brightness through. RESONANCE and ENVELOPE fully anticlockwise take the squelch out. As on the TB-303 it copies, the envelope still moves the filter a little on each note even here.',
+        controls: ['filter.*'],
+      },
+      {
+        title: 'Set the decay and take the accent off',
+        module: 'env',
+        why: 'The TD-3 has no sustain: every note fades away. DECAY a little below the middle sets how quickly it fades. ACCENT fully anticlockwise, and no ACCENT or SLIDE on the steps you play, keep every note the same.',
+        controls: ['env.*', 'amp.*', 'seq.*'],
+      },
+      {
+        title: 'Switch the distortion off',
+        module: 'fx',
+        why: 'With the DISTORTION switch off the other distortion knobs do nothing, but set them anyway so your TD-3 matches when you switch it on later.',
+        controls: ['dist.*'],
+        listen:
+          'play a few notes: a bright buzz that starts at once and fades away slowly while you hold the key.',
+      },
+    ],
     values: { 'filter.cutoff': 10, 'filter.res': 0, 'filter.envMod': 0, 'amp.accent': 0 },
   },
   toEngine,

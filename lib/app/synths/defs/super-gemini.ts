@@ -2288,6 +2288,76 @@ const superGemini: SynthDef & { version: number } = {
   // Init is already the upper layer's DDS 1 sawtooth alone, with the loudness an organ gate. The Default patch opens
   // its low-pass filter all the way, with no keyboard tracking.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume and play one layer as a plain polysynth',
+        module: 'mode',
+        why: 'The Super Gemini keeps settings in its menus that the panel does not show, so if you can, start from an initialised program. MASTER VOLUME at 7 is the level every patch here assumes, with FINE ADJ, OCTAVE and both detune knobs at the centre. KEYBOARD on SINGLE plays the upper layer alone, on POLY 1 with UNISON, both HOLD buttons and ARP ON unlit. PORTAMENTO all the way left means notes land on their pitch at once. LAYER on UPPER means the sliders edit the upper layer.',
+        controls: ['out.*', 'perf.*', 'kbd.*', 'voice.*', 'arp.*', 'hold.*'],
+      },
+      {
+        title: 'Take LFO 2 off, and switch the effects off',
+        module: 'fx',
+        why: 'LFO 2 is the performance LFO: with its DDS, VCF and VCA sliders all the way down it moves nothing. CHORUS I and II unlit; the delay only sounds when a layer sends to it.',
+        controls: ['lfo2.*', 'chorus.*', 'dly.*'],
+      },
+      {
+        title: 'Set the upper layer’s oscillators to the sawtooth',
+        module: 'osc',
+        why: 'Both DDS oscillators go to the sawtooth, the buzzy wave with every harmonic, at 8. SUPER off, DDS 2 MODE on NORM and DDS 2 TUNE at the centre keep them plain and in tune. PW, DRIFT and CROSS MOD all the way down. MIX fully anticlockwise plays DDS 1 alone.',
+        controls: ['up.super', 'up.pw*', 'up.drift', 'up.xmod', 'up.dds*', 'up.mix'],
+      },
+      {
+        title: 'Take every kind of modulation off the upper layer',
+        module: 'mod',
+        why: 'With both DDS MOD sliders all the way down, LFO 1 and envelope 1 do not move the oscillators. Set LFO 1’s rate, wave and mode as shown, so your synth matches.',
+        controls: ['up.lfo*', 'up.mod*'],
+      },
+      {
+        title: 'Open the upper layer’s filter',
+        module: 'filter',
+        why: 'HPF all the way down lets all the bass through and LPF all the way up all the treble. DRIVE and KEYTRACK off, RES and every VCF modulation slider down: the saw goes through untouched. Envelope 1 is set too, though it does nothing while VCF ENV is down.',
+        controls: ['up.drive', 'up.hpf', 'up.lpf', 'up.res', 'up.vcf*', 'up.env1*', 'up.e1*'],
+      },
+      {
+        title: 'Make the upper layer’s loudness a plain gate',
+        module: 'amp',
+        why: 'Envelope 2 opens the amplifier. ATTACK all the way down starts each note at once, SUSTAIN all the way up holds it while the key is down, and a short RELEASE stops it soon after you let go. VCA ENV LEVEL at 8, DYNAMICS off, no LFO or DDS 2 on the level, and DELAY SEND down.',
+        controls: ['up.dyn', 'up.vca*', 'up.e2*', 'up.send'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+      {
+        title: 'Switch to the lower layer, set it, then switch back',
+        module: 'mode',
+        why: 'The lower layer is not heard in SINGLE mode, but set it so a patch that brings it in starts from the same place. Turn LAYER to LOWER, set every control below as shown, then turn LAYER back to UPPER.',
+        controls: ['layer.*'],
+      },
+      {
+        title: 'Lower layer: oscillators',
+        module: 'osc',
+        why: 'Both DDS oscillators go to the sawtooth, the buzzy wave with every harmonic, at 8. SUPER off, DDS 2 MODE on NORM and DDS 2 TUNE at the centre keep them plain and in tune. PW, DRIFT and CROSS MOD all the way down. MIX fully anticlockwise plays DDS 1 alone.',
+        controls: ['lo.super', 'lo.pw*', 'lo.drift', 'lo.xmod', 'lo.dds*', 'lo.mix'],
+      },
+      {
+        title: 'Lower layer: modulation off',
+        module: 'mod',
+        why: 'With both DDS MOD sliders all the way down, LFO 1 and envelope 1 do not move the oscillators. Set LFO 1’s rate, wave and mode as shown, so your synth matches.',
+        controls: ['lo.lfo*', 'lo.mod*'],
+      },
+      {
+        title: 'Lower layer: filter',
+        module: 'filter',
+        why: 'Set the lower layer’s filter as shown: its LPF sits a little lower, with half keytracking, ready for a patch that brings it in.',
+        controls: ['lo.drive', 'lo.hpf', 'lo.lpf', 'lo.res', 'lo.vcf*', 'lo.env1*', 'lo.e1*'],
+      },
+      {
+        title: 'Lower layer: loudness',
+        module: 'amp',
+        why: 'Envelope 2 opens the amplifier. ATTACK all the way down starts each note at once, SUSTAIN all the way up holds it while the key is down, and a short RELEASE stops it soon after you let go. VCA ENV LEVEL at 8, DYNAMICS off, no LFO or DDS 2 on the level, and DELAY SEND down.',
+        controls: ['lo.dyn', 'lo.vca*', 'lo.e2*', 'lo.send'],
+      },
+    ],
     values: { 'up.lpf': 10, 'up.vcfKey': 'off' },
   },
   toEngine,

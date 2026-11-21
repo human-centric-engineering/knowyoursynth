@@ -1075,6 +1075,60 @@ const subharmonicon: SynthDef & { version: number } = {
   ownSequencer: { run: 'transport.play', ppq: SUBHARM_PPQ },
   // Init is already the Default patch: VCO 1 alone on its sawtooth at C4 (so keys sound as played), the filter fully
   // open with no envelope on it, the VCA EG a 1 ms attack and a short decay, so a held key holds the peak like a gate.
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Pull every cable out, and stop the sequencers',
+        module: 'mod',
+        why: 'The Subharmonicon plays through its own internal connections when nothing is patched, so take out any cable first. PLAY unlit stops the sequencers, so the notes come from your keyboard or MIDI. EG on lets a key open the envelopes. TEMPO only matters while it plays; set it as shown.',
+        controls: ['transport.*', 'clock.*'],
+      },
+      {
+        title: 'Set VCO 1 to the sawtooth, at the note you play',
+        module: 'osc',
+        why: 'The VCOs make the raw tone. VCO 1’s WAVE goes to the sawtooth, the buzzy wave with every harmonic, with FREQ fully anticlockwise, which is C4: the keys then sound as played. VCO 2 is set the same. Every SEQ ASSIGN button unlit and QUANTIZE off, so the sequencers do not move the pitch.',
+        controls: [
+          'vco1.*',
+          'vco2.*',
+          'sub11.*',
+          'sub12.*',
+          'sub21.*',
+          'sub22.*',
+          'seq1.assign*',
+          'seq2.assign*',
+          'vco.*',
+        ],
+      },
+      {
+        title: 'Mix in VCO 1 alone',
+        module: 'mixer',
+        why: 'VCO 1 LEVEL at 7; both of its subharmonics, VCO 2 and VCO 2’s subharmonics fully anticlockwise. One plain saw goes into the filter.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. CUTOFF fully clockwise and no RESONANCE let the saw through. VCF EG AMT at the centre means the filter envelope does not move it.',
+        controls: ['vcf.*', 'vcf_eg.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The VCA envelope is attack and decay only. VCA ATTACK fully anticlockwise opens it at once; while you hold the key it stays at its peak, and the short VCA DECAY closes it soon after you let go. VOLUME at 7 is the level every patch here assumes.',
+        controls: ['vca.*', 'vca_eg.*'],
+      },
+      {
+        title: 'Set the sequencers and rhythms, ready for later patches',
+        module: 'mod',
+        why: 'They do nothing while PLAY is unlit, but set every step at the centre (no change in pitch), every rhythm button unlit and SEQ OCT on ±2, so they start from the same place when a patch plays them.',
+        controls: ['seq1.*', 'seq2.*', 'rhythm*', 'seq.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 
