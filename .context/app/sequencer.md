@@ -471,8 +471,9 @@ Nothing else reads them: which controls show, and what a turn starts from, are t
 control drawn at a lane's value changes the panel's by as much as it moved, a switch pressed flips the panel's, and a
 choice picked is picked (`rebase`). The panel is drawn from its own values again at Stop.
 
-**In the module** (`mod-lanes.tsx`). **Mod lanes** on the tool row (drawn in the accent and always in words, t-299, so it stands out from the quiet tools) shows the lanes under the step keys, on the same grid,
-for the page of keys on show. A pattern opened with lanes shows them. One lane shows at a time: a **Lanes** cell of
+**In the module** (`mod-lanes.tsx`). The lanes are always under the step keys, on the same grid, for the page of keys
+on show: with none yet, the row is **Add lane** alone, which is the way in (t-299; there is no button to show or
+hide them). One lane shows at a time: a **Lanes** cell of
 tabs (as the Part cell's keys) picks it, in one row with **Add lane**, **View all**, the lane's readout and **Clear
 all** (every value off the lane in the part being edited). The tab opens by place, so removing the last lane opens
 the one before. The open tab carries the lane's remove (×), and a second press on it lists the controls, to move the

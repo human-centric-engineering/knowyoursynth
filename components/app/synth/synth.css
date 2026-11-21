@@ -3392,15 +3392,6 @@ svg .kys-hit:focus-visible {
   border-top: 1px dashed var(--lane-rest);
   pointer-events: none;
 }
-.kys-seq-tool-count {
-  min-width: 15px;
-  padding: 0 4px;
-  border-radius: 8px;
-  font-size: 10px;
-  line-height: 15px;
-  color: var(--kys-accent-ink);
-  background: var(--kys-accent);
-}
 @media (pointer: coarse) {
   .kys-seq-lane-cell {
     height: 44px;
@@ -3468,24 +3459,6 @@ svg .kys-hit:focus-visible {
 .kys-seq-tool:disabled {
   opacity: 0.35;
   cursor: default;
-}
-/* Mod lanes stands out from the quiet tools (t-299): an accent outline and icon closed, filled in the accent open. */
-.kys-seq .kys-seq-tool.kys-seq-mod-tool {
-  color: var(--kys-accent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--kys-accent) 60%, transparent);
-}
-.kys-seq .kys-seq-tool.kys-seq-mod-tool:hover:enabled {
-  color: var(--kys-accent);
-  background: color-mix(in oklab, var(--kys-accent) 14%, transparent);
-}
-.kys-seq .kys-seq-tool.kys-seq-mod-tool.is-open {
-  color: var(--kys-accent-ink);
-  background: var(--kys-accent);
-  box-shadow: none;
-}
-.kys-seq .kys-seq-tool.kys-seq-mod-tool.is-open .kys-seq-tool-count {
-  color: var(--kys-accent);
-  background: var(--kys-accent-ink);
 }
 
 /* Playing into it (t-86): what the keys do, then that mode's controls, as readout cells, and a line saying what
@@ -3883,14 +3856,6 @@ svg .kys-hit:focus-visible {
   box-shadow:
     inset 0 0 0 1px var(--cap-ring),
     0 1px 0 var(--cap-drop);
-}
-/* Mod lanes keeps its accent by day too, over the keycap the quiet tools take (t-299). */
-:root:not(.dark) .kys-seq .kys-seq-tool.kys-seq-mod-tool:hover:enabled {
-  background: color-mix(in oklab, var(--kys-accent) 14%, var(--cap));
-}
-:root:not(.dark) .kys-seq .kys-seq-tool.kys-seq-mod-tool.is-open {
-  background: var(--kys-accent);
-  box-shadow: 0 1px 0 var(--cap-drop);
 }
 :root:not(.dark) .kys-seq .kys-seq-lib-error {
   color: var(--kys-warn);

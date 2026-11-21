@@ -15,7 +15,8 @@
  * - The tool row: Euclidean fill, rotate, octave and scale-degree shifts, reverse, randomise and mutate, copy and
  *   paste of a step or a page, clear, and Undo.
  * - The step inspector: the chosen step's values on encoders (`step-inspector.tsx`).
- * - Mod lanes (`mod-lanes.tsx`, t-82): a value per step for panel controls, under the keys. **Mod lanes** shows them.
+ * - Mod lanes (`mod-lanes.tsx`, t-82): a value per step for panel controls, always under the keys. **Add lane** starts one
+ *   (t-299: it is the way in, so there is no button to show them).
  *
  * - The patterns strip (`pattern-library.tsx`, t-81): save to My patterns, open one, or start from any synth's library.
  * - Playing into it (t-86): the Keys row says what notes played do. They edit the chosen step, step record (a note or
@@ -41,7 +42,6 @@ import {
   MidiPort,
   Play,
   Shuffle,
-  SlidersVertical,
   Square,
   Undo2,
 } from 'lucide-react';
@@ -195,7 +195,7 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
   ],
   [
     'Mod lanes',
-    'Mod lanes shows them. Each lane moves one panel control, step by step: draw values across its cells, double-press a cell to clear it, and the control plays the panel’s value there (the dashed line). Stop puts the panel back. A lane for a control this synth lacks is kept, silent.',
+    'Add lane, under the steps, starts one. Each lane moves one panel control, step by step: draw values across its cells, double-press a cell to clear it, and the control plays the panel’s value there (the dashed line). Stop puts the panel back. A lane for a control this synth lacks is kept, silent.',
   ],
 ];
 
@@ -296,16 +296,13 @@ export function Sequencer({
   const hits = Math.min(hitsSet, len);
   const [clip, setClip] = useState<{ kind: 'step' | 'page'; steps: Step[] } | null>(null);
   const keyRefs = useRef(new Map<number, HTMLButtonElement>());
-  const laneCount = p.lanes?.length ?? 0;
-  const [lanesOpen, setLanesOpen] = useState(laneCount > 0);
-  // A pattern that replaces the whole one (opened, or a sound's riff) shows its lanes if it has any.
+  // A pattern that replaces the whole one (opened, or a sound's riff) starts on its first page again.
   const replacedAt = seq.held();
   const [shownFor, setShownFor] = useState(replacedAt);
   const [held, setHeld] = useState<number | null>(null);
   if (shownFor !== replacedAt) {
     setShownFor(replacedAt);
     setHeld(null);
-    if (laneCount > 0) setLanesOpen(true);
   }
   const moveFocus = useRef(false);
 
@@ -877,7 +874,7 @@ export function Sequencer({
               );
             })}
           </div>
-          {def && lanesOpen && (
+          {def && (
             <ModLanes
               pattern={p}
               def={def}
@@ -1005,28 +1002,6 @@ export function Sequencer({
                 { short: 'Mutate' }
               )}
             </div>
-            {def && (
-              <div className="kys-seq-tool-group">
-                <PlayerTip
-                  name="Mod lanes"
-                  help="Per-step values for any panel control: the control moves as the pattern plays."
-                >
-                  {/* Drawn in the accent, and always in words, unlike the quiet tools around it: the lanes are a part
-                      of the module people missed when it was one of them (t-299). */}
-                  <button
-                    type="button"
-                    className={`kys-seq-tool kys-seq-mod-tool ${lanesOpen ? 'is-open' : ''}`}
-                    aria-label="Mod lanes"
-                    aria-pressed={lanesOpen}
-                    onClick={() => setLanesOpen(!lanesOpen)}
-                  >
-                    <SlidersVertical size={15} aria-hidden="true" />
-                    <span>Mod lanes</span>
-                    {laneCount > 0 && <span className="kys-seq-tool-count">{laneCount}</span>}
-                  </button>
-                </PlayerTip>
-              </div>
-            )}
             <EditMenu
               items={[
                 {
