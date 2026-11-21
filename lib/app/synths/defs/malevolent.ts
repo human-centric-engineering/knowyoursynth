@@ -1062,6 +1062,40 @@ const malevolent: SynthDef & { version: number } = {
   // with no envelope or LFO on it, and makes Envelope 2 (the loudness, through AM 1 at full) an organ gate with a short
   // release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out, and set the keyboard',
+        module: 'mode',
+        why: 'The Malevolent plays through its own internal connections when nothing is patched, so take out any cable first. MASTER VOL at 7 is the level every patch here assumes. ARP, VIBRATO, HOLD and both OCTAVE buttons unlit, with the joystick centred: each key plays one plain note.',
+        controls: ['out.*', 'keys.*', 'joy.*'],
+      },
+      {
+        title: 'Set VCO 1 to the sawtooth, VCO 2 off',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. On VCO 1 only the sawtooth button is lit, the buzzy wave with every harmonic, with LEVEL at 8. COARSE and FINE at the centre keep it in tune, and SHAPE MOD and both FM depths fully anticlockwise, so nothing moves it. VCO 2’s LEVEL goes fully down and none of its wave buttons is lit.',
+        controls: ['vco1.*', 'vco2.*'],
+      },
+      {
+        title: 'Keep noise and the aux input out',
+        module: 'mixer',
+        why: 'AUX LEVEL and NOISE LEVEL fully anticlockwise, so the saw is the only sound going into the filter. The LFO only moves what it is patched to; set its rate as shown.',
+        controls: ['mix.*', 'lfo.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. CUT OFF fully clockwise, with no RESONANCE and both FM depths fully anticlockwise, lets the saw through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'With the VCA on GATED and AM 1 fully clockwise, envelope 2 opens the amplifier for each note. ATTACK fully anticlockwise starts it at once, SUSTAIN fully clockwise holds it while the key is down, and a short RELEASE stops it soon after you let go. No DRIVE. Envelope 1 is set too, though nothing listens to it in this patch.',
+        controls: ['vca.*', 'env1.*', 'env2.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'vcf.cutoff': 10,
       'vcf.res': 0,

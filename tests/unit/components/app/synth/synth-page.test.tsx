@@ -217,7 +217,7 @@ const chooseDefaultPatch = () => {
   fireEvent.click(
     within(screen.getByRole('dialog', { name: 'Patches' }))
       .getAllByRole('button')
-      .filter((b) => b.textContent?.includes('Default patch'))[0]
+      .filter((b) => b.textContent?.includes('Default Saw'))[0]
   );
 };
 /** A control in the panel settings on the panel's foot rail (t-72). */
@@ -323,7 +323,7 @@ describe('SynthPage layout', () => {
     expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
       'Behringer Model D · Modelled on the 1970 Minimoog Model D'
     );
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     expect(screen.getByText('Patch:')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'About ›' })).toBeTruthy();
     expect(screen.getByText(MODEL_D_SYNTH.summary)).toBeTruthy();
@@ -352,10 +352,10 @@ describe('SynthPage layout', () => {
 
   it('opens on the Default patch, ahead of the library’s sounds, with nothing moved', () => {
     page();
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     // Chosen from the patches drawer, where it is first: the bar has no button of its own for it (t-208).
-    expect(screen.queryByRole('button', { name: 'Default patch' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Default Saw' })).toBeNull();
     // The patch is chosen in the Play deck's bar, before Play (t-279); under the panel it is only named.
     const pick = button(/^Choose a patch/);
     expect(pick.closest('.kys-player-bar')).not.toBeNull();
@@ -744,7 +744,7 @@ describe('SynthPage patch', () => {
     chooseDefaultPatch();
 
     expect(screen.queryByRole('button', { name: 'Unplug all cables' })).toBeNull();
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       '5'
     );
@@ -1874,7 +1874,7 @@ describe('SynthPage session', () => {
     storeSound(def, FAT_BASS);
     window.localStorage.setItem('kys.synth', JSON.stringify('ob-x'));
     page();
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     expect(screen.getAllByRole('slider', { name: /CUTOFF/ })[0].getAttribute('aria-valuenow')).toBe(
       '5'
     );
@@ -2001,7 +2001,7 @@ describe('SynthPage session', () => {
   it('starts from the Default patch when the stored session is not usable', () => {
     window.localStorage.setItem(SESSION_KEY, '{"presetId": 7}');
     page();
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     expect(screen.queryByText(/controls? moved/)).toBeNull();
   });
 
@@ -2175,7 +2175,7 @@ describe('SynthPage player', () => {
     fireEvent.click(
       within(screen.getByRole('dialog', { name: 'Patches' }))
         .getAllByRole('button')
-        .filter((b) => b.textContent?.includes('Default patch'))[0]
+        .filter((b) => b.textContent?.includes('Default Saw'))[0]
     );
     expect(highlightStore.get()).toEqual([]);
     expect(tab()).toHaveAttribute('aria-expanded', 'true');
@@ -2333,7 +2333,7 @@ describe('SynthPage player', () => {
         .getAllByRole('button')
         .map((b) => b.getAttribute('aria-label'))
     ).toEqual([
-      'Lesson step 0: Default patch',
+      'Lesson step 0: Default Saw',
       'Lesson step 1: Open the mixer',
       'Lesson step 2: Close the filter',
       'The finished patch',
@@ -2395,7 +2395,7 @@ describe('SynthPage player', () => {
     expect(cutoff()).toBe('-2');
     expect(defaultCutoff).not.toBe('-2');
 
-    fireEvent.click(button('Lesson step 0: Default patch'));
+    fireEvent.click(button('Lesson step 0: Default Saw'));
     expect(stepShown()).toBe('step 0 of 2');
     expect(cutoff()).toBe(defaultCutoff);
     const card = within(player()).getByTestId('lesson-card');
@@ -2432,7 +2432,7 @@ describe('SynthPage player', () => {
       .getAllByRole('listitem')
       .map((li) => li.textContent);
     expect(labels).toEqual([
-      '0StartDefault patch',
+      '0StartDefault Saw',
       '1MixerOpen the mixer',
       '2FilterClose the filter',
       'FinishedHow it works',
@@ -2446,7 +2446,7 @@ describe('SynthPage player', () => {
     expect(card.textContent).toMatch(/The finished patch/);
     fireEvent.click(within(card).getByRole('button', { name: /Build it step by step/ }));
     expect(card.textContent).toMatch(/Step 0 of 2 · Start/);
-    expect(card.textContent).toMatch(/Set your synth to the Default patch/);
+    expect(card.textContent).toMatch(/Set your synth to the Default Saw/);
     fireEvent.click(within(card).getByRole('button', { name: 'Next lesson step' }));
     expect(card.textContent).toMatch(/Step 1 of 2 · Mixer/);
     expect(card.textContent).toMatch(/Loud\./);
@@ -2644,7 +2644,7 @@ describe('SynthPage sounds', () => {
 
   it('with no sounds it opens on the Default patch, which plays its scale', async () => {
     page({ detail: { ...detail, sounds: [] } });
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
     expect(screen.queryByText(/controls? moved/)).toBeNull();
     await act(async () => {
@@ -2669,7 +2669,7 @@ describe('SynthPage sounds', () => {
   it('falls back to the Default patch when the stored sound is not in the list', () => {
     storeSession({ presetId: 'gone', step: null, values: { 'filter.cutoff': 1 }, cables: [] });
     page();
-    expect(loadedName()).toBe('Default patch');
+    expect(loadedName()).toBe('Default Saw');
     // The Default patch is the target: the stored cutoff (1, init's) is off its 5.
     expect(screen.getByText(/moved/)).toBeTruthy();
 

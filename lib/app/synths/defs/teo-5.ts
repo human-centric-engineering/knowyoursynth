@@ -1891,6 +1891,58 @@ const teo5: SynthDef & { version: number } = {
   // Init is already Oscillator 1's sawtooth alone, through the low-pass, with the loudness an organ gate (Envelope 2 at
   // full sustain) and no envelope on the filter. The Default patch opens the filter all the way.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Start from an initialised program, and set the output',
+        module: 'out',
+        why: 'The TEO-5 keeps settings in its menus that the knobs do not show, so if you can, start from an initialised program. VOLUME at 7 is the level every patch here assumes, with OCTAVE at 0. OVERDRIVE and VINTAGE fully anticlockwise keep the sound clean and steady.',
+        controls: ['out.*', 'drive.*', 'voice.vintage', 'kbd.*'],
+      },
+      {
+        title: 'Play it as a plain polysynth: no arpeggio, portamento or unison',
+        module: 'mode',
+        why: 'With ARPEGGIATOR ON, PORTAMENTO and UNISON unlit, each key plays one note of its own and lands on its pitch at once. The clock and arpeggiator settings do nothing while it is off; set them as shown.',
+        controls: ['arp.*', 'clock.*', 'glide.*', 'voice.unison'],
+      },
+      {
+        title: 'Set Oscillator 1 to the saw alone',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. On OSC 1 only the SAW button is lit, the buzzy wave with every harmonic; on OSC 2 none is lit. Both FREQUENCY knobs where they play the note you press, OSC 2 DETUNE at the centre. X-MOD fully anticlockwise and SYNC unlit.',
+        controls: ['osc1.*', 'osc2.*', 'osc.*'],
+      },
+      {
+        title: 'Mix in OSC 1 alone',
+        module: 'mixer',
+        why: 'In the mixer only OSC 1 is lit; SUB, OSC 2 and NOISE unlit. One plain saw goes into the filter.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Take both LFOs off',
+        module: 'lfo',
+        why: 'LFO AMOUNT at the centre is zero, so neither LFO moves anything. Set their shape and speed anyway, so your TEO-5 matches.',
+        controls: ['lfo1.*', 'lfo2.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. STATE fully anticlockwise is low-pass; CUTOFF fully clockwise and no RESONANCE let the saw through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'ENV ROUTING sends envelope 2 to the amplifier. ENV 2 ATTACK fully anticlockwise starts each note at once, SUSTAIN and AMOUNT fully clockwise hold it at full volume while the key is down, and a short RELEASE stops it soon after you let go. Envelope 1 goes to the filter, but its AMOUNT at the centre means it does nothing. VELOCITY unlit on both.',
+        controls: ['env.*', 'env1.*', 'env2.*'],
+      },
+      {
+        title: 'Switch the effect and the reverb off',
+        module: 'fx',
+        why: 'With EFFECT ON and REVERB ON unlit you hear the plain synth. Set their knobs anyway, so your TEO-5 matches when you switch them on.',
+        controls: ['fx.*', 'rev.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
     values: { 'vcf.cutoff': 10 },
   },
   toEngine,

@@ -913,6 +913,40 @@ const polivoks: SynthDef & { version: number } = {
   // Init is already Generator I's sawtooth alone at 8′ into a gated amplifier. The Default patch opens the filter, takes
   // its envelope off, and gives the loudness a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the output and play one voice',
+        module: 'out',
+        why: 'Output on, with Volume and the headphone level as shown: the level every patch here assumes. Voices on 1 voice and Key memory off mean each key plays one note while you hold it. Tune at the centre keeps it at concert pitch, and Glissando fully anticlockwise lands each note on its pitch at once.',
+        controls: ['out.*', 'kbd.*', 'gen.tune', 'gen1.glide'],
+      },
+      {
+        title: 'Set Generator I to the sawtooth',
+        module: 'osc',
+        why: 'The generators make the raw tone. Generator I goes to the sawtooth, the buzzy wave with every harmonic, at 8′. Generator II stays on its square, with detune at the centre, but it will not be heard. Every modulation and FM knob fully anticlockwise, so nothing moves the pitch.',
+        controls: ['gen1.*', 'gen2.*'],
+      },
+      {
+        title: 'Mix in Generator I alone',
+        module: 'mixer',
+        why: 'Generator I level as shown, with Generator II, noise and external all fully anticlockwise: one plain saw goes into the filter.',
+        controls: ['mixer.*'],
+      },
+      {
+        title: 'Open the filter all the way, with no envelope on it',
+        module: 'filter',
+        why: 'The filter takes brightness away. In low-pass with Cutoff fully clockwise, no Resonance, no modulation and no envelope depth, it lets the saw through. Its envelope is turned all the way down too.',
+        controls: ['vcf.*', 'fenv.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The amplifier envelope shapes each note. Attack and decay fully anticlockwise start it at once, pedestal (the Polivoks’ name for sustain) fully clockwise holds it while the key is down, and a short after-sound (release) stops it soon after you let go. The Modulator only moves what its knobs send it to; with every modulation knob down it does nothing.',
+        controls: ['aenv.*', 'vca.*', 'lfo.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'vcf.cutoff': 6,
       'vcf.env': 0,

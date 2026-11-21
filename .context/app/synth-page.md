@@ -70,7 +70,8 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   (`PATCH /api/v1/admin/synths/[id]/design`). Neutral, the default, is the panel in its own
   colours and lettering without the maker's marks; faithful adds them and needs a recorded
   approval. See `lib/app/catalogue/designs.ts`.
-- **The Default patch comes first** (`f-default-patch`). The page puts it ahead of the catalogue's sounds
+- **The Default patch comes first** (`f-default-patch`), named the **Default Saw** wherever it is a sawtooth
+  (`defaultPatchName`, t-295). The page puts it ahead of the catalogue's sounds
   (`defaultPatchSound` in `lib/app/synths/default-patch.ts`, under the reserved id `default-patch`), so a synth with
   no session yet opens on it, and a stored sound the library no longer has falls back to it. **A synth chosen over
   another opens on it too**, whatever panel it was left with (owner ruling, 2026-11-03): on arrival the page compares
@@ -97,10 +98,12 @@ break shared links for no visible gain. "Sound" on screen means what you hear ("
   `default-patch.ts` sets the panel to `defaultPatchState()` for it. Build it step by step, the Lesson's start and
   Back from step 1 go to it; its Next goes to step 1. It records no lesson progress, and a step restored from the
   session still wins over it on a refresh. It is compact: one line before the step cards in the Lesson ("Set your
-  synth to the Default patch." and what to listen for, from the Default patch's step), a short **0 · Start** chapter
-  before step 1, and a card with no numbered moves (the Default patch sets the whole panel). Its controls are lit
-  and, on a phone, revealed above the Lesson sheet as a step's are. The Default patch's own lesson has none: its one
-  step is that patch already.
+  synth to the Default Saw." or "the Default patch" where it is no sawtooth, `defaultPatchName`, and what to listen
+  for, from `startStep`), a short **0 · Start** chapter before step 1, and a card with no numbered moves (the Default
+  patch sets the whole panel). Its controls are lit and, on a phone, revealed above the Lesson sheet as a step's are.
+  It points to the checklist in the library. The Default patch's own lesson has no step 0. Its steps are the
+  synth's starter checklist (`DefaultPatch.checklist`, [`synths.md`](./synths.md)), a part of the panel at a time,
+  each saying where every control in it goes; its Lesson starts with "Start the checklist".
 - **The sound map works from the definition, not the drawn layout**, so it answers the same
   whichever view is showing. It runs in the probe workers (`/worklets/kys-probe.js`) and falls
   back to the main thread where a host blocks workers. A new map starts 300 ms after the panel

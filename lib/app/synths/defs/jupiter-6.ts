@@ -1753,6 +1753,50 @@ const jupiter6: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Set the volume and tuning, and play it as a plain polysynth',
+        module: 'mode',
+        why: 'Volume at 7 is the level every patch here assumes, and Master tune at the centre keeps it at concert pitch. Assign mode on POLY-1, with SOLO, Hold and both arpeggio buttons unlit, means each key plays a note of its own. With PORTAMENTO and GLISSANDO unlit, notes land on their pitch at once.',
+        controls: ['out.*', 'voice.*', 'arp.*', 'glide.*'],
+      },
+      {
+        title: 'Set VCO-1 to the sawtooth alone',
+        module: 'osc',
+        why: 'The VCOs make the raw tone. On VCO-1 only the sawtooth button is lit, the buzzy wave with every harmonic, at 8′. On VCO-2 every wave button is unlit, so it is silent. Both sync buttons stay unlit, VCO-2’s tune sits at the centre, and the cross mod sliders go all the way down.',
+        controls: ['vco1.*', 'vco2.*', 'vco.*'],
+      },
+      {
+        title: 'Set the mix',
+        module: 'mixer',
+        why: 'The mix slider balances VCO-1 against VCO-2. Set it towards VCO-1 as shown; VCO-2 has no wave on, so only VCO-1’s saw comes through.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'Two LFOs, the envelope and the bender can all move the pitch, the pulse width or the filter. With every depth all the way down and LFO MOD unlit, nothing does. The bend settings only act while you push the lever.',
+        controls: ['lfo.*', 'lfo2.*', 'vcomod.*', 'pwm.*', 'bend.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. Low-pass lit, high-pass unlit, cutoff all the way up, with no resonance, envelope, LFO or keyboard follow: the saw goes through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'ENV-2 shapes the loudness of each note. Attack all the way down starts it at once, sustain all the way up holds it while the key is down, and a short release stops it soon after you let go. VCA level at 8 and no tremolo. ENV-1 is set too, though nothing listens to it in this patch.',
+        controls: ['vca.*', 'env1.*', 'env2.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
+  },
   toEngine,
   modular,
   signalNames: {

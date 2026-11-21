@@ -2109,6 +2109,50 @@ const minilogueXd: SynthDef & { version: number } = {
   init,
   // no Default patch: init is already VCO 1's sawtooth alone at 8′, the filter open, the loudness a gate with a short
   // release, and the EG, LFO and effects off
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Start from an initialised program, and set the output',
+        module: 'mode',
+        why: 'The minilogue xd keeps settings in its menus that the knobs do not show, so if you can, start from an initialised program. MASTER at 7 is the level every patch here assumes, with OCTAVE at 0 and the joystick centred. VOICE MODE on POLY with its depth fully anticlockwise plays a note per key, LATCH unlit, and PORTAMENTO fully anticlockwise lands each note on its pitch at once.',
+        controls: ['out.*', 'seq.*', 'kbd.*', 'joy.*', 'glide.*', 'voice.*', 'arp.*'],
+      },
+      {
+        title: 'Set both VCOs to the sawtooth',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Both WAVE switches on the sawtooth, the buzzy wave with every harmonic, at 8′, with PITCH at the centre and SHAPE fully anticlockwise. SYNC and RING off, CROSS MOD DEPTH fully anticlockwise. The multi engine is set as shown, though it will not be heard.',
+        controls: ['vco1.*', 'vco2.*', 'multi.*'],
+      },
+      {
+        title: 'Mix in VCO 1 alone',
+        module: 'mixer',
+        why: 'VCO 1 fully clockwise, VCO 2 and MULTI fully anticlockwise: one plain saw goes into the filter.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. CUTOFF fully clockwise, no RESONANCE, DRIVE and KEY TRACK at 0 %: the saw goes through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The amp EG shapes each note. ATTACK fully anticlockwise starts it at once, SUSTAIN fully clockwise holds it while the key is down, and a short RELEASE stops it soon after you let go. The other EG and the LFO are set too, but with EG INT and LFO INT at the centre they move nothing.',
+        controls: ['amp.*', 'eg.*', 'lfo.*'],
+      },
+      {
+        title: 'Switch the effects off',
+        module: 'fx',
+        why: 'MOD, REVERB and DELAY all off keep the sound dry. Set their TIME and DEPTH as shown, so your minilogue xd matches when you switch them on.',
+        controls: ['mod.*', 'rev.*', 'del.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 

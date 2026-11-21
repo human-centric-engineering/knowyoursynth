@@ -10,18 +10,22 @@
 import { describe, expect, it } from 'vitest';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { PatternSchema } from '@/lib/app/sequencer/pattern';
-import type { CablePair, SynthDef } from '@/lib/app/synths/contract';
+import type { CablePair, DefaultPatchStep, SynthDef } from '@/lib/app/synths/contract';
 import {
   DEFAULT_PATCH_ID,
+  defaultPatchName,
   defaultPatchSound,
   defaultPatchState,
+  startStep,
   SCALE_PATTERN,
   SCALE_PATTERN_VIEW,
   SCALE_PHRASE,
 } from '@/lib/app/synths/default-patch';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
+import buchlaEasel from '@/lib/app/synths/defs/buchla-easel';
 import modelD from '@/lib/app/synths/defs/model-d';
-import { cablesToEngine } from '@/lib/app/synths/lib/patch';
+import { checklistRequired } from '@/lib/app/synths/lib/checklist';
+import { cablesToEngine, presetState } from '@/lib/app/synths/lib/patch';
 import { validateDefaultPatch, validatePreset } from '@/lib/app/synths/validate';
 import { render, rms } from '@/tests/unit/lib/app/synths/audio/render';
 import { makeMiniD } from '@/tests/fixtures/synths/mini-d';
@@ -115,7 +119,8 @@ describe('defaultPatchSound', () => {
     const sound = defaultPatchSound(modelD);
 
     expect(sound.blurb).toMatch(/^A plain sawtooth on the Model D/);
-    expect(sound.steps[0].why).toContain('bright, steady buzz');
+    expect(sound.name).toBe('Default Saw');
+    expect(sound.steps.at(-1)?.why).toContain('bright, steady buzz');
   });
 
   it('plugs the cables a Default patch has', () => {
@@ -125,6 +130,139 @@ describe('defaultPatchSound', () => {
     expect(defaultPatchState(def).cables).toEqual([
       expect.objectContaining({ from: 'env1.out', to: 'pitch.in' }),
     ]);
+  });
+});
+
+describe('the Default patch’s checklist', () => {
+  const defs = SYNTH_DEFS.map((d) => [d.id, d] as const);
+
+  it.each(defs)('%s has one', (_id, def) => {
+    expect(def.defaultPatch?.checklist?.length).toBeGreaterThan(0);
+  });
+
+  it.each(defs)(
+    '%s sets every control that shapes the sound exactly once, and ends on the Default patch',
+    (_id, def) => {
+      const sound = defaultPatchSound(def);
+      const want = defaultPatchState(def);
+      const seen = sound.steps.flatMap((s) => Object.keys(s.set ?? {}));
+
+      expect(new Set(seen).size).toBe(seen.length);
+      expect(new Set(seen)).toEqual(new Set(checklistRequired(def).map((c) => c.id)));
+      sound.steps.forEach((s) =>
+        Object.entries(s.set ?? {}).forEach(([id, v]) =>
+          expect([id, v]).toEqual([id, want.values[id]])
+        )
+      );
+      // every step builds on the Default patch, so the panel is on it at the last step and at every one before
+      sound.steps.forEach((_s, k) => expect(presetState(def, sound, k)).toEqual(want));
+      expect(sound.steps.flatMap((s) => s.cables ?? [])).toEqual(def.defaultPatch?.cables ?? []);
+    }
+  );
+
+  it.each(defs)('%s says where each control goes, one line each', (_id, def) => {
+    defaultPatchSound(def).steps.forEach((s) => {
+      const lines = s.why
+        .split('\n')
+        .filter((l) => l.startsWith('- ') && !l.startsWith('- Listen for:'));
+      expect(lines.length).toBe(Object.keys(s.set ?? {}).length + (s.cables?.length ?? 0));
+    });
+  });
+
+  it('writes Model D’s steps from its panel: a position for each control, and what to listen for at the end', () => {
+    const steps = defaultPatchSound(modelD).steps;
+    const filter = steps.find((s) => s.module === 'filter');
+
+    expect(filter?.why).toContain('- CUTOFF FREQUENCY: fully clockwise (5 · 20 kHz)');
+    expect(filter?.why).toContain('- EMPHASIS: fully anticlockwise (0)');
+    expect(steps.at(-1)?.why).toMatch(/\n- Listen for: .*bright, steady buzz/);
+  });
+
+  it('calls a sawtooth the Default Saw, and anything else the Default patch, with its reason first', () => {
+    const easel = defaultPatchSound(buchlaEasel);
+    const notSaw = buchlaEasel.defaultPatch?.notSaw ?? '';
+
+    expect(defaultPatchName(modelD)).toBe('Default Saw');
+    expect(defaultPatchName(buchlaEasel)).toBe('Default patch');
+    expect(easel.name).toBe('Default patch');
+    expect(notSaw).toMatch(/no sawtooth/);
+    expect(easel.how.startsWith(notSaw)).toBe(true);
+    expect(easel.steps[0].why.startsWith(`${notSaw}\n`)).toBe(true);
+  });
+
+  it.each(defs)('%s says why where its default is not a sawtooth', (_id, def) => {
+    if (def.defaultPatch?.listen) expect(def.defaultPatch.notSaw?.trim()).toBeTruthy();
+    else expect(defaultPatchName(def)).toBe('Default Saw');
+  });
+
+  it('keeps step 0 of other lessons to one step that sets the whole patch, and points to the checklist', () => {
+    const s = startStep(modelD);
+
+    expect(s.title).toBe('Default Saw');
+    expect(s.set).toEqual(modelD.defaultPatch?.values);
+    expect(s.why).toContain(
+      'The Default Saw in the library sets it up one part of the panel at a time.'
+    );
+    expect(defaultPatchSound(makeMiniD()).steps).toHaveLength(1);
+    expect(startStep(makeMiniD()).why).not.toContain('in the library');
+  });
+});
+
+describe('validateDefaultPatch on a checklist', () => {
+  const step = (controls: string[], extra: Partial<DefaultPatchStep> = {}): DefaultPatchStep => ({
+    title: 'Set it',
+    module: 'osc',
+    why: 'Set these.',
+    controls,
+    ...extra,
+  });
+  const withChecklist = (checklist: DefaultPatchStep[], more: object = {}) => ({
+    ...makeMiniD(),
+    defaultPatch: { values: {}, checklist, ...more },
+  });
+  const codes = (def: SynthDef) => validateDefaultPatch(def).problems.map((p) => p.code);
+
+  it('passes one that covers every control once, a broad pattern after a narrow one taking the rest', () => {
+    expect(codes(withChecklist([step(['osc1.*']), step(['*'])]))).toEqual([]);
+  });
+
+  it('names each control it leaves unset', () => {
+    const problems = validateDefaultPatch(withChecklist([step(['osc*', 'mix.*'])])).problems;
+
+    expect(problems.every((p) => p.code === 'uncovered-control')).toBe(true);
+    expect(problems.map((p) => p.message)).toContain(
+      "mini-d's Default patch checklist does not set filter.cutoff"
+    );
+    // a ui control is no part of the sound, so it needs no step
+    expect(problems.map((p) => p.message).join()).not.toContain('view.help');
+  });
+
+  it('refuses a pattern that matches nothing, and a step an earlier one left empty', () => {
+    expect(codes(withChecklist([step(['*']), step(['osc1.*']), step(['nope.*'])]))).toEqual([
+      'unmatched-pattern',
+      'empty-step',
+      'empty-step',
+    ]);
+  });
+
+  it('refuses a blank step, and an empty checklist', () => {
+    expect(codes(withChecklist([step(['*'], { why: ' ' })]))).toEqual(['blank-step']);
+    expect(codes(withChecklist([]))).toContain('empty-checklist');
+  });
+
+  it('wants the patch’s cables in at exactly one step, and none where it has none', () => {
+    const cables: CablePair[] = [['env1.out', 'pitch.in']];
+
+    expect(codes(withChecklist([step(['*'])], { cables }))).toEqual(['cable-step']);
+    expect(codes(withChecklist([step(['*']), step([], { cables: true })], { cables }))).toEqual([]);
+    expect(codes(withChecklist([step(['*'], { cables: true })]))).toEqual(['cable-step']);
+  });
+
+  it('wants a reason where the patch is not a sawtooth', () => {
+    expect(codes(withChecklist([step(['*'])], { listen: 'A drum.' }))).toEqual(['no-not-saw']);
+    expect(
+      codes(withChecklist([step(['*'])], { listen: 'A drum.', notSaw: 'It is a drum synth.' }))
+    ).toEqual([]);
   });
 });
 

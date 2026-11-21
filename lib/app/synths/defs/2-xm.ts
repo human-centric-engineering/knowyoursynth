@@ -1040,6 +1040,46 @@ const xm2: SynthDef & { version: number } = {
   // Init is already the first Xpander voice's VCO 1 on its sawtooth alone, through the low-pass, with the loudness an
   // organ gate. The Default patch opens the filter all the way.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the master volume and play one voice in unison',
+        module: 'mode',
+        why: 'The 2-XM has two complete voices, XM1 and XM2. MASTER at 7 is the level every patch here assumes. ASSIGN on UNI plays both voices from each key, but XM2’s level goes fully down, so you hear XM1 alone. Portamento stays off, so notes land on their pitch at once.',
+        controls: ['output.*', 'alloc.*', 'xm1.*', 'xm2.*', 'xm1_pitch.*', 'xm2_pitch.*'],
+      },
+      {
+        title: 'Set XM1’s oscillators in tune, with no modulation',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. Their frequency and fine knobs at the centre keep them in tune, and each modulation knob at the centre means nothing moves the pitch. Sync stays off.',
+        controls: ['xm1_vco1.*', 'xm1_vco2.*', 'xm1_lfo.*'],
+      },
+      {
+        title: 'Mix XM1’s VCO 1 sawtooth into the filter',
+        module: 'mixer',
+        why: 'Each VCO’s mix knob sends its sawtooth one way from the centre and its pulse the other. VCO 1 turns towards the sawtooth, to about 9 o’clock. VCO 2 and the external input stay at the centre, which is off.',
+        controls: ['xm1_vcf.mix_*'],
+      },
+      {
+        title: 'Open XM1’s filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. Frequency fully clockwise, no resonance, notch fully anticlockwise (plain low-pass) and modulation at the centre lets the saw through untouched.',
+        controls: ['xm1_vcf.*'],
+      },
+      {
+        title: 'Make XM1’s loudness a plain gate',
+        module: 'env',
+        why: 'With the VCA on ENV, envelope 1 opens the amplifier for each note. Attack fully down starts the note at once and sustain fully up holds it while the key is down; the decay knob also sets a short release. Envelope 2 is set too, though nothing listens to it in this patch.',
+        controls: ['xm1_env1.*', 'xm1_env2.*', 'xm1_vca.*'],
+      },
+      {
+        title: 'Set XM2 to match',
+        module: 'osc',
+        why: 'XM2 is silent here, but setting it the same way now means it matches XM1 as soon as a patch brings it in. Its filter sits a little lower, at 8.',
+        controls: ['xm2_*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'xm1_vcf.frequency': 10 },
   },
   toEngine,

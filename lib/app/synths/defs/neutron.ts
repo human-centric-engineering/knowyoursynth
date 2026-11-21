@@ -1472,6 +1472,52 @@ const neutron: SynthDef & { version: number } = {
   // Init is already Oscillator 1's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
   // all the way and takes the overdrive's drive off.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out and set the volume',
+        module: 'patch',
+        why: 'The Neutron plays through its own internal connections when nothing is patched. Take out any cable in the patch bay first, so the sound goes the way these steps expect. VOLUME at 7 is the level every patch here assumes.',
+        controls: ['out.*'],
+      },
+      {
+        title: 'Set both oscillators to a sawtooth, in tune',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. SHAPE at the centre is the sawtooth on the Neutron, the buzzy wave with every harmonic. TUNE at the centre keeps each one in tune, and SYNC and PARAPHONIC stay off.',
+        controls: ['osc1.*', 'osc2.*', 'osc.sync', 'osc.para'],
+      },
+      {
+        title: 'Hear Oscillator 1 alone, with no noise',
+        module: 'mixer',
+        why: 'OSC MIX fully anticlockwise sends only Oscillator 1 to the filter. NOISE fully down keeps the hiss out.',
+        controls: ['osc.mix', 'mix.noise'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. In low-pass with FREQ fully clockwise, RESO and both depth knobs at zero, and key tracking off, it lets the saw through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'Envelope 1 opens the amplifier for each note. A at 0 starts the note at once and S fully up holds it at full volume while the key is down. VCA BIAS at 0 keeps the amplifier shut between notes. Envelope 2 is set too, though nothing listens to it in this patch.',
+        controls: ['vca.*', 'env1.*', 'env2.*'],
+      },
+      {
+        title: 'Take the LFO, glide and utilities out of the way',
+        module: 'lfo',
+        why: 'Nothing here is patched into the sound, so these do nothing, but set them so your Neutron matches. PORTA TIME fully down matters most: with it up, notes slide into each other.',
+        controls: ['lfo.*', 'sh.*', 'slew.*', 'porta.*', 'att.*'],
+      },
+      {
+        title: 'Switch the effects off',
+        module: 'fx',
+        why: 'DRIVE fully down keeps the overdrive clean, and the delay MIX fully down means you hear no echoes.',
+        controls: ['od.*', 'delay.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'vcf.freq': 10, 'od.drive': 0 },
   },
   toEngine,

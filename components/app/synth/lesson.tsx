@@ -25,7 +25,12 @@ import type {
   PresetStep,
   SynthDef,
 } from '@/lib/app/synths/contract';
-import { START_STEP, hasStartStep, startStep } from '@/lib/app/synths/default-patch';
+import {
+  START_STEP,
+  defaultPatchName,
+  hasStartStep,
+  startStep,
+} from '@/lib/app/synths/default-patch';
 import { focusStore, highlightStore, moveStore, useStore } from '@/components/app/synth/stores';
 import { LevelDots, markText, reachedStep } from '@/components/app/synth/library';
 import type { LessonMark } from '@/components/app/synth/progress';
@@ -596,7 +601,7 @@ function StartLine({
       onPointerEnter={() => light(ids)}
       onPointerLeave={() => light(base)}
       aria-current={now ? 'step' : undefined}
-      title={now ? undefined : 'Set the panel to the Default patch'}
+      title={now ? undefined : `Set the panel to the ${s.title}`}
       className={`mb-3 flex w-full items-start gap-3 rounded-xl border px-3.5 py-2.5 text-left text-sm ${now ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-(--kys-line) bg-(--kys-surface) hover:border-(--kys-muted)'}`}
     >
       <span className="mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-(--kys-muted) font-mono text-[11px] font-semibold text-(--kys-muted)">
@@ -777,7 +782,9 @@ export function Lesson({
                       </>
                     ) : (
                       <button type="button" onClick={() => onStep(begin)} className={primary}>
-                        {hasStart ? 'Start from the Default patch' : 'Start from a blank patch'}
+                        {hasStart
+                          ? `Start from the ${defaultPatchName(def)}`
+                          : 'Start the checklist'}
                       </button>
                     )}
                   </div>

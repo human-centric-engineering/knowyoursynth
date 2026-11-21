@@ -135,7 +135,7 @@ describe('Library with the Default patch', () => {
 
   it('lists it first, above the catalogue’s sounds, and counts only theirs', () => {
     setupWithStart();
-    expect(names()).toEqual(['Default patch', ...sounds.map((s) => s.name)]);
+    expect(names()).toEqual(['Default Saw', ...sounds.map((s) => s.name)]);
     expect(screen.getByText('200 of 200')).toBeTruthy();
   });
 
@@ -143,11 +143,11 @@ describe('Library with the Default patch', () => {
     setupWithStart();
     const cat = [...new Set(sounds.map((s) => s.tags[0]))][1];
     fireEvent.click(screen.getByRole('button', { name: cat, pressed: false }));
-    expect(names()[0]).toBe('Default patch');
+    expect(names()[0]).toBe('Default Saw');
     expect(names().slice(1)).toEqual(sounds.filter((s) => s.tags[0] === cat).map((s) => s.name));
 
     fireEvent.change(search(), { target: { value: 'zzzz-no-such-sound' } });
-    expect(names()).toEqual(['Default patch']);
+    expect(names()).toEqual(['Default Saw']);
   });
 
   it('chooses it by its id, and marks it current while it is on the panel', () => {

@@ -1277,6 +1277,44 @@ const jupiter4: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Set the volume and tuning, and play it as a plain polysynth',
+        module: 'mode',
+        why: 'Volume at 7 is the level every patch here assumes, and Tuning at the centre keeps it at concert pitch. Key assignment on poly1, the arpeggio off and HOLD unlit mean each key plays a note of its own. Transpose stays NORMAL, and with the portamento switch off notes land on their pitch at once.',
+        controls: ['out.*', 'kbd.*', 'trig.arpClock', 'trig.rate'],
+      },
+      {
+        title: 'Set the VCO to the sawtooth',
+        module: 'osc',
+        why: 'The VCO makes the raw tone. Its waveform switch goes to the sawtooth, the buzzy wave with every harmonic, at 8′. The pulse width settings only matter for the pulse wave, so set them as shown and move on. Sub-oscillator and noise stay off.',
+        controls: ['vco.waveform', 'vco.range', 'vco.pw', 'vco.pwMode', 'vco.sub', 'noise.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'The LFO, the sample and hold and the bender lever can all move the sound. With every depth slider all the way down and the lever switches off, nothing does. LFO BEND at the centre and LFO delay off finish it.',
+        controls: ['lfo.*', 'vco.lfoMod', 'vcf.lfoMod', 'trig.*', 'bend.*'],
+      },
+      {
+        title: 'Open the filters all the way',
+        module: 'filter',
+        why: 'The high-pass filter takes away bass, so its cutoff goes all the way down (flat). The low-pass filter takes away treble, so its cutoff goes all the way up. No resonance and no envelope amount let the saw through untouched.',
+        controls: ['hpf.*', 'vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate, with no ensemble',
+        module: 'amp',
+        why: 'The loudness envelope shapes each note. Attack all the way down starts it at once, sustain all the way up holds it while the key is down, and a short release stops it soon after you let go. VCA level at 7 sets the voice level. The filter envelope is set too, though it does nothing while its amount is at 0. Ensemble stays off for a plain, dry sound.',
+        controls: ['env_f.*', 'env_a.*', 'vca.*', 'ens.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
+  },
   toEngine,
   modular,
   signalNames: {

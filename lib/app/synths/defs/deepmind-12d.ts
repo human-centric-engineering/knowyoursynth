@@ -1434,6 +1434,50 @@ const deepmind12d: SynthDef & { version: number } = {
   controls,
   jacks: [],
   init,
+  // Init is already the Default patch; the checklist sets it on the hardware from any state.
+  defaultPatch: {
+    values: {},
+    checklist: [
+      {
+        title: 'Start from an initialised program',
+        module: 'mode',
+        why: 'The DeepMind keeps many settings in its menus that the faders do not show: the mod matrix, the effects and more. If you can, start from an initialised program, so all of those are cleared. Then set VOLUME at 7, the level every patch here assumes, POLYPHONY on POLY with no unison detune, and switch the arpeggiator off. PORTAMENTO fully down means notes land on their pitch at once.',
+        controls: ['out.*', 'voice.*', 'glide.*', 'arp.*'],
+      },
+      {
+        title: 'Set Oscillator 1 to the sawtooth, Oscillator 2 down',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. On Oscillator 1 only the sawtooth button is lit, the buzzy wave with every harmonic, at 8′. Every PITCH MOD, PWM and TONE MOD fader goes all the way down, so nothing moves it. Oscillator 2’s LEVEL and the NOISE LEVEL go all the way down, so you hear one plain saw. SYNC stays unlit.',
+        controls: ['osc*', 'noise.*'],
+      },
+      {
+        title: 'Open both filters all the way',
+        module: 'filter',
+        why: 'The high-pass filter takes away bass, so its FREQ goes all the way down. The low-pass filter takes away treble, so its FREQ goes all the way up. RES, ENV, LFO and KYBD all the way down, with 2 POLE, INVERT and BOOST unlit, let the saw through untouched.',
+        controls: ['vcf.*', 'hpf.*'],
+      },
+      {
+        title: 'Take the LFOs out of the way',
+        module: 'lfo',
+        why: 'Nothing is listening to the LFOs once every depth fader is down. Set their rates and shapes anyway so your DeepMind matches.',
+        controls: ['lfo1.*', 'lfo2.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The VCA envelope shapes the loudness of each note. A all the way down starts it at once, S all the way up holds it while the key is down, and a short R stops it soon after you let go. VCA LEVEL at the centre. The filter and mod envelopes are set too, though nothing listens to them in this patch.',
+        controls: ['vca.*', 'vcaEnv.*', 'vcfEnv.*', 'modEnv.*'],
+      },
+      {
+        title: 'Switch the effects off',
+        module: 'fx',
+        why: 'Each of the four effects slots goes to NONE, so the sound comes out dry. Leave the slot levels and routing as shown, ready for later patches.',
+        controls: ['fx*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
+  },
   toEngine,
 };
 

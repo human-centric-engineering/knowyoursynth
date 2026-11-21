@@ -24,7 +24,9 @@ and `LOADERS` (`defs/load.ts`); `registry.test.ts` fails if one is missing.
   lesson starts from it, so a sound states each value it relies on that the Default patch changed from `init`, and
   unplugs each of its cables it does not keep (`default-base.test.ts` checks both). Leave it
   out only where `init` is already exactly that (never on a synth that is silent without cables). A synth with no saw
-  gets its plainest tone and a `listen` line saying what to expect. The rules are in
+  gets its plainest tone, a `listen` line saying what to expect and a `notSaw` line saying why. Every Default patch
+  also has a `checklist`: steps a newcomer follows to set it from any state, which between them cover every control
+  on the panel. Where `init` is already the patch, that is `defaultPatch: { values: {}, checklist }`. The rules are in
   [`synths.md`](./synths.md#authoring-a-definition); `default-patch.test.ts` checks it and fails if it is silent, and
   `check:synths` renders it as `(default)`, so record it in the baseline with the rest.
 - `toEngine()` maps onto the existing `EngineParams` only. If the voice needs something the

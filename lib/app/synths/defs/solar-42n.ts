@@ -2414,6 +2414,58 @@ const solar42n: SynthDef & { version: number } = {
   // (VCO A sits in the middle, so it goes through both) with no resonance, and makes Envelope A (its loudness) an organ
   // gate with a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out, and set the keyboard',
+        module: 'mode',
+        why: 'The SOLAR 42N plays through its own internal connections when nothing is patched, so take out any cable first. The keyboard on SINGLE, with both octave buttons unlit and PORTAMENTO fully anticlockwise, plays one note at a time and lands on its pitch at once. All six DRONE VOICES buttons unlit, so the keys do not open the drones.',
+        controls: ['keys.*', 'kb.*', 'gate.*'],
+      },
+      {
+        title: 'Set VCO A to the sawtooth',
+        module: 'osc',
+        why: 'VCO A makes the tone in this patch. Its waveform goes to the sawtooth, the buzzy wave with every harmonic, with tune at the centre and the sub off. VCO B is set the same for later patches. Both cv amt and pwm knobs fully anticlockwise, so nothing moves them.',
+        controls: ['va.*', 'vb.*'],
+      },
+      {
+        title: 'Set the drones, which stay silent here',
+        module: 'osc',
+        why: 'The six drone voices only sound when they are held or opened from the keyboard, and with every HOLD and DRONE VOICES button unlit they stay silent. Set their tuning, levels and envelopes as shown, so your SOLAR matches when a patch brings them in.',
+        controls: ['d1.*', 'd2.*', 'd3.*', 'd4.*', 'd5.*', 'd6.*'],
+      },
+      {
+        title: 'Mix in VCO A alone, in the centre',
+        module: 'mixer',
+        why: 'In the mixer, VCO A VOL at 7, panned to the centre. VCO B, EXT.AUDIO and PREAMP VOL fully anticlockwise, and the preamp gain off. The drone channels keep their levels and pans, ready for later.',
+        controls: ['mix.*', 'pre.*'],
+      },
+      {
+        title: 'Open both filters all the way',
+        module: 'filter',
+        why: 'The two filters take brightness away. Both on LP, FREQ fully clockwise and RES fully anticlockwise let the saw through. No DIST, GAIN and the two MOD knobs at the centre, and link unlit.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'Envelope A opens the amplifier for each note. Attack fully anticlockwise starts it at once, sustain fully clockwise holds it while the key is down, and the short release stops it soon after you let go. Hold and loop unlit. Envelope B is set too, though nothing listens to it in this patch.',
+        controls: ['ea.*', 'eb.*'],
+      },
+      {
+        title: 'Set the LFOs, sequencer and joystick, which are not patched',
+        module: 'mod',
+        why: 'Nothing here is patched into the sound, so these do nothing. Set them as shown, with the joystick centred, so your SOLAR matches.',
+        controls: ['lfoa.*', 'lfob.*', 'joy.*', 'seq.*'],
+      },
+      {
+        title: 'Set the output, with no effects',
+        module: 'out',
+        why: 'MASTER VOLUME at 7 is the level every patch here assumes. Both effects cartridge slots EMPTY, so the sound comes out dry; set the X, Y, Z and BLEND knobs at the centre.',
+        controls: ['fx.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'vcf.lfreq': 10,
       'vcf.rfreq': 10,

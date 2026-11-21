@@ -1052,6 +1052,64 @@ const cat: SynthDef & { version: number } = {
   // Init is already VCO 1's sawtooth alone. The Default patch opens the filter all the way with no keyboard tracking
   // and takes the ADSR off it, and makes the ADSR (the loudness) an organ gate with a short release.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume, the pitch and no glide',
+        module: 'out',
+        why: 'Volume at 7 is the level every patch here assumes. Pitch bend at the centre and octave shift at 0 keep the synth at concert pitch, and glide all the way down means each note lands on its pitch at once.',
+        controls: ['out.*', 'pitch.bend', 'pitch.octave', 'pitch.glide'],
+      },
+      {
+        title: 'Set VCO 1 to its sawtooth alone',
+        module: 'osc',
+        why: 'The CAT mixes its waves with a slider each. VCO 1’s sawtooth goes up to 7, the buzzy wave with every harmonic, and every other wave slider on both VCOs goes all the way down. The tuning knobs sit at the centre and sync is off. Keyboard control on POLY is how the CAT normally plays one note at a time.',
+        controls: [
+          'vco1.fine',
+          'vco1.coarse',
+          'pitch.kbdCtrl',
+          'vco1.pw',
+          'vco1.sub',
+          'vco1.saw',
+          'vco1.tri',
+          'vco1.pulse',
+          'vco1.sync',
+          'vco2.fine',
+          'vco2.sub',
+          'vco2.square',
+          'vco2.saw',
+        ],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'Each VCO and the filter can be moved by the LFO and the envelope. With every mod depth knob fully down, the source switches do nothing, but set them anyway so your CAT matches. Repeat stays off.',
+        controls: [
+          'vco1.mod*',
+          'vco1.pwmSrc',
+          'vco2.mod*',
+          'vcf.mod1Src',
+          'vcf.mod2Src',
+          'vcf.mod1Depth',
+          'trig.*',
+          'sh.*',
+          'lfo.*',
+        ],
+      },
+      {
+        title: 'Send VCO 1 into the filter, and open it',
+        module: 'filter',
+        why: 'VCO 1 audio on lets its sound into the filter, with the noise all the way down. The filter takes brightness away: Fc (cutoff) all the way up, Q (resonance) all the way down, and no keyboard control or envelope depth lets the saw through untouched.',
+        controls: ['vcf.*', 'noise.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'env',
+        why: 'With the VCA source on ADSR, the ADSR envelope opens the amplifier for each note. Attack all the way down starts the note at once, sustain all the way up holds it while the key is down, and the short release stops it soon after you let go. The AR envelope is set too, though nothing listens to it in this patch.',
+        controls: ['adsr.*', 'ar.*', 'vca.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'vcf.fc': 10,
       'vcf.kbd': 0,

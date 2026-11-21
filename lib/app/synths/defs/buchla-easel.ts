@@ -1944,6 +1944,53 @@ const buchlaEasel: SynthDef & { version: number } = {
   // opening fast on a key, held while the key is, and falling fast. The reverb is off and the output turned down to
   // match the other synths' Default patches.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Pull every cable out and set the outputs',
+        module: 'out',
+        why: 'Start with no patch cords in. Then set the output: channel A at 4 carries the sound, channel B fully down, REVERBERATION fully down for a dry sound, MASTER VOLUME at 7, the level every patch here assumes. Leave the program card on local control and the preamp on low.',
+        controls: ['out.*', 'card.*', 'preamp.*'],
+      },
+      {
+        title: 'Set the keyboard: no portamento, no arpeggio',
+        module: 'mode',
+        why: 'PORTAMENTO SLOPE fully down means notes land on their pitch at once. ARPEGGIATION PATTERN and ADD TO PITCH on none mean each key plays one plain note. Set the preset voltages and plates too, so your Easel matches.',
+        controls: ['kbd.*'],
+      },
+      {
+        title: 'Set the complex oscillator to a plain square',
+        module: 'osc',
+        why: 'The complex oscillator makes the tone. Its waveshape selector goes to the square, with the waveshape knob fully clockwise so none of the sine is mixed in, and TIMBRE all the way down so the wave is not folded. PITCH at 3 puts it around C below middle C. KEYBOARD on lets it follow the keys, and every processing slider goes all the way down so nothing else moves it.',
+        controls: ['cosc.*'],
+      },
+      {
+        title: 'Set Gate 1 as a plain amplifier',
+        module: 'filter',
+        why: 'The Easel’s gates are its filters and amplifiers in one. Gate 1 on voltage-controlled amp lets the square through at full brightness. Its LEVEL slider all the way down keeps it shut between notes, and LEVEL processing all the way up lets the envelope open it fully. Gate 2 belongs to the modulation oscillator, which is not heard here: both its sliders go down.',
+        controls: ['lpg*'],
+      },
+      {
+        title: 'Set the envelope to open fast and hold while a key is down',
+        module: 'env',
+        why: 'The envelope opens Gate 1 on each note. Keyboard as its trigger source, mode on sustained so it stays up while the key is held. On the Easel these sliders give the shortest time at the top: attack all the way up opens at once, and decay near the top lets go quickly.',
+        controls: ['env.*'],
+      },
+      {
+        title: 'Leave the sequencer, pulser, random source and modulation oscillator alone',
+        module: 'lfo',
+        why: 'None of these is patched into the sound, so they do nothing here. Set them anyway so your Easel matches; the modulation oscillator’s index all the way down matters most, as that is what would bend the pitch.',
+        controls: ['seq.*', 'rvs.*', 'pulser.*', 'mosc.*'],
+      },
+      {
+        title: 'Plug in the envelope cord',
+        module: 'patch',
+        why: 'One patch cord, from the envelope’s output to Gate 1’s level input, lets the envelope open the gate on each note. Every library sound here starts with this cord in.',
+        controls: [],
+        cables: true,
+        listen:
+          'play a few notes: a bright, hollow, reedy buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'cosc.shape': 10,
       'cosc.timbre': 0,
@@ -1958,6 +2005,8 @@ const buchlaEasel: SynthDef & { version: number } = {
     cables: [['j.env3', 'j.lvl1']],
     listen:
       'Play a few notes and listen for a bright, hollow, reedy buzz, a square wave, that starts and stops with the key.',
+    notSaw:
+      'The Music Easel has no sawtooth. Its complex oscillator makes a sine, a square or a triangle, and folds them for brighter tones, so its plainest bright wave is the square, unfolded. That stands in for the sawtooth the other synths here start from.',
   },
   toEngine,
 };

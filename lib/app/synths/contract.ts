@@ -211,6 +211,34 @@ export interface DefaultPatch {
   listen?: string;
   /** The library category the Default patch lists under; absent, `lead`. A drum synth's is `perc`. */
   category?: PresetCategory;
+  /**
+   * Why the patch is not a sawtooth, where it is not one (it has `listen`): one or two sentences naming what the synth
+   * has instead, and why this is its plainest starting point. Required with `listen`.
+   */
+  notSaw?: string;
+  /**
+   * The Default patch's lesson: a starter checklist for setting it on the hardware from any state, a part of the panel
+   * at a time. Between them the steps cover every control that shapes the sound (not `ui`, not `deep`) exactly once,
+   * and the patch's cables (`validateDefaultPatch`). The values come from the patch, so the two cannot disagree.
+   */
+  checklist?: DefaultPatchStep[];
+}
+
+/** One step of a Default patch's checklist (`DefaultPatch.checklist`). */
+export interface DefaultPatchStep {
+  title: string;
+  module: SynthModule;
+  /**
+   * What this part of the panel does in the patch, to a newcomer. The step's text goes on with one line per control,
+   * written from the definition: its name and where to put it ("fully anticlockwise", "about 2 o'clock").
+   */
+  why: string;
+  /** The controls this step sets: ids, or patterns where `*` stands for any run of characters (`osc2.*`). */
+  controls: string[];
+  /** This step plugs in the patch's cables. */
+  cables?: true;
+  /** What to listen for at the end of the step, where there is something to hear by then. */
+  listen?: string;
 }
 
 /**

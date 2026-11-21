@@ -1848,6 +1848,47 @@ const syntrxII: SynthDef & { version: number } = {
   // up and pins it through the trapezoid's VCA to Output 1, which sits in the middle: two pins. The filter is left out,
   // which is as open as it gets. The trapezoid opens on a key and stays up while it is held, then falls fast.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Clear every matrix point, and set the outputs',
+        module: 'out',
+        why: 'The SYNTRX II makes no sound until a point in the matrix joins a row (where a sound comes from) to a column (where it goes). Start with every point cleared. Then set both output channels the same: LEVEL at 7, PAN and OUTPUT FILTER at the centre.',
+        controls: ['out*'],
+      },
+      {
+        title: 'Set Oscillator 2’s saw, and silence every other source',
+        module: 'osc',
+        why: 'Oscillator 2’s saw LEVEL at 7 is the sound in this patch: the buzzy wave with every harmonic. Both TUNE knobs at the centre and OCTAVE at 0 keep it in tune, SYNC on Free. Every other level, the other waves, Oscillator 3, the noise, the ring modulator and both inputs, goes fully anticlockwise so nothing else gets in.',
+        controls: ['osc1.*', 'osc2.*', 'osc3.*', 'noise.*', 'ring.*', 'in1.*', 'in2.*'],
+      },
+      {
+        title: 'Set the filter and effects, which this patch leaves out',
+        module: 'filter',
+        why: 'The filter and effects are not in the patch, which is as open and dry as it gets. Turn their LEVEL knobs fully anticlockwise so nothing leaks in, and set the rest as shown. HPF fully anticlockwise and LPF fully clockwise are both open.',
+        controls: ['vcf.*', 'fx.*'],
+      },
+      {
+        title: 'Set the trapezoid envelope to open while a key is held',
+        module: 'env',
+        why: 'The trapezoid envelope’s amplifier lets the sound out on each note. ATTACK and ON fully anticlockwise start it at once, OFF fully clockwise holds it open until you let go, and the short DECAY closes it quickly after. SIGNAL at 7 sets how loud it lets the sound through; TRAPEZOID level fully anticlockwise, as nothing uses it here.',
+        controls: ['trap.*'],
+      },
+      {
+        title: 'Centre the joystick, and turn the sample and hold down',
+        module: 'mod',
+        why: 'Nothing is routed to the joystick or the sample and hold here. Centre the joystick with both LEVEL knobs down, and turn the S&H LEVEL down, so your SYNTRX II matches.',
+        controls: ['joy.*', 'snh.*'],
+      },
+      {
+        title: 'Set the two matrix points',
+        module: 'patch',
+        why: 'Each line below is one point: the row first, then the column. Together they send Oscillator 2 into the envelope, and the envelope out to output channel 1.',
+        controls: [],
+        cables: true,
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: {
       'osc2.saw': 7,
       'trap.attack': 0,

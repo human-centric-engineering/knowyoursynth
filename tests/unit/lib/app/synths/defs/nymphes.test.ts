@@ -93,8 +93,9 @@ describe('Nymphes toEngine at the init patch', () => {
     expect(p.lfo2?.rate).toBeCloseTo(exp(0.4, 0.03, 30), 8);
   });
 
-  it('needs no Default patch: init is already the plain sawtooth', () => {
-    expect(nymphes.defaultPatch).toBeUndefined();
+  it('changes nothing in its Default patch: init is already the plain sawtooth, so it only has a checklist', () => {
+    expect(nymphes.defaultPatch?.values).toEqual({});
+    expect(nymphes.defaultPatch?.cables).toBeUndefined();
   });
 });
 

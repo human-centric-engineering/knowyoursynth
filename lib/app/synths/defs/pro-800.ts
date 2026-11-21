@@ -1028,6 +1028,59 @@ const pro800: SynthDef & { version: number } = {
   // Init is already Oscillator A's sawtooth alone, with the loudness an organ gate. The Default patch opens the filter
   // all the way, with no keyboard tracking.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the volume and tuning, and switch the arpeggiator off',
+        module: 'out',
+        why: 'VOLUME at 7 is the level every patch here assumes, and MASTER TUNE at the centre keeps the synth at concert pitch. Both arpeggiator buttons unlit and UNISON TRACK off mean each key plays one note of its own.',
+        controls: ['out.*', 'arp.*', 'voice.*'],
+      },
+      {
+        title: 'Set both oscillators to the sawtooth alone',
+        module: 'osc',
+        why: 'The oscillators make the raw tone. On each, only the sawtooth switch is on, the buzzy wave with every harmonic. FREQUENCY at the centre plays the note you press and OSC B’s fine tune at the centre keeps it in tune. Sync stays off.',
+        controls: [
+          'osc1.freq',
+          'osc1.sync',
+          'osc1.saw',
+          'osc1.tri',
+          'osc1.pulse',
+          'osc1.pw',
+          'osc2.freq',
+          'osc2.fine',
+          'osc2.saw',
+          'osc2.tri',
+          'osc2.pulse',
+          'osc2.pw',
+        ],
+      },
+      {
+        title: 'Mix in OSC A alone',
+        module: 'mixer',
+        why: 'OSC A level at the centre, with OSC B and NOISE fully down: one plain saw goes into the filter.',
+        controls: ['osc1.level', 'osc2.level', 'noise.*'],
+      },
+      {
+        title: 'Take every kind of modulation off, with no glide',
+        module: 'mod',
+        why: 'Poly-Mod and the LFO can wobble the pitch, the pulse width or the filter. With their amounts at none and every destination switch off, nothing moves the sound but your playing. Glide fully down means notes land on their pitch at once.',
+        controls: ['pmod.*', 'lfo.*', 'glide.*'],
+      },
+      {
+        title: 'Open the filter all the way',
+        module: 'filter',
+        why: 'The filter takes brightness away. CUTOFF fully clockwise, no RESONANCE, envelope amount at the centre (none) and keyboard tracking off let the saw through untouched.',
+        controls: ['vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'The amplifier envelope shapes each note. Attack fully down starts it at once, sustain fully up holds it while the key is down, and a short release stops it soon after you let go. The filter envelope is set too, though it does nothing while its amount is at the centre.',
+        controls: ['fenv.*', 'aenv.*'],
+        listen:
+          'play a few notes: a bright, steady buzz that starts the moment you press a key and stops when you let go.',
+      },
+    ],
     values: { 'vcf.cutoff': 10, 'vcf.kbd': 'off' },
   },
   toEngine,

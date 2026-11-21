@@ -1849,6 +1849,46 @@ const jupiter8: SynthDef & { version: number } = {
   // Init has both VCOs' sawtooths in the SOURCE MIX, VCO-2 an octave up. The Default patch turns the mix all the way to
   // VCO-1, alone; the filter is already open, and ENV-2 (the loudness) already an organ gate.
   defaultPatch: {
+    checklist: [
+      {
+        title: 'Set the output and play it as a plain polysynth',
+        module: 'mode',
+        why: 'VOLUME at 7 is the level every patch here assumes, with BALANCE and Master tune at the centre. Assign mode on POLY 1, the arpeggio off and both Hold buttons unlit mean each key plays a note of its own. With the portamento switch off, notes land on their pitch at once.',
+        controls: ['out.*', 'arp.*', 'assign.*', 'kbd.*', 'glide.*'],
+      },
+      {
+        title: 'Set both VCOs to the sawtooth',
+        module: 'osc',
+        why: 'The VCOs make the raw tone. Both waveform knobs go to the sawtooth, the buzzy wave with every harmonic. VCO-1 at 8′; VCO-2’s range and fine tune where they play the same note. Sync, low frequency and cross mod stay off, and the pulse width only matters for the pulse wave.',
+        controls: ['vco1.*', 'vco2.*', 'pwm.*'],
+      },
+      {
+        title: 'Hear VCO-1 alone',
+        module: 'mixer',
+        why: 'The source mix knob balances the two VCOs. Fully anticlockwise is VCO-1 alone: one plain saw.',
+        controls: ['mix.*'],
+      },
+      {
+        title: 'Take every kind of modulation off',
+        module: 'mod',
+        why: 'The LFO, the envelope, the performance LFO and the bender can all move the sound. With the depths all the way down and the performance LFO unlit, nothing does. The bend settings only act while you push the lever.',
+        controls: ['lfo.*', 'vcomod.*', 'plfo.*', 'bend.*'],
+      },
+      {
+        title: 'Open the filters all the way',
+        module: 'filter',
+        why: 'The high-pass filter takes away bass, so it goes all the way down (off). The low-pass filter takes away treble, so its cutoff goes all the way up. No resonance, envelope, LFO or key follow: the saw goes through untouched.',
+        controls: ['hpf.*', 'vcf.*'],
+      },
+      {
+        title: 'Make the loudness a plain gate',
+        module: 'amp',
+        why: 'ENV-2 shapes the loudness of each note. Attack all the way down starts it at once, sustain all the way up holds it while the key is down, and a short release stops it soon after you let go. VCA level at 8 and no tremolo. ENV-1 is set too, though nothing listens to it in this patch.',
+        controls: ['vca.*', 'env1.*', 'env2.*'],
+        listen:
+          'play a chord: a bright, steady buzz on every note, starting the moment you press and stopping when you let go.',
+      },
+    ],
     values: { 'mix.balance': 0 },
   },
   toEngine,
