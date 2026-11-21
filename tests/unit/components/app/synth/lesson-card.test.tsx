@@ -578,6 +578,8 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     );
     const card = screen.getByTestId('lesson-card');
     Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    // Docked at the height the sections are drawn at (happy-dom lays nothing out), so they are level with it.
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
     return { card, onSide, view };
   }
 
@@ -751,7 +753,6 @@ describe("LessonCard beside the step's sections (t-297)", () => {
       steps: [{ title: 'Patch it', module: 'mixer', why: 'Why.', cables: [[from.id, into.id]] }],
     };
     // The two sections as drawn, far apart: no room for the card either side of them, and more to the right.
-    window.innerWidth = 1400;
     panelAt([40, 300], [1000, 1300]);
     render(
       <LessonCard
@@ -769,6 +770,7 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     );
     const card = screen.getByTestId('lesson-card');
     Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
 
     expect([...lessonAreaStore.get()].sort()).toEqual([fromArea.id, intoArea.id].sort());
     await waitFor(() => expect(card.style.left).toBe(`${1400 - 400 - 16}px`));
@@ -781,7 +783,20 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     inRow.getBoundingClientRect = () => new DOMRect(100, 400, 400, 200);
     above.getBoundingClientRect = () => new DOMRect(900, 50, 400, 200);
     const { card } = open();
-    card.getBoundingClientRect = () => new DOMRect(960, 300, 400, 500);
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+  });
+
+  it('docks when none of the lit pieces are level with it, and moves beside them once it grows into their row', async () => {
+    const [area] = panelAt([100, 500]);
+    area.getBoundingClientRect = () => new DOMRect(100, 50, 400, 200);
+    const { card } = open();
+    await new Promise((r) => requestAnimationFrame(r));
+    expect(card).not.toHaveAttribute('data-beside');
+    expect(card.style.left).toBe('');
+
+    // A longer step's text grows the docked card up into the row above.
+    card.getBoundingClientRect = () => new DOMRect(960, 100, 400, 700);
+    fireEvent(window, new Event('resize'));
     await waitFor(() => expect(card.style.left).toBe('516px'));
   });
 });

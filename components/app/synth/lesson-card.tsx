@@ -224,8 +224,9 @@ export function LessonCard({
 
   // Beside the lit sections, on the side with more room, at the height the card docks at. With no room either side it
   // keeps to the far edge, over as little of them as it can. Measured from the panel as drawn, after the sections
-  // are, and again as the window or the panel moves. Only the pieces in the card's own height count: a modular or
-  // compact layout splits a section across rows, and a piece above or below the card is not one it could cover.
+  // are, and again as the window, the panel or the card moves. Only the pieces in the card's own height count: a modular
+  // or compact layout splits a section across rows, and a piece above or below the card is not one it could cover; with
+  // none level with it, it docks.
   const placing = !!areaKey && !pinned && pos == null;
   const sizeW = size?.w;
   useEffect(() => {
@@ -240,7 +241,8 @@ export function LessonCard({
       if (!el || all.length === 0) return setBeside(null);
       const band = el.getBoundingClientRect();
       const level = all.filter((r) => r.bottom > band.top && r.top < band.bottom);
-      const rects = level.length ? level : all;
+      if (level.length === 0) return setBeside(null);
+      const rects = level;
       const left = Math.min(...rects.map((r) => r.left));
       const right = Math.max(...rects.map((r) => r.right));
       const w = el.offsetWidth;
@@ -273,8 +275,10 @@ export function LessonCard({
     };
     later();
     // The panel changes size without the window when it is zoomed or its layout changes; the scroller around it, when
-    // a drawer or column beside it does, which can move the panel without resizing it.
+    // a drawer or column beside it does, which can move the panel without resizing it. The card grows with a longer
+    // step and rises with the Sound Design drawer, which changes the rows it is level with.
     const seen = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(later) : null;
+    if (ref.current) seen?.observe(ref.current);
     for (const sel of ['[data-testid="panel-frame"]', '.kys-panel-scroller']) {
       const el = document.querySelector(sel);
       if (el) seen?.observe(el);

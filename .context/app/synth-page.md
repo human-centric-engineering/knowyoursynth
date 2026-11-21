@@ -529,8 +529,9 @@ icons` (the toggles' icons and LEDs without their words, which stay in their too
   with more room, at its docked height, or at the far edge when it fits on neither side; only the pieces in the card's
   own height count, since a modular or compact layout splits a section across rows (t-297 on the Model D, every synth
   since t-298). Dragged or docked with ⇆, it stays where it is put until closed. Turning the panel over to the Diagram
-  closes it, whatever it shows (t-205). Showing the lesson, its header is a strip of the faceplate (the face roles above) and the card sits in a
-  desk-tone bezel, opaque, so it lifts off a panel of its own colour (t-201). Docked, it stands
+  closes it, whatever it shows (t-205). Showing the lesson, its header is a strip of the faceplate (the face roles
+  above) and the card sits in a desk-tone bezel, opaque, so it lifts off a panel of its own colour (t-201). Docked, it
+  stands
   above the dock and, with a pointer, above the Sound Design drawer while that is open: the drawer
   stands on the dock outside its height, so the page measures it into `--kys-strip-h` as it slides,
   and the card rises with it (t-174). The inspector
