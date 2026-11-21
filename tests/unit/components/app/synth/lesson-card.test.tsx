@@ -710,18 +710,62 @@ describe("LessonCard beside the step's sections (t-297)", () => {
     expect(lessonAreaStore.get()).toEqual(areasOf(def, ids));
   });
 
-  it('lights nothing for the effects, nor on a synth not trying it yet', () => {
+  it('lights nothing for the effects', () => {
     open({ section: 'fx' });
     expect(lessonAreaStore.get()).toEqual([]);
-    cleanup();
+  });
 
+  it('lights the sections and stands beside them on every synth, not just the Model D (t-298)', async () => {
     const other = getSynthDef('grandmother');
     if (!other) throw new Error('grandmother is not registered');
     const c = other.controls.find((x) => areaOf(other, x));
     if (!c) throw new Error('grandmother has no control in an area');
     panelAt([100, 500]);
     const { card } = open({ d: other, set: { [c.id]: 5 } });
-    expect(lessonAreaStore.get()).toEqual([]);
-    expect(card).not.toHaveAttribute('data-beside');
+    expect(lessonAreaStore.get()).toEqual(areasOf(other, [c.id]));
+    await waitFor(() => expect(card.style.left).toBe('516px'));
+    expect(card).toHaveAttribute('data-beside');
+  });
+
+  it("lights every section a patchbay step's cables run between, and keeps to the far edge when they span the panel", async () => {
+    const d = getSynthDef('system-55');
+    if (!d) throw new Error('system-55 is not registered');
+    // An output and an input in different sections of the case: the cable crosses the panel.
+    const from = d.jacks.find((j) => j.dir === 'out' && areaOf(d, j));
+    const fromArea = from && areaOf(d, from);
+    const into = d.jacks.find(
+      (j) => j.dir === 'in' && areaOf(d, j) && areaOf(d, j)?.id !== fromArea?.id
+    );
+    if (!from || !fromArea || !into) throw new Error('system-55 has no cable across two sections');
+    const intoArea = areaOf(d, into);
+    if (!intoArea) throw new Error('no area');
+
+    const patched: Preset = {
+      ...defaultPatchSound(d),
+      id: 'across',
+      name: 'Across',
+      steps: [{ title: 'Patch it', module: 'mixer', why: 'Why.', cables: [[from.id, into.id]] }],
+    };
+    // The two sections as drawn, far apart: no room for the card either side of them.
+    panelAt([40, 300], [1000, 1360]);
+    render(
+      <LessonCard
+        def={d}
+        preset={patched}
+        step={0}
+        onStep={vi.fn()}
+        section="build"
+        onClose={vi.fn()}
+        side="right"
+        onSide={vi.fn()}
+        inspector={null}
+        effects={null}
+      />
+    );
+    const card = screen.getByTestId('lesson-card');
+    Object.defineProperty(card, 'offsetWidth', { configurable: true, value: 400 });
+
+    expect([...lessonAreaStore.get()].sort()).toEqual([fromArea.id, intoArea.id].sort());
+    await waitFor(() => expect(card.style.left).toBe(`${1400 - 400 - 16}px`));
   });
 });

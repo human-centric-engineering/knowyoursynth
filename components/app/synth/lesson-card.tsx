@@ -12,9 +12,9 @@
  * not in use; moved, it floats over the dock too (t-202). The ⇆ button docks it again, on the other side. Its grip at
  * the bottom right sizes it, by pointer or by the arrow keys (t-203), and the size is kept when it is docked again.
  *
- * On a synth trying it (`BESIDE`), a step's sections are lit on the panel (`lessonAreaStore`, drawn by
- * `LessonAreaLayer`) and the card stands beside them rather than over them, at the height it docks at, moving along as
- * the steps go. Dragged, or docked with ⇆, it stays where it is put until it is closed.
+ * A step's sections are lit on the panel (`lessonAreaStore`, drawn by `LessonAreaLayer`) and the card stands beside
+ * them rather than over them, at the height it docks at, moving along as the steps go (t-297, on every synth since
+ * t-298). Dragged, or docked with ⇆, it stays where it is put until it is closed.
  *
  * The lesson hangs from a strip of the faceplate (`face`, t-201): its header is the panel's colour and silkscreen
  * ink, as the rails along the panel's head and foot are, so the card reads as part of the instrument; its body is the
@@ -65,8 +65,6 @@ export type CardId = 'build' | 'inspector' | 'fx';
 /** The controls a sound's tweaks are about, once each, in their order. */
 const tweakBadges = (p: Preset): string[] => [...new Set(p.tweaks.map((t) => t.id))];
 
-/** The synths whose lesson card lights a step's sections and stands beside them: tried on the Model D first. */
-const BESIDE = new Set(['model-d']);
 /** How far the card stands off the sections it is beside, in px. */
 const GAP = 16;
 
@@ -206,9 +204,9 @@ export function LessonCard({
   }, [badgeKey]);
   useEffect(() => () => badgeStore.set([]), []);
 
-  // The sections the step's moves are in, lit on the panel: on a synth trying it, for a step that moves something.
+  // The sections the step's moves are in, lit on the panel, for a step that moves something.
   const areaKey = useMemo(() => {
-    if (!BESIDE.has(def.id) || section !== 'build' || !current) return '';
+    if (section !== 'build' || !current) return '';
     const cm = controlMap(def);
     const jm = jackMap(def);
     const ids = new Set<string>();
