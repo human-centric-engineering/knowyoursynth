@@ -17,6 +17,7 @@ import {
   HeatLayer,
   HeatRanks,
   Lens,
+  LessonAreaLayer,
   LessonBadges,
   Locator,
   heatColor,
@@ -28,6 +29,7 @@ import {
   focusStore,
   highlightStore,
   lensStore,
+  lessonAreaStore,
   mapStore,
   moveStore,
 } from '@/components/app/synth/stores';
@@ -45,11 +47,43 @@ afterEach(() => {
   mapStore.set(MAP_OFF);
   badgeStore.set([]);
   moveStore.set(null);
+  lessonAreaStore.set([]);
 });
 
 const inSvg = (node: ReactNode) => render(<svg>{node}</svg>);
 const setMap = (m: Partial<SoundMap>) =>
   act(() => mapStore.set({ ...MAP_OFF, status: 'ready', ...m }));
+
+describe('LessonAreaLayer (t-297)', () => {
+  it("tints and outlines the open step's sections, and nothing else, with nothing to point at", () => {
+    const { container } = inSvg(<LessonAreaLayer def={def} />);
+    expect(container.querySelector('[data-lesson-area]')).toBeNull();
+
+    act(() => lessonAreaStore.set(['right', 'nowhere']));
+
+    const lit = [...container.querySelectorAll('[data-lesson-area]')];
+    expect(lit.length).toBeGreaterThan(0);
+    expect(lit.every((r) => r.getAttribute('data-lesson-area') === 'right')).toBe(true);
+    expect(lit[0].getAttribute('fill-opacity')).toBe('0.2');
+    expect(container.querySelector('mask#kysLessonEdge-right')).not.toBeNull();
+    expect(screen.getByTestId('lesson-areas').getAttribute('pointer-events')).toBe('none');
+    expect(screen.queryAllByRole('button')).toHaveLength(0);
+
+    act(() => lessonAreaStore.set([]));
+    expect(container.querySelector('[data-lesson-area]')).toBeNull();
+  });
+
+  it('draws them unseen and unoutlined while Explain sections tints every section', () => {
+    const { container } = inSvg(<LessonAreaLayer def={def} quiet />);
+    act(() => lessonAreaStore.set(['right']));
+
+    const lit = [...container.querySelectorAll('[data-lesson-area]')];
+    expect(lit.length).toBeGreaterThan(0);
+    expect(lit.every((r) => r.getAttribute('fill-opacity') === '0')).toBe(true);
+    expect(container.querySelector('mask#kysLessonEdge-right')).toBeNull();
+    act(() => lessonAreaStore.set([]));
+  });
+});
 
 describe('AreaLayer', () => {
   it('tints every area, and lights the one in focus while the rest dims', () => {

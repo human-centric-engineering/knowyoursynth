@@ -2045,6 +2045,15 @@ svg .kys-hit:focus-visible {
 .kys-card:not([data-detached]) {
   max-width: calc(100vw - 80px);
 }
+/* Beside a lesson step's sections, the card glides along to the next step's. */
+.kys-card[data-beside] {
+  transition: left 0.25s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-card[data-beside] {
+    transition: none;
+  }
+}
 /* Moved, the card can go anywhere on the screen, so it floats over the dock and the tutor's drawer (t-202), still
    under the sounds and the player's menus and tips. */
 .kys-card[data-detached] {
