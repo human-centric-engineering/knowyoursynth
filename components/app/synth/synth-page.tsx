@@ -66,7 +66,7 @@ import {
   startStep,
   type ChosenPatch,
 } from '@/lib/app/synths/default-patch';
-import { rackForPatch } from '@/lib/app/synths/audio/fx';
+import { normalizeFx, rackForPatch, type RackFx } from '@/lib/app/synths/audio/fx';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -1653,22 +1653,23 @@ function Synth({
     fxNow.current = fx;
   });
   const choosePatch = useCallback(
-    (chosen: ChosenPatch = { drums: 'auto', fx: null }) => {
+    (chosen: ChosenPatch = { drums: 'auto', fx: null }, from: RackFx = fxNow.current) => {
       newPatch(chosen.drums);
-      const next = rackForPatch(fxNow.current, chosen.fx);
+      const next = rackForPatch(from, chosen.fx);
       // Already so (both normalised, so in the same key order): nothing to store or send.
-      if (JSON.stringify(next) === JSON.stringify(fxNow.current)) return;
+      if (JSON.stringify(next) === JSON.stringify(from)) return;
       fxNow.current = next;
       setFx(next);
     },
     [newPatch, setFx]
   );
-  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
+  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default. The rack
+  // this render holds is still the default (the stored one is read after mount), so the reset starts from the stored one.
   useEffect(() => {
     const chosen = arrivedOnPatch.current;
     if (!chosen) return;
     arrivedOnPatch.current = null;
-    choosePatch(chosen);
+    choosePatch(chosen, normalizeFx(readStored(STORAGE_KEYS.fx)));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the

@@ -247,7 +247,7 @@ export function beatGrid(beat: DrumBeat, swing: number): DrumGrid {
 const RULES: readonly [DrumBeatId | null, RegExp][] = [
   [
     null,
-    /ambient|drone|orchestral|raga|hindustani|carnatic|irish trad|celtic|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
+    /ambient|drone|orchestral|\braga\b|hindustani|carnatic|irish trad|\bceltic\b(?! (rock|punk|metal))|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
   ],
   ['trap', /\btrap\b|\bdrill\b/],
   ['halftime', /dubstep|future garage|half-?time|downtempo|burial/],
@@ -256,12 +256,18 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
     /drum (and|&|n) bass|\bdnb\b|jungle|breakbeat|big beat|\bamen\b|prodigy|chemical brothers/,
   ],
   ['hiphop', /hip-?hop|lo-?fi|boom bap|g-funk|trip-?hop|\brap\b|nujabes|dilla|dr\.? dre/],
-  ['onedrop', /\bdub\b(?! techno)|reggae|\bska\b|king tubby|lee .?scratch.? perry|scientist/],
-  ['bossa', /bossa|samba|\blatin\b|brazil|tropic[aá]lia|cha-?cha|salsa|cumbia|calypso|steel pan/],
-  ['garage', /uk garage|2-?step|speed garage|\bgarage\b(?! (rock|house|punk))/],
+  [
+    'onedrop',
+    /\bdub\b(?! techno)|reggae|ragga|ragamuffin|\bska\b|king tubby|lee .?scratch.? perry|scientist/,
+  ],
+  [
+    'bossa',
+    /bossa|samba|\blatin\b(?! (house|freestyle))|brazil|tropic[aá]lia|cha-?cha|salsa|cumbia|calypso|steel pan/,
+  ],
+  ['garage', /uk garage|2-?step|(?<!speed )\bgarage\b(?! (rock|house|punk))/],
   [
     'four',
-    /house|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
+    /house|speed garage|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
   ],
   [
     'techno',

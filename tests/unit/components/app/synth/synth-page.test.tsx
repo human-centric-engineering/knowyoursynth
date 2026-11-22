@@ -2106,6 +2106,29 @@ describe('SynthPage effects', () => {
     page();
     expect(readStored('kys.fx')).toMatchObject({ on: true });
   });
+
+  // Arriving on a patch reads the rack the visitor left, not the default the first render holds.
+  it('turns a stored rack off on arriving at a patch with no effects', () => {
+    window.localStorage.setItem('kys.fx', JSON.stringify({ on: true, reverb: { on: true } }));
+    window.history.replaceState(null, '', '/synths/model-d?sound=wobble');
+    page({ soundParam: 'wobble' });
+    expect(readStored('kys.fx')).toMatchObject({ on: false, reverb: { on: true } });
+    expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: false }));
+  });
+
+  it('keeps the stored knobs on arriving at a patch with effects', () => {
+    window.localStorage.setItem(
+      'kys.fx',
+      JSON.stringify({ on: false, drive: { on: true, amount: 0.9 } })
+    );
+    window.history.replaceState(null, '', '/synths/model-d?sound=echo-lead');
+    page({ detail: { ...detail, sounds: [FAT_BASS, ECHO_LEAD] }, soundParam: 'echo-lead' });
+    expect(readStored('kys.fx')).toMatchObject({
+      on: true,
+      drive: { on: false, amount: 0.9 },
+      delay: { on: true, time: 0.4 },
+    });
+  });
 });
 
 // The regions the page lays out.

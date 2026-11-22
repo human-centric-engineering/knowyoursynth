@@ -75,8 +75,11 @@ describe('drumStyleFor', () => {
     ['UK garage', 'garage'],
     ['2-step', 'garage'],
     ['Garage rock', 'backbeat'],
+    ['Speed garage', 'four'],
     ['Bossa nova', 'bossa'],
     ['Latin jazz', 'bossa'],
+    ['Latin house', 'four'],
+    ['Latin freestyle', 'electro'],
     ['Calypso', 'bossa'],
     ['Jazz', 'jazz'],
     ['Big band', 'jazz'],
@@ -96,6 +99,8 @@ describe('drumStyleFor', () => {
     ['Minimal techno', 'techno'],
     ['Minimal wave', 'backbeat'],
     ['King Tubby', 'onedrop'],
+    ['Ragamuffin', 'onedrop'],
+    ['Celtic punk', 'backbeat'],
     ['Dubstep', 'halftime'],
     ['Burial', 'halftime'],
   ])('matches %s to %s by its style', (inspiredBy, beat) => {
@@ -111,6 +116,8 @@ describe('drumStyleFor', () => {
     'Sound effects',
     'Hindustani classical',
     'Irish traditional music',
+    'Raga',
+    'Celtic folk',
   ])('gives %s no beat', (inspiredBy) => {
     expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat: null, by: 'style' });
   });
