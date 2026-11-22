@@ -81,7 +81,7 @@ import {
   type PanelState,
   WHEEL,
 } from '@/lib/app/synths/lib/patch';
-import { shownWheel, splitPerformance } from '@/lib/app/synths/lib/performance';
+import { shownWheel, splitPerformance, wheelSays } from '@/lib/app/synths/lib/performance';
 import { tempoBpmOf } from '@/lib/app/synths/lib/tempo';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
@@ -162,7 +162,7 @@ import {
 import { RoutingView } from '@/components/app/synth/routing-view';
 import type { RoutingShowTarget } from '@/components/app/synth/routing-card';
 import { getSynthRouting } from '@/lib/app/synths/routing';
-import { routingState } from '@/lib/app/synths/lib/routing';
+import { ROUTING_FLOOR, routingState, wheelReach } from '@/lib/app/synths/lib/routing';
 import type { LiveGlow } from '@/components/app/panel/live-layer';
 import { TutorDrawer } from '@/components/app/synth/drawers';
 import { LessonCard, type CardId } from '@/components/app/synth/lesson-card';
@@ -1343,6 +1343,26 @@ function Synth({
   const { modShown } = seq;
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
   const wheelShown = shownWheel(modShown) ?? wheel;
+  // Where the wheel sends modulation (`wheelReach`), from the panel as it plays: said under the wheel and, while it is
+  // up, shown on the panel.
+  const reach = useMemo(() => {
+    if (!routing) return null;
+    const values = modShown
+      ? { ...sess.values, ...splitPerformance(synthDef, modShown).values }
+      : sess.values;
+    return wheelReach(synthDef, routing, { values, cables: sess.cables, wheel: wheelShown });
+  }, [routing, synthDef, sess.values, sess.cables, modShown, wheelShown]);
+  const wheelSaid = useMemo(
+    () => (reach && routing ? wheelSays(synthDef, routing, reach) : null),
+    [reach, routing, synthDef]
+  );
+  const wheelUp = useMemo(
+    () =>
+      reach && reach.blocks.length && wheelShown > ROUTING_FLOOR
+        ? { depth: reach.depth, switches: reach.switches }
+        : null,
+    [reach, wheelShown]
+  );
   // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
   const liveGlow = useMemo<LiveGlow | null>(
     () =>
@@ -1366,6 +1386,8 @@ function Synth({
   const seqWheelLane =
     (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
   useEffect(() => setWheelLaneOn(seqWheelLane), [seqWheelLane]);
+  // A lane plays the wheel for the whole run, the steps it leaves alone included, as MIDI out has it.
+  const wheelLanePlaying = seqWheelLane && seq.playing;
   useEffect(() => {
     wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
   }, [seqWheelLane, midiOut.sending, seq.playing]);
@@ -3101,6 +3123,7 @@ function Synth({
                             areasOn={areasOn}
                             dimOn={dimOn}
                             liveGlow={liveGlow}
+                            wheelUp={wheelUp}
                             heatOn={heatOn}
                             onChange={
                               synthDef.seqButtons || synthDef.ownSequencer
@@ -3495,6 +3518,8 @@ function Synth({
                     onOctave={setOctave}
                     wheel={wheelShown}
                     onWheel={setWheel}
+                    wheelSays={wheelSaid}
+                    wheelLane={wheelLanePlaying}
                     hold={hold}
                     onHold={setHoldMode}
                     noteOn={noteOn}
@@ -3685,6 +3710,8 @@ function Synth({
         onPlay={() => void (playsPattern ? playPattern() : playRiff())}
         onStop={stopRiff}
         wheel={wheelShown}
+        wheelSays={wheelSaid}
+        wheelLane={wheelLanePlaying}
         onWheel={setWheel}
         octave={octave}
         onOctave={setOctave}

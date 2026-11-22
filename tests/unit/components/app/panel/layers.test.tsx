@@ -20,6 +20,7 @@ import {
   LessonAreaLayer,
   LessonBadges,
   Locator,
+  WheelLayer,
   heatColor,
 } from '@/components/app/panel/layers';
 import {
@@ -37,7 +38,7 @@ import type { SoundMap } from '@/components/app/synth/stores';
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
 import { allPartsDef as def } from '@/tests/fixtures/synths/all-parts';
 import { modelD } from '@/tests/fixtures/synths/model-d';
-import type { PatchCable } from '@/lib/app/synths/contract';
+import type { ControlValues, PatchCable } from '@/lib/app/synths/contract';
 
 afterEach(() => {
   focusStore.set(null);
@@ -324,5 +325,46 @@ describe('LessonBadges', () => {
     expect(badges()[1]).toHaveAttribute('data-now');
     expect(badges()[1].querySelectorAll('circle')).toHaveLength(2);
     expect(badges()[0]).not.toHaveAttribute('data-now');
+  });
+});
+
+describe('WheelLayer (t-308)', () => {
+  const at = (set: ControlValues = {}): ControlValues => ({ ...modelD.init, ...set });
+
+  it('arcs MOD DEPTH from the knob to the depth it and the wheel give, and rings the switches carrying it', () => {
+    inSvg(
+      <WheelLayer
+        def={modelD}
+        values={at({ 'mod.depth': 2, 'mod.toFilter': true })}
+        up={{ depth: [{ id: 'mod.depth', value: 7 }], switches: ['mod.toFilter'] }}
+      />
+    );
+    const arc = document.querySelector('[data-wheel-depth="mod.depth"]');
+    expect(arc).not.toBeNull();
+    const d = arc?.querySelector('path')?.getAttribute('d') ?? '';
+    expect(d).toMatch(/^M[\d.-]+ [\d.-]+ A/);
+    expect(document.querySelector('[data-wheel-switch="mod.toFilter"]')).not.toBeNull();
+  });
+
+  it('draws no arc where the wheel adds nothing past the knob', () => {
+    inSvg(
+      <WheelLayer
+        def={modelD}
+        values={at({ 'mod.depth': 7 })}
+        up={{ depth: [{ id: 'mod.depth', value: 7 }], switches: [] }}
+      />
+    );
+    expect(document.querySelector('[data-wheel-depth]')).toBeNull();
+  });
+
+  it('leaves out an id the panel has not got', () => {
+    inSvg(
+      <WheelLayer
+        def={modelD}
+        values={at()}
+        up={{ depth: [{ id: 'no.such', value: 1 }], switches: ['no.such'] }}
+      />
+    );
+    expect(document.querySelector('[data-testid="wheel-layer"]')?.childElementCount).toBe(0);
   });
 });

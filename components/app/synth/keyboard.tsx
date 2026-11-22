@@ -10,10 +10,12 @@
  *   the pointer and cut a held note.
  */
 
-import { useEffect, useRef } from 'react';
-import type { Dispatch, PointerEvent, SetStateAction } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import type { CSSProperties, Dispatch, PointerEvent, SetStateAction } from 'react';
 import { useWheelWanted } from '@/components/app/synth/sound-map';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { notesStore, useStore } from '@/components/app/synth/stores';
+import type { WheelSays } from '@/lib/app/synths/lib/performance';
 
 const WHITE = [0, 2, 4, 5, 7, 9, 11];
 const HAS_SHARP: Record<number, boolean> = { 0: true, 2: true, 5: true, 7: true, 9: true };
@@ -46,14 +48,91 @@ const QWERTY_LABEL: Record<number, string> = Object.fromEntries(
 export const OCTAVE_MIN = -1;
 export const OCTAVE_MAX = 2;
 
+/**
+ * Under the wheel: "Mod" and a lamp for where pushing it sends modulation (`wheelReach`). Lit amber when it reaches
+ * something, glowing harder as the wheel goes up; dark, ringed in the warning colour, when it reaches nowhere. Hover or
+ * click it for the readout. The words are also in the page, hidden, for the wheel's `aria-describedby`.
+ */
+function WheelLamp({ says, value, id }: { says: WheelSays; value: number; id: string }) {
+  const [open, setOpen] = useState(false);
+  const [pinned, setPinned] = useState(false); // opened by a click: stays until clicked again or dismissed
+  const reaches = says.to !== 'Nowhere';
+  const text = [says.from, says.to, says.hint].filter(Boolean).join(' ');
+  const glow: CSSProperties & Record<'--wheel', number> = { '--wheel': value };
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="kys-label text-(--kys-faint)">Mod</span>
+      <span id={id} data-testid="wheel-says" className="sr-only">
+        {text}
+      </span>
+      <Popover
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setPinned(false);
+        }}
+      >
+        <PopoverTrigger
+          type="button"
+          data-testid="wheel-lamp"
+          aria-label={`Where the mod wheel reaches: ${reaches ? says.to.replace('→ ', '') : 'nowhere'}`}
+          className="kys-wheel-lamp"
+          data-reach={reaches ? 'yes' : 'no'}
+          style={glow}
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse') setOpen(true);
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === 'mouse' && !pinned) setOpen(false);
+          }}
+          onClick={(e) => {
+            e.preventDefault(); // the open state is ours: a click pins it open, or closes a pinned one
+            const pin = !pinned;
+            setPinned(pin);
+            setOpen(pin);
+          }}
+        >
+          <span className="kys-wheel-lamp-dot" />
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          align="start"
+          sideOffset={8}
+          className="kys-wheel-readout w-56 p-3"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <p className="kys-label flex items-center gap-1.5 text-[10px] text-(--kys-faint)">
+            <span className="kys-wheel-lamp-dot" data-reach={reaches ? 'yes' : 'no'} />
+            Mod wheel · {Math.round(value * 100)}%
+          </p>
+          {says.from && <p className="mt-2 text-xs text-(--kys-muted)">{says.from}</p>}
+          <p
+            className={`text-sm font-medium ${reaches ? 'text-(--kys-text)' : 'text-(--kys-warn)'} ${says.from ? '' : 'mt-2'}`}
+          >
+            {says.to}
+          </p>
+          {says.hint && (
+            <p className="mt-1.5 text-xs leading-snug text-(--kys-muted)">{says.hint}</p>
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
+
 function ModWheel({
   value,
   onChange,
+  says,
+  lane,
 }: {
   value: number;
   onChange: Dispatch<SetStateAction<number>>;
+  says: WheelSays | null;
+  lane: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const saysId = useId();
   const wanted = useWheelWanted(); // the sound map says: pushing this up would bring in the dark control being pointed at
   const set = (e: PointerEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -70,6 +149,8 @@ function ModWheel({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
+        aria-valuetext={`${Math.round(value * 100)}%${lane ? ', played by a lane' : ''}`}
+        aria-describedby={says && !wanted ? saysId : undefined}
         className={`relative h-24 w-11 touch-none overflow-hidden rounded-md border bg-(--kys-desk) lg:w-9 ${wanted ? 'kys-pulse border-dashed border-(--kys-text) outline-2 outline-offset-2 outline-(--kys-text) outline-dashed' : 'border-(--kys-line)'}`}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -85,17 +166,28 @@ function ModWheel({
         }}
       >
         <div
-          className="absolute inset-x-0 bottom-0 bg-(--kys-accent)/25"
+          className={`absolute inset-x-0 bottom-0 ${lane ? 'kys-wheel-lane-fill' : 'bg-(--kys-accent)/25'}`}
           style={{ height: `${value * 100}%` }}
         />
+        {/* A lane is playing the wheel: its colour down the wheel's edge (`f-performance-wheels`). */}
+        {lane && (
+          <div
+            data-testid="wheel-lane-mark"
+            className="kys-wheel-lane-mark absolute inset-y-0 left-0 w-1"
+          />
+        )}
         <div
           className="absolute inset-x-1 h-3 -translate-y-1/2 rounded-sm bg-(--kys-muted) shadow"
           style={{ top: `${(1 - value) * 84 + 8}%` }}
         />
       </div>
-      <span className={`kys-label ${wanted ? 'text-(--kys-text)' : 'text-(--kys-faint)'}`}>
-        {wanted ? 'Push up' : 'Mod'}
-      </span>
+      {wanted || !says ? (
+        <span className={`kys-label ${wanted ? 'text-(--kys-text)' : 'text-(--kys-faint)'}`}>
+          {wanted ? 'Push up' : 'Mod'}
+        </span>
+      ) : (
+        <WheelLamp says={says} value={value} id={saysId} />
+      )}
     </div>
   );
 }
@@ -107,6 +199,10 @@ export interface KeyboardProps {
   wheel: number;
   /** Moves the hand's wheel; the arrow keys step it from the hand's own position. */
   onWheel: Dispatch<SetStateAction<number>>;
+  /** Where the wheel sends modulation, said under it. Absent: the routing says nothing of it, and it reads "Mod". */
+  wheelSays?: WheelSays | null;
+  /** A lane is playing the wheel now. */
+  wheelLane?: boolean;
   hold: boolean;
   onHold: (h: boolean) => void;
   noteOn: (n: number) => void;
@@ -118,6 +214,8 @@ export function Keyboard({
   onOctave,
   wheel,
   onWheel,
+  wheelSays = null,
+  wheelLane = false,
   hold,
   onHold,
   noteOn,
@@ -217,7 +315,7 @@ export function Keyboard({
   return (
     // min-w-0: a grid cell would otherwise grow to the keys' full width and widen the page.
     <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
-      <ModWheel value={wheel} onChange={onWheel} />
+      <ModWheel value={wheel} onChange={onWheel} says={wheelSays} lane={wheelLane} />
       <div ref={scroller} className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
         <div className="min-w-[980px] lg:min-w-[620px]">
           {/* What a finger drags to scroll the keys, since a drag on the keys plays them. */}

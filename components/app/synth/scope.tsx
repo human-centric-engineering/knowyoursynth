@@ -1056,7 +1056,16 @@ const HOW =
 
 export interface ScopeDialogProps extends Pick<
   KeyboardProps,
-  'wheel' | 'onWheel' | 'octave' | 'onOctave' | 'hold' | 'onHold' | 'noteOn' | 'noteOff'
+  | 'wheel'
+  | 'onWheel'
+  | 'wheelSays'
+  | 'wheelLane'
+  | 'octave'
+  | 'onOctave'
+  | 'hold'
+  | 'onHold'
+  | 'noteOn'
+  | 'noteOff'
 > {
   open: boolean;
   onClose: () => void;
@@ -1088,6 +1097,8 @@ export function ScopeDialog({
   onStop,
   wheel,
   onWheel,
+  wheelSays,
+  wheelLane,
   octave,
   onOctave,
   hold,
@@ -1389,6 +1400,8 @@ export function ScopeDialog({
               onOctave={onOctave}
               wheel={wheel}
               onWheel={onWheel}
+              wheelSays={wheelSays}
+              wheelLane={wheelLane}
               hold={hold}
               onHold={onHold}
               noteOn={noteOn}

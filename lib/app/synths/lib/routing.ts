@@ -21,6 +21,7 @@ import {
 } from '@/lib/app/synths/lib/patch';
 import type {
   Control,
+  ControlValue,
   ControlValues,
   RoutingBlock,
   RoutingEdge,
@@ -497,4 +498,165 @@ export function routingProblems(def: SynthDef, routing: SynthRouting): string[] 
       problems.push(`block ${b.id} passes signal on, but nothing feeds it`);
 
   return problems;
+}
+
+// ─── The mod wheel's reach ───────────────────────────────────────────────────
+
+/** Whether `level` reads the mod wheel, alone or as one part of a sum. */
+export function readsWheel(level: RoutingLevel): boolean {
+  if (typeof level === 'string') return level === WHEEL;
+  if ('sum' in level) return level.sum.some(readsWheel);
+  return level.id === WHEEL;
+}
+
+/** The wheel's own signal: an edge with the wheel as a level by itself, not as part of a sum it scales. */
+const ownWheel = (e: RoutingEdge) =>
+  (e.levels ?? []).some(
+    (l) => l === WHEEL || (typeof l !== 'string' && 'id' in l && l.id === WHEEL)
+  );
+
+/** Where the mod wheel's modulation goes, read from the routing (`wheelReach`). */
+export interface WheelReach {
+  /** The blocks whose signal it scales on their way in (Model D: the mod bus's sources MOD MIX lets through). */
+  sources: string[];
+  /** The blocks the modulation lands on, in routing order. Empty: pushing the wheel changes nothing. */
+  blocks: string[];
+  /** The edges it travels, from its own and its sources' to where it lands. */
+  edges: string[];
+  /** The switches it passes on its way to where it lands: the controls of those edges' conditions, each set as it is. */
+  switches: string[];
+  /** Where it lands nowhere: the switches, any one of them set as given, that would send it somewhere. */
+  doors: { id: string; v: ControlValue }[];
+  /**
+   * The knobs the wheel adds to (Model D: MOD DEPTH), each with where it would have to be to give, on its own, the
+   * depth it and the wheel give now. Read at the wheel's own position, where the rest is read with it all the way up.
+   */
+  depth: { id: string; value: number }[];
+}
+
+/** Every leaf condition of `when`: the switch settings it asks for. */
+function conditions(
+  when: RoutingWhen
+): Exclude<RoutingWhen, { all: unknown } | { any: unknown }>[] {
+  if ('all' in when) return when.all.flatMap(conditions);
+  if ('any' in when) return when.any.flatMap(conditions);
+  return [when];
+}
+
+/** Where the wheel's modulation lands at `values`, the wheel all the way up: its landing blocks and how it gets there. */
+function wheelPath(def: SynthDef, routing: SynthRouting, input: RoutingInput) {
+  const state = routingState(def, routing, { ...input, wheel: 1 });
+  const passes = new Set(routing.blocks.filter((b) => b.passes).map((b) => b.id));
+  const edges = new Set<string>();
+  const sources = new Set<string>();
+  const seen = new Set<string>();
+  const queue: string[] = [];
+  for (const e of routing.edges) {
+    if (!state.edges[e.id] || !(e.levels ?? []).some(readsWheel)) continue;
+    edges.add(e.id);
+    if (!ownWheel(e) && passes.has(e.to)) sources.add(e.from);
+    if (!seen.has(e.to)) {
+      seen.add(e.to);
+      queue.push(e.to);
+    }
+  }
+  // On through each block that only passes signal on, over what it sends live, to the blocks it lands on.
+  const landed = new Set<string>();
+  for (let b = queue.shift(); b !== undefined; b = queue.shift()) {
+    if (!passes.has(b)) {
+      landed.add(b);
+      continue;
+    }
+    for (const e of routing.edges)
+      if (e.from === b && state.edges[e.id]) {
+        edges.add(e.id);
+        if (!seen.has(e.to)) {
+          seen.add(e.to);
+          queue.push(e.to);
+        }
+      }
+  }
+  const into = routing.edges.filter((e) => edges.has(e.id) && landed.has(e.to));
+  const switches = into.flatMap((e) =>
+    (e.when ? conditions(e.when) : []).filter((w) => holds(w, input.values)).map((w) => w.id)
+  );
+  return {
+    sources: routing.blocks.filter((b) => sources.has(b.id)).map((b) => b.id),
+    blocks: routing.blocks.filter((b) => landed.has(b.id)).map((b) => b.id),
+    edges: routing.edges.filter((e) => edges.has(e.id)).map((e) => e.id),
+    switches: [...new Set(switches)],
+  };
+}
+
+/**
+ * Where pushing the mod wheel sends modulation, from the synth's routing, so no synth writes it by hand: the edges
+ * whose levels read the wheel, live with the wheel all the way up, followed on through any block that only passes
+ * signal on (`passes`) over the edges it sends live (`routingState`), to the blocks the modulation lands on. Cables
+ * count as they do there, where they break a normal; the walk on goes over edges only. `null` for a routing that
+ * never reads the wheel, which says nothing about where it goes.
+ */
+export function wheelReach(
+  def: SynthDef,
+  routing: SynthRouting,
+  input: RoutingInput
+): WheelReach | null {
+  const wheelEdges = routing.edges.filter((e) => (e.levels ?? []).some(readsWheel));
+  if (!wheelEdges.length) return null;
+  const path = wheelPath(def, routing, input);
+
+  // Nowhere: the switches on the way that, set, would send it somewhere. On the way: past the wheel's edges and on
+  // through what only passes signal on, every edge counted whatever its switches.
+  const doors: WheelReach['doors'] = [];
+  if (!path.blocks.length) {
+    const passes = new Set(routing.blocks.filter((b) => b.passes).map((b) => b.id));
+    const way = new Set(wheelEdges.map((e) => e.id));
+    const from = [...new Set(wheelEdges.map((e) => e.to))].filter((b) => passes.has(b));
+    for (let i = 0; i < from.length; i++)
+      for (const e of routing.edges)
+        if (e.from === from[i]) {
+          way.add(e.id);
+          if (passes.has(e.to) && !from.includes(e.to)) from.push(e.to);
+        }
+    for (const e of routing.edges) {
+      if (!way.has(e.id) || !e.when) continue;
+      for (const w of conditions(e.when)) {
+        if (holds(w, input.values) || doors.some((d) => d.id === w.id)) continue;
+        const v = 'in' in w ? w.in[0] : w.eq;
+        if (
+          wheelPath(def, routing, { ...input, values: { ...input.values, [w.id]: v } }).blocks
+            .length
+        )
+          doors.push({ id: w.id, v });
+      }
+    }
+  }
+
+  // The knobs summed with the wheel on its way, each where it would have to be to give that sum on its own.
+  const depth: WheelReach['depth'] = [];
+  const controls = controlMap(def);
+  const wheel = Math.min(1, Math.max(0, input.wheel ?? 0));
+  for (const e of routing.edges) {
+    if (!path.edges.includes(e.id)) continue;
+    for (const l of e.levels ?? []) {
+      if (typeof l === 'string' || !('sum' in l) || !l.sum.some(readsWheel)) continue;
+      const knobs = l.sum.filter((x) => !readsWheel(x));
+      if (knobs.length !== 1) continue;
+      const k = knobs[0];
+      if (typeof k !== 'string' && 'sum' in k) continue;
+      const { id, off, pow = 1 } = typeof k === 'string' ? { id: k } : k;
+      const c = controls[id];
+      if (!c || c.kind !== 'cont' || depth.some((d) => d.id === id)) continue;
+      const total = amount(def, k, input) + wheel;
+      const at = Math.min(1, Math.pow(total, 1 / pow));
+      // Measured from the level's zero, as `amount` reads it, on the side of it the knob is turned to (up from a
+      // zero at its foot, down from one at its top), and kept on the knob.
+      const zero = typeof off === 'number' ? off : c.min;
+      const v = input.values[id];
+      const now = typeof v === 'number' ? v : zero;
+      const dir = now > zero ? 1 : now < zero ? -1 : zero < c.max ? 1 : -1;
+      const value = zero + dir * at * (c.max - c.min);
+      depth.push({ id, value: Math.min(c.max, Math.max(c.min, value)) });
+    }
+  }
+  return { ...path, doors, depth };
 }

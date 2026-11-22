@@ -30,7 +30,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { z } from 'zod';
 import type { CSSProperties, KeyboardEvent, PointerEvent, ReactNode } from 'react';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
-import { routingState } from '@/lib/app/synths/lib/routing';
+import { ROUTING_FLOOR, routingState, wheelReach } from '@/lib/app/synths/lib/routing';
 import { routingActivity, settle } from '@/lib/app/synths/lib/routing-activity';
 import { BLOCK_H, BLOCK_W, layoutRouting } from '@/lib/app/synths/lib/routing-layout';
 import { createMeterReader, type LiveSource } from '@/components/app/synth/live-meters';
@@ -267,6 +267,13 @@ export function RoutingView({
     () => routingState(def, routing, { values, cables, wheel }),
     [def, routing, values, cables, wheel]
   );
+  // The mod wheel's way through, while it is up: drawn lit, as thick as it is pushed (`wheelReach`).
+  const wheelUp = wheel > ROUTING_FLOOR;
+  const wheelWay = useMemo(
+    () =>
+      new Set(wheelUp ? (wheelReach(def, routing, { values, cables, wheel })?.edges ?? []) : []),
+    [def, routing, values, cables, wheel, wheelUp]
+  );
   // Laid out again only when a cable goes in or comes out, not on every turn of a knob: `state.cables` is a new array
   // each time, so the memo is keyed on the blocks each cable joins and what it carries (as JSON, which no id can
   // break). On a modular or a pin matrix the cables are what place the blocks, so the drawing changes shape.
@@ -400,13 +407,17 @@ export function RoutingView({
           {routing.edges.map((e, i) => {
             const p = layout.edges[i];
             const live = state.edges[e.id];
+            const byWheel = live && wheelWay.has(e.id);
+            const edgeStyle: CSSProperties & { '--wheel'?: string } = { color: accentOf(e.from) };
+            if (byWheel) edgeStyle['--wheel'] = wheel.toFixed(2);
             return (
               <g
                 key={e.id}
                 data-edge={e.id}
                 data-live={live ? 'true' : 'false'}
-                className={`kys-route-edge is-${e.signal} ${live ? 'is-live' : ''}`}
-                style={{ color: accentOf(e.from) }}
+                data-wheel={byWheel ? 'true' : undefined}
+                className={`kys-route-edge is-${e.signal} ${live ? 'is-live' : ''} ${byWheel ? 'is-wheel' : ''}`}
+                style={edgeStyle}
               >
                 <title>{`${byId.get(e.from)?.name} → ${byId.get(e.to)?.name}${e.label ? ` (${e.label})` : ''}`}</title>
                 <path d={p.d} className="kys-route-line" markerEnd={`url(#${arrow})`} />

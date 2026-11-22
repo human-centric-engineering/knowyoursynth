@@ -157,6 +157,27 @@ describe('RoutingView', () => {
     expect(edge('c03')).toBe('true');
   });
 
+  it('draws the wheel’s way through thick as it is pushed, while it is up (t-308)', () => {
+    const values = { ...def.init, 'mod.toFilter': true };
+    const wheelAt = (id: string) => document.querySelector(`[data-edge="${id}"]`);
+    const r = render(
+      <RoutingView def={def} routing={routing} values={values} cables={[]} wheel={0} />
+    );
+    expect(document.querySelectorAll('[data-wheel]')).toHaveLength(0);
+    r.rerender(<RoutingView def={def} routing={routing} values={values} cables={[]} wheel={0.5} />);
+    // Its own line, the LFO it brings in (MOD MIX fully right at init) and the bus on to the cutoff.
+    const way = [...document.querySelectorAll('[data-wheel]')].map((e) =>
+      e.getAttribute('data-edge')
+    );
+    expect(way).toEqual(['c03', 'c23', 'c33']);
+    expect(wheelAt('c03')?.classList.contains('is-wheel')).toBe(true);
+    expect((wheelAt('c03') as HTMLElement).style.getPropertyValue('--wheel')).toBe('0.50');
+    r.rerender(<RoutingView def={def} routing={routing} values={values} cables={[]} wheel={1} />);
+    expect((wheelAt('c33') as HTMLElement).style.getPropertyValue('--wheel')).toBe('1.00');
+    // Not to the oscillators, whose switch is off.
+    expect(wheelAt('c30')?.hasAttribute('data-wheel')).toBe(false);
+  });
+
   it('draws every block as a box with its schematic symbol and designator', () => {
     view();
     const want: Record<string, string> = {

@@ -373,6 +373,60 @@ describe('Keyboard mod wheel', () => {
     fireEvent.pointerMove(wheel, { clientY: 20, buttons: 1 });
     expect(props.onWheel).toHaveBeenCalledExactlyOnceWith(0.8);
   });
+
+  it('reads "Mod" when nothing says where it reaches', () => {
+    setup();
+    expect(screen.getByText('Mod')).toBeTruthy();
+    expect(screen.queryByTestId('wheel-says')).toBeNull();
+  });
+
+  it('lights a lamp under it where it reaches, and the wheel is described by where', () => {
+    setup({ wheelSays: { from: 'LFO', to: '→ Oscillators · Filter' } });
+    const says = screen.getByTestId('wheel-says');
+    expect(says.textContent).toBe('LFO → Oscillators · Filter');
+    const wheel = screen.getByRole('slider', { name: 'Mod wheel' });
+    expect(wheel.getAttribute('aria-describedby')).toBe(says.id);
+    const lamp = screen.getByRole('button', {
+      name: 'Where the mod wheel reaches: Oscillators · Filter',
+    });
+    expect(lamp.getAttribute('data-reach')).toBe('yes');
+    expect(screen.getByText('Mod')).toBeTruthy();
+  });
+
+  it('leaves the lamp dark when it reaches nothing, and a click opens what would send it somewhere', () => {
+    const hint = 'Switch on OSCILLATOR MODULATION or Filter modulation.';
+    setup({ wheelSays: { to: 'Nowhere', hint } });
+    expect(screen.getByTestId('wheel-says').textContent).toBe(`Nowhere ${hint}`);
+    const lamp = screen.getByRole('button', { name: 'Where the mod wheel reaches: nowhere' });
+    expect(lamp.getAttribute('data-reach')).toBe('no');
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    fireEvent.click(lamp);
+    const card = screen.getByRole('dialog');
+    expect(card.textContent).toContain(hint);
+
+    fireEvent.click(lamp);
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('opens the readout while a mouse is over the lamp, and closes it as it leaves', () => {
+    setup({ wheelSays: { to: '→ Filter' }, wheel: 0.4 });
+    const lamp = screen.getByTestId('wheel-lamp');
+    fireEvent.pointerEnter(lamp, { pointerType: 'mouse' });
+    expect(screen.getByRole('dialog').textContent).toContain('40%');
+    fireEvent.pointerLeave(lamp, { pointerType: 'mouse' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('marks the wheel in the lanes’ colour only while a lane plays it', () => {
+    const { rerender, props } = setup({ wheel: 0.6 });
+    expect(screen.queryByTestId('wheel-lane-mark')).toBeNull();
+    const wheel = screen.getByRole('slider', { name: 'Mod wheel' });
+    expect(wheel.getAttribute('aria-valuetext')).toBe('60%');
+    rerender(<Keyboard {...props} wheelLane />);
+    expect(screen.getByTestId('wheel-lane-mark')).toBeTruthy();
+    expect(wheel.getAttribute('aria-valuetext')).toBe('60%, played by a lane');
+  });
 });
 
 describe('QWERTY', () => {

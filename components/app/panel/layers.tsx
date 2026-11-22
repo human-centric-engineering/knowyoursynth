@@ -30,6 +30,7 @@ import {
   jackReach,
 } from '@/lib/app/synths/lib/patch';
 import { WHEEL } from '@/lib/app/synths/lib/soundmap';
+import { knobRim, polar, valueAngle } from '@/components/app/panel/parts';
 import type {
   Area,
   Control,
@@ -706,6 +707,91 @@ export function DoorRings({ def, values }: { def: SynthDef; values: ControlValue
             >
               {tag.toUpperCase()}
             </text>
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+/** What the panel shows while the mod wheel is up (`wheelReach`): the knobs it adds to, and the switches carrying it. */
+export interface WheelUp {
+  /** Each knob the wheel adds to, and where it would have to be to give that depth on its own. */
+  depth: { id: string; value: number }[];
+  switches: string[];
+}
+
+/** The wheel's colour on the panel: the modulation section's. */
+const WHEEL_INK = moduleOf('mod').color;
+
+/**
+ * The mod wheel's link on the panel while it is up: an arc round each knob it adds to (Model D: MOD DEPTH), from the
+ * knob to the depth the two give together, with a tick where that is, and a ring round each switch carrying it.
+ * `values` are the panel's as drawn.
+ */
+export function WheelLayer({
+  def,
+  up,
+  values,
+}: {
+  def: SynthDef;
+  up: WheelUp;
+  values: ControlValues;
+}) {
+  const cm = controlMap(def);
+  return (
+    <g pointerEvents="none" data-testid="wheel-layer">
+      {up.depth.map(({ id, value }) => {
+        const c = cm[id];
+        if (!c || c.type !== 'knob' || c.kind !== 'cont' || !isShown(c, values)) return null;
+        const r = knobRim(c) + 6;
+        const a0 = valueAngle(c, values[id]);
+        const a1 = valueAngle(c, value);
+        if (a1 - a0 < 1) return null;
+        const [x0, y0] = polar(c.x, c.y, r, a0);
+        const [x1, y1] = polar(c.x, c.y, r, a1);
+        const [tx, ty] = polar(c.x, c.y, r + 8, a1);
+        const [ix, iy] = polar(c.x, c.y, r - 8, a1);
+        const d = `M${x0} ${y0} A${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1} ${y1}`;
+        return (
+          <g key={id} data-wheel-depth={id}>
+            <path
+              d={d}
+              fill="none"
+              stroke="#000"
+              strokeOpacity="0.5"
+              strokeWidth="9"
+              strokeLinecap="round"
+            />
+            <path d={d} fill="none" stroke={WHEEL_INK} strokeWidth="5" strokeLinecap="round" />
+            <line
+              x1={ix}
+              y1={iy}
+              x2={tx}
+              y2={ty}
+              stroke="#fff"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </g>
+        );
+      })}
+      {up.switches.map((id) => {
+        const c = cm[id];
+        if (!c || !isShown(c, values)) return null;
+        const r = doorReach(c);
+        return (
+          <g key={id} data-wheel-switch={id}>
+            <circle
+              cx={c.x}
+              cy={c.y}
+              r={r}
+              fill="none"
+              stroke="#000"
+              strokeOpacity="0.5"
+              strokeWidth="7"
+            />
+            <circle cx={c.x} cy={c.y} r={r} fill="none" stroke={WHEEL_INK} strokeWidth="3" />
           </g>
         );
       })}

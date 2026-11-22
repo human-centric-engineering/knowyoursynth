@@ -51,6 +51,8 @@ import {
   Lens,
   LessonBadges,
   Locator,
+  WheelLayer,
+  type WheelUp,
 } from '@/components/app/panel/layers';
 import { LiveLayer, type LiveGlow } from '@/components/app/panel/live-layer';
 import { LivePointers } from '@/components/app/panel/live-pointer';
@@ -120,6 +122,8 @@ export interface SynthPanelProps {
   dimOn?: boolean;
   /** Live signal's glow (`f-live-panel`), over the dimming or without it: what to light and the engine to listen to. Null = none. */
   liveGlow?: LiveGlow | null;
+  /** While the mod wheel is up: the knobs it adds to and the switches carrying it (`wheelReach`). Null = down. */
+  wheelUp?: WheelUp | null;
   heatOn?: boolean;
   onChange: ControlChange;
   onConnect: (from: string, to: string) => void;
@@ -194,6 +198,7 @@ export function SynthPanel({
   areasOn = false,
   dimOn = false,
   liveGlow = null,
+  wheelUp = null,
   heatOn = false,
   onChange,
   onConnect,
@@ -630,6 +635,9 @@ export function SynthPanel({
           <LiveLayer def={def} live={liveGlow} cables={cables} values={values} />
         )}
         {liveGlow && !areasOn && <LivePointers def={def} cables={cables} values={values} />}
+        {wheelUp && !areasOn && (
+          <WheelLayer def={def} up={wheelUp} values={moved ? { ...values, ...moved } : values} />
+        )}
         {heatOn && !areasOn && <HeatRanks def={shown} values={values} outline={outline} />}
         {!areasOn && <LessonBadges def={shown} values={values} />}
         {def.matrix && (

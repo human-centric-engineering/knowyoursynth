@@ -500,7 +500,17 @@ on no panel). What differs is where it goes:
 - **The voice** hears it as the wheel, not a panel value: `paramsFor` splits it out (`splitPerformance`) and hands it
   to `toEngine()` as `ctx.wheel`, which is how the synth already hears a hand on the wheel. So the wheel does what the
   hardware's does, with no voice code of its own. A step the lane leaves alone plays the wheel where the hand has it.
-- **The keyboard strip's wheel** (and the routing view) draws the lane's value while it plays (`shownWheel`).
+- **The keyboard strip's wheel** (and the routing view) draws the lane's value while it plays (`shownWheel`), with a
+  mark in the lanes' amber down its edge.
+- **Where the wheel reaches** (t-308) is read from the routing, never written by a synth: `wheelReach` in
+  `lib/app/synths/lib/routing.ts` takes the edges whose levels read `@wheel`, live with the wheel all the way up, and
+  follows them on through blocks that only pass signal on (`passes`) to the blocks the modulation lands on. It gives
+  the sources it scales (Model D: what MOD MIX lets through), where it lands, the switches carrying it, the knobs it
+  adds to (MOD DEPTH, as where the knob alone would give the depth the two give), and, landing nowhere, the switches
+  that would open it. `wheelSays` (`performance.ts`) words it under the wheel ("LFO → Oscillators · Filter", or
+  "Nowhere" and what to switch on). While the wheel is up the panel draws MOD DEPTH's depth as an arc and rings the
+  switches (`WheelLayer`), and the routing view draws the wheel's way as thick as it is pushed. A routing that never
+  reads the wheel gets `null`, and the wheel says "Mod".
 - **MIDI out** sends it as the declared CC, with no CC to choose, while the pattern has the lane: a step it leaves alone
   sends the hand's wheel, and the run's end puts the hardware's wheel back there once the lane moved it
   (`CcLookup.rest`). Another lane can't be given that number; one given it before says it isn't sent. While a wheel
