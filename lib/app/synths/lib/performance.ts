@@ -10,7 +10,7 @@
  *
  * A synth that declares nothing is offered no lane, and a pattern's lane for a wheel it lacks is kept and silent, as a
  * lane for any control a synth has not got. Adopting the template on another synth is its declaration, and its
- * `toEngine()` reading `ctx.wheel` where the hardware's wheel goes: `.context/app/lane-sounds.md`.
+ * `toEngine()` reading `ctx.wheel` where the hardware's wheel goes: `.context/app/sequencer.md` (Performance wheels).
  */
 import type {
   Control,

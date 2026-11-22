@@ -315,24 +315,37 @@ describe('Keyboard mod wheel', () => {
     expect(wheel.getAttribute('aria-valuenow')).toBe('40');
   });
 
+  /** What the arrow key's change makes of the hand's wheel at `hand`: the keys step it by an updater. */
+  const stepped = (onWheel: KeyboardProps['onWheel'], hand: number): number => {
+    const arg = vi.mocked(onWheel).mock.lastCall?.[0];
+    return typeof arg === 'function' ? arg(hand) : (arg ?? NaN);
+  };
+
   it('nudges up and down by 5% with the arrow keys', () => {
     const { props } = setup({ wheel: 0.5 });
     const wheel = screen.getByRole('slider', { name: 'Mod wheel' });
     fireEvent.keyDown(wheel, { key: 'ArrowUp' });
-    expect(props.onWheel).toHaveBeenLastCalledWith(0.55);
+    expect(stepped(props.onWheel, 0.5)).toBeCloseTo(0.55);
     fireEvent.keyDown(wheel, { key: 'ArrowDown' });
-    expect(props.onWheel).toHaveBeenLastCalledWith(0.45);
+    expect(stepped(props.onWheel, 0.5)).toBeCloseTo(0.45);
+  });
+
+  it('steps from where the hand has the wheel, not where a lane draws it', () => {
+    // A lane draws the wheel at 0.9; the hand left it at 0.
+    const { props } = setup({ wheel: 0.9 });
+    fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
+    expect(stepped(props.onWheel, 0)).toBeCloseTo(0.05);
   });
 
   it('stays within 0 and 1 at the ends', () => {
     const top = setup({ wheel: 0.99 });
     fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowUp' });
-    expect(top.props.onWheel).toHaveBeenCalledWith(1);
+    expect(stepped(top.props.onWheel, 0.99)).toBe(1);
     top.unmount();
 
     const bottom = setup({ wheel: 0.02 });
     fireEvent.keyDown(screen.getByRole('slider', { name: 'Mod wheel' }), { key: 'ArrowDown' });
-    expect(bottom.props.onWheel).toHaveBeenCalledWith(0);
+    expect(stepped(bottom.props.onWheel, 0.02)).toBe(0);
   });
 
   it('reads a pointer press as position: the top of the wheel is 1, the bottom 0', () => {

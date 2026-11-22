@@ -79,6 +79,7 @@ import {
   isLightFace,
   presetState,
   type PanelState,
+  WHEEL,
 } from '@/lib/app/synths/lib/patch';
 import { shownWheel, splitPerformance } from '@/lib/app/synths/lib/performance';
 import { tempoBpmOf } from '@/lib/app/synths/lib/tempo';
@@ -1028,23 +1029,6 @@ function Synth({
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
-  // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
-  const liveGlow = useMemo<LiveGlow | null>(
-    () =>
-      liveOn && routing && !routingOn
-        ? {
-            routing,
-            flow: true,
-            state: routingState(synthDef, routing, {
-              values: sess.values,
-              cables: sess.cables,
-              wheel,
-            }),
-            source: engine,
-          }
-        : null,
-    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
-  );
   // The sequencer hears the engine's events too (its loops and the playhead): handed over once it exists, below.
   const seqEvents = useRef<(e: SynthEvent) => void>(() => undefined);
   useEffect(() => {
@@ -1351,6 +1335,25 @@ function Synth({
   const { modShown } = seq;
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
   const wheelShown = shownWheel(modShown) ?? wheel;
+  // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
+  const liveGlow = useMemo<LiveGlow | null>(
+    () =>
+      liveOn && routing && !routingOn
+        ? {
+            routing,
+            flow: true,
+            state: routingState(synthDef, routing, {
+              values: sess.values,
+              cables: sess.cables,
+              wheel: wheelShown,
+            }),
+            source: engine,
+          }
+        : null,
+    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheelShown, engine]
+  );
+  // The panel's values with the hand's wheel, for the mod lanes: what a wheel lane's step left alone plays.
+  const lanePanel = useMemo(() => ({ ...sess.values, [WHEEL]: wheel }), [sess.values, wheel]);
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;
@@ -1784,7 +1787,8 @@ function Synth({
   const seqProps = {
     seq,
     def: synthDef,
-    panel: sess.values,
+    // The hand's wheel with the panel's values: what a wheel lane's step left alone plays (`performance.ts`).
+    panel: lanePanel,
     playing: transportPlaying,
     onPlay: () => void playPattern(),
     onStop: stopRiff,

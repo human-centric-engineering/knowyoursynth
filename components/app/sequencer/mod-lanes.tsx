@@ -64,6 +64,12 @@ const CC_OPTIONS: [string, string][] = [
   ...LANE_CCS.map((n): [string, string] => [String(n), `CC ${n}`]),
 ];
 
+/** The CCs a lane on `def` can be given: not one a performance wheel is sent as, which `ccLookup` keeps for it. */
+const ccOptionsFor = (def: SynthDef): [string, string][] => {
+  const taken = new Set(performanceInputs(def).map((p) => String(p.cc)));
+  return taken.size ? CC_OPTIONS.filter(([v]) => !taken.has(v)) : CC_OPTIONS;
+};
+
 /** How far Up and Down move a value along its lane, and Page Up and Page Down. */
 const NUDGE = 1 / 50;
 const BIG_NUDGE = 1 / 10;
@@ -395,6 +401,8 @@ function Lane({
   const restValue = c ? (panel[c.id] ?? c.def) : undefined;
   // A performance wheel's lane (`@wheel`): a step it leaves alone plays the wheel where the hand has it.
   const own = performanceInputs(def).find((p) => p.id === id) ?? null;
+  const ccOptions = ccOptionsFor(def);
+  const ccGiven = cc?.ccs[id];
   // The panel as step i plays it, every lane's change on that step over the panel's values: a readout another control
   // changes (`ContinuousValue.fmt`) follows the step.
   const panelAt = (i: number): ControlValues => {
@@ -456,7 +464,7 @@ function Lane({
   const readout =
     shownAt === null || !c
       ? null
-      : `Step ${shownAt + 1}: ${shownValue === undefined ? (own ? 'where your hand has it' : `panel (${formatValue(c, restValue, panelAt(shownAt))})`) : formatValue(c, shownValue, panelAt(shownAt))}`;
+      : `Step ${shownAt + 1}: ${shownValue === undefined ? (own ? `your hand's (${formatValue(c, restValue, panelAt(shownAt))})` : `panel (${formatValue(c, restValue, panelAt(shownAt))})`) : formatValue(c, shownValue, panelAt(shownAt))}`;
   const restPos = c && restValue !== undefined ? lanePos(c, restValue) : null;
 
   return (
@@ -483,8 +491,12 @@ function Lane({
           <Select
             label="CC"
             help="The MIDI CC this lane is sent to the hardware as, its values across the control's travel as 0–127. Find the number in the synth's MIDI chart. Kept in this browser, for this synth, not with the pattern."
-            value={cc.ccs[id] === undefined ? '' : String(cc.ccs[id])}
-            options={CC_OPTIONS}
+            value={
+              ccGiven === undefined || !ccOptions.some(([v]) => v === String(ccGiven))
+                ? ''
+                : String(ccGiven)
+            }
+            options={ccOptions}
             onChange={(v) => cc.set(id, v === '' ? null : Number(v))}
           />
         ) : null}
@@ -568,7 +580,7 @@ function Lane({
                     ? 'nothing set'
                     : String(v)
                   : v === undefined
-                    ? `panel value, ${formatValue(c, restValue, panelAt(i))}`
+                    ? `${own ? "your hand's" : 'panel'} value, ${formatValue(c, restValue, panelAt(i))}`
                     : formatValue(c, v, panelAt(i))
               }
               aria-disabled={!c || undefined}
