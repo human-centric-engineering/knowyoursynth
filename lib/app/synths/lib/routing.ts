@@ -648,9 +648,14 @@ export function wheelReach(
       if (!c || c.kind !== 'cont' || depth.some((d) => d.id === id)) continue;
       const total = amount(def, k, input) + wheel;
       const at = Math.min(1, Math.pow(total, 1 / pow));
-      // Measured from the level's zero, as `amount` reads it, and kept on the knob.
+      // Measured from the level's zero, as `amount` reads it, on the side of it the knob is turned to (up from a
+      // zero at its foot, down from one at its top), and kept on the knob.
       const zero = typeof off === 'number' ? off : c.min;
-      depth.push({ id, value: Math.min(c.max, zero + at * (c.max - c.min)) });
+      const v = input.values[id];
+      const now = typeof v === 'number' ? v : zero;
+      const dir = now > zero ? 1 : now < zero ? -1 : zero < c.max ? 1 : -1;
+      const value = zero + dir * at * (c.max - c.min);
+      depth.push({ id, value: Math.min(c.max, Math.max(c.min, value)) });
     }
   }
   return { ...path, doors, depth };

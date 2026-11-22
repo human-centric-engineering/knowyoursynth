@@ -111,6 +111,13 @@ describe('wheelReach on Model D', () => {
       wheel: 0.25,
     });
     expect(r?.depth).toEqual([{ id: 'mod.depth', value: 7.5 }]);
+    // Turned below its zero, the depth grows downwards: 3 is 0.2 from 5, plus the wheel's 0.25, is 0.45 below.
+    const below = wheelReach(modelD, fromFive, {
+      values: { ...modelD.init, 'mod.toFilter': true, 'mod.depth': 3 },
+      cables: [],
+      wheel: 0.25,
+    });
+    expect(below?.depth[0].value).toBeCloseTo(0.5, 6);
   });
 });
 
