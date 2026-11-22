@@ -9,7 +9,8 @@
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
-import type { KeyboardProps } from '@/components/app/synth/keyboard';
+import type { KeyboardProps, PitchWheelProps } from '@/components/app/synth/keyboard';
+import type { Dispatch, SetStateAction } from 'react';
 import { notesStore } from '@/components/app/synth/stores';
 
 beforeAll(() => {
@@ -450,18 +451,18 @@ describe('QWERTY', () => {
 });
 
 describe('Keyboard pitch wheel (`f-performance-wheels` t-309)', () => {
-  const bend = (over: Partial<NonNullable<KeyboardProps['bend']>> = {}) => ({
+  const bend = (over: Partial<Omit<PitchWheelProps, 'onChange'>> = {}) => ({
     value: 0,
-    onChange: vi.fn(),
     range: 2,
     lane: false,
     ...over,
+    onChange: vi.fn<Dispatch<SetStateAction<number>>>(),
   });
   const wheel = () => screen.getByRole('slider', { name: 'Pitch wheel' });
   /** The last value handed to `onChange`, an updater read from the hand at `hand`. */
-  const last = (onChange: ReturnType<typeof vi.fn>, hand = 0): number => {
-    const arg: unknown = onChange.mock.lastCall?.[0];
-    return typeof arg === 'function' ? (arg as (b: number) => number)(hand) : Number(arg);
+  const last = (onChange: ReturnType<typeof bend>['onChange'], hand = 0): number => {
+    const arg = onChange.mock.lastCall?.[0];
+    return typeof arg === 'function' ? arg(hand) : (arg ?? NaN);
   };
 
   it('is drawn only on a synth that has one, left of the mod wheel', () => {
