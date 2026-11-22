@@ -10,7 +10,7 @@
  * Then add the new sounds to the check baseline (`npm run check:synths -- model-d --add-sounds`). Printing goes
  * through `console`, as every script's does (the `scripts/**` override in `eslint.config.mjs`).
  */
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { z } from 'zod';
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -68,9 +68,16 @@ function readFile<T>(
 
 /** The sounds this script wrote last time, by the batch it wrote them with: renamed or dropped specs included. */
 const SLUG = 'model-d/';
-const before = existsSync(BATCH)
-  ? readFile(BatchFile, BATCH).data.patterns.flatMap((p) => p.sounds)
-  : [];
+// Read, not checked then read: a missing batch means a first run, any other failure stops.
+function soundsBefore(): string[] {
+  try {
+    return readFile(BatchFile, BATCH).data.patterns.flatMap((p) => p.sounds);
+  } catch (err) {
+    if (err instanceof Error && 'code' in err && err.code === 'ENOENT') return [];
+    throw err;
+  }
+}
+const before = soundsBefore();
 const mineBefore = new Set(
   before.filter((k) => k.startsWith(SLUG)).map((k) => k.slice(SLUG.length))
 );
