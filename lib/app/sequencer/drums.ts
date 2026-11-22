@@ -275,13 +275,16 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
   ],
   ['disco', /disco|hi-?nrg|moroder|patrick cowley|cerrone|boogie/],
   ['electro', /\belectro\b|miami bass|\b808\b|freestyle|bambaataa|mantronix|kraftwerk/],
-  ['funk', /funk|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/],
+  [
+    'funk',
+    /funk|new jack|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/,
+  ],
   ['jazz', /jazz|bebop|hard bop|\bswing\b|big band|dixieland/],
   [
     'synthwave',
     /synthwave|outrun|retro-?wave|darksynth|kavinsky|carpenter brut|com truise|perturbator|the weeknd|\bm83\b/,
   ],
-  ['motorik', /kraut|motorik|\bneu!|kosmische|harmonia|la düsseldorf/],
+  ['motorik', /kraut|motorik|\bneu!|kosmische|\bharmonia\b|la düsseldorf/],
   [
     'backbeat',
     /\bpop\b|synth-?pop|rock|wave|\b80s\b|ballad|punk|indie|röyksopp|royksopp|alabama 3|depeche|new order|gary numan|human league|tears for fears|a-ha|vangelis/,

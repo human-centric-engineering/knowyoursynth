@@ -66,7 +66,7 @@ import {
   startStep,
   type ChosenPatch,
 } from '@/lib/app/synths/default-patch';
-import { normalizeFx, rackForPatch, type RackFx } from '@/lib/app/synths/audio/fx';
+import { rackForPatch } from '@/lib/app/synths/audio/fx';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -1652,25 +1652,43 @@ function Synth({
   useEffect(() => {
     fxNow.current = fx;
   });
-  const choosePatch = useCallback(
-    (chosen: ChosenPatch = { drums: 'auto', fx: null }, from: RackFx = fxNow.current) => {
-      newPatch(chosen.drums);
-      const next = rackForPatch(from, chosen.fx);
+  const rackFor = useCallback(
+    (patchFx: ChosenPatch['fx']) => {
+      const next = rackForPatch(fxNow.current, patchFx);
       // Already so (both normalised, so in the same key order): nothing to store or send.
-      if (JSON.stringify(next) === JSON.stringify(from)) return;
+      if (JSON.stringify(next) === JSON.stringify(fxNow.current)) return;
       fxNow.current = next;
       setFx(next);
     },
-    [newPatch, setFx]
+    [setFx]
   );
-  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default. The rack
-  // this render holds is still the default (the stored one is read after mount), so the reset starts from the stored one.
+  // The effects of the patch arrived on, held until the settings have settled (`undefined`: none to apply).
+  const arrivalFx = useRef<ChosenPatch['fx'] | undefined>(undefined);
+  const choosePatch = useCallback(
+    (chosen: ChosenPatch = { drums: 'auto', fx: null }) => {
+      arrivalFx.current = undefined;
+      newPatch(chosen.drums);
+      rackFor(chosen.fx);
+    },
+    [newPatch, rackFor]
+  );
+  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
   useEffect(() => {
     const chosen = arrivedOnPatch.current;
     if (!chosen) return;
     arrivedOnPatch.current = null;
-    choosePatch(chosen, normalizeFx(readStored(STORAGE_KEYS.fx)));
+    newPatch(chosen.drums);
+    arrivalFx.current = chosen.fx;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
+  // The rack is reset once the settings have settled: the browser's stored rack read and, signed in, the account's.
+  // Before then the rack this render holds can still be replaced, which would undo the reset or lose the knobs.
+  const settingsSettled = settings.settled && !authPending;
+  useEffect(() => {
+    if (!settingsSettled || arrivalFx.current === undefined) return;
+    const patchFx = arrivalFx.current;
+    arrivalFx.current = undefined;
+    rackFor(patchFx);
+  }, [settingsSettled, rackFor]);
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.

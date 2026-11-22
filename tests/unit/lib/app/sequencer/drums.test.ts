@@ -101,6 +101,7 @@ describe('drumStyleFor', () => {
     ['King Tubby', 'onedrop'],
     ['Ragamuffin', 'onedrop'],
     ['Celtic punk', 'backbeat'],
+    ['New jack swing', 'funk'],
     ['Dubstep', 'halftime'],
     ['Burial', 'halftime'],
   ])('matches %s to %s by its style', (inspiredBy, beat) => {

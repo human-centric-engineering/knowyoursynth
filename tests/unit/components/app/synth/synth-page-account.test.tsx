@@ -30,6 +30,7 @@ import {
   ACCOUNT_WRITE_MAX_WAIT_MS,
 } from '@/components/app/synth/account-storage';
 import { readStored } from '@/components/app/synth/storage';
+import { normalizeFx } from '@/lib/app/synths/audio/fx';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
@@ -305,6 +306,25 @@ describe('signed in, opening a synth', () => {
     expect(cutoff()).toBe(shown);
     await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
     expect(api.put).not.toHaveBeenCalled();
+  });
+
+  // Arriving on a patch resets the rack once the account has answered, from the account's rack, not the browser's.
+  it("turns the account's rack off on arriving at a patch with no effects, keeping its knobs", async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    storeLocal('kys.fx', { on: false });
+    const kept = normalizeFx({ on: true, reverb: { on: true, size: 0.9, mix: 0.4 } });
+    account.settings = { ...NO_SETTINGS, fx: kept, updatedAt: KEPT_AT };
+    window.history.replaceState(null, '', '/synths/model-d?sound=fat-bass');
+    render(
+      <SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} soundParam="fat-bass" />
+    );
+    await act(async () => vi.advanceTimersByTimeAsync(0));
+    expect(readStored('kys.fx')).toMatchObject({ on: false, reverb: { on: true, size: 0.9 } });
+
+    await act(async () => vi.advanceTimersByTimeAsync(ACCOUNT_WRITE_MAX_WAIT_MS * 2));
+    expect(settingsPatches().at(-1)?.[1]).toMatchObject({
+      body: { fx: { on: false, reverb: { on: true, size: 0.9 } } },
+    });
   });
 
   it("writes the account's settings to the browser, stamped with the account's time", async () => {
