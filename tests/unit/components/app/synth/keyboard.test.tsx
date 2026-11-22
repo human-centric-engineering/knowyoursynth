@@ -373,6 +373,39 @@ describe('Keyboard mod wheel', () => {
     fireEvent.pointerMove(wheel, { clientY: 20, buttons: 1 });
     expect(props.onWheel).toHaveBeenCalledExactlyOnceWith(0.8);
   });
+
+  it('reads "Mod" when nothing says where it reaches', () => {
+    setup();
+    expect(screen.getByText('Mod')).toBeTruthy();
+    expect(screen.queryByTestId('wheel-says')).toBeNull();
+  });
+
+  it('says where it reaches under it, and the wheel is described by it', () => {
+    setup({ wheelSays: { from: 'LFO', to: '→ Oscillators · Filter' } });
+    const says = screen.getByTestId('wheel-says');
+    expect(says.textContent).toBe('LFO→ Oscillators · Filter');
+    expect(screen.queryByText('Mod')).toBeNull();
+    const wheel = screen.getByRole('slider', { name: 'Mod wheel' });
+    expect(wheel.getAttribute('aria-describedby')).toBe(says.id);
+  });
+
+  it('says what would send it somewhere when it reaches nothing', () => {
+    const hint = 'Switch on OSCILLATOR MODULATION or Filter modulation.';
+    setup({ wheelSays: { to: 'Nowhere', hint } });
+    const says = screen.getByTestId('wheel-says');
+    expect(says.textContent).toBe(`Nowhere${hint}`);
+    expect(says.getAttribute('title')).toBe(hint);
+  });
+
+  it('marks the wheel in the lanes’ colour only while a lane plays it', () => {
+    const { rerender, props } = setup({ wheel: 0.6 });
+    expect(screen.queryByTestId('wheel-lane-mark')).toBeNull();
+    const wheel = screen.getByRole('slider', { name: 'Mod wheel' });
+    expect(wheel.getAttribute('aria-valuetext')).toBe('60%');
+    rerender(<Keyboard {...props} wheelLane />);
+    expect(screen.getByTestId('wheel-lane-mark')).toBeTruthy();
+    expect(wheel.getAttribute('aria-valuetext')).toBe('60%, played by a lane');
+  });
 });
 
 describe('QWERTY', () => {
