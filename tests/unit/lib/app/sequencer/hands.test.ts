@@ -204,3 +204,18 @@ describe('the limits', () => {
     expect(handProblems(modelD, p, panel)).toEqual([]);
   });
 });
+
+describe('the mod wheel’s lane (f-performance-wheels)', () => {
+  // Up on the first step only: every other step plays the wheel where the hand has it.
+  const p = pattern({ '@wheel': (c) => (c.i === 0 ? 1 : null) });
+
+  it('measures a step it leaves alone from the wheel down, when the caller gives no hand', () => {
+    expect(handProblems(modelD, p, panel)).toEqual([
+      "@wheel: moves 100% of its travel into A2 in 0.13 s, a full sweep in 0.13 s (a hand's fastest is 0.3 s)",
+    ]);
+  });
+
+  it('measures it from where the caller says the hand has the wheel', () => {
+    expect(handProblems(modelD, p, { ...panel, '@wheel': 1 })).toEqual([]);
+  });
+});
