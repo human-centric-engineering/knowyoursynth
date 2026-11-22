@@ -643,12 +643,14 @@ export function wheelReach(
       if (knobs.length !== 1) continue;
       const k = knobs[0];
       if (typeof k !== 'string' && 'sum' in k) continue;
-      const { id, pow = 1 } = typeof k === 'string' ? { id: k } : k;
+      const { id, off, pow = 1 } = typeof k === 'string' ? { id: k } : k;
       const c = controls[id];
       if (!c || c.kind !== 'cont' || depth.some((d) => d.id === id)) continue;
       const total = amount(def, k, input) + wheel;
       const at = Math.min(1, Math.pow(total, 1 / pow));
-      depth.push({ id, value: c.min + at * (c.max - c.min) });
+      // Measured from the level's zero, as `amount` reads it, and kept on the knob.
+      const zero = typeof off === 'number' ? off : c.min;
+      depth.push({ id, value: Math.min(c.max, zero + at * (c.max - c.min)) });
     }
   }
   return { ...path, doors, depth };

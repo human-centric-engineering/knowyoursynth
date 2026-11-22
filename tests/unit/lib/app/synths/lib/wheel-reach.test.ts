@@ -93,6 +93,25 @@ describe('wheelReach on Model D', () => {
     // Reaching nothing, it adds to nothing.
     expect(reach({}, 1).depth).toEqual([]);
   });
+
+  it('measures a knob with an off value from there, as the level reads it', () => {
+    // MOD DEPTH read from 5: at 5 it adds nothing, so the wheel halfway puts it half its travel on, at the end.
+    const fromFive: SynthRouting = {
+      ...routing,
+      edges: routing.edges.map((e) => ({
+        ...e,
+        levels: e.levels?.map((l) =>
+          typeof l !== 'string' && 'sum' in l ? { sum: [{ id: 'mod.depth', off: 5 }, WHEEL] } : l
+        ),
+      })),
+    };
+    const r = wheelReach(modelD, fromFive, {
+      values: { ...modelD.init, 'mod.toFilter': true, 'mod.depth': 5 },
+      cables: [],
+      wheel: 0.25,
+    });
+    expect(r?.depth).toEqual([{ id: 'mod.depth', value: 7.5 }]);
+  });
 });
 
 describe('wheelReach on any routing', () => {

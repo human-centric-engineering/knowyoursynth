@@ -1342,8 +1342,7 @@ function Synth({
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
-  const laneWheel = shownWheel(modShown);
-  const wheelShown = laneWheel ?? wheel;
+  const wheelShown = shownWheel(modShown) ?? wheel;
   // Where the wheel sends modulation (`wheelReach`), from the panel as it plays: said under the wheel and, while it is
   // up, shown on the panel.
   const reach = useMemo(() => {
@@ -1387,6 +1386,8 @@ function Synth({
   const seqWheelLane =
     (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
   useEffect(() => setWheelLaneOn(seqWheelLane), [seqWheelLane]);
+  // A lane plays the wheel for the whole run, the steps it leaves alone included, as MIDI out has it.
+  const wheelLanePlaying = seqWheelLane && seq.playing;
   useEffect(() => {
     wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
   }, [seqWheelLane, midiOut.sending, seq.playing]);
@@ -3518,7 +3519,7 @@ function Synth({
                     wheel={wheelShown}
                     onWheel={setWheel}
                     wheelSays={wheelSaid}
-                    wheelLane={laneWheel !== undefined}
+                    wheelLane={wheelLanePlaying}
                     hold={hold}
                     onHold={setHoldMode}
                     noteOn={noteOn}
@@ -3709,6 +3710,8 @@ function Synth({
         onPlay={() => void (playsPattern ? playPattern() : playRiff())}
         onStop={stopRiff}
         wheel={wheelShown}
+        wheelSays={wheelSaid}
+        wheelLane={wheelLanePlaying}
         onWheel={setWheel}
         octave={octave}
         onOctave={setOctave}
