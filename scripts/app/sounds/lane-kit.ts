@@ -154,8 +154,9 @@ export interface LaneSoundSpec extends Omit<SoundSpec, 'bpm' | 'riff' | 'steps'>
   pattern: LanePatternSpec;
 }
 
+// `+ 0` turns a -0 into 0, as JSON stores it, so a pattern read back from its file equals the one built.
 const round = (v: ControlValue): ControlValue =>
-  typeof v === 'number' ? Math.round(v * 100) / 100 : v;
+  typeof v === 'number' ? Math.round(v * 100) / 100 + 0 : v;
 
 /** Builds the pattern, checking each lane value against the synth's control and the pattern against the riff rule. */
 export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {

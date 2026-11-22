@@ -32,7 +32,7 @@ function midi(name: string): number {
  * A bar of sixteen steps, one token a step: `.` a rest (or the note held over it), `A3` a note for one step, `E5:3`
  * held for three. Each note stops a little short of its last step, so the next is struck afresh on the gate.
  */
-function bar(text: string): Step[] {
+export function bar(text: string): Step[] {
   const tokens = text.split(/\s+/).filter(Boolean);
   if (tokens.length !== 16) throw new Error(`a bar has 16 steps, not ${tokens.length}: ${text}`);
   return tokens.map((t): Step => {

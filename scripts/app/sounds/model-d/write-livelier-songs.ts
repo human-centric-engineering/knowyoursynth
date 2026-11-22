@@ -18,8 +18,13 @@ import modelD from '@/lib/app/synths/defs/model-d';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { phraseOf } from '@/lib/app/patterns/library';
 import { PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
-import { buildSong, checkHands, type SongSpec } from '@/scripts/app/sounds/lane-kit';
-import { LIVELIER, type LivelierSpec } from '@/scripts/app/sounds/model-d/livelier-songs';
+import { buildSong, checkHands } from '@/scripts/app/sounds/lane-kit';
+import {
+  LIVELIER,
+  livelierKey as key,
+  songSpecOf,
+  type LivelierSpec,
+} from '@/scripts/app/sounds/model-d/livelier-songs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..', '..', '..');
 const DATA = join(ROOT, 'prisma', 'seeds', 'app-knowyoursynth', 'data');
@@ -29,7 +34,6 @@ const BATCH_NAME = 't304-model-d-livelier-songs.json';
 const BATCH = join(PATTERNS, BATCH_NAME);
 const DEFAULTS = join(DATA, 'pattern-defaults.json');
 const SLUG = 'model-d/';
-const key = (sound: string) => `researched:model-d-livelier/${sound}`;
 
 const Json = z.record(z.string(), z.unknown());
 const Items = z.array(z.unknown());
@@ -71,27 +75,7 @@ function build(s: LivelierSpec) {
         `${s.sound}: write it at the transcription's ${t.bpm} bpm, ${t.stepSize}, swing ${t.swing}`
       );
   }
-  const spec: SongSpec = {
-    name: s.name,
-    role: s.role,
-    genre: s.genre ?? '',
-    bpm: s.bpm,
-    stepSize: s.stepSize,
-    swing: s.swing,
-    root: 0,
-    scale: 'chromatic',
-    len: s.len,
-    parts: [
-      from
-        ? { steps: from.pattern.parts[0].steps }
-        : { notes: s.a as string, lanes: s.lanes?.a ?? {} },
-      { notes: s.b, lanes: s.lanes?.b ?? {} },
-    ],
-    chain: s.chain,
-    notes: s.notes,
-    key: key(s.sound),
-    ...(s.fx ? { fx: s.fx } : {}),
-  };
+  const spec = songSpecOf(s, from ? from.pattern.parts[0].steps : null);
   const pattern = buildSong(modelD, spec);
   const raw = rawSounds.find((r) => r.id === s.sound);
   if (!raw) throw new Error(`${s.sound}: not in the Model D's library`);

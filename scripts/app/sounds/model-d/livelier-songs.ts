@@ -15,11 +15,10 @@
  * `genre` is what the drums' Match goes by (`drumStyleFor`), so it is chosen for the beat as much as the credit, and
  * never names a person (owner ruling, 2026-11-02).
  */
-import type { PatternFx } from '@/lib/app/sequencer/pattern';
+import type { PatternFx, Step, StepSize } from '@/lib/app/sequencer/pattern';
 import type { PatternRole } from '@prisma/client';
-import type { Lane } from '@/scripts/app/sounds/lane-kit';
+import type { Lane, SongSpec } from '@/scripts/app/sounds/lane-kit';
 import { wave } from '@/scripts/app/sounds/lane-kit';
-import type { StepSize } from '@/lib/app/sequencer/pattern';
 
 export interface LivelierSpec {
   /** The Model D sound's slug. */
@@ -56,6 +55,36 @@ export function stacc(text: string, gate = 0.5): string {
       return m ? `${m[1]}:${gate}${m[2]}${m[3] ?? ''}` : t;
     })
     .join(' ');
+}
+
+/** The pattern key a sound's livelier song is stored under. */
+export const livelierKey = (sound: string): string => `researched:model-d-livelier/${sound}`;
+
+/**
+ * The kit's spec for one song (`buildSong`): part A as written, or `fromSteps`, the first part of the transcription
+ * it is built on, kept note for note.
+ */
+export function songSpecOf(s: LivelierSpec, fromSteps: Step[] | null): SongSpec {
+  if (typeof s.a !== 'string' && !fromSteps) throw new Error(`${s.sound}: no transcription steps`);
+  return {
+    name: s.name,
+    role: s.role,
+    genre: s.genre ?? '',
+    bpm: s.bpm,
+    stepSize: s.stepSize,
+    swing: s.swing,
+    root: 0,
+    scale: 'chromatic',
+    len: s.len,
+    parts: [
+      typeof s.a === 'string' ? { notes: s.a, lanes: s.lanes?.a ?? {} } : { steps: fromSteps! },
+      { notes: s.b, lanes: s.lanes?.b ?? {} },
+    ],
+    chain: s.chain,
+    notes: s.notes,
+    key: livelierKey(s.sound),
+    ...(s.fx ? { fx: s.fx } : {}),
+  };
 }
 
 const reverb = (size: number, mix: number): PatternFx['reverb'] => ({ size, mix });
