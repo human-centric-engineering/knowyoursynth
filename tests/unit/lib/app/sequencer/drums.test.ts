@@ -78,6 +78,9 @@ describe('drumStyleFor', () => {
     ['Bossa nova', 'bossa'],
     ['Latin jazz', 'bossa'],
     ['Calypso', 'bossa'],
+    ['Jazz', 'jazz'],
+    ['Big band', 'jazz'],
+    ['Jazz-funk', 'funk'],
     ['Electro', 'electro'],
     ['808-style drums', 'electro'],
     ['Afrika Bambaataa', 'electro'],
@@ -99,12 +102,18 @@ describe('drumStyleFor', () => {
     expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat, by: 'style' });
   });
 
-  it.each(['Ambient', 'Drone music', 'Orchestral', 'Film scores', 'Steve Reich', 'Sound effects'])(
-    'gives %s no beat',
-    (inspiredBy) => {
-      expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat: null, by: 'style' });
-    }
-  );
+  it.each([
+    'Ambient',
+    'Drone music',
+    'Orchestral',
+    'Film scores',
+    'Steve Reich',
+    'Sound effects',
+    'Hindustani classical',
+    'Irish traditional music',
+  ])('gives %s no beat', (inspiredBy) => {
+    expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat: null, by: 'style' });
+  });
 
   it('does not hear Bach in Burt Bacharach', () => {
     expect(drumStyleFor('Burt Bacharach', 120, 50).beat).not.toBeNull();

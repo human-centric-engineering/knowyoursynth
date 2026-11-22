@@ -891,9 +891,9 @@ passes no backing buffers, so it is mixed into the synth's output there.
   tutor writes (`countIn: false`), for a lesson's Replay, or for the riff starting again as a patch is picked.
 - **Metronome** (off by default): a click on every beat from beat 0, accented on each bar of four.
 - **Drums** (off by default): one of the beats in `lib/app/sequencer/drums.ts`, a bar of sixteen sixteenths played by
-  synthesised voices (kick, snare, clap, closed and open hat, rim), swung by the pattern's swing. Fifteen beats: four
+  synthesised voices (kick, snare, clap, closed and open hat, rim), swung by the pattern's swing. Sixteen beats: four
   on the floor, techno, disco, pop backbeat, electro, hip-hop, trap, funk, breakbeat, one drop and half-time, and
-  (t-304) motorik, synthwave, two-step garage and bossa nova. **Match** picks the
+  (t-304) motorik, synthwave, two-step garage, bossa nova and a jazz ride. Raga and Irish traditional styles, like ambient, get none. **Match** picks the
   beat with `drumStyleFor`: words in the pattern's Inspired by (a genre, or an artist known for one) first, with
   beatless styles (ambient, drone, film scores, classical) getting none; otherwise the tempo and swing.
 

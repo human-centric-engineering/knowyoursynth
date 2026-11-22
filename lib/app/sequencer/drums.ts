@@ -32,6 +32,7 @@ export const DRUM_BEAT_IDS = [
   'synthwave',
   'garage',
   'bossa',
+  'jazz',
 ] as const;
 export type DrumBeatId = (typeof DRUM_BEAT_IDS)[number];
 
@@ -205,6 +206,18 @@ export const DRUM_BEATS: readonly DrumBeat[] = [
       closedHat: 'x.x.x.x.x.x.x.x.',
     },
   },
+  {
+    id: 'jazz',
+    name: 'Jazz ride',
+    styles: 'Jazz, swing, big band',
+    // The ride's "ding, ding-a ding" on the closed hat, the hi-hat's foot on two and four on the rim, a feathered kick.
+    lines: {
+      kick: 'o.......o.......',
+      closedHat: 'x...x.x.x...x.x.',
+      rim: '....x.......x...',
+      snare: '.......o......o.',
+    },
+  },
 ];
 
 export const drumBeat = (id: DrumBeatId): DrumBeat =>
@@ -234,7 +247,7 @@ export function beatGrid(beat: DrumBeat, swing: number): DrumGrid {
 const RULES: readonly [DrumBeatId | null, RegExp][] = [
   [
     null,
-    /ambient|drone|orchestral|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
+    /ambient|drone|orchestral|raga|hindustani|carnatic|irish trad|celtic|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
   ],
   ['trap', /\btrap\b|\bdrill\b/],
   ['halftime', /dubstep|future garage|half-?time|downtempo|burial/],
@@ -257,6 +270,7 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
   ['disco', /disco|hi-?nrg|moroder|patrick cowley|cerrone|boogie/],
   ['electro', /\belectro\b|miami bass|\b808\b|freestyle|bambaataa|mantronix|kraftwerk/],
   ['funk', /funk|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/],
+  ['jazz', /jazz|bebop|hard bop|\bswing\b|big band|dixieland/],
   [
     'synthwave',
     /synthwave|outrun|retro-?wave|darksynth|kavinsky|carpenter brut|com truise|perturbator|the weeknd|\bm83\b/,
