@@ -14,7 +14,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { z } from 'zod';
-import { PresetSchema } from '@/lib/app/synths/validate';
+import { PresetSchema, validatePreset } from '@/lib/app/synths/validate';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import { handProblems } from '@/lib/app/sequencer/hands';
@@ -551,8 +551,9 @@ describe('the research batches', () => {
         // And a person could play the lanes by hand, against the panel the sound sets (`lane-sounds.md`).
         const [synthId] = p.sounds[0].split('/');
         const def = SYNTH_DEFS.find((d) => d.id === synthId)!;
-        const preset = sounds.get(p.sounds[0])!;
-        const panel = presetState(def, preset, preset.steps.length - 1).values;
+        const checked = validatePreset(def, sounds.get(p.sounds[0]));
+        if (!checked.ok) throw new Error(`${p.sounds[0]}: ${JSON.stringify(checked.problems)}`);
+        const panel = presetState(def, checked.value, checked.value.steps.length - 1).values;
         expect(handProblems(def, pattern, panel), p.key).toEqual([]);
       }
     }
