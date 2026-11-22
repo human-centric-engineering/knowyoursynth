@@ -6,13 +6,14 @@
  * A lane's value is sent across its control's travel as the lane draws it (`lanePos`): a knob by its taper (a log knob
  * by ratio), a choice by its place among the options the panel shows, a switch as 0 or 127.
  *
- * A performance wheel's lane (`@wheel`, `f-performance-wheels`) is the one exception: the hardware knows its wheel, so
- * the lane is sent as the CC the synth declares for it, always, with nothing to assign. It is sent only while the
- * pattern has the lane (`hand.on`), and a step it leaves alone sends the hand's wheel, as the browser's voice plays it.
- * Both are read as each change is sent, so the lookup stays the same while the hand moves or the lane comes and goes.
+ * A performance wheel's lane (`@wheel`, `@bend`, `f-performance-wheels`) is the one exception: the hardware knows its
+ * wheels, so the lane is sent as the message the synth declares for it, always, with nothing to assign: the mod wheel
+ * as its CC, the pitch wheel as pitch bend (`PITCH_BEND`, which `ccMessage` turns into the bytes). It is sent only while
+ * the pattern has the lane (`hand.on`), and a step it leaves alone sends the hand's wheel, as the browser's voice plays
+ * it. Both are read as each change is sent, so the lookup stays the same while the hand moves or the lane comes and goes.
  */
 import { lanePos, laneControl } from '@/lib/app/sequencer/lanes';
-import { isPerformanceId, performanceInputs } from '@/lib/app/synths/lib/performance';
+import { isPerformanceId, performanceInputs, PITCH_BEND } from '@/lib/app/synths/lib/performance';
 import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/synths/contract';
 
 /** The highest CC a lane can send: 120–127 are the channel-mode messages (All Notes Off among them). */
@@ -42,7 +43,7 @@ export const LANE_CCS: readonly number[] = Array.from(
 /** Lane control id → CC number, for one synth. */
 export type LaneCcs = Readonly<Record<string, number>>;
 
-/** The CCs a set of lane values sends: `[cc, value]`, value 0..127. */
+/** The CCs a set of lane values sends: `[cc, value]`, value 0..127, or for `PITCH_BEND` 0..16383. */
 export interface CcLookup {
   (set: ControlValues): [cc: number, value: number][];
   /**
@@ -59,6 +60,36 @@ export const ccValue = (c: Control, v: ControlValue): number => {
   return Number.isFinite(t) ? Math.round(t * 127) : 0;
 };
 
+/** Pitch bend's centre, as a 14-bit value: the wheel at rest. */
+export const BEND_CENTRE = 8192;
+
+/** A pitch wheel's position, -1..1, as a 14-bit pitch-bend value: 0 all the way down, 8192 at rest, 16383 all the way up. */
+export const bendValue = (v: ControlValue): number => {
+  const b = typeof v === 'number' && Number.isFinite(v) ? Math.min(1, Math.max(-1, v)) : 0;
+  return Math.round(BEND_CENTRE + b * (b > 0 ? BEND_CENTRE - 1 : BEND_CENTRE));
+};
+
+/**
+ * A pitch-bend message's two data bytes (least significant first, as they come) as the wheel's position, -1..1: 8192
+ * is the centre, 0 all the way down and 16383 all the way up, so either side of the centre reaches its end.
+ */
+export const bendFromMidi = (lsb: number, msb: number): number => {
+  const v = ((msb & 0x7f) << 7) | (lsb & 0x7f);
+  return v >= BEND_CENTRE ? (v - BEND_CENTRE) / (BEND_CENTRE - 1) : (v - BEND_CENTRE) / BEND_CENTRE;
+};
+
+/** The bytes that send `value` on `cc` on `channel`: a Control Change, or for `PITCH_BEND` a pitch-bend message. */
+export const ccMessage = (channel: number, cc: number, value: number): number[] =>
+  cc === PITCH_BEND
+    ? [0xe0 | channel, value & 0x7f, (value >> 7) & 0x7f]
+    : [0xb0 | channel, cc, value];
+
+/** Where a performance wheel's lane gets the hand's position, by lane id, and whether the pattern has that lane. */
+export interface LaneHand {
+  on: (id: string) => boolean;
+  at: (id: string) => number;
+}
+
 /**
  * What a set of lane values sends on synth `def`, with `ccs` assigned: one `[cc, value]` per lane with a CC whose
  * control this synth has. A lane without a CC sends nothing. `null` when no lane has one, so nothing is looked up.
@@ -66,14 +97,20 @@ export const ccValue = (c: Control, v: ControlValue): number => {
 export function ccLookup(
   def: SynthDef,
   ccs: LaneCcs,
-  /** Whether the pattern has a wheel lane, and the hand's wheel, 0..1; left out, no wheel is ever sent. */
-  hand?: { on: () => boolean; wheel: () => number } | null
+  /** Whether the pattern has each wheel's lane, and where the hand has each wheel; left out, no wheel is ever sent. */
+  hand?: LaneHand | null
 ): CcLookup | null {
   // A performance wheel is sent as the message the synth hears it as, with nothing to assign (`performance.ts`); a
   // CC the player gave another lane that is the same number is the wheel's, so it is not sent twice, lane or none.
   const inputs = performanceInputs(def);
   const taken = new Set(inputs.map((p) => p.cc));
-  const own = hand ? inputs.map((p) => ({ id: p.id, cc: p.cc, c: p.control })) : [];
+  const own = hand
+    ? inputs.map((p) => {
+        const c = p.control;
+        const send = p.cc === PITCH_BEND ? bendValue : (v: ControlValue) => ccValue(c, v);
+        return { id: p.id, cc: p.cc, send };
+      })
+    : [];
   const given = Object.entries(ccs).flatMap(([id, cc]) => {
     if (isPerformanceId(id) || taken.has(cc)) return [];
     const c = laneControl(def, id);
@@ -83,9 +120,9 @@ export function ccLookup(
   const look: CcLookup = (set) => {
     const out: [number, number][] = [];
     // A step the wheel lane leaves alone plays the hand's wheel.
-    if (hand?.on())
-      for (const { id, cc, c } of own)
-        out.push([cc, ccValue(c, Object.hasOwn(set, id) ? set[id] : hand.wheel())]);
+    if (hand)
+      for (const { id, cc, send } of own)
+        if (hand.on(id)) out.push([cc, send(Object.hasOwn(set, id) ? set[id] : hand.at(id))]);
     for (const { id, cc, c } of given) {
       if (Object.hasOwn(set, id)) out.push([cc, ccValue(c, set[id])]);
     }
@@ -93,6 +130,6 @@ export function ccLookup(
   };
   // Whether or not the lane is still on: one taken off mid-run leaves the wheel where it put it otherwise.
   if (hand && own.length > 0)
-    look.rest = () => own.map(({ cc, c }): [number, number] => [cc, ccValue(c, hand.wheel())]);
+    look.rest = () => own.map(({ id, cc, send }): [number, number] => [cc, send(hand.at(id))]);
   return look;
 }

@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
 import type { KeyboardProps } from '@/components/app/synth/keyboard';
 import { notesStore } from '@/components/app/synth/stores';
@@ -448,3 +448,78 @@ describe('QWERTY', () => {
     expect(QWERTY.u).toBe(QWERTY.j - 1);
   });
 });
+
+describe('Keyboard pitch wheel (`f-performance-wheels` t-309)', () => {
+  const bend = (over: Partial<NonNullable<KeyboardProps['bend']>> = {}) => ({
+    value: 0,
+    onChange: vi.fn(),
+    range: 2,
+    lane: false,
+    ...over,
+  });
+  const wheel = () => screen.getByRole('slider', { name: 'Pitch wheel' });
+  /** The last value handed to `onChange`, an updater read from the hand at `hand`. */
+  const last = (onChange: ReturnType<typeof vi.fn>, hand = 0): number => {
+    const arg: unknown = onChange.mock.lastCall?.[0];
+    return typeof arg === 'function' ? (arg as (b: number) => number)(hand) : Number(arg);
+  };
+
+  it('is drawn only on a synth that has one, left of the mod wheel', () => {
+    setup();
+    expect(screen.queryByRole('slider', { name: 'Pitch wheel' })).toBeNull();
+    cleanupAndSetup({ bend: bend() });
+    const sliders = screen.getAllByRole('slider').map((s) => s.getAttribute('aria-label'));
+    expect(sliders).toEqual(['Pitch wheel', 'Mod wheel']);
+  });
+
+  it('says where it is in semitones, by its range, and that a lane plays it', () => {
+    setup({ bend: bend({ value: 0.5, range: 2 }) });
+    expect(wheel().getAttribute('aria-valuenow')).toBe('1');
+    expect(wheel().getAttribute('aria-valuetext')).toBe('+1 semitone');
+    cleanupAndSetup({ bend: bend({ value: -1, range: 2, lane: true }) });
+    expect(wheel().getAttribute('aria-valuetext')).toBe('−2 semitones, played by a lane');
+    expect(screen.getByTestId('bend-lane-mark')).toBeTruthy();
+    cleanupAndSetup({ bend: bend({ value: 0 }) });
+    expect(wheel().getAttribute('aria-valuetext')).toBe('centre');
+  });
+
+  it('reads a press as position, the top 1, the middle 0, the bottom -1, and springs back on release', () => {
+    const b = bend();
+    setup({ bend: b });
+    wheel().getBoundingClientRect = () => new DOMRect(0, 100, 36, 100);
+    fireEvent.pointerDown(wheel(), { clientY: 125 });
+    expect(b.onChange).toHaveBeenLastCalledWith(0.5);
+    fireEvent.pointerMove(wheel(), { clientY: 175, buttons: 1 });
+    expect(b.onChange).toHaveBeenLastCalledWith(-0.5);
+    fireEvent.pointerMove(wheel(), { clientY: 400, buttons: 1 }); // below it: clamped
+    expect(b.onChange).toHaveBeenLastCalledWith(-1);
+    fireEvent.pointerUp(wheel());
+    expect(b.onChange).toHaveBeenLastCalledWith(0);
+  });
+
+  it('springs back when the pointer is taken away from it, too', () => {
+    const b = bend();
+    setup({ bend: b });
+    fireEvent.pointerDown(wheel(), { clientY: 0 });
+    fireEvent.pointerCancel(wheel());
+    expect(b.onChange).toHaveBeenLastCalledWith(0);
+  });
+
+  it('bends with the arrow keys from where the hand has it, held to its ends, and springs back on the key up', () => {
+    const b = bend({ value: 0.9 }); // a lane draws it; the hand left it at rest
+    setup({ bend: b });
+    fireEvent.keyDown(wheel(), { key: 'ArrowUp' });
+    expect(last(b.onChange, 0)).toBeCloseTo(0.25);
+    expect(last(b.onChange, 0.9)).toBe(1);
+    fireEvent.keyDown(wheel(), { key: 'ArrowDown' });
+    expect(last(b.onChange, -0.9)).toBe(-1);
+    fireEvent.keyUp(wheel(), { key: 'ArrowDown' });
+    expect(b.onChange).toHaveBeenLastCalledWith(0);
+  });
+});
+
+/** Unmounts what `setup` rendered and renders again with `over`. */
+function cleanupAndSetup(over: Partial<KeyboardProps>) {
+  cleanup();
+  return setup(over);
+}

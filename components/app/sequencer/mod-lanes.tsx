@@ -21,7 +21,8 @@
  * - A lane for a control this synth does not have stays with the pattern, silent, and says so.
  * - **CC.** While MIDI out sends to an output, each lane can be given a CC number (`f-midi-out` t-90), and its values
  *   are sent to the hardware as that CC. The numbers are this browser's, per synth, not the pattern's. A performance
- *   wheel's lane (the Mod wheel, `performance.ts`) is sent as the synth's own CC for it, so it has no choice to make.
+ *   wheel's lane (the Mod wheel, `performance.ts`) is sent as the synth's own CC for it, and the Pitch wheel's as pitch
+ *   bend, so neither has a choice to make.
  *
  * The values are the pattern's (`Step.mod`), so rotate, reverse, copy and paste carry them with their steps.
  */
@@ -50,7 +51,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { SeqPicker, SeqSelect as Select } from '@/components/app/sequencer/select';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
 import { LANE_CCS, type LaneCcs } from '@/lib/app/midi/cc';
-import { performanceInputs } from '@/lib/app/synths/lib/performance';
+import { performanceInputs, PITCH_BEND } from '@/lib/app/synths/lib/performance';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 /** The CCs a lane can be sent as, while MIDI out sends (t-90): lane control id → CC, and a change to one. */
@@ -488,7 +489,9 @@ function Lane({
         )}
         {cc && c && own ? (
           // A performance wheel goes as the message the synth hears its own wheel as: nothing to choose.
-          <span className="kys-seq-lane-readout">Sent as CC {own.cc}</span>
+          <span className="kys-seq-lane-readout">
+            {own.cc === PITCH_BEND ? 'Sent as pitch bend' : `Sent as CC ${own.cc}`}
+          </span>
         ) : cc && c ? (
           <Select
             label="CC"

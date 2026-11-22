@@ -1005,7 +1005,16 @@ const areas: Area[] = [
 ];
 
 // ── Engine mapping ────────────────────────────────────────────────────────
+/**
+ * How far the pitch wheel bends, in semitones either way. The manual gives the wheel's fixed range no number (only a
+ * settable one, up to 12, over MIDI), so this is a whole tone: what a MIDI keyboard's bend assumes, and the bends a
+ * player reaches for.
+ */
+const BEND_RANGE = 2;
+
 function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
+  // The pitch wheel bends what TUNE moves: the oscillators on the keyboard, OSC 3 left alone with its control off.
+  const bend = clamp(ctx.bend ?? 0, -1, 1) * BEND_RANGE;
   const osc = [1, 2, 3].map((n) => {
     const kbd = n === 3 ? Boolean(v['osc3.kbd']) : true;
     const det = n === 1 ? 0 : num(v, `osc${n}.freq`);
@@ -1015,7 +1024,7 @@ function toEngine(v: ControlValues, ctx: EngineContext): EngineParams {
       semi:
         RANGE_SEMI[String(v[`osc${n}.range`])] +
         (kbd ? det : det * (36 / 7)) +
-        (kbd ? num(v, 'ctl.tune') : 0),
+        (kbd ? num(v, 'ctl.tune') + bend : 0),
       kbd,
       fixedNote: 60,
       syncTo: -1,
@@ -1183,7 +1192,8 @@ const modelD: SynthDef & { version: number } = {
   },
   // The Model D has no keybed, but its MIDI input hears CC 1 as the Minimoog's mod wheel: it adds to MOD DEPTH
   // (`toEngine` below), and from there goes where MOD MIX and the two MODULATION switches send it.
-  performance: { wheel: { cc: 1 } },
+  // Its pitch wheel bends the oscillators by `BEND_RANGE`, and MIDI in hears pitch bend as it.
+  performance: { wheel: { cc: 1 }, bend: { range: BEND_RANGE } },
   toEngine,
 };
 

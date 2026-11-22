@@ -81,7 +81,13 @@ import {
   type PanelState,
   WHEEL,
 } from '@/lib/app/synths/lib/patch';
-import { shownWheel, splitPerformance, wheelSays } from '@/lib/app/synths/lib/performance';
+import {
+  BEND,
+  shownBend,
+  shownWheel,
+  splitPerformance,
+  wheelSays,
+} from '@/lib/app/synths/lib/performance';
 import { tempoBpmOf } from '@/lib/app/synths/lib/tempo';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
@@ -703,6 +709,8 @@ function Synth({
   // runs on.
   const [playing, setPlaying] = useState(false);
   const [wheel, setWheel] = useState(0);
+  // The pitch wheel, -1..1, 0 at rest: where the hand has it (on screen or a MIDI keyboard's), on a synth with one.
+  const [bend, setBend] = useState(0);
   const [octave, setOctave] = useState(0);
   const [hold, setHold] = useState(false);
   const [engineError, setEngineError] = useState('');
@@ -1067,15 +1075,19 @@ function Synth({
   }, [engine]);
 
   // The voice's settings for a set of panel values: the panel's own, or (mod lanes) with a lane's values in them.
-  // `at` is the mod wheel the settings are for: the hand's, or a lane's (`performance.ts`).
+  // `at` and `b` are the mod and pitch wheels the settings are for: the hand's, or a lane's (`performance.ts`).
   const engineParams = useCallback(
-    (values: ControlValues, at: number = wheel) => {
-      const p = synthDef.toEngine(values, { wheel: at, patched: patchedJacks(sess.cables) });
+    (values: ControlValues, at: number = wheel, b: number = bend) => {
+      const p = synthDef.toEngine(values, {
+        wheel: at,
+        bend: b,
+        patched: patchedJacks(sess.cables),
+      });
       p.cables = cablesToEngine(synthDef, sess.cables, values);
       p.wheel = at;
       return p;
     },
-    [synthDef, sess.cables, wheel]
+    [synthDef, sess.cables, wheel, bend]
   );
 
   // The error is set only when it changes: this runs on every frame of a glide, and setting state each time (even to
@@ -1272,10 +1284,17 @@ function Synth({
   const wheelIn = useCallback((v: number) => {
     if (!wheelLaneSending.current) setWheel(v);
   }, []);
+  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's.
+  const [bendLaneOn, setBendLaneOn] = useState(false);
+  const bendLaneSending = useRef(false);
+  const bendIn = useCallback((v: number) => {
+    if (!bendLaneSending.current) setBend(v);
+  }, []);
   const midi = useMidi({
     noteOn,
     noteOff,
     onWheel: wheelIn,
+    onBend: bendIn,
     remember: rememberMidi,
     load: loadMidi,
   });
@@ -1287,6 +1306,14 @@ function Synth({
   // A MIDI clock the sequencer follows (`f-midi-hardware-lead` t-91): an input of the same grant.
   const clockIn = useClockIn({ midi, engine });
   const following = clockIn.clock.following;
+  // The wheels MIDI out sends for the lanes that play them (`f-performance-wheels`): the hand's, and whether a lane does.
+  const midiWheels = useMemo(
+    () => ({
+      [WHEEL]: { hand: wheel, lane: wheelLaneOn },
+      [BEND]: { hand: bend, lane: bendLaneOn },
+    }),
+    [wheel, wheelLaneOn, bend, bendLaneOn]
+  );
   // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant. No clock out while one is followed.
   const midiOut = useMidiOut({
     midi,
@@ -1295,7 +1322,7 @@ function Synth({
     def: synthDef,
     following,
     silent: loading,
-    wheel: { hand: wheel, lane: wheelLaneOn },
+    wheels: midiWheels,
   });
 
   // SynthDef `tempo` names the control that sets the riff's BPM (the TB-303's TEMPO knob, or the Subharmonicon's through
@@ -1319,8 +1346,8 @@ function Synth({
         try {
           mode ??= voiceMode(engineParams(sess.values));
           // A performance wheel's lane plays the wheel, not a panel control (`f-performance-wheels`).
-          const { values: lane, wheel: at } = splitPerformance(synthDef, set);
-          const p = engineParams({ ...sess.values, ...lane }, at);
+          const { values: lane, wheel: at, bend: b } = splitPerformance(synthDef, set);
+          const p = engineParams({ ...sess.values, ...lane }, at, b);
           return voiceMode(p) === mode ? p : null;
         } catch {
           return null; // the panel already reports the error
@@ -1343,6 +1370,9 @@ function Synth({
   const { modShown } = seq;
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
   const wheelShown = shownWheel(modShown) ?? wheel;
+  // And the pitch wheel, on a synth that has one.
+  const bendShown = shownBend(modShown) ?? bend;
+  const bendRange = synthDef.performance?.bend?.range ?? null;
   // Where the wheel sends modulation (`wheelReach`), from the panel as it plays: said under the wheel and, while it is
   // up, shown on the panel.
   const reach = useMemo(() => {
@@ -1381,7 +1411,10 @@ function Synth({
     [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheelShown, engine]
   );
   // The panel's values with the hand's wheel, for the mod lanes: what a wheel lane's step left alone plays.
-  const lanePanel = useMemo(() => ({ ...sess.values, [WHEEL]: wheel }), [sess.values, wheel]);
+  const lanePanel = useMemo(
+    () => ({ ...sess.values, [WHEEL]: wheel, [BEND]: bend }),
+    [sess.values, wheel, bend]
+  );
   // Only on a synth with a wheel: elsewhere the lane is kept and silent, and sends nothing to be echoed.
   const seqWheelLane =
     (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
@@ -1391,6 +1424,21 @@ function Synth({
   useEffect(() => {
     wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
   }, [seqWheelLane, midiOut.sending, seq.playing]);
+  // The pitch wheel's lane, likewise.
+  const seqBendLane = (seq.pattern.lanes?.includes(BEND) ?? false) && bendRange !== null;
+  useEffect(() => setBendLaneOn(seqBendLane), [seqBendLane]);
+  const bendLanePlaying = seqBendLane && seq.playing;
+  useEffect(() => {
+    bendLaneSending.current = seqBendLane && midiOut.sending && seq.playing;
+  }, [seqBendLane, midiOut.sending, seq.playing]);
+  // The pitch wheel beside the keys, on a synth that declares one.
+  const pitchWheel = useMemo(
+    () =>
+      bendRange === null
+        ? null
+        : { value: bendShown, onChange: setBend, range: bendRange, lane: bendLanePlaying },
+    [bendRange, bendShown, bendLanePlaying]
+  );
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;
@@ -1824,7 +1872,7 @@ function Synth({
   const seqProps = {
     seq,
     def: synthDef,
-    // The hand's wheel with the panel's values: what a wheel lane's step left alone plays (`performance.ts`).
+    // The hand's wheels with the panel's values: what a wheel lane's step left alone plays (`performance.ts`).
     panel: lanePanel,
     playing: transportPlaying,
     onPlay: () => void playPattern(),
@@ -3520,6 +3568,7 @@ function Synth({
                     onWheel={setWheel}
                     wheelSays={wheelSaid}
                     wheelLane={wheelLanePlaying}
+                    bend={pitchWheel}
                     hold={hold}
                     onHold={setHoldMode}
                     noteOn={noteOn}
@@ -3712,6 +3761,7 @@ function Synth({
         wheel={wheelShown}
         wheelSays={wheelSaid}
         wheelLane={wheelLanePlaying}
+        bend={pitchWheel}
         onWheel={setWheel}
         octave={octave}
         onOctave={setOctave}

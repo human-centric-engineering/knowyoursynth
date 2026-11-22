@@ -39,6 +39,7 @@
  * value in effect on each CC, now.
  * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to. A
  * performance wheel's lane is the exception (`CcLookup.rest`): the wheel goes back to the hand's, once a lane moved it.
+ * The pitch wheel's lane rides the same path as pitch bend (`PITCH_BEND`), turned into its bytes as it goes out.
  *
  * With a program set (`setProgram`, `f-midi-hardware-lead` t-92), a run from the top first calls up that patch: Bank
  * Select (CC 0, then CC 32, each only if given), then Program Change, now. A synth takes a moment to load a patch, so
@@ -52,7 +53,7 @@
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
 import type { ControlValues, PhraseNote } from '@/lib/app/synths/contract';
-import type { CcLookup } from '@/lib/app/midi/cc';
+import { ccMessage, type CcLookup } from '@/lib/app/midi/cc';
 import { DEFAULT_VELOCITY } from '@/lib/app/synths/audio/note-events';
 import {
   playable,
@@ -340,7 +341,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       for (const [cc, v] of ccs?.rest?.() ?? []) {
         const sent = ccSent.get(cc);
         if (sent !== undefined && sent !== v)
-          out([0xb0 | channel, cc, v], Math.max(now, ccAt.get(cc) ?? now));
+          out(ccMessage(channel, cc, v), Math.max(now, ccAt.get(cc) ?? now));
       }
     ccSent.clear();
     offs.length = 0;
@@ -579,11 +580,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     // Not while a patch loads, which would set it back.
     const at = Math.max(when, holdUntil);
     ccSent.set(cc, v);
-    out([0xb0 | channel, cc, v], at);
+    out(ccMessage(channel, cc, v), at);
     // A value handed over for later on this CC (before an edit, or a silence) can't be taken back: this one goes again
     // at that time too, after it, so the hardware ends on this one. Changes come in time order, so the latest wins.
     const queued = ccAt.get(cc);
-    if (queued !== undefined && queued > at) out([0xb0 | channel, cc, v], queued);
+    if (queued !== undefined && queued > at) out(ccMessage(channel, cc, v), queued);
     else ccAt.set(cc, at);
   }
 

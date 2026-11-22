@@ -43,7 +43,7 @@ import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
 import { createMidiScheduler, type MidiProgram } from '@/lib/app/midi/scheduler';
-import { ccLookup, validLaneCc, type LaneCcs } from '@/lib/app/midi/cc';
+import { ccLookup, validLaneCc, type LaneCcs, type LaneHand } from '@/lib/app/midi/cc';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { playable } from '@/lib/app/synths/audio/pattern-player';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
@@ -141,7 +141,7 @@ export function useMidiOut({
   def = null,
   following = false,
   silent = false,
-  wheel,
+  wheels,
 }: {
   midi: Pick<Midi, 'status' | 'outputs' | 'output'>;
   engine: MidiOutEngine | null;
@@ -154,11 +154,12 @@ export function useMidiOut({
   /** A new patch is loading: no notes are sent, here or to the synth. */
   silent?: boolean;
   /**
-   * The hand's mod wheel, 0..1, and whether the pattern has a wheel lane (`f-performance-wheels`): what a step the lane
-   * leaves alone, and the end of the run, send on the wheel's CC. Read as each is sent, so moving either sends no CC
-   * again. Left out, no wheel is sent.
+   * Per performance wheel, by its lane id (`@wheel`, `@bend`, `f-performance-wheels`): where the hand has it, and
+   * whether the pattern has its lane. What a step the lane leaves alone, and the end of the run, send for it: the mod
+   * wheel on its CC, the pitch wheel as pitch bend. Read as each is sent, so moving either sends nothing again. A wheel
+   * left out is not sent.
    */
-  wheel?: { hand: number; lane: boolean };
+  wheels?: Readonly<Record<string, { hand: number; lane: boolean }>>;
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -183,14 +184,14 @@ export function useMidiOut({
   const [allCcs, setAllCcs] = useStoredPref(STORAGE_KEYS.midiCc, MidiCcSchema, NO_CCS);
   const synthId = def?.id ?? null;
   const ccs = (synthId !== null && allCcs[synthId]) || NO_LANE_CCS;
-  const wheelAt = useRef(wheel);
+  const wheelsAt = useRef(wheels);
   useEffect(() => {
-    wheelAt.current = wheel;
-  }, [wheel]);
-  const hand = useMemo(
+    wheelsAt.current = wheels;
+  }, [wheels]);
+  const hand = useMemo<LaneHand>(
     () => ({
-      on: () => wheelAt.current?.lane ?? false,
-      wheel: () => wheelAt.current?.hand ?? 0,
+      on: (id) => wheelsAt.current?.[id]?.lane ?? false,
+      at: (id) => wheelsAt.current?.[id]?.hand ?? 0,
     }),
     []
   );
