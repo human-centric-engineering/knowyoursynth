@@ -9,6 +9,7 @@ import modelD from '@/lib/app/synths/defs/model-d';
 import { phraseOf } from '@/lib/app/patterns/library';
 import {
   buildPattern,
+  buildSong,
   cells,
   checkHands,
   moves,
@@ -130,6 +131,30 @@ describe('buildPattern', () => {
       { notes: A, lanes: {} },
     ];
     expect(() => buildPattern(modelD, none)).toThrow(/one or two controls/);
+  });
+});
+
+describe('buildSong (t-304)', () => {
+  const plain = { notes: A, lanes: {} };
+  const b = { notes: 'D3 . . . | . . . G2', lanes: {} };
+
+  it('needs no lanes, carries the effects it brings, and still chains two parts', () => {
+    const fx = { delay: { time: 0.3, feedback: 0.3, mix: 0.2 } };
+    const p = buildSong(modelD, { ...spec(), parts: [plain, b], fx });
+    expect(p.lanes).toBeUndefined();
+    expect(p.fx).toEqual(fx);
+    expect(p.chain).toEqual([0, 1]);
+    expect(() => buildPattern(modelD, spec({ parts: [plain, b] }))).toThrow(/one or two controls/);
+  });
+
+  it('keeps a part A given as steps exactly, so the sound it is built on keeps its riff', () => {
+    const from = buildSong(modelD, { ...spec(), parts: [plain, plain] });
+    const p = buildSong(modelD, { ...spec(), parts: [{ steps: from.parts[0].steps }, b] });
+    expect(p.parts[0]).toEqual(from.parts[0]);
+    expect(phraseOf(p)).toEqual(phraseOf(from));
+    expect(() =>
+      buildSong(modelD, { ...spec(), parts: [{ steps: from.parts[0].steps.slice(1) }, b] })
+    ).toThrow(/part A has 7 steps/);
   });
 });
 

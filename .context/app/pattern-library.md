@@ -1370,6 +1370,28 @@ sound, is that sound's default in `pattern-defaults.json`, and is _In the style 
   (`checkHands`), and the batch test runs the same check (`handProblems`) over every composed batch. The limits, and
   the design of a set for any synth, are [`lane-sounds.md`](./lane-sounds.md).
 
+#### Composed batches: livelier songs for sounds already in the library
+
+`f-livelier-patterns` t-304. `t304-model-d-livelier-songs.json` gives 38 Model D sounds whose default was a one- or
+two-bar loop a new default song: two parts, chained, at most eight bars played (owner ruling, 2026-11-22: rework the
+boring and predictable patterns, not every one). Written by `scripts/app/sounds/model-d/write-livelier-songs.ts` from
+`livelier-songs.ts`, with the lane-sound kit (`buildSong`, `lane-kit.ts`).
+
+- **32 composed songs** replace a sound's own riff. Each is _In the style of_ a genre chosen for the drums' Match as
+  much as the credit, and the sound’s riff in the library file becomes the song’s first loop. Eleven ride one
+  control on a mod lane, a slow `wave` the same low point in both parts so the seams join, held to the hand rule
+  (`lane-sounds.md`) and on a control one of the sound's tweaks names.
+- **6 songs on transcriptions** (Thriller, Flash Light, Autobahn, Chameleon, Are 'Friends' Electric?, When Doves Cry)
+  keep the transcription's part A note for note, so the sound's riff does not move, and add a part B written for the
+  sound; the research record says which part is not from the record. They keep the transcription's Inspired by. The
+  transcription stays on the sound's list behind it, and no other synth's sound moves.
+- **20 bring effects** (`fx` on the pattern, [sequencer.md](./sequencer.md#the-effects-a-pattern-brings)): mostly
+  leads and winds with a room or an echo, a dub delay on the reggae lead, drive on the industrial bass.
+- **What it changes elsewhere.** Each is its sound's default in `pattern-defaults.json`, replacing the entry it had,
+  and a sound the file had ruled keeps its own riff loses that ruling (it is decided once). The batch test holds it as
+  a composed batch with lanes optional (`lanesOptional`), and leaves it out of the one-batch-a-sound rule, since it
+  names sounds other batches already looked at. The 32 riffs that moved were re-recorded in the check baseline.
+
 ### The API
 
 Public, no session needed, in `lib/app/patterns/library-read.ts`. A pattern is served only when it is on a sound of

@@ -514,7 +514,12 @@ describe('the research batches', () => {
    * sounds are credited to a genre that sounds on other synths share, so an artist roster cannot hold them: each is
    * checked below, pattern by sound, instead.
    */
-  const composed = ['t-301'];
+  const composed = ['t-301', 't-304'];
+  /**
+   * The composed batches whose songs need no lanes (`f-livelier-patterns` t-304): new songs for sounds already in the
+   * library, which chain two parts and move a control only where the song is better for it.
+   */
+  const lanesOptional = ['t-304'];
 
   it('has a roster for every researched batch, so none goes unchecked below', () => {
     expect(
@@ -536,11 +541,12 @@ describe('the research batches', () => {
         expect(p.sounds, p.key).toHaveLength(1);
         expect(defaults.get(p.sounds[0]), p.key).toBe(p.key);
         const pattern = PatternSchema.parse(p.pattern);
-        expect(pattern.lanes?.length, p.key).toBeGreaterThan(0);
+        if (!lanesOptional.includes(b.task))
+          expect(pattern.lanes?.length, p.key).toBeGreaterThan(0);
         expect(new Set(pattern.chain).size, p.key).toBe(2);
         // Every lane moves its control somewhere in the song, and names one of the sound's tweaks.
         const tweaks = sounds.get(p.sounds[0])!.tweaks.map((t) => t.id);
-        for (const id of pattern.lanes!) {
+        for (const id of pattern.lanes ?? []) {
           const values = pattern.parts.flatMap((part) => part.steps.map((st) => st.mod?.[id]));
           expect(
             new Set(values.filter((v) => v !== undefined)).size,
@@ -560,9 +566,13 @@ describe('the research batches', () => {
   });
 
   it('places each sound in one batch at most', () => {
-    const named = batches.flatMap((b) => [
-      ...new Set([...b.patterns.flatMap((p) => p.sounds), ...b.notRecreated.map((n) => n.sound)]),
-    ]);
+    // A composed batch that writes new songs for sounds already in the library (t-304) names sounds another batch
+    // already looked at: it is no roster, so it is left out here, and its own test below holds it to one song a sound.
+    const named = batches
+      .filter((b) => !lanesOptional.includes(b.task))
+      .flatMap((b) => [
+        ...new Set([...b.patterns.flatMap((p) => p.sounds), ...b.notRecreated.map((n) => n.sound)]),
+      ]);
     expect(named.filter((s, i) => named.indexOf(s) !== i)).toEqual([]);
   });
 
