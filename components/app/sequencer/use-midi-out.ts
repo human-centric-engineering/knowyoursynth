@@ -37,7 +37,7 @@
  * on), and the page going.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-midi';
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
@@ -141,7 +141,7 @@ export function useMidiOut({
   def = null,
   following = false,
   silent = false,
-  wheel = null,
+  wheel,
 }: {
   midi: Pick<Midi, 'status' | 'outputs' | 'output'>;
   engine: MidiOutEngine | null;
@@ -154,10 +154,11 @@ export function useMidiOut({
   /** A new patch is loading: no notes are sent, here or to the synth. */
   silent?: boolean;
   /**
-   * The hand's mod wheel, 0..1, while the pattern has a wheel lane (`f-performance-wheels`): what a step the lane
-   * leaves alone, and the end of the run, send on the wheel's CC. `null`: no wheel lane, so none is sent.
+   * The hand's mod wheel, 0..1, and whether the pattern has a wheel lane (`f-performance-wheels`): what a step the lane
+   * leaves alone, and the end of the run, send on the wheel's CC. Read as each is sent, so moving either sends no CC
+   * again. Left out, no wheel is sent.
    */
-  wheel?: number | null;
+  wheel?: { hand: number; lane: boolean };
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -182,10 +183,18 @@ export function useMidiOut({
   const [allCcs, setAllCcs] = useStoredPref(STORAGE_KEYS.midiCc, MidiCcSchema, NO_CCS);
   const synthId = def?.id ?? null;
   const ccs = (synthId !== null && allCcs[synthId]) || NO_LANE_CCS;
-  useEffect(
-    () => s.setCcs(def ? ccLookup(def, ccs, wheel === null ? null : { wheel }) : null),
-    [s, def, ccs, wheel]
+  const wheelAt = useRef(wheel);
+  useEffect(() => {
+    wheelAt.current = wheel;
+  }, [wheel]);
+  const hand = useMemo(
+    () => ({
+      on: () => wheelAt.current?.lane ?? false,
+      wheel: () => wheelAt.current?.hand ?? 0,
+    }),
+    []
   );
+  useEffect(() => s.setCcs(def ? ccLookup(def, ccs, hand) : null), [s, def, ccs, hand]);
   const setCc = useCallback(
     (id: string, cc: number | null) => {
       if (synthId === null || (cc !== null && !validLaneCc(cc))) return;

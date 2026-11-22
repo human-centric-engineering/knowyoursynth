@@ -775,14 +775,18 @@ describe('a performance wheel’s lane (f-performance-wheels)', () => {
     expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
   });
 
-  it('keeps the wheel’s CC off another lane’s choices, and shows a lane given it as having none', () => {
-    render(<Harness def={DEF_WHEEL} midiOut={out({ cutoff: 1 })} />);
+  it('keeps the wheel’s CC off another lane’s choices, and a lane given it before can still be cleared', () => {
+    const midi = out({ cutoff: 1 });
+    render(<Harness def={DEF_WHEEL} midiOut={midi} />);
     addCutoff();
     const cc = screen.getByRole('combobox', { name: 'CC' });
-    expect(cc.textContent).toContain('No CC');
+    expect(cc.textContent).toContain('CC 1 (the wheel’s)');
     expect(screen.getByText('Not sent: CC 1 is the Mod wheel’s. Choose another.')).toBeTruthy();
     fireEvent.click(cc);
-    expect(screen.queryByRole('option', { name: 'CC 1' })).toBeNull();
     expect(screen.getByRole('option', { name: 'CC 2' })).toBeTruthy();
+    // CC 1 is offered only as the value it had, not as one plain choice among the rest.
+    expect(screen.queryByRole('option', { name: 'CC 1' })).toBeNull();
+    fireEvent.click(screen.getByRole('option', { name: 'No CC' }));
+    expect(midi.setCc).toHaveBeenLastCalledWith('cutoff', null);
   });
 });

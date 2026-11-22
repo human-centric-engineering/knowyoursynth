@@ -312,8 +312,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     offs.length = 0;
   }
 
-  /** Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. */
-  function release(keepClock = false) {
+  /**
+   * Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. `rest`: the run
+   * ends here, so a wheel a lane moved goes back to the hand's; not on a silence.
+   */
+  function release(keepClock = false, rest = true) {
     const now = clock.now();
     freeAt.forEach((at, n) => {
       if (at <= now) freeAt.delete(n);
@@ -333,8 +336,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     lagOf.clear();
     // A wheel a lane moved goes back to the hand's (`CcLookup.rest`): now, or after a value already handed over for
     // later on it, so the hardware ends on the hand's.
-    if (port)
-      for (const [cc, v] of ccs?.rest ?? []) {
+    if (port && rest)
+      for (const [cc, v] of ccs?.rest?.() ?? []) {
         const sent = ccSent.get(cc);
         if (sent !== undefined && sent !== v)
           out([0xb0 | channel, cc, v], Math.max(now, ccAt.get(cc) ?? now));
@@ -684,7 +687,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const e = endG;
     // A Start not sent yet keeps its place; one whose beat has passed by the next pump waits for the next loop.
     const sg = started ? null : startG;
-    release(keepClock);
+    // The run goes on, so the wheel stays where the lane has it.
+    release(keepClock, false);
     // The run goes on from what is heard when next pumped. The clock starts again at the next loop.
     cur = run;
     next = n;

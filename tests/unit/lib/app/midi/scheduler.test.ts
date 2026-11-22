@@ -1410,7 +1410,7 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     (set: Record<string, unknown>): [number, number][] => [
       [1, typeof set.w === 'number' ? set.w : 20],
     ],
-    { rest: [[1, 20]] as [number, number][] }
+    { rest: (): [number, number][] => [[1, 20]] }
   );
   const cc1 = (sent: Sent[]) =>
     sent.filter(([, d]) => (d[0] & 0xf0) === 0xb0 && d[1] === 1).map(([at, d]) => [at, d[2]]);
@@ -1452,6 +1452,15 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     const before = cc1(u.sent).length;
     u.s.message({ type: 'stopPattern' });
     expect(cc1(u.sent)).toHaveLength(before);
+  });
+
+  it('leaves the wheel where the lane has it through a silence mid-run', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.silence();
+    expect(cc1(t.sent).map(([, v]) => v)).not.toContain(20);
   });
 });
 

@@ -494,11 +494,16 @@ function Lane({
             label="CC"
             help="The MIDI CC this lane is sent to the hardware as, its values across the control's travel as 0–127. Find the number in the synth's MIDI chart. Kept in this browser, for this synth, not with the pattern."
             value={
-              ccGiven === undefined || !ccOptions.some(([v]) => v === String(ccGiven))
+              ccGiven === undefined || (!ccWheel && !ccOptions.some(([v]) => v === String(ccGiven)))
                 ? ''
                 : String(ccGiven)
             }
-            options={ccOptions}
+            // A CC kept from before the wheel had it is shown as it is, so No CC can still take it off.
+            options={
+              ccWheel
+                ? [...ccOptions, [String(ccWheel.cc), `CC ${ccWheel.cc} (the wheel’s)`]]
+                : ccOptions
+            }
             onChange={(v) => cc.set(id, v === '' ? null : Number(v))}
           />
         ) : null}

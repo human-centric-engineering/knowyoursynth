@@ -100,27 +100,32 @@ describe('ccLookup', () => {
 
 describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
   const modelD = getSynthDef('model-d')!;
+  const hand = (wheel: number, on = true) => ({ on: () => on, wheel: () => wheel });
 
   it('sends a wheel lane as the CC the synth declares, with nothing assigned', () => {
-    const look = ccLookup(modelD, {}, { wheel: 0 })!;
+    const look = ccLookup(modelD, {}, hand(0))!;
     expect(look({ '@wheel': 1 })).toEqual([[1, 127]]);
     expect(look({ '@wheel': 0.5 })).toEqual([[1, 64]]);
   });
 
   it('sends the hand’s wheel on a step the lane leaves alone, and goes back to it when the run ends', () => {
-    const look = ccLookup(modelD, {}, { wheel: 0.5 })!;
+    const look = ccLookup(modelD, {}, hand(0.5))!;
     expect(look({})).toEqual([[1, 64]]);
-    expect(look.rest).toEqual([[1, 64]]);
+    expect(look.rest?.()).toEqual([[1, 64]]);
   });
 
   it('sends no wheel while the pattern has no wheel lane, and keeps its CC off other lanes even so', () => {
     expect(ccLookup(modelD, {})).toBeNull();
+    // Read as each change goes: the lane taken off sends no wheel, but the run's end still puts it back.
+    const off = ccLookup(modelD, {}, hand(0.5, false))!;
+    expect(off({ '@wheel': 1 })).toEqual([]);
+    expect(off.rest?.()).toEqual([[1, 64]]);
     expect(ccLookup(modelD, { 'filter.cutoff': 1 })).toBeNull();
     expect(ccLookup(modelD, { 'filter.cutoff': 74 })?.rest).toBeUndefined();
   });
 
   it('keeps the wheel’s CC for the wheel: another lane given it is not sent on it too', () => {
-    const look = ccLookup(modelD, { 'filter.cutoff': 1, '@wheel': 20 }, { wheel: 0 })!;
+    const look = ccLookup(modelD, { 'filter.cutoff': 1, '@wheel': 20 }, hand(0))!;
     expect(look({ '@wheel': 0, 'filter.cutoff': 10 })).toEqual([[1, 0]]);
   });
 

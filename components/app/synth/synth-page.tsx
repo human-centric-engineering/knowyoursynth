@@ -1295,7 +1295,7 @@ function Synth({
     def: synthDef,
     following,
     silent: loading,
-    wheel: wheelLaneOn ? wheel : null,
+    wheel: { hand: wheel, lane: wheelLaneOn },
   });
 
   // SynthDef `tempo` names the control that sets the riff's BPM (the TB-303's TEMPO knob, or the Subharmonicon's through
@@ -1362,7 +1362,9 @@ function Synth({
   );
   // The panel's values with the hand's wheel, for the mod lanes: what a wheel lane's step left alone plays.
   const lanePanel = useMemo(() => ({ ...sess.values, [WHEEL]: wheel }), [sess.values, wheel]);
-  const seqWheelLane = seq.pattern.lanes?.includes(WHEEL) ?? false;
+  // Only on a synth with a wheel: elsewhere the lane is kept and silent, and sends nothing to be echoed.
+  const seqWheelLane =
+    (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
   useEffect(() => setWheelLaneOn(seqWheelLane), [seqWheelLane]);
   useEffect(() => {
     wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
