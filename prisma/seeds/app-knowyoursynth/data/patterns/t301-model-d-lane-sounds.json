@@ -1705,7 +1705,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "accent": true,
@@ -1769,7 +1769,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -1790,7 +1790,7 @@
                 "notes": [
                   {
                     "note": 48,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "slide": true,
@@ -1859,7 +1859,7 @@
                 "notes": [
                   {
                     "note": 53,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -1885,7 +1885,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "accent": true,
@@ -2013,7 +2013,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -2034,7 +2034,7 @@
                 "notes": [
                   {
                     "note": 41,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -2064,7 +2064,7 @@
                 "notes": [
                   {
                     "note": 48,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "accent": true,
@@ -2128,7 +2128,7 @@
                 "notes": [
                   {
                     "note": 51,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -2149,7 +2149,7 @@
                 "notes": [
                   {
                     "note": 53,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "slide": true,
@@ -2218,7 +2218,7 @@
                 "notes": [
                   {
                     "note": 58,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -2244,7 +2244,7 @@
                 "notes": [
                   {
                     "note": 41,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "accent": true,
@@ -2330,7 +2330,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -2351,7 +2351,7 @@
                 "notes": [
                   {
                     "note": 47,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "slide": true,
@@ -2378,7 +2378,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -2399,7 +2399,7 @@
                 "notes": [
                   {
                     "note": 41,
-                    "gate": 1
+                    "gate": 1.12
                   }
                 ],
                 "mod": {
@@ -9863,13 +9863,13 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "accent": true,
                 "mod": {
                   "ctl.glide": 0,
-                  "filter.contour": 7
+                  "filter.contour": 6
                 }
               },
               {
@@ -9917,7 +9917,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -9938,7 +9938,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "slide": true,
@@ -9981,7 +9981,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -10039,13 +10039,13 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "accent": true,
                 "mod": {
                   "ctl.glide": 0,
-                  "filter.contour": 7
+                  "filter.contour": 6
                 }
               },
               {
@@ -10077,7 +10077,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -10119,7 +10119,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "slide": true,
@@ -10167,7 +10167,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -10192,13 +10192,13 @@
                 "notes": [
                   {
                     "note": 39,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "accent": true,
                 "mod": {
                   "ctl.glide": 0,
-                  "filter.contour": 7
+                  "filter.contour": 6
                 }
               },
               {
@@ -10246,7 +10246,7 @@
                 "notes": [
                   {
                     "note": 51,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -10267,7 +10267,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "slide": true,
@@ -10285,7 +10285,7 @@
                   }
                 ],
                 "mod": {
-                  "ctl.glide": 3,
+                  "ctl.glide": 2.5,
                   "filter.contour": 3.5
                 }
               },
@@ -10310,7 +10310,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -10368,13 +10368,13 @@
                 "notes": [
                   {
                     "note": 41,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "accent": true,
                 "mod": {
                   "ctl.glide": 0,
-                  "filter.contour": 7
+                  "filter.contour": 6
                 }
               },
               {
@@ -10406,7 +10406,7 @@
                 "notes": [
                   {
                     "note": 53,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -10448,7 +10448,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "slide": true,
@@ -10466,7 +10466,7 @@
                   }
                 ],
                 "mod": {
-                  "ctl.glide": 3,
+                  "ctl.glide": 2.5,
                   "filter.contour": 3.5
                 }
               },
@@ -10496,7 +10496,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 1
+                    "gate": 1.24
                   }
                 ],
                 "mod": {
@@ -15019,7 +15019,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15077,7 +15077,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15182,7 +15182,7 @@
                 "notes": [
                   {
                     "note": 74,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15224,7 +15224,7 @@
                 "notes": [
                   {
                     "note": 69,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15344,7 +15344,7 @@
                 "notes": [
                   {
                     "note": 79,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15402,7 +15402,7 @@
                 "notes": [
                   {
                     "note": 79,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15507,7 +15507,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -15549,7 +15549,7 @@
                 "notes": [
                   {
                     "note": 67,
-                    "gate": 1
+                    "gate": 1.28
                   }
                 ],
                 "mod": {
@@ -16452,7 +16452,7 @@
                 "notes": [
                   {
                     "note": 36,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "accent": true,
@@ -16474,7 +16474,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16495,7 +16495,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16516,7 +16516,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16563,7 +16563,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16584,7 +16584,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16605,7 +16605,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16626,7 +16626,7 @@
                 "notes": [
                   {
                     "note": 36,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "accent": true,
@@ -16648,7 +16648,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16674,7 +16674,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16695,7 +16695,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16737,7 +16737,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16758,7 +16758,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16779,7 +16779,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16809,7 +16809,7 @@
                 "notes": [
                   {
                     "note": 36,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "accent": true,
@@ -16831,7 +16831,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16857,7 +16857,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16878,7 +16878,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16899,7 +16899,7 @@
                 "notes": [
                   {
                     "note": 36,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16920,7 +16920,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16946,7 +16946,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16967,7 +16967,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -16993,7 +16993,7 @@
                 "notes": [
                   {
                     "note": 36,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "accent": true,
@@ -17020,7 +17020,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -17046,7 +17046,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -17067,7 +17067,7 @@
                 "notes": [
                   {
                     "note": 72,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -17088,7 +17088,7 @@
                 "notes": [
                   {
                     "note": 36,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "mod": {
@@ -17109,7 +17109,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "ratchet": 2,
@@ -17131,7 +17131,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "ratchet": 3,
@@ -17153,7 +17153,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 1
+                    "gate": 1.08
                   }
                 ],
                 "ratchet": 4,
@@ -18522,7 +18522,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 3
+                    "gate": 3.2
                   }
                 ],
                 "mod": {
@@ -18654,7 +18654,7 @@
                 "notes": [
                   {
                     "note": 48,
-                    "gate": 1
+                    "gate": 1.2
                   }
                 ],
                 "mod": {
@@ -18675,7 +18675,7 @@
                 "notes": [
                   {
                     "note": 50,
-                    "gate": 3
+                    "gate": 3.2
                   }
                 ],
                 "mod": {
@@ -18728,7 +18728,7 @@
                 "notes": [
                   {
                     "note": 53,
-                    "gate": 1
+                    "gate": 1.2
                   }
                 ],
                 "mod": {
@@ -18770,7 +18770,7 @@
                 "notes": [
                   {
                     "note": 53,
-                    "gate": 1
+                    "gate": 1.2
                   }
                 ],
                 "slide": true,
@@ -18838,7 +18838,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 3
+                    "gate": 3.2
                   }
                 ],
                 "mod": {
@@ -18970,7 +18970,7 @@
                 "notes": [
                   {
                     "note": 45,
-                    "gate": 1
+                    "gate": 1.2
                   }
                 ],
                 "mod": {
@@ -18991,7 +18991,7 @@
                 "notes": [
                   {
                     "note": 43,
-                    "gate": 3
+                    "gate": 3.2
                   }
                 ],
                 "mod": {
@@ -19044,7 +19044,7 @@
                 "notes": [
                   {
                     "note": 46,
-                    "gate": 1
+                    "gate": 1.2
                   }
                 ],
                 "mod": {
@@ -19086,7 +19086,7 @@
                 "notes": [
                   {
                     "note": 48,
-                    "gate": 1
+                    "gate": 1.2
                   }
                 ],
                 "slide": true,

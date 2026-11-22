@@ -728,8 +728,8 @@ export function PatternForm({ pattern, choices }: PatternFormProps) {
             <p className="mt-2">
               A pattern that is a patch&apos;s default gives that patch its riff, its first loop, so
               that loop must play the same every time: forward or reverse, no chance or conditions,
-              and no rests after part A&apos;s last note. A part B and mod lanes are fine: Play
-              plays the whole pattern.
+              and no rests after the last note of the first part it plays. A second part and mod
+              lanes are fine: Play plays the whole pattern.
             </p>
           </FieldHelp>
         </h2>

@@ -35,7 +35,7 @@ Owner ruling, 2026-11-21 ("loose": a quick, practised player). In `HAND_LIMITS`,
 | A wobble that is no turn     | 3% of travel          | A steady hand's unsteadiness                                     |
 
 The model is **one hand per lane, with the sequencer playing the notes**: two lanes are two hands, so a lane sound
-has at most two. A knob's travel is how far it turns, so a log-taper knob is measured by ratio. The song is read as it
+has at most two. A knob's travel is how far it turns, so a log-taper knob is measured by ratio. Time is the song's own: swing starts every second step late, as the compiler plays a lane's change, so a move into a late step has longer and a move out of it less. A swung sound's jabs need to be smaller than the table below says. The song is read as it
 loops: the chain, then back to its start.
 
 The numbers to keep in your head, a sixteenth at the tempo:

@@ -1619,16 +1619,17 @@ export const LANE_SOUNDS: LaneSoundSpec[] = [
             'G2! . . . | . . G2 . | Bb2^ C3 . . | G2 . . F2 | . . G2! . | . . D3 . | . C3 Bb2^ A2 | . F2 G2 .',
           lanes: {
             'ctl.glide': (c) => (c.slidIn ? 2.5 : 0),
-            // A jab of the knob on the two accents, otherwise left where the panel has it.
-            'filter.contour': (c) => (c.accent ? 7 : 3.5),
+            // A jab of the knob on the two accents, otherwise left where the panel has it. Small enough to make in the
+            // shortened gap a swung step leaves.
+            'filter.contour': (c) => (c.accent ? 6 : 3.5),
           },
         },
         {
           notes:
             'Eb2! . . . | . . Eb3 . | D3^ C3 . . | Bb2 . . G2 | . . F2! . | . . F3 . | . Eb3 D3^ C3 | . A2 D3 .',
           lanes: {
-            'ctl.glide': (c) => (c.slidIn ? 3 : 0),
-            'filter.contour': (c) => (c.accent ? 7 : 3.5),
+            'ctl.glide': (c) => (c.slidIn ? 2.5 : 0),
+            'filter.contour': (c) => (c.accent ? 6 : 3.5),
           },
         },
       ],

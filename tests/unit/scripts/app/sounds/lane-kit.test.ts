@@ -84,16 +84,31 @@ describe('buildPattern', () => {
     expect(phraseOf(p).steps[0]).toEqual([0, 45, 0.25, 1]);
   });
 
-  it('ends a swung off-beat note on the grid', () => {
+  it('ends a swung note where the step after it starts, late or not', () => {
     const swung = spec({ swing: 62 });
     swung.parts[0] = { notes: 'A2! . A2:2 . | C3^ D3 E3:2 .', lanes: swung.parts[0].lanes };
     const p = buildPattern(modelD, swung);
+    // Starts late, ends on the grid: shorter by the push.
     expect(p.parts[0].steps[5].notes[0].gate).toBe(0.76);
+    // Starts on the grid, ends where a late step starts: longer by it, so no gap opens before that step.
+    expect(p.parts[0].steps[0].notes[0].gate).toBe(1.24);
     expect(p.parts[0].steps[2].notes[0].gate).toBe(2);
+    const late = spec({ swing: 62 });
+    late.parts[0] = { notes: '. A2:2 . A2 | . . . A2', lanes: late.parts[0].lanes };
+    // Starts late and ends late: as written.
+    expect(buildPattern(modelD, late).parts[0].steps[1].notes[0].gate).toBe(2);
+  });
+
+  it('checks a lane value as it is stored, rounded', () => {
+    // 5.004 rounds to CUTOFF's top, 5: kept, not refused as past it.
+    const edge = spec();
+    edge.parts[0] = { notes: A, lanes: { 'filter.cutoff': () => 5.004 } };
+    expect(buildPattern(modelD, edge).parts[0].steps[0].mod).toEqual({ 'filter.cutoff': 5 });
   });
 
   it('refuses what could not be the sound’s default, or a value its control cannot take', () => {
     expect(() => buildPattern(modelD, spec({ chain: [0, 0] }))).toThrow(/one part/);
+    expect(() => buildPattern(modelD, spec({ chain: [1, 0] }))).toThrow(/starts with part B/);
     const rests = spec();
     rests.parts[0] = { notes: 'A2 . . . | . . . .', lanes: rests.parts[0].lanes };
     expect(() => buildPattern(modelD, rests)).toThrow(/rests/);

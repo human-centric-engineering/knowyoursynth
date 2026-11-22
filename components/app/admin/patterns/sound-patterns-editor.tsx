@@ -79,8 +79,9 @@ export function SoundPatternsEditor({ sound }: SoundPatternsEditorProps) {
           <p className="mt-2">
             To demote a riff, make another pattern the default. Nothing is taken off a patch. A
             default&apos;s first loop must play the same every time, so a pattern with chance,
-            conditions, a direction other than forward or reverse, or rests after part A&apos;s last
-            note cannot be one. A part B and mod lanes are fine: Play plays the whole pattern.
+            conditions, a direction other than forward or reverse, or rests after the last note of
+            the first part it plays cannot be one. A second part and mod lanes are fine: Play plays
+            the whole pattern.
           </p>
         </FieldHelp>
       </h2>

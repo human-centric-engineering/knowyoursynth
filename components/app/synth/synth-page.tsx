@@ -1783,13 +1783,17 @@ function Synth({
     [riffNow, stopRiff]
   );
   // Not while a patch loads: then once it has, counted in.
+  // A played default whose read failed plays its riff meanwhile; each Play asks for it again, and once it arrives it
+  // is loaded in the riff's place, so the chain and lanes are never silently lost for good.
+  const retryPlayed = playedDefault && soundPatterns?.error ? soundPatterns.retry : null;
   const playRiff = useCallback(
     async (countIn = true) => {
       replayRiff.current = false;
+      retryPlayed?.();
       if (isLoading()) queue('riff', countIn);
       else await riffNow(undefined, countIn);
     },
-    [isLoading, queue, riffNow]
+    [isLoading, queue, riffNow, retryPlayed]
   );
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
   // sequencer, and the riff or pattern playing, which stops and plays again from its top, counted in, once the load ends

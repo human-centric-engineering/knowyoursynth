@@ -9,7 +9,8 @@
  *   turn: a hand holding a knob still is that unsteady anyway.
  * - **A switch or selector** may not change again within `flipS` of its last change.
  *
- * Travel is how far the knob turns, so a knob with a log taper is measured by ratio, as it is dragged.
+ * Travel is how far the knob turns, so a knob with a log taper is measured by ratio, as it is dragged. Time is the
+ * song's own: swing starts every second step late, so a move into a late step has longer and one out of it less.
  */
 import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/synths/contract';
 import { laneControl, laneValue } from '@/lib/app/sequencer/lanes';
@@ -57,24 +58,29 @@ export function handProblems(
   const stepS = 60 / pattern.bpm / stepsPerBeat(pattern);
   const song = pattern.chain.flatMap((k) => pattern.parts[k].steps);
   const n = song.length;
+  // When step `i` (counted on through later passes) plays, in seconds: swing starts every second step late, as the
+  // compiler plays a lane's change (`slotStart`), so a move into a late step has longer and one out of it less.
+  const push = pattern.swing / 50 - 1;
+  const time = (i: number) => (i + (i % 2 === 1 ? push : 0)) * stepS;
   const problems: string[] = [];
   for (const id of pattern.lanes ?? []) {
     const c = laneControl(def, id);
     if (!c) continue;
+    // A step the lane leaves alone plays at the panel's value, or the control's own where the panel has none.
     const at = (i: number): ControlValue | null =>
-      laneValue(c, song[i % n].mod?.[id]) ?? laneValue(c, panel[id]);
+      laneValue(c, song[i % n].mod?.[id]) ?? laneValue(c, panel[id] ?? c.def);
     if (c.kind === 'cont') {
       const pos = Array.from({ length: n }, (_, i) => {
         const v = at(i);
         return typeof v === 'number' ? travel(c, v) : 0;
       });
       // Speed: the move from each step to the next, the song's last back to its first.
-      const most = stepS / limits.sweepS;
       for (let i = 0; i < n; i++) {
         const d = Math.abs(pos[(i + 1) % n] - pos[i]);
-        if (d > most + 1e-9) {
+        const gap = time(i + 1) - time(i);
+        if (d > gap / limits.sweepS + 1e-9) {
           problems.push(
-            `${id}: moves ${Math.round(d * 100)}% of its travel into ${placeOf(pattern, i + 1)} in ${round(stepS)} s, a full sweep in ${round(stepS / d)} s (a hand's fastest is ${limits.sweepS} s)`
+            `${id}: moves ${Math.round(d * 100)}% of its travel into ${placeOf(pattern, i + 1)} in ${round(gap)} s, a full sweep in ${round(gap / d)} s (a hand's fastest is ${limits.sweepS} s)`
           );
           break;
         }
@@ -94,12 +100,12 @@ export function handProblems(
           [dir, peak] = [-dir, v];
         }
       }
-      const window = 1 / stepS;
       for (let k = 0; k < turns.length; k++) {
         if (turns[k] < n) continue;
         if (turns[k] >= 2 * n) break;
         let count = 0;
-        while (k + count < turns.length && turns[k + count] - turns[k] < window) count++;
+        while (k + count < turns.length && time(turns[k + count]) - time(turns[k]) < 1 - 1e-9)
+          count++;
         if (count > limits.turnsPerS) {
           problems.push(
             `${id}: turns back ${count} times in the second from ${placeOf(pattern, turns[k] % n)} (a hand turns at most ${limits.turnsPerS})`
@@ -111,13 +117,14 @@ export function handProblems(
       // A switch or selector: the steps where it changes, and the gap back to the last one.
       const changes: number[] = [];
       for (let i = 0; i < n; i++) if (at(i) !== at((i + n - 1) % n)) changes.push(i);
-      const least = limits.flipS / stepS;
       for (let k = 0; k < changes.length; k++) {
         const prev = changes[(k + changes.length - 1) % changes.length];
-        const gap = changes.length === 1 ? n : (changes[k] - prev + n) % n;
-        if (gap < least - 1e-9) {
+        // The last change before this one, a pass earlier where it is the song's first.
+        const from = prev < changes[k] ? prev : prev - n;
+        const gap = changes.length === 1 ? n * stepS : time(changes[k] + n) - time(from + n);
+        if (gap < limits.flipS - 1e-9) {
           problems.push(
-            `${id}: changes again at ${placeOf(pattern, changes[k])}, ${round(gap * stepS)} s after its last change (a hand needs ${limits.flipS} s)`
+            `${id}: changes again at ${placeOf(pattern, changes[k])}, ${round(gap)} s after its last change (a hand needs ${limits.flipS} s)`
           );
           break;
         }

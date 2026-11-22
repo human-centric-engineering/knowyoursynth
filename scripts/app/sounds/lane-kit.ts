@@ -162,9 +162,11 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
   if (ids.length < 1 || ids.length > 2)
     throw new Error(`${s.name}: a lane sound moves one or two controls, not ${ids.length}`);
   for (const id of ids) if (!laneControl(def, id)) throw new Error(`${s.name}: no lane for ${id}`);
-  // Swing starts every second step late; a note there keeps its end on the grid, so it never overlaps the next one.
+  // Swing starts every second step late. A note ends where the step after it starts, late or not, so it neither
+  // overlaps the next note nor leaves a gap before it: shorter when it starts late, longer when it ends late.
   const push = (s.swing ?? 50) / 50 - 1;
-  const gateOf = (c: Cell) => (c.i % 2 === 1 ? Math.round((c.gate - push) * 1000) / 1000 : c.gate);
+  const late = (i: number) => (i % 2 === 1 ? push : 0);
+  const gateOf = (c: Cell) => Math.round((c.gate + late(c.i + c.gate) - late(c.i)) * 1000) / 1000;
   const parts = s.parts.map((p) => ({
     steps: cells(p.notes, s.len).map((c): Step => {
       const step: Step = {
@@ -176,8 +178,10 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
       };
       const mod: Record<string, ControlValue> = {};
       for (const [id, lane] of Object.entries(p.lanes)) {
-        const v = lane(c);
-        if (v === null) continue;
+        const raw = lane(c);
+        if (raw === null) continue;
+        // Checked as it is stored, so a value rounded past an end of its knob is caught.
+        const v = round(raw);
         const control = laneControl(def, id)!;
         if (laneValue(control, v) === null)
           throw new Error(`${s.name}: ${id} cannot take ${String(v)} (step ${c.i + 1})`);
@@ -186,7 +190,7 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
           if (v < min - 1e-9 || v > max + 1e-9)
             throw new Error(`${s.name}: ${id} ${v} is outside ${min}..${max} (step ${c.i + 1})`);
         }
-        mod[id] = round(v);
+        mod[id] = v;
       }
       return Object.keys(mod).length ? { ...step, mod } : step;
     }),
@@ -206,6 +210,8 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
     lanes: ids,
   });
   if (new Set(pattern.chain).size < 2) throw new Error(`${s.name}: the chain plays one part`);
+  // The riff is the chain's first part's first loop, and the lesson calls that part A.
+  if (pattern.chain[0] !== 0) throw new Error(`${s.name}: the chain starts with part B`);
   const problem = riffProblem(pattern);
   if (problem) throw new Error(`${s.name}: ${problem}`);
   return pattern;

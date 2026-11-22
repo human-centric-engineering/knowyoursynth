@@ -411,6 +411,36 @@ describe('the pattern picker in the sequencer', () => {
     expect(patternsSent(sent())[0]).toMatchObject({ bpm: 140 });
   });
 
+  it('reads a played default again on Play when the first read failed, and plays it once it arrives', async () => {
+    const pattern = { ...structuredClone(ROLLING.pattern), lanes: ['filter.cutoff'] };
+    pattern.parts[0].steps[2].mod = { 'filter.cutoff': 4 };
+    const laned: LibraryPatternView = { ...ROLLING, name: 'Laned eighths', pattern };
+    const path = '/api/v1/synths/model-d/sounds/fat-bass/patterns';
+    let reads = 0;
+    serve({});
+    const served = api.get.getMockImplementation()!;
+    api.get.mockImplementation(async (p: string, o?: unknown) => {
+      if (p !== path) return served(p, o);
+      reads += 1;
+      if (reads === 1) throw new Error('offline');
+      return [laned];
+    });
+    page({
+      ...detail,
+      sounds: [
+        { ...FAT_BASS, defaultPattern: { id: laned.id, name: laned.name, played: true } },
+        WOBBLE,
+      ],
+    });
+    await waitFor(() => expect(reads).toBe(1));
+    await act(async () => {});
+    engine.send.mockClear();
+    // The first Play plays the riff, and asks for the pattern again.
+    await press('Play');
+    await waitFor(() => expect(reads).toBe(2));
+    await waitFor(() => expect(patternsSent(sent()).some((p) => p.bpm === 140)).toBe(true));
+  });
+
   it('leaves a default that is only its riff to be read when the sequencer opens', async () => {
     serve({ '/api/v1/synths/model-d/sounds/fat-bass/patterns': [ROLLING] });
     page({

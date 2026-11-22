@@ -86,6 +86,38 @@ describe('a knob', () => {
     expect(handProblems(modelD, p, panel).join('\n')).toMatch(/turns back 8 times/);
     expect(handProblems(modelD, p, { ...panel, 'filter.cutoff': 4 })).toEqual([]);
   });
+
+  it('falls back to the control’s own value where the panel has none', () => {
+    // CUTOFF's own value is 1: a lane at 1 on the notes leaves the knob still between them.
+    const p = pattern({ 'filter.cutoff': (c) => (c.note === null ? null : 1) });
+    expect(handProblems(modelD, p, {})).toEqual([]);
+  });
+});
+
+describe('swing', () => {
+  it('measures a move into a step against the swung time it has, as the compiler plays it', () => {
+    // 40% of CUTOFF from step 4 into step 5. Straight that is 0.125 s, under a hand's limit; at swing 66 step 4 starts
+    // 0.04 s late, so the move has 0.085 s.
+    const lane: Lane = (c) => (c.i < 4 ? -2 : 2);
+    const straight = pattern({ 'filter.cutoff': lane }, { 'filter.cutoff': ramp(2, -2) });
+    expect(handProblems(modelD, straight, panel)).toEqual([]);
+    expect(handProblems(modelD, { ...straight, swing: 66 }, panel)).toEqual([
+      "filter.cutoff: moves 40% of its travel into A5 in 0.08 s, a full sweep in 0.21 s (a hand's fastest is 0.3 s)",
+    ]);
+  });
+
+  it('times a switch’s flips by the swung steps too', () => {
+    // Flipped on step 2 and back on step 5, three steps apart: 0.225 s at 200 bpm. At swing 74 step 2 starts 0.036 s
+    // late, so the flip back comes 0.189 s after it, too soon for a hand.
+    const p = {
+      ...pattern({ 'osc1.wave': (c) => (c.i >= 1 && c.i < 4 ? 'sq' : 'saw') }),
+      bpm: 200,
+    };
+    expect(handProblems(modelD, p, panel)).toEqual([]);
+    expect(handProblems(modelD, { ...p, swing: 74 }, panel)).toEqual([
+      'osc1.wave: changes again at A5, 0.19 s after its last change (a hand needs 0.2 s)',
+    ]);
+  });
 });
 
 describe('a switch or selector', () => {
