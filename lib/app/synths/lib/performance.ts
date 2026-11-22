@@ -18,8 +18,11 @@ import type {
   ControlValues,
   FaderControl,
   SynthDef,
+  SynthRouting,
 } from '@/lib/app/synths/contract';
-import { WHEEL } from '@/lib/app/synths/lib/patch';
+import { moduleOf } from '@/lib/app/synths/lib/modules';
+import { controlMap, displayName, WHEEL } from '@/lib/app/synths/lib/patch';
+import type { WheelReach } from '@/lib/app/synths/lib/routing';
 
 /** The performance inputs a lane can play, by the key `SynthDef.performance` declares them under. */
 export type PerformanceKey = 'wheel';
@@ -114,4 +117,47 @@ export function splitPerformance(def: SynthDef, set: ControlValues): Performance
 /** The mod wheel's position a set of lane values gives (the lanes' on a step), for the keyboard strip to draw. */
 export function shownWheel(set: ControlValues | null | undefined): number | undefined {
   return set ? num(set[WHEEL]) : undefined;
+}
+
+/** What the keyboard strip says under the mod wheel: where pushing it sends modulation (`wheelReach`). */
+export interface WheelSays {
+  /** What it brings in, e.g. "LFO + Noise"; absent when it scales no source of its own. */
+  from?: string;
+  /** Where it lands, e.g. "→ Oscillators · Filter", or "Nowhere". */
+  to: string;
+  /** Where it lands nowhere: what would send it somewhere, e.g. "Switch on OSCILLATOR MODULATION or …". */
+  hint?: string;
+}
+
+/**
+ * `reach` in words: its sources by their block names, where it lands by the parts of the synth those blocks are
+ * (`moduleOf`: three oscillators read as "Oscillators"), and, where it lands nowhere, the switches that would send it
+ * somewhere, by their panel names.
+ */
+export function wheelSays(def: SynthDef, routing: SynthRouting, reach: WheelReach): WheelSays {
+  const blocks = new Map(routing.blocks.map((b) => [b.id, b]));
+  const names = (ids: string[], name: (id: string) => string | undefined) => [
+    ...new Set(ids.flatMap((id) => name(id) ?? [])),
+  ];
+  const from = names(reach.sources, (id) => blocks.get(id)?.name).join(' + ') || undefined;
+  if (reach.blocks.length) {
+    const to = names(reach.blocks, (id) => moduleOf(blocks.get(id)?.module).label);
+    return { from, to: `→ ${to.join(' · ')}` };
+  }
+  const controls = controlMap(def);
+  const doors = reach.doors.flatMap((d) => {
+    const c = controls[d.id];
+    if (!c) return [];
+    const verb = c.kind === 'bool' ? (d.v ? 'switch on' : 'switch off') : 'set';
+    return [{ verb, name: displayName(def, c) }];
+  });
+  // "Switch on A or B." where every way in is the same move, else each with its own: "Switch on A, or set B."
+  const said = doors.every((d) => d.verb === doors[0].verb)
+    ? `${doors[0]?.verb} ${doors.map((d) => d.name).join(' or ')}`
+    : doors.map((d) => `${d.verb} ${d.name}`).join(', or ');
+  return {
+    from,
+    to: 'Nowhere',
+    hint: doors.length ? `${said.charAt(0).toUpperCase()}${said.slice(1)}.` : undefined,
+  };
 }

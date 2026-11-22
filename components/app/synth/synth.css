@@ -4947,3 +4947,25 @@ a.kys-link-shot:hover .kys-link-title {
     transition: none;
   }
 }
+
+/* The mod wheel while a lane plays it (`f-performance-wheels`): the lanes' amber, as their bars draw it. */
+.kys-wheel-lane-mark,
+.kys-wheel-lane-fill {
+  --wheel-lane: #ffb547;
+}
+:root:not(.dark) .kys-wheel-lane-mark,
+:root:not(.dark) .kys-wheel-lane-fill {
+  --wheel-lane: #d07514;
+}
+.kys-wheel-lane-mark {
+  background: var(--wheel-lane);
+}
+.kys-wheel-lane-fill {
+  background: color-mix(in srgb, var(--wheel-lane) 30%, transparent);
+}
+
+/* The mod wheel's way through the routing while it is up: lit, as thick as the wheel is pushed. */
+.kys-route-edge.is-wheel .kys-route-line {
+  stroke: currentColor;
+  stroke-width: calc(1 + var(--wheel, 0) * 3);
+}

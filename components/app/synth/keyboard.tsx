@@ -10,10 +10,11 @@
  *   the pointer and cut a held note.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import type { Dispatch, PointerEvent, SetStateAction } from 'react';
 import { useWheelWanted } from '@/components/app/synth/sound-map';
 import { notesStore, useStore } from '@/components/app/synth/stores';
+import type { WheelSays } from '@/lib/app/synths/lib/performance';
 
 const WHITE = [0, 2, 4, 5, 7, 9, 11];
 const HAS_SHARP: Record<number, boolean> = { 0: true, 2: true, 5: true, 7: true, 9: true };
@@ -49,11 +50,16 @@ export const OCTAVE_MAX = 2;
 function ModWheel({
   value,
   onChange,
+  says,
+  lane,
 }: {
   value: number;
   onChange: Dispatch<SetStateAction<number>>;
+  says: WheelSays | null;
+  lane: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const saysId = useId();
   const wanted = useWheelWanted(); // the sound map says: pushing this up would bring in the dark control being pointed at
   const set = (e: PointerEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -70,6 +76,8 @@ function ModWheel({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
+        aria-valuetext={`${Math.round(value * 100)}%${lane ? ', played by a lane' : ''}`}
+        aria-describedby={says && !wanted ? saysId : undefined}
         className={`relative h-24 w-11 touch-none overflow-hidden rounded-md border bg-(--kys-desk) lg:w-9 ${wanted ? 'kys-pulse border-dashed border-(--kys-text) outline-2 outline-offset-2 outline-(--kys-text) outline-dashed' : 'border-(--kys-line)'}`}
         onPointerDown={(e) => {
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -85,17 +93,38 @@ function ModWheel({
         }}
       >
         <div
-          className="absolute inset-x-0 bottom-0 bg-(--kys-accent)/25"
+          className={`absolute inset-x-0 bottom-0 ${lane ? 'kys-wheel-lane-fill' : 'bg-(--kys-accent)/25'}`}
           style={{ height: `${value * 100}%` }}
         />
+        {/* A lane is playing the wheel: its colour down the wheel's edge (`f-performance-wheels`). */}
+        {lane && (
+          <div
+            data-testid="wheel-lane-mark"
+            className="kys-wheel-lane-mark absolute inset-y-0 left-0 w-1"
+          />
+        )}
         <div
           className="absolute inset-x-1 h-3 -translate-y-1/2 rounded-sm bg-(--kys-muted) shadow"
           style={{ top: `${(1 - value) * 84 + 8}%` }}
         />
       </div>
-      <span className={`kys-label ${wanted ? 'text-(--kys-text)' : 'text-(--kys-faint)'}`}>
-        {wanted ? 'Push up' : 'Mod'}
-      </span>
+      {wanted || !says ? (
+        <span className={`kys-label ${wanted ? 'text-(--kys-text)' : 'text-(--kys-faint)'}`}>
+          {wanted ? 'Push up' : 'Mod'}
+        </span>
+      ) : (
+        // Where pushing it sends modulation, read from the routing (`wheelReach`), as MOD MIX and the switches change.
+        <span
+          id={saysId}
+          data-testid="wheel-says"
+          className="flex w-20 flex-col text-center text-[10px] leading-tight text-(--kys-faint)"
+          title={says.hint}
+        >
+          {says.from && <span>{says.from}</span>}
+          <span className={says.hint ? 'text-(--kys-muted)' : 'text-(--kys-text)'}>{says.to}</span>
+          {says.hint && <span>{says.hint}</span>}
+        </span>
+      )}
     </div>
   );
 }
@@ -107,6 +136,10 @@ export interface KeyboardProps {
   wheel: number;
   /** Moves the hand's wheel; the arrow keys step it from the hand's own position. */
   onWheel: Dispatch<SetStateAction<number>>;
+  /** Where the wheel sends modulation, said under it. Absent: the routing says nothing of it, and it reads "Mod". */
+  wheelSays?: WheelSays | null;
+  /** A lane is playing the wheel now. */
+  wheelLane?: boolean;
   hold: boolean;
   onHold: (h: boolean) => void;
   noteOn: (n: number) => void;
@@ -118,6 +151,8 @@ export function Keyboard({
   onOctave,
   wheel,
   onWheel,
+  wheelSays = null,
+  wheelLane = false,
   hold,
   onHold,
   noteOn,
@@ -217,7 +252,7 @@ export function Keyboard({
   return (
     // min-w-0: a grid cell would otherwise grow to the keys' full width and widen the page.
     <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
-      <ModWheel value={wheel} onChange={onWheel} />
+      <ModWheel value={wheel} onChange={onWheel} says={wheelSays} lane={wheelLane} />
       <div ref={scroller} className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
         <div className="min-w-[980px] lg:min-w-[620px]">
           {/* What a finger drags to scroll the keys, since a drag on the keys plays them. */}
