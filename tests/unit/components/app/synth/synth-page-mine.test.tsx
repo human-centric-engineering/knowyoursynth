@@ -20,7 +20,7 @@ import { readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
-import { defaultPatchState, SCALE_PHRASE } from '@/lib/app/synths/default-patch';
+import { defaultPatchSound, defaultPatchState } from '@/lib/app/synths/default-patch';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { UserSoundDetail, UserSoundSummary } from '@/lib/app/sounds/data';
 import type { SoundLesson } from '@/lib/app/sounds/lesson';
@@ -408,9 +408,10 @@ describe('My patches', () => {
     expect(runs()).toHaveLength(1);
     fireEvent.click(await within(mySounds()).findByRole('button', { name: /Night bass/ }));
     await waitFor(() => expect(loadedName()).toBe('Night bass'));
-    // Stopped for the load, then from its top once the load ends: a sound of the user's own plays the scale.
+    // Stopped for the load, then from its top once the load ends: a sound of the user's own with no riff plays the
+    // Default patch's, the Model D's groove (t-303).
     expect(engine.send).toHaveBeenCalledWith({ type: 'stopPattern' });
-    await waitFor(() => expectRiff(runs().at(-1), SCALE_PHRASE));
+    await waitFor(() => expectRiff(runs().at(-1), defaultPatchSound(def).phrase));
     expect(runs().at(-1)?.muted).toBe(false);
     expect(button('Stop')).toBeTruthy();
   });

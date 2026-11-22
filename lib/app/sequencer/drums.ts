@@ -28,6 +28,11 @@ export const DRUM_BEAT_IDS = [
   'breakbeat',
   'onedrop',
   'halftime',
+  'motorik',
+  'synthwave',
+  'garage',
+  'bossa',
+  'jazz',
 ] as const;
 export type DrumBeatId = (typeof DRUM_BEAT_IDS)[number];
 
@@ -157,6 +162,62 @@ export const DRUM_BEATS: readonly DrumBeat[] = [
       closedHat: 'x...x...x...x...',
     },
   },
+  // Added for variety (`f-livelier-patterns` t-304, owner 2026-11-22).
+  {
+    id: 'motorik',
+    name: 'Motorik',
+    styles: 'Krautrock, kosmische',
+    lines: {
+      kick: 'x...x.x.x...x.x.',
+      snare: '....x.......x...',
+      closedHat: 'x.x.x.x.x.x.x.x.',
+      openHat: '..............x.',
+    },
+  },
+  {
+    id: 'synthwave',
+    name: 'Synthwave',
+    styles: 'Synthwave, outrun, retrowave',
+    lines: {
+      kick: 'x...x...x...x...',
+      snare: '....X.......X...',
+      clap: '....x.......x...',
+      closedHat: 'xoxoxoxoxoxoxoxo',
+    },
+  },
+  {
+    id: 'garage',
+    name: 'Two-step garage',
+    styles: 'UK garage, 2-step',
+    lines: {
+      kick: 'x......x..x.....',
+      snare: '....x.......x...',
+      closedHat: '..x...x...x...xo',
+      rim: '.......x.....x..',
+    },
+  },
+  {
+    id: 'bossa',
+    name: 'Bossa nova',
+    styles: 'Bossa nova, samba, Latin',
+    lines: {
+      kick: 'x..xx..xx..xx..x',
+      rim: 'x..x..x...x..x..',
+      closedHat: 'x.x.x.x.x.x.x.x.',
+    },
+  },
+  {
+    id: 'jazz',
+    name: 'Jazz ride',
+    styles: 'Jazz, swing, big band',
+    // The ride's "ding, ding-a ding" on the closed hat, the hi-hat's foot on two and four on the rim, a feathered kick.
+    lines: {
+      kick: 'o.......o.......',
+      closedHat: 'x...x.x.x...x.x.',
+      rim: '....x.......x...',
+      snare: '.......o......o.',
+    },
+  },
 ];
 
 export const drumBeat = (id: DrumBeatId): DrumBeat =>
@@ -186,7 +247,7 @@ export function beatGrid(beat: DrumBeat, swing: number): DrumGrid {
 const RULES: readonly [DrumBeatId | null, RegExp][] = [
   [
     null,
-    /ambient|drone|orchestral|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
+    /ambient|drone|orchestral|\braga\b|hindustani|carnatic|irish trad|\bceltic\b(?! (rock|punk|metal))|film scor|scores?\b|soundtrack|baroque|classical|sound effects?|radiophonic|music box|sound design|sci-fi|berlin school|new age|choral|minimalis|\bbach\b|tchaikovsky|scarlatti|messiaen|reich|philip glass|terry riley|la monte young|radigue|oliveros|harold budd|yoshimura|stars of the lid|morricone|herrmann|john williams|lustmord|biosphere|laraaji|steve roach/,
   ],
   ['trap', /\btrap\b|\bdrill\b/],
   ['halftime', /dubstep|future garage|half-?time|downtempo|burial/],
@@ -195,10 +256,18 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
     /drum (and|&|n) bass|\bdnb\b|jungle|breakbeat|big beat|\bamen\b|prodigy|chemical brothers/,
   ],
   ['hiphop', /hip-?hop|lo-?fi|boom bap|g-funk|trip-?hop|\brap\b|nujabes|dilla|dr\.? dre/],
-  ['onedrop', /\bdub\b(?! techno)|reggae|\bska\b|king tubby|lee .?scratch.? perry|scientist/],
+  [
+    'onedrop',
+    /\bdub\b(?! techno)|reggae|ragga|ragamuffin|\bska\b|king tubby|lee .?scratch.? perry|scientist/,
+  ],
+  [
+    'bossa',
+    /bossa|samba|\blatin\b(?! (house|freestyle))|brazil|tropic[aá]lia|cha-?cha|salsa|cumbia|calypso|steel pan/,
+  ],
+  ['garage', /uk garage|2-?step|(?<!speed )\bgarage\b(?! (rock|house|punk))/],
   [
     'four',
-    /house|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
+    /house|speed garage|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
   ],
   [
     'techno',
@@ -206,10 +275,19 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
   ],
   ['disco', /disco|hi-?nrg|moroder|patrick cowley|cerrone|boogie/],
   ['electro', /\belectro\b|miami bass|\b808\b|freestyle|bambaataa|mantronix|kraftwerk/],
-  ['funk', /funk|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/],
+  [
+    'funk',
+    /funk|new jack|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/,
+  ],
+  ['jazz', /jazz|bebop|hard bop|\bswing\b|big band|dixieland/],
+  [
+    'synthwave',
+    /synthwave|outrun|retro-?wave|darksynth|kavinsky|carpenter brut|com truise|perturbator|the weeknd|\bm83\b/,
+  ],
+  ['motorik', /kraut|motorik|\bneu!|kosmische|\bharmonia\b|la düsseldorf/],
   [
     'backbeat',
-    /\bpop\b|synth-?pop|rock|wave|\b80s\b|ballad|punk|kraut|motorik|indie|kavinsky|carpenter brut|com truise|the weeknd|m83|röyksopp|royksopp|alabama 3|depeche|new order|gary numan|human league|tears for fears|a-ha|vangelis/,
+    /\bpop\b|synth-?pop|rock|wave|\b80s\b|ballad|punk|indie|röyksopp|royksopp|alabama 3|depeche|new order|gary numan|human league|tears for fears|a-ha|vangelis/,
   ],
 ];
 

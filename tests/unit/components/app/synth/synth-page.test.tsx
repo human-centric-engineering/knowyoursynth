@@ -23,7 +23,7 @@ import {
 } from '@/components/app/synth/stores';
 import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { SCALE_PHRASE, START_STEP, defaultPatchState } from '@/lib/app/synths/default-patch';
+import { START_STEP, defaultPatchSound, defaultPatchState } from '@/lib/app/synths/default-patch';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
@@ -2056,6 +2056,79 @@ describe('SynthPage effects', () => {
     expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: true }));
     expect(readStored('kys.fx')).toMatchObject({ on: true });
   });
+
+  // A sound whose default pattern comes with effects (t-302): a delay and a reverb, nothing else.
+  const ECHO_LEAD = sound({
+    id: 'echo-lead',
+    name: 'Echo lead',
+    steps: [{ title: 'Open it', module: 'filter', why: 'Bright.', set: { 'filter.cutoff': 4 } }],
+    defaultPattern: {
+      id: 'p-echo',
+      name: 'Echo lead line',
+      fx: { delay: { time: 0.4, feedback: 0.3, mix: 0.3 }, reverb: { size: 0.6, mix: 0.2 } },
+    },
+  });
+  const choose = (name: string) => {
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes(name))[0]
+    );
+  };
+
+  it('turns the rack to the effects a chosen sound comes with, and off for the next patch, knobs kept (t-302)', () => {
+    page({ detail: { ...detail, sounds: [FAT_BASS, ECHO_LEAD] } });
+    // The visitor's own rack, on with the drive: no standing setting, so the next patch chosen turns it off.
+    fireEvent.click(button('Effects'));
+    fireEvent.click(screen.getByRole('button', { name: /^Effects off$/ }));
+    expect(readStored('kys.fx')).toMatchObject({ on: true });
+
+    choose('Echo lead');
+    expect(readStored('kys.fx')).toMatchObject({
+      on: true,
+      drive: { on: false },
+      chorus: { on: false },
+      delay: { on: true, time: 0.4, feedback: 0.3, mix: 0.3 },
+      reverb: { on: true, size: 0.6, mix: 0.2 },
+    });
+    expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: true }));
+
+    choose('Fat bass');
+    // Off, with the knobs where the last patch left them for when it is switched on again.
+    expect(readStored('kys.fx')).toMatchObject({ on: false, delay: { time: 0.4 } });
+    expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: false }));
+  });
+
+  it('keeps the rack as it was through a reload, which is no patch chosen (t-302)', () => {
+    storeSound(def, FAT_BASS);
+    window.localStorage.setItem('kys.fx', JSON.stringify({ on: true }));
+    page();
+    expect(readStored('kys.fx')).toMatchObject({ on: true });
+  });
+
+  // Arriving on a patch reads the rack the visitor left, not the default the first render holds.
+  it('turns a stored rack off on arriving at a patch with no effects', () => {
+    window.localStorage.setItem('kys.fx', JSON.stringify({ on: true, reverb: { on: true } }));
+    window.history.replaceState(null, '', '/synths/model-d?sound=wobble');
+    page({ soundParam: 'wobble' });
+    expect(readStored('kys.fx')).toMatchObject({ on: false, reverb: { on: true } });
+    expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: false }));
+  });
+
+  it('keeps the stored knobs on arriving at a patch with effects', () => {
+    window.localStorage.setItem(
+      'kys.fx',
+      JSON.stringify({ on: false, drive: { on: true, amount: 0.9 } })
+    );
+    window.history.replaceState(null, '', '/synths/model-d?sound=echo-lead');
+    page({ detail: { ...detail, sounds: [FAT_BASS, ECHO_LEAD] }, soundParam: 'echo-lead' });
+    expect(readStored('kys.fx')).toMatchObject({
+      on: true,
+      drive: { on: false, amount: 0.9 },
+      delay: { on: true, time: 0.4 },
+    });
+  });
 });
 
 // The regions the page lays out.
@@ -2642,7 +2715,7 @@ describe('SynthPage sounds', () => {
 
   const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 
-  it('with no sounds it opens on the Default patch, which plays its scale', async () => {
+  it('with no sounds it opens on the Default patch, which plays its groove on the Model D (t-303)', async () => {
     page({ detail: { ...detail, sounds: [] } });
     expect(loadedName()).toBe('Default Saw');
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
@@ -2650,7 +2723,7 @@ describe('SynthPage sounds', () => {
     await act(async () => {
       fireEvent.click(button('Play'));
     });
-    expectRiff(patternsSent(sentNow()).at(-1), SCALE_PHRASE);
+    expectRiff(patternsSent(sentNow()).at(-1), defaultPatchSound(def).phrase);
   });
 
   it('with no sounds the fresh session is the Default patch, which a moved control counts against and Restore puts back', () => {

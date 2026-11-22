@@ -95,6 +95,43 @@ describe('worklet-entry', () => {
     expect(posted).toContainEqual(expect.objectContaining({ type: 'loop', index: 0, frame: 5256 }));
     expect(posted).toContainEqual({ type: 'note', n: 60, on: true });
   });
+
+  it('renders the play-along backing on its second output, apart from the synth (t-305)', async () => {
+    class AudioWorkletProcessor {
+      port = {
+        onmessage: null as ((m: { data: unknown }) => void) | null,
+        postMessage: () => {},
+      };
+    }
+    const registered: (new () => Processor)[] = [];
+    vi.resetModules();
+    vi.stubGlobal('AudioWorkletProcessor', AudioWorkletProcessor);
+    vi.stubGlobal('sampleRate', 48000);
+    vi.stubGlobal('currentFrame', 0);
+    vi.stubGlobal('registerProcessor', (_: string, ctor: new () => Processor) =>
+      registered.push(ctor)
+    );
+
+    await import('@/lib/app/synths/audio/worklet-entry');
+
+    const proc = new registered[0]();
+    proc.port.onmessage!({ data: { type: 'params', p: monoParams() } });
+    // A metronome over a loop that plays a note only on its last sixteenth: the first block is the click alone.
+    proc.port.onmessage!({
+      data: {
+        type: 'pattern',
+        loop: { notes: [[0.75, 60, 0.1]], beats: 1 },
+        bpm: 120,
+        backing: { click: true, drums: null },
+      },
+    });
+    const out = [new Float32Array(128), new Float32Array(128)];
+    const back = [new Float32Array(128), new Float32Array(128), new Float32Array(128)];
+    proc.process([], [out, back]);
+    expect(back[0].some((x) => x !== 0)).toBe(true);
+    expect(Array.from(back[2])).toEqual(Array.from(back[0]));
+    expect(out[0].every((x) => x === 0)).toBe(true);
+  });
 });
 
 describe('probe-worker-entry', () => {

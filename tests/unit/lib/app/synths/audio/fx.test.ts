@@ -7,7 +7,8 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { createRack, FX_DEFAULT, normalizeFx } from '@/lib/app/synths/audio/fx';
+import { createRack, FX_DEFAULT, normalizeFx, rackForPatch } from '@/lib/app/synths/audio/fx';
+import { PatternFxSchema } from '@/lib/app/sequencer/pattern';
 import {
   FakeContext,
   FakeConvolver,
@@ -44,6 +45,33 @@ describe('normalizeFx', () => {
     const out = normalizeFx({});
     out.drive.amount = 0.9;
     expect(FX_DEFAULT.drive.amount).toBe(0.35);
+  });
+});
+
+describe('rackForPatch (t-302)', () => {
+  const mine = normalizeFx({ on: true, drive: { on: true, amount: 0.9 }, delay: { time: 0.8 } });
+
+  it('turns the rack off for a patch with no effects, its knobs kept', () => {
+    expect(rackForPatch(mine, null)).toEqual({ ...mine, on: false });
+    expect(rackForPatch(mine, undefined).on).toBe(false);
+  });
+
+  it('turns on exactly the units a pattern names, at its settings over the defaults, and every other off', () => {
+    const r = rackForPatch(mine, { delay: { time: 0.5, feedback: 0.4, mix: 0.3 } });
+    expect(r.on).toBe(true);
+    expect(r.delay).toEqual({ on: true, time: 0.5, feedback: 0.4, mix: 0.3 });
+    expect(r.drive).toEqual({ ...mine.drive, on: false });
+    expect(r.chorus.on).toBe(false);
+    expect(r.reverb.on).toBe(false);
+  });
+});
+
+describe('PatternFxSchema (t-302)', () => {
+  it('takes units with their levels, and refuses an empty set, a level past 1 or an unknown unit', () => {
+    expect(PatternFxSchema.safeParse({ reverb: { size: 0.5, mix: 0.2 } }).success).toBe(true);
+    expect(PatternFxSchema.safeParse({}).success).toBe(false);
+    expect(PatternFxSchema.safeParse({ reverb: { size: 1.2, mix: 0.2 } }).success).toBe(false);
+    expect(PatternFxSchema.safeParse({ flanger: { rate: 0.2 } }).success).toBe(false);
   });
 });
 

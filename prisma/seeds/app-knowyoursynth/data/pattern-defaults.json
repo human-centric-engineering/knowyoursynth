@@ -2307,10 +2307,6 @@
       "pattern": "researched:jaco-pastorius/continuum-melody"
     },
     {
-      "sound": "model-d/funk-bass",
-      "pattern": "researched:parliament/flash-light-bass"
-    },
-    {
       "sound": "model-d/fusion-electric-violin",
       "pattern": "researched:jean-luc-ponty/enigmatic-ocean-line"
     },
@@ -2479,10 +2475,6 @@
       "pattern": "researched:air/la-femme-dargent-bass"
     },
     {
-      "sound": "model-d/round-staccato-bass",
-      "pattern": "researched:kraftwerk/autobahn-octave-pulse"
-    },
-    {
       "sound": "model-d/satchidananda-harp",
       "pattern": "researched:alice-coltrane/satchidananda-cascade"
     },
@@ -2523,14 +2515,6 @@
       "pattern": "researched:stevie-wonder/boogie-on-reggae-woman-bass"
     },
     {
-      "sound": "model-d/staccato-quack-bass",
-      "pattern": "researched:herbie-hancock/chameleon-bass-high"
-    },
-    {
-      "sound": "model-d/stacked-night-bass",
-      "pattern": "researched:michael-jackson/thriller-bass"
-    },
-    {
       "sound": "model-d/stately-swell-lead",
       "pattern": "researched:kraftwerk/trans-europe-express-descent"
     },
@@ -2561,10 +2545,6 @@
     {
       "sound": "model-d/thin-high-strings",
       "pattern": "researched:isao-tomita/clair-de-lune-melody"
-    },
-    {
-      "sound": "model-d/thin-plucked-keys",
-      "pattern": "researched:prince/when-doves-cry-synth"
     },
     {
       "sound": "model-d/throbbing-machine-bass",
@@ -2601,10 +2581,6 @@
     {
       "sound": "model-d/warbling-glide-lead",
       "pattern": "researched:parliament/mothership-warble"
-    },
-    {
-      "sound": "model-d/wavering-saw-lead",
-      "pattern": "researched:tubeway-army/are-friends-electric-riff"
     },
     {
       "sound": "model-d/whatd-i-say-wurlitzer",
@@ -5081,6 +5057,158 @@
     {
       "sound": "model-d/lane-fusion-unison",
       "pattern": "researched:model-d-lanes/fusion-unison-line"
+    },
+    {
+      "sound": "model-d/feedback-growl",
+      "pattern": "researched:model-d-livelier/feedback-growl"
+    },
+    {
+      "sound": "model-d/open-buzz-bass",
+      "pattern": "researched:model-d-livelier/open-buzz-bass"
+    },
+    {
+      "sound": "model-d/filter-fm-grit-bass",
+      "pattern": "researched:model-d-livelier/filter-fm-grit-bass"
+    },
+    {
+      "sound": "model-d/tubby-dub-sub",
+      "pattern": "researched:model-d-livelier/tubby-dub-sub"
+    },
+    {
+      "sound": "model-d/trap-808-slide",
+      "pattern": "researched:model-d-livelier/trap-808-slide"
+    },
+    {
+      "sound": "model-d/walking-upright-bass",
+      "pattern": "researched:model-d-livelier/walking-upright-bass"
+    },
+    {
+      "sound": "model-d/long-sub-boom",
+      "pattern": "researched:model-d-livelier/long-sub-boom"
+    },
+    {
+      "sound": "model-d/fifths-lead",
+      "pattern": "researched:model-d-livelier/fifths-lead"
+    },
+    {
+      "sound": "model-d/bubble-wah-lead",
+      "pattern": "researched:model-d-livelier/bubble-wah-lead"
+    },
+    {
+      "sound": "model-d/scoop-bend-lead",
+      "pattern": "researched:model-d-livelier/scoop-bend-lead"
+    },
+    {
+      "sound": "model-d/nasal-reed-lead",
+      "pattern": "researched:model-d-livelier/nasal-reed-lead"
+    },
+    {
+      "sound": "model-d/chip-octave-arp",
+      "pattern": "researched:model-d-livelier/chip-octave-arp"
+    },
+    {
+      "sound": "model-d/sitar-meend-lead",
+      "pattern": "researched:model-d-livelier/sitar-meend-lead"
+    },
+    {
+      "sound": "model-d/bright-seq-arp",
+      "pattern": "researched:model-d-livelier/bright-seq-arp"
+    },
+    {
+      "sound": "model-d/dry-blip-pluck",
+      "pattern": "researched:model-d-livelier/dry-blip-pluck"
+    },
+    {
+      "sound": "model-d/hard-blip-stab",
+      "pattern": "researched:model-d-livelier/hard-blip-stab"
+    },
+    {
+      "sound": "model-d/falling-tom",
+      "pattern": "researched:model-d-livelier/falling-tom"
+    },
+    {
+      "sound": "model-d/square-cowbell",
+      "pattern": "researched:model-d-livelier/square-cowbell"
+    },
+    {
+      "sound": "model-d/syndrum-zap",
+      "pattern": "researched:model-d-livelier/syndrum-zap"
+    },
+    {
+      "sound": "model-d/talking-tabla",
+      "pattern": "researched:model-d-livelier/talking-tabla"
+    },
+    {
+      "sound": "model-d/tenor-sax-lead",
+      "pattern": "researched:model-d-livelier/tenor-sax-lead"
+    },
+    {
+      "sound": "model-d/open-trumpet-lead",
+      "pattern": "researched:model-d-livelier/open-trumpet-lead"
+    },
+    {
+      "sound": "model-d/hollow-clarinet-lead",
+      "pattern": "researched:model-d-livelier/hollow-clarinet-lead"
+    },
+    {
+      "sound": "model-d/reedy-bassoon-solo",
+      "pattern": "researched:model-d-livelier/reedy-bassoon-solo"
+    },
+    {
+      "sound": "model-d/treble-recorder-line",
+      "pattern": "researched:model-d-livelier/treble-recorder-line"
+    },
+    {
+      "sound": "model-d/irish-tin-whistle",
+      "pattern": "researched:model-d-livelier/irish-tin-whistle"
+    },
+    {
+      "sound": "model-d/polka-tuba",
+      "pattern": "researched:model-d-livelier/polka-tuba"
+    },
+    {
+      "sound": "model-d/plunger-trombone",
+      "pattern": "researched:model-d-livelier/plunger-trombone"
+    },
+    {
+      "sound": "model-d/fm-tine-piano",
+      "pattern": "researched:model-d-livelier/fm-tine-piano"
+    },
+    {
+      "sound": "model-d/calypso-steel-pan",
+      "pattern": "researched:model-d-livelier/calypso-steel-pan"
+    },
+    {
+      "sound": "model-d/plink-plank-pizzicato",
+      "pattern": "researched:model-d-livelier/plink-plank-pizzicato"
+    },
+    {
+      "sound": "model-d/solo-string-line",
+      "pattern": "researched:model-d-livelier/solo-string-line"
+    },
+    {
+      "sound": "model-d/stacked-night-bass",
+      "pattern": "researched:model-d-livelier/stacked-night-bass"
+    },
+    {
+      "sound": "model-d/funk-bass",
+      "pattern": "researched:model-d-livelier/funk-bass"
+    },
+    {
+      "sound": "model-d/round-staccato-bass",
+      "pattern": "researched:model-d-livelier/round-staccato-bass"
+    },
+    {
+      "sound": "model-d/staccato-quack-bass",
+      "pattern": "researched:model-d-livelier/staccato-quack-bass"
+    },
+    {
+      "sound": "model-d/wavering-saw-lead",
+      "pattern": "researched:model-d-livelier/wavering-saw-lead"
+    },
+    {
+      "sound": "model-d/thin-plucked-keys",
+      "pattern": "researched:model-d-livelier/thin-plucked-keys"
     }
   ],
   "notDefault": [
@@ -5275,11 +5403,6 @@
       "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
     },
     {
-      "sound": "model-d/bright-seq-arp",
-      "pattern": "researched:yazoo/only-you-arpeggio-high",
-      "reason": "An admin made “Only You: arpeggio” its default."
-    },
-    {
       "sound": "model-d/clockwork-funeral-brass",
       "pattern": "researched:wendy-carlos/clockwork-orange-march",
       "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
@@ -5290,33 +5413,8 @@
       "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
     },
     {
-      "sound": "model-d/dry-blip-pluck",
-      "pattern": "researched:talking-heads/born-under-punches-blips",
-      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
-    },
-    {
-      "sound": "model-d/hard-blip-stab",
-      "pattern": "researched:soft-cell/tainted-love-bink",
-      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
-    },
-    {
-      "sound": "model-d/open-buzz-bass",
-      "pattern": "researched:gary-numan/cars-bass",
-      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
-    },
-    {
-      "sound": "model-d/plink-plank-pizzicato",
-      "pattern": "researched:leroy-anderson/plink-plank-plunk-line",
-      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
-    },
-    {
       "sound": "model-d/rockmore-theremin",
       "pattern": "researched:clara-rockmore/the-swan-melody",
-      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
-    },
-    {
-      "sound": "model-d/scoop-bend-lead",
-      "pattern": "researched:bernie-worrell/knee-deep-synth-line",
       "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
     },
     {
@@ -5327,11 +5425,6 @@
     {
       "sound": "model-d/toccata-pedal-organ",
       "pattern": "researched:johann-sebastian-bach/toccata-opening",
-      "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
-    },
-    {
-      "sound": "model-d/walking-upright-bass",
-      "pattern": "researched:paul-chambers/so-what-bass",
       "reason": "It ends in rests, and a sound’s riff loops where its last note ends, so as a default it would come round early."
     },
     {

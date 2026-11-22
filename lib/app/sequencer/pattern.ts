@@ -148,6 +148,24 @@ export type StepMod = NonNullable<Step['mod']>;
 export const PartSchema = z.object({ steps: z.array(StepSchema).min(1).max(MAX_STEPS) }).strict();
 export type Part = z.infer<typeof PartSchema>;
 
+const level = z.number().min(0).max(1);
+/**
+ * The outboard effects a pattern brings (`f-livelier-patterns` t-302): each unit it names is switched on at those
+ * settings, every other off, and the rack on. A sound whose default pattern has them turns the rack to them as it is
+ * chosen, and any other patch starts with the rack off (`rackForPatch`, `lib/app/synths/audio/fx.ts`). Levels are the
+ * rack's own, 0..1.
+ */
+export const PatternFxSchema = z
+  .object({
+    drive: z.object({ amount: level, tone: level }).strict().optional(),
+    chorus: z.object({ rate: level, depth: level }).strict().optional(),
+    delay: z.object({ time: level, feedback: level, mix: level }).strict().optional(),
+    reverb: z.object({ size: level, mix: level }).strict().optional(),
+  })
+  .strict()
+  .refine((f) => Object.keys(f).length > 0, 'Effects name at least one unit');
+export type PatternFx = z.infer<typeof PatternFxSchema>;
+
 export const PatternSchema = z
   .object({
     version: z.literal(PATTERN_VERSION),
@@ -182,6 +200,8 @@ export const PatternSchema = z
      * it, silent.
      */
     lanes: z.array(z.string().regex(CONTROL_ID)).max(MAX_LANES).optional(),
+    /** The effects it comes with, when it is a sound's default (t-302). Optional: most patterns bring none. */
+    fx: PatternFxSchema.optional(),
   })
   .strict()
   .superRefine((p, ctx) => {

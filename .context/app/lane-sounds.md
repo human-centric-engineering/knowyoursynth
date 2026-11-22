@@ -5,7 +5,8 @@ A/B pattern with one or two mod lanes that play the controls its lesson teaches.
 [a default may carry both](./pattern-library.md#a-sounds-riff-is-its-default-pattern)).
 
 This page is the template for writing a set for **any synth**: how one is designed, and the rule that a person could
-play its lanes by hand. The Model D's thirty (`scripts/app/sounds/model-d/lane-sounds.ts`) are the worked example.
+play its lanes by hand. The same kit writes new songs for sounds already in the library, lanes optional
+(`buildSong`, t-304: [pattern-library.md](./pattern-library.md#composed-batches-livelier-songs-for-sounds-already-in-the-library)). The Model D's thirty (`scripts/app/sounds/model-d/lane-sounds.ts`) are the worked example.
 How the batch reaches the seed, and what the seed checks, is in
 [`pattern-library.md`](./pattern-library.md#composed-batches-sounds-played-by-their-lanes).
 

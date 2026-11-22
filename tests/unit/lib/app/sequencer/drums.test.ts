@@ -67,8 +67,23 @@ describe('drumStyleFor', () => {
     ['Italo disco', 'disco'],
     ['Giorgio Moroder', 'disco'],
     ['Synth-pop', 'backbeat'],
-    ['Synthwave', 'backbeat'],
-    ['Kavinsky', 'backbeat'],
+    ['Synthwave', 'synthwave'],
+    ['Outrun', 'synthwave'],
+    ['Kavinsky', 'synthwave'],
+    ['Krautrock', 'motorik'],
+    ['Motorik', 'motorik'],
+    ['UK garage', 'garage'],
+    ['2-step', 'garage'],
+    ['Garage rock', 'backbeat'],
+    ['Speed garage', 'four'],
+    ['Bossa nova', 'bossa'],
+    ['Latin jazz', 'bossa'],
+    ['Latin house', 'four'],
+    ['Latin freestyle', 'electro'],
+    ['Calypso', 'bossa'],
+    ['Jazz', 'jazz'],
+    ['Big band', 'jazz'],
+    ['Jazz-funk', 'funk'],
     ['Electro', 'electro'],
     ['808-style drums', 'electro'],
     ['Afrika Bambaataa', 'electro'],
@@ -84,18 +99,29 @@ describe('drumStyleFor', () => {
     ['Minimal techno', 'techno'],
     ['Minimal wave', 'backbeat'],
     ['King Tubby', 'onedrop'],
+    ['Ragamuffin', 'onedrop'],
+    ['Celtic punk', 'backbeat'],
+    ['New jack swing', 'funk'],
     ['Dubstep', 'halftime'],
     ['Burial', 'halftime'],
   ])('matches %s to %s by its style', (inspiredBy, beat) => {
     expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat, by: 'style' });
   });
 
-  it.each(['Ambient', 'Drone music', 'Orchestral', 'Film scores', 'Steve Reich', 'Sound effects'])(
-    'gives %s no beat',
-    (inspiredBy) => {
-      expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat: null, by: 'style' });
-    }
-  );
+  it.each([
+    'Ambient',
+    'Drone music',
+    'Orchestral',
+    'Film scores',
+    'Steve Reich',
+    'Sound effects',
+    'Hindustani classical',
+    'Irish traditional music',
+    'Raga',
+    'Celtic folk',
+  ])('gives %s no beat', (inspiredBy) => {
+    expect(drumStyleFor(inspiredBy, 120, 50)).toEqual({ beat: null, by: 'style' });
+  });
 
   it('does not hear Bach in Burt Bacharach', () => {
     expect(drumStyleFor('Burt Bacharach', 120, 50).beat).not.toBeNull();

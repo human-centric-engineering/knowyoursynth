@@ -616,11 +616,25 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
     synth.handle(m);
   }
 
-  function process(out: Float32Array, n: number, outR?: Float32Array) {
+  function process(
+    out: Float32Array,
+    n: number,
+    outR?: Float32Array,
+    backL?: Float32Array,
+    backR?: Float32Array
+  ) {
+    // The backing goes to its own buffers where the caller gives them, so it can pass the effects rack by (t-305);
+    // without them (an offline render) it is mixed into the synth's.
+    const bL = backL ?? out;
+    const bR = backL ? backR : outR;
+    if (backL) {
+      backL.fill(0, 0, n);
+      if (backR) backR.fill(0, 0, n);
+    }
     if (!cur) {
       synth.process(out, n, outR);
       // A stopped run's drums fade out rather than stop on a sample.
-      backing.tail(out, outR, 0, n);
+      backing.tail(bL, bR, 0, n);
       frames += n;
       return;
     }
@@ -631,7 +645,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         const k = Math.min(pre, n - i);
         if (i === 0 && k === n) synth.process(out, n, outR);
         else synth.process(out.subarray(i, i + k), k, outR && outR.subarray(i, i + k));
-        backing.process(out, outR, i, k, -pre / spb(), spb(), muted);
+        backing.process(bL, bR, i, k, -pre / spb(), spb(), muted);
         pre -= k;
         frames += k;
         i += k;
@@ -640,7 +654,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       fire();
       if (!cur) {
         synth.process(out.subarray(i, n), n - i, outR && outR.subarray(i, n));
-        backing.tail(out, outR, i, n - i);
+        backing.tail(bL, bR, i, n - i);
         frames += n - i;
         return;
       }
@@ -653,7 +667,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
       const k = Math.min(Math.max(1, due - pos), n - i);
       if (i === 0 && k === n) synth.process(out, n, outR);
       else synth.process(out.subarray(i, i + k), k, outR && outR.subarray(i, i + k));
-      backing.process(out, outR, i, k, beatsDone + pos / spb(), spb(), muted);
+      backing.process(bL, bR, i, k, beatsDone + pos / spb(), spb(), muted);
       pos += k;
       frames += k;
       i += k;

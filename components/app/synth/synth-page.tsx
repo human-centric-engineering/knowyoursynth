@@ -57,14 +57,16 @@ import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { lessonPreset } from '@/lib/app/sounds/lesson';
 import {
   START_STEP,
+  chosenSound,
   defaultPatchName,
   defaultPatchSound,
   hasStartStep,
   isDefaultPatch,
-  isSawDefault,
   lessonState,
   startStep,
+  type ChosenPatch,
 } from '@/lib/app/synths/default-patch';
+import { rackForPatch, type RackFx } from '@/lib/app/synths/audio/fx';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -588,12 +590,14 @@ function Synth({
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
   // A synth switched to, or a sound opened by `?sound=`, is a patch chosen (t-277): the backing goes to Match and the
   // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`). The Default patch it
-  // opens on starts with the drums off where it is the Default Saw (t-295); a sound from `?sound=` with them on Match.
-  const arrivedOnPatch = useRef<'auto' | 'off' | null>(null);
+  // opens on starts with the drums off where it is a Default Saw playing its scale (t-295), and on Match where it plays
+  // a groove (t-303); a sound from `?sound=` with them on Match (`chosenSound`).
+  // Its effects go with it (t-302): the default's, or the rack off.
+  const arrivedOnPatch = useRef<ChosenPatch | null>(null);
   useEffect(() => {
     if (switchedTo.current) {
       setSess(() => freshSession(synthDef, defaultSound));
-      arrivedOnPatch.current = isSawDefault(synthDef) ? 'off' : 'auto';
+      arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
@@ -609,7 +613,7 @@ function Synth({
     const p = sounds.find((x) => x.id === soundParam);
     if (p) {
       glide(() => freshSession(synthDef, p));
-      arrivedOnPatch.current = isDefaultPatch(p.id) && isSawDefault(synthDef) ? 'off' : 'auto';
+      arrivedOnPatch.current = chosenSound(synthDef, p);
     }
     const url = new URL(window.location.href);
     url.searchParams.delete('sound');
@@ -1640,14 +1644,65 @@ function Synth({
   const backing = useBacking(seq, useBackingPref(), {
     fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
   });
-  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
+  // A patch chosen (t-277, t-302): the drums to Match (or off), the Count-in on, and the rack to the effects the patch
+  // comes with, or off. The rack is no standing setting (owner ruling, 2026-11-22), so its knobs stay where they were
+  // but it is switched off for a patch that brings none. Read from the latest rack, not this render's.
   const { newPatch } = backing;
+  const fxNow = useRef(fx);
   useEffect(() => {
-    const drums = arrivedOnPatch.current;
-    if (!drums) return;
+    fxNow.current = fx;
+  });
+  const rackFor = useCallback(
+    (patchFx: ChosenPatch['fx']) => {
+      const next = rackForPatch(fxNow.current, patchFx);
+      // Already so (both normalised, so in the same key order): nothing to store or send.
+      if (JSON.stringify(next) === JSON.stringify(fxNow.current)) return;
+      fxNow.current = next;
+      setFx(next);
+    },
+    [setFx]
+  );
+  // The rack is reset once the settings have settled: the browser's stored rack read and, signed in, the account's.
+  // Before then the rack this render holds can still be replaced, which would undo the reset or lose the knobs, so a
+  // patch chosen meanwhile (arrived on, a shared sound or `?mine=` opened) holds its effects here (`undefined`: none).
+  const settingsSettled = settings.settled && !authPending;
+  const settledNow = useRef(settingsSettled);
+  useEffect(() => {
+    settledNow.current = settingsSettled;
+  });
+  const pendingFx = useRef<ChosenPatch['fx'] | undefined>(undefined);
+  const choosePatch = useCallback(
+    (chosen: ChosenPatch = { drums: 'auto', fx: null }) => {
+      newPatch(chosen.drums);
+      if (settledNow.current) {
+        pendingFx.current = undefined;
+        rackFor(chosen.fx);
+      } else pendingFx.current = chosen.fx;
+    },
+    [newPatch, rackFor]
+  );
+  // The visitor's own change to the rack wins over a reset still waiting.
+  const changeRack = useCallback(
+    (next: RackFx) => {
+      pendingFx.current = undefined;
+      fxNow.current = next;
+      setFx(next);
+    },
+    [setFx]
+  );
+  // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
+  useEffect(() => {
+    const chosen = arrivedOnPatch.current;
+    if (!chosen) return;
     arrivedOnPatch.current = null;
-    newPatch(drums);
+    choosePatch(chosen);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
+  useEffect(() => {
+    if (!settingsSettled || pendingFx.current === undefined) return;
+    const patchFx = pendingFx.current;
+    pendingFx.current = undefined;
+    rackFor(patchFx);
+  }, [settingsSettled, rackFor]);
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
   // one a sound of the user's plays) or the riff edited, and with no sound's riff to play; otherwise the riff, which the
   // sequencer holds as it came. A new patch puts back its riff in the sequencer, and Play with it.
@@ -2031,10 +2086,9 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
-    // Restore, or the same sound picked again, is not another patch: the drums and Count-in stay as set.
-    // The Default Saw plays its scale with no drums (t-295).
+    // Restore, or the same sound picked again, is not another patch: the drums, Count-in and effects stay as set.
     if (id !== sess.presetId || sess.soundId || designed || sharedPanel)
-      backing.newPatch(isDefaultPatch(id) && isSawDefault(synthDef) ? 'off' : 'auto');
+      choosePatch(chosenSound(synthDef, p));
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
   };
@@ -2053,7 +2107,7 @@ function Synth({
       soundId: null,
       ...presetState(synthDef, d.preset),
     }));
-    backing.newPatch();
+    choosePatch();
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
     return () => {
@@ -2139,7 +2193,7 @@ function Synth({
     leaveShared();
     setDesigned(null);
     glide(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
-    backing.newPatch();
+    choosePatch();
     setSaved({ id: d.id, ...panel });
     mine.put(d);
     if (!d.panel)
@@ -2199,7 +2253,7 @@ function Synth({
     if (keep) patch((s) => s);
     else {
       glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
-      backing.newPatch();
+      choosePatch();
     }
     writeStored(sharedFromKey(synthId), shared.slug);
     setSharedPanel(panel);
@@ -3435,7 +3489,7 @@ function Synth({
                     </div>
                   )}
                 </div>
-                {small && <FxRack fx={fx} onChange={setFx} />}
+                {small && <FxRack fx={fx} onChange={changeRack} />}
               </div>
             </div>
 
@@ -3457,7 +3511,7 @@ function Synth({
                 side={cardSide}
                 onSide={() => setCardSide(cardSide === 'right' ? 'left' : 'right')}
                 inspector={inspector}
-                effects={<FxRack fx={fx} onChange={setFx} inCard />}
+                effects={<FxRack fx={fx} onChange={changeRack} inCard />}
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
                 links={shownLinks}
                 suggestLink={suggestForSound}

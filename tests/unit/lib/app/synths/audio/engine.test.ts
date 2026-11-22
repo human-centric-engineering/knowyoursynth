@@ -118,8 +118,17 @@ describe('Engine', () => {
     expect(WORKLET_URL).toBe('/worklets/kys-voice.js');
     const node = FakeWorkletNode.made[0];
     expect(node.name).toBe('kys-voice');
-    expect(node.opts).toEqual({ numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] });
-    expect(node.outputs).toContain(engine.analyser);
+    expect(node.opts).toEqual({
+      numberOfInputs: 0,
+      numberOfOutputs: 2,
+      outputChannelCount: [2, 2],
+    });
+    // The synth (output 0) goes to the scope and on through the rack; the backing (output 1) straight to the
+    // speakers, so the drums and clicks never pass through the effects (t-305).
+    expect(node.links).toEqual([
+      { dest: engine.analyser, output: 0 },
+      { dest: ctx.destination, output: 1 },
+    ]);
     expect(engine.analyser!.fftSize).toBe(4096);
     // the params sent before the start reached the worklet once it was up
     expect(node.port.sent).toEqual([{ type: 'params', p: monoParams() }]);
@@ -137,11 +146,25 @@ describe('Engine', () => {
     const sp = Ctx.last!.script!;
     engine.send({ type: 'params', p: monoParams() });
     engine.send({ type: 'noteOn', n: 60 });
-    const l = new Float32Array(1024),
-      r = new Float32Array(1024);
-    sp.onaudioprocess!({ outputBuffer: { getChannelData: (c) => (c ? r : l) } });
+    const chans = [0, 1, 2, 3].map(() => new Float32Array(1024));
+    sp.onaudioprocess!({ outputBuffer: { getChannelData: (c) => chans[c] } });
+    const [l, r, bl, br] = chans;
     expect(l.some((x) => x !== 0)).toBe(true);
     expect(Array.from(r)).toEqual(Array.from(l));
+    // Nothing plays along, so the backing's two channels are silent.
+    expect(bl.every((x) => x === 0) && br.every((x) => x === 0)).toBe(true);
+  });
+
+  it('splits the fallback into the synth, through the scope and rack, and the backing, straight to the speakers', async () => {
+    const { Ctx, engine } = setup('fail');
+    await expect(engine.start()).resolves.toBe('script');
+    const ctx = Ctx.last!;
+    const [split] = ctx.script!.outputs;
+    // Channels 0 and 1 make the synth, 2 and 3 the backing.
+    const [toSynth, , toBack] = split.links.map((k) => k.dest);
+    expect(split.links.map((k) => k.output)).toEqual([0, 1, 2, 3]);
+    expect(toSynth.outputs).toEqual([engine.analyser]);
+    expect(toBack.outputs).toEqual([ctx.destination]);
   });
 
   it("moves a pattern's loop events onto the context's clock in the fallback, and reads the frame heard now", async () => {
@@ -150,9 +173,8 @@ describe('Engine', () => {
     await expect(engine.start()).resolves.toBe('script');
     const sp = Ctx.last!.script!;
     engine.send({ type: 'params', p: monoParams() });
-    const l = new Float32Array(1024),
-      r = new Float32Array(1024);
-    const buffer = { getChannelData: (c: number) => (c ? r : l) };
+    const chans = [0, 1, 2, 3].map(() => new Float32Array(1024));
+    const buffer = { getChannelData: (c: number) => chans[c] };
     // The first buffer plays at 0.5 s: frame 24,000 of the context
     sp.onaudioprocess!({ outputBuffer: buffer, playbackTime: 0.5 });
     engine.send({ type: 'pattern', loop: { notes: [[0, 60, 0.5]], beats: 1 }, bpm: 120 });

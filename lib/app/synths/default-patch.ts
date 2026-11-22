@@ -8,11 +8,11 @@
  * sequencer pattern is a C major scale rather than a riff from the pattern library.
  */
 import type { CatalogueSound } from '@/lib/app/catalogue/read';
-import { patternFacts } from '@/lib/app/patterns/library-facts';
+import { firstLoop, patternFacts } from '@/lib/app/patterns/library-facts';
 // Type only: this module reaches the browser, and the library module holds the database client.
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { importPhrase } from '@/lib/app/sequencer/import';
-import type { Pattern } from '@/lib/app/sequencer/pattern';
+import type { Pattern, PatternFx } from '@/lib/app/sequencer/pattern';
 import type {
   DefaultPatch,
   DefaultPatchStep,
@@ -25,6 +25,7 @@ import type {
 import { checklistControls, controlLine } from '@/lib/app/synths/lib/checklist';
 import { jackMap, presetState, type PanelState } from '@/lib/app/synths/lib/patch';
 import { START_STEP } from '@/lib/app/sounds/preference-data';
+import { defaultGrooveOf, type DefaultGroove } from '@/lib/app/synths/default-grooves';
 
 /** The Default patch's id where a library sound's slug goes: the session, the library and the sequencer. */
 export const DEFAULT_PATCH_ID = 'default-patch';
@@ -41,6 +42,27 @@ export const defaultPatchName = (def: SynthDef): string =>
   isSawDefault(def) ? DEFAULT_SAW_NAME : DEFAULT_PATCH_NAME;
 
 export const isDefaultPatch = (id: string | null | undefined): boolean => id === DEFAULT_PATCH_ID;
+
+/** What choosing a patch does to what plays along with it and the effects rack (t-277, t-295, t-302). */
+export interface ChosenPatch {
+  /** The drums: on Match, or off. */
+  drums: 'auto' | 'off';
+  /** The effects its default pattern comes with; none turns the rack off. */
+  fx: PatternFx | null;
+}
+
+/**
+ * A library sound (or the Default patch) as it is chosen: the drums on Match, except the Default Saw's, which plays
+ * its scale with none (t-295); and the rack to the effects its default comes with, or off.
+ */
+export const chosenSound = (
+  def: SynthDef,
+  sound: Pick<CatalogueSound, 'id' | 'defaultPattern'>
+): ChosenPatch => ({
+  // A Default Saw with a groove of its own plays it with the drums (t-303).
+  drums: isDefaultPatch(sound.id) && isSawDefault(def) && !defaultGrooveOf(def.id) ? 'off' : 'auto',
+  fx: sound.defaultPattern?.fx ?? null,
+});
 
 /** C3, an octave below middle C: where the scale starts and ends. */
 const SCALE_ROOT = 48;
@@ -88,6 +110,45 @@ export const SCALE_PATTERN_VIEW: LibraryPatternView = {
   origin: 'human_authored',
   facts: patternFacts(SCALE_PATTERN),
 };
+
+/** A Default patch groove as the picker lists a library pattern (t-303): first, the scale after it. */
+const grooveView = (synthId: string, g: DefaultGroove): LibraryPatternView => ({
+  ...SCALE_PATTERN_VIEW,
+  id: `${DEFAULT_PATCH_ID}:groove:${synthId}`,
+  key: `${DEFAULT_PATCH_ID}:groove:${synthId}`,
+  name: g.name,
+  pattern: g.pattern,
+  inspiredBy: { ...SCALE_PATTERN_VIEW.inspiredBy, label: g.style },
+  facts: patternFacts(g.pattern),
+});
+
+/**
+ * The Default patch's patterns, default first: the synth's groove and then the scale where it has one (t-303), or the
+ * scale alone. In code, so the sequencer offers them without a read.
+ */
+export function defaultPatchPatterns(synthId: string): LibraryPatternView[] {
+  // One list a synth, so a hook handed it on every render is handed the same one.
+  let list = patchPatterns.get(synthId);
+  if (!list) {
+    const g = defaultGrooveOf(synthId);
+    list = g ? [grooveView(synthId, g), SCALE_PATTERN_VIEW] : [SCALE_PATTERN_VIEW];
+    patchPatterns.set(synthId, list);
+  }
+  return list;
+}
+const patchPatterns = new Map<string, LibraryPatternView[]>();
+
+/** A groove's first loop as the riff the Default patch stores, as `phraseOf` makes a library default's. */
+const tidy = (n: number) => Math.round(n * 1e6) / 1e6;
+const grooveRiff = (g: DefaultGroove): Phrase => ({
+  bpm: g.pattern.bpm,
+  loop: g.pattern.loop,
+  steps: firstLoop(g.pattern).notes.map(([beat, note, len]): PhraseNote => [
+    tidy(beat),
+    note,
+    tidy(len),
+  ]),
+});
 
 /** What to listen for once the Default patch is set: the patch's own words, or a sawtooth's. */
 const listenFor = (def: SynthDef): string =>
@@ -167,6 +228,7 @@ function wholeStep(def: SynthDef, own: boolean): PresetStep {
 export function defaultPatchSound(def: SynthDef): CatalogueSound {
   const patch = def.defaultPatch;
   const saw = isSawDefault(def);
+  const groove = saw ? defaultGrooveOf(def.id) : null;
   const notSaw = saw ? '' : `${patch?.notSaw?.trim() ?? ''} `.trimStart();
   return {
     id: DEFAULT_PATCH_ID,
@@ -180,14 +242,22 @@ export function defaultPatchSound(def: SynthDef): CatalogueSound {
     how: saw
       ? 'One oscillator’s sawtooth goes through the filter, left open, to the amplifier, which opens while a key is held. Every other patch here starts from this one.'
       : `${notSaw}The plainest tone the synth makes, with no modulation and no effects. Every other patch here starts from this one.`,
-    phrase: SCALE_PHRASE,
+    phrase: groove ? grooveRiff(groove) : SCALE_PHRASE,
     steps: patch?.checklist?.length
       ? checklistSteps(def, patch, patch.checklist)
       : [wholeStep(def, true)],
     context: {},
     tweaks: [],
-    // its one pattern is the riff it plays (t-224)
-    defaultPattern: { id: SCALE_PATTERN_VIEW.id, name: SCALE_PATTERN_VIEW.name },
+    // Its default is the riff it plays (t-224): its groove where it has one, played whole with its drums (t-303), or
+    // the scale.
+    defaultPattern: groove
+      ? {
+          id: grooveView(def.id, groove).id,
+          name: groove.name,
+          style: groove.style,
+          played: true,
+        }
+      : { id: SCALE_PATTERN_VIEW.id, name: SCALE_PATTERN_VIEW.name },
   };
 }
 

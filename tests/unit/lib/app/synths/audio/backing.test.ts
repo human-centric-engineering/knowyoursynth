@@ -34,7 +34,7 @@ const RIM = DRUM_VOICES.indexOf('rim');
 type Timed = [at: number, m: SynthMessage];
 
 /** Plays `len` samples in 128-sample blocks around a synth that sounds nothing and logs the sample of each note. */
-function play(len: number, timed: Timed[]) {
+function play(len: number, timed: Timed[], apart = false) {
   let at = 0;
   const notes: number[] = [];
   const synth: Synth = {
@@ -50,13 +50,18 @@ function play(len: number, timed: Timed[]) {
   const queue = [...timed].sort((a, b) => a[0] - b[0]);
   let e = 0;
   const out = new Float32Array(len);
+  // `apart`: the backing is given buffers of its own, as the worklet's second output (t-305).
+  const back = new Float32Array(len);
   for (let i = 0; i < len; i += 128) {
     while (e < queue.length && queue[e][0] < i + 128) player.handle(queue[e++][1]);
     const n = Math.min(128, len - i);
-    player.process(out.subarray(i, i + n), n);
+    // The synth stand-in writes nothing, so what it leaves is last block's: start each block from silence.
+    out.fill(0, i, i + n);
+    if (apart) player.process(out.subarray(i, i + n), n, undefined, back.subarray(i, i + n));
+    else player.process(out.subarray(i, i + n), n);
   }
   const loops = events.filter((x): x is LoopEvent => x.type === 'loop');
-  return { out, notes, loops };
+  return { out, back, notes, loops };
 }
 
 /** The samples a sound starts on: the first non-zero after silence. A sine starts at zero, so this may be one late. */
@@ -345,6 +350,19 @@ describe('a stop', () => {
     expect(jump).toBeLessThan(0.02);
     // And 5 ms on, it is gone.
     expect(out.subarray(sr / 10 + sr / 200 + 1).every((x) => x === 0)).toBe(true);
+  });
+
+  it('plays into the backing’s own buffers where given, leaving the synth’s output free of it (t-305)', () => {
+    const timed: Timed[] = [
+      [0, { type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: BPM, backing: rims([0, 6]) }],
+      [5000, { type: 'patternBacking', backing: CLICK }],
+    ];
+    const mixed = play(5 * BEAT, timed);
+    const apart = play(5 * BEAT, timed, true);
+    // The same hits and clicks, sample for sample, in their own buffer; nothing of them in the synth's.
+    expect(mixed.out.some((x) => x !== 0)).toBe(true);
+    expect(Array.from(apart.back)).toEqual(Array.from(mixed.out));
+    expect(apart.out.every((x) => x === 0)).toBe(true);
   });
 
   it('lets a stopped pattern’s drums fade through the player', () => {

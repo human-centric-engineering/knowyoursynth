@@ -19,8 +19,11 @@ export class FakeParam {
 
 export class FakeNode {
   outputs: FakeNode[] = [];
-  connect<T extends FakeNode>(dest: T, ..._rest: number[]): T {
+  /** Each connection with the output it leaves from (0 unless given), for a node with more than one. */
+  links: { dest: FakeNode; output: number }[] = [];
+  connect<T extends FakeNode>(dest: T, output = 0, ..._rest: number[]): T {
     this.outputs.push(dest);
+    this.links.push({ dest, output });
     return dest;
   }
 }
@@ -84,6 +87,9 @@ export class FakeContext {
     return new FakeDelay();
   }
   createChannelMerger(_n: number): FakeNode {
+    return new FakeNode();
+  }
+  createChannelSplitter(_n: number): FakeNode {
     return new FakeNode();
   }
   createConvolver(): FakeConvolver {

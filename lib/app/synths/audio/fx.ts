@@ -6,6 +6,8 @@
  * Transliterated from the prototype's `prototype/src/audio/fx.js` (D3). `normalizeFx` reads a stored setting, which is
  * outside data, so it checks each field's type rather than trusting it (as the prototype did, with type guards here).
  */
+// Type only: the pattern module is plain data, and this one is the browser's audio graph.
+import type { PatternFx } from '@/lib/app/sequencer/pattern';
 
 /** The outboard rack's settings. Every level is 0..1. */
 export interface RackFx {
@@ -55,6 +57,26 @@ export function normalizeFx(v: unknown): RackFx {
     }
   }
   return out;
+}
+
+/**
+ * The rack as a patch is chosen (`f-livelier-patterns` t-302, owner ruling 2026-11-22): the rack is no standing setting,
+ * so a patch whose default pattern brings effects turns it on with exactly those units, and any other patch turns it
+ * off, its knobs left where they were for when it is switched on again.
+ */
+export function rackForPatch(current: RackFx, preset: PatternFx | null | undefined): RackFx {
+  if (!preset) return { ...current, on: false };
+  const unitOf = <U extends RackUnit>(u: U): RackFx[U] => {
+    const given = preset[u];
+    return given ? { ...FX_DEFAULT[u], ...given, on: true } : { ...current[u], on: false };
+  };
+  return normalizeFx({
+    on: true,
+    drive: unitOf('drive'),
+    chorus: unitOf('chorus'),
+    delay: unitOf('delay'),
+    reverb: unitOf('reverb'),
+  });
 }
 
 const RAMP = 0.03;

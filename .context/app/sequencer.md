@@ -875,8 +875,11 @@ clock-out lock and its release; and the readout's Clock select and read-only Tem
 ## Playing along: count-in, metronome and drums
 
 What plays along with a pattern (t-266, t-267) is rendered by the pattern player on the audio thread
-(`lib/app/synths/audio/backing.ts`), so every click and hit lands on its sample, in time with the notes. It is added to
-the synth's output after its effects, dry, and is silent on a muted (MIDI-only) run.
+(`lib/app/synths/audio/backing.ts`), so every click and hit lands on its sample, in time with the notes. It is silent
+on a muted (MIDI-only) run, and dry: the worklet renders it on a second output (`numberOfOutputs: 2`; the main-thread
+fallback on channels 2 and 3, split apart), which the engine connects straight to the speakers, past the scope and the
+outboard effects rack (t-305). Only the synth goes through the effects. An offline render (the probe, `check:synths`)
+passes no backing buffers, so it is mixed into the synth's output there.
 
 - **Count-in** (on by default). `pattern` can carry `countIn` (beats; the sequencer sends `COUNT_IN_BEATS`, one bar of
   4). The player holds the loop for that many beats while it clicks, the first accented, and only then announces loop
@@ -888,7 +891,9 @@ the synth's output after its effects, dry, and is silent on a muted (MIDI-only) 
   tutor writes (`countIn: false`), for a lesson's Replay, or for the riff starting again as a patch is picked.
 - **Metronome** (off by default): a click on every beat from beat 0, accented on each bar of four.
 - **Drums** (off by default): one of the beats in `lib/app/sequencer/drums.ts`, a bar of sixteen sixteenths played by
-  synthesised voices (kick, snare, clap, closed and open hat, rim), swung by the pattern's swing. **Match** picks the
+  synthesised voices (kick, snare, clap, closed and open hat, rim), swung by the pattern's swing. Sixteen beats: four
+  on the floor, techno, disco, pop backbeat, electro, hip-hop, trap, funk, breakbeat, one drop and half-time, and
+  (t-304) motorik, synthwave, two-step garage, bossa nova and a jazz ride. Raga and Irish traditional styles, like ambient, get none. **Match** picks the
   beat with `drumStyleFor`: words in the pattern's Inspired by (a genre, or an artist known for one) first, with
   beatless styles (ambient, drone, film scores, classical) getting none; otherwise the tempo and swing.
 
@@ -901,3 +906,22 @@ The bar is always four beats from the pattern's first step, whatever the loop's 
 its Inspired by for Match, when that is a genre or an artist (`styleWordsOf`: a work's title or a synth's name says
 nothing of a style); the sound's own riff goes by its default pattern's, which the catalogue sends as
 `defaultPattern.style`.
+
+## The effects a pattern brings
+
+`f-livelier-patterns` t-302. The outboard effects rack (`lib/app/synths/audio/fx.ts`, drive → chorus → delay → reverb)
+is **not a standing setting** (owner ruling, 2026-11-22): every patch chosen or created starts with it off, unless the
+patch comes with effects of its own.
+
+- **A pattern may carry `fx`** (`PatternFxSchema`): the units it wants, each at its levels (0..1, the rack's own). A
+  unit it names is switched on, every other off, and the rack on. Most patterns have none.
+- **A sound's default brings them.** The catalogue sends the default's effects as `defaultPattern.fx`, and choosing
+  the sound turns the rack to them (`rackForPatch`). A patch with none (another library sound, the Default patch, a
+  tutor design, one of your sounds, a shared sound) turns the rack off, its knobs left where they were for when the
+  visitor switches it on again.
+- **The page does it where it puts the drums on Match** (`choosePatch` in `synth-page.tsx`, with `chosenSound` from
+  `lib/app/synths/default-patch.ts`), so the same rule holds: a reload, the account's copy arriving or another tab is
+  no patch chosen, and the rack stays as it was. The visitor can still turn the rack on and set it for the patch in
+  front of them; the next patch chosen replaces that.
+- A pattern opened in the sequencer's picker over the same sound does not move the rack: only a patch chosen does.
+- The drums, count-in and metronome never pass through it ([Playing along](#playing-along-count-in-metronome-and-drums)).

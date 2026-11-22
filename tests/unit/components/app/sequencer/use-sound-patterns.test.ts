@@ -22,7 +22,7 @@ beforeEach(() => {
 describe('useSoundPatterns', () => {
   it('offers the Default patch its scale, and reads nothing', () => {
     const sound = {
-      synthId: 'model-d',
+      synthId: 'pro-1',
       slug: 'default-patch',
       name: 'Default patch',
       defaultId: SCALE_PATTERN_VIEW.id,
@@ -30,6 +30,24 @@ describe('useSoundPatterns', () => {
     const { result } = renderHook(() => useSoundPatterns(sound, true));
 
     expect(result.current).toMatchObject({ sound, patterns: [SCALE_PATTERN_VIEW], error: false });
+    expect(api.get).not.toHaveBeenCalled();
+  });
+
+  it('offers the Model D’s Default patch its groove first, then the scale, the same list each render (t-303)', () => {
+    const sound = {
+      synthId: 'model-d',
+      slug: 'default-patch',
+      name: 'Default Saw',
+      defaultId: 'default-patch:groove:model-d',
+    };
+    const { result, rerender } = renderHook(() => useSoundPatterns(sound, true));
+    const first = result.current?.patterns;
+    expect(first?.map((p) => p.id)).toEqual([
+      'default-patch:groove:model-d',
+      SCALE_PATTERN_VIEW.id,
+    ]);
+    rerender();
+    expect(result.current?.patterns).toBe(first);
     expect(api.get).not.toHaveBeenCalled();
   });
 

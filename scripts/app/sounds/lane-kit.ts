@@ -28,6 +28,7 @@ import {
   PATTERN_VERSION,
   PatternSchema,
   type Pattern,
+  type PatternFx,
   type ScaleName,
   type Step,
   type StepSize,
@@ -153,14 +154,39 @@ export interface LaneSoundSpec extends Omit<SoundSpec, 'bpm' | 'riff' | 'steps'>
   pattern: LanePatternSpec;
 }
 
+// `+ 0` turns a -0 into 0, as JSON stores it, so a pattern read back from its file equals the one built.
 const round = (v: ControlValue): ControlValue =>
-  typeof v === 'number' ? Math.round(v * 100) / 100 : v;
+  typeof v === 'number' ? Math.round(v * 100) / 100 + 0 : v;
 
 /** Builds the pattern, checking each lane value against the synth's control and the pattern against the riff rule. */
 export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
-  const ids = [...new Set(s.parts.flatMap((p) => Object.keys(p.lanes)))];
-  if (ids.length < 1 || ids.length > 2)
-    throw new Error(`${s.name}: a lane sound moves one or two controls, not ${ids.length}`);
+  return assemble(def, s, 1);
+}
+
+/**
+ * A song for a sound that is already in the library (`f-livelier-patterns` t-304): as a lane sound's pattern, but its
+ * lanes are optional (none, one or two), it may bring effects, and its part A may be another pattern's steps as they
+ * are (a transcription kept note for note, so the sound's riff does not change) with part B written beside it.
+ */
+export interface SongSpec extends Omit<LanePatternSpec, 'parts'> {
+  /** Part A as written, or the steps of an existing pattern's first part; then part B. */
+  parts: [PartSpec | { steps: Step[] }, PartSpec];
+  fx?: PatternFx;
+}
+
+export function buildSong(def: SynthDef, s: SongSpec): Pattern {
+  return assemble(def, s, 0);
+}
+
+function assemble(def: SynthDef, s: LanePatternSpec | SongSpec, minLanes: number): Pattern {
+  const written = (p: PartSpec | { steps: Step[] }): p is PartSpec => 'notes' in p;
+  const ids = [...new Set(s.parts.flatMap((p) => (written(p) ? Object.keys(p.lanes) : [])))];
+  if (ids.length < minLanes || ids.length > 2)
+    throw new Error(
+      minLanes
+        ? `${s.name}: a lane sound moves one or two controls, not ${ids.length}`
+        : `${s.name}: a song moves at most two controls, not ${ids.length}`
+    );
   for (const id of ids) if (!laneControl(def, id)) throw new Error(`${s.name}: no lane for ${id}`);
   // Swing starts every second step late. A note ends where the step after it starts, late or not, so it neither
   // overlaps the next note nor leaves a gap before it: shorter when it starts late, longer when it ends late.
@@ -173,34 +199,41 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
     // A note that runs into the next loop ends on its slot there, counted from that loop's first.
     return Math.round((c.gate + late((c.i + c.gate) % s.len) - late(c.i)) * 1000) / 1000;
   };
-  const parts = s.parts.map((p) => ({
-    steps: cells(p.notes, s.len).map((c): Step => {
-      const step: Step = {
-        on: true,
-        notes: c.note === null ? [] : [{ note: c.note, gate: gateOf(c) }],
-        ...(c.accent && { accent: true }),
-        ...(c.slide && { slide: true }),
-        ...(c.ratchet > 1 && { ratchet: c.ratchet }),
-      };
-      const mod: Record<string, ControlValue> = {};
-      for (const [id, lane] of Object.entries(p.lanes)) {
-        const raw = lane(c);
-        if (raw === null) continue;
-        // Checked as it is stored, so a value rounded past an end of its knob is caught.
-        const v = round(raw);
-        const control = laneControl(def, id)!;
-        if (laneValue(control, v) === null)
-          throw new Error(`${s.name}: ${id} cannot take ${String(v)} (step ${c.i + 1})`);
-        if (typeof v === 'number' && 'min' in control && 'max' in control) {
-          const { min, max } = control as { min: number; max: number };
-          if (v < min - 1e-9 || v > max + 1e-9)
-            throw new Error(`${s.name}: ${id} ${v} is outside ${min}..${max} (step ${c.i + 1})`);
+  const parts = s.parts.map((p) => {
+    if (!written(p)) {
+      if (p.steps.length !== s.len)
+        throw new Error(`${s.name}: part A has ${p.steps.length} steps, not ${s.len}`);
+      return { steps: p.steps };
+    }
+    return {
+      steps: cells(p.notes, s.len).map((c): Step => {
+        const step: Step = {
+          on: true,
+          notes: c.note === null ? [] : [{ note: c.note, gate: gateOf(c) }],
+          ...(c.accent && { accent: true }),
+          ...(c.slide && { slide: true }),
+          ...(c.ratchet > 1 && { ratchet: c.ratchet }),
+        };
+        const mod: Record<string, ControlValue> = {};
+        for (const [id, lane] of Object.entries(p.lanes)) {
+          const raw = lane(c);
+          if (raw === null) continue;
+          // Checked as it is stored, so a value rounded past an end of its knob is caught.
+          const v = round(raw);
+          const control = laneControl(def, id)!;
+          if (laneValue(control, v) === null)
+            throw new Error(`${s.name}: ${id} cannot take ${String(v)} (step ${c.i + 1})`);
+          if (typeof v === 'number' && 'min' in control && 'max' in control) {
+            const { min, max } = control as { min: number; max: number };
+            if (v < min - 1e-9 || v > max + 1e-9)
+              throw new Error(`${s.name}: ${id} ${v} is outside ${min}..${max} (step ${c.i + 1})`);
+          }
+          mod[id] = v;
         }
-        mod[id] = v;
-      }
-      return Object.keys(mod).length ? { ...step, mod } : step;
-    }),
-  }));
+        return Object.keys(mod).length ? { ...step, mod } : step;
+      }),
+    };
+  });
   const pattern = PatternSchema.parse({
     version: PATTERN_VERSION,
     bpm: s.bpm,
@@ -213,7 +246,8 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
     scale: s.scale,
     parts,
     chain: s.chain,
-    lanes: ids,
+    ...(ids.length ? { lanes: ids } : {}),
+    ...('fx' in s && s.fx ? { fx: s.fx } : {}),
   });
   if (new Set(pattern.chain).size < 2) throw new Error(`${s.name}: the chain plays one part`);
   // The riff is the chain's first part's first loop, and the lesson calls that part A.

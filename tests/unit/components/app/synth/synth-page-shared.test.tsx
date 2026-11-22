@@ -273,6 +273,14 @@ describe('signed out', () => {
     expect(within(strip()).getByText('bass')).toBeTruthy();
   });
 
+  it('turns a rack left on off, as a patch chosen that brings no effects (t-302)', () => {
+    window.localStorage.setItem('kys.fx', JSON.stringify({ on: true }));
+    shared();
+    expect(JSON.parse(window.localStorage.getItem('kys.fx') ?? 'null')).toMatchObject({
+      on: false,
+    });
+  });
+
   it('offers Save a copy as sign-in that comes back to the shared address, and asks nothing of the API', () => {
     shared();
     const link = within(strip()).getByRole('link', { name: 'Sign in to save a copy' });

@@ -32,9 +32,12 @@ class KysProcessor extends AudioWorkletProcessor {
   process(_inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
     this.offset = currentFrame - this.played;
     const out = outputs[0];
-    this.synth.process(out[0], out[0].length, out[1]);
+    // Output 1 is the play-along backing, which the engine sends past the effects rack (t-305).
+    const back = outputs[1];
+    this.synth.process(out[0], out[0].length, out[1], back?.[0], back?.[1]);
     this.played += out[0].length;
     for (let c = 2; c < out.length; c++) out[c].set(out[0]);
+    if (back) for (let c = 2; c < back.length; c++) back[c].set(back[0]);
     return true;
   }
 }

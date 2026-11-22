@@ -34,6 +34,7 @@ const ALLOWED = (path: string) =>
   path === 'scripts/app/sounds/subharmonicon/write.ts' ||
   // Dev-only: writes the Model D's sounds played by their mod lanes, their batch and defaults into the seed data (t-301).
   path === 'scripts/app/sounds/model-d/write-lane-sounds.ts' ||
+  path === 'scripts/app/sounds/model-d/write-livelier-songs.ts' ||
   // Names the seed units as keys for Sunrise's capability parity test, and reads nothing (t-77).
   path === 'lib/app/capability-seed-pairs.ts';
 

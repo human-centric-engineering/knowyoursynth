@@ -48,6 +48,11 @@ type SettingValue<K extends SettingKey> = NonNullable<AccountSettings[K]>;
 type Setting<K extends SettingKey> = [SettingValue<K>, (next: SettingValue<K>) => void];
 export type Settings = { [K in SettingKey]: Setting<K> };
 type Setters = { [K in SettingKey]: (next: SettingValue<K>) => void };
+/**
+ * The settings, and whether they have settled: the browser's read, and signed in, the account's answered (or failed).
+ * Until then a value can still be replaced by the stored one, so a change made from it can be lost or undone.
+ */
+export type PageSettings = Settings & { settled: boolean };
 
 /** Each setting before anything has been chosen. */
 const DEFAULTS: { [K in SettingKey]: SettingValue<K> } = {
@@ -78,7 +83,7 @@ function patchOf<K extends SettingKey>(key: K, value: SettingValue<K>): Settings
  * The page's settings: from browser storage, as always, and signed in (`userId`), from the account once it answers.
  * Each setter writes the browser as before and, signed in, queues the change for the account.
  */
-export function useSettings(userId: string | null): Settings {
+export function useSettings(userId: string | null): PageSettings {
   const signedIn = userId !== null;
   const browser: Settings = {
     tips: useStoredPref(STORAGE_KEYS.tips, SCHEMAS.tips, DEFAULTS.tips),
@@ -87,6 +92,13 @@ export function useSettings(userId: string | null): Settings {
     harm: useStoredPref(STORAGE_KEYS.harm, SCHEMAS.harm, DEFAULTS.harm),
     fx: useStoredPref<RackFx>(STORAGE_KEYS.fx, SCHEMAS.fx, DEFAULTS.fx),
   };
+  // The browser's stored settings are read in an effect after mount (declared above this one, so read before it runs).
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+  // The user whose account settings have been read, or failed to be.
+  const [readFor, setReadFor] = useState<string | null>(null);
   // The browser's settings and setters, for the account's to be written back once they arrive.
   const toBrowser = useRef(browser);
   useEffect(() => {
@@ -114,6 +126,7 @@ export function useSettings(userId: string | null): Settings {
 
   useEffect(() => {
     setAccount(null);
+    setReadFor(null);
     answered.current = false;
     // Kept through the wait for the session, so a change made then still counts once it says who is signed in.
     if (!userId) {
@@ -149,6 +162,7 @@ export function useSettings(userId: string | null): Settings {
         answered.current = true;
         const merged = { ...acct, ...send };
         setAccount(merged);
+        setReadFor(userId);
         // The browser keeps the account's too, so signed out (or with the account unread) the page shows the same.
         // Where the account has no value, another user's is not left in its place: the browser goes back to the default.
         for (const key of SETTING_KEYS) {
@@ -161,7 +175,10 @@ export function useSettings(userId: string | null): Settings {
         else if (Object.keys(send).length === 0 && kept !== null)
           writeStored(STORAGE_KEYS.settingsAt, kept);
       })
-      .catch((err: unknown) => warnAccount('read the settings from the account', err));
+      .catch((err: unknown) => {
+        if (live) setReadFor(userId);
+        warnAccount('read the settings from the account', err);
+      });
     return () => {
       live = false;
     };
@@ -211,5 +228,6 @@ export function useSettings(userId: string | null): Settings {
     heat: setting('heat'),
     harm: setting('harm'),
     fx: setting('fx'),
+    settled: hydrated && (!signedIn || readFor === userId),
   };
 }
