@@ -875,8 +875,11 @@ clock-out lock and its release; and the readout's Clock select and read-only Tem
 ## Playing along: count-in, metronome and drums
 
 What plays along with a pattern (t-266, t-267) is rendered by the pattern player on the audio thread
-(`lib/app/synths/audio/backing.ts`), so every click and hit lands on its sample, in time with the notes. It is added to
-the synth's output after its effects, dry, and is silent on a muted (MIDI-only) run.
+(`lib/app/synths/audio/backing.ts`), so every click and hit lands on its sample, in time with the notes. It is silent
+on a muted (MIDI-only) run, and dry: the worklet renders it on a second output (`numberOfOutputs: 2`; the main-thread
+fallback on channels 2 and 3, split apart), which the engine connects straight to the speakers, past the scope and the
+outboard effects rack (t-305). Only the synth goes through the effects. An offline render (the probe, `check:synths`)
+passes no backing buffers, so it is mixed into the synth's output there.
 
 - **Count-in** (on by default). `pattern` can carry `countIn` (beats; the sequencer sends `COUNT_IN_BEATS`, one bar of
   4). The player holds the loop for that many beats while it clicks, the first accented, and only then announces loop

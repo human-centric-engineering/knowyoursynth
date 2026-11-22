@@ -329,7 +329,17 @@ interface Voice {
 /** The synth: send it messages, and ask it for samples. With `outR` the output is stereo; without it `out` gets the mono sum. */
 export interface Synth {
   handle: (m: SynthMessage) => void;
-  process: (out: Float32Array, n: number, outR?: Float32Array) => void;
+  /**
+   * Renders `n` samples. The play-along backing (drums, count-in, metronome) goes into `backL`/`backR` where given,
+   * apart from the synth so it can skip the effects rack (t-305), and into `out` otherwise.
+   */
+  process: (
+    out: Float32Array,
+    n: number,
+    outR?: Float32Array,
+    backL?: Float32Array,
+    backR?: Float32Array
+  ) => void;
 }
 
 /** Separate waveform outputs of each oscillator (`o1saw` … `o3sine`), filled in when EngineParams `oscOuts` is on. */

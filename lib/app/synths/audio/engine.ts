@@ -113,6 +113,9 @@ export class Engine {
     this.analyser.smoothingTimeConstant = 0.6;
 
     let node: AudioWorkletNode | ScriptProcessorNode | null = null;
+    // Where the synth and the backing come out: the worklet's outputs 0 and 1, or the fallback's channels split apart.
+    let synthOut: AudioNode | null = null;
+    let backOut: AudioNode | null = null;
     if (ctx.audioWorklet && typeof AudioWorkletNode !== 'undefined') {
       try {
         let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -128,8 +131,9 @@ export class Engine {
         }
         const wn = new AudioWorkletNode(ctx, 'kys-voice', {
           numberOfInputs: 0,
-          numberOfOutputs: 1,
-          outputChannelCount: [2],
+          // The synth, then the play-along backing (drums, count-in, metronome), which skips the effects (t-305).
+          numberOfOutputs: 2,
+          outputChannelCount: [2, 2],
         });
         wn.port.onmessage = (m: MessageEvent<SynthEvent>) => this.onEvent(m.data);
         node = wn;
@@ -154,21 +158,40 @@ export class Engine {
         this.onEvent(e.type === 'loop' ? { ...e, frame: e.frame + offset } : e)
       );
       this.local = local;
-      const sp = ctx.createScriptProcessor(1024, 0, 2);
+      // Four channels: the synth's two, then the backing's two, split apart below as the worklet's two outputs are.
+      const sp = ctx.createScriptProcessor(1024, 0, 4);
       sp.onaudioprocess = (e) => {
         if (e.playbackTime) offset = Math.round(e.playbackTime * ctx.sampleRate) - played;
-        const l = e.outputBuffer.getChannelData(0);
-        local.process(l, l.length, e.outputBuffer.getChannelData(1));
+        const b = e.outputBuffer;
+        const l = b.getChannelData(0);
+        local.process(l, l.length, b.getChannelData(1), b.getChannelData(2), b.getChannelData(3));
         played += l.length;
       };
+      const split = ctx.createChannelSplitter(4);
+      const merged = ctx.createChannelMerger(2);
+      const backMerged = ctx.createChannelMerger(2);
+      sp.connect(split);
+      split.connect(merged, 0, 0);
+      split.connect(merged, 1, 1);
+      split.connect(backMerged, 2, 0);
+      split.connect(backMerged, 3, 1);
       node = sp;
+      synthOut = merged;
+      backOut = backMerged;
       this.mode = 'script';
     }
     this.node = node;
     // The scope reads the synth itself; the effects rack sits after it, before the speakers.
     this.rack = createRack(ctx);
     if (this.lastFx) this.rack.set(this.lastFx);
-    node.connect(this.analyser);
+    // The drums, count-in and metronome go straight to the speakers, past the scope and the rack (t-305).
+    if (synthOut && backOut) {
+      synthOut.connect(this.analyser);
+      backOut.connect(ctx.destination);
+    } else {
+      node.connect(this.analyser, 0);
+      node.connect(ctx.destination, 1);
+    }
     this.analyser.connect(this.rack.input);
     this.rack.output.connect(ctx.destination);
     if (this.lastParams) this.send({ type: 'params', p: this.lastParams });
