@@ -537,19 +537,15 @@ describe('the sequencer while a sound loads (f-default-patch t-172)', () => {
     expect(lastSent('pattern')).toMatchObject({ muted: false });
   });
 
-  it('plays the Default Saw’s scale with no drums, and puts them back on Match for the next sound (t-295)', async () => {
+  it('plays the Model D’s Default Saw groove with its drums on Match, matched to its style (t-303)', async () => {
     page();
     settle();
     fireEvent.click(button('Sequencer'));
     choose('Default Saw');
     settle();
-    expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toContain('Off');
-    await press('Play');
-    expect(lastSent('pattern')).toMatchObject({ type: 'pattern', muted: false });
-    expect(lastSent('pattern')).not.toHaveProperty('backing');
-
-    choose('Wobble lead');
-    settle();
     expect(screen.getByRole('combobox', { name: 'Drums' }).textContent).toMatch(/Match: /);
+    await press('Play');
+    expect(lastSent('pattern')).toMatchObject({ type: 'pattern', muted: false, bpm: 116 });
+    expect(lastSent('pattern')).toHaveProperty('backing.drums');
   });
 });

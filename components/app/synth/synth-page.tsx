@@ -590,7 +590,8 @@ function Synth({
   // and before `?sound=`, a shared sound and `?mine=`, which still open their own sound over it.
   // A synth switched to, or a sound opened by `?sound=`, is a patch chosen (t-277): the backing goes to Match and the
   // Count-in on, once the stored setting has been read (`arrivedOnPatch`, below `useBacking`). The Default patch it
-  // opens on starts with the drums off where it is the Default Saw (t-295); a sound from `?sound=` with them on Match.
+  // opens on starts with the drums off where it is a Default Saw playing its scale (t-295), and on Match where it plays
+  // a groove (t-303); a sound from `?sound=` with them on Match (`chosenSound`).
   // Its effects go with it (t-302): the default's, or the rack off.
   const arrivedOnPatch = useRef<ChosenPatch | null>(null);
   useEffect(() => {

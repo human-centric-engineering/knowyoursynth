@@ -87,7 +87,11 @@ definition reaches the page's up-front bundle.
   one's Default patch through the real DSP, failing on a silent one, and `check:synths` renders it as `(default)`
   playing its scale (and refuses a `silentInit` synth that has none). `lib/app/synths/default-patch.ts` turns it into
   the sound the page lists (`defaultPatchSound`), under the reserved id `default-patch`, with its sequencer pattern: C
-  major from C3 up to C4 and back, at 70 bpm.
+  major from C3 up to C4 and back, at 70 bpm, played with the drums off (t-295). A synth may instead have a **groove**
+  (`lib/app/synths/default-grooves.ts`, `f-livelier-patterns` t-303): a chained A/B song that is then its Default Saw's
+  default, played whole with the drums on Match and no effects, its riff the groove's first loop, with the scale second
+  in the patterns the sequencer offers (`defaultPatchPatterns`). The Model D has one (owner ruling, 2026-11-22: the
+  Default Saw is the first sound most visitors hear); every other synth plays the scale.
 
   What goes in one: one oscillator on its sawtooth, the filter open with no resonance and no envelope on it, the
   loudness a plain gate (full sustain, short attack and release), no modulation and no effects. Where the synth has no

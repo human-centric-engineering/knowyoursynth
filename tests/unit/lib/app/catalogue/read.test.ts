@@ -239,7 +239,8 @@ describe('getSynthDetail', () => {
   it('sends the effects a default comes with, and none for one that brings none (t-302)', async () => {
     const s = stored();
     const fx = { delay: { time: 0.4, feedback: 0.3, mix: 0.25 } };
-    const withFx = { ...importPhrase(s.sounds[0].phrase as Phrase), fx };
+    const patternOf = (phrase: unknown) => importPhrase(phrase as Phrase);
+    const withFx = { ...patternOf(s.sounds[0].phrase), fx };
     const place = (id: string, pattern: unknown) => ({
       patternId: id,
       pattern: { status: 'enabled', name: id, pattern, inspiration: 'work', inspiredBy: 'A song' },
@@ -247,7 +248,7 @@ describe('getSynthDetail', () => {
     s.sounds[0] = { ...s.sounds[0], patterns: [place('echoed', withFx)] };
     s.sounds[1] = {
       ...s.sounds[1],
-      patterns: [place('dry', importPhrase(s.sounds[1].phrase as Phrase))],
+      patterns: [place('dry', patternOf(s.sounds[1].phrase))],
     };
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(s as never);
 

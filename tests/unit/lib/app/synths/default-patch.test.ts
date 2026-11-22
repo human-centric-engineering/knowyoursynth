@@ -10,10 +10,15 @@
 import { describe, expect, it } from 'vitest';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { PatternSchema } from '@/lib/app/sequencer/pattern';
+import { drumStyleFor } from '@/lib/app/sequencer/drums';
+import { phraseOf, riffProblem } from '@/lib/app/patterns/library';
+import { defaultGrooveOf } from '@/lib/app/synths/default-grooves';
 import type { CablePair, DefaultPatchStep, SynthDef } from '@/lib/app/synths/contract';
 import {
+  chosenSound,
   DEFAULT_PATCH_ID,
   defaultPatchName,
+  defaultPatchPatterns,
   defaultPatchSound,
   defaultPatchState,
   startStep,
@@ -50,6 +55,42 @@ describe('the scale pattern', () => {
   it('is the Default patch’s own pattern in the picker', () => {
     expect(SCALE_PATTERN_VIEW.pattern).toBe(SCALE_PATTERN);
     expect(SCALE_PATTERN_VIEW.inspiredBy.label).toBe('');
+  });
+});
+
+describe('the Model D’s Default Saw groove (t-303)', () => {
+  const groove = defaultGrooveOf('model-d')!;
+  const sound = defaultPatchSound(modelD);
+
+  it('is a whole song the sequencer accepts and a sound can play by default: two parts, chained', () => {
+    expect(PatternSchema.safeParse(groove.pattern).success).toBe(true);
+    expect(riffProblem(groove.pattern)).toBeNull();
+    expect(new Set(groove.pattern.chain).size).toBe(2);
+    expect(groove.pattern.fx).toBeUndefined();
+  });
+
+  it('is the Default Saw’s default, played whole, its riff the first loop, with the scale after it', () => {
+    expect(sound.defaultPattern).toMatchObject({ played: true, style: groove.style });
+    expect(sound.phrase).toEqual(phraseOf(groove.pattern));
+    const list = defaultPatchPatterns('model-d');
+    expect(list.map((p) => p.id)).toEqual([sound.defaultPattern?.id, SCALE_PATTERN_VIEW.id]);
+    expect(list[0].pattern).toBe(groove.pattern);
+  });
+
+  it('plays with the drums on Match, which finds a beat for its style, and no effects', () => {
+    expect(chosenSound(modelD, sound)).toEqual({ drums: 'auto', fx: null });
+    expect(drumStyleFor(groove.style, groove.pattern.bpm, 50).beat).not.toBeNull();
+  });
+
+  it('leaves every other synth’s Default Saw on its scale with the drums off (t-295)', () => {
+    const others = SYNTH_DEFS.filter((d) => d.id !== 'model-d' && !d.defaultPatch?.listen?.trim());
+    expect(others.length).toBeGreaterThan(0);
+    for (const d of others) {
+      const s = defaultPatchSound(d);
+      expect(s.phrase, d.id).toBe(SCALE_PHRASE);
+      expect(defaultPatchPatterns(d.id), d.id).toEqual([SCALE_PATTERN_VIEW]);
+      expect(chosenSound(d, s).drums, d.id).toBe('off');
+    }
   });
 });
 

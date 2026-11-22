@@ -23,7 +23,7 @@ import {
 } from '@/components/app/synth/stores';
 import { SESSION_WRITE_DELAY_MS, readStored } from '@/components/app/synth/storage';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { SCALE_PHRASE, START_STEP, defaultPatchState } from '@/lib/app/synths/default-patch';
+import { START_STEP, defaultPatchSound, defaultPatchState } from '@/lib/app/synths/default-patch';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
@@ -2692,7 +2692,7 @@ describe('SynthPage sounds', () => {
 
   const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 
-  it('with no sounds it opens on the Default patch, which plays its scale', async () => {
+  it('with no sounds it opens on the Default patch, which plays its groove on the Model D (t-303)', async () => {
     page({ detail: { ...detail, sounds: [] } });
     expect(loadedName()).toBe('Default Saw');
     expect(screen.queryByRole('button', { name: 'Restore patch' })).toBeNull();
@@ -2700,7 +2700,7 @@ describe('SynthPage sounds', () => {
     await act(async () => {
       fireEvent.click(button('Play'));
     });
-    expectRiff(patternsSent(sentNow()).at(-1), SCALE_PHRASE);
+    expectRiff(patternsSent(sentNow()).at(-1), defaultPatchSound(def).phrase);
   });
 
   it('with no sounds the fresh session is the Default patch, which a moved control counts against and Restore puts back', () => {

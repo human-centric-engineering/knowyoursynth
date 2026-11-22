@@ -12,7 +12,8 @@
  *
  * Every patch chosen starts with the drums on Match and the Count-in on (t-277), whatever was set on the last one, Off
  * included: the beat is the one that suits the new patch. The Default Saw is the exception: it starts with the drums
- * off (t-295, owner 2026-11-21), as it is the plain tone to check by ear, playing a scale. The Metronome is left as
+ * off (t-295, owner 2026-11-21), as it is the plain tone to check by ear, playing a scale, except on a synth whose
+ * Default Saw plays a groove of its own (t-303, `default-grooves.ts`). The Metronome is left as
  * it was. The page calls `newPatch` where the visitor picks a patch, not on a change of what is open: a reload, the
  * stored panel arriving after the first render, the account's copy arriving later, or another tab writing the setting
  * is not a patch chosen, and leaves the choices made on the panel as they were.
@@ -57,7 +58,7 @@ export interface Backing {
   matched: DrumStyle;
   /** The beat that plays, or null for none. */
   beat: DrumBeatId | null;
-  /** A patch was chosen: the drums go to Match (or `drums`, Off for the Default Saw) and the Count-in comes on. */
+  /** A patch was chosen: the drums go to Match (or `drums`, Off for a Default Saw playing its scale) and the Count-in comes on. */
   newPatch: (drums?: 'auto' | 'off') => void;
 }
 
