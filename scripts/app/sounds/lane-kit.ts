@@ -166,7 +166,12 @@ export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
   // overlaps the next note nor leaves a gap before it: shorter when it starts late, longer when it ends late.
   const push = (s.swing ?? 50) / 50 - 1;
   const late = (i: number) => (i % 2 === 1 ? push : 0);
-  const gateOf = (c: Cell) => Math.round((c.gate + late(c.i + c.gate) - late(c.i)) * 1000) / 1000;
+  const gateOf = (c: Cell) => {
+    // A gate that ends inside a step has no swung step start to end on: written straight, or not at all.
+    if (push !== 0 && !Number.isInteger(c.gate))
+      throw new Error(`${s.name}: a swung note holds whole steps, not ${c.gate} (step ${c.i + 1})`);
+    return Math.round((c.gate + late(c.i + c.gate) - late(c.i)) * 1000) / 1000;
+  };
   const parts = s.parts.map((p) => ({
     steps: cells(p.notes, s.len).map((c): Step => {
       const step: Step = {

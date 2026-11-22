@@ -97,6 +97,12 @@ describe('buildPattern', () => {
     late.parts[0] = { notes: '. A2:2 . A2 | . . . A2', lanes: late.parts[0].lanes };
     // Starts late and ends late: as written.
     expect(buildPattern(modelD, late).parts[0].steps[1].notes[0].gate).toBe(2);
+    // A gate ending inside a step has no swung start to end on, so a swung part refuses one.
+    const part = spec({ swing: 62 });
+    part.parts[0] = { notes: 'A2:1.5 . . A2 | . . . A2', lanes: part.parts[0].lanes };
+    expect(() => buildPattern(modelD, part)).toThrow(
+      /a swung note holds whole steps, not 1.5 \(step 1\)/
+    );
   });
 
   it('checks a lane value as it is stored, rounded', () => {

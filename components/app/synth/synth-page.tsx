@@ -1599,6 +1599,10 @@ function Synth({
   const playedDefault = !!librarySound && !!libraryPreset?.defaultPattern?.played;
   const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen || playedDefault);
   useLoadSoundDefault(seq, playedDefault ? soundPatterns : null);
+  // A played default whose read failed plays its riff meanwhile. Play and opening the sequencer each ask for it again
+  // (its read is already on, so opening does not re-read it by itself), and once it arrives it takes the riff's place,
+  // so the chain and lanes are never silently lost for good.
+  const retryPlayed = playedDefault && soundPatterns?.error ? soundPatterns.retry : null;
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1747,6 +1751,7 @@ function Synth({
     }
     // Opened while the riff plays, it plays on as the pattern: it is the riff, until it is edited.
     riffToPattern();
+    retryPlayed?.();
   };
   const toggleSequencer = () => {
     if (!seqShown) openSequencer();
@@ -1783,9 +1788,6 @@ function Synth({
     [riffNow, stopRiff]
   );
   // Not while a patch loads: then once it has, counted in.
-  // A played default whose read failed plays its riff meanwhile; each Play asks for it again, and once it arrives it
-  // is loaded in the riff's place, so the chain and lanes are never silently lost for good.
-  const retryPlayed = playedDefault && soundPatterns?.error ? soundPatterns.retry : null;
   const playRiff = useCallback(
     async (countIn = true) => {
       replayRiff.current = false;

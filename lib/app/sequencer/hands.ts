@@ -10,7 +10,8 @@
  * - **A switch or selector** may not change again within `flipS` of its last change.
  *
  * Travel is how far the knob turns, so a knob with a log taper is measured by ratio, as it is dragged. Time is the
- * song's own: swing starts every second step late, so a move into a late step has longer and one out of it less.
+ * song's own, as the compiler plays it: each part a loop, its steps forward or in reverse, and swing starting every
+ * second slot of a loop late, so a move into a late slot has longer and one out of it less.
  */
 import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/synths/contract';
 import { laneControl, laneValue } from '@/lib/app/sequencer/lanes';
@@ -30,12 +31,35 @@ export interface HandLimits {
 /** The owner's ruling, 2026-11-21: a quick, practised player's hands (`lane-sounds.md`, The hand limits). */
 export const HAND_LIMITS: HandLimits = { sweepS: 0.3, turnsPerS: 3, flipS: 0.2, jitter: 0.03 };
 
-/** Where a step of the song is, for a problem's text: `A7` is part A's seventh step, on whichever pass. */
-const placeOf = (p: Pattern, i: number): string => {
+/** One slot of the song as it plays: the step, where it is in its part, and when it starts in the song. */
+interface Slot {
+  step: Pattern['parts'][number]['steps'][number];
+  /** For a problem's text: `A7` is part A's seventh step, on whichever pass. */
+  place: string;
+  at: number;
+}
+
+/**
+ * The song as the compiler plays it (`compileLoop`): a loop a part in the chain's order, its steps forward or in
+ * reverse, and swing counted from each loop's first slot, every second slot starting late. A default plays forward or
+ * in reverse (`riffProblem`); any other direction is read forward.
+ */
+function songOf(p: Pattern): { slots: Slot[]; length: number } {
+  const stepS = 60 / p.bpm / stepsPerBeat(p);
   const len = p.parts[0].steps.length;
-  const loop = Math.floor(i / len) % p.chain.length;
-  return `${'AB'[p.chain[loop]] ?? `part ${p.chain[loop] + 1} `}${(i % len) + 1}`;
-};
+  const push = p.swing / 50 - 1;
+  const slots = p.chain.flatMap((k, loop) =>
+    Array.from({ length: len }, (_, slot) => {
+      const index = p.direction === 'reverse' ? len - 1 - slot : slot;
+      return {
+        step: p.parts[k].steps[index],
+        place: `${'AB'[k] ?? `part ${k + 1} `}${index + 1}`,
+        at: (loop * len + slot + (slot % 2 === 1 ? push : 0)) * stepS,
+      };
+    })
+  );
+  return { slots, length: p.chain.length * len * stepS };
+}
 
 /** A knob's position along its travel, 0 to 1. */
 function travel(c: Extract<Control, { kind: 'cont' }>, v: number): number {
@@ -55,20 +79,19 @@ export function handProblems(
   panel: ControlValues,
   limits: HandLimits = HAND_LIMITS
 ): string[] {
-  const stepS = 60 / pattern.bpm / stepsPerBeat(pattern);
-  const song = pattern.chain.flatMap((k) => pattern.parts[k].steps);
-  const n = song.length;
-  // When step `i` (counted on through later passes) plays, in seconds: swing starts every second step late, as the
-  // compiler plays a lane's change (`slotStart`), so a move into a late step has longer and one out of it less.
-  const push = pattern.swing / 50 - 1;
-  const time = (i: number) => (i + (i % 2 === 1 ? push : 0)) * stepS;
+  const { slots, length } = songOf(pattern);
+  const n = slots.length;
+  // When slot `i`, counted on through later passes of the song, starts: a move into a late slot has longer, and one
+  // out of it less.
+  const time = (i: number) => Math.floor(i / n) * length + slots[i % n].at;
+  const place = (i: number) => slots[i % n].place;
   const problems: string[] = [];
   for (const id of pattern.lanes ?? []) {
     const c = laneControl(def, id);
     if (!c) continue;
     // A step the lane leaves alone plays at the panel's value, or the control's own where the panel has none.
     const at = (i: number): ControlValue | null =>
-      laneValue(c, song[i % n].mod?.[id]) ?? laneValue(c, panel[id] ?? c.def);
+      laneValue(c, slots[i % n].step.mod?.[id]) ?? laneValue(c, panel[id] ?? c.def);
     if (c.kind === 'cont') {
       const pos = Array.from({ length: n }, (_, i) => {
         const v = at(i);
@@ -80,7 +103,7 @@ export function handProblems(
         const gap = time(i + 1) - time(i);
         if (d > gap / limits.sweepS + 1e-9) {
           problems.push(
-            `${id}: moves ${Math.round(d * 100)}% of its travel into ${placeOf(pattern, i + 1)} in ${round(gap)} s, a full sweep in ${round(gap / d)} s (a hand's fastest is ${limits.sweepS} s)`
+            `${id}: moves ${Math.round(d * 100)}% of its travel into ${place(i + 1)} in ${round(gap)} s, a full sweep in ${round(gap / d)} s (a hand's fastest is ${limits.sweepS} s)`
           );
           break;
         }
@@ -108,7 +131,7 @@ export function handProblems(
           count++;
         if (count > limits.turnsPerS) {
           problems.push(
-            `${id}: turns back ${count} times in the second from ${placeOf(pattern, turns[k] % n)} (a hand turns at most ${limits.turnsPerS})`
+            `${id}: turns back ${count} times in the second from ${place(turns[k])} (a hand turns at most ${limits.turnsPerS})`
           );
           break;
         }
@@ -121,10 +144,11 @@ export function handProblems(
         const prev = changes[(k + changes.length - 1) % changes.length];
         // The last change before this one, a pass earlier where it is the song's first.
         const from = prev < changes[k] ? prev : prev - n;
-        const gap = changes.length === 1 ? n * stepS : time(changes[k] + n) - time(from + n);
+        // A song that changes a switch changes it back, so there are always two changes at least.
+        const gap = time(changes[k] + n) - time(from + n);
         if (gap < limits.flipS - 1e-9) {
           problems.push(
-            `${id}: changes again at ${placeOf(pattern, changes[k])}, ${round(gap)} s after its last change (a hand needs ${limits.flipS} s)`
+            `${id}: changes again at ${place(changes[k])}, ${round(gap)} s after its last change (a hand needs ${limits.flipS} s)`
           );
           break;
         }

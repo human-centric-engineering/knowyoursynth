@@ -65,6 +65,14 @@ describe('a knob', () => {
     ]);
   });
 
+  it('reads a reversed pattern in the order it plays, so the seams fall where it turns round', () => {
+    // Forward, B's 4 jumps back to A's -4 at the loop's end. Reversed, A plays down to -4 and B starts at its top, 4.
+    const p = pattern({ 'filter.cutoff': ramp(-4, 0) }, { 'filter.cutoff': ramp(0, 4) });
+    expect(handProblems(modelD, { ...p, direction: 'reverse' }, panel)).toEqual([
+      expect.stringMatching(/^filter\.cutoff: moves 80% of its travel into B16 /),
+    ]);
+  });
+
   it('refuses more than three turns back in a second, a wobble too quick for a hand', () => {
     // A 30% wobble four steps a cycle turns twice a half second: four times in a second, though no move is too fast.
     const p = pattern({ 'filter.emphasis': wave(2, 5, 4) });
@@ -104,6 +112,20 @@ describe('swing', () => {
     expect(handProblems(modelD, { ...straight, swing: 66 }, panel)).toEqual([
       "filter.cutoff: moves 40% of its travel into A5 in 0.08 s, a full sweep in 0.21 s (a hand's fastest is 0.3 s)",
     ]);
+  });
+
+  it('counts swing from each loop’s first slot, so a part of odd length starts the next loop on time', () => {
+    // Fifteen steps a part: B's first slot is on time and its second late, so the 40% move into B2 has 1.32 steps.
+    // Counted across the song instead, B2 would be the 16th step, on time, with 0.68 of one.
+    const odd = (p: ReturnType<typeof pattern>) => ({
+      ...p,
+      swing: 66,
+      parts: p.parts.map((part) => ({ ...part, steps: part.steps.slice(0, 15) })),
+    });
+    const p = odd(
+      pattern({ 'filter.cutoff': () => -2 }, { 'filter.cutoff': (c) => (c.i < 1 ? -2 : 2) })
+    );
+    expect(handProblems(modelD, p, panel)).toEqual([]);
   });
 
   it('times a switch’s flips by the swung steps too', () => {
