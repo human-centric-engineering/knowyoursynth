@@ -126,6 +126,7 @@ export function useSettings(userId: string | null): PageSettings {
 
   useEffect(() => {
     setAccount(null);
+    setReadFor(null);
     answered.current = false;
     // Kept through the wait for the session, so a change made then still counts once it says who is signed in.
     if (!userId) {

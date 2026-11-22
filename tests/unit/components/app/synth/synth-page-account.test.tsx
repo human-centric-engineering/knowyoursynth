@@ -327,6 +327,29 @@ describe('signed in, opening a synth', () => {
     });
   });
 
+  it('keeps a rack change made while the account is still answering, over the reset waiting for it', async () => {
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    let answer: (v: AccountSettings) => void = () => undefined;
+    const pending = new Promise<AccountSettings>((resolve) => {
+      answer = resolve;
+    });
+    const servedElse = api.get.getMockImplementation();
+    api.get.mockImplementation((path: string) =>
+      path === SETTINGS_PATH ? pending : servedElse?.(path)
+    );
+    window.history.replaceState(null, '', '/synths/model-d?sound=fat-bass');
+    render(
+      <SynthPage detail={detail} synths={[MODEL_D_SYNTH]} viewParam={null} soundParam="fat-bass" />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Effects' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Effects off$/ }));
+    await act(async () => {
+      answer(served.settings({ ...NO_SETTINGS, updatedAt: KEPT_AT }));
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(readStored('kys.fx')).toMatchObject({ on: true });
+  });
+
   it("writes the account's settings to the browser, stamped with the account's time", async () => {
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
     account.settings = { ...NO_SETTINGS, dim: true, updatedAt: KEPT_AT };

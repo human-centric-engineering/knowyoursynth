@@ -8,6 +8,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { z } from 'zod';
 import modelD from '@/lib/app/synths/defs/model-d';
 import { PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
 import { buildSong } from '@/scripts/app/sounds/lane-kit';
@@ -18,12 +19,13 @@ import {
   stacc,
 } from '@/scripts/app/sounds/model-d/livelier-songs';
 
+const BatchFileSchema = z.object({
+  patterns: z.array(z.object({ key: z.string(), pattern: z.unknown() })),
+});
 const DIR = join(process.cwd(), 'prisma/seeds/app-knowyoursynth/data/patterns');
 const NAME = 't304-model-d-livelier-songs.json';
 const patternsIn = (file: string): Map<string, Pattern> => {
-  const raw = JSON.parse(readFileSync(join(DIR, file), 'utf8')) as {
-    patterns: { key: string; pattern: unknown }[];
-  };
+  const raw = BatchFileSchema.parse(JSON.parse(readFileSync(join(DIR, file), 'utf8')));
   return new Map(raw.patterns.map((p) => [p.key, PatternSchema.parse(p.pattern)]));
 };
 const batch = patternsIn(NAME);

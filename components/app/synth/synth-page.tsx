@@ -66,7 +66,7 @@ import {
   startStep,
   type ChosenPatch,
 } from '@/lib/app/synths/default-patch';
-import { rackForPatch } from '@/lib/app/synths/audio/fx';
+import { rackForPatch, type RackFx } from '@/lib/app/synths/audio/fx';
 import { SynthPanel } from '@/components/app/panel/synth-panel';
 import type { CableEnd } from '@/components/app/panel/synth-panel';
 import type { AppSynthDef } from '@/lib/app/synths/defs';
@@ -1662,31 +1662,45 @@ function Synth({
     },
     [setFx]
   );
-  // The effects of the patch arrived on, held until the settings have settled (`undefined`: none to apply).
-  const arrivalFx = useRef<ChosenPatch['fx'] | undefined>(undefined);
+  // The rack is reset once the settings have settled: the browser's stored rack read and, signed in, the account's.
+  // Before then the rack this render holds can still be replaced, which would undo the reset or lose the knobs, so a
+  // patch chosen meanwhile (arrived on, a shared sound or `?mine=` opened) holds its effects here (`undefined`: none).
+  const settingsSettled = settings.settled && !authPending;
+  const settledNow = useRef(settingsSettled);
+  useEffect(() => {
+    settledNow.current = settingsSettled;
+  });
+  const pendingFx = useRef<ChosenPatch['fx'] | undefined>(undefined);
   const choosePatch = useCallback(
     (chosen: ChosenPatch = { drums: 'auto', fx: null }) => {
-      arrivalFx.current = undefined;
       newPatch(chosen.drums);
-      rackFor(chosen.fx);
+      if (settledNow.current) {
+        pendingFx.current = undefined;
+        rackFor(chosen.fx);
+      } else pendingFx.current = chosen.fx;
     },
     [newPatch, rackFor]
+  );
+  // The visitor's own change to the rack wins over a reset still waiting.
+  const changeRack = useCallback(
+    (next: RackFx) => {
+      pendingFx.current = undefined;
+      fxNow.current = next;
+      setFx(next);
+    },
+    [setFx]
   );
   // Declared after the backing's stored setting is read, so the reset lands on it rather than on the default.
   useEffect(() => {
     const chosen = arrivedOnPatch.current;
     if (!chosen) return;
     arrivedOnPatch.current = null;
-    newPatch(chosen.drums);
-    arrivalFx.current = chosen.fx;
+    choosePatch(chosen);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
-  // The rack is reset once the settings have settled: the browser's stored rack read and, signed in, the account's.
-  // Before then the rack this render holds can still be replaced, which would undo the reset or lose the knobs.
-  const settingsSettled = settings.settled && !authPending;
   useEffect(() => {
-    if (!settingsSettled || arrivalFx.current === undefined) return;
-    const patchFx = arrivalFx.current;
-    arrivalFx.current = undefined;
+    if (!settingsSettled || pendingFx.current === undefined) return;
+    const patchFx = pendingFx.current;
+    pendingFx.current = undefined;
     rackFor(patchFx);
   }, [settingsSettled, rackFor]);
   // Play plays the sequencer while it is open, while it holds a pattern that was loaded (one picked in the sequencer, the
@@ -3475,7 +3489,7 @@ function Synth({
                     </div>
                   )}
                 </div>
-                {small && <FxRack fx={fx} onChange={setFx} />}
+                {small && <FxRack fx={fx} onChange={changeRack} />}
               </div>
             </div>
 
@@ -3497,7 +3511,7 @@ function Synth({
                 side={cardSide}
                 onSide={() => setCardSide(cardSide === 'right' ? 'left' : 'right')}
                 inspector={inspector}
-                effects={<FxRack fx={fx} onChange={setFx} inCard />}
+                effects={<FxRack fx={fx} onChange={changeRack} inCard />}
                 mark={ownLesson || !shown ? null : (progress.marks?.get(shown.id) ?? null)}
                 links={shownLinks}
                 suggestLink={suggestForSound}
