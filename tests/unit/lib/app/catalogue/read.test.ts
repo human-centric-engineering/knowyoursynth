@@ -236,6 +236,27 @@ describe('getSynthDetail', () => {
     expect(detail?.sounds[2].defaultPattern).toEqual({ id: 'plain', name: 'plain' });
   });
 
+  it('sends the effects a default comes with, and none for one that brings none (t-302)', async () => {
+    const s = stored();
+    const fx = { delay: { time: 0.4, feedback: 0.3, mix: 0.25 } };
+    const withFx = { ...importPhrase(s.sounds[0].phrase as Phrase), fx };
+    const place = (id: string, pattern: unknown) => ({
+      patternId: id,
+      pattern: { status: 'enabled', name: id, pattern, inspiration: 'work', inspiredBy: 'A song' },
+    });
+    s.sounds[0] = { ...s.sounds[0], patterns: [place('echoed', withFx)] };
+    s.sounds[1] = {
+      ...s.sounds[1],
+      patterns: [place('dry', importPhrase(s.sounds[1].phrase as Phrase))],
+    };
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(s as never);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(detail?.sounds[0].defaultPattern).toEqual({ id: 'echoed', name: 'echoed', fx });
+    expect(detail?.sounds[1].defaultPattern).toEqual({ id: 'dry', name: 'dry' });
+  });
+
   it('sends each sound with the pattern its riff plays: the first enabled one that can be a riff (t-224)', async () => {
     const s = stored();
     let n = 0;

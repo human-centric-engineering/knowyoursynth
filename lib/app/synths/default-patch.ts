@@ -12,7 +12,7 @@ import { patternFacts } from '@/lib/app/patterns/library-facts';
 // Type only: this module reaches the browser, and the library module holds the database client.
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { importPhrase } from '@/lib/app/sequencer/import';
-import type { Pattern } from '@/lib/app/sequencer/pattern';
+import type { Pattern, PatternFx } from '@/lib/app/sequencer/pattern';
 import type {
   DefaultPatch,
   DefaultPatchStep,
@@ -41,6 +41,26 @@ export const defaultPatchName = (def: SynthDef): string =>
   isSawDefault(def) ? DEFAULT_SAW_NAME : DEFAULT_PATCH_NAME;
 
 export const isDefaultPatch = (id: string | null | undefined): boolean => id === DEFAULT_PATCH_ID;
+
+/** What choosing a patch does to what plays along with it and the effects rack (t-277, t-295, t-302). */
+export interface ChosenPatch {
+  /** The drums: on Match, or off. */
+  drums: 'auto' | 'off';
+  /** The effects its default pattern comes with; none turns the rack off. */
+  fx: PatternFx | null;
+}
+
+/**
+ * A library sound (or the Default patch) as it is chosen: the drums on Match, except the Default Saw's, which plays
+ * its scale with none (t-295); and the rack to the effects its default comes with, or off.
+ */
+export const chosenSound = (
+  def: SynthDef,
+  sound: Pick<CatalogueSound, 'id' | 'defaultPattern'>
+): ChosenPatch => ({
+  drums: isDefaultPatch(sound.id) && isSawDefault(def) ? 'off' : 'auto',
+  fx: sound.defaultPattern?.fx ?? null,
+});
 
 /** C3, an octave below middle C: where the scale starts and ends. */
 const SCALE_ROOT = 48;

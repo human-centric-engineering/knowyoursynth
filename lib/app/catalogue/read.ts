@@ -19,6 +19,7 @@ import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
 import { ENABLED, parsedHeadOf, playedDefault, PLACES } from '@/lib/app/patterns/library';
 import { styleWordsOf } from '@/lib/app/sequencer/drums';
+import type { PatternFx } from '@/lib/app/sequencer/pattern';
 import {
   summarisePublicLinks,
   summariseSongLinks,
@@ -58,11 +59,12 @@ export interface CatalogueSynth {
  * the sound. Its `style` is the words of its Inspired by that say its style (`styleWordsOf`), what the drums' Match
  * goes by for the riff (t-267); absent for a work or a synth. `played` marks a default that plays more than its riff
  * (a chained part B, or mod lanes: `playedDefault`, t-300), which the page loads into the sequencer as the sound is
- * picked, so Play plays it whole; absent otherwise.
+ * picked, so Play plays it whole; absent otherwise. `fx` is the effects the default comes with (t-302), which the rack
+ * is turned to as the sound is chosen; absent for one that brings none, when the rack is turned off.
  */
 export type CatalogueSound = Preset & {
   version: number;
-  defaultPattern?: { id: string; name: string; style?: string; played?: true };
+  defaultPattern?: { id: string; name: string; style?: string; played?: true; fx?: PatternFx };
 };
 
 export type Limit = z.infer<typeof LimitSchema>;
@@ -263,6 +265,8 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       ? styleWordsOf({ kind: head.pattern.inspiration, label: head.pattern.inspiredBy })
       : null;
     const played = !!parsedHead && playedDefault(parsedHead.pattern);
+    // The effects the default comes with (t-302): the rack is turned to them as the sound is chosen.
+    const fx = parsedHead?.pattern.fx;
     sounds.push({
       ...result.value,
       version: s.definitionVersion,
@@ -273,6 +277,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
               name: head.pattern.name,
               ...(style ? { style } : {}),
               ...(played ? { played: true as const } : {}),
+              ...(fx ? { fx } : {}),
             },
           }
         : {}),

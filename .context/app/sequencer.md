@@ -904,3 +904,22 @@ The bar is always four beats from the pattern's first step, whatever the loop's 
 its Inspired by for Match, when that is a genre or an artist (`styleWordsOf`: a work's title or a synth's name says
 nothing of a style); the sound's own riff goes by its default pattern's, which the catalogue sends as
 `defaultPattern.style`.
+
+## The effects a pattern brings
+
+`f-livelier-patterns` t-302. The outboard effects rack (`lib/app/synths/audio/fx.ts`, drive → chorus → delay → reverb)
+is **not a standing setting** (owner ruling, 2026-11-22): every patch chosen or created starts with it off, unless the
+patch comes with effects of its own.
+
+- **A pattern may carry `fx`** (`PatternFxSchema`): the units it wants, each at its levels (0..1, the rack's own). A
+  unit it names is switched on, every other off, and the rack on. Most patterns have none.
+- **A sound's default brings them.** The catalogue sends the default's effects as `defaultPattern.fx`, and choosing
+  the sound turns the rack to them (`rackForPatch`). A patch with none (another library sound, the Default patch, a
+  tutor design, one of your sounds, a shared sound) turns the rack off, its knobs left where they were for when the
+  visitor switches it on again.
+- **The page does it where it puts the drums on Match** (`choosePatch` in `synth-page.tsx`, with `chosenSound` from
+  `lib/app/synths/default-patch.ts`), so the same rule holds: a reload, the account's copy arriving or another tab is
+  no patch chosen, and the rack stays as it was. The visitor can still turn the rack on and set it for the patch in
+  front of them; the next patch chosen replaces that.
+- A pattern opened in the sequencer's picker over the same sound does not move the rack: only a patch chosen does.
+- The drums, count-in and metronome never pass through it ([Playing along](#playing-along-count-in-metronome-and-drums)).

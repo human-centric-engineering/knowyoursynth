@@ -2056,6 +2056,56 @@ describe('SynthPage effects', () => {
     expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: true }));
     expect(readStored('kys.fx')).toMatchObject({ on: true });
   });
+
+  // A sound whose default pattern comes with effects (t-302): a delay and a reverb, nothing else.
+  const ECHO_LEAD = sound({
+    id: 'echo-lead',
+    name: 'Echo lead',
+    steps: [{ title: 'Open it', module: 'filter', why: 'Bright.', set: { 'filter.cutoff': 4 } }],
+    defaultPattern: {
+      id: 'p-echo',
+      name: 'Echo lead line',
+      fx: { delay: { time: 0.4, feedback: 0.3, mix: 0.3 }, reverb: { size: 0.6, mix: 0.2 } },
+    },
+  });
+  const choose = (name: string) => {
+    fireEvent.click(button(/^Choose a patch/));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes(name))[0]
+    );
+  };
+
+  it('turns the rack to the effects a chosen sound comes with, and off for the next patch, knobs kept (t-302)', () => {
+    page({ detail: { ...detail, sounds: [FAT_BASS, ECHO_LEAD] } });
+    // The visitor's own rack, on with the drive: no standing setting, so the next patch chosen turns it off.
+    fireEvent.click(button('Effects'));
+    fireEvent.click(screen.getByRole('button', { name: /^Effects off$/ }));
+    expect(readStored('kys.fx')).toMatchObject({ on: true });
+
+    choose('Echo lead');
+    expect(readStored('kys.fx')).toMatchObject({
+      on: true,
+      drive: { on: false },
+      chorus: { on: false },
+      delay: { on: true, time: 0.4, feedback: 0.3, mix: 0.3 },
+      reverb: { on: true, size: 0.6, mix: 0.2 },
+    });
+    expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: true }));
+
+    choose('Fat bass');
+    // Off, with the knobs where the last patch left them for when it is switched on again.
+    expect(readStored('kys.fx')).toMatchObject({ on: false, delay: { time: 0.4 } });
+    expect(engine.setFx).toHaveBeenLastCalledWith(expect.objectContaining({ on: false }));
+  });
+
+  it('keeps the rack as it was through a reload, which is no patch chosen (t-302)', () => {
+    storeSound(def, FAT_BASS);
+    window.localStorage.setItem('kys.fx', JSON.stringify({ on: true }));
+    page();
+    expect(readStored('kys.fx')).toMatchObject({ on: true });
+  });
 });
 
 // The regions the page lays out.
