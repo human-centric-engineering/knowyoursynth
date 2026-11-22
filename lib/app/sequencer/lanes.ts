@@ -11,6 +11,11 @@
 import type { ModChange } from '@/lib/app/sequencer/compile';
 import type { Pattern } from '@/lib/app/sequencer/pattern';
 import { controlMap } from '@/lib/app/synths/lib/patch';
+import {
+  isPerformanceId,
+  performanceControl,
+  performanceInputs,
+} from '@/lib/app/synths/lib/performance';
 import type {
   Control,
   ControlOption,
@@ -20,18 +25,25 @@ import type {
 } from '@/lib/app/synths/contract';
 
 /**
- * The control a lane moves, if the synth has one it can move. Its tempo knob is the pattern's own tempo, so not that: a
+ * The control a lane moves, if the synth has one it can move: a panel control, or a performance wheel the synth
+ * declares (`@wheel`, `performance.ts`). Its tempo knob is the pattern's own tempo, so not that: a
  * lane saved for one (the Subharmonicon's TEMPO, from before it became the tempo, `f-own-sequencer`) is kept and
  * silent, as any lane the synth has no control for.
  */
 export function laneControl(def: SynthDef, id: string): Control | null {
   if (id === def.tempo) return null;
+  if (isPerformanceId(id)) return performanceControl(def, id);
   return controlMap(def)[id] ?? null;
 }
 
-/** The controls a lane can be given on this synth, in panel order. */
-export const laneControls = (def: SynthDef): Control[] =>
-  def.controls.filter((c) => c.id !== def.tempo && !('pairOf' in c && c.pairOf));
+/**
+ * The controls a lane can be given on this synth: its performance wheels first (`performance.ts`), which a player
+ * reaches for before any knob, then the panel's controls in panel order.
+ */
+export const laneControls = (def: SynthDef): Control[] => [
+  ...performanceInputs(def).map((p) => p.control),
+  ...def.controls.filter((c) => c.id !== def.tempo && !('pairOf' in c && c.pairOf)),
+];
 
 /** The options of a choice a lane can pick: those the panel draws. */
 export const laneOptions = (c: { options: ControlOption[] }): ControlOption[] => {

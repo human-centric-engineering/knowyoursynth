@@ -37,7 +37,8 @@
  * like the notes and ahead of a note on the same beat. A CC is sent only when its value changes. Changes whose time
  * has gone (an edit, a CC given mid-run, a held-up timer, a change of port) aren't sent late one by one: only the
  * value in effect on each CC, now.
- * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to.
+ * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to. A
+ * performance wheel's lane is the exception (`CcLookup.rest`): the wheel goes back to the hand's, once a lane moved it.
  *
  * With a program set (`setProgram`, `f-midi-hardware-lead` t-92), a run from the top first calls up that patch: Bank
  * Select (CC 0, then CC 32, each only if given), then Program Change, now. A synth takes a moment to load a patch, so
@@ -311,8 +312,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     offs.length = 0;
   }
 
-  /** Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. */
-  function release(keepClock = false) {
+  /**
+   * Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. `rest`: the run
+   * ends here, so a wheel a lane moved goes back to the hand's; not on a silence.
+   */
+  function release(keepClock = false, rest = true) {
     const now = clock.now();
     freeAt.forEach((at, n) => {
       if (at <= now) freeAt.delete(n);
@@ -330,6 +334,14 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     held.clear();
     downAt.clear();
     lagOf.clear();
+    // A wheel a lane moved goes back to the hand's (`CcLookup.rest`): now, or after a value already handed over for
+    // later on it, so the hardware ends on the hand's.
+    if (port && rest)
+      for (const [cc, v] of ccs?.rest?.() ?? []) {
+        const sent = ccSent.get(cc);
+        if (sent !== undefined && sent !== v)
+          out([0xb0 | channel, cc, v], Math.max(now, ccAt.get(cc) ?? now));
+      }
     ccSent.clear();
     offs.length = 0;
     dirty = false;
@@ -581,9 +593,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
    * not a burst of the ones before it: a CC is a setting, better late than left wrong. One still to come goes at its
    * time.
    */
-  function sendMod(c: Cursor, g: number, set: ControlValues | null, a: Anchor, now: number) {
+  function sendMod(c: Cursor, g: number, raw: ControlValues | null, a: Anchor, now: number) {
     c.k++;
-    if (!set || !ccs) return;
+    if (!ccs) return;
+    // A change to no lane values still sends a wheel lane's hand value (`ccLookup`); a lane given a CC sends nothing.
+    const set = raw ?? {};
     const due = msAt(a, g);
     if (due <= now) {
       for (const [cc, v] of ccs(set)) behind.set(cc, v);
@@ -673,7 +687,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const e = endG;
     // A Start not sent yet keeps its place; one whose beat has passed by the next pump waits for the next loop.
     const sg = started ? null : startG;
-    release(keepClock);
+    // The run goes on, so the wheel stays where the lane has it.
+    release(keepClock, false);
     // The run goes on from what is heard when next pumped. The clock starts again at the next loop.
     cur = run;
     next = n;

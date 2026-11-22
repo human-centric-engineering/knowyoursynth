@@ -734,3 +734,59 @@ describe('a lane’s CC (t-90)', () => {
     expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
   });
 });
+
+describe('a performance wheel’s lane (f-performance-wheels)', () => {
+  const DEF_WHEEL = { ...DEF, performance: { wheel: { cc: 1 } } } as SynthDef;
+  const out = (ccs: MidiOut['ccs'] = {}): MidiOut => ({
+    status: 'on',
+    connect: vi.fn(),
+    outputs: [{ id: 'md', name: 'Model D' }],
+    choice: { output: { id: 'md', name: 'Model D' }, channel: 1, plays: 'midi' },
+    connected: true,
+    sending: true,
+    clock: false,
+    following: false,
+    ccs,
+    program: null,
+    setOutput: vi.fn(),
+    setChannel: vi.fn(),
+    setPlays: vi.fn(),
+    setClock: vi.fn(),
+    setCc: vi.fn(),
+    setProgram: vi.fn(),
+    out: { muted: true, message: vi.fn(), event: vi.fn() },
+  });
+  const wheelLaned = (): Pattern => {
+    const p = importPhrase(RIFF);
+    p.lanes = ['@wheel'];
+    p.parts[0].steps[0] = { ...p.parts[0].steps[0], mod: { '@wheel': 0.9 } };
+    return p;
+  };
+
+  it('plays a step it leaves alone where the hand has the wheel, and is sent as the wheel’s own CC', () => {
+    render(<Harness def={DEF_WHEEL} panel={{ ...PANEL, '@wheel': 0.8 }} midiOut={out()} />);
+    act(() => void state.load(wheelLaned(), { id: null, name: 'test' }));
+    const wheel = within(screen.getByRole('group', { name: /Mod wheel lane/ })).getAllByRole(
+      'slider'
+    );
+    expect(wheel[0].getAttribute('aria-valuetext')).toMatch(/90%$/);
+    expect(wheel[1].getAttribute('aria-valuetext')).toMatch(/^your hand's value, .*80%$/);
+    expect(screen.getByText('Sent as CC 1')).toBeTruthy();
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+  });
+
+  it('keeps the wheel’s CC off another lane’s choices, and a lane given it before can still be cleared', () => {
+    const midi = out({ cutoff: 1 });
+    render(<Harness def={DEF_WHEEL} midiOut={midi} />);
+    addCutoff();
+    const cc = screen.getByRole('combobox', { name: 'CC' });
+    expect(cc.textContent).toContain('CC 1 (the wheel’s)');
+    expect(screen.getByText('Not sent: CC 1 is the Mod wheel’s. Choose another.')).toBeTruthy();
+    fireEvent.click(cc);
+    expect(screen.getByRole('option', { name: 'CC 2' })).toBeTruthy();
+    // CC 1 is offered only as the value it had, not as one plain choice among the rest.
+    expect(screen.queryByRole('option', { name: 'CC 1' })).toBeNull();
+    fireEvent.click(screen.getByRole('option', { name: 'No CC' }));
+    expect(midi.setCc).toHaveBeenLastCalledWith('cutoff', null);
+  });
+});

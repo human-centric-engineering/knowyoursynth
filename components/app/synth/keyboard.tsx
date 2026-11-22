@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useRef } from 'react';
-import type { PointerEvent } from 'react';
+import type { Dispatch, PointerEvent, SetStateAction } from 'react';
 import { useWheelWanted } from '@/components/app/synth/sound-map';
 import { notesStore, useStore } from '@/components/app/synth/stores';
 
@@ -46,7 +46,13 @@ const QWERTY_LABEL: Record<number, string> = Object.fromEntries(
 export const OCTAVE_MIN = -1;
 export const OCTAVE_MAX = 2;
 
-function ModWheel({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+function ModWheel({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: Dispatch<SetStateAction<number>>;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const wanted = useWheelWanted(); // the sound map says: pushing this up would bring in the dark control being pointed at
   const set = (e: PointerEvent<HTMLDivElement>) => {
@@ -73,8 +79,9 @@ function ModWheel({ value, onChange }: { value: number; onChange: (v: number) =>
           if (e.buttons) set(e);
         }}
         onKeyDown={(e) => {
-          if (e.key === 'ArrowUp') onChange(Math.min(1, value + 0.05));
-          if (e.key === 'ArrowDown') onChange(Math.max(0, value - 0.05));
+          // From where the hand has it: `value` may be a lane's, while one plays the wheel (`performance.ts`).
+          if (e.key === 'ArrowUp') onChange((w) => Math.min(1, w + 0.05));
+          if (e.key === 'ArrowDown') onChange((w) => Math.max(0, w - 0.05));
         }}
       >
         <div
@@ -96,8 +103,10 @@ function ModWheel({ value, onChange }: { value: number; onChange: (v: number) =>
 export interface KeyboardProps {
   octave: number;
   onOctave: (o: number) => void;
+  /** The wheel as drawn: a lane's while one plays it, else the hand's. */
   wheel: number;
-  onWheel: (v: number) => void;
+  /** Moves the hand's wheel; the arrow keys step it from the hand's own position. */
+  onWheel: Dispatch<SetStateAction<number>>;
   hold: boolean;
   onHold: (h: boolean) => void;
   noteOn: (n: number) => void;

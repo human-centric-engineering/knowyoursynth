@@ -79,7 +79,9 @@ import {
   isLightFace,
   presetState,
   type PanelState,
+  WHEEL,
 } from '@/lib/app/synths/lib/patch';
+import { shownWheel, splitPerformance } from '@/lib/app/synths/lib/performance';
 import { tempoBpmOf } from '@/lib/app/synths/lib/tempo';
 import { predict } from '@/lib/app/synths/lib/predict';
 import type { Prediction } from '@/lib/app/synths/lib/predict';
@@ -1027,23 +1029,6 @@ function Synth({
 
   // ── audio ──
   const engine = useMemo(() => (typeof window === 'undefined' ? null : getEngine()), []);
-  // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
-  const liveGlow = useMemo<LiveGlow | null>(
-    () =>
-      liveOn && routing && !routingOn
-        ? {
-            routing,
-            flow: true,
-            state: routingState(synthDef, routing, {
-              values: sess.values,
-              cables: sess.cables,
-              wheel,
-            }),
-            source: engine,
-          }
-        : null,
-    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheel, engine]
-  );
   // The sequencer hears the engine's events too (its loops and the playhead): handed over once it exists, below.
   const seqEvents = useRef<(e: SynthEvent) => void>(() => undefined);
   useEffect(() => {
@@ -1082,11 +1067,12 @@ function Synth({
   }, [engine]);
 
   // The voice's settings for a set of panel values: the panel's own, or (mod lanes) with a lane's values in them.
+  // `at` is the mod wheel the settings are for: the hand's, or a lane's (`performance.ts`).
   const engineParams = useCallback(
-    (values: ControlValues) => {
-      const p = synthDef.toEngine(values, { wheel, patched: patchedJacks(sess.cables) });
+    (values: ControlValues, at: number = wheel) => {
+      const p = synthDef.toEngine(values, { wheel: at, patched: patchedJacks(sess.cables) });
       p.cables = cablesToEngine(synthDef, sess.cables, values);
-      p.wheel = wheel;
+      p.wheel = at;
       return p;
     },
     [synthDef, sess.cables, wheel]
@@ -1279,10 +1265,17 @@ function Synth({
 
   const rememberMidi = useCallback((v: boolean) => writeStored(STORAGE_KEYS.midi, v), []);
   const loadMidi = useCallback(() => readStored(STORAGE_KEYS.midi) === true, []);
+  // A wheel lane playing over MIDI out (`f-performance-wheels`): the pattern has one, and it is sent and playing. Its
+  // CC 1 coming back in (a DAW echoing it) is not the hand, so the wheel in from MIDI waits until it stops.
+  const [wheelLaneOn, setWheelLaneOn] = useState(false);
+  const wheelLaneSending = useRef(false);
+  const wheelIn = useCallback((v: number) => {
+    if (!wheelLaneSending.current) setWheel(v);
+  }, []);
   const midi = useMidi({
     noteOn,
     noteOff,
-    onWheel: setWheel,
+    onWheel: wheelIn,
     remember: rememberMidi,
     load: loadMidi,
   });
@@ -1302,6 +1295,7 @@ function Synth({
     def: synthDef,
     following,
     silent: loading,
+    wheel: { hand: wheel, lane: wheelLaneOn },
   });
 
   // SynthDef `tempo` names the control that sets the riff's BPM (the TB-303's TEMPO knob, or the Subharmonicon's through
@@ -1324,7 +1318,9 @@ function Synth({
       paramsFor: (set) => {
         try {
           mode ??= voiceMode(engineParams(sess.values));
-          const p = engineParams({ ...sess.values, ...set });
+          // A performance wheel's lane plays the wheel, not a panel control (`f-performance-wheels`).
+          const { values: lane, wheel: at } = splitPerformance(synthDef, set);
+          const p = engineParams({ ...sess.values, ...lane }, at);
           return voiceMode(p) === mode ? p : null;
         } catch {
           return null; // the panel already reports the error
@@ -1345,6 +1341,34 @@ function Synth({
   });
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
+  // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
+  const wheelShown = shownWheel(modShown) ?? wheel;
+  // What the live glow lights: what the patch routes now, worked out only while it is showing on the panel's face.
+  const liveGlow = useMemo<LiveGlow | null>(
+    () =>
+      liveOn && routing && !routingOn
+        ? {
+            routing,
+            flow: true,
+            state: routingState(synthDef, routing, {
+              values: sess.values,
+              cables: sess.cables,
+              wheel: wheelShown,
+            }),
+            source: engine,
+          }
+        : null,
+    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheelShown, engine]
+  );
+  // The panel's values with the hand's wheel, for the mod lanes: what a wheel lane's step left alone plays.
+  const lanePanel = useMemo(() => ({ ...sess.values, [WHEEL]: wheel }), [sess.values, wheel]);
+  // Only on a synth with a wheel: elsewhere the lane is kept and silent, and sends nothing to be echoed.
+  const seqWheelLane =
+    (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
+  useEffect(() => setWheelLaneOn(seqWheelLane), [seqWheelLane]);
+  useEffect(() => {
+    wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
+  }, [seqWheelLane, midiOut.sending, seq.playing]);
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;
@@ -1778,7 +1802,8 @@ function Synth({
   const seqProps = {
     seq,
     def: synthDef,
-    panel: sess.values,
+    // The hand's wheel with the panel's values: what a wheel lane's step left alone plays (`performance.ts`).
+    panel: lanePanel,
     playing: transportPlaying,
     onPlay: () => void playPattern(),
     onStop: stopRiff,
@@ -3105,7 +3130,7 @@ function Synth({
                               routing={routing}
                               values={sess.values}
                               cables={sess.cables}
-                              wheel={wheel}
+                              wheel={wheelShown}
                               source={engine}
                               onShow={showFromRouting}
                               panel={def}
@@ -3468,7 +3493,7 @@ function Synth({
                   <Keyboard
                     octave={octave}
                     onOctave={setOctave}
-                    wheel={wheel}
+                    wheel={wheelShown}
                     onWheel={setWheel}
                     hold={hold}
                     onHold={setHoldMode}
@@ -3659,7 +3684,7 @@ function Synth({
         // One transport: what the bar's Play plays, the scope's plays too.
         onPlay={() => void (playsPattern ? playPattern() : playRiff())}
         onStop={stopRiff}
-        wheel={wheel}
+        wheel={wheelShown}
         onWheel={setWheel}
         octave={octave}
         onOctave={setOctave}

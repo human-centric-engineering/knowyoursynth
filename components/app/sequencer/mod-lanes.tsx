@@ -20,7 +20,8 @@
  * - A dashed line marks the panel's value, which a cell with nothing set plays.
  * - A lane for a control this synth does not have stays with the pattern, silent, and says so.
  * - **CC.** While MIDI out sends to an output, each lane can be given a CC number (`f-midi-out` t-90), and its values
- *   are sent to the hardware as that CC. The numbers are this browser's, per synth, not the pattern's.
+ *   are sent to the hardware as that CC. The numbers are this browser's, per synth, not the pattern's. A performance
+ *   wheel's lane (the Mod wheel, `performance.ts`) is sent as the synth's own CC for it, so it has no choice to make.
  *
  * The values are the pattern's (`Step.mod`), so rotate, reverse, copy and paste carry them with their steps.
  */
@@ -49,6 +50,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/compone
 import { SeqPicker, SeqSelect as Select } from '@/components/app/sequencer/select';
 import type { SeqPosition } from '@/components/app/sequencer/use-sequencer';
 import { LANE_CCS, type LaneCcs } from '@/lib/app/midi/cc';
+import { performanceInputs } from '@/lib/app/synths/lib/performance';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 
 /** The CCs a lane can be sent as, while MIDI out sends (t-90): lane control id → CC, and a change to one. */
@@ -61,6 +63,12 @@ const CC_OPTIONS: [string, string][] = [
   ['', 'No CC'],
   ...LANE_CCS.map((n): [string, string] => [String(n), `CC ${n}`]),
 ];
+
+/** The CCs a lane on `def` can be given: not one a performance wheel is sent as, which `ccLookup` keeps for it. */
+const ccOptionsFor = (def: SynthDef): [string, string][] => {
+  const taken = new Set(performanceInputs(def).map((p) => String(p.cc)));
+  return taken.size ? CC_OPTIONS.filter(([v]) => !taken.has(v)) : CC_OPTIONS;
+};
 
 /** How far Up and Down move a value along its lane, and Page Up and Page Down. */
 const NUDGE = 1 / 50;
@@ -391,6 +399,12 @@ function Lane({
     return mod && Object.hasOwn(mod, id) ? mod[id] : undefined;
   };
   const restValue = c ? (panel[c.id] ?? c.def) : undefined;
+  // A performance wheel's lane (`@wheel`): a step it leaves alone plays the wheel where the hand has it.
+  const own = performanceInputs(def).find((p) => p.id === id) ?? null;
+  const ccOptions = ccOptionsFor(def);
+  const ccGiven = cc?.ccs[id];
+  // A CC given this lane before the wheel had it (`performance.ts`): kept, not sent, and said so beside the choice.
+  const ccWheel = performanceInputs(def).find((p) => p.cc === ccGiven) ?? null;
   // The panel as step i plays it, every lane's change on that step over the panel's values: a readout another control
   // changes (`ContinuousValue.fmt`) follows the step.
   const panelAt = (i: number): ControlValues => {
@@ -452,7 +466,7 @@ function Lane({
   const readout =
     shownAt === null || !c
       ? null
-      : `Step ${shownAt + 1}: ${shownValue === undefined ? `panel (${formatValue(c, restValue, panelAt(shownAt))})` : formatValue(c, shownValue, panelAt(shownAt))}`;
+      : `Step ${shownAt + 1}: ${shownValue === undefined ? (own ? `your hand's (${formatValue(c, restValue, panelAt(shownAt))})` : `panel (${formatValue(c, restValue, panelAt(shownAt))})`) : formatValue(c, shownValue, panelAt(shownAt))}`;
   const restPos = c && restValue !== undefined ? lanePos(c, restValue) : null;
 
   return (
@@ -472,14 +486,31 @@ function Lane({
             onChange={(v) => onEdit((q) => moveLane(def, q, id, v))}
           />
         )}
-        {cc && c && (
+        {cc && c && own ? (
+          // A performance wheel goes as the message the synth hears its own wheel as: nothing to choose.
+          <span className="kys-seq-lane-readout">Sent as CC {own.cc}</span>
+        ) : cc && c ? (
           <Select
             label="CC"
             help="The MIDI CC this lane is sent to the hardware as, its values across the control's travel as 0–127. Find the number in the synth's MIDI chart. Kept in this browser, for this synth, not with the pattern."
-            value={cc.ccs[id] === undefined ? '' : String(cc.ccs[id])}
-            options={CC_OPTIONS}
+            value={
+              ccGiven === undefined || (!ccWheel && !ccOptions.some(([v]) => v === String(ccGiven)))
+                ? ''
+                : String(ccGiven)
+            }
+            // A CC kept from before the wheel had it is shown as it is, so No CC can still take it off.
+            options={
+              ccWheel
+                ? [...ccOptions, [String(ccWheel.cc), `CC ${ccWheel.cc} (the wheel’s)`]]
+                : ccOptions
+            }
             onChange={(v) => cc.set(id, v === '' ? null : Number(v))}
           />
+        ) : null}
+        {cc && c && !own && ccWheel && (
+          <span className="kys-seq-lane-readout">
+            Not sent: CC {ccWheel.cc} is the {ccWheel.control.name}’s. Choose another.
+          </span>
         )}
         <span className="kys-seq-lane-readout" aria-live="polite">
           {c ? readout : 'Not on this synth: kept with the pattern, and silent here.'}
@@ -561,7 +592,7 @@ function Lane({
                     ? 'nothing set'
                     : String(v)
                   : v === undefined
-                    ? `panel value, ${formatValue(c, restValue, panelAt(i))}`
+                    ? `${own ? "your hand's" : 'panel'} value, ${formatValue(c, restValue, panelAt(i))}`
                     : formatValue(c, v, panelAt(i))
               }
               aria-disabled={!c || undefined}

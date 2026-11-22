@@ -25,6 +25,7 @@ import {
 } from '@/lib/app/midi/scheduler';
 import type { LoopEvent, PatternLoop } from '@/lib/app/synths/audio/pattern-player';
 import type { PhraseNote } from '@/lib/app/synths/contract';
+import type { CcLookup } from '@/lib/app/midi/cc';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { PatternSchema, newPattern, type Pattern } from '@/lib/app/sequencer/pattern';
 import { logger } from '@/lib/logging';
@@ -1400,6 +1401,66 @@ describe('mod lanes as CCs (t-90)', () => {
       [0, 'cc74=10', 0],
       [500, 'cc74=10', 0],
     ]);
+  });
+});
+
+describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => {
+  /** A wheel lane on `w` as CC 1: a step it leaves alone sends the hand's 20, and the run ends on it. */
+  const wheel: CcLookup = Object.assign(
+    (set: Record<string, unknown>): [number, number][] => [
+      [1, typeof set.w === 'number' ? set.w : 20],
+    ],
+    { rest: (): [number, number][] => [[1, 20]] }
+  );
+  const cc1 = (sent: Sent[]) =>
+    sent.filter(([, d]) => (d[0] & 0xf0) === 0xb0 && d[1] === 1).map(([at, d]) => [at, d[2]]);
+  const modded = (mods: [number, Record<string, number> | null][]): PatternLoop => ({
+    notes: [],
+    beats: 1,
+    mods,
+  });
+
+  it('sends the hand’s wheel on a step the lane leaves alone, a change to no lane values among them', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(
+      t,
+      modded([
+        [0, { w: 127 }],
+        [0.5, null],
+      ])
+    );
+    t.run(900);
+    expect(cc1(t.sent).filter(([at]) => at < 1000)).toEqual([
+      [0, 127],
+      [500, 20],
+    ]);
+  });
+
+  it('puts the wheel back to the hand’s on Stop, once a lane moved it, and only then', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.message({ type: 'stopPattern' });
+    expect(cc1(t.sent).at(-1)?.[1]).toBe(20);
+
+    const u = setup();
+    u.s.setCcs(wheel);
+    start(u, modded([[0, { w: 20 }]]));
+    u.run(200);
+    const before = cc1(u.sent).length;
+    u.s.message({ type: 'stopPattern' });
+    expect(cc1(u.sent)).toHaveLength(before);
+  });
+
+  it('leaves the wheel where the lane has it through a silence mid-run', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.silence();
+    expect(cc1(t.sent).map(([, v]) => v)).not.toContain(20);
   });
 });
 

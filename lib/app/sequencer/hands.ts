@@ -9,6 +9,10 @@
  *   turn: a hand holding a knob still is that unsteady anyway.
  * - **A switch or selector** may not change again within `flipS` of its last change.
  *
+ * A performance wheel's lane (`@wheel`, `performance.ts`) is a hand on the wheel, read the same way; a step it leaves
+ * alone plays the wheel where the other hand has it, which the caller gives as `panel['@wheel']`. Left out, the wheel
+ * is down, where it rests before anyone touches it: a sound's pattern is checked from there.
+ *
  * Travel is how far the knob turns, so a knob with a log taper is measured by ratio, as it is dragged. Time is the
  * song's own, as the compiler plays it: each part a loop, its steps forward or in reverse, and swing starting every
  * second slot of a loop late, so a move into a late slot has longer and one out of it less.
@@ -97,7 +101,8 @@ export function handProblems(
   for (const id of pattern.lanes ?? []) {
     const c = laneControl(def, id);
     if (!c) continue;
-    // A step the lane leaves alone plays at the panel's value, or the control's own where the panel has none.
+    // A step the lane leaves alone plays at the panel's value, or the control's own where the panel has none: for the
+    // wheel's lane, the hand's wheel the caller gives, or the wheel down.
     const at = (i: number): ControlValue | null =>
       laneValue(c, slots[i % n].step.mod?.[id]) ??
       laneValue(c, panel[id] ?? c.def) ??

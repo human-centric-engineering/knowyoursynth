@@ -8,6 +8,7 @@
 import { describe, it, expect } from 'vitest';
 import { LANE_CCS, MAX_LANE_CC, ccLookup, ccValue, validLaneCc } from '@/lib/app/midi/cc';
 import type { Control, SynthDef } from '@/lib/app/synths/contract';
+import { getSynthDef } from '@/lib/app/synths/defs';
 
 const at = { x: 0, y: 0, module: 'filter' as const, help: '' };
 const knob = { ...at, type: 'knob' as const, r: 10, style: 'pro1' as const, kind: 'cont' as const };
@@ -94,5 +95,41 @@ describe('ccLookup', () => {
     expect(ccLookup(DEF, {})).toBeNull();
     // A control this synth has not got, its tempo knob (the pattern's tempo), and a channel-mode CC.
     expect(ccLookup(DEF, { gone: 74, tempo: 75, level: 123 })).toBeNull();
+  });
+});
+
+describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
+  const modelD = getSynthDef('model-d')!;
+  const hand = (wheel: number, on = true) => ({ on: () => on, wheel: () => wheel });
+
+  it('sends a wheel lane as the CC the synth declares, with nothing assigned', () => {
+    const look = ccLookup(modelD, {}, hand(0))!;
+    expect(look({ '@wheel': 1 })).toEqual([[1, 127]]);
+    expect(look({ '@wheel': 0.5 })).toEqual([[1, 64]]);
+  });
+
+  it('sends the hand’s wheel on a step the lane leaves alone, and goes back to it when the run ends', () => {
+    const look = ccLookup(modelD, {}, hand(0.5))!;
+    expect(look({})).toEqual([[1, 64]]);
+    expect(look.rest?.()).toEqual([[1, 64]]);
+  });
+
+  it('sends no wheel while the pattern has no wheel lane, and keeps its CC off other lanes even so', () => {
+    expect(ccLookup(modelD, {})).toBeNull();
+    // Read as each change goes: the lane taken off sends no wheel, but the run's end still puts it back.
+    const off = ccLookup(modelD, {}, hand(0.5, false))!;
+    expect(off({ '@wheel': 1 })).toEqual([]);
+    expect(off.rest?.()).toEqual([[1, 64]]);
+    expect(ccLookup(modelD, { 'filter.cutoff': 1 })).toBeNull();
+    expect(ccLookup(modelD, { 'filter.cutoff': 74 })?.rest).toBeUndefined();
+  });
+
+  it('keeps the wheel’s CC for the wheel: another lane given it is not sent on it too', () => {
+    const look = ccLookup(modelD, { 'filter.cutoff': 1, '@wheel': 20 }, hand(0))!;
+    expect(look({ '@wheel': 0, 'filter.cutoff': 10 })).toEqual([[1, 0]]);
+  });
+
+  it('sends nothing for a wheel on a synth that declares none', () => {
+    expect(ccLookup(DEF, { '@wheel': 1 })).toBeNull();
   });
 });
