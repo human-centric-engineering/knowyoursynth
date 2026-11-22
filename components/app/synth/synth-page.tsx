@@ -123,7 +123,10 @@ import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-stri
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
 import { StepLamp } from '@/components/app/sequencer/step-lamp';
-import type { PatternLibraryProps } from '@/components/app/sequencer/pattern-library';
+import {
+  useLoadSoundDefault,
+  type PatternLibraryProps,
+} from '@/components/app/sequencer/pattern-library';
 import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
@@ -1591,7 +1594,15 @@ function Synth({
       : null;
   // The sequencer's pattern picker (`f-pattern-picker` t-213) lists them too, so they are read while it is open.
   const [patternsOpen, setPatternsOpen] = useState(false);
-  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen);
+  // A sound whose default plays more than its riff (a part B, mod lanes: t-300) has it read and loaded as it is picked,
+  // so Play plays the whole pattern, not the riff, without the sequencer having been opened.
+  const playedDefault = !!librarySound && !!libraryPreset?.defaultPattern?.played;
+  const soundPatterns = useSoundPatterns(librarySound, seqShown || patternsOpen || playedDefault);
+  useLoadSoundDefault(seq, playedDefault ? soundPatterns : null);
+  // A played default whose read failed plays its riff meanwhile. Play and opening the sequencer each ask for it again
+  // (its read is already on, so opening does not re-read it by itself), and once it arrives it takes the riff's place,
+  // so the chain and lanes are never silently lost for good.
+  const retryPlayed = playedDefault && soundPatterns?.error ? soundPatterns.retry : null;
   // Patterns that suit the patch as it is now (t-125). A library sound is offered them once the patch has moved far
   // from how that sound came; anything else on the panel is offered them at once.
   // The Default patch is no sound the suggestions can be asked to leave out, so it is no start: it is offered them at once.
@@ -1672,6 +1683,7 @@ function Synth({
     synths,
     mine: myPatterns,
     soundPatterns,
+    loadsDefault: !playedDefault,
     suggested,
     riffName,
     sound: openSound
@@ -1739,6 +1751,7 @@ function Synth({
     }
     // Opened while the riff plays, it plays on as the pattern: it is the riff, until it is edited.
     riffToPattern();
+    retryPlayed?.();
   };
   const toggleSequencer = () => {
     if (!seqShown) openSequencer();
@@ -1778,10 +1791,11 @@ function Synth({
   const playRiff = useCallback(
     async (countIn = true) => {
       replayRiff.current = false;
+      retryPlayed?.();
       if (isLoading()) queue('riff', countIn);
       else await riffNow(undefined, countIn);
     },
-    [isLoading, queue, riffNow]
+    [isLoading, queue, riffNow, retryPlayed]
   );
   // As a load begins, what the page is sounding is let go: the keys held (and under Hold), the arp's keys in the
   // sequencer, and the riff or pattern playing, which stops and plays again from its top, counted in, once the load ends

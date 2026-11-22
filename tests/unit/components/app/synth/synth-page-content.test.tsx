@@ -110,12 +110,12 @@ const library = () => {
   return section;
 };
 describe('the library on the page', () => {
-  it('opens every one of Model D’s 200 sounds onto the panel', () => {
+  it('opens every one of Model D’s 230 sounds onto the panel', () => {
     page();
-    expect(detail.sounds).toHaveLength(200);
+    expect(detail.sounds).toHaveLength(230);
     // Every sound in order: the page opens on the Default patch, so none of them is loaded yet.
     const order = detail.sounds;
-    // Plain DOM lookups in the loop: a role query walks the whole page's accessibility tree, 200 times over.
+    // Plain DOM lookups in the loop: a role query walks the whole page's accessibility tree, 230 times over.
     const lib = library();
     const picker = button(/^Choose a patch/);
     for (const p of order) {
@@ -129,7 +129,7 @@ describe('the library on the page', () => {
       expect(picker.getAttribute('aria-label')).toBe(`Choose a patch (now: ${p.name})`);
       expect(lastParams(engine.send)).toEqual(expectedParams(def, p));
     }
-    // 200 full re-renders of the panel: ~11s alone, past the 30s default under coverage on a loaded machine.
+    // 230 full re-renders of the panel: ~13s alone, past the 30s default under coverage on a loaded machine.
   }, 90_000);
 });
 

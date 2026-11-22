@@ -65,7 +65,7 @@ describe('GET /api/v1/synths', () => {
           summary: row.summary,
           design: 'neutral',
           definitionVersion: 1,
-          soundCount: 200,
+          soundCount: 230,
         },
       ],
     });

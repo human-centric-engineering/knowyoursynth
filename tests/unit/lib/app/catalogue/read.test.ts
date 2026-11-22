@@ -86,7 +86,7 @@ describe('listSynths', () => {
         summary: synthRow.summary,
         design: 'faithful',
         definitionVersion: 1,
-        soundCount: 200,
+        soundCount: 230,
       },
     ]);
     expect(prisma.synth.findMany).toHaveBeenCalledWith(
@@ -121,8 +121,8 @@ describe('getSynthDetail', () => {
     expect(prisma.synth.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: 'model-d', listed: true } })
     );
-    expect(detail?.synth).toMatchObject({ id: 'model-d', definitionVersion: 1, soundCount: 200 });
-    expect(detail?.sounds).toHaveLength(200);
+    expect(detail?.synth).toMatchObject({ id: 'model-d', definitionVersion: 1, soundCount: 230 });
+    expect(detail?.sounds).toHaveLength(230);
     const first = firstModelDSound();
     expect(detail?.sounds[0]).toMatchObject({ id: first.id, name: first.name, version: 1 });
     expect(detail?.lineage?.title).toBe('From the Moog modular to the Model D');
@@ -204,6 +204,38 @@ describe('getSynthDetail', () => {
     expect(prisma.synth.findFirst).not.toHaveBeenCalled();
   });
 
+  it('marks a default that plays more than its riff, a part B or mod lanes, as played (t-300)', async () => {
+    const s = stored();
+    const patternOf = (phrase: unknown) => importPhrase(phrase as Phrase);
+    const withLanes = patternOf(s.sounds[0].phrase);
+    withLanes.lanes = ['filter.cutoff'];
+    withLanes.parts[0].steps[0].mod = { 'filter.cutoff': 3 };
+    const chained = patternOf(s.sounds[1].phrase);
+    chained.parts.push(structuredClone(chained.parts[0]));
+    chained.chain = [0, 1];
+    const place = (id: string, pattern: unknown) => ({
+      patternId: id,
+      pattern: { status: 'enabled', name: id, pattern, inspiration: 'work', inspiredBy: 'A song' },
+    });
+    s.sounds[0] = { ...s.sounds[0], patterns: [place('laned', withLanes)] };
+    s.sounds[1] = { ...s.sounds[1], patterns: [place('chained', chained)] };
+    s.sounds[2] = {
+      ...s.sounds[2],
+      patterns: [place('plain', patternOf(s.sounds[2].phrase))],
+    };
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(s as never);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(detail?.sounds[0].defaultPattern).toEqual({ id: 'laned', name: 'laned', played: true });
+    expect(detail?.sounds[1].defaultPattern).toEqual({
+      id: 'chained',
+      name: 'chained',
+      played: true,
+    });
+    expect(detail?.sounds[2].defaultPattern).toEqual({ id: 'plain', name: 'plain' });
+  });
+
   it('sends each sound with the pattern its riff plays: the first enabled one that can be a riff (t-224)', async () => {
     const s = stored();
     let n = 0;
@@ -281,7 +313,7 @@ describe('getSynthDetail', () => {
 
     const detail = await getSynthDetail('model-d');
 
-    expect(detail?.sounds).toHaveLength(198);
+    expect(detail?.sounds).toHaveLength(228);
     expect(detail?.sounds.map((x) => x.id)).not.toContain(broken.slug);
     expect(detail?.sounds.map((x) => x.id)).not.toContain(oldVersion.slug);
     expect(logger.error).toHaveBeenCalledWith(

@@ -19553,6 +19553,3065 @@
           "hear": "A breathier, more intimate horn."
         }
       ]
+    },
+    {
+      "id": "lane-acid-walk",
+      "name": "Acid Cutoff Walk",
+      "ref": "A squelching one-oscillator acid line whose filter is ridden through the whole song by its mod lanes",
+      "artist": "90s acid techno",
+      "tags": ["bass", "acid", "90s"],
+      "level": 2,
+      "blurb": "A rubbery, squelching acid bass whose filter climbs and twists as the song plays.",
+      "how": "One sawtooth an octave down goes into a resonant, nearly closed filter, and a short filter envelope gives every note its squelch. The playing is in the sequencer: one mod lane walks the cutoff up through part A and swings it in a wave through part B, and the other pushes the emphasis up on the slides and towards a scream at the end. Open the sequencer: the lanes are under the steps, and the cutoff and emphasis rows show both moving.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.25, 1],
+          [0.5, 45, 0.25],
+          [0.75, 48, 0.25],
+          [1.25, 45, 0.25],
+          [1.5, 43, 0.2625],
+          [1.75, 45, 0.25],
+          [2.5, 52, 0.25],
+          [2.75, 45, 0.25],
+          [3.25, 50, 0.2625],
+          [3.5, 48, 0.25],
+          [3.75, 45, 0.25],
+          [4, 45, 0.25, 1],
+          [4.5, 45, 0.25],
+          [4.75, 48, 0.25],
+          [5.25, 52, 0.25],
+          [5.75, 45, 0.25],
+          [6, 43, 0.2625],
+          [6.25, 45, 0.25],
+          [6.75, 48, 0.25],
+          [7.25, 45, 0.25],
+          [7.5, 40, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One sawtooth, an octave down",
+          "module": "osc",
+          "why": "Acid lines are one oscillator and nothing else: the filter does all the talking. A sawtooth has every harmonic, so the resonance always has something to bite on.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 1 VOLUME 7\n- Listen for: a plain, buzzy bass tone, the same brightness on every note.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "mix.osc1": 7
+          }
+        },
+        {
+          "title": "A dark, resonant filter",
+          "module": "filter",
+          "why": "The cutoff starts low, so the bass is muffled, and the emphasis is high, so the filter rings at its cutoff. Keyboard control 1 opens it a little for higher notes.\n- CUTOFF -2 (159 Hz)\n- EMPHASIS 6.5\n- KEYBOARD CONTROL 1 on\n- Listen for: a hollow, ringing tone with a whistle riding on it.",
+          "set": {
+            "filter.cutoff": -2,
+            "filter.emphasis": 6.5,
+            "filter.kbd1": true
+          }
+        },
+        {
+          "title": "A quick squelch on every note",
+          "module": "filter",
+          "why": "The filter envelope flicks the cutoff open on each note and lets it fall straight back, with nothing held.\n- AMOUNT OF CONTOUR 5\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.8 (130 ms)\n- Filter SUSTAIN 0\n- Listen for: a \"yow\" on the front of every note.",
+          "set": {
+            "filter.contour": 5,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "Tight notes, and a hint of glide",
+          "module": "env",
+          "why": "A short loudness decay and a held level keep the notes punchy, and a touch of glide lets the slides in the pattern bend from note to note.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 8\n- GLIDE 1.2 (29 ms)\n- Listen for: play two notes legato: the second bends in from the first.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 8,
+            "ctl.glide": 1.2
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "The lane plays this one. Its walk up through part A is the line getting brighter, bar by bar.",
+        "filter.emphasis": "The other lane. It leaps on the slides, where the squelch should sing, and climbs through part B.",
+        "filter.contour": "The size of the squelch on each note, on top of where the lane puts the cutoff.",
+        "fenv.decay": "How long each squelch lasts. Short is tight and percussive; long goes rubbery.",
+        "ctl.glide": "Sets how far the slid notes bend."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, redraw the cutoff lane as a steep climb in the last bar.",
+          "hear": "The line opens up like a riser before the loop comes round."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "In the sequencer's Mod lanes, flatten the emphasis lane to 9 everywhere.",
+          "hear": "Every note screams; the slides no longer stand out."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Move between 1 and 3.5",
+          "hear": "From tight blips to long rubbery sweeps."
+        },
+        {
+          "id": "filter.contour",
+          "try": "Push up to 8",
+          "hear": "A bigger, more aggressive squelch on every note."
+        }
+      ]
+    },
+    {
+      "id": "lane-berlin-sweep",
+      "name": "Berlin Sweep Sequence",
+      "ref": "A driving sixteenth-note sequencer ostinato whose filter breathes in one long sweep across the song",
+      "artist": "Berlin-school sequencing",
+      "tags": ["seq", "kosmische", "70s"],
+      "level": 2,
+      "blurb": "A hypnotic, pulsing sequence that slowly brightens and darkens like breathing.",
+      "how": "Two sawtooths, a hair apart, play a steady sixteenth-note pattern through a moderately resonant filter. One mod lane sweeps the cutoff in one slow wave spread over parts A and B, so the sequence opens and closes over four bars; the other stretches the filter decay as it goes, from a tight tick at the start of A to a long, rubbery pluck where B begins, and back. Both are slow turns of one knob each, as a player would ride them.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.25, 1],
+          [0.25, 52, 0.25],
+          [0.5, 47, 0.25],
+          [0.75, 52, 0.25],
+          [1, 43, 0.25],
+          [1.25, 52, 0.25],
+          [1.5, 47, 0.25],
+          [1.75, 52, 0.25],
+          [2, 40, 0.25],
+          [2.25, 52, 0.25],
+          [2.5, 47, 0.25],
+          [2.75, 50, 0.25],
+          [3, 42, 0.25],
+          [3.25, 50, 0.25],
+          [3.5, 47, 0.25],
+          [3.75, 50, 0.25],
+          [4, 36, 0.25, 1],
+          [4.25, 48, 0.25],
+          [4.5, 43, 0.25],
+          [4.75, 48, 0.25],
+          [5, 40, 0.25],
+          [5.25, 48, 0.25],
+          [5.5, 43, 0.25],
+          [5.75, 48, 0.25],
+          [6, 38, 0.25],
+          [6.25, 50, 0.25],
+          [6.5, 45, 0.25],
+          [6.75, 50, 0.25],
+          [7, 42, 0.25],
+          [7.25, 50, 0.25],
+          [7.5, 45, 0.25],
+          [7.75, 47, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, slightly apart",
+          "module": "osc",
+          "why": "Two saws, with Oscillator 2 nudged a hair sharp, beat slowly against each other: the slow shimmer of a big modular sequence.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.08 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- Listen for: a slow beating in a held note.",
+          "set": {
+            "osc2.wave": "saw",
+            "osc2.freq": 0.08,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A filter with some ring",
+          "module": "filter",
+          "why": "A middling cutoff and some emphasis: the lanes will move the cutoff, so this is just its centre.\n- CUTOFF -1 (317 Hz)\n- EMPHASIS 4\n- Listen for: a rounded tone with a little whistle in it.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 4
+          }
+        },
+        {
+          "title": "Plucked notes",
+          "module": "env",
+          "why": "The filter envelope gives each note a short pluck, and the loudness falls to a low level, so sixteenth notes stay separate.\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.6 (86 ms)\n- Filter SUSTAIN 1\n- Loudness DECAY 2.2 (220 ms)\n- Loudness SUSTAIN 2\n- Listen for: each note plucked and gone before the next.",
+          "set": {
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.6,
+            "fenv.sustain": 1,
+            "aenv.decay": 2.2,
+            "aenv.sustain": 2
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Moved by a lane in one slow wave across the whole song: the four-bar breath of the sequence.",
+        "fenv.decay": "The other lane: tight at the start of A, long where B begins, tight again by B’s end. The pluck grows and shrinks with the sweep.",
+        "osc2.freq": "The tiny detune is the shimmer. Past 0.3 it goes sour.",
+        "filter.emphasis": "More makes the sweep sing; less keeps it warm."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, draw the cutoff lane as one straight climb across both parts.",
+          "hear": "A four-bar build that drops back as the loop starts again."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "In the sequencer's Mod lanes, set every step of the decay lane to the same value.",
+          "hear": "The pluck stays one length: only the cutoff breathes."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push up to 7",
+          "hear": "The sweep turns vocal and glassy."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Set it to 7 (a fifth)",
+          "hear": "The sequence plays in fifths, darker and bigger."
+        }
+      ]
+    },
+    {
+      "id": "lane-glide-funk",
+      "name": "Glide-Lane Funk Bass",
+      "ref": "A syncopated funk bass that slides only into the notes its glide lane picks, with pops on the accents",
+      "artist": "70s funk",
+      "tags": ["bass", "funk", "70s"],
+      "level": 2,
+      "blurb": "A bouncy, syncopated funk bass with slides on just the notes that need them.",
+      "how": "A hollow square and a sawtooth an octave down make a woody bass, plucked by the filter envelope. On a real Model D the glide knob is on or off for every note, so a player rides it by hand to slide into one note and not the next. Here a mod lane does that: glide is up only on the steps the line slides into. A second lane jabs the contour amount up on the first note of each phrase, so it pops brighter than the rest.",
+      "phrase": {
+        "bpm": 98,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.28, 1],
+          [0.78, 55, 0.22],
+          [1.28, 43, 0.22],
+          [1.5, 46, 0.28],
+          [2, 48, 0.2925],
+          [2.28, 50, 0.22],
+          [2.78, 53, 0.22],
+          [3.28, 55, 0.22],
+          [3.5, 53, 0.28],
+          [3.78, 50, 0.22],
+          [4, 43, 0.28, 1],
+          [4.78, 55, 0.22],
+          [5.28, 43, 0.22],
+          [5.78, 46, 0.22],
+          [6.28, 48, 0.22],
+          [6.78, 49, 0.2325],
+          [7, 50, 0.28],
+          [7.5, 41, 0.28],
+          [7.78, 43, 0.22]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Square and saw, an octave down",
+          "module": "osc",
+          "why": "A square is hollow and woody, the sawtooth adds bite on top, and both sit at 16’ for weight.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM square\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 5\n- Listen for: a round, slightly nasal bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "sq",
+            "osc2.range": "16",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "Pluck it with the filter",
+          "module": "filter",
+          "why": "A closed filter and a short envelope give every note a fast attack and a quick fall, like a thumbed string.\n- CUTOFF -1.5 (224 Hz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.8 (130 ms)\n- Filter SUSTAIN 1.5\n- Listen for: a quick \"dow\" on every note.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 3,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 1.5
+          }
+        },
+        {
+          "title": "Short, bouncy notes",
+          "module": "env",
+          "why": "The loudness falls quickly to a held level, which keeps the line bouncing rather than droning.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 7\n- Listen for: notes that stay separate at speed.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 7
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "Moved by a lane: up only on the steps the line slides into, which is how a player rides the knob.",
+        "filter.contour": "The other lane: jabbed up on each phrase’s first note, so it pops.",
+        "fenv.decay": "The length of each pluck.",
+        "mix.osc2": "The sawtooth’s bite. Take it down for a rounder, more dub-like bass."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "In the sequencer's Mod lanes, raise the glide lane on every step.",
+          "hear": "Every note slides into the next: the line goes lazy and loses its snap."
+        },
+        {
+          "id": "filter.contour",
+          "try": "In the sequencer's Mod lanes, draw the contour lane up on the second bar’s first note instead of the first.",
+          "hear": "The pop moves to the answer, and the phrase leans the other way."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Move between 1 and 3",
+          "hear": "From slap-tight to a long, singing pluck."
+        },
+        {
+          "id": "osc1.wave",
+          "try": "Switch Oscillator 1 to narrow pulse",
+          "hear": "A thinner, more nasal bass."
+        }
+      ]
+    },
+    {
+      "id": "lane-dub-pressure",
+      "name": "Dub Pressure Bass",
+      "ref": "A deep, round sound-system bass whose held notes darken and start to waver the longer they ring",
+      "artist": "Sound-system dub",
+      "tags": ["bass", "dub", "reggae"],
+      "level": 2,
+      "blurb": "A huge, round dub bass that sinks darker and wobbles as each note is held.",
+      "how": "A triangle and a quiet square, both an octave down, make a soft but solid bass. The playing is in two mod lanes. The cutoff is ridden slowly, the way a dub engineer rides the bass EQ: it sinks through each bar and opens again for the next, while the filter envelope gives every note its own soft bloom. Mod depth rises on the long notes only, so they start to waver with vibrato while the short ones stay still.",
+      "phrase": {
+        "bpm": 74,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.75],
+          [1.5, 52, 0.25],
+          [2, 43, 0.5],
+          [2.75, 45, 0.25],
+          [3.25, 47, 0.5],
+          [4, 40, 0.75],
+          [5.5, 50, 0.25],
+          [6, 47, 1],
+          [7.25, 43, 0.25],
+          [7.5, 45, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A round tone, an octave down",
+          "module": "osc",
+          "why": "A triangle is almost a pure tone, which is what makes a sound-system bass feel like pressure rather than buzz. A little square underneath gives it a body you can still hear on small speakers.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM triangle\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM square\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 3\n- Listen for: a soft, deep tone with a faint edge.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "tri",
+            "osc2.range": "16",
+            "osc2.wave": "sq",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "Keep the top end down",
+          "module": "filter",
+          "why": "The filter sits low with almost no emphasis, and a gentle envelope gives each note a soft thump that blooms and settles.\n- CUTOFF -1.5 (224 Hz)\n- EMPHASIS 1\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 3 (350 ms)\n- Filter SUSTAIN 3\n- Listen for: a warm, muffled bass with a soft front.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 1,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 3,
+            "fenv.sustain": 3
+          }
+        },
+        {
+          "title": "Long notes, and vibrato ready",
+          "module": "mod",
+          "why": "The loudness holds for as long as the note does. The LFO is routed to the oscillators at a slow vibrato rate, with MOD DEPTH left at 0: the lane turns it up only on the long notes.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 4 (600 ms)\n- Loudness SUSTAIN 10\n- OSCILLATOR MODULATION on\n- LFO RATE 5.67 (5.51 Hz)\n- LFO shape triangle\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: nothing yet: turn MOD DEPTH up by hand and the held note wavers.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 4,
+            "aenv.sustain": 10,
+            "mod.toOsc": true,
+            "lfo.rate": 5.67,
+            "lfo.shape": "tri",
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "A lane rides it slowly: it sinks through each bar and opens again for the next, the dark pull of a dub bass.",
+        "mod.depth": "The other lane: vibrato that grows only on notes held for more than a step or two.",
+        "lfo.rate": "The speed of the waver. Slower is woozier.",
+        "mix.osc2": "The square’s edge. Take it out for pure sub pressure."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, draw the depth lane high on the short notes too.",
+          "hear": "The whole line wobbles, seasick, instead of only the held notes."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, draw the cutoff lane rising through each bar instead of sinking.",
+          "hear": "The line swells brighter as it goes and pushes forward."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn down to about 4",
+          "hear": "A slower, deeper sway on the held notes."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Turn to 0",
+          "hear": "Pure, round sub: felt more than heard."
+        }
+      ]
+    },
+    {
+      "id": "lane-interval-stabs",
+      "name": "Interval Stab Riff",
+      "ref": "Offbeat two-note house stabs on a mono synth, the second oscillator’s interval moved for every chord by a mod lane",
+      "artist": "Early 90s house",
+      "tags": ["keys", "house", "90s"],
+      "level": 3,
+      "blurb": "Bright, punchy two-note chord stabs bouncing on the offbeat.",
+      "how": "A Model D plays one note at a time, but its second oscillator can be tuned up to a fifth away, so each note is a two-note chord. On the hardware you would set that interval and leave it. Here a mod lane retunes Oscillator 2 for every chord, so the progression is minor, then major, then suspended, from one key at a time: one hand on the FREQUENCY knob, set in the gap before each new chord. A second hand opens the cutoff slowly across part A and closes it across part B, so the riff brightens and settles every two bars.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0.5, 48, 0.25, 1],
+          [1.5, 48, 0.25],
+          [2.25, 48, 0.25],
+          [3, 48, 0.5],
+          [4.5, 53, 0.25, 1],
+          [5.5, 53, 0.25],
+          [6.25, 53, 0.25],
+          [7, 56, 0.25],
+          [7.5, 55, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two equal sawtooths",
+          "module": "osc",
+          "why": "Both sawtooths at the same level, so the second note of each chord is as loud as the first. Oscillator 2 starts in unison; the lane tunes it.\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 RANGE 8'\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 7\n- Listen for: a full, buzzy unison.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.range": "8",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "Try an interval by hand",
+          "module": "osc",
+          "why": "Seven semitones up is a fifth: play a note and you hear a bare power chord. Three is a minor third, four a major third, five a fourth.\n- Osc 2 FREQUENCY 7 (+7 st)\n- Listen for: one key playing two notes, a fifth apart.",
+          "set": {
+            "osc2.freq": 7
+          }
+        },
+        {
+          "title": "Short, plucked stabs",
+          "module": "filter",
+          "why": "The filter snaps open and shut, and the loudness dies away fast with nothing held: the clipped stab of an early house record.\n- CUTOFF -0.5 (448 Hz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.5 (70 ms)\n- Filter SUSTAIN 0\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.2 (220 ms)\n- Loudness SUSTAIN 0\n- Listen for: a bright chord that is gone almost at once.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 2,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.5,
+            "fenv.sustain": 0,
+            "aenv.attack": 0,
+            "aenv.decay": 2.2,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "osc2.freq": "Played by a lane: the interval of each chord. 3 is minor, 4 major, 5 a fourth, 7 a fifth.",
+        "filter.cutoff": "The other lane: opening slowly across part A and closing across part B, so the riff builds and settles.",
+        "aenv.decay": "The length of each stab. Longer turns them into chords that ring together.",
+        "filter.emphasis": "More gives the stabs a hollow, vocal edge."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "In the sequencer's Mod lanes, set the Osc 2 frequency lane to 7 everywhere.",
+          "hear": "Every chord becomes a bare fifth: darker, more like a techno stab."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, draw the cutoff lane as one climb across both parts.",
+          "hear": "A four-bar build that drops back as the loop comes round."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Move between 1.5 and 4",
+          "hear": "From dry clicks to ringing organ-like chords."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push up to 5",
+          "hear": "A nasal, hollow stab."
+        }
+      ]
+    },
+    {
+      "id": "lane-wave-switch",
+      "name": "Wave-Switch Lead",
+      "ref": "A singing synth-pop lead whose waveform is switched inside each long note, brassy at the front and hollow as it holds",
+      "artist": "80s synth-pop",
+      "tags": ["lead", "synth-pop", "80s"],
+      "level": 3,
+      "blurb": "A bright pop lead whose long notes start brassy and turn hollow, with a vibrato that blooms.",
+      "how": "Oscillator 1 is the lead and a quiet triangle two octaves up adds sparkle. A mod lane turns Oscillator 1’s waveform switch two steps into each long note, the last of every phrase: sawtooth to square, so the note starts brassy and goes hollow and woody as it holds, and back for the next. In part B the switch goes from narrow to wide pulse instead. A second lane swells vibrato in on those long notes, as a singer would. One hand on the switch, one on MOD DEPTH.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 64, 0.5],
+          [0.5, 61, 0.25],
+          [1, 64, 0.75],
+          [1.75, 66, 0.25],
+          [2, 64, 0.5],
+          [2.5, 61, 0.25],
+          [3, 59, 1],
+          [4, 57, 0.5],
+          [4.5, 59, 0.25],
+          [5, 61, 0.5],
+          [5.5, 64, 0.25],
+          [6, 66, 0.75],
+          [6.75, 64, 0.25],
+          [7, 61, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A lead with a little sparkle",
+          "module": "osc",
+          "why": "Oscillator 1 is the voice. A triangle two octaves up, kept quiet, adds a bell-like shine on top without thickening the tone.\n- Osc 1 WAVEFORM sawtooth\n- Osc 1 VOLUME 8\n- Osc 2 RANGE 2'\n- Osc 2 WAVEFORM triangle\n- Osc 2 switch on\n- Osc 2 VOLUME 3\n- GLIDE 1 (20 ms)\n- Listen for: a bright tone with a faint whistle above it.",
+          "set": {
+            "osc1.wave": "saw",
+            "mix.osc1": 8,
+            "osc2.range": "2",
+            "osc2.wave": "tri",
+            "mix.osc2On": true,
+            "mix.osc2": 3,
+            "ctl.glide": 1
+          }
+        },
+        {
+          "title": "Open filter, soft swell",
+          "module": "filter",
+          "why": "The filter is fairly open, with a slow little rise from its envelope so each note blooms.\n- CUTOFF 1.5 (1.8 kHz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0.5 (9 ms)\n- Filter DECAY 3 (350 ms)\n- Filter SUSTAIN 5\n- Loudness ATTACK 0.5 (9 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: notes that open slightly as they start.",
+          "set": {
+            "filter.cutoff": 1.5,
+            "filter.emphasis": 2,
+            "filter.contour": 3,
+            "fenv.attack": 0.5,
+            "fenv.decay": 3,
+            "fenv.sustain": 5,
+            "aenv.attack": 0.5,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato, waiting",
+          "module": "mod",
+          "why": "The LFO goes to the oscillators at a singer’s vibrato rate. MOD DEPTH stays at 0: the lane raises it on held notes.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.67 (5.51 Hz)\n- LFO shape triangle\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: nothing until MOD DEPTH comes up.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.67,
+            "lfo.shape": "tri",
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "osc1.wave": "Played by a lane, inside each phrase’s long note: sawtooth at the front, square as it holds (narrow and wide pulses in part B).",
+        "mod.depth": "The other lane: vibrato that swells in on the long notes only.",
+        "mix.osc2": "The sparkle on top. More makes it bell-like; none makes it plainer.",
+        "filter.cutoff": "How bright the lead is overall."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.wave",
+          "try": "In the sequencer's Mod lanes, set the waveform lane to triangle on the held steps.",
+          "hear": "Each long note starts brassy and fades into a soft flute."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, start the depth lane’s swell on the first step of each long note.",
+          "hear": "Vibrato from the start: more like a violin than a singer."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 6",
+          "hear": "A glassier, organ-like lead."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "Drop to 0",
+          "hear": "A darker, more distant lead."
+        }
+      ]
+    },
+    {
+      "id": "lane-breath-flute",
+      "name": "Breath-Lane Flute",
+      "ref": "A breathy synth flute whose breath swells with each phrase, and vibrato that blooms on the long notes",
+      "artist": "Folk melody",
+      "tags": ["wind", "folk", "melodic"],
+      "level": 2,
+      "blurb": "A soft, airy flute whose breath rises and falls with the tune.",
+      "how": "A triangle through a soft filter makes the flute’s pure tone, and noise is mixed in for breath. The playing is in two mod lanes: the noise swells as each phrase climbs to its long note and eases off as it falls, the way a player blows harder at the top of a phrase. The other raises vibrato on the held notes only. A quick little filter rise on every note does the tonguing.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.5],
+          [0.5, 64, 0.25],
+          [1, 65, 0.75],
+          [1.75, 67, 0.25],
+          [2, 69, 1],
+          [3, 67, 0.25],
+          [3.25, 65, 0.25],
+          [3.5, 64, 0.5],
+          [4, 62, 0.5],
+          [4.5, 60, 0.25],
+          [5, 62, 0.75],
+          [5.75, 64, 0.25],
+          [6, 65, 0.5],
+          [6.5, 64, 0.25],
+          [7, 62, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure, soft tone",
+          "module": "osc",
+          "why": "A triangle has very few harmonics, which is why it sounds like a flute or an ocarina.\n- Osc 1 WAVEFORM triangle\n- Osc 1 VOLUME 7\n- Listen for: a plain, hollow tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "mix.osc1": 7
+          }
+        },
+        {
+          "title": "Add breath",
+          "module": "mixer",
+          "why": "White noise in the mixer, kept low, is the air around the note.\n- Noise switch on\n- NOISE VOLUME 1.5\n- Noise colour WHITE\n- Listen for: a faint hiss with the note.",
+          "set": {
+            "mix.noiseOn": true,
+            "mix.noise": 1.5,
+            "noise.colour": "white"
+          }
+        },
+        {
+          "title": "Soften it and let it track",
+          "module": "filter",
+          "why": "Both keyboard controls on make the filter follow the melody, so high notes stay as bright as low ones. A quick filter rise that settles back gives each note a soft, tongued start.\n- CUTOFF 0.5 (893 Hz)\n- KEYBOARD CONTROL 1 on\n- KEYBOARD CONTROL 2 on\n- EMPHASIS 1\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0.4 (7 ms)\n- Filter DECAY 2.2 (220 ms)\n- Filter SUSTAIN 5\n- Loudness ATTACK 1.2 (37 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: notes that breathe in rather than click.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true,
+            "filter.emphasis": 1,
+            "filter.contour": 3,
+            "fenv.attack": 0.4,
+            "fenv.decay": 2.2,
+            "fenv.sustain": 5,
+            "aenv.attack": 1.2,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato, waiting",
+          "module": "mod",
+          "why": "The LFO goes to the oscillators at a flute player’s vibrato rate, depth at 0 for the lane to raise.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.55 (4.99 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: a still note until MOD DEPTH comes up.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.55,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mix.noise": "Played by a lane: the breath, swelling as each phrase climbs to its long note and easing as it falls.",
+        "mod.depth": "The other lane: vibrato on the held notes.",
+        "aenv.attack": "How softly each note starts. Longer is more like a recorder blown gently.",
+        "filter.cutoff": "How airy or dark the flute is."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "In the sequencer's Mod lanes, raise the noise lane on every step to about 5.",
+          "hear": "A breathy, Japanese shakuhachi-like flute."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, flatten the depth lane to 0.",
+          "hear": "A straight tone, like a recorder or a pipe organ."
+        },
+        {
+          "id": "aenv.attack",
+          "try": "Move between 0.5 and 3",
+          "hear": "From tongued to slowly blown notes."
+        },
+        {
+          "id": "osc1.range",
+          "try": "Set RANGE to 4'",
+          "hear": "A piccolo an octave up."
+        }
+      ]
+    },
+    {
+      "id": "lane-talking-bass",
+      "name": "Talking Emphasis Bass",
+      "ref": "An electro-funk bass that says “wow” on every note in part A and “yow” in part B, the filter envelope reset between them by hand",
+      "artist": "Electro-funk",
+      "tags": ["bass", "electro", "80s"],
+      "level": 3,
+      "blurb": "A talking, vowel-shaped bass that seems to speak each note.",
+      "how": "Two oscillators an octave down make a thick bass, and a resonant filter makes it vocal. The filter envelope shapes the vowel inside each note, and two mod lanes change it between parts, as a player would with a hand free. In part A the filter ATTACK is turned up, so each note opens slowly and says “wow”; for part B it is turned right down, so each note snaps open and falls, “yow”. The other hand rides the emphasis in slow waves, so the voice gets more and less nasal as the line goes.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.75],
+          [0.75, 38, 0.25],
+          [1.25, 41, 0.5],
+          [1.75, 38, 0.25],
+          [2.5, 33, 0.5],
+          [3, 36, 0.5],
+          [3.5, 38, 0.25],
+          [4, 38, 0.75],
+          [4.75, 50, 0.25],
+          [5.25, 48, 0.5],
+          [5.75, 45, 0.25],
+          [6.25, 43, 0.25],
+          [6.75, 41, 0.25],
+          [7, 40, 0.5],
+          [7.5, 36, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A thick bass",
+          "module": "osc",
+          "why": "A sawtooth and a square, both at 16’, with the square a hair flat: thick, and with something for the resonance to grip.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM square\n- Osc 2 FREQUENCY -0.1 (-0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 5\n- Listen for: a fat, slightly moving bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "osc2.range": "16",
+            "osc2.wave": "sq",
+            "osc2.freq": -0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "A vocal filter",
+          "module": "filter",
+          "why": "High emphasis is what makes a filter sound like a mouth, and a big contour lets the filter envelope say the vowel. The attack and emphasis here are only resting points for the lanes.\n- CUTOFF -1.5 (224 Hz)\n- EMPHASIS 6\n- AMOUNT OF CONTOUR 5\n- Filter ATTACK 2 (200 ms)\n- Filter DECAY 2 (200 ms)\n- Filter SUSTAIN 3\n- Listen for: a nasal tone that opens slowly on each note: “wow”.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 6,
+            "filter.contour": 5,
+            "fenv.attack": 2,
+            "fenv.decay": 2,
+            "fenv.sustain": 3
+          }
+        },
+        {
+          "title": "Notes that hold",
+          "module": "env",
+          "why": "The loudness holds high, so the lanes have time to shape each note.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 8\n- Listen for: notes that hold as long as they are played.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 8
+          }
+        }
+      ],
+      "context": {
+        "fenv.attack": "Played by a lane: up for part A, so each note opens slowly (“wow”), right down for part B, so it snaps (“yow”).",
+        "filter.emphasis": "The other lane, ridden in slow waves: how nasal the voice is.",
+        "osc2.freq": "The square’s detune. A little more makes the bass growl.",
+        "filter.contour": "How wide the vowel opens on each note."
+      },
+      "tweaks": [
+        {
+          "id": "filter.emphasis",
+          "try": "In the sequencer's Mod lanes, raise the emphasis lane’s peaks to 9.",
+          "hear": "The voice squeals at the top of every wave."
+        },
+        {
+          "id": "fenv.attack",
+          "try": "In the sequencer's Mod lanes, copy part B’s attack lane into part A.",
+          "hear": "The whole song says “yow”: punchier and more aggressive."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Move to -0.3",
+          "hear": "A rougher, growlier bass."
+        },
+        {
+          "id": "filter.contour",
+          "try": "Raise to 5",
+          "hear": "A sharper attack on every note."
+        }
+      ]
+    },
+    {
+      "id": "lane-trance-gate",
+      "name": "Gated Trance Pulse",
+      "ref": "A sixteenth-note power-chord pulse gated into a rhythm by its note lengths, with a two-handed filter build",
+      "artist": "90s trance",
+      "tags": ["seq", "trance", "90s"],
+      "level": 2,
+      "blurb": "A pulsing, chopped trance riff that builds up brighter every time round.",
+      "how": "Two sawtooths a fifth apart make a power chord from one key. Every sixteenth is played, and the sequencer gates them into a rhythm: long notes ring, clipped ones are just a tick, the effect a trance gate gives a held pad. The hands do the build: one lane lifts the cutoff and the other the emphasis, gently through part A and hard through part B, and both drop back as the loop comes round.",
+      "phrase": {
+        "bpm": 138,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.25],
+          [0.25, 45, 0.075],
+          [0.5, 45, 0.25],
+          [0.75, 45, 0.075],
+          [1, 45, 0.075],
+          [1.25, 45, 0.25],
+          [1.5, 45, 0.075],
+          [1.75, 45, 0.075],
+          [2, 41, 0.25],
+          [2.25, 41, 0.075],
+          [2.5, 41, 0.25],
+          [2.75, 41, 0.075],
+          [3, 41, 0.075],
+          [3.25, 41, 0.075],
+          [3.5, 41, 0.25],
+          [3.75, 41, 0.075],
+          [4, 48, 0.25],
+          [4.25, 48, 0.075],
+          [4.5, 48, 0.25],
+          [4.75, 48, 0.075],
+          [5, 48, 0.075],
+          [5.25, 48, 0.25],
+          [5.5, 48, 0.075],
+          [5.75, 48, 0.075],
+          [6, 43, 0.25],
+          [6.25, 43, 0.075],
+          [6.5, 43, 0.25],
+          [6.75, 43, 0.075],
+          [7, 43, 0.075],
+          [7.25, 43, 0.075],
+          [7.5, 43, 0.25],
+          [7.75, 43, 0.075]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A power chord from one key",
+          "module": "osc",
+          "why": "Oscillator 2 tuned seven semitones up plays the fifth of every note, so one key is a bare chord.\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 7 (+7 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- Listen for: a hard, open chord.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.freq": 7,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A filter to build with",
+          "module": "filter",
+          "why": "The cutoff starts darkish, with a little emphasis and a small pluck from the envelope.\n- CUTOFF -1 (317 Hz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.5 (70 ms)\n- Filter SUSTAIN 2\n- Listen for: a rounded, slightly ringing chord.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 3,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 1.5,
+            "fenv.sustain": 2
+          }
+        },
+        {
+          "title": "Held: the note length is the gate",
+          "module": "env",
+          "why": "With LOUDNESS SUSTAIN high and the LOUD DECAY switch off, a note sounds for exactly as long as its key is down and stops dead. So the sequencer’s note lengths are the gate: a full sixteenth rings, a clipped one is a tick.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 1.5 (70 ms)\n- Loudness SUSTAIN 7\n- LOUD DECAY switch off\n- Listen for: a held key keeps sounding until it is let go.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 1.5,
+            "aenv.sustain": 7,
+            "env.loudDecay": false
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Played by a lane: the build, slow through A and steep through B.",
+        "filter.emphasis": "The other lane, rising with the cutoff: the build squeals more as it climbs.",
+        "osc2.freq": "The interval of the chord: 7 is a fifth, 5 a fourth.",
+        "aenv.decay": "How fast each note settles to its held level. Longer blurs the gate."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, make part B’s cutoff lane fall instead of rise.",
+          "hear": "A breakdown instead of a build."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "In the sequencer's Mod lanes, raise the end of part B’s emphasis lane to 7.",
+          "hear": "The build ends on a squeal."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Set to 5",
+          "hear": "Fourths: a darker, more modal riff."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Move between 1 and 4",
+          "hear": "From a hard gate to a softer, pumping one."
+        }
+      ]
+    },
+    {
+      "id": "lane-rate-wobble",
+      "name": "Rate-Step Wobble Bass",
+      "ref": "A half-time wobble bass whose LFO changes speed every beat, quarter notes to sixteenths, played by a rate lane",
+      "artist": "2010s bass music",
+      "tags": ["bass", "dubstep", "2010s"],
+      "level": 3,
+      "blurb": "A heavy, wobbling bass whose wobble speeds up and slows down with the beat.",
+      "how": "Two oscillators an octave down go through a dark filter that the LFO swings open and shut: the wobble. A mod lane changes the LFO RATE on every beat, set to the song’s tempo: quarter notes, eighths, triplets, sixteenths. That rhythmic rate-switching is the whole performance. A second lane sets how deep the wobble goes, deeper in part B.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 40, 1.5],
+          [1.5, 40, 0.5],
+          [2, 43, 1],
+          [3, 40, 1],
+          [4, 40, 1.5],
+          [5.5, 46, 0.5],
+          [6, 45, 0.75],
+          [6.75, 43, 0.5],
+          [7.25, 40, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A heavy bass",
+          "module": "osc",
+          "why": "A sawtooth and a slightly flat square, both an octave down, are thick and buzzy: plenty for the filter to carve.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM square\n- Osc 2 FREQUENCY -0.1 (-0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 6\n- Listen for: a big, raw bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "osc2.range": "16",
+            "osc2.wave": "sq",
+            "osc2.freq": -0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Close the filter",
+          "module": "filter",
+          "why": "The filter sits nearly shut with some emphasis, so when the LFO opens it there is a vocal “wub”.\n- CUTOFF -2.5 (112 Hz)\n- EMPHASIS 4\n- AMOUNT OF CONTOUR 0\n- Listen for: a dark, muffled bass.",
+          "set": {
+            "filter.cutoff": -2.5,
+            "filter.emphasis": 4,
+            "filter.contour": 0
+          }
+        },
+        {
+          "title": "The LFO on the filter",
+          "module": "mod",
+          "why": "FILTER MODULATION on sends the LFO to the cutoff, and MOD DEPTH sets how far it swings. The LFO RATE is what the lane plays.\n- FILTER MODULATION on\n- LFO shape triangle\n- MOD MIX 10\n- MOD DEPTH 5\n- LFO RATE 5.47 (4.67 Hz)\n- Listen for: the bass opening and closing in eighth notes.",
+          "set": {
+            "mod.toFilter": true,
+            "lfo.shape": "tri",
+            "mod.mix": 10,
+            "mod.depth": 5,
+            "lfo.rate": 5.47
+          }
+        },
+        {
+          "title": "Hold the notes",
+          "module": "env",
+          "why": "Full sustain, so a held note keeps wobbling as long as it is held.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 10\n- Listen for: long notes that keep moving.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "lfo.rate": "Played by a lane, one value a beat, each a division of the song’s 140 bpm: quarter notes, eighths, triplets, sixteenths.",
+        "mod.depth": "The other lane: how far the wobble opens the filter.",
+        "filter.emphasis": "The vowel of the wobble: more is more “yoi”, less is more “wub”.",
+        "filter.cutoff": "Where the wobble starts from."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "In the sequencer's Mod lanes, pick the same rate for every step.",
+          "hear": "A steady wobble: the rhythm of the rate changes is gone."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, drop the depth lane to 0 on the first step of each bar.",
+          "hear": "A clean hit of bass before each wobble starts."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push up to 7",
+          "hear": "A screaming, vocal wobble."
+        },
+        {
+          "id": "lfo.shape",
+          "try": "Switch the LFO to square",
+          "hear": "A choppy, on-off wobble."
+        }
+      ]
+    },
+    {
+      "id": "lane-fm-growl",
+      "name": "FM Growl Riff",
+      "ref": "A clanging, growling industrial bass: Oscillator 3 frequency-modulates the others, its depth and ratio played by lanes",
+      "artist": "Industrial body music",
+      "tags": ["bass", "industrial", "80s"],
+      "level": 3,
+      "blurb": "A metallic, snarling bass whose growl swells through each bar and whose clang changes between sections.",
+      "how": "Oscillator 3 is taken out of the mixer and used as a modulator at audio rate, following the keyboard: that is frequency modulation, and it turns a plain sawtooth into a clang. One mod lane rides MOD DEPTH, swelling the snarl through each bar and easing it back for the next. The other retunes Oscillator 3, which changes the ratio between modulator and carrier and so the colour of the clang: plain in the first half of part A, a fifth in the second, and four different colours through part B, a turn of the knob every half bar.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.25, 1],
+          [0.25, 40, 0.25],
+          [0.75, 40, 0.25],
+          [1, 41, 0.25],
+          [1.5, 40, 0.25],
+          [2, 40, 0.25, 1],
+          [2.25, 40, 0.25],
+          [2.75, 43, 0.25],
+          [3.25, 40, 0.25],
+          [3.5, 41, 0.25],
+          [4, 40, 0.25, 1],
+          [4.25, 40, 0.25],
+          [4.75, 40, 0.25],
+          [5, 46, 0.25],
+          [5.5, 45, 0.25],
+          [6, 43, 0.25, 1],
+          [6.5, 41, 0.25],
+          [7, 40, 0.25],
+          [7.5, 41, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sawtooth bass",
+          "module": "osc",
+          "why": "The carrier: one sawtooth an octave down.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 1 VOLUME 8\n- Listen for: a plain, buzzy bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Oscillator 3 as a modulator",
+          "module": "osc",
+          "why": "Oscillator 3 is left out of the mixer and set to a triangle an octave above the carrier, still following the keyboard, so its modulation stays in tune with every note.\n- Osc 3 switch off\n- Osc 3 RANGE 8'\n- Osc 3 WAVEFORM triangle\n- OSC 3 CONTROL on\n- Osc 3 FREQUENCY 0 (0 st)\n- Listen for: no change yet: Oscillator 3 is silent on its own.",
+          "set": {
+            "mix.osc3On": false,
+            "osc3.range": "8",
+            "osc3.wave": "tri",
+            "osc3.kbd": true,
+            "osc3.freq": 0
+          }
+        },
+        {
+          "title": "Route it to pitch",
+          "module": "mod",
+          "why": "MOD MIX fully left picks source A, Oscillator 3, and OSCILLATOR MODULATION sends it to the pitch of all the oscillators. MOD DEPTH is the amount, left at 0 for the lane.\n- Mod source A OSC 3\n- MOD MIX 0\n- OSCILLATOR MODULATION on\n- MOD DEPTH 0\n- Listen for: turn MOD DEPTH up by hand: the bass clangs and growls.",
+          "set": {
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 0
+          }
+        },
+        {
+          "title": "Shape it",
+          "module": "filter",
+          "why": "A half-open filter with a small pluck, and notes that hold.\n- CUTOFF 0 (632 Hz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2 (200 ms)\n- Filter SUSTAIN 4\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 9\n- Listen for: a firm bass with a little bite on each note.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 2,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 4,
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 9
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Played by a lane: how hard Oscillator 3 growls, swelling through each bar and eased back for the next.",
+        "osc3.freq": "The other lane: Oscillator 3’s tuning, which is the FM ratio. 0 is harmonic; 7 a fifth up is still sweet; 5 or −5 go metallic.",
+        "osc3.wave": "The modulator’s shape. A square makes a harsher, buzzier growl.",
+        "filter.cutoff": "How much of the clang gets through."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, draw the depth lane up through each held note.",
+          "hear": "The growl swells as the notes hold."
+        },
+        {
+          "id": "osc3.freq",
+          "try": "In the sequencer's Mod lanes, try 3.5 in the frequency lane.",
+          "hear": "An inharmonic ratio: bell-like and out of key, very industrial."
+        },
+        {
+          "id": "osc3.wave",
+          "try": "Switch Oscillator 3 to square",
+          "hear": "A rougher, more distorted growl."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "Open to 2",
+          "hear": "More of the metallic top end."
+        }
+      ]
+    },
+    {
+      "id": "lane-overdrive-riff",
+      "name": "Overdrive-Lane Rock Riff",
+      "ref": "A three-oscillator prog-rock riff that is nearly clean in the verse and driven hard in the chorus, by the feedback trick",
+      "artist": "70s progressive rock",
+      "tags": ["lead", "prog", "70s"],
+      "level": 3,
+      "blurb": "A heavy synth riff that snarls into overdrive for the chorus and pushes harder on the accents.",
+      "how": "Three oscillators make a big rock tone. With nothing plugged into EXT, switching on the external input feeds the synth’s own output back into its mixer: the Minimoog’s overdrive trick. A mod lane rides that EXT IN VOLUME, low through the verse (part A) with a push on the accents, turned up over the chorus’s (part B’s) first beat and eased back over its last. A second lane opens the cutoff on the accents and further in the chorus.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.25, 1],
+          [0.5, 40, 0.25],
+          [0.75, 43, 0.25],
+          [1, 40, 0.25],
+          [1.5, 45, 0.25],
+          [2, 40, 0.25],
+          [2.5, 47, 0.25],
+          [2.75, 45, 0.25],
+          [3, 43, 0.25],
+          [3.5, 40, 0.25],
+          [3.75, 38, 0.25],
+          [4, 40, 0.25, 1],
+          [4.5, 40, 0.25],
+          [4.75, 43, 0.25],
+          [5, 40, 0.25],
+          [5.5, 45, 0.25],
+          [6, 47, 0.25, 1],
+          [6.5, 50, 0.25],
+          [6.75, 47, 0.25],
+          [7, 45, 0.25],
+          [7.5, 43, 0.25],
+          [7.75, 40, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three oscillators",
+          "module": "osc",
+          "why": "Two sawtooths a hair apart and a square an octave down: the classic big three-oscillator lead.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.12 (+0.1 st)\n- Osc 2 switch on\n- Osc 3 RANGE 16'\n- Osc 3 WAVEFORM square\n- Osc 3 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 7\n- Osc 3 VOLUME 4\n- Listen for: a wide, heavy tone.",
+          "set": {
+            "osc2.wave": "saw",
+            "osc2.freq": 0.12,
+            "mix.osc2On": true,
+            "osc3.range": "16",
+            "osc3.wave": "sq",
+            "mix.osc3On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 7,
+            "mix.osc3": 4
+          }
+        },
+        {
+          "title": "The feedback loop",
+          "module": "mixer",
+          "why": "With no cable in EXT, the external input carries the synth’s own output. A little of it thickens the tone; a lot distorts it. The lane rides this knob.\n- External input switch on\n- EXT IN VOLUME 2\n- Listen for: a slightly thicker, grittier tone.",
+          "set": {
+            "mix.extOn": true,
+            "mix.ext": 2
+          }
+        },
+        {
+          "title": "Shape the riff",
+          "module": "filter",
+          "why": "A half-open filter, a modest pluck, and notes that hold.\n- CUTOFF 1 (1.3 kHz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.5 (260 ms)\n- Filter SUSTAIN 5\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 8\n- Listen for: a firm, driven riff.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.emphasis": 2,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 5,
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 8
+          }
+        }
+      ],
+      "context": {
+        "mix.ext": "Played by a lane: the overdrive. Low in the verse, turned up into the chorus and back out of it, pushed on accents.",
+        "filter.cutoff": "The other lane: brighter on the accents and through the chorus.",
+        "out.volume": "Also sets how hard the feedback loop is driven.",
+        "osc2.freq": "The detune that makes the riff wide."
+      },
+      "tweaks": [
+        {
+          "id": "mix.ext",
+          "try": "In the sequencer's Mod lanes, copy part B’s EXT IN lane into part A.",
+          "hear": "The whole song in overdrive: no verse, all chorus."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, raise the cutoff lane to 3 on the last bar of B.",
+          "hear": "The end of the chorus screams before the verse comes back."
+        },
+        {
+          "id": "out.volume",
+          "try": "Move between 5 and 9",
+          "hear": "Less or more drive from the same lane."
+        },
+        {
+          "id": "mix.osc3",
+          "try": "Raise to 7",
+          "hear": "A heavier, chunkier low end."
+        }
+      ]
+    },
+    {
+      "id": "lane-glass-arp",
+      "name": "Glass Arpeggio",
+      "ref": "A shimmering Lydian sixteenth-note arpeggio whose brightness repeats in threes against the beat’s fours",
+      "artist": "Synthwave",
+      "tags": ["keys", "synthwave", "2010s"],
+      "level": 2,
+      "blurb": "A glassy, sparkling arpeggio with an accent that seems to roll across the beat.",
+      "how": "A triangle and a square two octaves up make a bell-like tone that dies away on every note. The LFO sweeps the filter once every three sixteenths while the arpeggio repeats every four, so the bright note lands somewhere new each time: the rolling accent. Two mod lanes ride it by hand: one brings the roll in and out with MOD DEPTH, the other lets the notes ring longer through part A and draws them back in through part B.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 53, 0.25],
+          [0.25, 57, 0.25],
+          [0.5, 60, 0.25],
+          [0.75, 64, 0.25],
+          [1, 71, 0.25],
+          [1.25, 64, 0.25],
+          [1.5, 60, 0.25],
+          [1.75, 57, 0.25],
+          [2, 53, 0.25],
+          [2.25, 57, 0.25],
+          [2.5, 60, 0.25],
+          [2.75, 64, 0.25],
+          [3, 71, 0.25],
+          [3.25, 64, 0.25],
+          [3.5, 60, 0.25],
+          [3.75, 57, 0.25],
+          [4, 50, 0.25],
+          [4.25, 53, 0.25],
+          [4.5, 57, 0.25],
+          [4.75, 60, 0.25],
+          [5, 64, 0.25],
+          [5.25, 60, 0.25],
+          [5.5, 57, 0.25],
+          [5.75, 53, 0.25],
+          [6, 55, 0.25],
+          [6.25, 59, 0.25],
+          [6.5, 62, 0.25],
+          [6.75, 65, 0.25],
+          [7, 69, 0.25],
+          [7.25, 65, 0.25],
+          [7.5, 62, 0.25],
+          [7.75, 59, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bell-like tone",
+          "module": "osc",
+          "why": "A triangle for the body and a quiet square two octaves up for the glassy overtone.\n- Osc 1 WAVEFORM triangle\n- Osc 1 VOLUME 6\n- Osc 2 RANGE 2'\n- Osc 2 WAVEFORM square\n- Osc 2 switch on\n- Osc 2 VOLUME 3\n- Listen for: a soft tone with a bright ping above it.",
+          "set": {
+            "osc1.wave": "tri",
+            "mix.osc1": 6,
+            "osc2.range": "2",
+            "osc2.wave": "sq",
+            "mix.osc2On": true,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "A filter that follows the notes",
+          "module": "filter",
+          "why": "Keyboard control 1 keeps the high notes bright. A small pluck from the envelope makes each note ping.\n- CUTOFF 1 (1.3 kHz)\n- KEYBOARD CONTROL 1 on\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.8 (130 ms)\n- Filter SUSTAIN 2\n- Listen for: a ping on every note.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.kbd1": true,
+            "filter.emphasis": 3,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 2
+          }
+        },
+        {
+          "title": "Notes that die away",
+          "module": "env",
+          "why": "With LOUDNESS SUSTAIN at 0, the decay alone sets how long each note rings, which is what the lane plays.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.2 (220 ms)\n- Loudness SUSTAIN 0\n- Listen for: every note fading out like a struck bell.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2.2,
+            "aenv.sustain": 0
+          }
+        },
+        {
+          "title": "Roll the filter with the LFO",
+          "module": "mod",
+          "why": "MOD MIX fully right picks the LFO, and FILTER MODULATION sends it to the cutoff. Its rate is one cycle every three sixteenths at the song’s 96 bpm, against the arpeggio’s fours. MOD DEPTH is left at 0 for the lane.\n- MOD MIX 10\n- FILTER MODULATION on\n- LFO shape triangle\n- LFO RATE 4.53 (2.14 Hz)\n- MOD DEPTH 0\n- Listen for: turn MOD DEPTH up by hand: the brightness rolls across the notes.",
+          "set": {
+            "mod.mix": 10,
+            "mod.toFilter": true,
+            "lfo.shape": "tri",
+            "lfo.rate": 4.53,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Played by a lane: how much of the LFO’s three-step roll reaches the filter, swelling through each half of the song.",
+        "aenv.decay": "The other lane: the notes ring longer through A and are drawn back in through B.",
+        "lfo.rate": "Set to three sixteenths a cycle against the arpeggio’s four: the roll.",
+        "mix.osc2": "The glass on top. More is more like a celesta.",
+        "filter.emphasis": "A ring at the cutoff. More makes the bright notes sing."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, flatten the depth lane to 0.",
+          "hear": "The roll stops: every note as bright as the last."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "In the sequencer's Mod lanes, raise the decay lane to 4 everywhere.",
+          "hear": "The notes ring into each other: a wash rather than a pattern."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Slow it to about 4",
+          "hear": "A slow tide of brightness instead of a roll."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 6",
+          "hear": "A brighter, more metallic arpeggio."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push up to 6",
+          "hear": "A ringing, synthetic shimmer on every note."
+        }
+      ]
+    },
+    {
+      "id": "lane-garage-sub",
+      "name": "Two-Step Garage Bass",
+      "ref": "A swung, skippy UK garage sub bass with slides picked by a glide lane and a pluck on the accents",
+      "artist": "UK garage",
+      "tags": ["bass", "garage", "90s"],
+      "level": 2,
+      "blurb": "A bouncing, swung sub bass that slides between some notes and skips over others.",
+      "how": "A square and a triangle an octave down make a round sub with a little edge, through a mostly closed filter. The rhythm is two-step: swung sixteenths with gaps. One mod lane raises GLIDE only on the notes a slide lands on, so the line slips into those and jumps to the rest. The other jabs the contour amount up on the two accented notes of each part, so they pluck brighter than the rest.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 43, 0.31, 1],
+          [1.5, 43, 0.31],
+          [2, 46, 0.3225],
+          [2.31, 48, 0.19],
+          [3, 43, 0.31],
+          [3.81, 41, 0.19],
+          [4.5, 43, 0.31, 1],
+          [5.5, 50, 0.31],
+          [6.31, 48, 0.19],
+          [6.5, 46, 0.3225],
+          [6.81, 45, 0.19],
+          [7.31, 41, 0.19],
+          [7.5, 43, 0.31]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A rounded sub",
+          "module": "osc",
+          "why": "A square for presence and a triangle under it for the round, felt low end, both an octave down.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM square\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM triangle\n- Osc 2 switch on\n- Osc 1 VOLUME 6\n- Osc 2 VOLUME 7\n- Listen for: a round, deep bass with a hollow edge.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "sq",
+            "osc2.range": "16",
+            "osc2.wave": "tri",
+            "mix.osc2On": true,
+            "mix.osc1": 6,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "Mostly closed, with a pluck",
+          "module": "filter",
+          "why": "A dark filter and a quick envelope: the lane raises the contour on accents.\n- CUTOFF -1.8 (182 Hz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 3.5\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.8 (130 ms)\n- Filter SUSTAIN 1\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.4 (250 ms)\n- Loudness SUSTAIN 8\n- Listen for: a muted, bouncy sub.",
+          "set": {
+            "filter.cutoff": -1.8,
+            "filter.emphasis": 2,
+            "filter.contour": 3.5,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 1,
+            "aenv.attack": 0,
+            "aenv.decay": 2.4,
+            "aenv.sustain": 8
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "Played by a lane: up only on the notes a slide lands on.",
+        "filter.contour": "The other lane: a brighter pluck on the accents.",
+        "filter.cutoff": "How dark the sub sits between plucks.",
+        "mix.osc1": "The square’s edge. Less makes the bass more of a pure sub."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "In the sequencer's Mod lanes, add glide on the first note of each bar.",
+          "hear": "Every bar swoops in from the last note of the one before."
+        },
+        {
+          "id": "filter.contour",
+          "try": "In the sequencer's Mod lanes, raise the contour lane to 7 on every note.",
+          "hear": "A punchier, more insistent bass that loses its light and shade."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "Close to -3",
+          "hear": "Almost pure sub: a felt pulse."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Lower to 1.5",
+          "hear": "Shorter, skippier notes."
+        }
+      ]
+    },
+    {
+      "id": "lane-italo-octaves",
+      "name": "Italo Octave Bass",
+      "ref": "A bouncing eighth-note octave bass in the disco tradition, its filter opening over four bars and its ring rising and falling",
+      "artist": "Italo disco",
+      "tags": ["bass", "disco", "80s"],
+      "level": 2,
+      "blurb": "A bouncing, driving octave bass that slowly opens up over the song.",
+      "how": "Two sawtooths an octave down bounce between each note and its octave. One mod lane sweeps the cutoff in one slow wave that runs across both parts, four bars from dark to bright and back. Keyboard control opens the filter a little for the high octave of each pair, so the upper notes are brighter and the bounce feels bigger. The other lane turns the emphasis up through part A and back down through part B, so the bass rings more as it opens.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.25],
+          [0.5, 57, 0.25],
+          [1, 45, 0.25],
+          [1.5, 57, 0.25],
+          [2, 45, 0.25],
+          [2.5, 57, 0.25],
+          [3, 45, 0.25],
+          [3.5, 57, 0.25],
+          [3.75, 57, 0.25],
+          [4, 41, 0.25],
+          [4.5, 53, 0.25],
+          [5, 41, 0.25],
+          [5.5, 53, 0.25],
+          [6, 43, 0.25],
+          [6.5, 55, 0.25],
+          [7, 43, 0.25],
+          [7.5, 55, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths an octave down",
+          "module": "osc",
+          "why": "Two saws, Oscillator 2 a fraction sharp, for a wide disco bass.\n- Osc 1 RANGE 16'\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.06 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- Listen for: a thick, slowly beating bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc2.range": "16",
+            "osc2.wave": "saw",
+            "osc2.freq": 0.06,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A bouncy filter",
+          "module": "filter",
+          "why": "A quick pluck on each note from the envelope, over a cutoff the lane will sweep. Keyboard control 1 opens the filter a little for higher notes, so the top of each octave is brighter.\n- CUTOFF -1 (317 Hz)\n- KEYBOARD CONTROL 1 on\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.6 (86 ms)\n- Filter SUSTAIN 1\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 6\n- Listen for: a punchy, plucked bass.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.kbd1": true,
+            "filter.emphasis": 3,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.6,
+            "fenv.sustain": 1,
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 6
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Played by a lane in one four-bar wave across parts A and B.",
+        "filter.emphasis": "The other lane: turned up through A and back down through B, so the bass rings as it opens.",
+        "osc2.freq": "The detune that makes the bass wide.",
+        "filter.contour": "The pluck on each note."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, draw the cutoff lane low and flat through part A, then open in B.",
+          "hear": "A verse that holds back and a chorus that opens."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "In the sequencer's Mod lanes, raise the top of the emphasis lane to 7.",
+          "hear": "The bass squelches at its brightest: closer to an acid bass."
+        },
+        {
+          "id": "filter.contour",
+          "try": "Raise to 6",
+          "hear": "A harder, clickier pluck."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Set to 0",
+          "hear": "A narrower, punchier bass."
+        }
+      ]
+    },
+    {
+      "id": "lane-motorik-drift",
+      "name": "Motorik Drift",
+      "ref": "A steady eighth-note motorik pulse whose second oscillator drifts slowly in and out of tune with the first",
+      "artist": "Motorik krautrock",
+      "tags": ["seq", "krautrock", "70s"],
+      "level": 2,
+      "blurb": "A hypnotic, steady pulse that shimmers and swims as its two oscillators drift apart.",
+      "how": "Two sawtooths play a straight, unchanging eighth-note line, the motorik beat. The movement is all in the mod lanes. One detunes Oscillator 2 in a slow wave, a little flat, then in tune, then a little sharp, so the beating between the two speeds up, stops and starts again. The other opens and closes the filter once every two bars.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.25],
+          [0.5, 38, 0.25],
+          [1, 38, 0.25],
+          [1.5, 50, 0.25],
+          [2, 38, 0.25],
+          [2.5, 38, 0.25],
+          [3, 41, 0.25],
+          [3.5, 38, 0.25],
+          [4, 38, 0.25],
+          [4.5, 38, 0.25],
+          [5, 38, 0.25],
+          [5.5, 50, 0.25],
+          [6, 36, 0.25],
+          [6.5, 36, 0.25],
+          [7, 33, 0.25],
+          [7.5, 36, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths",
+          "module": "osc",
+          "why": "Two equal saws. The lane will move Oscillator 2’s tuning by a fraction of a semitone, which is what makes them beat.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 7\n- Listen for: a full saw tone; the two are in unison for now.",
+          "set": {
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 7
+          }
+        },
+        {
+          "title": "Pulse it",
+          "module": "filter",
+          "why": "A pluck on each eighth note, with a short loudness envelope so they stay separate.\n- CUTOFF 0 (632 Hz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2 (200 ms)\n- Filter SUSTAIN 3\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 5\n- Listen for: a steady, plucked pulse.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 2,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 3,
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 5
+          }
+        }
+      ],
+      "context": {
+        "osc2.freq": "Played by a lane in a slow wave of a third of a semitone either way: the drift.",
+        "filter.cutoff": "The other lane: one swell every two bars.",
+        "filter.contour": "The pluck on each note.",
+        "aenv.decay": "Longer lets the eighths ring together into a drone."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "In the sequencer's Mod lanes, set the frequency lane to 7 on every step.",
+          "hear": "The pulse in fifths: bigger and more like an organ."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, draw a sixteenth-note zig-zag into the cutoff lane.",
+          "hear": "The pulse ticks bright and dark: busier, more electronic."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Raise to 4",
+          "hear": "The pulse blurs into a drone."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 5",
+          "hear": "A ringing, glassier pulse."
+        }
+      ]
+    },
+    {
+      "id": "lane-pulse-shuffle",
+      "name": "Pulse-Width Shuffle",
+      "ref": "A wiry new-wave riff whose oscillator is flicked between square, wide and narrow pulses on every beat",
+      "artist": "Post-punk new wave",
+      "tags": ["lead", "new-wave", "80s"],
+      "level": 3,
+      "blurb": "A twitchy, wiry riff whose tone flickers from beat to beat.",
+      "how": "The Model D has no pulse-width knob, but its waveform switch has three pulses: square, wide and narrow. A mod lane flicks Oscillator 1’s switch to its neighbour on every beat, square to wide to narrow and back, which gives the riff a nervous, phasing flicker like pulse-width modulation, but in rhythm. A second lane lifts the cutoff through each bar.",
+      "phrase": {
+        "bpm": 132,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.25, 1],
+          [0.5, 48, 0.25],
+          [0.75, 51, 0.25],
+          [1.25, 48, 0.25],
+          [1.5, 55, 0.25],
+          [2, 46, 0.25],
+          [2.5, 48, 0.25],
+          [3, 51, 0.25],
+          [3.5, 53, 0.25],
+          [3.75, 55, 0.25],
+          [4, 48, 0.25, 1],
+          [4.5, 48, 0.25],
+          [4.75, 51, 0.25],
+          [5.25, 48, 0.25],
+          [5.5, 55, 0.25],
+          [6, 46, 0.25],
+          [6.5, 43, 0.25],
+          [7, 44, 0.25],
+          [7.5, 46, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pulse lead",
+          "module": "osc",
+          "why": "Oscillator 1 on a square, with a quiet sawtooth an octave down for body.\n- Osc 1 WAVEFORM square\n- Osc 1 VOLUME 8\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 2 VOLUME 3\n- Listen for: a hollow, wiry tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "mix.osc1": 8,
+            "osc2.range": "16",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "A tight filter",
+          "module": "filter",
+          "why": "A short pluck and a short loudness envelope for a choppy, guitar-like riff.\n- CUTOFF 0.5 (893 Hz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.8 (130 ms)\n- Filter SUSTAIN 3\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.2 (220 ms)\n- Loudness SUSTAIN 6\n- Listen for: a choppy, nervous riff.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 3,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 1.8,
+            "fenv.sustain": 3,
+            "aenv.attack": 0,
+            "aenv.decay": 2.2,
+            "aenv.sustain": 6
+          }
+        }
+      ],
+      "context": {
+        "osc1.wave": "Played by a lane: square, wide and narrow pulses, flicked on every beat.",
+        "filter.cutoff": "The other lane: a rise through each bar.",
+        "mix.osc2": "The body underneath. Up for a fatter riff.",
+        "filter.emphasis": "A ring on the flicker."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.wave",
+          "try": "In the sequencer's Mod lanes, set the waveform lane to narrow on every step.",
+          "hear": "A thin, nasal, steady riff: the flicker is gone."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, flatten the cutoff lane at 2.",
+          "hear": "A brighter riff with no rise in it."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 6",
+          "hear": "A fatter, darker riff."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 6",
+          "hear": "A ringing, bubbling flicker."
+        }
+      ]
+    },
+    {
+      "id": "lane-contour-marimba",
+      "name": "Contour Marimba Cells",
+      "ref": "Interlocking marimba-like pulse cells in the minimalist tradition, with accents in threes phasing over the fours",
+      "artist": "American minimalism",
+      "tags": ["keys", "minimal", "70s"],
+      "level": 3,
+      "blurb": "Bright, wooden pulse patterns whose accents drift and phase over the beat.",
+      "how": "A triangle with a quiet square two octaves up, dying away fast, makes a wooden, marimba-like strike. The notes are four-note cells, and the LFO brightens the filter once every three steps, which never lines up with the four, so the accents seem to walk through the pattern: the phasing effect of minimalist pulse music. Two mod lanes ride it slowly: MOD DEPTH brings the phasing in and lets it fade, and the filter decay rounds the strike off through part A and tightens it again through part B.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.25],
+          [0.25, 59, 0.25],
+          [0.5, 54, 0.25],
+          [1, 52, 0.25],
+          [1.25, 59, 0.25],
+          [1.5, 54, 0.25],
+          [1.75, 57, 0.25],
+          [2.25, 59, 0.25],
+          [2.5, 54, 0.25],
+          [2.75, 57, 0.25],
+          [3, 52, 0.25],
+          [3.5, 54, 0.25],
+          [3.75, 57, 0.25],
+          [4, 52, 0.25],
+          [4.25, 59, 0.25],
+          [4.75, 57, 0.25],
+          [5, 52, 0.25],
+          [5.25, 59, 0.25],
+          [5.5, 54, 0.25],
+          [6, 52, 0.25],
+          [6.25, 59, 0.25],
+          [6.5, 54, 0.25],
+          [6.75, 57, 0.25],
+          [7.25, 59, 0.25],
+          [7.5, 54, 0.25],
+          [7.75, 57, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A wooden strike",
+          "module": "osc",
+          "why": "A triangle for the bar’s tone and a quiet square two octaves up for its knock.\n- Osc 1 WAVEFORM triangle\n- Osc 1 VOLUME 7\n- Osc 2 RANGE 2'\n- Osc 2 WAVEFORM square\n- Osc 2 switch on\n- Osc 2 VOLUME 2\n- Listen for: a soft tone with a faint click above it.",
+          "set": {
+            "osc1.wave": "tri",
+            "mix.osc1": 7,
+            "osc2.range": "2",
+            "osc2.wave": "sq",
+            "mix.osc2On": true,
+            "mix.osc2": 2
+          }
+        },
+        {
+          "title": "A struck, tracking filter",
+          "module": "filter",
+          "why": "Both keyboard controls on so every note is equally bright, and a fast filter envelope for the strike.\n- CUTOFF -0.5 (448 Hz)\n- KEYBOARD CONTROL 1 on\n- KEYBOARD CONTROL 2 on\n- EMPHASIS 1\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.4 (57 ms)\n- Filter SUSTAIN 0\n- Listen for: a wooden knock on every note.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true,
+            "filter.emphasis": 1,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.4,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "A fast fade",
+          "module": "env",
+          "why": "Nothing held: the note dies away like a struck bar.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.6 (280 ms)\n- Loudness SUSTAIN 0\n- Listen for: a short, ringing strike.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 2.6,
+            "aenv.sustain": 0
+          }
+        },
+        {
+          "title": "Accents in threes, from the LFO",
+          "module": "mod",
+          "why": "MOD MIX fully right picks the LFO and FILTER MODULATION sends it to the cutoff, at one cycle every three sixteenths of the song’s 112 bpm. MOD DEPTH starts at 0 for the lane.\n- MOD MIX 10\n- FILTER MODULATION on\n- LFO shape triangle\n- LFO RATE 4.71 (2.49 Hz)\n- MOD DEPTH 0\n- Listen for: turn MOD DEPTH up by hand: the bright strike walks through the cell.",
+          "set": {
+            "mod.mix": 10,
+            "mod.toFilter": true,
+            "lfo.shape": "tri",
+            "lfo.rate": 4.71,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Played by a lane: how strongly the LFO’s threes accent the strikes, phasing in and fading out.",
+        "fenv.decay": "The other lane: the strike rounds off through A and tightens again through B.",
+        "filter.contour": "How bright each strike is before the LFO adds its accent.",
+        "aenv.decay": "How long each bar rings.",
+        "mix.osc2": "The knock on top. More is more like a xylophone."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, hold the depth lane at its highest all the way through.",
+          "hear": "The phasing never fades: a hard, insistent walk."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "In the sequencer's Mod lanes, flatten the decay lane at 1.2.",
+          "hear": "Every strike stays tight and dry: a woodblock more than a marimba."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Nudge it a little either way",
+          "hear": "The accents drift against the cells instead of walking in step."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Raise to 4",
+          "hear": "The strikes ring into a wash, like a vibraphone."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 5",
+          "hear": "A harder, xylophone-like knock."
+        }
+      ]
+    },
+    {
+      "id": "lane-glitch-ratchet",
+      "name": "Glitch Ratchet Line",
+      "ref": "A stuttering glitch-electronica line of ratcheted notes, the stutters tightened and the tone scattered by lanes",
+      "artist": "Glitch electronica",
+      "tags": ["seq", "idm", "2000s"],
+      "level": 3,
+      "blurb": "A stuttering, glitchy line that rolls and crackles through its notes.",
+      "how": "Some steps of this line are ratcheted, hit two, three or four times inside one sixteenth. Two mod lanes play it. The loudness decay is tightened through part A, so the rolls get crisper, and let out again through part B, so they smear into buzzes. The cutoff is jerked to a new place every three steps, seven places that come round every twenty-one steps, never in step with the bar, which scatters the tone like a glitch.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.25, 1],
+          [0.5, 48, 0.083333],
+          [0.583333, 48, 0.083333],
+          [0.666667, 48, 0.083333],
+          [1, 51, 0.25],
+          [1.75, 43, 0.125],
+          [1.875, 43, 0.125],
+          [2, 48, 0.25],
+          [2.5, 46, 0.25],
+          [3, 48, 0.0625],
+          [3.0625, 48, 0.0625],
+          [3.125, 48, 0.0625],
+          [3.1875, 48, 0.0625],
+          [3.5, 43, 0.25],
+          [4, 48, 0.25, 1],
+          [4.5, 48, 0.083333],
+          [4.583333, 48, 0.083333],
+          [4.666667, 48, 0.083333],
+          [5, 51, 0.25],
+          [5.5, 53, 0.125],
+          [5.625, 53, 0.125],
+          [6, 55, 0.25],
+          [6.5, 53, 0.25],
+          [6.75, 51, 0.083333],
+          [6.833333, 51, 0.083333],
+          [6.916667, 51, 0.083333],
+          [7.25, 48, 0.25],
+          [7.5, 43, 0.125],
+          [7.625, 43, 0.125]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A hollow, bright tone",
+          "module": "osc",
+          "why": "A square for the body and a sawtooth an octave up for the crackle.\n- Osc 1 WAVEFORM square\n- Osc 1 VOLUME 7\n- Osc 2 RANGE 4'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 2 VOLUME 3\n- Listen for: a buzzy, hollow tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "mix.osc1": 7,
+            "osc2.range": "4",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "A tight filter",
+          "module": "filter",
+          "why": "A ringing filter with a fast flick on every hit.\n- CUTOFF 0 (632 Hz)\n- EMPHASIS 4\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.2 (37 ms)\n- Filter SUSTAIN 0\n- Listen for: a click on every note.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 4,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.2,
+            "fenv.sustain": 0
+          }
+        },
+        {
+          "title": "Nothing held",
+          "module": "env",
+          "why": "With no sustain the decay is the note length, short enough for a ratchet to be heard as separate hits.\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 1.8 (130 ms)\n- Loudness SUSTAIN 0\n- Listen for: short, dry notes.",
+          "set": {
+            "aenv.attack": 0,
+            "aenv.decay": 1.8,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "aenv.decay": "Played by a lane: tightened through A so the rolls crisp up, let out through B.",
+        "filter.cutoff": "The other lane: jerked to a new place every three steps, seven places that never line up with the bar.",
+        "filter.emphasis": "More gives the scatter a ringing, zappy edge.",
+        "mix.osc2": "The crackle on top."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.decay",
+          "try": "In the sequencer's Mod lanes, raise the decay lane to 2.5 everywhere.",
+          "hear": "The rolls smear into buzzes."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, move the cutoff every four steps instead of three.",
+          "hear": "The scatter locks to the beat: more groove, less glitch."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 7",
+          "hear": "Zappy, resonant glitches."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Raise to 6",
+          "hear": "A harsher, crackling line."
+        }
+      ]
+    },
+    {
+      "id": "lane-theremin-glide",
+      "name": "Theremin Glide Melody",
+      "ref": "An eerie, swooping 1950s science-fiction melody with portamento ridden note by note and vibrato on the held notes",
+      "artist": "1950s science-fiction film",
+      "tags": ["lead", "sci-fi", "50s"],
+      "level": 2,
+      "blurb": "A spooky, wavering melody that swoops between its notes, wider on the big leaps.",
+      "how": "A soft triangle with a slow attack is close to the pure, voice-like tone of a theremin, which has no keys and slides between every note. Here a mod lane rides GLIDE for every note: short for steps, long for the wide leaps, so the big intervals swoop. A second lane brings in a wide vibrato as each note holds.",
+      "phrase": {
+        "bpm": 66,
+        "loop": true,
+        "steps": [
+          [0, 67, 2],
+          [2, 68, 1],
+          [3, 67, 1],
+          [4, 74, 3],
+          [7, 72, 1],
+          [8, 71, 2],
+          [10, 67, 1],
+          [11, 63, 1],
+          [12, 66, 3],
+          [15, 67, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A pure, singing tone",
+          "module": "osc",
+          "why": "A triangle is nearly a sine, which is the tone of a theremin.\n- Osc 1 WAVEFORM triangle\n- Osc 1 VOLUME 8\n- Listen for: a soft, hollow tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Open and soft",
+          "module": "filter",
+          "why": "An open, tracking filter and a slow attack, so notes swell in rather than strike.\n- CUTOFF 2 (2.5 kHz)\n- KEYBOARD CONTROL 1 on\n- KEYBOARD CONTROL 2 on\n- EMPHASIS 0\n- AMOUNT OF CONTOUR 0\n- Loudness ATTACK 2 (200 ms)\n- Loudness DECAY 4 (600 ms)\n- Loudness SUSTAIN 10\n- Listen for: notes that fade in like a voice.",
+          "set": {
+            "filter.cutoff": 2,
+            "filter.kbd1": true,
+            "filter.kbd2": true,
+            "filter.emphasis": 0,
+            "filter.contour": 0,
+            "aenv.attack": 2,
+            "aenv.decay": 4,
+            "aenv.sustain": 10
+          }
+        },
+        {
+          "title": "Vibrato and glide, ready",
+          "module": "mod",
+          "why": "A fast LFO to the pitch for a theremin’s wide vibrato, MOD DEPTH at 0 for the lane, and GLIDE up a little for the lane to ride.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.77 (5.99 Hz)\n- LFO shape triangle\n- MOD MIX 10\n- MOD DEPTH 0\n- GLIDE 2 (80 ms)\n- Listen for: notes that slide into each other.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.77,
+            "lfo.shape": "tri",
+            "mod.mix": 10,
+            "mod.depth": 0,
+            "ctl.glide": 2
+          }
+        }
+      ],
+      "context": {
+        "ctl.glide": "Played by a lane, set on each note: longest for the wide leaps, so they swoop.",
+        "mod.depth": "The other lane: vibrato that widens as each note holds.",
+        "aenv.attack": "How slowly each note fades in.",
+        "lfo.rate": "The speed of the vibrato. A theremin player’s hand shakes fast."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.glide",
+          "try": "In the sequencer's Mod lanes, set the glide lane to 6 on every note.",
+          "hear": "Every note is a long swoop: more like a siren than a melody."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, start the depth lane high on every note.",
+          "hear": "A nervous, shaky vibrato from the start."
+        },
+        {
+          "id": "aenv.attack",
+          "try": "Raise to 4",
+          "hear": "A ghostly, slow-swelling melody."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn down to 4.5",
+          "hear": "A slow, seasick waver."
+        }
+      ]
+    },
+    {
+      "id": "lane-blues-bend",
+      "name": "Bending Blues Lead",
+      "ref": "A swung blues-rock synth lead whose held notes are bent up a tone or a semitone by a tuning lane, guitar-style",
+      "artist": "Blues-rock",
+      "tags": ["lead", "blues", "70s"],
+      "level": 3,
+      "blurb": "A crying, swung lead that bends its long notes up like a guitar string.",
+      "how": "Players bend Model D notes with the pitch wheel. Here a mod lane does it with the master TUNE knob, which moves every oscillator about two semitones either way: on chosen held notes it climbs over two or three steps, so the D bends up to E and the C up to C♯, the blues third. The other lane adds vibrato on the held notes that are not bending, the way a guitarist shakes a note after landing it.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 69, 0.5],
+          [0.5, 72, 0.32],
+          [1, 74, 1],
+          [2, 72, 0.32],
+          [2.32, 69, 0.18],
+          [2.82, 67, 0.18],
+          [3, 69, 1],
+          [4, 76, 0.5],
+          [4.5, 74, 0.32],
+          [5, 72, 0.5],
+          [5.5, 69, 0.32],
+          [6, 72, 1],
+          [7, 69, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A reedy lead",
+          "module": "osc",
+          "why": "A sawtooth and a square a hair apart: bright, a little nasal, closer to an overdriven guitar or a harmonica than a pure tone.\n- Osc 2 WAVEFORM square\n- Osc 2 FREQUENCY 0.1 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 5\n- GLIDE 0.8 (13 ms)\n- Listen for: a bright, buzzy lead.",
+          "set": {
+            "osc2.wave": "sq",
+            "osc2.freq": 0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 5,
+            "ctl.glide": 0.8
+          }
+        },
+        {
+          "title": "A singing filter",
+          "module": "filter",
+          "why": "A fairly open filter that eases open on each note, and notes that hold.\n- CUTOFF 1 (1.3 kHz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0.2 (5 ms)\n- Filter DECAY 3 (350 ms)\n- Filter SUSTAIN 6\n- Loudness ATTACK 0.3 (6 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: a lead that sings on held notes.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.emphasis": 3,
+            "filter.contour": 3,
+            "fenv.attack": 0.2,
+            "fenv.decay": 3,
+            "fenv.sustain": 6,
+            "aenv.attack": 0.3,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato, ready",
+          "module": "mod",
+          "why": "The LFO to pitch at a guitarist’s shake, MOD DEPTH left at 0 for the lane.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.67 (5.51 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: a still note until the lane raises MOD DEPTH.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.67,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "ctl.tune": "Played by a lane: the bends. 2 is a whole tone up, 1 a semitone.",
+        "mod.depth": "The other lane: vibrato on held notes that are not bending.",
+        "ctl.glide": "A little slur between notes.",
+        "filter.emphasis": "More makes the lead cry."
+      },
+      "tweaks": [
+        {
+          "id": "ctl.tune",
+          "try": "In the sequencer's Mod lanes, draw a bend down from 2 to 0 at the start of a long note.",
+          "hear": "A pre-bend: the note starts high and is let down, a classic guitar move."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, raise the depth lane on the bent notes too.",
+          "hear": "A shaking bend, more like a slide guitar."
+        },
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 2.5",
+          "hear": "A lazier, more slurred lead."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 6",
+          "hear": "A wailing, vocal lead."
+        }
+      ]
+    },
+    {
+      "id": "lane-octave-leap",
+      "name": "Octave-Leap Electro",
+      "ref": "A robotic electro-funk riff that leaps between octaves every step, its two oscillators’ RANGE switches set against each other by lanes",
+      "artist": "Electro-funk",
+      "tags": ["seq", "electro", "80s"],
+      "level": 3,
+      "blurb": "A jumpy, robotic riff that leaps between octaves, its two oscillators landing in new combinations.",
+      "how": "The riff leaps an octave down, back, an octave up and back on every four steps, so the same few notes jump across three octaves. The RANGE switches set each oscillator’s octave, and two mod lanes turn them, one hand each: Oscillator 2’s switch moves every half bar, so the two oscillators keep landing in new combinations, unison, an octave apart, two octaves apart; Oscillator 1’s moves only for a phrase, lifting the whole riff.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.25, 1],
+          [0.5, 60, 0.25],
+          [0.75, 48, 0.25],
+          [1.25, 48, 0.25],
+          [1.75, 51, 0.25],
+          [2.25, 51, 0.25],
+          [2.5, 60, 0.25],
+          [3, 36, 0.25],
+          [3.5, 55, 0.25],
+          [3.75, 46, 0.25],
+          [4, 36, 0.25, 1],
+          [4.5, 60, 0.25],
+          [4.75, 48, 0.25],
+          [5.25, 48, 0.25],
+          [5.75, 51, 0.25],
+          [6.25, 53, 0.25],
+          [6.5, 63, 0.25],
+          [7, 36, 0.25],
+          [7.5, 58, 0.25],
+          [7.75, 48, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators, two tones",
+          "module": "osc",
+          "why": "A sawtooth and a narrow pulse, so you can hear which is where as the lanes move them.\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 WAVEFORM narrow pulse\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- Listen for: a bright, buzzy tone.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "narrow",
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A plucked, robotic filter",
+          "module": "filter",
+          "why": "Full keyboard tracking keeps every octave equally bright, and a quick pluck keeps the notes short and mechanical.\n- CUTOFF -0.5 (448 Hz)\n- KEYBOARD CONTROL 1 on\n- KEYBOARD CONTROL 2 on\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1.6 (86 ms)\n- Filter SUSTAIN 1\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 5\n- Listen for: a tight, clipped riff.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.kbd1": true,
+            "filter.kbd2": true,
+            "filter.emphasis": 3,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 1.6,
+            "fenv.sustain": 1,
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 5
+          }
+        }
+      ],
+      "context": {
+        "osc1.range": "Played by a lane: Oscillator 1’s octave, lifted for the last phrase of A and held there through the first half of B.",
+        "osc2.range": "The other lane, turned every half bar, so the two oscillators land in new combinations.",
+        "osc2.wave": "The second oscillator’s tone. A sawtooth blends it in; the narrow pulse keeps it apart.",
+        "filter.emphasis": "A robotic ring on every note."
+      },
+      "tweaks": [
+        {
+          "id": "osc1.range",
+          "try": "In the sequencer's Mod lanes, set Oscillator 1’s lane to 8’ everywhere.",
+          "hear": "The riff stays in one register: only the second oscillator moves against it."
+        },
+        {
+          "id": "osc2.range",
+          "try": "In the sequencer's Mod lanes, make Oscillator 2’s lane copy Oscillator 1’s.",
+          "hear": "The two move together: the octave leaps, but no combinations."
+        },
+        {
+          "id": "osc2.wave",
+          "try": "Switch Oscillator 2 to sawtooth",
+          "hear": "A fuller, less robotic riff."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 6",
+          "hear": "A ringing, laser-like riff."
+        }
+      ]
+    },
+    {
+      "id": "lane-noise-kit",
+      "name": "One-Voice Drum Kit",
+      "ref": "A breakbeat drum pattern played on one mono voice: kick, snare and hats made by the notes through a key-tracking filter",
+      "artist": "Breakbeat",
+      "tags": ["perc", "breakbeat", "90s"],
+      "level": 3,
+      "blurb": "A whole drum kit, kick, snare and hats, from a single voice.",
+      "how": "One voice can only make one sound at a time, but with both keyboard controls on, the filter follows the key, so each drum is just a note. The kick is a low note: the filter is nearly shut, so the noise is only a little grit on a deep thump. The snare is a middle note, the filter half open on body and noise. The hat is a high note with the filter wide open, almost all hiss. Two mod lanes ride the kit by hand: the noise climbs through the loop and most in the fill, and the cutoff opens the whole kit up into the fill.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.27, 1],
+          [0.5, 72, 0.27],
+          [1, 43, 0.27],
+          [1.5, 72, 0.27],
+          [1.77, 36, 0.23],
+          [2.27, 36, 0.23],
+          [2.5, 72, 0.27],
+          [3, 43, 0.27],
+          [3.5, 72, 0.27],
+          [4, 36, 0.27, 1],
+          [4.5, 72, 0.27],
+          [4.77, 36, 0.23],
+          [5, 43, 0.27],
+          [5.5, 72, 0.27],
+          [6.27, 36, 0.23],
+          [6.5, 72, 0.27],
+          [7, 43, 0.27],
+          [7.5, 72, 0.27],
+          [7.77, 72, 0.23]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A triangle for the drum bodies",
+          "module": "osc",
+          "why": "A triangle is the pitched body of each drum: deep on the kick, a knock on the snare.\n- Osc 1 WAVEFORM triangle\n- Osc 1 VOLUME 8\n- Listen for: a soft, pure tone.",
+          "set": {
+            "osc1.wave": "tri",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Noise for the snare and hats",
+          "module": "mixer",
+          "why": "White noise in the mixer, half up. The filter decides how much of it each drum gets: hardly any on the low kick, nearly all on the high hats.\n- Noise switch on\n- NOISE VOLUME 4.5\n- Noise colour WHITE\n- Listen for: a hiss with every note.",
+          "set": {
+            "mix.noiseOn": true,
+            "mix.noise": 4.5,
+            "noise.colour": "white"
+          }
+        },
+        {
+          "title": "A thump on every hit, darker low down",
+          "module": "filter",
+          "why": "Both keyboard controls on make the filter follow the key, dark for low notes and open for high ones: that is what turns one voice into a kick, a snare and a hat. A big, fast filter envelope gives every hit its crack, and with nothing held the loudness dies away like a drum.\n- CUTOFF -2 (159 Hz)\n- KEYBOARD CONTROL 1 on\n- KEYBOARD CONTROL 2 on\n- EMPHASIS 1\n- AMOUNT OF CONTOUR 6\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 1 (24 ms)\n- Filter SUSTAIN 0\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 1.4 (57 ms)\n- Loudness SUSTAIN 0\n- Listen for: a deep thump low on the keyboard, a hissing tick high up.",
+          "set": {
+            "filter.cutoff": -2,
+            "filter.kbd1": true,
+            "filter.kbd2": true,
+            "filter.emphasis": 1,
+            "filter.contour": 6,
+            "fenv.attack": 0,
+            "fenv.decay": 1,
+            "fenv.sustain": 0,
+            "aenv.attack": 0,
+            "aenv.decay": 1.4,
+            "aenv.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "mix.noise": "Played by a lane: the kit’s grit, climbing through the loop and most in the fill.",
+        "filter.cutoff": "The other lane: the whole kit opening up into the fill. The keyboard tracking keeps the kick dark and the hats open on top of it.",
+        "aenv.decay": "The length of every hit. Longer for an open, roomy kit.",
+        "filter.contour": "The crack on each hit."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "In the sequencer's Mod lanes, raise the noise lane to 8 everywhere.",
+          "hear": "A dirtier, trashier kit, like a sampled break."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, lower the cutoff lane by 1 everywhere.",
+          "hear": "A duller kit: shaker-like hats and a deeper kick."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Raise to 2.5",
+          "hear": "A boomier, roomier kit."
+        },
+        {
+          "id": "noise.colour",
+          "try": "Switch to pink",
+          "hear": "Softer, darker snares and hats."
+        }
+      ]
+    },
+    {
+      "id": "lane-bowed-cello",
+      "name": "Bowed Cello Line",
+      "ref": "A singing baroque-style bass line with soft bow changes on the long notes and crisp ones on the quick, played by an attack lane",
+      "artist": "Baroque string writing",
+      "tags": ["strings", "baroque", "classical"],
+      "level": 2,
+      "blurb": "A warm, singing cello line whose long notes are bowed slowly and short ones crisply.",
+      "how": "Two sawtooths a hair apart, through a soft filter, make a bowed-string tone. A real cellist bows a long note slowly and a quick one with a short, firm stroke. One mod lane does that with LOUDNESS ATTACK: it sets each note’s attack by its length, slow for the long notes and quick for the short ones. The other adds vibrato only once a note is held, as a string player does.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 48, 1],
+          [1, 43, 0.5],
+          [2, 52, 1],
+          [3, 50, 0.5],
+          [4, 48, 0.5],
+          [4.5, 47, 0.5],
+          [5, 48, 0.5],
+          [5.5, 50, 0.5],
+          [6, 52, 2],
+          [8, 53, 1],
+          [9, 50, 0.5],
+          [10, 47, 1],
+          [11, 43, 0.5],
+          [12, 45, 0.5],
+          [12.5, 47, 0.5],
+          [13, 48, 0.5],
+          [13.5, 50, 0.5],
+          [14, 43, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bowed tone",
+          "module": "osc",
+          "why": "Two sawtooths slightly apart: a sawtooth is close to the shape a bowed string vibrates in, and the second gives it the width of a real instrument.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.07 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 5\n- Listen for: a rich, slowly beating tone.",
+          "set": {
+            "osc2.wave": "saw",
+            "osc2.freq": 0.07,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "Soften the top",
+          "module": "filter",
+          "why": "A lower cutoff that tracks the notes takes the buzz off, and a slow little filter rise is the bow catching the string.\n- CUTOFF 0.5 (893 Hz)\n- KEYBOARD CONTROL 1 on\n- EMPHASIS 1\n- AMOUNT OF CONTOUR 2\n- Filter ATTACK 1.5 (70 ms)\n- Filter DECAY 3 (350 ms)\n- Filter SUSTAIN 6\n- Loudness ATTACK 1.5 (70 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: a warm, string-like tone that leans in.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.kbd1": true,
+            "filter.emphasis": 1,
+            "filter.contour": 2,
+            "fenv.attack": 1.5,
+            "fenv.decay": 3,
+            "fenv.sustain": 6,
+            "aenv.attack": 1.5,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato, ready",
+          "module": "mod",
+          "why": "The LFO to pitch at a string player’s vibrato rate, depth at 0 for the lane.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.6 (5.20 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: a still note.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.6,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "aenv.attack": "Played by a lane, one value a note: slow for the long notes, quick for the short ones.",
+        "mod.depth": "The other lane: vibrato that grows as a note holds.",
+        "osc2.freq": "The width of the tone. Less is a single cello; more is a section.",
+        "filter.cutoff": "Brighter is nearer the bridge; darker is softer, nearer the fingerboard."
+      },
+      "tweaks": [
+        {
+          "id": "aenv.attack",
+          "try": "In the sequencer's Mod lanes, set the attack lane to 0.3 on every note.",
+          "hear": "Every note is a firm stroke: a plucked, harpsichord-like line."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, start the depth lane on every note’s first step.",
+          "hear": "A more romantic, intense vibrato."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Raise to 0.25",
+          "hear": "A wider, ensemble sound."
+        },
+        {
+          "id": "osc1.range",
+          "try": "Set both RANGE knobs to 16'",
+          "hear": "A double bass an octave down."
+        }
+      ]
+    },
+    {
+      "id": "lane-shifting-drone",
+      "name": "Shifting Drone",
+      "ref": "A slow ambient drone whose second oscillator moves through intervals, beating, a fourth, a fifth, a minor third, by lane",
+      "artist": "Ambient drone",
+      "tags": ["drone", "ambient", "2000s"],
+      "level": 2,
+      "blurb": "A slow, breathing drone whose harmony keeps shifting under a held note.",
+      "how": "Three oscillators make a big, slow drone on two held notes a part. The harmony moves in a mod lane on Oscillator 2: a hair out of tune so it beats, then a fourth above, then a fifth, then a minor third, two bars each. So one held note becomes a slow sequence of chords. A second lane opens and closes the filter once a part.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 38, 8],
+          [8, 33, 8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Three oscillators",
+          "module": "osc",
+          "why": "Two sawtooths and a triangle an octave down. Oscillator 2 is the one the lane retunes.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 3 RANGE 16'\n- Osc 3 WAVEFORM triangle\n- Osc 3 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- Osc 3 VOLUME 4\n- Listen for: a full, deep tone.",
+          "set": {
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "osc3.range": "16",
+            "osc3.wave": "tri",
+            "mix.osc3On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6,
+            "mix.osc3": 4
+          }
+        },
+        {
+          "title": "A soft filter",
+          "module": "filter",
+          "why": "A lower cutoff with a little emphasis, nothing from the envelope: the lane moves it.\n- CUTOFF -0.5 (448 Hz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 0\n- Listen for: a warm, slightly ringing tone.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 3,
+            "filter.contour": 0
+          }
+        },
+        {
+          "title": "Slow in, slow out",
+          "module": "env",
+          "why": "About a second to fade in and a long release, so each held note swells and lingers.\n- Loudness ATTACK 6 (1.0 s)\n- Loudness DECAY 6 (1.0 s)\n- Loudness SUSTAIN 10\n- Listen for: notes that swell in slowly.",
+          "set": {
+            "aenv.attack": 6,
+            "aenv.decay": 6,
+            "aenv.sustain": 10
+          }
+        }
+      ],
+      "context": {
+        "osc2.freq": "Played by a lane: the interval above the held note, two bars at a time. 0.15 beats, 5 is a fourth, 7 a fifth, 3 a minor third.",
+        "filter.cutoff": "The other lane: one slow swell a part.",
+        "aenv.attack": "How slowly each note swells in.",
+        "mix.osc3": "The deep floor under the drone."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "In the sequencer's Mod lanes, draw a slow ramp from 0 to 7 across part A.",
+          "hear": "The interval glides open instead of stepping: an eerie, rising drone."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, raise the cutoff lane by 2 everywhere.",
+          "hear": "A brighter, buzzier drone."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 6",
+          "hear": "A singing, whistling drone."
+        },
+        {
+          "id": "mix.osc3",
+          "try": "Raise to 8",
+          "hear": "A heavier, darker floor."
+        }
+      ]
+    },
+    {
+      "id": "lane-boom-bap",
+      "name": "Boom-Bap Moog Bass",
+      "ref": "A swung, laid-back 90s hip-hop bass with full roots on the beat, muffled ghost notes between, and the odd slide",
+      "artist": "90s boom-bap hip-hop",
+      "tags": ["bass", "hip-hop", "90s"],
+      "level": 2,
+      "blurb": "A warm, laid-back hip-hop bass with dark ghost notes and the odd slide.",
+      "how": "A triangle and a quiet sawtooth an octave down make a round, warm bass. One mod lane plays the cutoff like a bassist’s right hand: open on the notes that fall on the beat, nearly closed on the ghost notes between, so those sound muted. The other raises GLIDE only on the notes a slide lands on.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 50, 0.8],
+          [1.8, 50, 0.2],
+          [2, 53, 0.5],
+          [2.8, 45, 0.2],
+          [3.5, 48, 0.3],
+          [4, 50, 0.8],
+          [5.5, 53, 0.3],
+          [6, 55, 0.5],
+          [6.5, 53, 0.3125],
+          [6.8, 50, 0.2],
+          [7.5, 48, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A warm, round bass",
+          "module": "osc",
+          "why": "A triangle for warmth and a little sawtooth for definition, both an octave down.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM triangle\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 3\n- Listen for: a soft, deep bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "tri",
+            "osc2.range": "16",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "A soft pluck",
+          "module": "filter",
+          "why": "A gentle filter envelope and a long-ish loudness decay: a played bass rather than a synth stab.\n- CUTOFF -1 (317 Hz)\n- EMPHASIS 1.5\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.4 (250 ms)\n- Filter SUSTAIN 3\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 8\n- Listen for: a round bass with a soft front.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 1.5,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2.4,
+            "fenv.sustain": 3,
+            "aenv.attack": 0,
+            "aenv.decay": 3,
+            "aenv.sustain": 8
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Played by a lane: open on the beat, nearly closed on the ghost notes between.",
+        "ctl.glide": "The other lane: up only on the notes a slide lands on.",
+        "mix.osc2": "The bit of edge that lets the bass speak on small speakers.",
+        "aenv.decay": "How long each note rings."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, raise the cutoff on the ghost notes to match the beat notes.",
+          "hear": "Every note is full: busier and less laid-back."
+        },
+        {
+          "id": "ctl.glide",
+          "try": "In the sequencer's Mod lanes, add glide to the last note of each bar.",
+          "hear": "Each bar slurs into the next."
+        },
+        {
+          "id": "mix.osc2",
+          "try": "Turn to 0",
+          "hear": "A pure, deep, almost sub bass."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "Lower to 1.5",
+          "hear": "A tighter, punchier pluck."
+        }
+      ]
+    },
+    {
+      "id": "lane-electro-zap",
+      "name": "Electro Zap Bass",
+      "ref": "An early-80s electro bass that fires a laser-like zap on the first note of each phrase and stays round on the rest",
+      "artist": "Early 80s electro",
+      "tags": ["bass", "electro", "80s"],
+      "level": 2,
+      "blurb": "A bouncing electro bass that zaps like a laser at the top of each phrase.",
+      "how": "A sawtooth and a square an octave down go into a resonant filter. Two mod lanes, a hand each, make the first note of each phrase zap: the contour amount is jabbed up and the filter decay down, so the resonant filter flicks down from high in a fraction of a second, the “pew” of an electro bass. Then both go back to a gentle, round setting for the rest. Keyboard control brightens the octave jumps a little on their own.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 45, 0.25, 1],
+          [0.75, 45, 0.25],
+          [1.5, 57, 0.25],
+          [2.25, 45, 0.25],
+          [3, 43, 0.25],
+          [3.5, 48, 0.25],
+          [4, 45, 0.25, 1],
+          [4.75, 45, 0.25],
+          [5.5, 57, 0.25],
+          [6.25, 52, 0.25],
+          [6.75, 50, 0.25],
+          [7.25, 48, 0.25],
+          [7.5, 43, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A punchy bass",
+          "module": "osc",
+          "why": "A sawtooth and a square at 16’, the square a little flat for movement.\n- Osc 1 RANGE 16'\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM square\n- Osc 2 FREQUENCY -0.08 (-0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- Listen for: a fat, buzzy bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc2.range": "16",
+            "osc2.wave": "sq",
+            "osc2.freq": -0.08,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A resonant, closed filter",
+          "module": "filter",
+          "why": "High emphasis is what makes a fast filter sweep sound like a laser. The cutoff sits low, keyboard control 1 opens it a little for the high notes, and the lanes set how far and how fast the zaps sweep.\n- CUTOFF -2 (159 Hz)\n- KEYBOARD CONTROL 1 on\n- EMPHASIS 6\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.2 (220 ms)\n- Filter SUSTAIN 0\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.2 (220 ms)\n- Loudness SUSTAIN 7\n- Listen for: a round, ringing bass.",
+          "set": {
+            "filter.cutoff": -2,
+            "filter.kbd1": true,
+            "filter.emphasis": 6,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2.2,
+            "fenv.sustain": 0,
+            "aenv.attack": 0,
+            "aenv.decay": 2.2,
+            "aenv.sustain": 7
+          }
+        }
+      ],
+      "context": {
+        "filter.contour": "Played by a lane: jabbed up on each phrase’s first note, the zap, gentle on the rest.",
+        "fenv.decay": "The other lane: jabbed short on the zaps, so the sweep is a flick.",
+        "filter.emphasis": "The laser’s ring. Less is a softer zap.",
+        "osc2.freq": "The square’s detune."
+      },
+      "tweaks": [
+        {
+          "id": "fenv.decay",
+          "try": "In the sequencer's Mod lanes, lengthen the decay lane on the zaps to 2.",
+          "hear": "The zaps turn into slower, wah-like sweeps."
+        },
+        {
+          "id": "filter.contour",
+          "try": "In the sequencer's Mod lanes, put the zap value on every step.",
+          "hear": "A laser on every note: hectic and video-game-like."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push to 8",
+          "hear": "Sharper, whistling zaps."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Set to 7",
+          "hear": "The bass plays in fifths: heavier, more menacing."
+        }
+      ]
+    },
+    {
+      "id": "lane-night-drive",
+      "name": "Night Drive Lead",
+      "ref": "A wide, cinematic synthwave lead whose held notes swell brighter and then start to shimmer with late vibrato",
+      "artist": "Synthwave",
+      "tags": ["lead", "synthwave", "2010s"],
+      "level": 2,
+      "blurb": "A wide, nostalgic lead whose long notes bloom open and shimmer.",
+      "how": "Two sawtooths a little apart make a wide, warm lead with a touch of glide. A slow filter envelope opens every note as it rings, so each one blooms brighter. The hands do the rest: one mod lane brightens the whole lead through part A and draws it back through part B, and the other swells vibrato in late on the long notes, which gives them a shimmer at their ends.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 71, 1],
+          [1, 69, 0.5],
+          [1.5, 67, 0.25],
+          [2, 66, 0.75],
+          [2.75, 64, 0.25],
+          [3, 66, 1.5],
+          [4.5, 67, 0.25],
+          [5, 69, 0.5],
+          [5.5, 71, 0.25],
+          [6, 74, 1],
+          [7, 71, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A wide lead",
+          "module": "osc",
+          "why": "Two sawtooths, Oscillator 2 a fraction sharp, and a little glide between notes.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.1 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 6\n- GLIDE 1.5 (45 ms)\n- Listen for: a wide, gliding lead.",
+          "set": {
+            "osc2.wave": "saw",
+            "osc2.freq": 0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 6,
+            "ctl.glide": 1.5
+          }
+        },
+        {
+          "title": "A soft, swelling start",
+          "module": "filter",
+          "why": "A slow filter attack with the sustain right up, so the filter keeps opening as a note holds: the bloom. The loudness eases in a little too.\n- CUTOFF -0.5 (448 Hz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 4 (600 ms)\n- Filter DECAY 3 (350 ms)\n- Filter SUSTAIN 10\n- Loudness ATTACK 0.4 (7 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: a held note that eases in and keeps getting brighter.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 2,
+            "filter.contour": 3,
+            "fenv.attack": 4,
+            "fenv.decay": 3,
+            "fenv.sustain": 10,
+            "aenv.attack": 0.4,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato, ready",
+          "module": "mod",
+          "why": "The LFO to pitch, depth at 0 for the lane to raise late in the long notes.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.67 (5.51 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: a still note.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.67,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "filter.cutoff": "Played by a lane: the lead brightening through A and drawn back through B.",
+        "mod.depth": "The other lane: vibrato swelling in late on the long notes.",
+        "fenv.attack": "How slowly each note blooms. Shorter opens it at once.",
+        "ctl.glide": "The slur between notes.",
+        "osc2.freq": "The width."
+      },
+      "tweaks": [
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, draw the cutoff lane closing through A instead.",
+          "hear": "The verse fades darker: moodier, more distant."
+        },
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, start each of the depth lane’s swells two steps earlier.",
+          "hear": "An earlier, more emotional vibrato."
+        },
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 3",
+          "hear": "A dreamy, sliding lead."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Raise to 0.25",
+          "hear": "A wider, more detuned lead."
+        },
+        {
+          "id": "fenv.attack",
+          "try": "Lower to 1",
+          "hear": "Notes open at once: punchier, less dreamy."
+        }
+      ]
+    },
+    {
+      "id": "lane-arcade-trill",
+      "name": "Arcade Trill Lead",
+      "ref": "A bright, narrow-pulse video-game melody whose held notes break into a fast square-wave warble, switched on by a lane",
+      "artist": "Chiptune",
+      "tags": ["lead", "chiptune", "80s"],
+      "level": 2,
+      "blurb": "A cheerful, bleepy game melody that warbles on its long notes.",
+      "how": "A narrow pulse is the thin, bright tone of an old game console. A square-wave LFO on the pitch flips each note back and forth by about a tone, many times a second: the warble that game music uses in place of vibrato. One mod lane turns it on for the long notes that end each phrase, a twist of MOD DEPTH up and back; the other sets its speed, faster in part B.",
+      "phrase": {
+        "bpm": 150,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25],
+          [0.5, 76, 0.25],
+          [1, 79, 0.5],
+          [1.5, 76, 0.25],
+          [2, 72, 0.25],
+          [2.5, 74, 0.25],
+          [3, 76, 1],
+          [4, 77, 0.25],
+          [4.5, 76, 0.25],
+          [5, 74, 0.5],
+          [5.5, 71, 0.25],
+          [6, 72, 0.5],
+          [6.5, 74, 0.25],
+          [7, 76, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow pulse",
+          "module": "osc",
+          "why": "A thin pulse is the classic sound of a game console’s tone channel.\n- Osc 1 WAVEFORM narrow pulse\n- Osc 1 VOLUME 8\n- Listen for: a bright, thin, bleepy tone.",
+          "set": {
+            "osc1.wave": "narrow",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Open and clean",
+          "module": "filter",
+          "why": "An open filter and simple, organ-like envelopes: nothing softens the tone.\n- CUTOFF 3 (5.0 kHz)\n- EMPHASIS 0\n- AMOUNT OF CONTOUR 0\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 8\n- Listen for: a plain, bright beep.",
+          "set": {
+            "filter.cutoff": 3,
+            "filter.emphasis": 0,
+            "filter.contour": 0,
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 8
+          }
+        },
+        {
+          "title": "A square-wave warble",
+          "module": "mod",
+          "why": "A square LFO jumps between two values instead of sweeping, so on the pitch it is a warble rather than a vibrato. MOD DEPTH stays at 0 for the lane.\n- OSCILLATOR MODULATION on\n- LFO shape square\n- LFO RATE 6.61 (12 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: turn MOD DEPTH up by hand: the note flips back and forth.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.shape": "sq",
+            "lfo.rate": 6.61,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Played by a lane: the warble, on the long note ending each phrase. Its size is the interval.",
+        "lfo.rate": "The other lane: the warble’s speed, faster in part B.",
+        "osc1.wave": "The tone channel’s pulse. Square is rounder; narrow is the classic bleep.",
+        "aenv.decay": "Shorter makes the notes blip."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, raise the depth lane to 3.5 on the long notes.",
+          "hear": "A wider warble that sounds like a two-note arpeggio."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "In the sequencer's Mod lanes, set the rate lane to 6 in part B.",
+          "hear": "A slower, wobblier warble in the second half."
+        },
+        {
+          "id": "osc1.wave",
+          "try": "Switch to square",
+          "hear": "A rounder, softer chip tone."
+        },
+        {
+          "id": "aenv.sustain",
+          "try": "Lower to 3",
+          "hear": "Notes that fade, like a plucked game sound."
+        }
+      ]
+    },
+    {
+      "id": "lane-fusion-unison",
+      "name": "Fusion Unison Line",
+      "ref": "A fast, twisting jazz-fusion synth line in D dorian whose long notes spread wider as Oscillator 2 detunes, its bite rising with each phrase",
+      "artist": "Jazz fusion",
+      "tags": ["lead", "fusion", "70s"],
+      "level": 3,
+      "blurb": "A fast, twisting fusion line whose long notes open out into a wide chorus.",
+      "how": "Two sawtooths and a quiet square an octave down make a bright, cutting lead for fast lines. One mod lane detunes Oscillator 2 inside each held note: in tune at the start, then spreading wider step by step, so fast runs stay tight and long notes open out like a chorus. The other hand rides EMPHASIS, rising through each phrase and easing off for the next, so the run bites harder as it climbs.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.25],
+          [0.25, 64, 0.25],
+          [0.5, 65, 0.25],
+          [0.75, 69, 0.25],
+          [1, 72, 0.25],
+          [1.25, 69, 0.25],
+          [1.5, 67, 0.25],
+          [1.75, 65, 0.25],
+          [2, 64, 0.25],
+          [2.25, 67, 0.25],
+          [2.5, 69, 0.25],
+          [2.75, 74, 0.25],
+          [3, 72, 0.5],
+          [3.5, 69, 0.25],
+          [4, 74, 0.25],
+          [4.25, 72, 0.25],
+          [4.5, 69, 0.25],
+          [4.75, 67, 0.25],
+          [5, 65, 0.25],
+          [5.25, 64, 0.25],
+          [5.5, 62, 0.25],
+          [5.75, 60, 0.25],
+          [6, 62, 0.25],
+          [6.25, 65, 0.25],
+          [6.5, 69, 0.25],
+          [6.75, 72, 0.25],
+          [7, 76, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A cutting lead",
+          "module": "osc",
+          "why": "Two sawtooths for the line and a quiet square an octave down for weight.\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 3 RANGE 16'\n- Osc 3 WAVEFORM square\n- Osc 3 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 7\n- Osc 3 VOLUME 3\n- GLIDE 0.6 (7 ms)\n- Listen for: a bright, full lead.",
+          "set": {
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "osc3.range": "16",
+            "osc3.wave": "sq",
+            "mix.osc3On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 7,
+            "mix.osc3": 3,
+            "ctl.glide": 0.6
+          }
+        },
+        {
+          "title": "Bright and tracking",
+          "module": "filter",
+          "why": "An open filter that tracks the line, so fast high runs stay as bright as the low ones.\n- CUTOFF 1.5 (1.8 kHz)\n- KEYBOARD CONTROL 1 on\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.5 (260 ms)\n- Filter SUSTAIN 5\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: every note of a fast run speaking clearly.",
+          "set": {
+            "filter.cutoff": 1.5,
+            "filter.kbd1": true,
+            "filter.emphasis": 3,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 5,
+            "aenv.attack": 0,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        }
+      ],
+      "context": {
+        "osc2.freq": "Played by a lane: in tune as each note starts, spreading wider as it holds.",
+        "filter.emphasis": "The other lane: the bite, rising through each phrase and easing off for the next.",
+        "mix.osc3": "The weight under the line.",
+        "ctl.glide": "A touch of slur on fast runs."
+      },
+      "tweaks": [
+        {
+          "id": "osc2.freq",
+          "try": "In the sequencer's Mod lanes, set the frequency lane to 0.3 everywhere.",
+          "hear": "A permanently wide, chorused line: lusher but less articulate."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "In the sequencer's Mod lanes, raise the top of the emphasis lane to 7.",
+          "hear": "A sharper, wah-like peak to every phrase."
+        },
+        {
+          "id": "ctl.glide",
+          "try": "Raise to 1.5",
+          "hear": "A slippery, legato run."
+        },
+        {
+          "id": "mix.osc3",
+          "try": "Raise to 6",
+          "hear": "A heavier, darker line."
+        }
+      ]
     }
   ]
 }

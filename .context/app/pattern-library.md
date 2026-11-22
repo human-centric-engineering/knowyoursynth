@@ -1173,11 +1173,16 @@ probe, lessons, the tutor, sharing and the content template all still read the o
   rewritten where the notes differ, and the sound is marked edited either way, so the seed and an upload then leave
   it alone. Otherwise a reseed could write a riff the admin's default no longer matches. A riff that already plays
   the pattern's notes is not rewritten.
-- **A default plays whole as a riff** (`riffProblem`). A riff is the first loop, frozen: one part, looping where its
-  last note ends, the same every time, moving no controls. So a pattern whose chain has a second part, that ends in
-  rests, that plays nothing on its first loop, that uses probability or conditions, that plays in a random, Brownian
-  or pendulum direction, or that has mod lanes cannot be a sound's default. It can still be in the library and on a sound's list behind the default. Playing a pattern in full
-  is the sequencer's job (t-123).
+- **A default's first loop is its riff** (`riffProblem`). A riff is the first loop, frozen: one part, looping where
+  its last note ends, the same every time, moving no controls. So a pattern that ends part A in rests, that plays
+  nothing on its first loop, that uses probability or conditions, or that plays in a random, Brownian or pendulum
+  direction cannot be a sound's default. It can still be in the library and on a sound's list behind the default.
+- **A default may chain a part B and carry mod lanes** (owner ruling, 2026-11-21, `f-lane-sounds` t-300). Its riff is
+  then part A's notes, with no control moving, and the sound is _played_: the catalogue sends `defaultPattern.played`
+  (`playedDefault`), and the page reads the sound's patterns and loads the default into the sequencer as the sound is
+  picked (`useLoadSoundDefault`), so Play plays the whole pattern, chain and lanes, before the sequencer has been
+  opened. Any other default is read only when the sequencer or the picker opens, as before. Playing a pattern in full is
+  the sequencer's job (t-123).
 - **A sound's riff is edited directly only while it leads** (`riffLeadsDefault`): while the default is the sound's own
   riff pattern, that pattern is still exactly what the riff imports to, and it is _In the style of_. An admin may have
   changed its name or role. A new riff whose bpm falls outside the pattern's tempo range clears the range.
@@ -1340,6 +1345,30 @@ decided once, as a default or a reason. A new batch that names a sound therefore
 
 An upload (`lib/app/catalogue/upload.ts`) keeps a sound whose default is another pattern playing that pattern, whatever
 riff the file gives it, as the edit page refuses the change (`riffLeadsDefault`).
+
+#### Composed batches: sounds played by their lanes
+
+`f-lane-sounds` t-301. A batch can also hold songs written for their own sounds rather than researched from a work:
+`t301-model-d-lane-sounds.json`, thirty Model D sounds whose default is a chained A/B pattern with one or two mod lanes
+(owner ruling, 2026-11-21: [a default may carry both](#a-sounds-riff-is-its-default-pattern)). Each pattern names one
+sound, is that sound's default in `pattern-defaults.json`, and is _In the style of_ its genre, with no lead (the
+2026-11-02 ruling's words in its notes).
+
+- **Written, not hand-edited.** `scripts/app/sounds/model-d/lane-sounds.ts` holds each sound's lesson and song in a
+  step notation (`scripts/app/sounds/lane-kit.ts`: a token a step, lanes as functions of the step), and
+  `write-lane-sounds.ts` writes the sound into the library file, the pattern into the batch and the pair into the
+  defaults. The riff it stores is the pattern's first loop (`phraseOf`), so the two never disagree. A run replaces its
+  own sounds in place and touches nothing else.
+- **Checked by sound, not by roster.** Its sounds are credited to genres that sounds on other synths share, so an
+  artist roster cannot hold them. The batch test instead checks that each composed pattern names one sound, is its
+  default, chains two parts, and that every lane moves its control and names one of the sound's tweaks: the lanes play
+  what the lesson's last section suggests turning.
+- **The kit checks what the seed would refuse later**: every lane value is one its control takes (`laneValue`), in
+  range, the chain plays two parts, and `riffProblem` passes. A swung note keeps its end on the grid, so it never
+  overlaps the next.
+- **A person could play every lane by hand** (owner ruling, 2026-11-21): the writer refuses one that is not
+  (`checkHands`), and the batch test runs the same check (`handProblems`) over every composed batch. The limits, and
+  the design of a set for any synth, are [`lane-sounds.md`](./lane-sounds.md).
 
 ### The API
 
@@ -1634,17 +1663,17 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-20 over the library's 6,024 sounds:
+Measured on 2026-11-21 over the library's 6,054 sounds:
 
-- **The detector reads the sound's own category for 2,753 of them (45.7%).** Picking the commonest category, bass, every
-  time would get 16.2%.
-- **Cross-validated: 2,726 (45.3%).** Each fifth of the library is measured on a model fitted to the other four fifths.
+- **The detector reads the sound's own category for 2,768 of them (45.7%).** Picking the commonest category, bass, every
+  time would get 16.3%.
+- **Cross-validated: 2,743 (45.3%).** Each fifth of the library is measured on a model fitted to the other four fifths.
 - **8 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
   `pro-1/filter-clave`, `nymphes/nym-filter-whistle`, `malevolent/mal-extreme`, `grandmother/gm-ringing-ladder-ping`, `buchla-easel/easel-rainforest-cross-feedback` and `buchla-easel/easel-sonar-ping`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. The two filter pings (the clave and the Grandmother's) have no oscillator in the mixer, only a
   filter struck by a short envelope. The two Easel effects play themselves and first speak about 1 s and 1.5 s in, after the probe's note has ended. Why the pings and the Nymphes' whistle are silent has not been looked into. They count as disagreements.
 
-The figure fell from 48.7% over 5,024 sounds (t-250) to 47.2% over 5,579 (t-193), to 46.2% over 5,829, to 45.8% over 5,994 and to 45.7% now, because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library). t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%), and t-197's 250 VCS3 and Music Easel sounds 59 (24%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. Two of t-197's effects joined the five silent sounds. The 165 sounds since 46.2% are the Sub 37's, the TEO-5's and the Nymphes' 18 each, the ODYSSEY's 13 and the Subharmonicon's 98 (17 with t-272, 81 more with t-289). The Subharmonicon's agree on 9 of 98 (9%): its sounds are its own sequencers playing polyrhythms on the app's clock (40 of them tagged seq), which the probe's held notes do not run. The Nymphes' `nym-filter-whistle` is the eighth silent sound. The 30 sounds since 45.8% are the Subharmonicon's patchbay sounds (t-290), most of them its sequencers again; refit with them, the detector reads 7 more of the whole library right, and none of the 30 is silent.
+The figure fell from 48.7% over 5,024 sounds (t-250) to 47.2% over 5,579 (t-193), to 46.2% over 5,829, to 45.8% over 5,994 and to 45.7% over 6,024, where it held at 6,054, because of what the library gained, not a change to the detector's probe or features (the model was only refit to the grown library). t-193's 555 System 15, 35, 55 and MODEL 15 sounds added 189 agreements (34%), and t-197's 250 VCS3 and Music Easel sounds 59 (24%). Most of them are strings, winds, drones, effects, percussion and sequences, the categories below where the detector is weakest. Two of t-197's effects joined the five silent sounds. The 165 sounds since 46.2% are the Sub 37's, the TEO-5's and the Nymphes' 18 each, the ODYSSEY's 13 and the Subharmonicon's 98 (17 with t-272, 81 more with t-289). The Subharmonicon's agree on 9 of 98 (9%): its sounds are its own sequencers playing polyrhythms on the app's clock (40 of them tagged seq), which the probe's held notes do not run. The Nymphes' `nym-filter-whistle` is the eighth silent sound. The 30 sounds since 45.8% are the Subharmonicon's patchbay sounds (t-290), most of them its sequencers again; refit with them, the detector reads 7 more of the whole library right, and none of the 30 is silent. The 30 since are the Model D’s sounds played by their mod lanes (t-301), which the probe hears without their lanes; refit with them, it reads 15 more right, and none is silent.
 
 When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are
@@ -1661,18 +1690,18 @@ sound was read as strings or wind, so those columns are left out.
 
 | Label   |    bass |    lead |     pad |  pluck |    keys |      fx |  drone |    perc |     seq | brass | silent | Agree |
 | ------- | ------: | ------: | ------: | -----: | ------: | ------: | -----: | ------: | ------: | ----: | -----: | ----: |
-| bass    | **751** |      71 |       6 |     10 |      41 |       9 |     15 |      20 |      49 |     2 |      · |   77% |
-| lead    |     117 | **586** |      61 |     11 |      68 |      27 |      3 |       5 |      40 |     1 |      1 |   64% |
-| pad     |       4 |      46 | **410** |      1 |      23 |      13 |     22 |       1 |      22 |     · |      · |   76% |
-| pluck   |      50 |      31 |       6 | **79** |     131 |       5 |      1 |      22 |      34 |     · |      · |   22% |
-| keys    |      84 |      87 |      32 |     52 | **311** |      16 |      4 |      17 |      52 |     4 |      · |   47% |
-| fx      |      53 |     142 |      37 |     14 |      22 | **187** |     16 |      53 |      47 |     · |      4 |   33% |
-| drone   |      24 |      51 |      94 |      · |      13 |      18 | **52** |       · |      15 |     · |      1 |   19% |
-| perc    |      76 |      32 |       · |     24 |      48 |      41 |      5 | **180** |      31 |     · |      2 |   41% |
-| seq     |     127 |      94 |      46 |     33 |      82 |      58 |     16 |      22 | **191** |     · |      · |   29% |
-| brass   |      42 |      60 |      44 |      · |      43 |       1 |      1 |       · |       · | **6** |      · |    3% |
-| strings |      16 |      45 |     114 |      · |      19 |       3 |      2 |       · |       8 |     · |      · |    0% |
-| wind    |      28 |     142 |      17 |      · |       2 |      11 |      2 |       · |      11 |     2 |      · |    0% |
+| bass    | **763** |      69 |       9 |      9 |      41 |       9 |     14 |      20 |      48 |     2 |      · |   78% |
+| lead    |     117 | **596** |      61 |     10 |      67 |      26 |      3 |       6 |      40 |     1 |      1 |   64% |
+| pad     |       5 |      47 | **408** |      1 |      23 |      13 |     21 |       1 |      23 |     · |      · |   75% |
+| pluck   |      48 |      31 |       6 | **75** |     134 |       5 |      1 |      23 |      36 |     · |      · |   21% |
+| keys    |      86 |      92 |      31 |     52 | **307** |      16 |      4 |      16 |      54 |     4 |      · |   46% |
+| fx      |      53 |     143 |      36 |     13 |      22 | **187** |     16 |      53 |      48 |     · |      4 |   33% |
+| drone   |      25 |      55 |      93 |      · |      11 |      18 | **51** |       · |      15 |     · |      1 |   19% |
+| perc    |      77 |      32 |       · |     21 |      49 |      41 |      5 | **182** |      31 |     · |      2 |   41% |
+| seq     |     128 |      95 |      46 |     35 |      81 |      58 |     16 |      22 | **193** |     · |      · |   29% |
+| brass   |      41 |      60 |      44 |      · |      43 |       1 |      1 |       1 |       · | **6** |      · |    3% |
+| strings |      15 |      47 |     114 |      · |      19 |       3 |      2 |       · |       8 |     · |      · |    0% |
+| wind    |      29 |     142 |      17 |      · |       2 |      11 |      2 |       · |      11 |     2 |      · |    0% |
 
 #### The disagreements
 

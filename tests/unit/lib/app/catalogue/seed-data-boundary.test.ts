@@ -32,6 +32,8 @@ const ALLOWED = (path: string) =>
   path === 'scripts/app/export-links.ts' ||
   // Dev-only: writes the Subharmonicon's sounds into their seed data file, which the seed then reads (t-289).
   path === 'scripts/app/sounds/subharmonicon/write.ts' ||
+  // Dev-only: writes the Model D's sounds played by their mod lanes, their batch and defaults into the seed data (t-301).
+  path === 'scripts/app/sounds/model-d/write-lane-sounds.ts' ||
   // Names the seed units as keys for Sunrise's capability parity test, and reads nothing (t-77).
   path === 'lib/app/capability-seed-pairs.ts';
 

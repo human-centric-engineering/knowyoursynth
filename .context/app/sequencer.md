@@ -471,8 +471,9 @@ Nothing else reads them: which controls show, and what a turn starts from, are t
 control drawn at a lane's value changes the panel's by as much as it moved, a switch pressed flips the panel's, and a
 choice picked is picked (`rebase`). The panel is drawn from its own values again at Stop.
 
-**In the module** (`mod-lanes.tsx`). **Mod** on the tool row shows the lanes under the step keys, on the same grid,
-for the page of keys on show. A pattern opened with lanes shows them. One lane shows at a time: a **Lanes** cell of
+**In the module** (`mod-lanes.tsx`). The lanes are always under the step keys, on the same grid, for the page of keys
+on show: with none yet, the row is **Add lane** alone, which is the way in (t-299; there is no button to show or
+hide them). One lane shows at a time: a **Lanes** cell of
 tabs (as the Part cell's keys) picks it, in one row with **Add lane**, **View all**, the lane's readout and **Clear
 all** (every value off the lane in the part being edited). The tab opens by place, so removing the last lane opens
 the one before. The open tab carries the lane's remove (×), and a second press on it lists the controls, to move the
@@ -489,6 +490,11 @@ with nothing set plays. In the light theme the module is a light unit with pale 
 - From the keyboard a lane is one Tab stop. Left and Right move along it, Up and Down change the value from the
   panel's (Page Up and Page Down by more; a switch or a choice by one option a press), Home and End go to either end, and Delete clears.
 - Hovering or focusing a cell shows its value at the head of the lane.
+
+**Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
+(t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once
+([`pattern-library.md`](./pattern-library.md#composed-batches-sounds-played-by-their-lanes)). The Model D has thirty
+(t-301).
 
 ## Sharing and publishing patterns
 

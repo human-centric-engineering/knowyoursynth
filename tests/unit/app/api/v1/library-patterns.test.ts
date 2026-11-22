@@ -1157,10 +1157,9 @@ describe('admin control (t-156)', () => {
 
   describe('a reorder past patterns the sound cannot play', () => {
     it('rewrites the riff when the default moves behind a disabled pattern and one that cannot be a riff', async () => {
-      // Sound 0: its riff (disabled), X (enabled, two parts: never a riff), then sounds 1's and 2's riffs.
+      // Sound 0: its riff (disabled), X (enabled, by chance: never a riff), then sounds 1's and 2's riffs.
       const two = PatternSchema.parse(riff(2).pattern);
-      two.parts.push(structuredClone(two.parts[0]));
-      two.chain = [0, 1];
+      two.parts[0].steps[0].probability = 0.5;
       const x = 'c' + 'q'.repeat(24);
       db.libraryPattern.rows.push({
         ...structuredClone(riff(2)),

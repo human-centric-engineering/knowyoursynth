@@ -134,7 +134,6 @@ const sentOf = <T extends SynthMessage['type']>(type: T) =>
 const cells = () =>
   within(screen.getByRole('group', { name: 'cutoff lane' })).getAllByRole('slider');
 const addCutoff = () => {
-  fireEvent.click(screen.getByRole('button', { name: 'Mod lanes' }));
   fireEvent.click(screen.getByRole('combobox', { name: 'Mod lane' }));
   fireEvent.click(screen.getByRole('option', { name: 'cutoff' }));
 };
@@ -345,12 +344,16 @@ describe('the lane tabs', () => {
 });
 
 describe('editing around the lanes', () => {
-  it('shows the lanes of a pattern opened while they were hidden', () => {
+  it('shows Add lane under the steps with no lanes yet, and no button to show it (t-299)', () => {
     render(<Harness />);
-    const mod = screen.getByRole('button', { name: 'Mod lanes' });
-    expect(mod).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('group', { name: 'Mod lanes' })).toBeTruthy();
+    expect(screen.getByRole('combobox', { name: 'Mod lane' }).textContent).toContain('Add lane');
+    expect(screen.queryByRole('button', { name: 'Mod lanes' })).toBeNull();
+  });
+
+  it('shows the lanes of a pattern as it is opened', () => {
+    render(<Harness />);
     act(() => void state.load(laned(), { id: null, name: 'test' }));
-    expect(mod).toHaveAttribute('aria-pressed', 'true');
     expect(cells()).toHaveLength(8);
   });
 

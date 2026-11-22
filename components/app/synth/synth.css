@@ -3392,15 +3392,6 @@ svg .kys-hit:focus-visible {
   border-top: 1px dashed var(--lane-rest);
   pointer-events: none;
 }
-.kys-seq-tool-count {
-  min-width: 15px;
-  padding: 0 4px;
-  border-radius: 8px;
-  font-size: 10px;
-  line-height: 15px;
-  color: var(--kys-accent-ink);
-  background: var(--kys-accent);
-}
 @media (pointer: coarse) {
   .kys-seq-lane-cell {
     height: 44px;

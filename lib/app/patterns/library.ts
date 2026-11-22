@@ -17,8 +17,10 @@
  *   pattern, or a new pattern at the head of the list. The riff is rewritten to the new notes where they differ, and
  *   the sound is marked edited even where they do not, so the seed and an upload leave the pair alone, as they leave
  *   any admin's edit. A riff already holding the pattern's notes is not rewritten, so a re-run writes nothing.
- * - **A default plays whole as a riff** ({@link riffProblem}). A riff has one part and loops at its last note's end,
- *   so a pattern with a second part in its chain, or rests after its last note, cannot be a sound's default.
+ * - **A default's first loop is its riff** ({@link riffProblem}). The riff is the first loop of the first part in its
+ *   chain, frozen, and loops at its last note's end, so a pattern with chance, conditions, a direction other than
+ *   forward or reverse, or rests after that part's last note cannot be a sound's default. A second part or mod lanes make the default
+ *   `played` ({@link playedDefault}, t-300): the riff is still its first loop, and Play plays the pattern whole.
  * - **Nothing is deleted.** A pattern stays in the library, and in every list it is on, whatever happens to it.
  */
 import { z } from 'zod';
@@ -138,20 +140,20 @@ export function phraseOf(pattern: Pattern): Phrase {
 }
 
 /**
- * Why a pattern cannot be a sound's default, or `null` when it can: the riff it becomes must play it whole. A riff
- * has one part, plays at least one note, and loops where its last note ends.
+ * Why a pattern cannot be a sound's default, or `null` when it can: the riff it becomes must be its first loop, the same
+ * however often it is played. A riff plays at least one note, and loops where its last note ends.
+ *
+ * A default may chain two parts and carry mod lanes (owner ruling, `f-lane-sounds` t-300): the riff is then the notes
+ * of the first part in its chain, with no control moving, and the sequencer plays the whole pattern, chain and lanes, when the sound is picked
+ * (`playedDefault`). What would make the first loop itself come out differently each time is still refused.
  */
 export function riffProblem(pattern: Pattern): string | null {
-  if (new Set(pattern.chain).size > 1)
-    return 'A sound plays its default as a riff, which has one part: a chain of two parts cannot be a default';
-  // A riff is the first loop, frozen: anything that makes one loop differ from the next is lost.
+  // A riff is the first loop, frozen: anything that makes that loop differ from one play to the next is lost.
   if (!['forward', 'reverse'].includes(pattern.direction))
     return 'A sound plays its default as a riff, the same every loop: a default plays forward or in reverse';
   const steps = pattern.parts.flatMap((p) => p.steps);
   if (steps.some((s) => s.probability !== undefined || s.condition !== undefined))
     return 'A sound plays its default as a riff, the same every loop: a default has no probability or conditions';
-  if (pattern.lanes?.length)
-    return 'A sound plays its default as a riff, which moves no controls: a default has no mod lanes';
   const riff = phraseOf(pattern);
   if (!riff.steps.length) return 'A default plays at least one note on its first loop';
   // The engine loops a riff at its last note's end, rounded up to a whole beat.
@@ -159,6 +161,13 @@ export function riffProblem(pattern: Pattern): string | null {
     return 'A sound plays its default as a riff, which loops where its last note ends: a default cannot end in rests';
   return null;
 }
+
+/**
+ * Whether a default plays more than its riff: a second part in its chain, or mod lanes. A sound with one is loaded
+ * into the sequencer as it is picked, so Play plays it whole rather than the riff (t-300).
+ */
+export const playedDefault = (pattern: Pattern): boolean =>
+  new Set(pattern.chain).size > 1 || !!pattern.lanes?.length;
 
 /** A riff, as a sound stores it. */
 export const PhraseSchema = PresetSchema.shape.phrase;
@@ -327,10 +336,15 @@ export interface Place {
  * riff it has.
  */
 export function headOf<P extends Place>(places: P[]): P | null {
+  return parsedHeadOf(places)?.place ?? null;
+}
+
+/** {@link headOf}, with the default's pattern as it was parsed to choose it, so a caller reading it parses it once. */
+export function parsedHeadOf<P extends Place>(places: P[]): { place: P; pattern: Pattern } | null {
   for (const place of places) {
     if (place.pattern.status !== 'enabled') continue;
     const parsed = PatternSchema.safeParse(place.pattern.pattern);
-    if (parsed.success && !riffProblem(parsed.data)) return place;
+    if (parsed.success && !riffProblem(parsed.data)) return { place, pattern: parsed.data };
   }
   return null;
 }
