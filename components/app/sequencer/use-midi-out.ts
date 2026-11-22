@@ -141,6 +141,7 @@ export function useMidiOut({
   def = null,
   following = false,
   silent = false,
+  wheel = null,
 }: {
   midi: Pick<Midi, 'status' | 'outputs' | 'output'>;
   engine: MidiOutEngine | null;
@@ -152,6 +153,11 @@ export function useMidiOut({
   following?: boolean;
   /** A new patch is loading: no notes are sent, here or to the synth. */
   silent?: boolean;
+  /**
+   * The hand's mod wheel, 0..1, while the pattern has a wheel lane (`f-performance-wheels`): what a step the lane
+   * leaves alone, and the end of the run, send on the wheel's CC. `null`: no wheel lane, so none is sent.
+   */
+  wheel?: number | null;
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -176,7 +182,10 @@ export function useMidiOut({
   const [allCcs, setAllCcs] = useStoredPref(STORAGE_KEYS.midiCc, MidiCcSchema, NO_CCS);
   const synthId = def?.id ?? null;
   const ccs = (synthId !== null && allCcs[synthId]) || NO_LANE_CCS;
-  useEffect(() => s.setCcs(def ? ccLookup(def, ccs) : null), [s, def, ccs]);
+  useEffect(
+    () => s.setCcs(def ? ccLookup(def, ccs, wheel === null ? null : { wheel }) : null),
+    [s, def, ccs, wheel]
+  );
   const setCc = useCallback(
     (id: string, cc: number | null) => {
       if (synthId === null || (cc !== null && !validLaneCc(cc))) return;

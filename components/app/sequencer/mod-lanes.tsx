@@ -403,6 +403,8 @@ function Lane({
   const own = performanceInputs(def).find((p) => p.id === id) ?? null;
   const ccOptions = ccOptionsFor(def);
   const ccGiven = cc?.ccs[id];
+  // A CC given this lane before the wheel had it (`performance.ts`): kept, not sent, and said so beside the choice.
+  const ccWheel = performanceInputs(def).find((p) => p.cc === ccGiven) ?? null;
   // The panel as step i plays it, every lane's change on that step over the panel's values: a readout another control
   // changes (`ContinuousValue.fmt`) follows the step.
   const panelAt = (i: number): ControlValues => {
@@ -500,6 +502,11 @@ function Lane({
             onChange={(v) => cc.set(id, v === '' ? null : Number(v))}
           />
         ) : null}
+        {cc && c && !own && ccWheel && (
+          <span className="kys-seq-lane-readout">
+            Not sent: CC {ccWheel.cc} is the {ccWheel.control.name}’s. Choose another.
+          </span>
+        )}
         <span className="kys-seq-lane-readout" aria-live="polite">
           {c ? readout : 'Not on this synth: kept with the pattern, and silent here.'}
         </span>

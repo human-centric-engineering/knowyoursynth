@@ -501,8 +501,10 @@ on no panel). What differs is where it goes:
   to `toEngine()` as `ctx.wheel`, which is how the synth already hears a hand on the wheel. So the wheel does what the
   hardware's does, with no voice code of its own. A step the lane leaves alone plays the wheel where the hand has it.
 - **The keyboard strip's wheel** (and the routing view) draws the lane's value while it plays (`shownWheel`).
-- **MIDI out** sends it as the declared CC, always, with no CC to choose; another lane given that number isn't sent on
-  it too.
+- **MIDI out** sends it as the declared CC, with no CC to choose, while the pattern has the lane: a step it leaves alone
+  sends the hand's wheel, and the run's end puts the hardware's wheel back there once the lane moved it
+  (`CcLookup.rest`). Another lane can't be given that number; one given it before says it isn't sent. While a wheel
+  lane plays over MIDI out, CC 1 coming in (a DAW echoing it) doesn't move the hand's wheel.
 - A synth that declares no wheel offers no lane, and a pattern's wheel lane is kept and silent there, as a lane for any
   control it hasn't got. A reserved id nothing declares yet (a future input) is the same.
 

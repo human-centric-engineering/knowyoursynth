@@ -1265,10 +1265,17 @@ function Synth({
 
   const rememberMidi = useCallback((v: boolean) => writeStored(STORAGE_KEYS.midi, v), []);
   const loadMidi = useCallback(() => readStored(STORAGE_KEYS.midi) === true, []);
+  // A wheel lane playing over MIDI out (`f-performance-wheels`): the pattern has one, and it is sent and playing. Its
+  // CC 1 coming back in (a DAW echoing it) is not the hand, so the wheel in from MIDI waits until it stops.
+  const [wheelLaneOn, setWheelLaneOn] = useState(false);
+  const wheelLaneSending = useRef(false);
+  const wheelIn = useCallback((v: number) => {
+    if (!wheelLaneSending.current) setWheel(v);
+  }, []);
   const midi = useMidi({
     noteOn,
     noteOff,
-    onWheel: setWheel,
+    onWheel: wheelIn,
     remember: rememberMidi,
     load: loadMidi,
   });
@@ -1288,6 +1295,7 @@ function Synth({
     def: synthDef,
     following,
     silent: loading,
+    wheel: wheelLaneOn ? wheel : null,
   });
 
   // SynthDef `tempo` names the control that sets the riff's BPM (the TB-303's TEMPO knob, or the Subharmonicon's through
@@ -1354,6 +1362,11 @@ function Synth({
   );
   // The panel's values with the hand's wheel, for the mod lanes: what a wheel lane's step left alone plays.
   const lanePanel = useMemo(() => ({ ...sess.values, [WHEEL]: wheel }), [sess.values, wheel]);
+  const seqWheelLane = seq.pattern.lanes?.includes(WHEEL) ?? false;
+  useEffect(() => setWheelLaneOn(seqWheelLane), [seqWheelLane]);
+  useEffect(() => {
+    wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
+  }, [seqWheelLane, midiOut.sending, seq.playing]);
   const { stop: stopPattern, play: startPattern, onEvent: seqOnEvent } = seq;
   useEffect(() => {
     seqEvents.current = seqOnEvent;

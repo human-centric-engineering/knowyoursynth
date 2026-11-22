@@ -780,6 +780,7 @@ describe('a performance wheel’s lane (f-performance-wheels)', () => {
     addCutoff();
     const cc = screen.getByRole('combobox', { name: 'CC' });
     expect(cc.textContent).toContain('No CC');
+    expect(screen.getByText('Not sent: CC 1 is the Mod wheel’s. Choose another.')).toBeTruthy();
     fireEvent.click(cc);
     expect(screen.queryByRole('option', { name: 'CC 1' })).toBeNull();
     expect(screen.getByRole('option', { name: 'CC 2' })).toBeTruthy();
