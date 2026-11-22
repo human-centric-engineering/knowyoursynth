@@ -28,6 +28,10 @@ export const DRUM_BEAT_IDS = [
   'breakbeat',
   'onedrop',
   'halftime',
+  'motorik',
+  'synthwave',
+  'garage',
+  'bossa',
 ] as const;
 export type DrumBeatId = (typeof DRUM_BEAT_IDS)[number];
 
@@ -157,6 +161,50 @@ export const DRUM_BEATS: readonly DrumBeat[] = [
       closedHat: 'x...x...x...x...',
     },
   },
+  // Added for variety (`f-livelier-patterns` t-304, owner 2026-11-22).
+  {
+    id: 'motorik',
+    name: 'Motorik',
+    styles: 'Krautrock, kosmische',
+    lines: {
+      kick: 'x...x.x.x...x.x.',
+      snare: '....x.......x...',
+      closedHat: 'x.x.x.x.x.x.x.x.',
+      openHat: '..............x.',
+    },
+  },
+  {
+    id: 'synthwave',
+    name: 'Synthwave',
+    styles: 'Synthwave, outrun, retrowave',
+    lines: {
+      kick: 'x...x...x...x...',
+      snare: '....X.......X...',
+      clap: '....x.......x...',
+      closedHat: 'xoxoxoxoxoxoxoxo',
+    },
+  },
+  {
+    id: 'garage',
+    name: 'Two-step garage',
+    styles: 'UK garage, 2-step',
+    lines: {
+      kick: 'x......x..x.....',
+      snare: '....x.......x...',
+      closedHat: '..x...x...x...xo',
+      rim: '.......x.....x..',
+    },
+  },
+  {
+    id: 'bossa',
+    name: 'Bossa nova',
+    styles: 'Bossa nova, samba, Latin',
+    lines: {
+      kick: 'x..xx..xx..xx..x',
+      rim: 'x..x..x...x..x..',
+      closedHat: 'x.x.x.x.x.x.x.x.',
+    },
+  },
 ];
 
 export const drumBeat = (id: DrumBeatId): DrumBeat =>
@@ -196,6 +244,8 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
   ],
   ['hiphop', /hip-?hop|lo-?fi|boom bap|g-funk|trip-?hop|\brap\b|nujabes|dilla|dr\.? dre/],
   ['onedrop', /\bdub\b(?! techno)|reggae|\bska\b|king tubby|lee .?scratch.? perry|scientist/],
+  ['bossa', /bossa|samba|\blatin\b|brazil|tropic[aá]lia|cha-?cha|salsa|cumbia|calypso|steel pan/],
+  ['garage', /uk garage|2-?step|speed garage|\bgarage\b(?! (rock|house|punk))/],
   [
     'four',
     /house|trance|\bedm\b|\brave\b|eurodance|big room|deadmau5|van dyk|daft punk|swedish house|tiësto|tiesto/,
@@ -208,8 +258,13 @@ const RULES: readonly [DrumBeatId | null, RegExp][] = [
   ['electro', /\belectro\b|miami bass|\b808\b|freestyle|bambaataa|mantronix|kraftwerk/],
   ['funk', /funk|\bsoul\b|r&b|booker t|billy preston|parliament|stevie wonder|herbie hancock/],
   [
+    'synthwave',
+    /synthwave|outrun|retro-?wave|darksynth|kavinsky|carpenter brut|com truise|perturbator|the weeknd|\bm83\b/,
+  ],
+  ['motorik', /kraut|motorik|\bneu!|kosmische|harmonia|la düsseldorf/],
+  [
     'backbeat',
-    /\bpop\b|synth-?pop|rock|wave|\b80s\b|ballad|punk|kraut|motorik|indie|kavinsky|carpenter brut|com truise|the weeknd|m83|röyksopp|royksopp|alabama 3|depeche|new order|gary numan|human league|tears for fears|a-ha|vangelis/,
+    /\bpop\b|synth-?pop|rock|wave|\b80s\b|ballad|punk|indie|röyksopp|royksopp|alabama 3|depeche|new order|gary numan|human league|tears for fears|a-ha|vangelis/,
   ],
 ];
 
