@@ -40,17 +40,21 @@ interface Slot {
 }
 
 /**
- * The song as the compiler plays it (`compileLoop`): a loop a part in the chain's order, its steps forward or in
- * reverse, and swing counted from each loop's first slot, every second slot starting late. A default plays forward or
- * in reverse (`riffProblem`); any other direction is read forward.
+ * The song as the compiler plays it (`compileLoop`): a loop a part in the chain's order, its steps forward, in reverse,
+ * or turning round each loop (pendulum), and swing counted from each loop's first slot, every second slot starting
+ * late. A pendulum over a chain of odd length comes back to its start after two goes round the chain, so the song is
+ * both. A random or brownian order has no song to read: {@link handProblems} says so.
  */
 function songOf(p: Pattern): { slots: Slot[]; length: number } {
   const stepS = 60 / p.bpm / stepsPerBeat(p);
   const len = p.parts[0].steps.length;
   const push = p.swing / 50 - 1;
-  const slots = p.chain.flatMap((k, loop) =>
+  const loops = p.direction === 'pendulum' && p.chain.length % 2 === 1 ? 2 : 1;
+  const chain = Array.from({ length: loops }, () => p.chain).flat();
+  const slots = chain.flatMap((k, loop) =>
     Array.from({ length: len }, (_, slot) => {
-      const index = p.direction === 'reverse' ? len - 1 - slot : slot;
+      const back = p.direction === 'reverse' || (p.direction === 'pendulum' && loop % 2 === 1);
+      const index = back ? len - 1 - slot : slot;
       return {
         step: p.parts[k].steps[index],
         place: `${'AB'[k] ?? `part ${k + 1} `}${index + 1}`,
@@ -58,7 +62,7 @@ function songOf(p: Pattern): { slots: Slot[]; length: number } {
       };
     })
   );
-  return { slots, length: p.chain.length * len * stepS };
+  return { slots, length: chain.length * len * stepS };
 }
 
 /** A knob's position along its travel, 0 to 1. */
@@ -79,6 +83,10 @@ export function handProblems(
   panel: ControlValues,
   limits: HandLimits = HAND_LIMITS
 ): string[] {
+  if (pattern.lanes?.length && (pattern.direction === 'random' || pattern.direction === 'brownian'))
+    return [
+      `plays its steps in a ${pattern.direction} order, so its lanes have no one playing a hand could learn`,
+    ];
   const { slots, length } = songOf(pattern);
   const n = slots.length;
   // When slot `i`, counted on through later passes of the song, starts: a move into a late slot has longer, and one
@@ -91,7 +99,9 @@ export function handProblems(
     if (!c) continue;
     // A step the lane leaves alone plays at the panel's value, or the control's own where the panel has none.
     const at = (i: number): ControlValue | null =>
-      laneValue(c, slots[i % n].step.mod?.[id]) ?? laneValue(c, panel[id] ?? c.def);
+      laneValue(c, slots[i % n].step.mod?.[id]) ??
+      laneValue(c, panel[id] ?? c.def) ??
+      laneValue(c, c.def);
     if (c.kind === 'cont') {
       const pos = Array.from({ length: n }, (_, i) => {
         const v = at(i);
@@ -108,12 +118,13 @@ export function handProblems(
           break;
         }
       }
-      // Turns: where the knob sets off back the way it came by more than the jitter. Read over three passes, and
-      // counted from the middle one, so a turn at the loop's seam is seen and the first pass only finds a direction.
+      // Turns: where the knob sets off back the way it came by more than the jitter. Counted in a second from each turn
+      // of the second pass, so a turn at the loop's seam is seen and the first pass only finds a direction; read on a
+      // full second past that pass, however short the song.
       const turns: number[] = [];
       let dir = 0;
       let peak = pos[0];
-      for (let i = 1; i < 3 * n; i++) {
+      for (let i = 1; time(i) < 2 * length + 1 + 1e-9; i++) {
         const v = pos[i % n];
         if (dir === 0) {
           if (Math.abs(v - peak) >= limits.jitter) [dir, peak] = [Math.sign(v - peak), v];

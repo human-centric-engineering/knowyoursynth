@@ -73,6 +73,40 @@ describe('a knob', () => {
     ]);
   });
 
+  it('reads a pendulum turning round each loop, so a climb and its way back are one smooth move', () => {
+    // Forward, the climb jumps from 4 back to -4 at every loop's start, first into B. In a pendulum it climbs, then plays back down.
+    const p = pattern({ 'filter.cutoff': ramp(-4, 4) }, { 'filter.cutoff': ramp(-4, 4) });
+    expect(handProblems(modelD, p, panel)).toEqual([
+      expect.stringMatching(/moves 80% of its travel into B1 /),
+    ]);
+    expect(handProblems(modelD, { ...p, direction: 'pendulum' }, panel)).toEqual([]);
+    // Over an odd chain the pendulum needs two goes round it to come back: the third loop plays B backwards.
+    const three = { ...p, chain: [0, 1, 1], direction: 'pendulum' as const };
+    expect(handProblems(modelD, three, panel)).toEqual([]);
+  });
+
+  it('says a lane in a random order has no playing to check', () => {
+    const p = pattern({ 'filter.cutoff': ramp(-3, 3) });
+    expect(handProblems(modelD, { ...p, direction: 'random' }, panel)).toEqual([
+      'plays its steps in a random order, so its lanes have no one playing a hand could learn',
+    ]);
+  });
+
+  it('counts a second of turns past the song’s end when the song is shorter than a second', () => {
+    // Four steps at 240 bpm is a quarter second a pass, so three passes are not a second; a wobble two steps a cycle
+    // turns on every step, sixteen times a second.
+    const short = pattern({ 'filter.emphasis': wave(2, 3, 2) });
+    const p = {
+      ...short,
+      bpm: 240,
+      parts: short.parts.map((part) => ({ ...part, steps: part.steps.slice(0, 4) })),
+      chain: [0],
+    };
+    expect(handProblems(modelD, p, panel)).toEqual([
+      expect.stringMatching(/^filter\.emphasis: turns back 16 times in the second from /),
+    ]);
+  });
+
   it('refuses more than three turns back in a second, a wobble too quick for a hand', () => {
     // A 30% wobble four steps a cycle turns twice a half second: four times in a second, though no move is too fast.
     const p = pattern({ 'filter.emphasis': wave(2, 5, 4) });
