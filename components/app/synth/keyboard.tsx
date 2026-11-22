@@ -10,9 +10,10 @@
  *   the pointer and cut a held note.
  */
 
-import { useEffect, useId, useRef } from 'react';
-import type { Dispatch, PointerEvent, SetStateAction } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import type { CSSProperties, Dispatch, PointerEvent, SetStateAction } from 'react';
 import { useWheelWanted } from '@/components/app/synth/sound-map';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { notesStore, useStore } from '@/components/app/synth/stores';
 import type { WheelSays } from '@/lib/app/synths/lib/performance';
 
@@ -46,6 +47,78 @@ const QWERTY_LABEL: Record<number, string> = Object.fromEntries(
 /** The lowest and highest octave shift. */
 export const OCTAVE_MIN = -1;
 export const OCTAVE_MAX = 2;
+
+/**
+ * Under the wheel: "Mod" and a lamp for where pushing it sends modulation (`wheelReach`). Lit amber when it reaches
+ * something, glowing harder as the wheel goes up; dark, ringed in the warning colour, when it reaches nowhere. Hover or
+ * click it for the readout. The words are also in the page, hidden, for the wheel's `aria-describedby`.
+ */
+function WheelLamp({ says, value, id }: { says: WheelSays; value: number; id: string }) {
+  const [open, setOpen] = useState(false);
+  const [pinned, setPinned] = useState(false); // opened by a click: stays until clicked again or dismissed
+  const reaches = says.to !== 'Nowhere';
+  const text = [says.from, says.to, says.hint].filter(Boolean).join(' ');
+  const glow: CSSProperties & Record<'--wheel', number> = { '--wheel': value };
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="kys-label text-(--kys-faint)">Mod</span>
+      <span id={id} data-testid="wheel-says" className="sr-only">
+        {text}
+      </span>
+      <Popover
+        open={open}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setPinned(false);
+        }}
+      >
+        <PopoverTrigger
+          type="button"
+          data-testid="wheel-lamp"
+          aria-label={`Where the mod wheel reaches: ${reaches ? says.to.replace('→ ', '') : 'nowhere'}`}
+          className="kys-wheel-lamp"
+          data-reach={reaches ? 'yes' : 'no'}
+          style={glow}
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse') setOpen(true);
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === 'mouse' && !pinned) setOpen(false);
+          }}
+          onClick={(e) => {
+            e.preventDefault(); // the open state is ours: a click pins it open, or closes a pinned one
+            const pin = !pinned;
+            setPinned(pin);
+            setOpen(pin);
+          }}
+        >
+          <span className="kys-wheel-lamp-dot" />
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          align="start"
+          sideOffset={8}
+          className="kys-wheel-readout w-56 p-3"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <p className="kys-label flex items-center gap-1.5 text-[10px] text-(--kys-faint)">
+            <span className="kys-wheel-lamp-dot" data-reach={reaches ? 'yes' : 'no'} />
+            Mod wheel · {Math.round(value * 100)}%
+          </p>
+          {says.from && <p className="mt-2 text-xs text-(--kys-muted)">{says.from}</p>}
+          <p
+            className={`text-sm font-medium ${reaches ? 'text-(--kys-text)' : 'text-(--kys-warn)'} ${says.from ? '' : 'mt-2'}`}
+          >
+            {says.to}
+          </p>
+          {says.hint && (
+            <p className="mt-1.5 text-xs leading-snug text-(--kys-muted)">{says.hint}</p>
+          )}
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
 
 function ModWheel({
   value,
@@ -113,17 +186,7 @@ function ModWheel({
           {wanted ? 'Push up' : 'Mod'}
         </span>
       ) : (
-        // Where pushing it sends modulation, read from the routing (`wheelReach`), as MOD MIX and the switches change.
-        <span
-          id={saysId}
-          data-testid="wheel-says"
-          className="flex w-20 flex-col text-center text-[10px] leading-tight text-(--kys-faint)"
-          title={says.hint}
-        >
-          {says.from && <span>{says.from}</span>}
-          <span className={says.hint ? 'text-(--kys-muted)' : 'text-(--kys-text)'}>{says.to}</span>
-          {says.hint && <span>{says.hint}</span>}
-        </span>
+        <WheelLamp says={says} value={value} id={saysId} />
       )}
     </div>
   );

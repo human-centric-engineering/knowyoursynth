@@ -4969,3 +4969,51 @@ a.kys-link-shot:hover .kys-link-title {
   stroke: currentColor;
   stroke-width: calc(1 + var(--wheel, 0) * 3);
 }
+
+/* The mod wheel's lamp (`WheelLamp`): where pushing it sends modulation. Amber when it reaches something, glowing
+   harder as the wheel goes up (`--wheel`); dark with a warning ring when it reaches nowhere. */
+.kys-wheel-lamp {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin: -6px;
+  border-radius: 999px;
+  cursor: help;
+}
+.kys-wheel-lamp:focus-visible {
+  outline: 2px solid var(--kys-text);
+  outline-offset: 1px;
+}
+.kys-wheel-lamp-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #3a2a14;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.5);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.15s ease;
+}
+.kys-wheel-lamp[data-reach='yes'] .kys-wheel-lamp-dot,
+.kys-wheel-lamp-dot[data-reach='yes'] {
+  background: color-mix(in srgb, #ffb547 calc(55% + var(--wheel, 1) * 45%), #3a2a14);
+  box-shadow:
+    0 0 calc(3px + var(--wheel, 1) * 5px) calc(var(--wheel, 1) * 1px)
+      rgb(255 166 58 / calc(0.35 + var(--wheel, 1) * 0.45)),
+    0 0 calc(var(--wheel, 1) * 14px) calc(var(--wheel, 1) * 2px) rgb(255 166 58 / 0.3);
+}
+.kys-wheel-lamp[data-reach='no'] .kys-wheel-lamp-dot,
+.kys-wheel-lamp-dot[data-reach='no'] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--kys-warn);
+}
+.kys-wheel-lamp:hover .kys-wheel-lamp-dot {
+  transform: scale(1.2);
+}
+.kys-wheel-readout {
+  background: var(--kys-surface);
+  border-color: var(--kys-line);
+  color: var(--kys-text);
+}
