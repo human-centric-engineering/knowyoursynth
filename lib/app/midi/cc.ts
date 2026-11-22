@@ -5,8 +5,12 @@
  *
  * A lane's value is sent across its control's travel as the lane draws it (`lanePos`): a knob by its taper (a log knob
  * by ratio), a choice by its place among the options the panel shows, a switch as 0 or 127.
+ *
+ * A performance wheel's lane (`@wheel`, `f-performance-wheels`) is the one exception: the hardware knows its wheel, so
+ * the lane is sent as the CC the synth declares for it, always, with nothing to assign.
  */
 import { lanePos, laneControl } from '@/lib/app/sequencer/lanes';
+import { isPerformanceId, performanceInputs } from '@/lib/app/synths/lib/performance';
 import type { Control, ControlValue, ControlValues, SynthDef } from '@/lib/app/synths/contract';
 
 /** The highest CC a lane can send: 120–127 are the channel-mode messages (All Notes Off among them). */
@@ -51,10 +55,16 @@ export const ccValue = (c: Control, v: ControlValue): number => {
  * control this synth has. A lane without a CC sends nothing. `null` when no lane has one, so nothing is looked up.
  */
 export function ccLookup(def: SynthDef, ccs: LaneCcs): CcLookup | null {
-  const live = Object.entries(ccs).flatMap(([id, cc]) => {
+  // A performance wheel is sent as the message the synth hears it as, with nothing to assign (`performance.ts`); a
+  // CC the player gave another lane that is the same number is the wheel's, so it is not sent twice.
+  const own = performanceInputs(def).map((p) => ({ id: p.id, cc: p.cc, c: p.control }));
+  const taken = new Set(own.map((p) => p.cc));
+  const given = Object.entries(ccs).flatMap(([id, cc]) => {
+    if (isPerformanceId(id) || taken.has(cc)) return [];
     const c = laneControl(def, id);
     return c && validLaneCc(cc) ? [{ id, cc, c }] : [];
   });
+  const live = [...own, ...given];
   if (live.length === 0) return null;
   return (set) => {
     const out: [number, number][] = [];

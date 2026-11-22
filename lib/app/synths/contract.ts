@@ -191,6 +191,19 @@ export interface SynthDef {
    * printed as part of a longer string. Names, help and search are written in English already and never change.
    */
   translation?: PanelTranslation;
+  /**
+   * The performance wheels this synth natively has, or hears over MIDI (`f-performance-wheels`). Each one declared is a
+   * mod lane a pattern can play (`@wheel`), which the voice hears through `EngineContext`, the keyboard strip's wheel
+   * draws, and MIDI out sends as the message named here. A synth with no wheel of its own and none over MIDI declares
+   * none, and is offered no lane for it. `lib/app/synths/lib/performance.ts` reads this.
+   */
+  performance?: PerformanceInputs;
+}
+
+/** The performance wheels a synth has (`SynthDef.performance`). */
+export interface PerformanceInputs {
+  /** The mod wheel, and the CC the hardware hears it as (1 on almost every synth). */
+  wheel?: { cc: number };
 }
 
 /** The language a panel is printed in, and the English for each printed string. */

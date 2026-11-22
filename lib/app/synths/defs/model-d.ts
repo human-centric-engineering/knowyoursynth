@@ -1181,6 +1181,9 @@ const modelD: SynthDef & { version: number } = {
       'aenv.sustain': 10,
     },
   },
+  // The Model D has no keybed, but its MIDI input hears CC 1 as the Minimoog's mod wheel: it adds to MOD DEPTH
+  // (`toEngine` below), and from there goes where MOD MIX and the two MODULATION switches send it.
+  performance: { wheel: { cc: 1 } },
   toEngine,
 };
 

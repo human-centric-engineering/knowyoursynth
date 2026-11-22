@@ -36,6 +36,12 @@ export const MAX_BPM = 300;
 export const MAX_LANES = 8;
 /** What a panel control's id looks like (`vcf.cutoff`, `xm1_vco1.coarse`, `fx1.tc-deepvrb.pst`): what a mod lane names. */
 export const CONTROL_ID = /^(?=.{1,64}$)[A-Za-z][A-Za-z0-9_-]*(?:\.[A-Za-z0-9_-]+)*$/;
+/**
+ * What a mod lane names: a panel control (`CONTROL_ID`), or a performance wheel by its reserved id (`@wheel`,
+ * `lib/app/synths/lib/performance.ts`), which no panel control's id can look like. A reserved id the synth playing it
+ * does not declare is kept and silent, as a lane for a control it has not got.
+ */
+export const LANE_ID = /^(?:@[a-z]{1,16}|(?=.{1,64}$)[A-Za-z][A-Za-z0-9_-]*(?:\.[A-Za-z0-9_-]+)*)$/;
 /** The velocity a step's notes play at when nothing sets it, as the engine reads a riff note without one. */
 export const DEFAULT_VELOCITY = 0.85;
 /** The velocity of an accented step. */
@@ -137,7 +143,7 @@ export const StepSchema = z
      * synth playing it checks (`lanes.ts`). A lane with no value here leaves the control at the panel's value.
      */
     mod: z
-      .record(z.string().regex(CONTROL_ID), z.union([z.number(), z.string().max(64), z.boolean()]))
+      .record(z.string().regex(LANE_ID), z.union([z.number(), z.string().max(64), z.boolean()]))
       .optional(),
   })
   .strict();
@@ -195,11 +201,11 @@ export const PatternSchema = z
       .min(1)
       .max(MAX_CHAIN),
     /**
-     * Mod lanes: the panel controls this pattern moves step by step, by id. Optional, so a pattern saved before lanes
+     * Mod lanes: the panel controls (and performance wheels) this pattern moves step by step, by id. Optional, so a pattern saved before lanes
      * existed reads as it was. A lane names a control of whichever synth it was made on and is kept on a synth without
      * it, silent.
      */
-    lanes: z.array(z.string().regex(CONTROL_ID)).max(MAX_LANES).optional(),
+    lanes: z.array(z.string().regex(LANE_ID)).max(MAX_LANES).optional(),
     /** The effects it comes with, when it is a sound's default (t-302). Optional: most patterns bring none. */
     fx: PatternFxSchema.optional(),
   })

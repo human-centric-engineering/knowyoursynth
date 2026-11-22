@@ -491,6 +491,21 @@ with nothing set plays. In the light theme the module is a light unit with pale 
   panel's (Page Up and Page Down by more; a switch or a choice by one option a press), Home and End go to either end, and Delete clears.
 - Hovering or focusing a cell shows its value at the head of the lane.
 
+**Performance wheels** (`f-performance-wheels` t-307, `lib/app/synths/lib/performance.ts`). A synth that declares a
+wheel it natively has, or hears over MIDI (`SynthDef.performance`: the Model D's `{ wheel: { cc: 1 } }`), offers it as
+the first lane in **Add lane**, by a reserved id (`@wheel`) no panel control can have (`LANE_ID` in the schema). It is a
+lane like any other: drawn, resolved and held to the hand limits through a control the module makes for it (0 to 1,
+on no panel). What differs is where it goes:
+
+- **The voice** hears it as the wheel, not a panel value: `paramsFor` splits it out (`splitPerformance`) and hands it
+  to `toEngine()` as `ctx.wheel`, which is how the synth already hears a hand on the wheel. So the wheel does what the
+  hardware's does, with no voice code of its own. A step the lane leaves alone plays the wheel where the hand has it.
+- **The keyboard strip's wheel** (and the routing view) draws the lane's value while it plays (`shownWheel`).
+- **MIDI out** sends it as the declared CC, always, with no CC to choose; another lane given that number isn't sent on
+  it too.
+- A synth that declares no wheel offers no lane, and a pattern's wheel lane is kept and silent there, as a lane for any
+  control it hasn't got. A reserved id nothing declares yet (a future input) is the same.
+
 **Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
 (t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once
 ([`pattern-library.md`](./pattern-library.md#composed-batches-sounds-played-by-their-lanes)). The Model D has thirty
