@@ -529,7 +529,7 @@ scheduler's `ccMessage` turns it into the bytes. The rest of the mod wheel's rul
 alone sends the hand's bend, the run's end puts it back, and pitch bend echoed in while the lane plays out is not the
 hand's, except the centre, which always is: a keyboard's wheel let go of during the run springs back once, and missing
 it would leave the voice bent after Stop. A synth without a pitch wheel ignores pitch bend in, and an input unplugged
-mid-bend centres the bend. For both wheels, changing MIDI out's port or channel mid-run puts a wheel a lane moved back
+mid-bend centres the bend. For both wheels, changing MIDI out's port or channel mid-run, or the page going (`pagehide`), puts a wheel a lane moved back
 to the hand's on the one being left (a bend left there detunes everything played on it after).
 
 **Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
