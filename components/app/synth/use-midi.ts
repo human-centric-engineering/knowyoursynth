@@ -181,7 +181,12 @@ export function useMidi({ noteOn, noteOff, onWheel, onBend, remember, load }: Mi
       if (!mounted.current || mine !== request.current) return false;
       detach();
       access.current = a;
-      a.onstatechange = bind;
+      a.onstatechange = (e: MIDIConnectionEvent | undefined) => {
+        // A keyboard unplugged mid-bend never sends its spring back: the bend goes back to the middle with it.
+        if (e?.port?.type === 'input' && e.port.state === 'disconnected')
+          handlers.current.onBend?.(0);
+        bind();
+      };
       bind();
       setStatus('on');
       setError('');

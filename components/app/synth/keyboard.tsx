@@ -226,6 +226,7 @@ function PitchWheel({ value, onChange, range, lane }: PitchWheelProps) {
     onChange(Math.max(-1, Math.min(1, 1 - (2 * (e.clientY - r.top)) / r.height)));
   };
   const letGo = () => onChange(0); // the spring: back to the middle
+  const arrows = useRef(new Set<string>()); // the arrow keys held down: let go of the last, and it springs back
   const v = Math.max(-1, Math.min(1, value));
   const low = -range; // all the way down, in semitones
   return (
@@ -251,14 +252,22 @@ function PitchWheel({ value, onChange, range, lane }: PitchWheelProps) {
         onPointerUp={letGo}
         onPointerCancel={letGo}
         onLostPointerCapture={letGo}
-        onBlur={letGo}
+        onBlur={() => {
+          arrows.current.clear();
+          letGo();
+        }}
         onKeyDown={(e) => {
+          if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+          e.preventDefault(); // bending, not scrolling the page
+          arrows.current.add(e.key);
           // From where the hand has it: `value` may be a lane's, while one plays the pitch wheel.
           if (e.key === 'ArrowUp') onChange((b) => Math.min(1, b + BEND_STEP));
-          if (e.key === 'ArrowDown') onChange((b) => Math.max(-1, b - BEND_STEP));
+          else onChange((b) => Math.max(-1, b - BEND_STEP));
         }}
         onKeyUp={(e) => {
-          if (e.key === 'ArrowUp' || e.key === 'ArrowDown') letGo();
+          if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+          arrows.current.delete(e.key);
+          if (arrows.current.size === 0) letGo();
         }}
       >
         {/* The middle, where it rests. */}

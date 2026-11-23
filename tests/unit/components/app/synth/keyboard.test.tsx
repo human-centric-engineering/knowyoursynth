@@ -514,8 +514,18 @@ describe('Keyboard pitch wheel (`f-performance-wheels` t-309)', () => {
     expect(last(b.onChange, 0.9)).toBe(1);
     fireEvent.keyDown(wheel(), { key: 'ArrowDown' });
     expect(last(b.onChange, -0.9)).toBe(-1);
+    // ArrowUp is still down: letting go of ArrowDown alone leaves it bent.
+    const calls = b.onChange.mock.calls.length;
     fireEvent.keyUp(wheel(), { key: 'ArrowDown' });
+    expect(b.onChange.mock.calls).toHaveLength(calls);
+    fireEvent.keyUp(wheel(), { key: 'ArrowUp' });
     expect(b.onChange).toHaveBeenLastCalledWith(0);
+  });
+
+  it('bends rather than scrolling the page with the arrow keys', () => {
+    setup({ bend: bend() });
+    expect(fireEvent.keyDown(wheel(), { key: 'ArrowUp' })).toBe(false); // default prevented
+    expect(fireEvent.keyDown(wheel(), { key: 'Tab' })).toBe(true);
   });
 });
 

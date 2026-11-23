@@ -33,7 +33,7 @@ function makeAccess(inputs: FakeInput[], outputs: FakeOutput[] = []) {
       forEach: (f: (o: FakeOutput) => void) => outputs.forEach(f),
       get: (id: string) => outputs.find((o) => o.id === id),
     },
-    onstatechange: null as (() => void) | null,
+    onstatechange: null as ((e?: { port: { type: string; state: string } }) => void) | null,
   };
 }
 
@@ -230,6 +230,19 @@ describe('useMidi', () => {
       send(input, 0xe0, 0x00, 0x00);
       expect(h.onBend.mock.calls).toEqual([[1], [0], [-1]]);
       expect(h.onWheel).not.toHaveBeenCalled();
+    });
+
+    it('centres the pitch wheel when the keyboard is unplugged, its spring never to be heard (t-309)', async () => {
+      const h = handlers();
+      const hook = renderHook(() => useMidi(h));
+      await act(async () => {
+        await hook.result.current.connect();
+      });
+      send(input, 0xe0, 0x7f, 0x7f);
+      act(() => access.onstatechange?.({ port: { type: 'output', state: 'disconnected' } }));
+      expect(h.onBend).toHaveBeenLastCalledWith(1);
+      act(() => access.onstatechange?.({ port: { type: 'input', state: 'disconnected' } }));
+      expect(h.onBend).toHaveBeenLastCalledWith(0);
     });
 
     it('centres the pitch wheel when MIDI stops, as the keyboard’s spring will not be heard (t-309)', async () => {

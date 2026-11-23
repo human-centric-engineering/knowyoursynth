@@ -26,6 +26,7 @@ import {
 import type { LoopEvent, PatternLoop } from '@/lib/app/synths/audio/pattern-player';
 import type { PhraseNote } from '@/lib/app/synths/contract';
 import type { CcLookup } from '@/lib/app/midi/cc';
+import { PITCH_BEND } from '@/lib/app/synths/lib/performance';
 import { compileLoop, seededRng } from '@/lib/app/sequencer/compile';
 import { PatternSchema, newPattern, type Pattern } from '@/lib/app/sequencer/pattern';
 import { logger } from '@/lib/logging';
@@ -1452,6 +1453,47 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     const before = cc1(u.sent).length;
     u.s.message({ type: 'stopPattern' });
     expect(cc1(u.sent)).toHaveLength(before);
+  });
+
+  it('puts the wheel back on the port it leaves, then sends the lane’s on the new one (t-309)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    const other: Sent[] = [];
+    t.s.setPort({ send: (d, at) => void other.push([at ?? t.now, d]) }, 0);
+    expect(cc1(t.sent).at(-1)?.[1]).toBe(20);
+    t.run(1200);
+    expect(cc1(other).map(([, v]) => v)).toContain(127);
+  });
+
+  it('puts the wheel back on the channel it leaves, too', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.setPort(t.port, 3);
+    const back = t.sent.filter(([, d]) => d[0] === 0xb0 && d[1] === 1).at(-1);
+    expect(back?.[1][2]).toBe(20);
+  });
+
+  it('sends a pitch-wheel lane as pitch bend, and centres it on Stop (t-309)', () => {
+    const bend: CcLookup = Object.assign(
+      (set: Record<string, unknown>): [number, number][] => [
+        [PITCH_BEND, typeof set.b === 'number' ? set.b : 8192],
+      ],
+      { rest: (): [number, number][] => [[PITCH_BEND, 8192]] }
+    );
+    const t = setup();
+    t.s.setCcs(bend);
+    start(t, modded([[0, { b: 16383 }]]));
+    t.run(200);
+    t.s.message({ type: 'stopPattern' });
+    const pb = t.sent.filter(([, d]) => (d[0] & 0xf0) === 0xe0).map(([, d]) => d);
+    expect(pb[0]).toEqual([0xe0, 0x7f, 0x7f]);
+    expect(pb.at(-1)).toEqual([0xe0, 0x00, 0x40]);
+    // Never as a Control Change on a number no CC has.
+    expect(t.sent.some(([, d]) => (d[0] & 0xf0) === 0xb0 && d[1] === PITCH_BEND)).toBe(false);
   });
 
   it('leaves the wheel where the lane has it through a silence mid-run', () => {

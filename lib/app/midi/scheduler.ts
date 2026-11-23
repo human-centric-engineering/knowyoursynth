@@ -681,15 +681,17 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     sentTo = Math.max(sentTo, anchor.g);
   }
 
-  function silence(keepClock = false) {
+  /** `rest`: the old port or channel is being left, so a wheel a lane moved goes back to the hand's on it first. */
+  function silence(keepClock = false, rest = false) {
     const run = cur;
     const n = next;
     const a = anchor;
     const e = endG;
     // A Start not sent yet keeps its place; one whose beat has passed by the next pump waits for the next loop.
     const sg = started ? null : startG;
-    // The run goes on, so the wheel stays where the lane has it.
-    release(keepClock, false);
+    // The run goes on, so the wheel stays where the lane has it: here, but not on a port or channel being left, which
+    // would otherwise keep it (a pitch bend left there detunes everything played on it after).
+    release(keepClock, rest);
     // The run goes on from what is heard when next pumped. The clock starts again at the next loop.
     cur = run;
     next = n;
@@ -706,7 +708,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   function setPort(p: MidiPort | null, ch: number) {
     if (p === port && ch === channel) return;
     const same = p === port;
-    silence(same);
+    silence(same, true);
     port = p;
     // What was handed to another port or channel holds back nothing here, nor a patch called up there.
     ccAt.clear();

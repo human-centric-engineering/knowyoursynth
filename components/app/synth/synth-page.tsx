@@ -1284,12 +1284,18 @@ function Synth({
   const wheelIn = useCallback((v: number) => {
     if (!wheelLaneSending.current) setWheel(v);
   }, []);
-  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's.
+  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's. Its centre always is: a
+  // keyboard's wheel let go of during the run springs back once, and an echo of the centre puts nothing wrong. Not at
+  // all on a synth without a pitch wheel, where it would change nothing but re-render the page per message.
   const [bendLaneOn, setBendLaneOn] = useState(false);
   const bendLaneSending = useRef(false);
-  const bendIn = useCallback((v: number) => {
-    if (!bendLaneSending.current) setBend(v);
-  }, []);
+  const hasBend = Boolean(synthDef.performance?.bend);
+  const bendIn = useCallback(
+    (v: number) => {
+      if (hasBend && (v === 0 || !bendLaneSending.current)) setBend(v);
+    },
+    [hasBend]
+  );
   const midi = useMidi({
     noteOn,
     noteOff,
