@@ -486,10 +486,10 @@ describe('the sequencer on the synth page', () => {
     });
     // written once the wheels have been still for a moment, and the loop playing sent again with them
     await act(() => new Promise((r) => setTimeout(r, 80)));
-    const edit = lastSent('patternEdit') as {
-      loop: { mods?: [number, Record<string, unknown>][] };
-    };
+    // on the first step, where the playhead was; the steps after it are left to the hand
+    const edit = lastSent('patternEdit') as unknown as { loop: { mods?: unknown[] } };
     expect(edit.loop.mods?.[0]).toEqual([0, { '@wheel': 0.05, '@bend': 0.25 }]);
+    expect(edit.loop.mods?.slice(1)).toEqual([[0.25, null]]);
   });
 
   it('opens in a docked bottom sheet on a phone, with the panel live above it', () => {
