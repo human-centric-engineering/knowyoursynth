@@ -527,7 +527,10 @@ taken away, or on the arrow key's key-up. MIDI in hears pitch bend as it (`bendF
 sends the lane as pitch bend: `ccLookup` carries it as `PITCH_BEND`, a number no CC can be, valued 0..16383, and the
 scheduler's `ccMessage` turns it into the bytes. The rest of the mod wheel's rules hold for it: a step the lane leaves
 alone sends the hand's bend, the run's end puts it back, and pitch bend echoed in while the lane plays out is not the
-hand's.
+hand's, except the centre, which always is: a keyboard's wheel let go of during the run springs back once, and missing
+it would leave the voice bent after Stop. A synth without a pitch wheel ignores pitch bend in. Two things hold for both
+wheels: changing MIDI out's port or channel mid-run puts a wheel a lane moved back to the hand's on the one being left
+(a bend left there detunes everything played on it after), and an input unplugged mid-bend centres the bend.
 
 **Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
 (t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once
