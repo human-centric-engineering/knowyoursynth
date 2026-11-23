@@ -33,7 +33,8 @@ function makeAccess(inputs: FakeInput[], outputs: FakeOutput[] = []) {
       forEach: (f: (o: FakeOutput) => void) => outputs.forEach(f),
       get: (id: string) => outputs.find((o) => o.id === id),
     },
-    onstatechange: null as ((e?: { port: { type: string; state: string } }) => void) | null,
+    onstatechange: null as
+      ((e?: { port: { id?: string; type: string; state: string } }) => void) | null,
   };
 }
 
@@ -224,7 +225,6 @@ describe('useMidi', () => {
 
     it('pitch bend on any channel moves the pitch wheel, both bytes read, the centre at rest (t-309)', async () => {
       const h = await connected();
-      h.onBend.mockClear(); // connecting first lets go of whatever was held, the bend centred with it
       send(input, 0xe0, 0x7f, 0x7f);
       send(input, 0xe3, 0x00, 0x40);
       send(input, 0xe0, 0x00, 0x00);
@@ -232,17 +232,45 @@ describe('useMidi', () => {
       expect(h.onWheel).not.toHaveBeenCalled();
     });
 
-    it('centres the pitch wheel when the keyboard is unplugged, its spring never to be heard (t-309)', async () => {
+    it('centres the pitch wheel when the keyboard bending it is unplugged, and for no other port (t-309)', async () => {
+      input.id = 'kb';
       const h = handlers();
       const hook = renderHook(() => useMidi(h));
       await act(async () => {
         await hook.result.current.connect();
       });
       send(input, 0xe0, 0x7f, 0x7f);
-      act(() => access.onstatechange?.({ port: { type: 'output', state: 'disconnected' } }));
+      act(() =>
+        access.onstatechange?.({ port: { id: 'out', type: 'output', state: 'disconnected' } })
+      );
+      act(() =>
+        access.onstatechange?.({ port: { id: 'pad', type: 'input', state: 'disconnected' } })
+      );
       expect(h.onBend).toHaveBeenLastCalledWith(1);
-      act(() => access.onstatechange?.({ port: { type: 'input', state: 'disconnected' } }));
+      act(() =>
+        access.onstatechange?.({ port: { id: 'kb', type: 'input', state: 'disconnected' } })
+      );
       expect(h.onBend).toHaveBeenLastCalledWith(0);
+    });
+
+    it('reads a pitch bend short of its two data bytes as nothing, not all the way down', async () => {
+      const h = await connected();
+      h.onBend.mockClear();
+      send(input, 0xe0);
+      send(input, 0xe0, 0x10);
+      expect(h.onBend).not.toHaveBeenCalled();
+    });
+
+    it('leaves a bend alone on Stop MIDI when no MIDI wheel holds one: the on-screen wheel is the hand’s', async () => {
+      const h = handlers();
+      const hook = renderHook(() => useMidi(h));
+      await act(async () => {
+        await hook.result.current.connect();
+      });
+      send(input, 0xe0, 0x00, 0x40); // a keyboard's wheel at rest
+      h.onBend.mockClear();
+      act(() => hook.result.current.disconnect());
+      expect(h.onBend).not.toHaveBeenCalled();
     });
 
     it('centres the pitch wheel when MIDI stops, as the keyboard’s spring will not be heard (t-309)', async () => {

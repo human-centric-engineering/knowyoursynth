@@ -153,8 +153,11 @@ export interface MidiScheduler {
   pump(): void;
   /** Lets go of every note sent and not yet let go, then All Notes Off, and stops placing notes until the next run. */
   release(): void;
-  /** Lets go as `release` does, but keeps the run: notes start again from what is heard when next pumped. */
-  silence(): void;
+  /**
+   * Lets go as `release` does, but keeps the run: notes start again from what is heard when next pumped. With `rest`
+   * (the page going), a wheel a lane moved goes back to the hand's too, as the hardware may hear nothing more.
+   */
+  silence(rest?: boolean): void;
   /** Sends to `port` on `channel` (0..15) from now on, letting go of everything on the one before. `null` sends nothing. */
   setPort(port: MidiPort | null, channel: number): void;
   /** Sends MIDI clock, or stops sending it (with a Stop, if it had started). Off to begin with. */
@@ -759,7 +762,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     event,
     pump,
     release: () => release(),
-    silence: () => silence(),
+    silence: (rest = false) => silence(false, rest),
     setPort,
     setClock,
     setCcs,

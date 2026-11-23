@@ -95,7 +95,7 @@ const bendControl = (range: number): FaderControl => ({
   module: 'osc',
   label: 'Pitch wheel',
   name: 'Pitch wheel',
-  help: `The pitch wheel beside the keys: bends every note up or down, up to ${range} semitone${range === 1 ? '' : 's'} either way, and springs back to the middle when let go.`,
+  help: `The pitch wheel beside the keys: bends the pitch up or down, up to ${range} semitone${range === 1 ? '' : 's'} either way, and springs back to the middle when let go.`,
   find: false,
   kind: 'cont',
   min: -1,

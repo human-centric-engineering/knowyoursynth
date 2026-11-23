@@ -103,6 +103,8 @@ export function useMidi({ noteOn, noteOff, onWheel, onBend, remember, load }: Mi
 
   // Notes the keyboard holds down: stopping MIDI (or leaving the page) releases them, since their key-ups never arrive.
   const held = useRef(new Set<number>());
+  // The input whose pitch wheel is off centre, if one is: unplugged or stopped, its spring back will never arrive.
+  const bentBy = useRef<string | null>(null);
   const listeners = useRef(new Set<ClockListener>());
   const onMessage = useCallback((e: MIDIMessageEvent, input: string) => {
     const data = e.data;
@@ -119,7 +121,12 @@ export function useMidi({ noteOn, noteOff, onWheel, onBend, remember, load }: Mi
       held.current.delete(d1);
       handlers.current.noteOff(d1);
     } else if (type === 0xb0 && d1 === 1) handlers.current.onWheel(d2 / 127);
-    else if (type === 0xe0) handlers.current.onBend?.(bendFromMidi(d1, d2));
+    else if (type === 0xe0 && data && data.length >= 3) {
+      // Both data bytes, or it is not a bend: a short one would read as all the way down.
+      const v = bendFromMidi(d1, d2);
+      bentBy.current = v === 0 ? null : input;
+      handlers.current.onBend?.(v);
+    }
   }, []);
 
   /** Detach from every input and from device changes, and release whatever the keyboard was holding. */
@@ -133,8 +140,11 @@ export function useMidi({ noteOn, noteOff, onWheel, onBend, remember, load }: Mi
     }
     held.current.forEach((n) => handlers.current.noteOff(n));
     held.current.clear();
-    // Nor will the pitch wheel's spring back: the bend goes back to the middle with it.
-    handlers.current.onBend?.(0);
+    // Nor will a MIDI pitch wheel's spring back: a bend one holds goes back to the middle with it. One on screen stays.
+    if (bentBy.current !== null) {
+      bentBy.current = null;
+      handlers.current.onBend?.(0);
+    }
   }, []);
 
   const bind = useCallback(() => {
@@ -183,8 +193,11 @@ export function useMidi({ noteOn, noteOff, onWheel, onBend, remember, load }: Mi
       access.current = a;
       a.onstatechange = (e: MIDIConnectionEvent | undefined) => {
         // A keyboard unplugged mid-bend never sends its spring back: the bend goes back to the middle with it.
-        if (e?.port?.type === 'input' && e.port.state === 'disconnected')
+        const p = e?.port;
+        if (p?.type === 'input' && p.state === 'disconnected' && p.id === bentBy.current) {
+          bentBy.current = null;
           handlers.current.onBend?.(0);
+        }
         bind();
       };
       bind();

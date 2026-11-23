@@ -1467,6 +1467,15 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     expect(cc1(other).map(([, v]) => v)).toContain(127);
   });
 
+  it('puts the wheel back on a silence for the page going, as the hardware may hear nothing more (t-309)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.silence(true);
+    expect(cc1(t.sent).at(-1)?.[1]).toBe(20);
+  });
+
   it('puts the wheel back on the channel it leaves, too', () => {
     const t = setup();
     t.s.setCcs(wheel);

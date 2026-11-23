@@ -238,7 +238,8 @@ export function useMidiOut({
   // The page hidden (closed, or left for another page) or gone: nothing is left held on the hardware. A tab switched
   // away from is not: with the synth sounding it is not slowed, and with MIDI alone the ticks keep it going.
   useEffect(() => {
-    const hide = () => s.silence();
+    // The page may not come back: a wheel a lane moved (a bend above all) is put back, or the hardware stays bent.
+    const hide = () => s.silence(true);
     window.addEventListener('pagehide', hide);
     return () => {
       window.removeEventListener('pagehide', hide);
