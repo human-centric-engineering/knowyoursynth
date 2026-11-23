@@ -10,12 +10,18 @@
  * @see components/app/sequencer/sequencer.tsx
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
-import { useSequencer, type Sequencer as SeqState } from '@/components/app/sequencer/use-sequencer';
-import type { Phrase } from '@/lib/app/synths/contract';
+import {
+  useSequencer,
+  type LaneTarget,
+  type Sequencer as SeqState,
+} from '@/components/app/sequencer/use-sequencer';
+import type { Phrase, SynthDef } from '@/lib/app/synths/contract';
+import { BEND } from '@/lib/app/synths/lib/performance';
+import { WHEEL } from '@/lib/app/synths/lib/patch';
 import type { SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import type { LoopEvent } from '@/lib/app/synths/audio/pattern-player';
 
@@ -510,5 +516,142 @@ describe('arp mode', () => {
     expect(playingNotes()).toEqual([48, 51, 55, 60]);
     // and keys reach the chosen step again, sounded by the page
     expect(press(62)).toBe(false);
+  });
+});
+
+describe('live record of the performance wheels (t-310)', () => {
+  /** A synth with a mod wheel and a pitch wheel, and nothing on its panel. */
+  const WHEELS = {
+    controls: [],
+    performance: { wheel: { cc: 1 }, bend: { range: 2 } },
+  } as unknown as SynthDef;
+
+  function WheelHarness({ def }: { def: SynthDef }) {
+    const [lanes] = useState<LaneTarget>(() => ({ def, paramsFor: () => null }));
+    state = useSequencer({ engine, ensureAudio: async () => true, riff: null, lanes });
+    return null;
+  }
+
+  const at = (steps: number) => {
+    engine.frame = Math.round(steps * STEP);
+  };
+  /** Sixteen sixteenths of rests, playing, in live record. */
+  const start = async (def: SynthDef = WHEELS, keys: 'live' | 'edit' = 'live') => {
+    render(<WheelHarness def={def} />);
+    act(() => state.setKeys(keys));
+    await act(async () => {
+      await state.play({ countIn: false });
+    });
+    fire(loopEvent({ beats: 4 }));
+  };
+  const move = (id: string, v: number, step: number) => {
+    at(step);
+    act(() => state.wheelIn(id, v));
+  };
+  /** Lets the wheels' wait run out, so what was moved is written. */
+  const settle = (ms = 60) => act(() => void vi.advanceTimersByTime(ms));
+  const lane = (id: string) => steps().map((s) => s.mod?.[id]);
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('writes the mod wheel into a lane it adds, on the steps it was moved in, and is heard', async () => {
+    await start();
+    expect(state.pattern.lanes).toBeUndefined();
+    move(WHEEL, 0.2, 1.1);
+    move(WHEEL, 0.4, 1.6);
+    // still on step 2: only its newest position is kept
+    move(WHEEL, 0.7, 2.3);
+    move(WHEEL, 1, 4.9);
+    settle();
+    expect(state.pattern.lanes).toEqual([WHEEL]);
+    const want: (number | undefined)[] = Array(16).fill(undefined);
+    want[1] = 0.4;
+    want[2] = 0.7;
+    // quantise on still writes a wheel on the step it was moved in, not the nearest
+    want[4] = 1;
+    expect(lane(WHEEL)).toEqual(want);
+    // the loop playing is sent again with the lane in it
+    expect(lastOf('patternEdit')).toBeDefined();
+  });
+
+  it('writes the pitch wheel bent and sprung back to the middle', async () => {
+    await start();
+    move(BEND, -0.5, 3.2);
+    move(BEND, 0, 5.5);
+    settle();
+    expect(state.pattern.lanes).toEqual([BEND]);
+    expect(lane(BEND)[3]).toBe(-0.5);
+    expect(lane(BEND)[5]).toBe(0);
+  });
+
+  it('writes nothing new for a wheel left still', async () => {
+    await start();
+    move(WHEEL, 0.5, 2.2);
+    move(WHEEL, 0.5, 6.2);
+    fire(loopEvent({ index: 1, beats: 4, frame: 16 * STEP }));
+    move(WHEEL, 0.5, 19.5);
+    settle();
+    expect(lane(WHEEL).filter((v) => v !== undefined)).toEqual([0.5]);
+    expect(lane(WHEEL)[2]).toBe(0.5);
+  });
+
+  it('takes a whole take back in one Undo, the lane it added with it', async () => {
+    await start();
+    for (let k = 0; k < 10; k++) {
+      move(WHEEL, k / 10, 1 + k);
+      move(BEND, -k / 10, 1 + k);
+      settle(100);
+    }
+    expect(lane(WHEEL)[10]).toBe(0.9);
+    expect(lane(BEND)[10]).toBe(-0.9);
+    act(() => state.undo());
+    expect(state.pattern.lanes).toBeUndefined();
+    expect(steps().every((s) => s.mod === undefined)).toBe(true);
+    expect(state.canUndo).toBe(false);
+  });
+
+  it('starts another Undo for a wheel moved again after a pause', async () => {
+    await start();
+    move(WHEEL, 0.3, 1.2);
+    settle();
+    settle(1500);
+    move(WHEEL, 0.6, 7.2);
+    settle();
+    act(() => state.undo());
+    expect(lane(WHEEL)[1]).toBe(0.3);
+    expect(lane(WHEEL)[7]).toBeUndefined();
+  });
+
+  it('writes a wheel moved just before Stop', async () => {
+    await start();
+    move(WHEEL, 0.8, 3.1);
+    act(() => state.stop());
+    expect(lane(WHEEL)[3]).toBe(0.8);
+  });
+
+  it('writes nothing outside live record, or while stopped', async () => {
+    await start(WHEELS, 'edit');
+    move(WHEEL, 0.5, 2.2);
+    settle();
+    expect(state.pattern.lanes).toBeUndefined();
+
+    act(() => state.setKeys('live'));
+    act(() => state.stop());
+    move(WHEEL, 0.5, 2.2);
+    settle();
+    expect(state.pattern.lanes).toBeUndefined();
+  });
+
+  it('writes nothing for a wheel the synth hasn’t got, nor for a panel control', async () => {
+    await start({ ...WHEELS, performance: { wheel: { cc: 1 } } });
+    move(BEND, 0.5, 2.2);
+    move('cutoff', 0.5, 3.2);
+    settle();
+    expect(state.pattern.lanes).toBeUndefined();
   });
 });

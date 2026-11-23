@@ -61,7 +61,7 @@ import {
   stepsPerBeat,
   type Pattern,
 } from '@/lib/app/sequencer/pattern';
-import { lanesPlay, resolveMods, stepOverrides } from '@/lib/app/sequencer/lanes';
+import { laneControl, lanesPlay, resolveMods, stepOverrides } from '@/lib/app/sequencer/lanes';
 import {
   DEFAULT_ARP,
   NO_ARP_KEYS,
@@ -78,8 +78,11 @@ import {
   placeHit,
   playedVelocity,
   recordNote,
+  recordWheel,
+  wheelValue,
   type LiveMode,
 } from '@/lib/app/sequencer/record';
+import { isPerformanceId } from '@/lib/app/synths/lib/performance';
 import type { ControlValues, EngineParams, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
 import {
@@ -271,6 +274,11 @@ export interface Sequencer {
   noteIn: (n: number, velocity?: number) => boolean;
   /** The note's key let go. */
   noteOut: (n: number) => void;
+  /**
+   * A performance wheel moved by hand (`@wheel` or `@bend`, at its own position): in live record, while the pattern
+   * plays, written into its lane on the step being heard (t-310). Called only when the hand moves it.
+   */
+  wheelIn: (id: string, v: number) => void;
   /** The module's handler for notes played in `edit` and `step` modes. Returns the undo. */
   onNoteIn: (f: NoteTarget) => () => void;
   /**
@@ -864,6 +872,31 @@ export function useSequencer({
   const liveHits = useRef(new Map<number, LiveHit>());
   /** Which steps live record has written on this time round, so notes struck together are a chord. */
   const liveStruck = useRef(new Set<string>());
+
+  // A wheel ridden moves every frame: what live record has of it waits, by wheel, as its newest position on the step it
+  // was moved in, and is written at most once every LANE_RESEND_MS, or at once when that wheel moves on to another step.
+  const wheelPending = useRef(new Map<string, { part: number; step: number; v: number }>());
+  /** Where each wheel was last moved to, so the same position given again writes nothing. */
+  const wheelLast = useRef(new Map<string, number>());
+  const wheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flushWheels = useCallback(() => {
+    if (wheelTimer.current) clearTimeout(wheelTimer.current);
+    wheelTimer.current = null;
+    const due = [...wheelPending.current];
+    wheelPending.current.clear();
+    if (due.length === 0) return;
+    // In the group the notes recorded are in, so a take (notes and wheels within 1.2 s of each other) is one Undo.
+    edit((q) => due.reduce((r, [id, w]) => recordWheel(r, w.part, w.step, id, w.v), q), {
+      group: 'live',
+    });
+  }, [edit]);
+  useEffect(
+    () => () => {
+      if (wheelTimer.current) clearTimeout(wheelTimer.current);
+    },
+    []
+  );
+
   const halt = useCallback(() => {
     playingRef.current = false;
     setPlaying(false);
@@ -874,7 +907,10 @@ export function useSequencer({
     // A run's loops count from 0 again, so a step struck in the last run is not one this run struck.
     liveStruck.current.clear();
     arpStarted.current = false;
-  }, []);
+    // A wheel moved just before the pattern stopped is written; the next run starts with nothing moved.
+    flushWheels();
+    wheelLast.current.clear();
+  }, [flushWheels]);
 
   const stop = useCallback(() => {
     runs.current++;
@@ -1101,10 +1137,37 @@ export function useSequencer({
     [heardAt, setArpKeys, edit]
   );
 
+  const wheelIn = useCallback(
+    (id: string, v: number) => {
+      if (keysRef.current !== 'live' || !isPerformanceId(id)) return;
+      const target = lanesRef.current;
+      const c = target ? laneControl(target.def, id) : null;
+      const value = c ? wheelValue(c, v) : null;
+      const here = heardAt();
+      if (value === null || !here || wheelLast.current.get(id) === value) return;
+      wheelLast.current.set(id, value);
+      const p = patternRef.current;
+      // A wheel goes on the step it was moved in, quantised or not: it has no start to be early or late.
+      const { slot } = placeHit(here.at, patternLength(p), p.swing, false);
+      const step = here.info.order[slot];
+      const part = here.info.part;
+      if (step === undefined || !p.parts[part]) return;
+      const was = wheelPending.current.get(id);
+      if (was && (was.part !== part || was.step !== step)) flushWheels();
+      wheelPending.current.set(id, { part, step, v: value });
+      wheelTimer.current ??= setTimeout(flushWheels, LANE_RESEND_MS);
+    },
+    [heardAt, flushWheels]
+  );
+
   const setKeys = useCallback(
     (k: KeyMode) => {
       if (keysRef.current === k) return;
       const wasArp = keysRef.current === 'arp';
+      if (keysRef.current === 'live') {
+        flushWheels();
+        wheelLast.current.clear();
+      }
       keysRef.current = k;
       setKeysState(k);
       liveHits.current.clear();
@@ -1116,7 +1179,7 @@ export function useSequencer({
       }
       if (wasArp || k === 'arp') replay();
     },
-    [replay]
+    [replay, flushWheels]
   );
   const setArp = useCallback(
     (a: ArpSettings) => {
@@ -1196,6 +1259,7 @@ export function useSequencer({
     position,
     noteIn,
     noteOut,
+    wheelIn,
     onNoteIn,
     panelIn,
     onPanelIn,

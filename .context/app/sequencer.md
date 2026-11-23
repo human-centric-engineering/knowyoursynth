@@ -333,6 +333,13 @@ round). The page still sounds the key as it is played.
 - Nothing is recorded while stopped, or for a key still down at Stop. A new run's loops count from 0 again, so a
   step struck in the run before is not part of this run's chord.
 - Notes recorded within 1.2 s of each other are one Undo, as an encoder's turn is.
+- **The wheels** (t-310). A performance wheel the synth declares, moved by hand (on screen, or a MIDI keyboard's CC 1
+  and pitch bend), is written into its lane (`@wheel`, `@bend`) on the step being heard, quantised or not: the step it
+  was moved in (`recordWheel`, to three places). The lane is added after the others if the pattern hasn't got one (none,
+  with all eight taken). Only a move writes: a wheel left still writes nothing new, so its lane keeps what the steps
+  had. A wheel ridden is written at most every 50 ms, its newest position on each step; a move just before Stop is
+  written. Wheels and notes recorded within 1.2 s of each other are one Undo, so a take is one. While live record is
+  on, a MIDI keyboard's wheels are taken as the hand's even while a lane sends them over MIDI out.
 
 ### Arp
 

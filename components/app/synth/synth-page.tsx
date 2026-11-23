@@ -1281,8 +1281,10 @@ function Synth({
   // CC 1 coming back in (a DAW echoing it) is not the hand, so the wheel in from MIDI waits until it stops.
   const [wheelLaneOn, setWheelLaneOn] = useState(false);
   const wheelLaneSending = useRef(false);
+  // In live record the wheel coming in is the hand recording the lane (t-310), so it is taken while the lane sends.
+  const liveRecording = useRef(false);
   const wheelIn = useCallback((v: number) => {
-    if (!wheelLaneSending.current) setWheel(v);
+    if (!wheelLaneSending.current || liveRecording.current) setWheel(v);
   }, []);
   // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's. Its centre always is: a
   // keyboard's wheel let go of during the run springs back once, and an echo of the centre puts nothing wrong. Not at
@@ -1292,7 +1294,7 @@ function Synth({
   const hasBend = Boolean(synthDef.performance?.bend);
   const bendIn = useCallback(
     (v: number) => {
-      if (hasBend && (v === 0 || !bendLaneSending.current)) setBend(v);
+      if (hasBend && (v === 0 || !bendLaneSending.current || liveRecording.current)) setBend(v);
     },
     [hasBend]
   );
@@ -1374,6 +1376,14 @@ function Synth({
   });
   // The panel shows a control a lane moves where the lane has it, while the pattern plays; its own value is unchanged.
   const { modShown } = seq;
+  // The hand's wheels, on screen or from a MIDI keyboard, recorded into their lanes in live record (t-310). Only a
+  // move is recorded: the sequencer writes nothing while stopped, or outside live record.
+  const { wheelIn: seqWheelIn, keys: seqKeys } = seq;
+  useEffect(() => {
+    liveRecording.current = seqKeys === 'live';
+  }, [seqKeys]);
+  useEffect(() => seqWheelIn(WHEEL, wheel), [seqWheelIn, wheel]);
+  useEffect(() => seqWheelIn(BEND, bend), [seqWheelIn, bend]);
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
   const wheelShown = shownWheel(modShown) ?? wheel;
   // And the pitch wheel, on a synth that has one.

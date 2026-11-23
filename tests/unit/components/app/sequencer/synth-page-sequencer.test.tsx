@@ -468,6 +468,30 @@ describe('the sequencer on the synth page', () => {
     expect(sent().map((m) => m.type)).toContain('noteOff');
   });
 
+  it('in live record, writes the mod wheel and the pitch wheel moved on screen into their lanes (t-310)', async () => {
+    page();
+    fireEvent.click(button('Sequencer'));
+    fireEvent.click(within(sequencer()).getByRole('combobox', { name: 'Keys' }));
+    fireEvent.click(screen.getByRole('option', { name: 'Live record' }));
+    await press('Play');
+    act(() =>
+      events.fn?.({ type: 'loop', index: 0, start: true, beat: 0, beats: 2, bpm: 90, frame: 0 } as {
+        type: string;
+      })
+    );
+    engine.send.mockClear();
+    fireEvent.keyDown(screen.getAllByRole('slider', { name: 'Mod wheel' })[0], { key: 'ArrowUp' });
+    fireEvent.keyDown(screen.getAllByRole('slider', { name: 'Pitch wheel' })[0], {
+      key: 'ArrowUp',
+    });
+    // written once the wheels have been still for a moment, and the loop playing sent again with them
+    await act(() => new Promise((r) => setTimeout(r, 80)));
+    const edit = lastSent('patternEdit') as {
+      loop: { mods?: [number, Record<string, unknown>][] };
+    };
+    expect(edit.loop.mods?.[0]).toEqual([0, { '@wheel': 0.05, '@bend': 0.25 }]);
+  });
+
   it('opens in a docked bottom sheet on a phone, with the panel live above it', () => {
     phone();
     page();
