@@ -518,6 +518,20 @@ on no panel). What differs is where it goes:
 - A synth that declares no wheel offers no lane, and a pattern's wheel lane is kept and silent there, as a lane for any
   control it hasn't got. A reserved id nothing declares yet (a future input) is the same.
 
+**The pitch wheel** (t-309) is the second input, by the same template: `{ bend: { range } }`, the range in semitones
+(the Model D's is 2; its manual gives the fixed range no number). Its lane, `@bend`, runs -1 to 1, 0 at rest, read in
+semitones, and is offered after the mod wheel. It reaches the voice as `ctx.bend`, which the Model D's `toEngine()`
+scales by its range and adds where TUNE goes, so OSC 3 off the keyboard is left alone as TUNE leaves it. On screen it
+sits left of the mod wheel, only on a synth that declares one, and springs back to the middle on release, on a pointer
+taken away, or on the arrow key's key-up. MIDI in hears pitch bend as it (`bendFromMidi`, both data bytes); MIDI out
+sends the lane as pitch bend: `ccLookup` carries it as `PITCH_BEND`, a number no CC can be, valued 0..16383, and the
+scheduler's `ccMessage` turns it into the bytes. The rest of the mod wheel's rules hold for it: a step the lane leaves
+alone sends the hand's bend, the run's end puts it back, and pitch bend echoed in while the lane plays out is not the
+hand's, except the centre, which always is: a keyboard's wheel let go of during the run springs back once, and missing
+it would leave the voice bent after Stop. A synth without a pitch wheel ignores pitch bend in, and an input unplugged
+mid-bend centres the bend. For both wheels, changing MIDI out's port or channel mid-run, or the page going (`pagehide`), puts a wheel a lane moved back
+to the hand's on the one being left (a bend left there detunes everything played on it after).
+
 **Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
 (t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once
 ([`pattern-library.md`](./pattern-library.md#composed-batches-sounds-played-by-their-lanes)). The Model D has thirty

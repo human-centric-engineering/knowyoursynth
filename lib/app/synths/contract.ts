@@ -204,6 +204,11 @@ export interface SynthDef {
 export interface PerformanceInputs {
   /** The mod wheel, and the CC the hardware hears it as (1 on almost every synth). */
   wheel?: { cc: number };
+  /**
+   * The pitch wheel, and how far it bends at either end, in semitones. Sent over MIDI as pitch bend, which every synth
+   * hears as itself: there is no CC to name. It springs back to the centre when let go.
+   */
+  bend?: { range: number };
 }
 
 /** The language a panel is printed in, and the English for each printed string. */
@@ -286,6 +291,11 @@ export type SeqButton =
 export interface EngineContext {
   /** Mod wheel position, 0..1. */
   wheel: number;
+  /**
+   * Pitch wheel position, -1 (all the way down) to 1 (all the way up), 0 at rest. Absent is at rest. Heard only by a
+   * synth that declares a pitch wheel (`SynthDef.performance.bend`), which adds it to pitch scaled by its range.
+   */
+  bend?: number;
   /** Which jacks have a cable, inputs and outputs alike (an output flag is for insert jacks such as the Kobol's VCO 2 OUT). */
   patched: Record<string, boolean>;
 }

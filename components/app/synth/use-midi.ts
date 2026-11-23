@@ -1,7 +1,8 @@
 'use client';
 
 /**
- * Web MIDI input: note on/off from any connected keyboard (all channels) and the mod wheel (CC 1). And the outputs the
+ * Web MIDI input: note on/off from any connected keyboard (all channels), the mod wheel (CC 1) and the pitch wheel
+ * (pitch bend). And the outputs the
  * same grant reaches (`f-midi-out` t-88), for the sequencer to play on: listed here, so the browser is asked once.
  * And MIDI clock with its Start, Continue, Stop and Song Position (`f-midi-hardware-lead` t-91), handed with the input
  * it came from to whoever `listen`s, for the sequencer to follow.
@@ -14,6 +15,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { bendFromMidi } from '@/lib/app/midi/cc';
 import { isClockMessage } from '@/lib/app/midi/follow';
 
 /**
@@ -42,6 +44,8 @@ export interface MidiHandlers {
   noteOn: (n: number, v: number) => void;
   noteOff: (n: number) => void;
   onWheel: (v: number) => void;
+  /** The pitch wheel moved: -1..1, 0 at rest (`bendFromMidi`). */
+  onBend?: (v: number) => void;
   /** Store whether MIDI should reconnect on the next visit. */
   remember: (on: boolean) => void;
   /** Read what `remember` stored. */
@@ -78,7 +82,7 @@ export interface Midi {
 const samePorts = (was: MidiPortInfo[], now: MidiPortInfo[]) =>
   was.length === now.length && was.every((w, i) => w.id === now[i].id && w.name === now[i].name);
 
-export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandlers): Midi {
+export function useMidi({ noteOn, noteOff, onWheel, onBend, remember, load }: MidiHandlers): Midi {
   // `off` on the server and the first client render alike; the frame check runs after mount.
   const [status, setStatus] = useState<MidiStatus>('off');
   const [devices, setDevices] = useState<string[]>([]);
@@ -92,13 +96,15 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
   // binding both left one attached that Stop MIDI never reached, so the keyboard kept playing with MIDI "off". The bar
   // offers no Connect while asking, but the hook does not rely on that.
   const request = useRef(0);
-  const handlers = useRef({ noteOn, noteOff, onWheel });
+  const handlers = useRef({ noteOn, noteOff, onWheel, onBend });
   useEffect(() => {
-    handlers.current = { noteOn, noteOff, onWheel };
+    handlers.current = { noteOn, noteOff, onWheel, onBend };
   });
 
   // Notes the keyboard holds down: stopping MIDI (or leaving the page) releases them, since their key-ups never arrive.
   const held = useRef(new Set<number>());
+  // The input whose pitch wheel is off centre, if one is: unplugged or stopped, its spring back will never arrive.
+  const bentBy = useRef<string | null>(null);
   const listeners = useRef(new Set<ClockListener>());
   const onMessage = useCallback((e: MIDIMessageEvent, input: string) => {
     const data = e.data;
@@ -115,6 +121,12 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       held.current.delete(d1);
       handlers.current.noteOff(d1);
     } else if (type === 0xb0 && d1 === 1) handlers.current.onWheel(d2 / 127);
+    else if (type === 0xe0 && data && data.length >= 3) {
+      // Both data bytes, or it is not a bend: a short one would read as all the way down.
+      const v = bendFromMidi(d1, d2);
+      bentBy.current = v === 0 ? null : input;
+      handlers.current.onBend?.(v);
+    }
   }, []);
 
   /** Detach from every input and from device changes, and release whatever the keyboard was holding. */
@@ -128,6 +140,11 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
     }
     held.current.forEach((n) => handlers.current.noteOff(n));
     held.current.clear();
+    // Nor will a MIDI pitch wheel's spring back: a bend one holds goes back to the middle with it. One on screen stays.
+    if (bentBy.current !== null) {
+      bentBy.current = null;
+      handlers.current.onBend?.(0);
+    }
   }, []);
 
   const bind = useCallback(() => {
@@ -174,7 +191,15 @@ export function useMidi({ noteOn, noteOff, onWheel, remember, load }: MidiHandle
       if (!mounted.current || mine !== request.current) return false;
       detach();
       access.current = a;
-      a.onstatechange = bind;
+      a.onstatechange = (e: MIDIConnectionEvent | undefined) => {
+        // A keyboard unplugged mid-bend never sends its spring back: the bend goes back to the middle with it.
+        const p = e?.port;
+        if (p?.type === 'input' && p.state === 'disconnected' && p.id === bentBy.current) {
+          bentBy.current = null;
+          handlers.current.onBend?.(0);
+        }
+        bind();
+      };
       bind();
       setStatus('on');
       setError('');

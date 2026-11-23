@@ -39,6 +39,7 @@
  * value in effect on each CC, now.
  * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to. A
  * performance wheel's lane is the exception (`CcLookup.rest`): the wheel goes back to the hand's, once a lane moved it.
+ * The pitch wheel's lane rides the same path as pitch bend (`PITCH_BEND`), turned into its bytes as it goes out.
  *
  * With a program set (`setProgram`, `f-midi-hardware-lead` t-92), a run from the top first calls up that patch: Bank
  * Select (CC 0, then CC 32, each only if given), then Program Change, now. A synth takes a moment to load a patch, so
@@ -52,7 +53,7 @@
  * Pure: no timers, no Web MIDI. The page (`use-midi-out.ts`) gives it a port and a clock and calls `pump`.
  */
 import type { ControlValues, PhraseNote } from '@/lib/app/synths/contract';
-import type { CcLookup } from '@/lib/app/midi/cc';
+import { ccMessage, type CcLookup } from '@/lib/app/midi/cc';
 import { DEFAULT_VELOCITY } from '@/lib/app/synths/audio/note-events';
 import {
   playable,
@@ -152,8 +153,11 @@ export interface MidiScheduler {
   pump(): void;
   /** Lets go of every note sent and not yet let go, then All Notes Off, and stops placing notes until the next run. */
   release(): void;
-  /** Lets go as `release` does, but keeps the run: notes start again from what is heard when next pumped. */
-  silence(): void;
+  /**
+   * Lets go as `release` does, but keeps the run: notes start again from what is heard when next pumped. With `rest`
+   * (the page going), a wheel a lane moved goes back to the hand's too, as the hardware may hear nothing more.
+   */
+  silence(rest?: boolean): void;
   /** Sends to `port` on `channel` (0..15) from now on, letting go of everything on the one before. `null` sends nothing. */
   setPort(port: MidiPort | null, channel: number): void;
   /** Sends MIDI clock, or stops sending it (with a Stop, if it had started). Off to begin with. */
@@ -340,7 +344,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       for (const [cc, v] of ccs?.rest?.() ?? []) {
         const sent = ccSent.get(cc);
         if (sent !== undefined && sent !== v)
-          out([0xb0 | channel, cc, v], Math.max(now, ccAt.get(cc) ?? now));
+          out(ccMessage(channel, cc, v), Math.max(now, ccAt.get(cc) ?? now));
       }
     ccSent.clear();
     offs.length = 0;
@@ -579,11 +583,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     // Not while a patch loads, which would set it back.
     const at = Math.max(when, holdUntil);
     ccSent.set(cc, v);
-    out([0xb0 | channel, cc, v], at);
+    out(ccMessage(channel, cc, v), at);
     // A value handed over for later on this CC (before an edit, or a silence) can't be taken back: this one goes again
     // at that time too, after it, so the hardware ends on this one. Changes come in time order, so the latest wins.
     const queued = ccAt.get(cc);
-    if (queued !== undefined && queued > at) out([0xb0 | channel, cc, v], queued);
+    if (queued !== undefined && queued > at) out(ccMessage(channel, cc, v), queued);
     else ccAt.set(cc, at);
   }
 
@@ -680,15 +684,17 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     sentTo = Math.max(sentTo, anchor.g);
   }
 
-  function silence(keepClock = false) {
+  /** `rest`: the old port or channel is being left, so a wheel a lane moved goes back to the hand's on it first. */
+  function silence(keepClock = false, rest = false) {
     const run = cur;
     const n = next;
     const a = anchor;
     const e = endG;
     // A Start not sent yet keeps its place; one whose beat has passed by the next pump waits for the next loop.
     const sg = started ? null : startG;
-    // The run goes on, so the wheel stays where the lane has it.
-    release(keepClock, false);
+    // The run goes on, so the wheel stays where the lane has it: here, but not on a port or channel being left, which
+    // would otherwise keep it (a pitch bend left there detunes everything played on it after).
+    release(keepClock, rest);
     // The run goes on from what is heard when next pumped. The clock starts again at the next loop.
     cur = run;
     next = n;
@@ -705,7 +711,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   function setPort(p: MidiPort | null, ch: number) {
     if (p === port && ch === channel) return;
     const same = p === port;
-    silence(same);
+    silence(same, true);
     port = p;
     // What was handed to another port or channel holds back nothing here, nor a patch called up there.
     ccAt.clear();
@@ -756,7 +762,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     event,
     pump,
     release: () => release(),
-    silence: () => silence(),
+    silence: (rest = false) => silence(false, rest),
     setPort,
     setClock,
     setCcs,

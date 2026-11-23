@@ -6,7 +6,18 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { LANE_CCS, MAX_LANE_CC, ccLookup, ccValue, validLaneCc } from '@/lib/app/midi/cc';
+import {
+  BEND_CENTRE,
+  LANE_CCS,
+  MAX_LANE_CC,
+  bendFromMidi,
+  bendValue,
+  ccLookup,
+  ccMessage,
+  ccValue,
+  validLaneCc,
+} from '@/lib/app/midi/cc';
+import { PITCH_BEND } from '@/lib/app/synths/lib/performance';
 import type { Control, SynthDef } from '@/lib/app/synths/contract';
 import { getSynthDef } from '@/lib/app/synths/defs';
 
@@ -100,7 +111,11 @@ describe('ccLookup', () => {
 
 describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
   const modelD = getSynthDef('model-d')!;
-  const hand = (wheel: number, on = true) => ({ on: () => on, wheel: () => wheel });
+  // The mod wheel's lane only, the pitch wheel at rest with no lane of its own.
+  const hand = (wheel: number, on = true) => ({
+    on: (id: string) => on && id === '@wheel',
+    at: (id: string) => (id === '@wheel' ? wheel : 0),
+  });
 
   it('sends a wheel lane as the CC the synth declares, with nothing assigned', () => {
     const look = ccLookup(modelD, {}, hand(0))!;
@@ -111,7 +126,10 @@ describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
   it('sends the hand’s wheel on a step the lane leaves alone, and goes back to it when the run ends', () => {
     const look = ccLookup(modelD, {}, hand(0.5))!;
     expect(look({})).toEqual([[1, 64]]);
-    expect(look.rest?.()).toEqual([[1, 64]]);
+    expect(look.rest?.()).toEqual([
+      [1, 64],
+      [PITCH_BEND, BEND_CENTRE],
+    ]);
   });
 
   it('sends no wheel while the pattern has no wheel lane, and keeps its CC off other lanes even so', () => {
@@ -119,7 +137,7 @@ describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
     // Read as each change goes: the lane taken off sends no wheel, but the run's end still puts it back.
     const off = ccLookup(modelD, {}, hand(0.5, false))!;
     expect(off({ '@wheel': 1 })).toEqual([]);
-    expect(off.rest?.()).toEqual([[1, 64]]);
+    expect(off.rest?.()).toContainEqual([1, 64]);
     expect(ccLookup(modelD, { 'filter.cutoff': 1 })).toBeNull();
     expect(ccLookup(modelD, { 'filter.cutoff': 74 })?.rest).toBeUndefined();
   });
@@ -131,5 +149,62 @@ describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
 
   it('sends nothing for a wheel on a synth that declares none', () => {
     expect(ccLookup(DEF, { '@wheel': 1 })).toBeNull();
+  });
+});
+
+describe('pitch bend (`f-performance-wheels` t-309)', () => {
+  const modelD = getSynthDef('model-d')!;
+  const hand = (bend: number, on = true) => ({
+    on: (id: string) => on && id === '@bend',
+    at: (id: string) => (id === '@bend' ? bend : 0),
+  });
+
+  it('turns the wheel’s position into 14 bits: 0 all the way down, 8192 at rest, 16383 all the way up', () => {
+    expect(bendValue(-1)).toBe(0);
+    expect(bendValue(0)).toBe(8192);
+    expect(bendValue(1)).toBe(16383);
+    expect(bendValue(0.5)).toBe(12288);
+    expect(bendValue(-0.5)).toBe(4096);
+    // Past either end it stops there; not a number is at rest.
+    expect(bendValue(3)).toBe(16383);
+    expect(bendValue(-3)).toBe(0);
+    expect(bendValue('up')).toBe(8192);
+  });
+
+  it('reads a pitch-bend message’s two bytes, least significant first, back into -1..1', () => {
+    expect(bendFromMidi(0x00, 0x40)).toBe(0); // 8192
+    expect(bendFromMidi(0x7f, 0x7f)).toBe(1); // 16383
+    expect(bendFromMidi(0x00, 0x00)).toBe(-1); // 0
+    expect(bendFromMidi(0x00, 0x60)).toBeCloseTo(0.5, 3); // 12288
+    expect(bendFromMidi(0x00, 0x20)).toBe(-0.5); // 4096
+    // The LSB counts: one step above the centre is just above it.
+    expect(bendFromMidi(0x01, 0x40)).toBeGreaterThan(0);
+    // A status bit leaking into a data byte is not read.
+    expect(bendFromMidi(0x80, 0xc0)).toBe(0);
+  });
+
+  it('round-trips: what is sent is what a synth reading it hears', () => {
+    for (const v of [-1, -0.25, 0, 0.3, 1]) {
+      const b = bendValue(v);
+      expect(bendFromMidi(b & 0x7f, b >> 7)).toBeCloseTo(v, 3);
+    }
+  });
+
+  it('sends pitch bend as a pitch-bend message on the channel, and a CC as a Control Change', () => {
+    expect(ccMessage(2, PITCH_BEND, 12288)).toEqual([0xe2, 0x00, 0x60]);
+    expect(ccMessage(0, PITCH_BEND, 16383)).toEqual([0xe0, 0x7f, 0x7f]);
+    expect(ccMessage(2, 74, 100)).toEqual([0xb2, 74, 100]);
+  });
+
+  it('sends a bend lane as pitch bend, and a step it leaves alone as where the hand has the wheel', () => {
+    const look = ccLookup(modelD, {}, hand(-0.5))!;
+    expect(look({ '@bend': 1 })).toEqual([[PITCH_BEND, 16383]]);
+    expect(look({})).toEqual([[PITCH_BEND, 4096]]);
+    expect(look.rest?.()).toContainEqual([PITCH_BEND, 4096]);
+  });
+
+  it('sends no bend while the pattern has no bend lane, nor on a synth without a pitch wheel', () => {
+    expect(ccLookup(modelD, {}, hand(0, false))!({ '@bend': 1 })).toEqual([]);
+    expect(ccLookup(DEF, { '@bend': 1 }, hand(0))).toBeNull();
   });
 });

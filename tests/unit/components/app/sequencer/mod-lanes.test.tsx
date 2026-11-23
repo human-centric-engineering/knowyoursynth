@@ -789,4 +789,20 @@ describe('a performance wheel’s lane (f-performance-wheels)', () => {
     fireEvent.click(screen.getByRole('option', { name: 'No CC' }));
     expect(midi.setCc).toHaveBeenLastCalledWith('cutoff', null);
   });
+
+  it('sends the pitch wheel’s lane as pitch bend, read in semitones, the hand’s bend on a step it leaves alone (t-309)', () => {
+    const def = { ...DEF, performance: { bend: { range: 2 } } } as SynthDef;
+    const p = importPhrase(RIFF);
+    p.lanes = ['@bend'];
+    p.parts[0].steps[0] = { ...p.parts[0].steps[0], mod: { '@bend': 0.5 } };
+    render(<Harness def={def} panel={{ ...PANEL, '@bend': -0.25 }} midiOut={out()} />);
+    act(() => void state.load(p, { id: null, name: 'test' }));
+    const bend = within(screen.getByRole('group', { name: /Pitch wheel lane/ })).getAllByRole(
+      'slider'
+    );
+    expect(bend[0].getAttribute('aria-valuetext')).toMatch(/\+1 st$/);
+    expect(bend[1].getAttribute('aria-valuetext')).toMatch(/^your hand's value, .*-0.5 st$/);
+    expect(screen.getByText('Sent as pitch bend')).toBeTruthy();
+    expect(screen.queryByRole('combobox', { name: 'CC' })).toBeNull();
+  });
 });

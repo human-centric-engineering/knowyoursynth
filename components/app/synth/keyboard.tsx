@@ -1,7 +1,8 @@
 'use client';
 
 /**
- * The on-screen keyboard: three octaves and a top C, the mod wheel, octave shift and hold.
+ * The on-screen keyboard: three octaves and a top C, the mod wheel (and the pitch wheel, on a synth that has one),
+ * octave shift and hold.
  *
  * Transliterated from the prototype file `prototype/src/ui/Keyboard.jsx` (decision D3). What changed (`f-phone-and-tablet`):
  * - Each pointer holds its own note, so several fingers play a chord.
@@ -192,6 +193,107 @@ function ModWheel({
   );
 }
 
+/**
+ * The pitch wheel (`f-performance-wheels`): -1 to 1, 0 in the middle, where it springs back to when let go, as the
+ * hardware's does on its spring. Shown only on a synth that declares one (`SynthDef.performance.bend`).
+ */
+export interface PitchWheelProps {
+  /** As drawn: a lane's while one plays it, else the hand's. */
+  value: number;
+  /** Moves the hand's pitch wheel; the arrow keys step it from the hand's own position. */
+  onChange: Dispatch<SetStateAction<number>>;
+  /** How far it bends at either end, in semitones. */
+  range: number;
+  /** A lane is playing the pitch wheel now. */
+  lane: boolean;
+}
+
+/** How far an arrow key moves the pitch wheel. Let go of the key and it springs back. */
+const BEND_STEP = 0.25;
+
+const semis = (v: number, range: number) => {
+  const r = Math.round(v * range * 10) / 10;
+  return r === 0
+    ? 'centre'
+    : `${r > 0 ? '+' : '−'}${Math.abs(r)} semitone${Math.abs(r) === 1 ? '' : 's'}`;
+};
+
+function PitchWheel({ value, onChange, range, lane }: PitchWheelProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const set = (e: PointerEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    onChange(Math.max(-1, Math.min(1, 1 - (2 * (e.clientY - r.top)) / r.height)));
+  };
+  const letGo = () => onChange(0); // the spring: back to the middle
+  const arrows = useRef(new Set<string>()); // the arrow keys held down: let go of the last, and it springs back
+  const v = Math.max(-1, Math.min(1, value));
+  const low = -range; // all the way down, in semitones
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div
+        ref={ref}
+        role="slider"
+        tabIndex={0}
+        aria-label="Pitch wheel"
+        aria-valuemin={low}
+        aria-valuemax={range}
+        aria-valuenow={Math.round(v * range * 10) / 10}
+        aria-valuetext={`${semis(v, range)}${lane ? ', played by a lane' : ''}`}
+        data-testid="pitch-wheel"
+        className="relative h-24 w-11 touch-none overflow-hidden rounded-md border border-(--kys-line) bg-(--kys-desk) lg:w-9"
+        onPointerDown={(e) => {
+          e.currentTarget.setPointerCapture?.(e.pointerId);
+          set(e);
+        }}
+        onPointerMove={(e) => {
+          if (e.buttons) set(e);
+        }}
+        onPointerUp={letGo}
+        onPointerCancel={letGo}
+        onLostPointerCapture={letGo}
+        onBlur={() => {
+          arrows.current.clear();
+          letGo();
+        }}
+        onKeyDown={(e) => {
+          if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+          e.preventDefault(); // bending, not scrolling the page
+          arrows.current.add(e.key);
+          // From where the hand has it: `value` may be a lane's, while one plays the pitch wheel.
+          if (e.key === 'ArrowUp') onChange((b) => Math.min(1, b + BEND_STEP));
+          else onChange((b) => Math.max(-1, b - BEND_STEP));
+        }}
+        onKeyUp={(e) => {
+          if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+          arrows.current.delete(e.key);
+          if (arrows.current.size === 0) letGo();
+        }}
+      >
+        {/* The middle, where it rests. */}
+        <div className="absolute inset-x-0 top-1/2 h-px bg-(--kys-line)" />
+        <div
+          className={`absolute inset-x-0 ${lane ? 'kys-wheel-lane-fill' : 'bg-(--kys-accent)/25'}`}
+          style={
+            v >= 0 ? { bottom: '50%', height: `${v * 50}%` } : { top: '50%', height: `${-v * 50}%` }
+          }
+        />
+        {lane && (
+          <div
+            data-testid="bend-lane-mark"
+            className="kys-wheel-lane-mark absolute inset-y-0 left-0 w-1"
+          />
+        )}
+        <div
+          className="absolute inset-x-1 h-3 -translate-y-1/2 rounded-sm bg-(--kys-muted) shadow"
+          style={{ top: `${(1 - (v + 1) / 2) * 84 + 8}%` }}
+        />
+      </div>
+      <span className="kys-label text-(--kys-faint)">Pitch</span>
+    </div>
+  );
+}
+
 export interface KeyboardProps {
   octave: number;
   onOctave: (o: number) => void;
@@ -203,6 +305,8 @@ export interface KeyboardProps {
   wheelSays?: WheelSays | null;
   /** A lane is playing the wheel now. */
   wheelLane?: boolean;
+  /** The pitch wheel, beside the mod wheel. Absent: the synth has none, and none is drawn. */
+  bend?: PitchWheelProps | null;
   hold: boolean;
   onHold: (h: boolean) => void;
   noteOn: (n: number) => void;
@@ -216,6 +320,7 @@ export function Keyboard({
   onWheel,
   wheelSays = null,
   wheelLane = false,
+  bend = null,
   hold,
   onHold,
   noteOn,
@@ -315,6 +420,8 @@ export function Keyboard({
   return (
     // min-w-0: a grid cell would otherwise grow to the keys' full width and widen the page.
     <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
+      {/* Left of the mod wheel, as on the Minimoog. */}
+      {bend && <PitchWheel {...bend} />}
       <ModWheel value={wheel} onChange={onWheel} says={wheelSays} lane={wheelLane} />
       <div ref={scroller} className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
         <div className="min-w-[980px] lg:min-w-[620px]">
