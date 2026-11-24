@@ -329,17 +329,21 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
 
   /**
    * The hand's wheels, sent now, or after a value already handed over for later on each, so the hardware ends on them;
-   * and not while a patch loads, which would set them back.
+   * and not while a patch loads, which would set them back. Noted as handed over, so a value the next run sends on the
+   * wheel sooner goes again after it (`ccOut`).
    */
   function rest(owed: [cc: number, value: number][]) {
     const now = clock.now();
-    for (const [cc, v] of owed)
-      out(ccMessage(channel, cc, v), Math.max(now, holdUntil, ccAt.get(cc) ?? now));
+    for (const [cc, v] of owed) {
+      const at = Math.max(now, holdUntil, ccAt.get(cc) ?? now);
+      out(ccMessage(channel, cc, v), at);
+      ccAt.set(cc, at);
+    }
   }
 
   /**
-   * Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. `rest`: the run
-   * ends here, so a wheel a lane moved goes back to the hand's; not on a silence.
+   * Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. `restWheels`: the
+   * run ends here, so a wheel a lane moved goes back to the hand's; not on a silence.
    */
   function release(keepClock = false, restWheels = true) {
     const now = clock.now();

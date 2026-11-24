@@ -1569,6 +1569,22 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     expect(at).toBeGreaterThanOrEqual(PROGRAM_LEAD_MS);
   });
 
+  it('ends on the next run’s wheel when it starts straight after a Stop whose put-back waits for a patch (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    t.s.setProgram({ program: 5 });
+    start(t, modded([[0, { w: 127 }]]));
+    t.s.pump();
+    t.now = 5;
+    t.s.message({ type: 'stopPattern' });
+    t.s.setProgram(null);
+    t.s.message({ type: 'pattern', loop: modded([[0, { w: 90 }]]), bpm: 60, run: 2 });
+    t.s.event(ev({ frame: 5 }));
+    t.s.pump();
+    const last = [...cc1(t.sent)].sort((a, b) => a[0] - b[0]).at(-1);
+    expect(last?.[1]).toBe(90);
+  });
+
   it('leaves the wheel where the lane has it through a silence mid-run', () => {
     const t = setup();
     t.s.setCcs(wheel);
