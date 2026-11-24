@@ -92,6 +92,8 @@ describe('onWheel', () => {
     expect(onWheel(() => 5)(c)).toBe(0.25);
     expect(onWheel(() => 0)(c)).toBe(0);
     expect(onWheel(() => null)(c)).toBeNull();
+    // Below 0 is the knob at 0: squaring it must not push the wheel up.
+    expect(onWheel(() => -1)(c)).toBe(0);
   });
 
   it('agrees with the Model D: the wheel there gives the depth the knob would', () => {

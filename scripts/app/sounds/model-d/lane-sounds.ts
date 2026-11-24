@@ -23,7 +23,9 @@ export const onWheel =
   (depth: Lane, panel = 0): Lane =>
   (c) => {
     const d = depth(c);
-    return typeof d === 'number' ? Math.max(0, (d / 10) ** 2 - (panel / 10) ** 2) : d;
+    if (typeof d !== 'number') return d;
+    // A position below 0 is the knob at 0, as the panel clamps it: squared, it would push the wheel up.
+    return Math.max(0, (Math.max(0, d) / 10) ** 2 - (Math.max(0, panel) / 10) ** 2);
   };
 
 /** The LFO rate for `perBeat` cycles a beat at `bpm`. */

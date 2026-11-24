@@ -402,7 +402,7 @@ export function wheelWordsProblems(s: LaneSoundSpec): string[] {
   if (!lanes.has(WHEEL)) return [];
   const problems: string[] = [];
   if (!/mod wheel/i.test(s.how)) problems.push('its how never names the mod wheel');
-  if (!s.steps.some((st) => /wheel/i.test(st.why)))
+  if (!s.steps.some((st) => /mod wheel|the wheel/i.test(st.why)))
     problems.push('no step says the wheel brings the modulation in');
   if (!s.tweaks.some((t) => tweakNamesLane(t, WHEEL) && /mod wheel lane/i.test(t.try)))
     problems.push('no tweak redraws the mod wheel lane');

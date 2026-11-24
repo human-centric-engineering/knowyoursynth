@@ -125,9 +125,9 @@ const isBaseline = (v: unknown): v is Baseline =>
  * the `brand` tags, what it says about a control or area (`help`, which says how the app works: the sequencer took
  * over the riff's transport in t-80, and the sequencer synths' buttons in t-85), and the buttons that drive the app's
  * sequencer (`seqButtons`), which the prototype has no sequencer for, and the Default patch (`defaultPatch`), which the
- * prototype never had, and the wheels a pattern's lanes play (`performance`). A control may also gain a `name` where the prototype's has none, so the app and the lesson text
- * show what it is rather than its id (t-192); a name the prototype gives must still match. None of these changes the
- * sound.
+ * prototype never had, and the wheels a pattern's lanes play (`performance`). A control may also gain a `name`
+ * where the prototype's has none, so the app and the lesson text show what it is rather than its id (t-192); a name
+ * the prototype gives must still match. None of these changes the sound.
  */
 function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
   const OMIT = new Set([
