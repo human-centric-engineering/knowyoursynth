@@ -1686,6 +1686,29 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
       expect(cc1(t.sent).at(-1)?.[1]).toBe(20);
     });
 
+    it('leaves the wheel to the player once back, when the lane left it where the hand had it', () => {
+      let hand = 20;
+      const moving: CcLookup = Object.assign(
+        (set: Record<string, unknown>, lanes?: readonly string[]): [number, number][] =>
+          lanes?.includes('w') ? [[1, typeof set.w === 'number' ? set.w : hand]] : [],
+        { rest: (): [number, number][] => [[1, hand]] }
+      );
+      const t = setup();
+      t.s.setCcs(moving);
+      // The lane's last value is the hand's: nothing to put back as it gives way.
+      start(t, withLane([[0, { w: 20 }]]));
+      t.run(300);
+      t.s.message({ type: 'patternEdit', loop: loop([[0.5, 60, 0.25]]) });
+      t.s.pump();
+      expect(cc1(t.sent)).toEqual([[0, 20]]);
+      // The hand moves on, and the loop is sent again, played on and stopped: the wheel is the player's by now.
+      hand = 90;
+      t.s.message({ type: 'patternEdit', loop: loop([[0.5, 60, 0.25]]) });
+      t.run(1200);
+      t.s.message({ type: 'stopPattern' });
+      expect(cc1(t.sent)).toEqual([[0, 20]]);
+    });
+
     it('centres pitch bend on Stop after its lane is taken off mid-run', () => {
       const bend: CcLookup = Object.assign(
         (set: Record<string, unknown>, lanes?: readonly string[]): [number, number][] =>

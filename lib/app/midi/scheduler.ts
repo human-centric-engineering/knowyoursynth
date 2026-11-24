@@ -673,13 +673,14 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     if (!ccs) return;
     const keep = new Set(ccs({}, lanesOf(c.loop)).map(([cc]) => cc));
     const owed = restOwed(keep);
-    if (owed.length === 0) return;
-    // After a value gathered from a loop before, which would otherwise land on top of it.
-    catchUp(now);
-    for (const [cc, v] of owed) {
-      ccOut(cc, v, Math.max(now, due));
-      moved.delete(cc);
+    if (owed.length > 0) {
+      // After a value gathered from a loop before, which would otherwise land on top of it.
+      catchUp(now);
+      for (const [cc, v] of owed) ccOut(cc, v, Math.max(now, due));
     }
+    // Every wheel the loop has no lane for is back, one already at the hand's too: it is the player's from here, not
+    // put back again later as the hand moves.
+    for (const [cc] of ccs.rest?.() ?? []) if (!keep.has(cc)) moved.delete(cc);
   }
 
   /** The values in effect gathered in `behind`, sent now: before anything later is. */

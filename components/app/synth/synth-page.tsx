@@ -1479,7 +1479,7 @@ function Synth({
   }, [seqBendLane, midiOut.sending, seq.playing]);
   // Playing along: the lanes' wheels as ghosts, and how closely the hand follows them.
   const { ghost } = seq;
-  const follow = usePlayAlong({ on: alongPlaying, ghost, wheel, bend, run: seq.loaded });
+  const follow = usePlayAlong({ on: alongPlaying, ghost, wheel, bend, run: seq.opened });
   const along = useMemo(
     () =>
       alongPlaying

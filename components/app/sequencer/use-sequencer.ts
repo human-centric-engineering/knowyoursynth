@@ -317,6 +317,8 @@ export interface Sequencer {
   canPlayAlong: boolean;
   /** With play-along on, what the wheel lanes set on the step being heard: the ghost on the wheels. Else null. */
   ghost: ControlValues | null;
+  /** Counts the patterns put in the sequencer (opened, or a sound's riff): what is played along with is another. */
+  opened: number;
 }
 
 /** An Undo step: the pattern, and for one a whole new pattern replaced, what it was named and saved as. */
@@ -484,6 +486,7 @@ export function useSequencer({
     setQuantiseState(on);
   }, []);
   const [playAlong, setPlayAlongState] = useState(false);
+  const [opened, setOpened] = useState(0);
   const playAlongRef = useRef(false);
   const [liveMode, setLiveModeState] = useState<LiveMode>('overdub');
   const liveModeRef = useRef<LiveMode>('overdub');
@@ -785,6 +788,7 @@ export function useSequencer({
     const edited = past.current.length > 0;
     patternRef.current = p;
     setPattern(p);
+    setOpened((n) => n + 1);
     setLoaded(null);
     setBaseline(JSON.stringify(p));
     past.current = edited ? [...past.current.slice(-(UNDO_DEPTH - 1)), was] : [];
@@ -807,6 +811,7 @@ export function useSequencer({
       heldRef.current++;
       patternRef.current = next;
       setPattern(next);
+      setOpened((n) => n + 1);
       setLoaded(from);
       setBaseline(JSON.stringify(next));
       if (!o.quiet) past.current = [...past.current.slice(-(UNDO_DEPTH - 1)), was];
@@ -1295,10 +1300,13 @@ export function useSequencer({
   const canPlayAlong =
     !!lanes &&
     (pattern.lanes ?? []).some((id) => isPerformanceId(id) && !!laneControl(lanes.def, id));
-  // A pattern with no wheel lane to ride has nothing to play along with: it plays as written.
+  // A pattern with no wheel lane to ride has nothing to play along with: it plays as written. Nothing to replay: without
+  // a wheel lane, the loop is the same either way.
   useEffect(() => {
-    if (!canPlayAlong && playAlongRef.current) setPlayAlong(false);
-  }, [canPlayAlong, setPlayAlong]);
+    if (canPlayAlong || !playAlongRef.current) return;
+    playAlongRef.current = false;
+    setPlayAlongState(false);
+  }, [canPlayAlong]);
 
   return {
     pattern,
@@ -1341,6 +1349,7 @@ export function useSequencer({
     setPlayAlong,
     canPlayAlong,
     ghost,
+    opened,
   };
 }
 
