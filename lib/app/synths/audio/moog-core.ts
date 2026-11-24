@@ -9,6 +9,8 @@
 // Transliterated from the prototype's `prototype/src/audio/moog-core.js` (D3): same names, order and arithmetic, so
 // the ported engine renders the recorded baseline sample for sample. Types added; nothing else.
 import type { MoogParams, MoogVco } from '@/lib/app/synths/contract';
+import { LOCK_MAX_HZ, createBeatLock, snapStage, snapStep } from '@/lib/app/synths/audio/beat-lock';
+import type { ClockAt } from '@/lib/app/synths/audio/subharm-core';
 
 const range = (n: number): number[] => Array.from({ length: n }, (_, i) => i + 1);
 export const MOOG_SLOTS: Record<'vco' | 'drv' | 'vca' | 'env' | 'mix' | 'mult' | 'ctl', number> = {
@@ -139,8 +141,13 @@ export interface MoogMeters {
 
 /** What `createMoog` hands back to the voice. */
 export interface Moog {
-  /** Take new settings: `m` = EngineParams `moog`, `used` = the signal names some cable reads. */
-  set: (m: MoogParams, used: Set<string>) => void;
+  /**
+   * Take new settings: `m` = EngineParams `moog`, `used` = the signal names some cable reads, `follow` = the 960 keeps
+   * to the app's clock (`EngineParams.follow`).
+   */
+  set: (m: MoogParams, used: Set<string>, follow?: boolean) => void;
+  /** The app's master clock (`f-own-sequencer`): the 960 locks to it while it follows. */
+  clock: (at: ClockAt) => void;
   /** One sample: `note` = the key pitch (MIDI, already glided), `gate` = a key is held. */
   step: (note: number, gate: boolean) => void;
   /** Envelope slot i's level (0-based). */
@@ -299,7 +306,14 @@ export function createMoog(
     prevSh: 0,
     prevIn: new Float64Array(8),
     btn: null as S960['btn'] | null,
+    // locked to the app's clock: where the stage began and how long it lasts, in beats from the run's first beat (0 =
+    // not known until the pulses give the beat's rate)
+    at: 0,
+    len: 0,
   };
+  // the 960 follows the app's clock (`EngineParams.follow`), and the pulses it locks to
+  let follow = false;
+  const lock = createBeatLock(sr);
   // 962 sequential switch, 911A trigger delay, 995 attenuators
   const sw = {
     on: false,
@@ -336,7 +350,8 @@ export function createMoog(
   }
 
   /** `m` = EngineParams `moog`; `used` = the set of signal names some cable reads. */
-  function set(m: MoogParams, used: Set<string>) {
+  function set(m: MoogParams, used: Set<string>, follows = false) {
+    follow = follows;
     const uses = (prefix: string): boolean => {
       for (const u of used) if (u.startsWith(prefix)) return true;
       return false;
@@ -726,6 +741,8 @@ export function createMoog(
     }
 
     // ── 960 sequential controller ──
+    // the clock's messages are taken every sample, so a run started while the 960 is unpatched is still counted
+    const le = lock.step();
     if (sq.on && sq.p) {
       const q = sq.p;
       const on = ev(DI.s960on),
@@ -748,17 +765,42 @@ export function createMoog(
       sq.prevSh = sh;
       const rowV = (r: number): number => (q.rows[r][sq.st] / 10) * q.range[r];
       // the clock: FREQUENCY RANGE and VERNIER, its control input at 1 V/oct, and row C when it controls the timing
-      const cv = ev(DI.s960cv) + (q.timing ? rowV(2) : 0);
-      const hz = Math.min(q.hz * Math.exp(cv * Math.LN2), sr * 0.2);
-      if (sq.run) {
-        sq.ph += hz / sr;
+      const rate = (): number =>
+        Math.min(q.hz * Math.exp((ev(DI.s960cv) + (q.timing ? rowV(2) : 0)) * Math.LN2), sr * 0.2);
+      // Following the app's clock, a clock slow enough to be a tempo is locked to the beat (`beat-lock.ts`): Start puts
+      // it on stage 1 at the run's first beat, each stage lasts a whole division of the beat (row C timing: a whole
+      // number of pulses), and Stop holds it. Faster, it is an oscillator, and runs free.
+      const locked = follow && q.hz <= LOCK_MAX_HZ;
+      if (locked) {
+        if (le === 'start') {
+          sq.st = 0;
+          if (q.mode[0] === 'skip') advance960();
+          sq.run = true;
+          sq.at = 0;
+          sq.len = 0;
+        } else if (le === 'stop') sq.run = false;
+        if (lock.running()) {
+          const bps = lock.bps(),
+            b = lock.beat();
+          const len = (): number => (q.timing ? snapStage(rate(), bps) : snapStep(rate(), bps));
+          if (sq.len === 0 && bps > 0) sq.len = len();
+          // the grid keeps time while the 960 is held (OSC OFF, a STOP stage), so it moves on again on the beat
+          while (sq.len > 0 && b >= sq.at + sq.len - 1e-9) {
+            sq.at += sq.len;
+            if (sq.run) advance960();
+            sq.len = len();
+          }
+          sq.ph = sq.len > 0 ? (b - sq.at) / sq.len : 0;
+        }
+      } else if (sq.run) {
+        sq.ph += rate() / sr;
         if (sq.ph >= 1) {
           sq.ph -= Math.floor(sq.ph);
           advance960();
         }
       }
       // clock pulses: high for 90 % of each cycle while running
-      S[SI.s960clk] = sq.run && sq.ph < 0.9 ? 5 : 0;
+      S[SI.s960clk] = sq.run && (!locked || lock.running()) && sq.ph < 0.9 ? 5 : 0;
       S[SI.s960a] = rowV(0);
       S[SI.s960b] = rowV(1);
       S[SI.s960c] = rowV(2);
@@ -851,5 +893,5 @@ export function createMoog(
     for (let i = 0; i < vca.length; i++) out.amp[i] = vca[i].on ? Math.min(vca[i].g, 1) : 0;
     return out;
   }
-  return { set, step, envLevel, seqState, meters };
+  return { set, clock: (at: ClockAt) => lock.clock(at), step, envLevel, seqState, meters };
 }

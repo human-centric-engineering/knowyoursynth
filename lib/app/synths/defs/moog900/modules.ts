@@ -1817,7 +1817,22 @@ export function cm1a(r: Rack, x0: number, y0: number, id = 'cm1a'): void {
 }
 
 /** The app's own output, printed on a blank panel. Not part of the hardware. */
-export function appOut(r: Rack, x0: number, y0: number, hp: number, label: string): void {
+/** The app's switch that keeps the 960 to the app's clock (`appOut`'s `follow960`), and what `toEngine()` reads. */
+export const FOLLOW_960 = 'out.follow960';
+
+/**
+ * The app's own output, on a blank panel. With `follow960` (a system with the 960) it also carries the app's switch
+ * that keeps the 960 to the app's clock (`f-own-sequencer`): on, the bar's Play starts it on stage 1 and its steps land
+ * on the beat; off, it free-runs on its own oscillator, as the hardware does.
+ */
+export function appOut(
+  r: Rack,
+  x0: number,
+  y0: number,
+  hp: number,
+  label: string,
+  opts: { follow960?: boolean } = {}
+): void {
   blank(r, x0, y0, hp, label);
   const w = hp * HP,
     cx = x0 + w / 2;
@@ -1883,6 +1898,7 @@ export function appOut(r: Rack, x0: number, y0: number, hp: number, label: strin
       help: 'What you hear. This socket is not on the hardware: there you would patch to a mixer or audio interface. Both jacks go to the same mono output.',
     });
   });
+  if (opts.follow960) follow960Switch(r, cx, y0);
   r.areas.push({
     id: 'appout',
     label: 'Output (app only)',
@@ -1890,6 +1906,48 @@ export function appOut(r: Rack, x0: number, y0: number, hp: number, label: strin
     keywords: 'output speaker audio out volume hear',
     rects: [{ x: x0 + 2, y: y0 + 1, w: w - 4, h: ROW_H - 2 }],
     help: 'The app’s own output, printed on a blank panel: nothing is heard until a cable reaches it. The real system has no master output; you patch whatever you want to hear to your mixer, and this is that cable’s other end.',
+  });
+}
+
+/** The 960's FREE / BEAT switch, under the app's output on its panel (`appOut`). */
+function follow960Switch(r: Rack, cx: number, y0: number): void {
+  r.decor.push({
+    t: 'rect',
+    x: cx - 52,
+    y: y0 + 258,
+    w: 104,
+    h: 78,
+    r: 8,
+    fill: 'none',
+    stroke: '#e0a040',
+    sw: 1.6,
+    dash: '6 4',
+  });
+  (
+    [
+      ['960 CLOCK', cx, 276, 9, 700],
+      ['FREE', cx - 36, 304, 7, 600],
+      ['BEAT', cx + 36, 304, 7, 600],
+      ['THIS APP ONLY', cx, 328, 7, 500],
+    ] as const
+  ).forEach(([text, x, y, size, weight]) =>
+    r.decor.push({ t: 'text', x, y: y0 + y, text, size, anchor: 'middle', weight, fill: '#e0a040' })
+  );
+  r.controls.push({
+    id: FOLLOW_960,
+    type: 'rocker',
+    x: cx,
+    y: y0 + 301,
+    w: 30,
+    h: 16,
+    color: 'black',
+    kind: 'bool',
+    def: true,
+    labelPos: 'none',
+    label: '960 CLOCK',
+    name: '960 CLOCK (app)',
+    module: 'mod',
+    help: 'Not on the hardware. At BEAT the 960 keeps to the app’s tempo: Play starts it on stage 1 with the drums, each step lands on an even division of the beat, and Stop stops it. At FREE it runs on its own clock, as the real 960 does, and drifts against the beat. A 960 clock fast enough to be a tone always runs free.',
   });
 }
 
@@ -2595,8 +2653,11 @@ export function m903a(r: Rack, x0: number, y0: number, id = 'm903a'): void {
  * definition still returns (`.context/app/synths.md`). The three systems' prototype files each spell this out.
  */
 export function rackToEngine(r: Rack, v: ControlValues): EngineParams {
+  const moog = rackEngine(r, v);
   return {
-    moog: rackEngine(r, v),
+    moog,
+    // a 960 at BEAT runs on the app's clock (`f-own-sequencer`); without that switch the rack follows nothing
+    ...(moog.s960 && v[FOLLOW_960] === true ? { follow: true } : null),
     osc: [],
     noise: { level: 0, color: 'white' },
     ext: { level: 0 },

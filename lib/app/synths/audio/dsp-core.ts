@@ -1037,7 +1037,7 @@ function createVoice(
     const first = !P;
     P = p;
     compile();
-    if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)));
+    if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)), !!p.follow);
     if (p.solar) solar.set(p.solar);
     if (p.subharm) subharm.set(p.subharm, !!p.follow);
     else subharm.off();
@@ -1362,9 +1362,14 @@ function createVoice(
     phrase!.len = Math.round(phrase!.beats * spb);
     if (old) phrasePos = Math.min(Math.round((phrasePos * phrase!.len) / old), phrase!.len - 1);
   }
+  /** The app's clock to the synth's own sequencer: the Subharmonicon's, or the Moog 960 (`f-own-sequencer`). */
+  function ownClock(at: ClockAt) {
+    if (P && P.moog) moog.clock(at);
+    else subharm.clock(at);
+  }
   function stopPhrase(silent?: boolean) {
     if (!phrase) return;
-    if (phrase.clocked) subharm.clock('stop');
+    if (phrase.clocked) ownClock('stop');
     phrase = null;
     for (const n of Array.from(phraseHeld)) noteOff(n);
     phraseHeld.clear();
@@ -1399,7 +1404,7 @@ function createVoice(
         subharm.press(m.name);
         break;
       case 'clock':
-        subharm.clock(m.at);
+        ownClock(m.at);
         break;
       case 'offset':
         vOff = m.semi || 0;
@@ -2250,20 +2255,20 @@ function createVoice(
     for (let i = 0; i < n; i++) {
       // ── phrase player ──
       if (phrase) {
-        // The riff is the Subharmonicon's master clock, as the pattern player is (`f-own-sequencer`): a start, then
-        // pulses at CLOCK_PPQ a beat, each sent before the riff's notes on its sample so a key there finds the
-        // sequencers running.
-        if (p.subharm) {
+        // The riff is the master clock of a synth's own sequencer, as the pattern player is (`f-own-sequencer`): the
+        // Subharmonicon's, or a 960 that follows the clock. A start, then pulses at CLOCK_PPQ a beat, each sent before
+        // the riff's notes on its sample so a key there finds the sequencers running.
+        if (p.subharm || (mg && p.follow)) {
           if (!phrase.clocked) {
             phrase.clocked = true;
             // back on the synth part-way through the riff, its clock starts again on the riff's next sixteenth
             phrase.pulse =
               Math.ceil((phrasePos / phrase.spb) * SUBHARM_PPQ - 1e-6) * (CLOCK_PPQ / SUBHARM_PPQ);
-            subharm.clock('start');
+            ownClock('start');
           }
           while (Math.round((phrase.pulse * phrase.spb) / CLOCK_PPQ) <= phrasePos) {
             phrase.pulse++;
-            subharm.clock('pulse');
+            ownClock('pulse');
           }
         } else if (phrase.clocked) {
           // the voice has left the Subharmonicon (`off()` ended its run): a start is owed if it comes back
