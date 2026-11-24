@@ -17,7 +17,13 @@ import { execFileSync } from 'node:child_process';
 import modelD from '@/lib/app/synths/defs/model-d';
 import type { Preset } from '@/lib/app/synths/contract';
 import { validatePreset } from '@/lib/app/synths/validate';
-import { buildPattern, checkHands, riffOf, writeLaneSounds } from '@/scripts/app/sounds/lane-kit';
+import {
+  buildPattern,
+  checkHands,
+  laneInWords,
+  riffOf,
+  writeLaneSounds,
+} from '@/scripts/app/sounds/lane-kit';
 import { LANE_SOUNDS, READOUTS } from '@/scripts/app/sounds/model-d/lane-sounds';
 
 const ROOT = resolve(import.meta.dirname, '..', '..', '..', '..');
@@ -118,7 +124,7 @@ const batch = {
     sounds: [`model-d/${spec.id}`],
     research: {
       work: `An original pattern, written for ${spec.name}`,
-      part: `The whole song: parts ${pattern.chain.map((p) => 'AB'[p]).join('')}, with ${pattern.lanes!.join(' and ')} on mod lanes`,
+      part: `The whole song: parts ${pattern.chain.map((p) => 'AB'[p]).join('')}, with ${pattern.lanes!.map((id) => laneInWords(id)).join(' and ')} on mod lanes`,
       originalKey: null,
       originalBpm: null,
       leads: [],
