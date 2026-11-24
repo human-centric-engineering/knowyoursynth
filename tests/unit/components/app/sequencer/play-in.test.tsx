@@ -627,6 +627,27 @@ describe('live record of the performance wheels (t-310)', () => {
     expect(lane(WHEEL)[7]).toBeUndefined();
   });
 
+  it('drops a wheel move not yet written when Undo takes the take back', async () => {
+    await start();
+    move(WHEEL, 0.3, 1.2);
+    settle();
+    move(WHEEL, 0.6, 2.2);
+    act(() => state.undo());
+    settle();
+    expect(state.pattern.lanes).toBeUndefined();
+    expect(state.canUndo).toBe(false);
+  });
+
+  it('records the wheel at the position it was left at again, after an Undo', async () => {
+    await start();
+    move(WHEEL, 0.6, 1.2);
+    settle();
+    act(() => state.undo());
+    move(WHEEL, 0.6, 3.2);
+    settle();
+    expect(lane(WHEEL)[3]).toBe(0.6);
+  });
+
   it('writes a wheel moved just before Stop', async () => {
     await start();
     move(WHEEL, 0.8, 3.1);

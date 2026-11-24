@@ -695,9 +695,42 @@ export function useSequencer({
     [commit]
   );
 
+  // A wheel ridden moves every frame: what live record has of it waits, by wheel, as its newest position on the step it
+  // was moved in, and is written at most once every LANE_RESEND_MS, or at once when that wheel moves on to another step.
+  const wheelPending = useRef(new Map<string, { part: number; step: number; v: number }>());
+  /** Where each wheel was last moved to, so the same position given again writes nothing. */
+  const wheelLast = useRef(new Map<string, number>());
+  const wheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flushWheels = useCallback(() => {
+    if (wheelTimer.current) clearTimeout(wheelTimer.current);
+    wheelTimer.current = null;
+    const due = [...wheelPending.current];
+    wheelPending.current.clear();
+    if (due.length === 0) return;
+    // In the group the notes recorded are in, so a take (notes and wheels within 1.2 s of each other) is one Undo.
+    edit((q) => due.reduce((r, [id, w]) => recordWheel(r, w.part, w.step, id, w.v), q), {
+      group: 'live',
+    });
+  }, [edit]);
+  /** Forget every wheel move not yet written: the pattern it was moved over is being replaced. */
+  const dropWheels = useCallback(() => {
+    if (wheelTimer.current) clearTimeout(wheelTimer.current);
+    wheelTimer.current = null;
+    wheelPending.current.clear();
+    wheelLast.current.clear();
+  }, []);
+  useEffect(
+    () => () => {
+      if (wheelTimer.current) clearTimeout(wheelTimer.current);
+    },
+    []
+  );
+
   const undo = useCallback(() => {
     const snap = past.current[past.current.length - 1];
     if (!snap) return;
+    // A wheel move not yet written belongs to the take being undone.
+    dropWheels();
     past.current = past.current.slice(0, -1);
     setUndoable(past.current.length > 0);
     const was = patternRef.current;
@@ -711,7 +744,7 @@ export function useSequencer({
     }
     lastGroup.current = null;
     if (playingRef.current) resend(prev, was);
-  }, [resend, setLoaded, setBaseline]);
+  }, [resend, setLoaded, setBaseline, dropWheels]);
 
   // The sound's riff, imported whenever it changes (another sound chosen): a fresh pattern with nothing to undo. Keyed
   // on the riff's content, so a sound read again with the same riff (a rename, a save) keeps the edits.
@@ -722,6 +755,7 @@ export function useSequencer({
     const ph = riffRef.current;
     if (!riffKey || !ph || riffKey === loadedKey.current) return;
     loadedKey.current = riffKey;
+    dropWheels();
     const p = fromRiff(ph, tempoRef.current);
     // An edited pattern is not lost to another sound's riff: one Undo brings it back. An unedited one is just the
     // last sound's riff, and is not worth an Undo.
@@ -736,7 +770,7 @@ export function useSequencer({
     setUndoable(edited);
     lastGroup.current = null;
     if (playingRef.current) restart(p);
-  }, [riffKey, restart, replaced, setLoaded, setBaseline]);
+  }, [riffKey, restart, replaced, setLoaded, setBaseline, dropWheels]);
 
   const load = useCallback(
     (p: Pattern, from: LoadedPattern, o: LoadOptions = {}) => {
@@ -747,6 +781,7 @@ export function useSequencer({
       }
       // On a synth with a tempo knob the knob sets the tempo, as it does for the sound's riff.
       const next = tempoRef.current ? { ...ok.data, bpm: clampBpm(tempoRef.current) } : ok.data;
+      dropWheels();
       const was = replaced();
       heldRef.current++;
       patternRef.current = next;
@@ -760,7 +795,7 @@ export function useSequencer({
       if (playingRef.current) restart(next, !o.quiet && o.countIn !== false);
       return next;
     },
-    [restart, replaced, setLoaded, setBaseline]
+    [restart, replaced, setLoaded, setBaseline, dropWheels]
   );
 
   const held = useCallback(() => heldRef.current, []);
@@ -823,12 +858,15 @@ export function useSequencer({
       const p = patternRef.current;
       const at = where(p, beat);
       if (!at) return false;
+      // A run started over one playing (a clock's Start) writes the last run's wheel, and starts with nothing moved.
+      flushWheels();
+      wheelLast.current.clear();
       playingRef.current = true;
       setPlaying(true);
       start(p, at, bpm, countIn);
       return true;
     },
-    [engine, ensureAudio, start]
+    [engine, ensureAudio, start, flushWheels]
   );
   const play = useCallback(
     (o?: PlayOptions) =>
@@ -872,30 +910,6 @@ export function useSequencer({
   const liveHits = useRef(new Map<number, LiveHit>());
   /** Which steps live record has written on this time round, so notes struck together are a chord. */
   const liveStruck = useRef(new Set<string>());
-
-  // A wheel ridden moves every frame: what live record has of it waits, by wheel, as its newest position on the step it
-  // was moved in, and is written at most once every LANE_RESEND_MS, or at once when that wheel moves on to another step.
-  const wheelPending = useRef(new Map<string, { part: number; step: number; v: number }>());
-  /** Where each wheel was last moved to, so the same position given again writes nothing. */
-  const wheelLast = useRef(new Map<string, number>());
-  const wheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const flushWheels = useCallback(() => {
-    if (wheelTimer.current) clearTimeout(wheelTimer.current);
-    wheelTimer.current = null;
-    const due = [...wheelPending.current];
-    wheelPending.current.clear();
-    if (due.length === 0) return;
-    // In the group the notes recorded are in, so a take (notes and wheels within 1.2 s of each other) is one Undo.
-    edit((q) => due.reduce((r, [id, w]) => recordWheel(r, w.part, w.step, id, w.v), q), {
-      group: 'live',
-    });
-  }, [edit]);
-  useEffect(
-    () => () => {
-      if (wheelTimer.current) clearTimeout(wheelTimer.current);
-    },
-    []
-  );
 
   const halt = useCallback(() => {
     playingRef.current = false;
@@ -1145,13 +1159,13 @@ export function useSequencer({
       const value = c ? wheelValue(c, v) : null;
       const here = heardAt();
       if (value === null || !here || wheelLast.current.get(id) === value) return;
-      wheelLast.current.set(id, value);
       const p = patternRef.current;
       // A wheel goes on the step it was moved in, quantised or not: it has no start to be early or late.
       const { slot } = placeHit(here.at, patternLength(p), p.swing, false);
       const step = here.info.order[slot];
       const part = here.info.part;
       if (step === undefined || !p.parts[part]) return;
+      wheelLast.current.set(id, value);
       const was = wheelPending.current.get(id);
       if (was && (was.part !== part || was.step !== step)) flushWheels();
       wheelPending.current.set(id, { part, step, v: value });

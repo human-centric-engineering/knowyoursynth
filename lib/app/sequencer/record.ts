@@ -146,7 +146,7 @@ export function wheelValue(c: Control, v: number): number | null {
 
 /**
  * `p` with lane `id` set to `v` on step `step` of part `part`, the lane added after the others if the pattern has none
- * for it. A pattern with every lane taken (`MAX_LANES`) and none for `id` is left as it is.
+ * for it. A pattern with every lane taken (`MAX_LANES`) and none for `id`, or without that step, is left as it is.
  */
 export function recordWheel(
   p: Pattern,
@@ -155,5 +155,6 @@ export function recordWheel(
   id: string,
   v: number
 ): Pattern {
+  if (!p.parts[part]?.steps[step]) return p;
   return setLaneStep(addLane(p, id), part, step, id, v);
 }

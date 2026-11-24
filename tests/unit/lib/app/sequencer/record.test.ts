@@ -205,4 +205,10 @@ describe('live record: a wheel moved (t-310)', () => {
     const full = { ...newPattern(8), lanes: Array.from({ length: MAX_LANES }, (_, i) => `c${i}`) };
     expect(recordWheel(full, 0, 3, WHEEL, 0.5)).toBe(full);
   });
+
+  it('leaves a pattern without the step, or the part, as it is, adding no empty lane', () => {
+    const p = newPattern(8);
+    expect(recordWheel(p, 0, 14, WHEEL, 0.5)).toBe(p);
+    expect(recordWheel(p, 2, 3, WHEEL, 0.5)).toBe(p);
+  });
 });
