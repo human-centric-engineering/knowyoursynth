@@ -9,9 +9,6 @@ import { describe, it, expect } from 'vitest';
 
 import {
   BEND,
-  BEND_STEP,
-  isLaneEcho,
-  WHEEL_STEP,
   PITCH_BEND,
   isPerformanceId,
   shownBend,
@@ -227,20 +224,5 @@ describe('the pitch wheel (`f-performance-wheels` t-309)', () => {
     p.lanes = [BEND];
     p.parts[0].steps[0] = { ...p.parts[0].steps[0], mod: { [BEND]: -1 } };
     expect(PatternSchema.safeParse(p).success).toBe(true);
-  });
-});
-
-describe('isLaneEcho (t-310)', () => {
-  it('takes a wheel within a MIDI step of a value the lane sent lately as its echo', () => {
-    // 0.6 sent as CC 76 comes back as 76 / 127
-    expect(isLaneEcho([0.6, 0.2], 76 / 127, WHEEL_STEP)).toBe(true);
-    expect(isLaneEcho([0.6, 0.2], 25 / 127, WHEEL_STEP)).toBe(true);
-    expect(isLaneEcho([-0.5], -0.5 + BEND_STEP, BEND_STEP)).toBe(true);
-  });
-
-  it('takes anything else as the hand', () => {
-    expect(isLaneEcho([0.6, 0.2], 0.9, WHEEL_STEP)).toBe(false);
-    expect(isLaneEcho([0.6], 0.6 + 3 * WHEEL_STEP, WHEEL_STEP)).toBe(false);
-    expect(isLaneEcho([], 0.6, WHEEL_STEP)).toBe(false);
   });
 });

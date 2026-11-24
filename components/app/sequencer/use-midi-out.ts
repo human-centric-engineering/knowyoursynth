@@ -43,7 +43,13 @@ import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
 import { createMidiScheduler, type MidiProgram } from '@/lib/app/midi/scheduler';
-import { ccLookup, validLaneCc, type LaneCcs, type LaneHand } from '@/lib/app/midi/cc';
+import {
+  ccLookup,
+  createEchoLog,
+  validLaneCc,
+  type LaneCcs,
+  type LaneHand,
+} from '@/lib/app/midi/cc';
 import type { SynthDef } from '@/lib/app/synths/contract';
 import { playable } from '@/lib/app/synths/audio/pattern-player';
 import type { SynthEvent, SynthMessage } from '@/lib/app/synths/audio/dsp-core';
@@ -127,6 +133,11 @@ export interface MidiOut {
   /** Sets it, or none (`null`): a bank goes only with a program. */
   setProgram: (program: MidiProgram | null) => void;
   out: SequencerOut;
+  /**
+   * Whether a wheel's position in from MIDI now is one sent out lately on the mod wheel (CC 1) or pitch bend: the
+   * output's own message echoed back (a DAW returning it), not the hand (t-310).
+   */
+  echoed: (kind: 'wheel' | 'bend', v: number) => boolean;
 }
 
 /** What MIDI out needs of the page's engine: its audio context, for the clock. */
@@ -174,9 +185,24 @@ export function useMidiOut({
   const clock = id !== null && (choice.clock ?? []).includes(id);
 
   const { output } = midi;
+  const echoes = useMemo(() => createEchoLog(), []);
   useEffect(() => {
-    s.setPort(sending && id ? output(id) : null, choice.channel - 1);
-  }, [s, sending, id, output, choice.channel, midi.outputs]);
+    const port = sending && id ? output(id) : null;
+    // What goes to the port is noted on the way, so its wheels coming back in can be told from the hand's.
+    s.setPort(
+      port && {
+        send: (data, at) => {
+          echoes.sent(data, at ?? performance.now(), performance.now());
+          port.send(data, at);
+        },
+      },
+      choice.channel - 1
+    );
+  }, [s, echoes, sending, id, output, choice.channel, midi.outputs]);
+  const echoed = useCallback(
+    (kind: 'wheel' | 'bend', v: number) => echoes.echoed(kind, v, performance.now()),
+    [echoes]
+  );
   // Only while notes are sent there: Synth only, or the output unplugged, sends it nothing. Nor while a clock is
   // followed: a DAW echoing it back would have the two clocks chase each other.
   useEffect(() => s.setClock(sending && clock && !following), [s, sending, clock, following]);
@@ -310,5 +336,6 @@ export function useMidiOut({
     setCc,
     setProgram,
     out,
+    echoed,
   };
 }

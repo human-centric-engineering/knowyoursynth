@@ -87,10 +87,6 @@ import {
   shownWheel,
   splitPerformance,
   wheelSays,
-  isLaneEcho,
-  BEND_STEP,
-  ECHO_KEPT,
-  WHEEL_STEP,
 } from '@/lib/app/synths/lib/performance';
 import { tempoBpmOf } from '@/lib/app/synths/lib/tempo';
 import { predict } from '@/lib/app/synths/lib/predict';
@@ -1286,26 +1282,25 @@ function Synth({
   const [wheelLaneOn, setWheelLaneOn] = useState(false);
   const wheelLaneSending = useRef(false);
   // In live record the wheel coming in is the hand recording the lane (t-310), so it is taken while the lane sends,
-  // except a value the lane has just sent: that is its echo, not the hand.
+  // except what MIDI out has just sent on it: that is its echo, not the hand. Its centre too, which an echo can be.
   const liveRecording = useRef(false);
-  const laneSent = useRef<{ wheel: number[]; bend: number[] }>({ wheel: [], bend: [] });
+  const echoed = useRef<(kind: 'wheel' | 'bend', v: number) => boolean>(() => false);
   const wheelIn = useCallback((v: number) => {
-    if (!wheelLaneSending.current) setWheel(v);
-    else if (liveRecording.current && !isLaneEcho(laneSent.current.wheel, v, WHEEL_STEP))
+    if (!wheelLaneSending.current || (liveRecording.current && !echoed.current('wheel', v)))
       setWheel(v);
   }, []);
-  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's. Its centre always is: a
-  // keyboard's wheel let go of during the run springs back once, and an echo of the centre puts nothing wrong. Not at
-  // all on a synth without a pitch wheel, where it would change nothing but re-render the page per message.
+  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's. Outside live record its
+  // centre always is: a keyboard's wheel let go of during the run springs back once, and an echo of the centre puts
+  // nothing wrong. Not at all on a synth without a pitch wheel, where it would change nothing but re-render the page
+  // per message.
   const [bendLaneOn, setBendLaneOn] = useState(false);
   const bendLaneSending = useRef(false);
   const hasBend = Boolean(synthDef.performance?.bend);
   const bendIn = useCallback(
     (v: number) => {
       if (!hasBend) return;
-      if (v === 0 || !bendLaneSending.current) setBend(v);
-      else if (liveRecording.current && !isLaneEcho(laneSent.current.bend, v, BEND_STEP))
-        setBend(v);
+      if (!bendLaneSending.current) setBend(v);
+      else if (liveRecording.current ? !echoed.current('bend', v) : v === 0) setBend(v);
     },
     [hasBend]
   );
@@ -1343,6 +1338,10 @@ function Synth({
     silent: loading,
     wheels: midiWheels,
   });
+  const { echoed: midiEchoed } = midiOut;
+  useEffect(() => {
+    echoed.current = midiEchoed;
+  }, [midiEchoed]);
 
   // SynthDef `tempo` names the control that sets the riff's BPM (the TB-303's TEMPO knob, or the Subharmonicon's through
   // its `tempoMap`): the riff plays at that speed, and turning it while the riff plays moves the riff with it.
@@ -1393,24 +1392,22 @@ function Synth({
   useEffect(() => {
     liveRecording.current = seqKeys === 'live';
   }, [seqKeys]);
-  useEffect(() => seqWheelIn(WHEEL, wheel), [seqWheelIn, wheel]);
-  useEffect(() => seqWheelIn(BEND, bend), [seqWheelIn, bend]);
+  // Given only when the hand moves it, not again when the sequencer itself changes.
+  const wheelsGiven = useRef({ wheel, bend });
+  useEffect(() => {
+    if (wheelsGiven.current.wheel === wheel) return;
+    wheelsGiven.current.wheel = wheel;
+    seqWheelIn(WHEEL, wheel);
+  }, [seqWheelIn, wheel]);
+  useEffect(() => {
+    if (wheelsGiven.current.bend === bend) return;
+    wheelsGiven.current.bend = bend;
+    seqWheelIn(BEND, bend);
+  }, [seqWheelIn, bend]);
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
   const wheelShown = shownWheel(modShown) ?? wheel;
   // And the pitch wheel, on a synth that has one.
   const bendShown = shownBend(modShown) ?? bend;
-  // What the lanes have sent lately, for telling their echo from the hand: the last few, as MIDI out sends ahead of
-  // the step heard and the echo comes back after it.
-  const laneWheel = shownWheel(modShown);
-  const laneBend = shownBend(modShown);
-  useEffect(() => {
-    if (laneWheel !== undefined)
-      laneSent.current.wheel = [laneWheel, ...laneSent.current.wheel].slice(0, ECHO_KEPT);
-  }, [laneWheel]);
-  useEffect(() => {
-    if (laneBend !== undefined)
-      laneSent.current.bend = [laneBend, ...laneSent.current.bend].slice(0, ECHO_KEPT);
-  }, [laneBend]);
   const bendRange = synthDef.performance?.bend?.range ?? null;
   // Where the wheel sends modulation (`wheelReach`), from the panel as it plays: said under the wheel and, while it is
   // up, shown on the panel.

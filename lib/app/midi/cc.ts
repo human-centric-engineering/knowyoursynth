@@ -133,3 +133,43 @@ export function ccLookup(
     look.rest = () => own.map(({ id, cc, send }): [number, number] => [cc, send(hand.at(id))]);
   return look;
 }
+
+/**
+ * How long after it is due a mod wheel or pitch-bend message sent out is still taken as the one coming back in: a DAW
+ * echoing MIDI out to MIDI in returns it within a few ms; this allows for a slow round trip (t-310).
+ */
+export const ECHO_WINDOW_MS = 300;
+
+/** The mod wheel (CC 1) and pitch bend sent out lately, to tell their echo coming back in from the hand (t-310). */
+export interface EchoLog {
+  /** `data` handed to the port at `now`, due at `at` (ms, `performance.now()`): kept if it is a wheel's. */
+  sent(data: readonly number[], at: number, now: number): void;
+  /** Whether the wheel's position `v` (mod wheel 0..1, pitch wheel -1..1) in from MIDI at `now` is one sent lately. */
+  echoed(kind: 'wheel' | 'bend', v: number, now: number): boolean;
+}
+
+/** A wheel message as what it sets, whatever its channel: `w` and CC 1's value, or `b` and the 14-bit bend. */
+const echoKey = (data: readonly number[]): string | null => {
+  const [st = 0, d1 = 0, d2 = 0] = data;
+  if ((st & 0xf0) === 0xb0 && d1 === 1) return `w${d2}`;
+  if ((st & 0xf0) === 0xe0 && data.length >= 3) return `b${((d2 & 0x7f) << 7) | (d1 & 0x7f)}`;
+  return null;
+};
+
+export function createEchoLog(): EchoLog {
+  /** Per wheel message, until when its echo is expected. */
+  const until = new Map<string, number>();
+  return {
+    sent(data, at, now) {
+      const key = echoKey(data);
+      if (!key) return;
+      for (const [k, t] of until) if (t < now) until.delete(k);
+      until.set(key, Math.max(until.get(key) ?? 0, Math.max(at, now) + ECHO_WINDOW_MS));
+    },
+    echoed(kind, v, now) {
+      const key =
+        kind === 'wheel' ? `w${Math.round(Math.min(1, Math.max(0, v)) * 127)}` : `b${bendValue(v)}`;
+      return (until.get(key) ?? -Infinity) >= now;
+    },
+  };
+}

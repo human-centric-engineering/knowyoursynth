@@ -339,7 +339,10 @@ round). The page still sounds the key as it is played.
   with all eight taken). Only a move writes: a wheel left still writes nothing new, so its lane keeps what the steps
   had. A wheel ridden is written at most every 50 ms, its newest position on each step; a move just before Stop is
   written. Wheels and notes recorded within 1.2 s of each other are one Undo, so a take is one. While live record is
-  on, a MIDI keyboard's wheels are taken as the hand's even while a lane sends them over MIDI out.
+  on, a MIDI keyboard's wheels are taken as the hand's even while a lane sends them over MIDI out, except a value MIDI
+  out has sent on CC 1 or pitch bend within the last 300 ms (`createEchoLog`): that is its echo (a DAW returning it),
+  centre included. A hand that comes back to such a value within that time is not recorded there. A wheel move not
+  yet written is dropped on Undo or another pattern, and written before a new run starts over one playing.
 
 ### Arp
 

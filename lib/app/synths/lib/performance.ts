@@ -208,17 +208,3 @@ export function wheelSays(def: SynthDef, routing: SynthRouting, reach: WheelReac
     hint: doors.length ? `${said.charAt(0).toUpperCase()}${said.slice(1)}.` : undefined,
   };
 }
-
-/** A mod wheel's step over MIDI (CC 1, 0–127), and a pitch wheel's (14-bit pitch bend, -1–1). */
-export const WHEEL_STEP = 1 / 127;
-export const BEND_STEP = 1 / 8192;
-/** How many of a wheel lane's latest values a wheel coming in from MIDI is checked against as their echo (t-310). */
-export const ECHO_KEPT = 3;
-
-/**
- * Whether `v`, a wheel in from MIDI while its lane sends, is the lane's own value echoed back (a DAW returning it):
- * within a MIDI step or two (`step`) of one the lane sent lately (`sent`), not the hand.
- */
-export function isLaneEcho(sent: readonly number[], v: number, step: number): boolean {
-  return sent.some((s) => Math.abs(s - v) <= step * 1.5);
-}
