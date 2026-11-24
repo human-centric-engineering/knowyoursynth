@@ -534,3 +534,51 @@ function cleanupAndSetup(over: Partial<KeyboardProps>) {
   cleanup();
   return setup(over);
 }
+
+describe('Keyboard wheels played along with (`f-performance-wheels` t-311)', () => {
+  const pitch = (): PitchWheelProps => ({ value: 0, range: 2, lane: false, onChange: vi.fn() });
+
+  it('draws no ghost and no sign when not playing along', () => {
+    setup({ bend: pitch() });
+    expect(screen.queryByTestId('wheel-ghost')).toBeNull();
+    expect(screen.queryByTestId('bend-ghost')).toBeNull();
+    expect(screen.queryByTestId('follow-sign')).toBeNull();
+  });
+
+  it('draws the lanes’ wheels as ghosts where they are, and says it to a screen reader', () => {
+    setup({
+      wheel: 0.2,
+      bend: pitch(),
+      along: { wheel: 0.75, bend: 0.5, follow: null },
+    });
+    // 84% of the wheel's height is its travel, 8% each end the thumb's margin.
+    expect(screen.getByTestId('wheel-ghost').style.top).toBe(`${0.25 * 84 + 8}%`);
+    expect(screen.getByTestId('bend-ghost').style.top).toBe(`${0.25 * 84 + 8}%`);
+    const mod = screen.getByRole('slider', { name: 'Mod wheel' });
+    expect(mod.getAttribute('aria-valuetext')).toBe('20%, the lane at 75%');
+    const pb = screen.getByRole('slider', { name: 'Pitch wheel' });
+    expect(pb.getAttribute('aria-valuetext')).toBe('centre, the lane at +1 semitone');
+  });
+
+  it('leaves out the ghost of a wheel whose lane sets nothing on the step', () => {
+    setup({ bend: pitch(), along: { wheel: 0.5, bend: null, follow: null } });
+    expect(screen.getByTestId('wheel-ghost')).toBeTruthy();
+    expect(screen.queryByTestId('bend-ghost')).toBeNull();
+  });
+
+  it('asks the hand to follow until there is something to say, then says how close it is', () => {
+    const { rerender, props } = setup({ along: { wheel: 0.5, bend: null, follow: null } });
+    const sign = () => screen.getByTestId('follow-sign');
+    expect(sign().textContent).toBe('Follow the outline');
+    expect(sign().getAttribute('data-level')).toBe('none');
+    rerender(
+      <Keyboard
+        {...props}
+        along={{ wheel: 0.5, bend: null, follow: { level: 'with', label: 'Right with it' } }}
+      />
+    );
+    expect(sign().textContent).toBe('Right with it');
+    expect(sign().getAttribute('data-level')).toBe('with');
+    expect(sign().getAttribute('role')).toBe('status');
+  });
+});

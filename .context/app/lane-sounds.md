@@ -158,6 +158,9 @@ synth's wheel may scale a knob's amount rather than add to it, so read its `toEn
   reads it the same way.
 - **Readouts and records** name it "Mod wheel" (`laneReadout`) and "the mod wheel" in a batch's research
   (`laneInWords`).
+- **Riding it along** comes free (t-311): any pattern with a wheel lane the synth plays offers Ride the wheel, the
+  lane shown as a ghost for the learner to follow ([`sequencer.md`](./sequencer.md), Riding the wheel). Nothing per
+  synth or per sound, so a wheel song is written to be ridden: moves a hand can follow, not one-step jumps.
 
 ### The Model D's ten
 

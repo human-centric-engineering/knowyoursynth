@@ -4964,6 +4964,31 @@ a.kys-link-shot:hover .kys-link-title {
   background: color-mix(in srgb, var(--wheel-lane) 30%, transparent);
 }
 
+/* Playing along (t-311): where the lane has the wheel, as an outline in the lanes' amber for the hand to follow. */
+.kys-wheel-ghost,
+.kys-follow {
+  --wheel-lane: #ffb547;
+}
+:root:not(.dark) .kys-wheel-ghost,
+:root:not(.dark) .kys-follow {
+  --wheel-lane: #d07514;
+}
+.kys-wheel-ghost {
+  border: 2px dashed var(--wheel-lane);
+  pointer-events: none;
+}
+/* How closely the hand follows: amber while there is nothing to say yet, then by how close. */
+.kys-follow {
+  color: var(--wheel-lane);
+  white-space: nowrap;
+}
+.kys-follow[data-level='with'] {
+  color: var(--kys-good);
+}
+.kys-follow[data-level='off'] {
+  color: var(--kys-faint);
+}
+
 /* The mod wheel's way through the routing while it is up: lit, as thick as the wheel is pushed. */
 .kys-route-edge.is-wheel .kys-route-line {
   stroke: currentColor;

@@ -12,7 +12,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Sequencer } from '@/components/app/sequencer/sequencer';
 import {
   useSequencer,
@@ -613,6 +613,128 @@ describe('live record of the performance wheels (t-310)', () => {
     expect(state.pattern.lanes).toBeUndefined();
     expect(steps().every((s) => s.mod === undefined)).toBe(true);
     expect(state.canUndo).toBe(false);
+  });
+
+  describe('riding the wheel along with the pattern (t-311)', () => {
+    /** A take on the mod wheel: 0.4 on step 2 and 0.8 on step 5, written, then out of live record. */
+    const recorded = async () => {
+      await start();
+      move(WHEEL, 0.4, 1.2);
+      move(WHEEL, 0.8, 4.2);
+      settle();
+      act(() => state.setKeys('edit'));
+    };
+
+    it('sends the loop without the wheel lane while on, and with it again once off', async () => {
+      await recorded();
+      expect(state.canPlayAlong).toBe(true);
+      expect(lastOf('patternEdit')?.loop.lanes).toEqual([WHEEL]);
+      act(() => state.setPlayAlong(true));
+      const along = lastOf('patternEdit')?.loop;
+      expect(along?.lanes).toBeUndefined();
+      expect(along?.mods).toBeUndefined();
+      act(() => state.setPlayAlong(false));
+      expect(lastOf('patternEdit')?.loop.lanes).toEqual([WHEEL]);
+    });
+
+    it('shows the lane’s wheel as the ghost, not on the wheel, on the step being heard', async () => {
+      await recorded();
+      act(() => state.setPlayAlong(true));
+      at(1.5);
+      act(() => void vi.advanceTimersByTime(50));
+      expect(state.ghost).toEqual({ [WHEEL]: 0.4 });
+      expect(state.modShown).toBeNull();
+      act(() => state.setPlayAlong(false));
+      act(() => void vi.advanceTimersByTime(50));
+      expect(state.ghost).toBeNull();
+      expect(state.modShown).toEqual({ [WHEEL]: 0.4 });
+    });
+
+    it('is the transport’s Ride the wheel, there only once the pattern has a wheel lane', async () => {
+      function WithSequencer() {
+        const [lanes] = useState<LaneTarget>(() => ({ def: WHEELS, paramsFor: () => null }));
+        const seq = useSequencer({ engine, ensureAudio: async () => true, riff: null, lanes });
+        state = seq;
+        return (
+          <Sequencer
+            seq={seq}
+            def={WHEELS}
+            panel={{ [WHEEL]: 0, [BEND]: 0 }}
+            playing={seq.playing}
+            onPlay={() => void seq.play()}
+            onStop={seq.stop}
+            transport
+          />
+        );
+      }
+      render(<WithSequencer />);
+      const ride = () => screen.queryByRole('button', { name: /Ride the wheel/ });
+      expect(ride()).toBeNull();
+      act(() => state.setKeys('live'));
+      await act(async () => {
+        await state.play({ countIn: false });
+      });
+      fire(loopEvent({ beats: 4 }));
+      move(WHEEL, 0.4, 1.2);
+      settle();
+      expect(ride()).not.toBeNull();
+      fireEvent.click(ride()!);
+      expect(state.playAlong).toBe(true);
+      fireEvent.click(ride()!);
+      expect(state.playAlong).toBe(false);
+    });
+
+    it('writes no wheel moves over the lane in live record while on', async () => {
+      await recorded();
+      const was = lane(WHEEL);
+      act(() => state.setKeys('live'));
+      act(() => state.setPlayAlong(true));
+      move(WHEEL, 0.1, 1.2);
+      move(WHEEL, 0.9, 7.2);
+      settle();
+      expect(lane(WHEEL)).toEqual(was);
+    });
+
+    it('writes a move made just before it goes on at once, and nothing after', async () => {
+      await start();
+      move(WHEEL, 0.4, 1.2);
+      act(() => state.setPlayAlong(true));
+      expect(lane(WHEEL)[1]).toBe(0.4);
+      move(WHEEL, 0.9, 7.2);
+      settle();
+      expect(lane(WHEEL)[7]).toBeUndefined();
+    });
+
+    it('does not send the loop again as the panel moves, when only its wheel lanes would play', async () => {
+      function Moving({ n }: { n: number }) {
+        // a new target each render, as the page's is when the wheel moves
+        const lanes = useMemo<LaneTarget>(() => ({ def: WHEELS, paramsFor: () => null }), [n]);
+        state = useSequencer({ engine, ensureAudio: async () => true, riff: null, lanes });
+        return null;
+      }
+      const { rerender } = render(<Moving n={0} />);
+      act(() => state.setKeys('live'));
+      await act(async () => {
+        await state.play({ countIn: false });
+      });
+      fire(loopEvent({ beats: 4 }));
+      move(WHEEL, 0.4, 1.2);
+      settle();
+      act(() => state.setKeys('edit'));
+      act(() => state.setPlayAlong(true));
+      settle(200);
+      const edits = sentOf('patternEdit').length;
+      for (let n = 1; n <= 4; n++) {
+        rerender(<Moving n={n} />);
+        settle(100);
+      }
+      expect(sentOf('patternEdit').length).toBe(edits);
+    });
+
+    it('is not offered on a pattern without a wheel lane', async () => {
+      await start();
+      expect(state.canPlayAlong).toBe(false);
+    });
   });
 
   it('starts another Undo for a wheel moved again after a pause', async () => {

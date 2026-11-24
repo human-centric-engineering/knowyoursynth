@@ -17,6 +17,7 @@ import { useWheelWanted } from '@/components/app/synth/sound-map';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { notesStore, useStore } from '@/components/app/synth/stores';
 import type { WheelSays } from '@/lib/app/synths/lib/performance';
+import type { FollowSign } from '@/lib/app/sequencer/play-along';
 
 const WHITE = [0, 2, 4, 5, 7, 9, 11];
 const HAS_SHARP: Record<number, boolean> = { 0: true, 2: true, 5: true, 7: true, 9: true };
@@ -121,16 +122,45 @@ function WheelLamp({ says, value, id }: { says: WheelSays; value: number; id: st
   );
 }
 
+/** The lane's wheel position as an outline over the wheel, for the hand to follow (play-along, t-311). */
+function WheelGhost({ top, testId }: { top: number; testId: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      data-testid={testId}
+      className="kys-wheel-ghost absolute inset-x-1 h-3 -translate-y-1/2 rounded-sm"
+      style={{ top: `${top}%` }}
+    />
+  );
+}
+
+/** Under the wheels while playing along: how closely the hand is following the lane. */
+function FollowLine({ follow }: { follow: FollowSign | null }) {
+  return (
+    <span
+      role="status"
+      data-testid="follow-sign"
+      data-level={follow?.level ?? 'none'}
+      className="kys-follow kys-label"
+    >
+      {follow?.label ?? 'Follow the outline'}
+    </span>
+  );
+}
+
 function ModWheel({
   value,
   onChange,
   says,
   lane,
+  ghost = null,
 }: {
   value: number;
   onChange: Dispatch<SetStateAction<number>>;
   says: WheelSays | null;
   lane: boolean;
+  /** Where the lane has the wheel, for the hand to follow (play-along, t-311); null: none on this step. */
+  ghost?: number | null;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const saysId = useId();
@@ -150,7 +180,7 @@ function ModWheel({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(value * 100)}
-        aria-valuetext={`${Math.round(value * 100)}%${lane ? ', played by a lane' : ''}`}
+        aria-valuetext={`${Math.round(value * 100)}%${lane ? ', played by a lane' : ''}${ghost !== null ? `, the lane at ${Math.round(ghost * 100)}%` : ''}`}
         aria-describedby={says && !wanted ? saysId : undefined}
         className={`relative h-24 w-11 touch-none overflow-hidden rounded-md border bg-(--kys-desk) lg:w-9 ${wanted ? 'kys-pulse border-dashed border-(--kys-text) outline-2 outline-offset-2 outline-(--kys-text) outline-dashed' : 'border-(--kys-line)'}`}
         onPointerDown={(e) => {
@@ -181,6 +211,9 @@ function ModWheel({
           className="absolute inset-x-1 h-3 -translate-y-1/2 rounded-sm bg-(--kys-muted) shadow"
           style={{ top: `${(1 - value) * 84 + 8}%` }}
         />
+        {ghost !== null && (
+          <WheelGhost top={(1 - Math.max(0, Math.min(1, ghost))) * 84 + 8} testId="wheel-ghost" />
+        )}
       </div>
       {wanted || !says ? (
         <span className={`kys-label ${wanted ? 'text-(--kys-text)' : 'text-(--kys-faint)'}`}>
@@ -208,6 +241,14 @@ export interface PitchWheelProps {
   lane: boolean;
 }
 
+/** Playing along with a pattern's wheel lanes (t-311): where they have the wheels, and how closely the hand follows. */
+export interface WheelsAlong {
+  /** The lanes' mod wheel and pitch wheel on the step being heard; null where a wheel has none there. */
+  wheel: number | null;
+  bend: number | null;
+  follow: FollowSign | null;
+}
+
 /** How far an arrow key moves the pitch wheel. Let go of the key and it springs back. */
 const BEND_STEP = 0.25;
 
@@ -218,7 +259,13 @@ const semis = (v: number, range: number) => {
     : `${r > 0 ? '+' : '−'}${Math.abs(r)} semitone${Math.abs(r) === 1 ? '' : 's'}`;
 };
 
-function PitchWheel({ value, onChange, range, lane }: PitchWheelProps) {
+function PitchWheel({
+  value,
+  onChange,
+  range,
+  lane,
+  ghost = null,
+}: PitchWheelProps & { ghost?: number | null }) {
   const ref = useRef<HTMLDivElement>(null);
   const set = (e: PointerEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -239,7 +286,7 @@ function PitchWheel({ value, onChange, range, lane }: PitchWheelProps) {
         aria-valuemin={low}
         aria-valuemax={range}
         aria-valuenow={Math.round(v * range * 10) / 10}
-        aria-valuetext={`${semis(v, range)}${lane ? ', played by a lane' : ''}`}
+        aria-valuetext={`${semis(v, range)}${lane ? ', played by a lane' : ''}${ghost !== null ? `, the lane at ${semis(Math.max(-1, Math.min(1, ghost)), range)}` : ''}`}
         data-testid="pitch-wheel"
         className="relative h-24 w-11 touch-none overflow-hidden rounded-md border border-(--kys-line) bg-(--kys-desk) lg:w-9"
         onPointerDown={(e) => {
@@ -288,6 +335,12 @@ function PitchWheel({ value, onChange, range, lane }: PitchWheelProps) {
           className="absolute inset-x-1 h-3 -translate-y-1/2 rounded-sm bg-(--kys-muted) shadow"
           style={{ top: `${(1 - (v + 1) / 2) * 84 + 8}%` }}
         />
+        {ghost !== null && (
+          <WheelGhost
+            top={(1 - (Math.max(-1, Math.min(1, ghost)) + 1) / 2) * 84 + 8}
+            testId="bend-ghost"
+          />
+        )}
       </div>
       <span className="kys-label text-(--kys-faint)">Pitch</span>
     </div>
@@ -307,6 +360,8 @@ export interface KeyboardProps {
   wheelLane?: boolean;
   /** The pitch wheel, beside the mod wheel. Absent: the synth has none, and none is drawn. */
   bend?: PitchWheelProps | null;
+  /** Playing along with the pattern's wheel lanes: their ghosts on the wheels, and the sign under them. */
+  along?: WheelsAlong | null;
   hold: boolean;
   onHold: (h: boolean) => void;
   noteOn: (n: number) => void;
@@ -321,6 +376,7 @@ export function Keyboard({
   wheelSays = null,
   wheelLane = false,
   bend = null,
+  along = null,
   hold,
   onHold,
   noteOn,
@@ -421,8 +477,19 @@ export function Keyboard({
     // min-w-0: a grid cell would otherwise grow to the keys' full width and widen the page.
     <div className="flex min-w-0 flex-wrap items-stretch gap-3 sm:flex-nowrap">
       {/* Left of the mod wheel, as on the Minimoog. */}
-      {bend && <PitchWheel {...bend} />}
-      <ModWheel value={wheel} onChange={onWheel} says={wheelSays} lane={wheelLane} />
+      <div className="flex flex-col items-center gap-1">
+        <div className="flex items-stretch gap-3">
+          {bend && <PitchWheel {...bend} ghost={along?.bend ?? null} />}
+          <ModWheel
+            value={wheel}
+            onChange={onWheel}
+            says={wheelSays}
+            lane={wheelLane}
+            ghost={along?.wheel ?? null}
+          />
+        </div>
+        {along && <FollowLine follow={along.follow} />}
+      </div>
       <div ref={scroller} className="kys-scroll min-w-0 flex-1 overflow-x-auto rounded-md">
         <div className="min-w-[980px] lg:min-w-[620px]">
           {/* What a finger drags to scroll the keys, since a drag on the keys plays them. */}

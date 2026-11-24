@@ -51,8 +51,8 @@ export type LaneCcs = Readonly<Record<string, number>>;
 export interface CcLookup {
   (set: ControlValues, lanes?: readonly string[]): [cc: number, value: number][];
   /**
-   * What a performance wheel goes back to when the run ends: the hand's wheel, on its CC. A lane leaves the hardware's
-   * wheel where it put it otherwise, as the hardware has no hand of the app's to return to.
+   * What a performance wheel goes back to when its lane gives way (the run ends, a loop without the lane): the hand's
+   * wheel, on its CC. A lane given a CC leaves the hardware where it put it, as there is no hand of the app's to return to.
    */
   rest?: () => [cc: number, value: number][];
 }
@@ -132,7 +132,7 @@ export function ccLookup(
     }
     return out;
   };
-  // Whether or not the lane is still on: one taken off mid-run leaves the wheel where it put it otherwise.
+  // Whether or not the lane is still on: one taken off mid-run puts the wheel back too (t-316).
   if (hand && own.length > 0)
     look.rest = () => own.map(({ id, cc, send }): [number, number] => [cc, send(hand.at(id))]);
   return look;

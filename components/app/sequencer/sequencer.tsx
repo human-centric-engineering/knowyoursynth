@@ -143,6 +143,10 @@ export const SEQ_HELP: readonly (readonly [string, string])[] = [
     'While it is on, steps set to “Only with Fill” play and steps set to “Not with Fill” do not, from the next loop.',
   ],
   [
+    'Ride the wheel',
+    'On a pattern with a mod wheel or pitch wheel lane. The lane stops playing the wheel and yours plays instead: the lane’s moves show as a dashed outline on the wheel to follow, and under the wheels it says how close you are. Off, the lane plays the wheel again.',
+  ],
+  [
     'Count-in and Metronome',
     'Count-in clicks one bar before the pattern starts, from Play or when you open another pattern while one plays. Metronome clicks every beat while it plays, louder on the first of each bar.',
   ],
@@ -638,6 +642,14 @@ export function Sequencer({
             help="Plays the pattern again from the top. Off, it plays once and stops."
             onClick={() => setP('loop', !p.loop)}
           />
+          {seq.canPlayAlong && (
+            <Toggle
+              label="Ride the wheel"
+              on={seq.playAlong}
+              help="The wheel lane stops moving the wheel. Its moves show as a dashed outline on the wheel for you to follow, with the wheel on screen or on your MIDI keyboard, and a word under the wheels says how close you are. Through MIDI out, your wheel isn’t sent: the synth’s own wheel is the one it hears."
+              onClick={() => seq.setPlayAlong(!seq.playAlong)}
+            />
+          )}
         </div>
         <div className="kys-seq-controls">
           <Encoder

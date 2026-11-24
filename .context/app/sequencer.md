@@ -541,6 +541,22 @@ hand's, except the centre, which always is: a keyboard's wheel let go of during 
 it would leave the voice bent after Stop. A synth without a pitch wheel ignores pitch bend in, and an input unplugged
 mid-bend centres the bend. For both wheels, changing MIDI out's port or channel mid-run, or the page going (`pagehide`), puts a wheel a lane moved back
 to the hand's on the one being left (a bend left there detunes everything played on it after).
+Wherever a wheel's lane gives way mid-run, MIDI out puts the wheel back to the hand's, as the voice plays it there
+(t-316): at the start of a loop without the lane (a chained part whose steps set no lane value goes out as one), and
+at once when an edit takes the lane off. The scheduler keeps the wheels a lane moved since they last went back
+(`moved`), which neither an edit nor a new lookup clears, so Stop finds them too (t-315).
+
+**Riding the wheel** (t-311, `lib/app/sequencer/play-along.ts`). On a pattern with a wheel lane the synth plays, the
+transport's **Ride the wheel** turns the lanes off the wheels: loops are compiled without them (`alongPattern`), so the
+voice plays the hand's wheels, and MIDI out puts a wheel a lane moved back to the hand's once, then leaves the
+hardware's wheel to the player, as with no lane. The switch replays the loop playing so it is heard at once. What the
+lanes set on the step being heard comes back as `ghost` rather than in `modShown`, drawn on each wheel as a dashed
+outline. `usePlayAlong` compares the hand with the ghost every 100 ms (`closeness`, across the wheel's travel) into a
+running score that leans to the last second (`follow`), and the line under the wheels says Right with it, Close or
+Catch it up (`followSign`) once there are five samples. A step whose wheel lanes set nothing isn't counted. It is the
+page's, not the pattern's: it isn't saved, and goes off on a pattern without a wheel lane. Another pattern opened
+mid-run starts the score again. Live record writes no wheel moves while it is on: the hand follows the lane, it does
+not write over it.
 
 **Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
 (t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once
