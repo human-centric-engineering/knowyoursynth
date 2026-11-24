@@ -228,6 +228,9 @@ describe('createEchoLog (t-310)', () => {
     log.sent([0xb0, 1, 64], 1000, 1000);
     log.sent([0xb0, 74, 65], 1000, 1000);
     log.sent([0x90, 60, 100], 1000, 1000);
+    // a CC cut short is not the wheel at 0
+    log.sent([0xb0, 1], 1000, 1000);
+    expect(log.echoed('wheel', 0, 1010)).toBe(false);
     expect(log.echoed('wheel', 65 / 127, 1010)).toBe(false);
     expect(log.echoed('bend', 0, 1010)).toBe(false);
     expect(log.echoed('wheel', 64 / 127, 1010)).toBe(true);

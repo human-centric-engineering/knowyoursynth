@@ -216,6 +216,13 @@ describe('sending', () => {
     expect(result.current.out.sending).toBe(true);
   });
 
+  it('plays on, letting go of nothing, when another device is plugged or unplugged', async () => {
+    await playing();
+    sh101.state = 'disconnected';
+    act(() => access.onstatechange?.());
+    expect(data(td3).slice(1)).toEqual([]);
+  });
+
   it('lets go when the page is hidden', async () => {
     await playing();
     act(() => void window.dispatchEvent(new Event('pagehide')));

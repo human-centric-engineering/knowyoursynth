@@ -42,7 +42,7 @@ import { z } from 'zod';
 import type { Midi, MidiPortInfo, MidiStatus } from '@/components/app/synth/use-midi';
 import { STORAGE_KEYS, useStoredPref } from '@/components/app/synth/storage';
 import { audioClock, type AudioClockSource } from '@/lib/app/midi/clock';
-import { createMidiScheduler, type MidiProgram } from '@/lib/app/midi/scheduler';
+import { createMidiScheduler, type MidiPort, type MidiProgram } from '@/lib/app/midi/scheduler';
 import {
   ccLookup,
   createEchoLog,
@@ -186,18 +186,22 @@ export function useMidiOut({
 
   const { output } = midi;
   const echoes = useMemo(() => createEchoLog(), []);
+  // What goes to the port is noted on the way, so its wheels coming back in can be told from the hand's. One wrapper
+  // per output, so the scheduler is handed the same port while the output is the same (and keeps the run going).
+  const tapped = useRef(new WeakMap<MidiPort, MidiPort>());
   useEffect(() => {
     const port = sending && id ? output(id) : null;
-    // What goes to the port is noted on the way, so its wheels coming back in can be told from the hand's.
-    s.setPort(
-      port && {
+    let tap = port ? tapped.current.get(port) : undefined;
+    if (port && !tap) {
+      tap = {
         send: (data, at) => {
           echoes.sent(data, at ?? performance.now(), performance.now());
           port.send(data, at);
         },
-      },
-      choice.channel - 1
-    );
+      };
+      tapped.current.set(port, tap);
+    }
+    s.setPort(tap ?? null, choice.channel - 1);
   }, [s, echoes, sending, id, output, choice.channel, midi.outputs]);
   const echoed = useCallback(
     (kind: 'wheel' | 'bend', v: number) => echoes.echoed(kind, v, performance.now()),

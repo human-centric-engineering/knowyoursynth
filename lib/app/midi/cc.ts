@@ -151,7 +151,7 @@ export interface EchoLog {
 /** A wheel message as what it sets, whatever its channel: `w` and CC 1's value, or `b` and the 14-bit bend. */
 const echoKey = (data: readonly number[]): string | null => {
   const [st = 0, d1 = 0, d2 = 0] = data;
-  if ((st & 0xf0) === 0xb0 && d1 === 1) return `w${d2}`;
+  if ((st & 0xf0) === 0xb0 && d1 === 1 && data.length >= 3) return `w${d2}`;
   if ((st & 0xf0) === 0xe0 && data.length >= 3) return `b${((d2 & 0x7f) << 7) | (d1 & 0x7f)}`;
   return null;
 };

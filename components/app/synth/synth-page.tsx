@@ -1285,6 +1285,8 @@ function Synth({
   // except what MIDI out has just sent on it: that is its echo, not the hand. Its centre too, which an echo can be.
   const liveRecording = useRef(false);
   const echoed = useRef<(kind: 'wheel' | 'bend', v: number) => boolean>(() => false);
+  /** A wheel position the hand's wheel took that live record is not to write: the centre, possibly an echo. */
+  const unrecorded = useRef<{ bend?: number }>({});
   const wheelIn = useCallback((v: number) => {
     if (!wheelLaneSending.current || (liveRecording.current && !echoed.current('wheel', v)))
       setWheel(v);
@@ -1300,7 +1302,13 @@ function Synth({
     (v: number) => {
       if (!hasBend) return;
       if (!bendLaneSending.current) setBend(v);
-      else if (liveRecording.current ? !echoed.current('bend', v) : v === 0) setBend(v);
+      else if (!liveRecording.current || !echoed.current('bend', v)) {
+        if (v === 0 || liveRecording.current) setBend(v);
+      } else if (v === 0) {
+        // The centre, which may be the lane's echoed: the hand's wheel goes back to it, but it is not recorded.
+        unrecorded.current.bend = 0;
+        setBend(0);
+      }
     },
     [hasBend]
   );
@@ -1402,7 +1410,9 @@ function Synth({
   useEffect(() => {
     if (wheelsGiven.current.bend === bend) return;
     wheelsGiven.current.bend = bend;
-    seqWheelIn(BEND, bend);
+    const skip = unrecorded.current.bend === bend;
+    unrecorded.current.bend = undefined;
+    if (!skip) seqWheelIn(BEND, bend);
   }, [seqWheelIn, bend]);
   // The mod wheel as the keyboard strip and the routing draw it: a lane's while one sets it, else the hand's.
   const wheelShown = shownWheel(modShown) ?? wheel;

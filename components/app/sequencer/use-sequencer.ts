@@ -712,6 +712,11 @@ export function useSequencer({
       group: 'live',
     });
   }, [edit]);
+  // The timer writes with the newest `flushWheels`, not the one of the render that set it.
+  const flushRef = useRef(flushWheels);
+  useEffect(() => {
+    flushRef.current = flushWheels;
+  }, [flushWheels]);
   /** Forget every wheel move not yet written: the pattern it was moved over is being replaced. */
   const dropWheels = useCallback(() => {
     if (wheelTimer.current) clearTimeout(wheelTimer.current);
@@ -1169,7 +1174,7 @@ export function useSequencer({
       const was = wheelPending.current.get(id);
       if (was && (was.part !== part || was.step !== step)) flushWheels();
       wheelPending.current.set(id, { part, step, v: value });
-      wheelTimer.current ??= setTimeout(flushWheels, LANE_RESEND_MS);
+      wheelTimer.current ??= setTimeout(() => flushRef.current(), LANE_RESEND_MS);
     },
     [heardAt, flushWheels]
   );
