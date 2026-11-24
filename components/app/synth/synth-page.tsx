@@ -1270,27 +1270,23 @@ function Synth({
   // CC 1 coming back in (a DAW echoing it) is not the hand, but the controller's own wheel is (t-313): what a step the
   // lane leaves alone sends, and what live record writes (t-310). So only what MIDI out has just sent on it is dropped.
   const wheelLaneSending = useRef(false);
-  const liveRecording = useRef(false);
   const echoed = useRef<(kind: 'wheel' | 'bend', v: number) => boolean>(() => false);
   /** A wheel position the hand's wheel took that live record is not to write: the centre, possibly an echo. */
   const unrecorded = useRef<{ bend?: number }>({});
   const wheelIn = useCallback((v: number) => {
     if (!wheelLaneSending.current || !echoed.current('wheel', v)) setWheel(v);
   }, []);
-  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's. Outside live record its
-  // centre always is: a keyboard's wheel let go of during the run springs back once, and an echo of the centre puts
-  // nothing wrong. Not at all on a synth without a pitch wheel, where it would change nothing but re-render the page
-  // per message.
+  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's, and the controller's own is.
+  // Its centre always is, echoed or not: a keyboard's wheel let go of springs back once, and an echo of the centre
+  // puts nothing wrong; but one that may be an echo is not recorded. Not at all on a synth without a pitch wheel, where
+  // it would change nothing but re-render the page per message.
   const bendLaneSending = useRef(false);
   const hasBend = Boolean(synthDef.performance?.bend);
   const bendIn = useCallback(
     (v: number) => {
       if (!hasBend) return;
-      if (!bendLaneSending.current) setBend(v);
-      else if (!liveRecording.current || !echoed.current('bend', v)) {
-        if (v === 0 || liveRecording.current) setBend(v);
-      } else if (v === 0) {
-        // The centre, which may be the lane's echoed: the hand's wheel goes back to it, but it is not recorded.
+      if (!bendLaneSending.current || !echoed.current('bend', v)) setBend(v);
+      else if (v === 0) {
         unrecorded.current.bend = 0;
         setBend(0);
       }
@@ -1376,10 +1372,7 @@ function Synth({
   const { modShown } = seq;
   // The hand's wheels, on screen or from a MIDI keyboard, recorded into their lanes in live record (t-310). Only a
   // move is recorded: the sequencer writes nothing while stopped, or outside live record.
-  const { wheelIn: seqWheelIn, keys: seqKeys } = seq;
-  useEffect(() => {
-    liveRecording.current = seqKeys === 'live';
-  }, [seqKeys]);
+  const { wheelIn: seqWheelIn } = seq;
   // Given only when the hand moves it, not again when the sequencer itself changes.
   const wheelsGiven = useRef({ wheel, bend });
   useEffect(() => {

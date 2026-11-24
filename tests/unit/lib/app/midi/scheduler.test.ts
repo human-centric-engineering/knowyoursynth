@@ -1542,6 +1542,20 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     expect(cc1(t.sent).at(-1)).toEqual([200, 20]);
   });
 
+  it('puts the wheel back after the patch the run started over it calls up, not into its load (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.setProgram({ program: 5 });
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: 60, run: 2 });
+    const pc = t.sent.findIndex(([, d]) => d[0] === 0xc0);
+    const back = t.sent.findIndex(([, d]) => d[0] === 0xb0 && d[1] === 1 && d[2] === 20);
+    expect(pc).toBeGreaterThan(-1);
+    expect(back).toBeGreaterThan(pc);
+    expect(t.sent[back][0]).toBeGreaterThanOrEqual(200 + PROGRAM_LEAD_MS);
+  });
+
   it('puts the wheel back no sooner than a patch called up has loaded (t-313)', () => {
     const t = setup();
     t.s.setCcs(wheel);

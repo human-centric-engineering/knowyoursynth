@@ -41,10 +41,12 @@ const { router, engine, lane } = vi.hoisted(() => ({
   },
   lane: {
     shown: null as ControlValues | null,
-    /** A wheel lane playing and sent over MIDI out, and the mod wheel values MIDI out has just sent on it. */
+    /** Both wheels' lanes playing and sent over MIDI out, and the values MIDI out has just sent on each. */
     sending: false,
     sent: new Set<number>(),
+    sentBend: new Set<number>(),
     onWheel: null as ((v: number) => void) | null,
+    onBend: null as ((v: number) => void) | null,
   },
 }));
 
@@ -65,7 +67,7 @@ vi.mock('@/components/app/sequencer/use-sequencer', async (importOriginal) => {
         modShown: lane.shown,
         ...(lane.sending && {
           playing: true,
-          pattern: { ...seq.pattern, lanes: ['@wheel'] },
+          pattern: { ...seq.pattern, lanes: ['@wheel', '@bend'] },
         }),
       };
     },
@@ -77,6 +79,7 @@ vi.mock('@/components/app/synth/use-midi', async (importOriginal) => {
     ...real,
     useMidi: (...args: Parameters<typeof real.useMidi>) => {
       lane.onWheel = args[0].onWheel ?? null;
+      lane.onBend = args[0].onBend ?? null;
       return real.useMidi(...args);
     },
   };
@@ -91,7 +94,8 @@ vi.mock('@/components/app/sequencer/use-midi-out', async (importOriginal) => {
         ? {
             ...out,
             sending: true,
-            echoed: (kind: 'wheel' | 'bend', v: number) => kind === 'wheel' && lane.sent.has(v),
+            echoed: (kind: 'wheel' | 'bend', v: number) =>
+              (kind === 'wheel' ? lane.sent : lane.sentBend).has(v),
           }
         : out;
     },
@@ -193,7 +197,9 @@ afterEach(() => {
   lane.shown = null;
   lane.sending = false;
   lane.sent.clear();
+  lane.sentBend.clear();
   lane.onWheel = null;
+  lane.onBend = null;
   vi.restoreAllMocks();
 });
 
@@ -243,7 +249,7 @@ describe('the panel as the lanes play it (t-314)', () => {
   });
 });
 
-describe('a controller’s mod wheel while a wheel lane is sent out (t-313)', () => {
+describe('a controller’s wheels while their lanes are sent out (t-313)', () => {
   const handWheel = () =>
     document
       .querySelector('[role="slider"][aria-label="Mod wheel"]')
@@ -264,5 +270,22 @@ describe('a controller’s mod wheel while a wheel lane is sent out (t-313)', ()
     wheelIn(0.3);
     wheelIn(0.9);
     expect(handWheel()).toBe('30');
+  });
+
+  it('moves the hand’s pitch wheel too, dropping only the output’s own pitch bend coming back', () => {
+    const range = def.performance?.bend?.range ?? 0;
+    const pitchWheel = () =>
+      Number(
+        document
+          .querySelector('[role="slider"][aria-label="Pitch wheel"]')
+          ?.getAttribute('aria-valuenow')
+      );
+    lane.sending = true;
+    lane.sentBend.add(1);
+    page(null);
+    act(() => lane.onBend?.(0.5));
+    act(() => lane.onBend?.(1));
+    expect(range).toBeGreaterThan(0);
+    expect(pitchWheel()).toBeCloseTo(0.5 * range, 1);
   });
 });

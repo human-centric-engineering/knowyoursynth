@@ -171,6 +171,8 @@ export interface MidiScheduler {
 }
 
 const NO_CCS: ReadonlySet<number> = new Set();
+const lanesOf = (loop: PatternLoop): readonly string[] | undefined =>
+  Array.isArray(loop.lanes) ? loop.lanes.filter((id) => typeof id === 'string') : undefined;
 const byStart = (a: PhraseNote, b: PhraseNote) => a[0] - b[0] || a[1] - b[1];
 const sorted = (loop: PatternLoop): PhraseNote[] => [...loop.notes].sort(byStart);
 const validByte = (n: unknown): n is number =>
@@ -317,12 +319,29 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     offs.length = 0;
   }
 
+  /** A wheel a lane moved, and where it goes back to (`CcLookup.rest`): the hand's. None on the CCs in `skip`. */
+  function restOwed(skip: ReadonlySet<number> = NO_CCS): [cc: number, value: number][] {
+    return (ccs?.rest?.() ?? []).filter(([cc, v]) => {
+      const sent = ccSent.get(cc);
+      return sent !== undefined && sent !== v && !skip.has(cc);
+    });
+  }
+
+  /**
+   * The hand's wheels, sent now, or after a value already handed over for later on each, so the hardware ends on them;
+   * and not while a patch loads, which would set them back.
+   */
+  function rest(owed: [cc: number, value: number][]) {
+    const now = clock.now();
+    for (const [cc, v] of owed)
+      out(ccMessage(channel, cc, v), Math.max(now, holdUntil, ccAt.get(cc) ?? now));
+  }
+
   /**
    * Lets go of everything. With `keepClock` (a change of channel: clock has none) the clock runs on. `rest`: the run
-   * ends here, so a wheel a lane moved goes back to the hand's; not on a silence, nor on the CCs in `sends`, which the
-   * run starting now sends from its first step (t-313).
+   * ends here, so a wheel a lane moved goes back to the hand's; not on a silence.
    */
-  function release(keepClock = false, rest = true, sends: ReadonlySet<number> = NO_CCS) {
+  function release(keepClock = false, restWheels = true) {
     const now = clock.now();
     freeAt.forEach((at, n) => {
       if (at <= now) freeAt.delete(n);
@@ -340,14 +359,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     held.clear();
     downAt.clear();
     lagOf.clear();
-    // A wheel a lane moved goes back to the hand's (`CcLookup.rest`): now, or after a value already handed over for
-    // later on it, so the hardware ends on the hand's; and not while a patch loads, which would set it back.
-    if (port && rest)
-      for (const [cc, v] of ccs?.rest?.() ?? []) {
-        const sent = ccSent.get(cc);
-        if (sent !== undefined && sent !== v && !sends.has(cc))
-          out(ccMessage(channel, cc, v), Math.max(now, holdUntil, ccAt.get(cc) ?? now));
-      }
+    if (port && restWheels) rest(restOwed());
     ccSent.clear();
     offs.length = 0;
     dirty = false;
@@ -359,10 +371,12 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   /** A run from `beat` of loop `index` (both 0 but for a MIDI Continue, t-91): nothing before that beat is sent. */
   function begin(loop: PatternLoop, index: number, beat: number) {
     const mods = modsOf(loop);
-    // A run started over one playing: a wheel its first step sends goes straight to that, not back to the hand's in
-    // between, which the hardware would play for a moment.
-    const first = ccs && mods.length > 0 ? ccs(mods[0][1] ?? {}, loop.lanes) : [];
-    release(false, true, new Set(first.map(([cc]) => cc)));
+    // A run started over one playing: a wheel the new run sends (its lane sends it on every change, whatever the step
+    // sets) goes straight to that, not back to the hand's in between, which the hardware would play for a moment
+    // (t-313). The rest of them go back after the patch this run calls up has loaded.
+    const sends = ccs && mods.length > 0 ? ccs({}, lanesOf(loop)) : [];
+    const owed = restOwed(new Set(sends.map(([cc]) => cc)));
+    release(false, false);
     cur = { index, start: 0, loop, notes: sorted(loop), i: 0, mods, k: 0 };
     next = undefined;
     starts.clear();
@@ -373,6 +387,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     // Started part-way, the clock waits for the next loop's start, as it does when turned on mid-run.
     startG = clockOn && beat === 0 ? 0 : null;
     if (index === 0 && beat === 0) callUp();
+    if (port) rest(owed);
   }
 
   /** The patch, now, after the release before it, and nothing on the channel until it has loaded. */
@@ -610,11 +625,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const set = raw ?? {};
     const due = msAt(a, g);
     if (due <= now) {
-      for (const [cc, v] of ccs(set, c.loop.lanes)) behind.set(cc, v);
+      for (const [cc, v] of ccs(set, lanesOf(c.loop))) behind.set(cc, v);
       return;
     }
     catchUp(now);
-    for (const [cc, v] of ccs(set, c.loop.lanes)) ccOut(cc, v, due);
+    for (const [cc, v] of ccs(set, lanesOf(c.loop))) ccOut(cc, v, due);
   }
 
   /** The values in effect gathered in `behind`, sent now: before anything later is. */
