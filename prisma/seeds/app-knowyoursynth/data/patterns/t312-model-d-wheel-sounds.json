@@ -4152,7 +4152,7 @@
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "D minor at 128, a pumping riff: root, octave and the minor third, then C–A; the second bar ends on the flat second E♭ falling to D. B moves it to G and A. AABB. One hand on the mod wheel, up through the whole song, slowly through A’s two passes and steeply through B, and back down as the loop comes round; the other turns Oscillator 3 a fifth up half way through B, so the metal changes colour at the top of the build, and back down for A. Each A starts with the wheel where the hand has it: the lane’s A rises 0 to 10% and plays twice, so the second pass jumps back, a small move the hand makes on the downbeat. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "notes": "D minor at 128, a pumping riff: root, octave and the minor third, then C–A; the second bar ends on the flat second E♭ falling to D. B moves it to G and A. AABB. One hand on the mod wheel, up through the whole song, slowly through A’s two passes and steeply through B, and back down as the loop comes round; the other turns Oscillator 3 a fifth up half way through each pass of B, so the metal changes colour at the top of the build, and back down as that pass ends. Each A starts with the wheel where the hand has it: the lane’s A rises 0 to 10% and plays twice, so the second pass jumps back, a small move the hand makes on the downbeat. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
         "listenedAt": null
       }
     },
@@ -6054,15 +6054,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.04,
-                  "filter.emphasis": 5
-                }
-              },
-              {
-                "on": true,
-                "notes": [],
-                "mod": {
-                  "@wheel": 0.08,
+                  "@wheel": 0.06,
                   "filter.emphasis": 5
                 }
               },
@@ -6071,6 +6063,14 @@
                 "notes": [],
                 "mod": {
                   "@wheel": 0.12,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
                   "filter.emphasis": 5
                 }
               },
@@ -6196,7 +6196,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.03,
+                  "@wheel": 0.0375,
                   "filter.emphasis": 5
                 }
               },
@@ -6204,7 +6204,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.06,
+                  "@wheel": 0.075,
                   "filter.emphasis": 5
                 }
               },
@@ -6212,15 +6212,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.09,
-                  "filter.emphasis": 5
-                }
-              },
-              {
-                "on": true,
-                "notes": [],
-                "mod": {
-                  "@wheel": 0.12,
+                  "@wheel": 0.1125,
                   "filter.emphasis": 5
                 }
               },
@@ -6236,7 +6228,15 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.075,
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
                   "filter.emphasis": 5
                 }
               },
@@ -6511,7 +6511,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.036,
+                  "@wheel": 0.045,
                   "filter.emphasis": 7.29
                 }
               },
@@ -6519,7 +6519,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.072,
+                  "@wheel": 0.09,
                   "filter.emphasis": 7.4
                 }
               },
@@ -6527,7 +6527,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.108,
+                  "@wheel": 0.135,
                   "filter.emphasis": 7.5
                 }
               },
@@ -6535,7 +6535,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.144,
+                  "@wheel": 0.18,
                   "filter.emphasis": 7.14
                 }
               },
@@ -6543,7 +6543,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.18,
+                  "@wheel": 0,
                   "filter.emphasis": 6.79
                 }
               },
@@ -6551,7 +6551,7 @@
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "@wheel": 0.09,
+                  "@wheel": 0,
                   "filter.emphasis": 6.43
                 }
               },

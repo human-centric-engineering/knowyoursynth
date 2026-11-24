@@ -680,13 +680,13 @@ export const WHEEL_SOUNDS: LaneSoundSpec[] = [
             'G2 . G2 G3 | . G2 Bb2 . | G2 . G2 G3 | . F3 D3 . | A2 . A2 A3 | . A2 C3 . | Bb2 . A2 . | G2 . A2:2 .',
           lanes: {
             '@wheel': moves({ 0: 0.12, 28: 0.4, 31: 0 }),
-            // Turned a fifth up over the gap into B's second half, and back for A over its last two steps.
+            // Turned a fifth up over the gap into B's second half, and back down over its last two steps, each pass.
             'osc3.freq': moves({ 0: 0, 15: 0, 17: 7, 29: 7, 31: 0 }),
           },
         },
       ],
       notes:
-        'D minor at 128, a pumping riff: root, octave and the minor third, then C–A; the second bar ends on the flat second E♭ falling to D. B moves it to G and A. AABB. One hand on the mod wheel, up through the whole song, slowly through A’s two passes and steeply through B, and back down as the loop comes round; the other turns Oscillator 3 a fifth up half way through B, so the metal changes colour at the top of the build, and back down for A. Each A starts with the wheel where the hand has it: the lane’s A rises 0 to 10% and plays twice, so the second pass jumps back, a small move the hand makes on the downbeat.',
+        'D minor at 128, a pumping riff: root, octave and the minor third, then C–A; the second bar ends on the flat second E♭ falling to D. B moves it to G and A. AABB. One hand on the mod wheel, up through the whole song, slowly through A’s two passes and steeply through B, and back down as the loop comes round; the other turns Oscillator 3 a fifth up half way through each pass of B, so the metal changes colour at the top of the build, and back down as that pass ends. Each A starts with the wheel where the hand has it: the lane’s A rises 0 to 10% and plays twice, so the second pass jumps back, a small move the hand makes on the downbeat.',
     },
   },
 
@@ -1111,7 +1111,7 @@ export const WHEEL_SOUNDS: LaneSoundSpec[] = [
           notes:
             'G4 . Bb4 . | C5 . D5:4 . | . . . F5 | D5 . C5 . | Bb4 . C5 . | G4:6 . . . | . . . . | F4 . G4 .',
           lanes: {
-            '@wheel': moves({ 0: 0, 7: 0, 10: 0.12, 11: 0, 21: 0, 26: 0.15, 28: 0 }),
+            '@wheel': moves({ 0: 0, 7: 0, 9: 0.12, 10: 0, 21: 0, 25: 0.15, 26: 0 }),
             'filter.emphasis': holds({ 0: 5 }),
           },
         },
@@ -1128,8 +1128,8 @@ export const WHEEL_SOUNDS: LaneSoundSpec[] = [
               15: 0.12,
               16: 0,
               21: 0,
-              26: 0.18,
-              28: 0,
+              25: 0.18,
+              26: 0,
             }),
             'filter.emphasis': moves({ 0: 5, 24: 7.5, 31: 5 }),
           },

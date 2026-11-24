@@ -809,7 +809,7 @@ export const LIVELIER: LivelierSpec[] = [
     genre: 'Jazz',
     fx: { reverb: reverb(0.5, 0.22) },
     notes:
-      'An A minor head that climbs to E and comes home (part A), and a bridge that starts on E and reaches C5 before falling to A (part B). The mod wheel lane widens the vibrato through each phrase, most in the bridge, as the sound’s lesson says a player would, and a club-sized room.',
+      'An A minor head that climbs to E and comes home (part A), and a bridge that starts on E and reaches C5 before falling to A (part B). The mod wheel lane widens the vibrato through each phrase, most in the bridge, as the sound’s lesson says a player would; between swells it rests, and the vibrato is the lesson’s MOD DEPTH 0.8, which the wheel only adds to. A club-sized room.',
   },
   {
     sound: 'open-trumpet-lead',

@@ -135,7 +135,9 @@ wobble. They now ride the wheel. Their other lane stays.
 The wheel's lane must play what the knob's did, read from how the synth's `toEngine()` combines the two. The Model D
 adds the wheel to the depth MOD DEPTH gives, (d ÷ 10)², so a MOD DEPTH lane at d is the wheel at (d ÷ 10)² with the
 knob at 0 (`onWheel` in `model-d/lane-sounds.ts`). The lesson then sets the knob to 0, and a lesson that had it up
-(Rate-Step Wobble Bass's MOD DEPTH 5) changes its finished panel: re-record that sound's check baseline entry. Another
+(Rate-Step Wobble Bass's MOD DEPTH 5) changes its finished panel: re-record that sound's check baseline entry. A library sound whose lesson keeps the
+knob up (Tenor Sax Lead's 0.8) passes that position as `onWheel(lane, 0.8)`: the wheel makes up only the rest, and a
+position below the panel's rests the wheel, since it can only add. Another
 synth's wheel may scale a knob's amount rather than add to it, so read its `toEngine()` before converting.
 
 ### What the kit does with it
@@ -143,9 +145,10 @@ synth's wheel may scale a knob's amount rather than add to it, so read its `toEn
 - **The hand check** reads the wheel's lane as it reads a knob's, from the wheel at rest (down): a step the lane
   leaves alone is the wheel down. **One hand on the wheel is advised, not enforced** (owner ruling, t-312): a sound
   may ride the wheel and a knob, as a player does with one hand on the wheel and one on the panel.
-- **Its values keep three decimals.** The wheel runs 0 to 1 where a knob runs 0 to 10, so a thousandth is the same
-  share of its travel as a knob's hundredth. On the Model D the wheel at full moves the pitch 14 semitones, so a
-  hundredth would step vibrato in 14-cent jumps.
+- **Its values keep four decimals.** The wheel runs 0 to 1 where a knob runs 0 to 10, and on the Model D it stands
+  for a squared MOD DEPTH, (d / 10)², so the small values carry most of a vibrato: at three decimals depths 0.4 to
+  0.47 all land on 0.002, and a smooth swell becomes a staircase. On the Model D the wheel at full moves the pitch
+  14 semitones, so a hundredth would step vibrato in 14-cent jumps.
 - **The lesson never sets it.** It is no panel control, so `validatePreset` would refuse it: `writeLaneSounds`
   refuses a step that sets one, by name.
 - **The words are checked** (`wheelWordsProblems`): the `how` names the mod wheel, a step says the wheel brings the
