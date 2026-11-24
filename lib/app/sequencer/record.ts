@@ -5,7 +5,8 @@
  *   Keys pressed together are a chord on one step. A rest moves on, leaving a rest; a tie holds the notes before it on
  *   over the step.
  * - **Live record** writes what is played over the loop as it plays, on the step it falls on. Quantised, a note goes on
- *   the nearest step; not, it goes on the step it falls in and keeps how late it was as its nudge.
+ *   the nearest step; not, it goes on the step it falls in and keeps how late it was as its nudge. A performance wheel
+ *   moved (`@wheel`, `@bend`) is written into its lane on the step it was moved in (`recordWheel`, t-310).
  *
  * Shapes and pure functions only: the module and the page hold the keys, and these make the steps. The rules are in
  * `.context/app/sequencer.md`.
@@ -15,10 +16,12 @@ import {
   MAX_CHORD,
   MAX_GATE,
   emptyStep,
+  type Pattern,
   type Step,
   type StepNote,
 } from '@/lib/app/sequencer/pattern';
-import { keepMods } from '@/lib/app/sequencer/tools';
+import { addLane, keepMods, setLaneStep } from '@/lib/app/sequencer/tools';
+import type { Control } from '@/lib/app/synths/contract';
 
 /** A note played: its pitch, and its velocity when the keys gave one. */
 export interface PlayedNote {
@@ -130,4 +133,28 @@ export function recordNote(step: Step, note: StepNote, mode: LiveMode, chord: bo
   const kept = mode === 'replace' && !chord ? [] : step.notes.filter((n) => n.note !== note.note);
   if (kept.length >= MAX_CHORD) return step;
   return { ...step, on: true, notes: [...kept, note] };
+}
+
+/**
+ * A performance wheel's position as live record writes it into the wheel's lane: inside the wheel's travel, to three
+ * places, so a wheel ridden writes the same value for the same position. `null` for a value it cannot take.
+ */
+export function wheelValue(c: Control, v: number): number | null {
+  if (c.kind !== 'cont' || !Number.isFinite(v)) return null;
+  return Math.round(Math.min(c.max, Math.max(c.min, v)) * 1000) / 1000;
+}
+
+/**
+ * `p` with lane `id` set to `v` on step `step` of part `part`, the lane added after the others if the pattern has none
+ * for it. A pattern with every lane taken (`MAX_LANES`) and none for `id`, or without that step, is left as it is.
+ */
+export function recordWheel(
+  p: Pattern,
+  part: number,
+  step: number,
+  id: string,
+  v: number
+): Pattern {
+  if (!p.parts[part]?.steps[step]) return p;
+  return setLaneStep(addLane(p, id), part, step, id, v);
 }

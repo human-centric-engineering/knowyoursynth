@@ -661,6 +661,7 @@ function loopEvent(over: Partial<LoopEvent> = {}): LoopEvent {
 describe('a lane’s CC (t-90)', () => {
   const midiOut = (over: Partial<MidiOut> = {}): MidiOut => ({
     status: 'on',
+    echoed: () => false,
     connect: vi.fn(),
     outputs: [{ id: 'td3', name: 'TD-3' }],
     choice: { output: { id: 'td3', name: 'TD-3' }, channel: 1, plays: 'midi' },
@@ -739,6 +740,7 @@ describe('a performance wheel’s lane (f-performance-wheels)', () => {
   const DEF_WHEEL = { ...DEF, performance: { wheel: { cc: 1 } } } as SynthDef;
   const out = (ccs: MidiOut['ccs'] = {}): MidiOut => ({
     status: 'on',
+    echoed: () => false,
     connect: vi.fn(),
     outputs: [{ id: 'md', name: 'Model D' }],
     choice: { output: { id: 'md', name: 'Model D' }, channel: 1, plays: 'midi' },

@@ -13,11 +13,22 @@ import {
   placeHit,
   playedVelocity,
   recordNote,
+  recordWheel,
   restAt,
   tieOver,
+  wheelValue,
   writeChord,
 } from '@/lib/app/sequencer/record';
-import { MAX_CHORD, PatternSchema, newPattern, type Step } from '@/lib/app/sequencer/pattern';
+import {
+  MAX_CHORD,
+  MAX_LANES,
+  PatternSchema,
+  newPattern,
+  type Step,
+} from '@/lib/app/sequencer/pattern';
+import { performanceInputs } from '@/lib/app/synths/lib/performance';
+import { WHEEL } from '@/lib/app/synths/lib/patch';
+import type { Control, SynthDef } from '@/lib/app/synths/contract';
 
 const note = (n: number, gate = 1): Step => ({ on: true, notes: [{ note: n, gate }] });
 const rest = (): Step => ({ on: true, notes: [] });
@@ -146,5 +157,58 @@ describe('live record: what a note does to the step', () => {
   it('keeps a step already playing six', () => {
     const full: Step = { on: true, notes: [48, 50, 52, 53, 55, 57].map(n) };
     expect(recordNote(full, n(59), 'overdub', false)).toBe(full);
+  });
+});
+
+describe('live record: a wheel moved (t-310)', () => {
+  const [modWheel, pitchWheel] = performanceInputs({
+    performance: { wheel: { cc: 1 }, bend: { range: 2 } },
+  } as SynthDef).map((x) => x.control);
+
+  it('writes a wheel’s position inside its travel, to three places', () => {
+    expect(wheelValue(modWheel, 0.123456)).toBe(0.123);
+    expect(wheelValue(modWheel, 1.4)).toBe(1);
+    expect(wheelValue(modWheel, -0.2)).toBe(0);
+    expect(wheelValue(pitchWheel, -1.5)).toBe(-1);
+    expect(wheelValue(pitchWheel, -0.3333)).toBe(-0.333);
+    expect(wheelValue(modWheel, Number.NaN)).toBeNull();
+    expect(wheelValue({ ...modWheel, kind: 'bool' } as Control, 0.5)).toBeNull();
+  });
+
+  it('adds the wheel’s lane the pattern hasn’t got, and sets it on the step', () => {
+    const p = recordWheel(newPattern(8), 0, 3, WHEEL, 0.5);
+    expect(p.lanes).toEqual([WHEEL]);
+    expect(p.parts[0].steps[3].mod).toEqual({ [WHEEL]: 0.5 });
+    expect(p.parts[0].steps.filter((s) => s.mod)).toHaveLength(1);
+    expect(PatternSchema.safeParse(p).success).toBe(true);
+  });
+
+  it('sets it beside the step’s other lanes, in the lane it has already', () => {
+    const had = recordWheel(newPattern(8), 0, 3, WHEEL, 0.5);
+    const p = recordWheel({ ...had, lanes: ['cutoff', WHEEL] }, 0, 3, WHEEL, 0.8);
+    const withCutoff = {
+      ...p,
+      parts: [
+        {
+          steps: p.parts[0].steps.map((s, i) =>
+            i === 3 ? { ...s, mod: { ...s.mod, cutoff: 2 } } : s
+          ),
+        },
+      ],
+    };
+    const again = recordWheel(withCutoff, 0, 3, WHEEL, 0.2);
+    expect(again.lanes).toEqual(['cutoff', WHEEL]);
+    expect(again.parts[0].steps[3].mod).toEqual({ [WHEEL]: 0.2, cutoff: 2 });
+  });
+
+  it('leaves a pattern with every lane taken, and none for the wheel, as it is', () => {
+    const full = { ...newPattern(8), lanes: Array.from({ length: MAX_LANES }, (_, i) => `c${i}`) };
+    expect(recordWheel(full, 0, 3, WHEEL, 0.5)).toBe(full);
+  });
+
+  it('leaves a pattern without the step, or the part, as it is, adding no empty lane', () => {
+    const p = newPattern(8);
+    expect(recordWheel(p, 0, 14, WHEEL, 0.5)).toBe(p);
+    expect(recordWheel(p, 2, 3, WHEEL, 0.5)).toBe(p);
   });
 });

@@ -216,6 +216,13 @@ describe('sending', () => {
     expect(result.current.out.sending).toBe(true);
   });
 
+  it('plays on, letting go of nothing, when another device is plugged or unplugged', async () => {
+    await playing();
+    sh101.state = 'disconnected';
+    act(() => access.onstatechange?.());
+    expect(data(td3).slice(1)).toEqual([]);
+  });
+
   it('lets go when the page is hidden', async () => {
     await playing();
     act(() => void window.dispatchEvent(new Event('pagehide')));
@@ -327,6 +334,7 @@ describe('the readout row', () => {
   }
   const fake = (over: Partial<MidiOut>): MidiOut => ({
     status: 'off',
+    echoed: () => false,
     connect: vi.fn(),
     outputs: [],
     choice: { output: null, channel: 1, plays: 'midi' },
@@ -539,6 +547,44 @@ describe('lane CCs (t-90)', () => {
       [0xb1, 74, 127],
       [0x91, 60, 108],
     ]);
+  });
+});
+
+describe('a wheel’s echo (t-310)', () => {
+  it('knows the mod wheel it sent the output, coming back in, from the hand', async () => {
+    const def = {
+      id: 'md',
+      controls: [],
+      init: {},
+      performance: { wheel: { cc: 1 } },
+    } as unknown as SynthDef;
+    const hook = renderHook(() => {
+      const midi = useMidi(handlers());
+      const out = useMidiOut({
+        midi,
+        engine: null,
+        connect: () => void midi.connect(),
+        def,
+        wheels: { '@wheel': { hand: 0, lane: true } },
+      });
+      return { midi, out };
+    });
+    await act(async () => {
+      await hook.result.current.midi.connect();
+    });
+    act(() => hook.result.current.out.setOutput('td3'));
+    act(() => {
+      hook.result.current.out.out.message({
+        type: 'pattern',
+        loop: { notes: [[0, 60, 4]], beats: 4, mods: [[0, { '@wheel': 0.6 }]] },
+        bpm: 120,
+        run: 1,
+      });
+      hook.result.current.out.out.event(loopStart);
+    });
+    expect(data(td3)).toContainEqual([0xb0, 1, 76]);
+    expect(hook.result.current.out.echoed('wheel', 76 / 127)).toBe(true);
+    expect(hook.result.current.out.echoed('wheel', 0.9)).toBe(false);
   });
 });
 

@@ -8,6 +8,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   BEND_CENTRE,
+  ECHO_WINDOW_MS,
   LANE_CCS,
   MAX_LANE_CC,
   bendFromMidi,
@@ -15,6 +16,7 @@ import {
   ccLookup,
   ccMessage,
   ccValue,
+  createEchoLog,
   validLaneCc,
 } from '@/lib/app/midi/cc';
 import { PITCH_BEND } from '@/lib/app/synths/lib/performance';
@@ -206,5 +208,31 @@ describe('pitch bend (`f-performance-wheels` t-309)', () => {
   it('sends no bend while the pattern has no bend lane, nor on a synth without a pitch wheel', () => {
     expect(ccLookup(modelD, {}, hand(0, false))!({ '@bend': 1 })).toEqual([]);
     expect(ccLookup(DEF, { '@bend': 1 }, hand(0))).toBeNull();
+  });
+});
+
+describe('createEchoLog (t-310)', () => {
+  it('takes a mod wheel or pitch bend sent lately, on any channel, as its echo coming back', () => {
+    const log = createEchoLog();
+    log.sent([0xb3, 1, 76], 1100, 1000);
+    log.sent(ccMessage(0, PITCH_BEND, bendValue(-0.5)), 1000, 1000);
+    // in before it is due (the look-ahead) and until the window after it runs out
+    expect(log.echoed('wheel', 76 / 127, 1001)).toBe(true);
+    expect(log.echoed('wheel', 76 / 127, 1100 + ECHO_WINDOW_MS)).toBe(true);
+    expect(log.echoed('wheel', 76 / 127, 1101 + ECHO_WINDOW_MS)).toBe(false);
+    expect(log.echoed('bend', -0.5, 1200)).toBe(true);
+  });
+
+  it('takes anything else as the hand: another value, another CC, its centre unsent', () => {
+    const log = createEchoLog();
+    log.sent([0xb0, 1, 64], 1000, 1000);
+    log.sent([0xb0, 74, 65], 1000, 1000);
+    log.sent([0x90, 60, 100], 1000, 1000);
+    // a CC cut short is not the wheel at 0
+    log.sent([0xb0, 1], 1000, 1000);
+    expect(log.echoed('wheel', 0, 1010)).toBe(false);
+    expect(log.echoed('wheel', 65 / 127, 1010)).toBe(false);
+    expect(log.echoed('bend', 0, 1010)).toBe(false);
+    expect(log.echoed('wheel', 64 / 127, 1010)).toBe(true);
   });
 });
