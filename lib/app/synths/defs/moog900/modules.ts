@@ -1822,8 +1822,9 @@ export const FOLLOW_960 = 'out.follow960';
 
 /**
  * The app's own output, on a blank panel. With `follow960` (a system with the 960) it also carries the app's switch
- * that keeps the 960 to the app's clock (`f-own-sequencer`): on, the bar's Play starts it on stage 1 and its steps land
- * on the beat; off, it free-runs on its own oscillator, as the hardware does.
+ * that keeps the 960 to the app's clock (`f-own-sequencer`): off (FREE, the default) it free-runs on its own oscillator,
+ * as the hardware does; on (BEAT), the bar's Play starts it on stage 1 and its steps land on the beat. A sound that
+ * follows turns it on, which is also the definition's `ownSequencer.run`.
  */
 export function appOut(
   r: Rack,
@@ -1922,6 +1923,7 @@ function follow960Switch(r: Rack, cx: number, y0: number): void {
     stroke: '#e0a040',
     sw: 1.6,
     dash: '6 4',
+    appOnly: true,
   });
   (
     [
@@ -1931,7 +1933,17 @@ function follow960Switch(r: Rack, cx: number, y0: number): void {
       ['THIS APP ONLY', cx, 328, 7, 500],
     ] as const
   ).forEach(([text, x, y, size, weight]) =>
-    r.decor.push({ t: 'text', x, y: y0 + y, text, size, anchor: 'middle', weight, fill: '#e0a040' })
+    r.decor.push({
+      t: 'text',
+      x,
+      y: y0 + y,
+      text,
+      size,
+      anchor: 'middle',
+      weight,
+      fill: '#e0a040',
+      appOnly: true,
+    })
   );
   r.controls.push({
     id: FOLLOW_960,
@@ -1942,12 +1954,13 @@ function follow960Switch(r: Rack, cx: number, y0: number): void {
     h: 16,
     color: 'black',
     kind: 'bool',
-    def: true,
+    def: false,
     labelPos: 'none',
     label: '960 CLOCK',
     name: '960 CLOCK (app)',
     module: 'mod',
-    help: 'Not on the hardware. At BEAT the 960 keeps to the app’s tempo: Play starts it on stage 1 with the drums, each step lands on an even division of the beat, and Stop stops it. At FREE it runs on its own clock, as the real 960 does, and drifts against the beat. A 960 clock fast enough to be a tone always runs free.',
+    appOnly: true,
+    help: 'Not on the hardware. At FREE the 960 runs on its own clock, as the real one does, and drifts against the drums. At BEAT it keeps to the app’s tempo: Play starts it on stage 1 with the drums, each step lands on an even division of the beat, and Stop stops it; switching to BEAT while nothing plays presses Play. A 960 clock fast enough to be a tone always runs free.',
   });
 }
 

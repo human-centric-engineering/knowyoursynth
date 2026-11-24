@@ -217,7 +217,7 @@ describe('the clock reaching the System 55’s 960 from the voice’s riff playe
       [FOLLOW_960]: follow,
     };
     return {
-      ...system55.toEngine(v),
+      ...system55.toEngine(v, { wheel: 0, patched: {} }),
       cables: [{ src: 's960a', dst: 'q0In', amt: 1, add: false }],
     };
   };
@@ -234,10 +234,11 @@ describe('the clock reaching the System 55’s 960 from the voice’s riff playe
   /** Readings at least a block clear of a step at `len` samples a step, so where a meter falls cannot tip them. */
   const clear = (len: number) => (r: { t: number }) => Math.min(r.t % len, len - (r.t % len)) > 256;
 
-  it('sets follow from the 960 CLOCK switch, which starts at BEAT', () => {
+  it('sets follow from the 960 CLOCK switch, which starts at FREE, as the hardware runs', () => {
     expect(params(true).follow).toBe(true);
     expect(params(false).follow).toBeUndefined();
-    expect(system55.init[FOLLOW_960]).toBe(true);
+    expect(system55.init[FOLLOW_960]).toBe(false);
+    expect(system55.ownSequencer?.run).toBe(FOLLOW_960);
   });
 
   it('following, the riff’s clock moves the 960 on every sixteenth from its first beat', () => {

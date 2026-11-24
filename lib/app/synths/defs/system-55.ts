@@ -11,6 +11,7 @@ import {
   HP,
   ROW_H,
   SYSTEM_THEME,
+  FOLLOW_960,
   appOut,
   blank,
   caseWordmark,
@@ -124,6 +125,8 @@ const system55: SynthDef & { version: number } = {
   init: initOf(controls),
   defaultPatch: moog900DefaultPatch(controls),
   toEngine: (v) => rackToEngine(rack, v),
+  // the 960 locks to the app's clock at BEAT (`f-own-sequencer`): switched there while nothing plays, it presses Play
+  ownSequencer: { run: FOLLOW_960 },
 };
 
 export default system55;
