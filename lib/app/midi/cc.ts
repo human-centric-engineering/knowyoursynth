@@ -9,8 +9,9 @@
  * A performance wheel's lane (`@wheel`, `@bend`, `f-performance-wheels`) is the one exception: the hardware knows its
  * wheels, so the lane is sent as the message the synth declares for it, always, with nothing to assign: the mod wheel
  * as its CC, the pitch wheel as pitch bend (`PITCH_BEND`, which `ccMessage` turns into the bytes). It is sent only while
- * the pattern has the lane (`hand.on`), and a step it leaves alone sends the hand's wheel, as the browser's voice plays
- * it. Both are read as each change is sent, so the lookup stays the same while the hand moves or the lane comes and goes.
+ * the loop being sent has the lane (its `lanes`, t-313), and a step it leaves alone sends the hand's wheel, as the
+ * browser's voice plays it. The hand is read as each change is sent, so the lookup stays the same while it moves; the
+ * lanes come with the loop, so they are the loop's own from its first step, whenever the page hears of them.
  */
 import { lanePos, laneControl } from '@/lib/app/sequencer/lanes';
 import { isPerformanceId, performanceInputs, PITCH_BEND } from '@/lib/app/synths/lib/performance';
@@ -43,9 +44,12 @@ export const LANE_CCS: readonly number[] = Array.from(
 /** Lane control id → CC number, for one synth. */
 export type LaneCcs = Readonly<Record<string, number>>;
 
-/** The CCs a set of lane values sends: `[cc, value]`, value 0..127, or for `PITCH_BEND` 0..16383. */
+/**
+ * The CCs a set of lane values sends: `[cc, value]`, value 0..127, or for `PITCH_BEND` 0..16383. `lanes` are the lanes
+ * of the loop the values are from: a wheel's is sent only when they include it.
+ */
 export interface CcLookup {
-  (set: ControlValues): [cc: number, value: number][];
+  (set: ControlValues, lanes?: readonly string[]): [cc: number, value: number][];
   /**
    * What a performance wheel goes back to when the run ends: the hand's wheel, on its CC. A lane leaves the hardware's
    * wheel where it put it otherwise, as the hardware has no hand of the app's to return to.
@@ -84,9 +88,8 @@ export const ccMessage = (channel: number, cc: number, value: number): number[] 
     ? [0xe0 | channel, value & 0x7f, (value >> 7) & 0x7f]
     : [0xb0 | channel, cc, value];
 
-/** Where a performance wheel's lane gets the hand's position, by lane id, and whether the pattern has that lane. */
+/** Where a performance wheel's lane gets the hand's position, by lane id. */
 export interface LaneHand {
-  on: (id: string) => boolean;
   at: (id: string) => number;
 }
 
@@ -97,7 +100,7 @@ export interface LaneHand {
 export function ccLookup(
   def: SynthDef,
   ccs: LaneCcs,
-  /** Whether the pattern has each wheel's lane, and where the hand has each wheel; left out, no wheel is ever sent. */
+  /** Where the hand has each wheel; left out, no wheel is ever sent. */
   hand?: LaneHand | null
 ): CcLookup | null {
   // A performance wheel is sent as the message the synth hears it as, with nothing to assign (`performance.ts`); a
@@ -117,12 +120,13 @@ export function ccLookup(
     return c && validLaneCc(cc) ? [{ id, cc, c }] : [];
   });
   if (own.length === 0 && given.length === 0) return null;
-  const look: CcLookup = (set) => {
+  const look: CcLookup = (set, lanes) => {
     const out: [number, number][] = [];
     // A step the wheel lane leaves alone plays the hand's wheel.
     if (hand)
       for (const { id, cc, send } of own)
-        if (hand.on(id)) out.push([cc, send(Object.hasOwn(set, id) ? set[id] : hand.at(id))]);
+        if (lanes?.includes(id))
+          out.push([cc, send(Object.hasOwn(set, id) ? set[id] : hand.at(id))]);
     for (const { id, cc, c } of given) {
       if (Object.hasOwn(set, id)) out.push([cc, ccValue(c, set[id])]);
     }

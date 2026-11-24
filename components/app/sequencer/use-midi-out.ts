@@ -165,12 +165,12 @@ export function useMidiOut({
   /** A new patch is loading: no notes are sent, here or to the synth. */
   silent?: boolean;
   /**
-   * Per performance wheel, by its lane id (`@wheel`, `@bend`, `f-performance-wheels`): where the hand has it, and
-   * whether the pattern has its lane. What a step the lane leaves alone, and the end of the run, send for it: the mod
-   * wheel on its CC, the pitch wheel as pitch bend. Read as each is sent, so moving either sends nothing again. A wheel
-   * left out is not sent.
+   * Per performance wheel, by its lane id (`@wheel`, `@bend`, `f-performance-wheels`): where the hand has it. What a
+   * step the wheel's lane leaves alone, and the end of the run, send for it: the mod wheel on its CC, the pitch wheel as
+   * pitch bend. Read as each is sent, so moving it sends nothing again. Whether a loop has the lane comes with the loop
+   * (`PatternLoop.lanes`, t-313).
    */
-  wheels?: Readonly<Record<string, { hand: number; lane: boolean }>>;
+  wheels?: Readonly<Record<string, number>>;
 }): MidiOut {
   const [choice, setChoice] = useStoredPref(STORAGE_KEYS.midiOut, MidiOutChoiceSchema, NO_CHOICE);
   // One per engine, which is the page's for its life; the clock reads the engine's context when asked, as the context
@@ -218,13 +218,7 @@ export function useMidiOut({
   useEffect(() => {
     wheelsAt.current = wheels;
   }, [wheels]);
-  const hand = useMemo<LaneHand>(
-    () => ({
-      on: (id) => wheelsAt.current?.[id]?.lane ?? false,
-      at: (id) => wheelsAt.current?.[id]?.hand ?? 0,
-    }),
-    []
-  );
+  const hand = useMemo<LaneHand>(() => ({ at: (id) => wheelsAt.current?.[id] ?? 0 }), []);
   useEffect(() => s.setCcs(def ? ccLookup(def, ccs, hand) : null), [s, def, ccs, hand]);
   const setCc = useCallback(
     (id: string, cc: number | null) => {

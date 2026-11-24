@@ -1505,6 +1505,86 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     expect(t.sent.some(([, d]) => (d[0] & 0xf0) === 0xb0 && d[1] === PITCH_BEND)).toBe(false);
   });
 
+  it('asks for each change with the lanes of the loop it is from, from the first step (t-313)', () => {
+    const asked: (readonly string[] | undefined)[] = [];
+    const look: CcLookup = (set, lanes) => {
+      asked.push(lanes);
+      return lanes?.includes('w') ? [[1, typeof set.w === 'number' ? set.w : 20]] : [];
+    };
+    const t = setup();
+    t.s.setCcs(look);
+    start(t, { ...modded([[0, { w: 127 }]]), lanes: ['w'] });
+    t.s.message({ type: 'patternNext', loop: { ...modded([[0, null]]), lanes: ['x'] } });
+    t.run(1500);
+    expect(asked[0]).toEqual(['w']);
+    expect(asked.at(-1)).toEqual(['x']);
+    expect(cc1(t.sent)).toEqual([[0, 127]]);
+  });
+
+  it('goes straight to the next run’s wheel when one starts over another, not back to the hand’s between (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    const before = cc1(t.sent).length;
+    t.s.message({ type: 'pattern', loop: modded([[0, { w: 90 }]]), bpm: 60, run: 2 });
+    t.s.event(ev({ frame: 200 }));
+    t.run(400);
+    expect(cc1(t.sent).slice(before)).toEqual([[200, 90]]);
+  });
+
+  it('still puts the wheel back when the run started over it sends no wheel (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: 60, run: 2 });
+    expect(cc1(t.sent).at(-1)).toEqual([200, 20]);
+  });
+
+  it('puts the wheel back after the patch the run started over it calls up, not into its load (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    start(t, modded([[0, { w: 127 }]]));
+    t.run(200);
+    t.s.setProgram({ program: 5 });
+    t.s.message({ type: 'pattern', loop: loop([[0, 60, 0.5]]), bpm: 60, run: 2 });
+    const pc = t.sent.findIndex(([, d]) => d[0] === 0xc0);
+    const back = t.sent.findIndex(([, d]) => d[0] === 0xb0 && d[1] === 1 && d[2] === 20);
+    expect(pc).toBeGreaterThan(-1);
+    expect(back).toBeGreaterThan(pc);
+    expect(t.sent[back][0]).toBeGreaterThanOrEqual(200 + PROGRAM_LEAD_MS);
+  });
+
+  it('puts the wheel back no sooner than a patch called up has loaded (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    t.s.setProgram({ program: 5 });
+    start(t, modded([[0, { w: 127 }]]));
+    t.s.pump();
+    t.now = 5;
+    t.s.message({ type: 'stopPattern' });
+    const [at, v] = cc1(t.sent).at(-1)!;
+    expect(v).toBe(20);
+    expect(at).toBeGreaterThanOrEqual(PROGRAM_LEAD_MS);
+  });
+
+  it('ends on the next run’s wheel when it starts straight after a Stop whose put-back waits for a patch (t-313)', () => {
+    const t = setup();
+    t.s.setCcs(wheel);
+    t.s.setProgram({ program: 5 });
+    start(t, modded([[0, { w: 127 }]]));
+    t.s.pump();
+    t.now = 5;
+    t.s.message({ type: 'stopPattern' });
+    t.s.setProgram(null);
+    t.s.message({ type: 'pattern', loop: modded([[0, { w: 90 }]]), bpm: 60, run: 2 });
+    t.s.event(ev({ frame: 5 }));
+    t.s.pump();
+    const last = [...cc1(t.sent)].sort((a, b) => a[0] - b[0]).at(-1);
+    expect(last?.[1]).toBe(90);
+  });
+
   it('leaves the wheel where the lane has it through a silence mid-run', () => {
     const t = setup();
     t.s.setCcs(wheel);

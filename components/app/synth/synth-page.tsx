@@ -1107,17 +1107,6 @@ function Synth({
     setEngineError(error);
   }, [engineParams, sess.values, engine]);
 
-  // Where the harmonics strip draws its dashed line. One toEngine() call — the same one the voice gets — so it keeps
-  // up with a knob being dragged. waveStory's attribution is hundreds of calls and stays in the dialog.
-  const cutoffNow = useMemo(() => {
-    if (!harmOn) return null;
-    try {
-      return synthDef.toEngine(sess.values, { wheel, patched: patchedJacks(sess.cables) }).filter
-        .cutoff;
-    } catch {
-      return null; // the panel already reports the error
-    }
-  }, [harmOn, synthDef, sess.values, sess.cables, wheel]);
   // A fresh identity whenever the panel moves, so the scope can hold the shape from just before the move.
   const traceKey = useMemo(
     () => ({ values: sess.values, cables: sess.cables, wheel }),
@@ -1278,34 +1267,26 @@ function Synth({
   const rememberMidi = useCallback((v: boolean) => writeStored(STORAGE_KEYS.midi, v), []);
   const loadMidi = useCallback(() => readStored(STORAGE_KEYS.midi) === true, []);
   // A wheel lane playing over MIDI out (`f-performance-wheels`): the pattern has one, and it is sent and playing. Its
-  // CC 1 coming back in (a DAW echoing it) is not the hand, so the wheel in from MIDI waits until it stops.
-  const [wheelLaneOn, setWheelLaneOn] = useState(false);
+  // CC 1 coming back in (a DAW echoing it) is not the hand, but the controller's own wheel is (t-313): what a step the
+  // lane leaves alone sends, and what live record writes (t-310). So only what MIDI out has just sent on it is dropped.
   const wheelLaneSending = useRef(false);
-  // In live record the wheel coming in is the hand recording the lane (t-310), so it is taken while the lane sends,
-  // except what MIDI out has just sent on it: that is its echo, not the hand. Its centre too, which an echo can be.
-  const liveRecording = useRef(false);
   const echoed = useRef<(kind: 'wheel' | 'bend', v: number) => boolean>(() => false);
   /** A wheel position the hand's wheel took that live record is not to write: the centre, possibly an echo. */
   const unrecorded = useRef<{ bend?: number }>({});
   const wheelIn = useCallback((v: number) => {
-    if (!wheelLaneSending.current || (liveRecording.current && !echoed.current('wheel', v)))
-      setWheel(v);
+    if (!wheelLaneSending.current || !echoed.current('wheel', v)) setWheel(v);
   }, []);
-  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's. Outside live record its
-  // centre always is: a keyboard's wheel let go of during the run springs back once, and an echo of the centre puts
-  // nothing wrong. Not at all on a synth without a pitch wheel, where it would change nothing but re-render the page
-  // per message.
-  const [bendLaneOn, setBendLaneOn] = useState(false);
+  // The same for the pitch wheel: a bend lane's pitch bend echoed back is not the hand's, and the controller's own is.
+  // Its centre always is, echoed or not: a keyboard's wheel let go of springs back once, and an echo of the centre
+  // puts nothing wrong; but one that may be an echo is not recorded. Not at all on a synth without a pitch wheel, where
+  // it would change nothing but re-render the page per message.
   const bendLaneSending = useRef(false);
   const hasBend = Boolean(synthDef.performance?.bend);
   const bendIn = useCallback(
     (v: number) => {
       if (!hasBend) return;
-      if (!bendLaneSending.current) setBend(v);
-      else if (!liveRecording.current || !echoed.current('bend', v)) {
-        if (v === 0 || liveRecording.current) setBend(v);
-      } else if (v === 0) {
-        // The centre, which may be the lane's echoed: the hand's wheel goes back to it, but it is not recorded.
+      if (!bendLaneSending.current || !echoed.current('bend', v)) setBend(v);
+      else if (v === 0) {
         unrecorded.current.bend = 0;
         setBend(0);
       }
@@ -1328,14 +1309,9 @@ function Synth({
   // A MIDI clock the sequencer follows (`f-midi-hardware-lead` t-91): an input of the same grant.
   const clockIn = useClockIn({ midi, engine });
   const following = clockIn.clock.following;
-  // The wheels MIDI out sends for the lanes that play them (`f-performance-wheels`): the hand's, and whether a lane does.
-  const midiWheels = useMemo(
-    () => ({
-      [WHEEL]: { hand: wheel, lane: wheelLaneOn },
-      [BEND]: { hand: bend, lane: bendLaneOn },
-    }),
-    [wheel, wheelLaneOn, bend, bendLaneOn]
-  );
+  // The hand's wheels, which MIDI out sends on a step a wheel's lane leaves alone (`f-performance-wheels`). Whether a
+  // loop has the lane comes with the loop itself, so its first steps send it (t-313).
+  const midiWheels = useMemo(() => ({ [WHEEL]: wheel, [BEND]: bend }), [wheel, bend]);
   // MIDI out from the sequencer (`f-midi-out` t-88): the outputs of the same grant. No clock out while one is followed.
   const midiOut = useMidiOut({
     midi,
@@ -1396,10 +1372,7 @@ function Synth({
   const { modShown } = seq;
   // The hand's wheels, on screen or from a MIDI keyboard, recorded into their lanes in live record (t-310). Only a
   // move is recorded: the sequencer writes nothing while stopped, or outside live record.
-  const { wheelIn: seqWheelIn, keys: seqKeys } = seq;
-  useEffect(() => {
-    liveRecording.current = seqKeys === 'live';
-  }, [seqKeys]);
+  const { wheelIn: seqWheelIn } = seq;
   // Given only when the hand moves it, not again when the sequencer itself changes.
   const wheelsGiven = useRef({ wheel, bend });
   useEffect(() => {
@@ -1419,15 +1392,40 @@ function Synth({
   // And the pitch wheel, on a synth that has one.
   const bendShown = shownBend(modShown) ?? bend;
   const bendRange = synthDef.performance?.bend?.range ?? null;
+  // The panel as it plays: its values with what the lanes set now in place (t-314). What the wheel's label, the
+  // routing view, the live glow and the harmonics' cutoff line read, so they agree with each other and with the panel.
+  const playedValues = useMemo(
+    () =>
+      modShown ? { ...sess.values, ...splitPerformance(synthDef, modShown).values } : sess.values,
+    [synthDef, sess.values, modShown]
+  );
   // Where the wheel sends modulation (`wheelReach`), from the panel as it plays: said under the wheel and, while it is
   // up, shown on the panel.
-  const reach = useMemo(() => {
-    if (!routing) return null;
-    const values = modShown
-      ? { ...sess.values, ...splitPerformance(synthDef, modShown).values }
-      : sess.values;
-    return wheelReach(synthDef, routing, { values, cables: sess.cables, wheel: wheelShown });
-  }, [routing, synthDef, sess.values, sess.cables, modShown, wheelShown]);
+  const reach = useMemo(
+    () =>
+      routing
+        ? wheelReach(synthDef, routing, {
+            values: playedValues,
+            cables: sess.cables,
+            wheel: wheelShown,
+          })
+        : null,
+    [routing, synthDef, playedValues, sess.cables, wheelShown]
+  );
+  // Where the harmonics strip draws its dashed line. One toEngine() call — the same one the voice gets — so it keeps
+  // up with a knob being dragged, and with a lane moving the filter or the wheel. waveStory's attribution is hundreds
+  // of calls and stays in the dialog.
+  const cutoffNow = useMemo(() => {
+    if (!harmOn) return null;
+    try {
+      return synthDef.toEngine(playedValues, {
+        wheel: wheelShown,
+        patched: patchedJacks(sess.cables),
+      }).filter.cutoff;
+    } catch {
+      return null; // the panel already reports the error
+    }
+  }, [harmOn, synthDef, playedValues, sess.cables, wheelShown]);
   const wheelSaid = useMemo(
     () => (reach && routing ? wheelSays(synthDef, routing, reach) : null),
     [reach, routing, synthDef]
@@ -1447,14 +1445,14 @@ function Synth({
             routing,
             flow: true,
             state: routingState(synthDef, routing, {
-              values: sess.values,
+              values: playedValues,
               cables: sess.cables,
               wheel: wheelShown,
             }),
             source: engine,
           }
         : null,
-    [liveOn, routing, routingOn, synthDef, sess.values, sess.cables, wheelShown, engine]
+    [liveOn, routing, routingOn, synthDef, playedValues, sess.cables, wheelShown, engine]
   );
   // The panel's values with the hand's wheel, for the mod lanes: what a wheel lane's step left alone plays.
   const lanePanel = useMemo(
@@ -1464,7 +1462,6 @@ function Synth({
   // Only on a synth with a wheel: elsewhere the lane is kept and silent, and sends nothing to be echoed.
   const seqWheelLane =
     (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
-  useEffect(() => setWheelLaneOn(seqWheelLane), [seqWheelLane]);
   // A lane plays the wheel for the whole run, the steps it leaves alone included, as MIDI out has it.
   const wheelLanePlaying = seqWheelLane && seq.playing;
   useEffect(() => {
@@ -1472,7 +1469,6 @@ function Synth({
   }, [seqWheelLane, midiOut.sending, seq.playing]);
   // The pitch wheel's lane, likewise.
   const seqBendLane = (seq.pattern.lanes?.includes(BEND) ?? false) && bendRange !== null;
-  useEffect(() => setBendLaneOn(seqBendLane), [seqBendLane]);
   const bendLanePlaying = seqBendLane && seq.playing;
   useEffect(() => {
     bendLaneSending.current = seqBendLane && midiOut.sending && seq.playing;
@@ -3245,7 +3241,7 @@ function Synth({
                             <RoutingView
                               def={synthDef}
                               routing={routing}
-                              values={sess.values}
+                              values={playedValues}
                               cables={sess.cables}
                               wheel={wheelShown}
                               source={engine}

@@ -565,7 +565,7 @@ describe('a wheel’s echo (t-310)', () => {
         engine: null,
         connect: () => void midi.connect(),
         def,
-        wheels: { '@wheel': { hand: 0, lane: true } },
+        wheels: { '@wheel': 0 },
       });
       return { midi, out };
     });
@@ -576,7 +576,12 @@ describe('a wheel’s echo (t-310)', () => {
     act(() => {
       hook.result.current.out.out.message({
         type: 'pattern',
-        loop: { notes: [[0, 60, 4]], beats: 4, mods: [[0, { '@wheel': 0.6 }]] },
+        loop: {
+          notes: [[0, 60, 4]],
+          beats: 4,
+          mods: [[0, { '@wheel': 0.6 }]],
+          lanes: ['@wheel'],
+        },
         bpm: 120,
         run: 1,
       });

@@ -545,6 +545,7 @@ export function useSequencer({
       if (lanes) {
         loop.params = lanes.params;
         loop.mods = lanes.mods;
+        loop.lanes = p.lanes;
       }
       lanesSent.current = !!lanes;
       return loop;

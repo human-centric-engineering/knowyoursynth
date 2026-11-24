@@ -113,40 +113,39 @@ describe('ccLookup', () => {
 
 describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
   const modelD = getSynthDef('model-d')!;
-  // The mod wheel's lane only, the pitch wheel at rest with no lane of its own.
-  const hand = (wheel: number, on = true) => ({
-    on: (id: string) => on && id === '@wheel',
-    at: (id: string) => (id === '@wheel' ? wheel : 0),
-  });
+  // The pitch wheel at rest; the loops sent have the mod wheel's lane only (`W`), unless said otherwise.
+  const hand = (wheel: number) => ({ at: (id: string) => (id === '@wheel' ? wheel : 0) });
+  const W = ['@wheel'];
 
   it('sends a wheel lane as the CC the synth declares, with nothing assigned', () => {
     const look = ccLookup(modelD, {}, hand(0))!;
-    expect(look({ '@wheel': 1 })).toEqual([[1, 127]]);
-    expect(look({ '@wheel': 0.5 })).toEqual([[1, 64]]);
+    expect(look({ '@wheel': 1 }, W)).toEqual([[1, 127]]);
+    expect(look({ '@wheel': 0.5 }, W)).toEqual([[1, 64]]);
   });
 
   it('sends the hand’s wheel on a step the lane leaves alone, and goes back to it when the run ends', () => {
     const look = ccLookup(modelD, {}, hand(0.5))!;
-    expect(look({})).toEqual([[1, 64]]);
+    expect(look({}, W)).toEqual([[1, 64]]);
     expect(look.rest?.()).toEqual([
       [1, 64],
       [PITCH_BEND, BEND_CENTRE],
     ]);
   });
 
-  it('sends no wheel while the pattern has no wheel lane, and keeps its CC off other lanes even so', () => {
+  it('sends no wheel from a loop without the wheel’s lane, and keeps its CC off other lanes even so', () => {
     expect(ccLookup(modelD, {})).toBeNull();
-    // Read as each change goes: the lane taken off sends no wheel, but the run's end still puts it back.
-    const off = ccLookup(modelD, {}, hand(0.5, false))!;
-    expect(off({ '@wheel': 1 })).toEqual([]);
-    expect(off.rest?.()).toContainEqual([1, 64]);
+    // Read from each loop as its changes go: one without the lane sends no wheel, but the run's end still puts it back.
+    const look = ccLookup(modelD, {}, hand(0.5))!;
+    expect(look({ '@wheel': 1 }, ['filter.cutoff'])).toEqual([]);
+    expect(look({ '@wheel': 1 })).toEqual([]);
+    expect(look.rest?.()).toContainEqual([1, 64]);
     expect(ccLookup(modelD, { 'filter.cutoff': 1 })).toBeNull();
     expect(ccLookup(modelD, { 'filter.cutoff': 74 })?.rest).toBeUndefined();
   });
 
   it('keeps the wheel’s CC for the wheel: another lane given it is not sent on it too', () => {
     const look = ccLookup(modelD, { 'filter.cutoff': 1, '@wheel': 20 }, hand(0))!;
-    expect(look({ '@wheel': 0, 'filter.cutoff': 10 })).toEqual([[1, 0]]);
+    expect(look({ '@wheel': 0, 'filter.cutoff': 10 }, [...W, 'filter.cutoff'])).toEqual([[1, 0]]);
   });
 
   it('sends nothing for a wheel on a synth that declares none', () => {
@@ -156,10 +155,8 @@ describe('ccLookup: a performance wheel (`f-performance-wheels` t-307)', () => {
 
 describe('pitch bend (`f-performance-wheels` t-309)', () => {
   const modelD = getSynthDef('model-d')!;
-  const hand = (bend: number, on = true) => ({
-    on: (id: string) => on && id === '@bend',
-    at: (id: string) => (id === '@bend' ? bend : 0),
-  });
+  const hand = (bend: number) => ({ at: (id: string) => (id === '@bend' ? bend : 0) });
+  const B = ['@bend'];
 
   it('turns the wheel’s position into 14 bits: 0 all the way down, 8192 at rest, 16383 all the way up', () => {
     expect(bendValue(-1)).toBe(0);
@@ -200,13 +197,13 @@ describe('pitch bend (`f-performance-wheels` t-309)', () => {
 
   it('sends a bend lane as pitch bend, and a step it leaves alone as where the hand has the wheel', () => {
     const look = ccLookup(modelD, {}, hand(-0.5))!;
-    expect(look({ '@bend': 1 })).toEqual([[PITCH_BEND, 16383]]);
-    expect(look({})).toEqual([[PITCH_BEND, 4096]]);
+    expect(look({ '@bend': 1 }, B)).toEqual([[PITCH_BEND, 16383]]);
+    expect(look({}, B)).toEqual([[PITCH_BEND, 4096]]);
     expect(look.rest?.()).toContainEqual([PITCH_BEND, 4096]);
   });
 
   it('sends no bend while the pattern has no bend lane, nor on a synth without a pitch wheel', () => {
-    expect(ccLookup(modelD, {}, hand(0, false))!({ '@bend': 1 })).toEqual([]);
+    expect(ccLookup(modelD, {}, hand(0))!({ '@bend': 1 }, ['filter.cutoff'])).toEqual([]);
     expect(ccLookup(DEF, { '@bend': 1 }, hand(0))).toBeNull();
   });
 });
