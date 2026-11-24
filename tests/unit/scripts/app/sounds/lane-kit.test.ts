@@ -15,8 +15,12 @@ import {
   moves,
   cycle,
   holds,
+  laneInWords,
+  laneReadout,
   laneTweak,
   onNotes,
+  tweakNamesLane,
+  wheelWordsProblems,
   over,
   wave,
   writeLaneSounds,
@@ -24,6 +28,7 @@ import {
   ramp,
   up,
   type LanePatternSpec,
+  type LaneSoundSpec,
 } from '@/scripts/app/sounds/lane-kit';
 
 const A = 'A2! . A2:2 . | C3^ D3 . E3*3';
@@ -275,6 +280,134 @@ describe('checkHands', () => {
     const { pattern, preset } = sound({ 'filter.cutoff': (c) => (c.note === null ? null : 3) });
     expect(() => checkHands(modelD, preset, pattern)).toThrow(
       /^Lane Hands: no hand could play it:\n {2}filter\.cutoff: moves 50% of its travel/
+    );
+  });
+});
+
+describe('a mod wheel lane (t-312)', () => {
+  const wheelSpec = (over: Partial<LaneSoundSpec> = {}): LaneSoundSpec => ({
+    id: 'wheel-test',
+    name: 'Wheel Test',
+    ref: 'A test',
+    artist: 'Test',
+    tags: ['lead'],
+    level: 1,
+    blurb: 'A test.',
+    how: 'The mod wheel brings the vibrato in.',
+    steps: [
+      {
+        title: 'Vibrato on the wheel',
+        module: 'mod',
+        why: 'MOD DEPTH stays at 0: the wheel brings it in.',
+        set: { 'mod.toOsc': true, 'mod.depth': 0 },
+        listen: 'a still note.',
+      },
+    ],
+    context: { 'mod.depth': 'Stays at 0: the mod wheel lane brings it in.' },
+    tweaks: [laneTweak('mod.depth', 'redraw the mod wheel lane higher.', 'Wider.')],
+    pattern: spec({
+      parts: [
+        { notes: A, lanes: { '@wheel': ramp(0, 0.012345) } },
+        { notes: A, lanes: { '@wheel': ramp(0.012345, 0) } },
+      ],
+    }),
+    ...over,
+  });
+  const write = (s: LaneSoundSpec) =>
+    writeLaneSounds(modelD, { names: {}, options: {} }, [
+      { spec: s, riff: [[0, 45, 0.25]], bpm: 120 },
+    ]);
+
+  it('is played as the wheel, kept to four decimals of its travel', () => {
+    const p = buildPattern(modelD, wheelSpec().pattern);
+    expect(p.lanes).toEqual(['@wheel']);
+    // A knob keeps a hundredth of its 0..10; the wheel runs 0..1 and stands for a squared depth, so it keeps four.
+    expect(p.parts[0].steps[7].mod).toEqual({ '@wheel': 0.0123 });
+  });
+
+  it('is named in readouts and words, and a tweak is about it when it says to move the mod wheel', () => {
+    expect(laneReadout(modelD, { names: {}, options: {} }, '@wheel', 0.25, {})).toBe(
+      'Mod wheel 0.25 (25%)'
+    );
+    expect(laneInWords('@wheel')).toBe('the mod wheel');
+    expect(laneInWords('filter.cutoff')).toBe('filter.cutoff');
+    const t = laneTweak('mod.depth', 'redraw the mod wheel lane.', 'Wider.');
+    expect(tweakNamesLane(t, '@wheel')).toBe(true);
+    expect(tweakNamesLane(t, 'mod.depth')).toBe(true);
+    expect(tweakNamesLane(laneTweak('mod.depth', 'redraw it.', 'Wider.'), '@wheel')).toBe(false);
+  });
+
+  it('writes a lesson that says the wheel plays it', () => {
+    expect(wheelWordsProblems(wheelSpec())).toEqual([]);
+    expect(() => write(wheelSpec())).not.toThrow();
+  });
+
+  it('refuses a lesson that still teaches the knob the wheel now plays', () => {
+    const knob = wheelSpec({
+      how: 'MOD DEPTH brings the vibrato in.',
+      steps: [{ ...wheelSpec().steps[0], why: 'MOD DEPTH stays at 0 for the lane.' }],
+      context: { 'mod.depth': 'The other lane: the depth lane brings vibrato in.' },
+      tweaks: [laneTweak('mod.depth', 'redraw the depth lane higher.', 'Wider.')],
+    });
+    expect(wheelWordsProblems(knob)).toEqual([
+      'Wheel Test: its how never names the mod wheel',
+      'Wheel Test: no step says the wheel brings the modulation in',
+      'Wheel Test: no tweak redraws the mod wheel lane',
+      'Wheel Test: its words still call the wheel the depth lane',
+    ]);
+    expect(() => write(knob)).toThrow(/its how never names the mod wheel/);
+    // A step's listen, or a second tweak, still calling it the depth lane is caught too.
+    const listen = wheelSpec({
+      steps: [{ ...wheelSpec().steps[0], listen: 'vibrato once the depth lane rises.' }],
+    });
+    expect(wheelWordsProblems(listen)).toEqual([
+      'Wheel Test: its words still call the wheel the depth lane',
+    ]);
+    const tweak = wheelSpec({
+      tweaks: [
+        ...wheelSpec().tweaks,
+        laneTweak('mod.depth', 'draw the depth lane higher.', 'Wider.'),
+      ],
+    });
+    expect(wheelWordsProblems(tweak)).toEqual([
+      'Wheel Test: its words still call the wheel the depth lane',
+    ]);
+    // A sound with no wheel lane has nothing to say about one.
+    expect(wheelWordsProblems({ ...knob, pattern: spec() })).toEqual([]);
+  });
+
+  it('refuses a lesson step that sets the wheel, which is no panel control', () => {
+    const sets = wheelSpec({
+      steps: [{ ...wheelSpec().steps[0], set: { 'mod.depth': 0, '@wheel': 0.5 } }],
+    });
+    expect(() => write(sets)).toThrow(
+      /"Vibrato on the wheel" sets @wheel, which is no panel control/
+    );
+  });
+
+  it('reads the hand check from the wheel at rest', () => {
+    const jump = wheelSpec({
+      pattern: spec({
+        parts: [
+          { notes: A, lanes: { '@wheel': () => 1 } },
+          { notes: A, lanes: { '@wheel': () => 1 } },
+        ],
+      }),
+    });
+    const [preset] = write(jump);
+    // Held at the top all song: no move, so nothing for a hand to refuse.
+    expect(() => checkHands(modelD, preset, buildPattern(modelD, jump.pattern))).not.toThrow();
+    const flick = wheelSpec({
+      pattern: spec({
+        parts: [
+          { notes: A, lanes: { '@wheel': (c) => (c.i === 0 ? 1 : null) } },
+          { notes: A, lanes: { '@wheel': (c) => (c.i === 0 ? 1 : null) } },
+        ],
+      }),
+    });
+    // A step the lane leaves alone is the wheel at rest, down: up the whole way and back in a step is no hand's.
+    expect(() => checkHands(modelD, write(flick)[0], buildPattern(modelD, flick.pattern))).toThrow(
+      /@wheel: moves 100% of its travel/
     );
   });
 });

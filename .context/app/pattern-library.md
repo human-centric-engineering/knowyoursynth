@@ -1370,6 +1370,14 @@ sound, is that sound's default in `pattern-defaults.json`, and is _In the style 
   (`checkHands`), and the batch test runs the same check (`handProblems`) over every composed batch. The limits, and
   the design of a set for any synth, are [`lane-sounds.md`](./lane-sounds.md).
 
+#### Composed batches: sounds played on the mod wheel
+
+`f-performance-wheels` t-312. `t312-model-d-wheel-sounds.json` holds ten more Model D lane sounds, each with a mod
+wheel lane (`@wheel`), written by the same `write-lane-sounds.ts` from `wheel-sounds.ts`. The batch test holds it as
+a composed batch, and checks each pattern plays the wheel with its sound's panel leaving MOD DEPTH at 0. The same
+task moved twelve of t-301's MOD DEPTH lanes and one of t-304's onto the wheel. How and why:
+[`lane-sounds.md`](./lane-sounds.md#performance-inputs-a-lane-on-the-wheel).
+
 #### Composed batches: livelier songs for sounds already in the library
 
 `f-livelier-patterns` t-304. `t304-model-d-livelier-songs.json` gives 38 Model D sounds whose default was a one- or

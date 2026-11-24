@@ -5059,6 +5059,46 @@
       "pattern": "researched:model-d-lanes/fusion-unison-line"
     },
     {
+      "sound": "model-d/wheel-delayed-vibrato",
+      "pattern": "researched:model-d-wheel/delayed-vibrato-lead"
+    },
+    {
+      "sound": "model-d/wheel-square-trill",
+      "pattern": "researched:model-d-wheel/square-wave-trill"
+    },
+    {
+      "sound": "model-d/wheel-wah-bass",
+      "pattern": "researched:model-d-wheel/wheel-wah-bass"
+    },
+    {
+      "sound": "model-d/wheel-noise-growl",
+      "pattern": "researched:model-d-wheel/noise-growl-bass"
+    },
+    {
+      "sound": "model-d/wheel-contour-zap",
+      "pattern": "researched:model-d-wheel/contour-pitch-zap"
+    },
+    {
+      "sound": "model-d/wheel-fm-build",
+      "pattern": "researched:model-d-wheel/fm-clang-build"
+    },
+    {
+      "sound": "model-d/wheel-bell-strike",
+      "pattern": "researched:model-d-wheel/wheel-bell-strike"
+    },
+    {
+      "sound": "model-d/wheel-seasick-breakdown",
+      "pattern": "researched:model-d-wheel/seasick-breakdown"
+    },
+    {
+      "sound": "model-d/wheel-siren-riser",
+      "pattern": "researched:model-d-wheel/siren-riser"
+    },
+    {
+      "sound": "model-d/wheel-filter-vibrato-funk",
+      "pattern": "researched:model-d-wheel/filter-vibrato-funk"
+    },
+    {
       "sound": "model-d/feedback-growl",
       "pattern": "researched:model-d-livelier/feedback-growl"
     },

@@ -16,7 +16,7 @@ import { join, resolve } from 'node:path';
 import { z } from 'zod';
 import { PresetSchema, validatePreset } from '@/lib/app/synths/validate';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
-import { presetState } from '@/lib/app/synths/lib/patch';
+import { presetState, WHEEL } from '@/lib/app/synths/lib/patch';
 import { handProblems } from '@/lib/app/sequencer/hands';
 import { compileLoop, seededRng, SLIDE_OVERLAP } from '@/lib/app/sequencer/compile';
 import { MAX_STEPS, PatternSchema, stepsPerBeat, type Pattern } from '@/lib/app/sequencer/pattern';
@@ -514,7 +514,7 @@ describe('the research batches', () => {
    * sounds are credited to a genre that sounds on other synths share, so an artist roster cannot hold them: each is
    * checked below, pattern by sound, instead.
    */
-  const composed = ['t-301', 't-304'];
+  const composed = ['t-301', 't-304', 't-312'];
   /**
    * The composed batches whose songs need no lanes (`f-livelier-patterns` t-304): new songs for sounds already in the
    * library, which chain two parts and move a control only where the song is better for it.
@@ -544,8 +544,11 @@ describe('the research batches', () => {
         if (!lanesOptional.includes(b.task))
           expect(pattern.lanes?.length, p.key).toBeGreaterThan(0);
         expect(new Set(pattern.chain).size, p.key).toBe(2);
-        // Every lane moves its control somewhere in the song, and names one of the sound's tweaks.
-        const tweaks = sounds.get(p.sounds[0])!.tweaks.map((t) => t.id);
+        // Every lane moves its control somewhere in the song, and names one of the sound's tweaks: the mod wheel's lane,
+        // which no tweak can name (a tweak points at a panel control), one that says to move the mod wheel (t-312).
+        const tweaks = sounds
+          .get(p.sounds[0])!
+          .tweaks.flatMap((t) => (/mod wheel/i.test(t.try) ? [t.id, WHEEL] : [t.id]));
         for (const id of pattern.lanes ?? []) {
           const values = pattern.parts.flatMap((part) => part.steps.map((st) => st.mod?.[id]));
           expect(
@@ -562,6 +565,23 @@ describe('the research batches', () => {
         const panel = presetState(def, checked.value, checked.value.steps.length - 1).values;
         expect(handProblems(def, pattern, panel), p.key).toEqual([]);
       }
+    }
+  });
+
+  it('plays the mod wheel in every pattern of the wheel batch, with the panel leaving MOD DEPTH to it (t-312)', () => {
+    const wheel = batches.find((b) => b.task === 't-312');
+    if (!wheel) throw new Error('No batch for t-312 under data/patterns/');
+    expect(wheel.patterns).toHaveLength(10);
+    for (const p of wheel.patterns) {
+      const pattern = PatternSchema.parse(p.pattern);
+      expect(pattern.lanes, p.key).toContain(WHEEL);
+      const def = SYNTH_DEFS.find((d) => d.id === p.sounds[0].split('/')[0])!;
+      const checked = validatePreset(def, sounds.get(p.sounds[0]));
+      if (!checked.ok) throw new Error(`${p.sounds[0]}: ${JSON.stringify(checked.problems)}`);
+      const sound = checked.value;
+      // The wheel adds to MOD DEPTH, so a lesson that left the knob up would teach the knob, not the wheel.
+      expect(presetState(def, sound, sound.steps.length - 1).values['mod.depth'], p.key).toBe(0);
+      expect(sound.how, p.key).toMatch(/mod wheel/i);
     }
   });
 

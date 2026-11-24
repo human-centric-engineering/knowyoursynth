@@ -11516,21 +11516,21 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.4
+                  "@wheel": 0
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.41
+                  "@wheel": 0.0001
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.43
+                  "@wheel": 0.0002
                 }
               },
               {
@@ -11542,7 +11542,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.47
+                  "@wheel": 0.0006
                 }
               },
               {
@@ -11554,21 +11554,21 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.52
+                  "@wheel": 0.001
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.58
+                  "@wheel": 0.0015
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.65
+                  "@wheel": 0.0021
                 }
               },
               {
@@ -11580,7 +11580,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.72
+                  "@wheel": 0.0028
                 }
               },
               {
@@ -11592,14 +11592,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.8
+                  "@wheel": 0.0036
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.88
+                  "@wheel": 0.0044
                 }
               },
               {
@@ -11611,7 +11611,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.95
+                  "@wheel": 0.0052
                 }
               },
               {
@@ -11623,7 +11623,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.02
+                  "@wheel": 0.0059
                 }
               },
               {
@@ -11635,28 +11635,28 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.08
+                  "@wheel": 0.0066
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.13
+                  "@wheel": 0.0072
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.17
+                  "@wheel": 0.0076
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.19
+                  "@wheel": 0.0079
                 }
               },
               {
@@ -11668,14 +11668,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.2
+                  "@wheel": 0.008
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.19
+                  "@wheel": 0.0079
                 }
               },
               {
@@ -11687,14 +11687,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.17
+                  "@wheel": 0.0076
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.13
+                  "@wheel": 0.0072
                 }
               },
               {
@@ -11706,21 +11706,21 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.08
+                  "@wheel": 0.0066
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.02
+                  "@wheel": 0.0059
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.95
+                  "@wheel": 0.0052
                 }
               },
               {
@@ -11732,7 +11732,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.88
+                  "@wheel": 0.0044
                 }
               },
               {
@@ -11744,14 +11744,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.8
+                  "@wheel": 0.0036
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.72
+                  "@wheel": 0.0028
                 }
               },
               {
@@ -11763,14 +11763,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.65
+                  "@wheel": 0.0021
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.58
+                  "@wheel": 0.0015
                 }
               },
               {
@@ -11782,28 +11782,28 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.52
+                  "@wheel": 0.001
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.47
+                  "@wheel": 0.0006
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.43
+                  "@wheel": 0.0002
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.41
+                  "@wheel": 0.0001
                 }
               }
             ]
@@ -11819,21 +11819,21 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.4
+                  "@wheel": 0
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.42
+                  "@wheel": 0.0002
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.46
+                  "@wheel": 0.0008
                 }
               },
               {
@@ -11845,7 +11845,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.53
+                  "@wheel": 0.0017
                 }
               },
               {
@@ -11857,21 +11857,21 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.63
+                  "@wheel": 0.0031
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.76
+                  "@wheel": 0.005
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.89
+                  "@wheel": 0.0073
                 }
               },
               {
@@ -11883,7 +11883,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.04
+                  "@wheel": 0.0101
                 }
               },
               {
@@ -11895,7 +11895,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.2
+                  "@wheel": 0.0132
                 }
               },
               {
@@ -11907,7 +11907,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.36
+                  "@wheel": 0.0166
                 }
               },
               {
@@ -11919,7 +11919,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.51
+                  "@wheel": 0.0202
                 }
               },
               {
@@ -11931,7 +11931,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.64
+                  "@wheel": 0.0236
                 }
               },
               {
@@ -11943,28 +11943,28 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.77
+                  "@wheel": 0.0269
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.87
+                  "@wheel": 0.0297
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.94
+                  "@wheel": 0.0318
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.98
+                  "@wheel": 0.0331
                 }
               },
               {
@@ -11976,14 +11976,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 2
+                  "@wheel": 0.0336
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.98
+                  "@wheel": 0.0331
                 }
               },
               {
@@ -11995,14 +11995,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.94
+                  "@wheel": 0.0318
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.87
+                  "@wheel": 0.0297
                 }
               },
               {
@@ -12014,21 +12014,21 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.77
+                  "@wheel": 0.0269
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.64
+                  "@wheel": 0.0236
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.51
+                  "@wheel": 0.0202
                 }
               },
               {
@@ -12040,7 +12040,7 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.36
+                  "@wheel": 0.0166
                 }
               },
               {
@@ -12052,14 +12052,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 1.2
+                  "@wheel": 0.0132
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 1.04
+                  "@wheel": 0.0101
                 }
               },
               {
@@ -12071,14 +12071,14 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.89
+                  "@wheel": 0.0073
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.76
+                  "@wheel": 0.005
                 }
               },
               {
@@ -12090,35 +12090,35 @@
                   }
                 ],
                 "mod": {
-                  "mod.depth": 0.63
+                  "@wheel": 0.0031
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.53
+                  "@wheel": 0.0017
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.46
+                  "@wheel": 0.0008
                 }
               },
               {
                 "on": true,
                 "notes": [],
                 "mod": {
-                  "mod.depth": 0.42
+                  "@wheel": 0.0002
                 }
               }
             ]
           }
         ],
         "chain": [0, 0, 1, 1],
-        "lanes": ["mod.depth"],
+        "lanes": ["@wheel"],
         "fx": {
           "reverb": {
             "size": 0.5,
@@ -12129,11 +12129,11 @@
       "sounds": ["model-d/tenor-sax-lead"],
       "research": {
         "work": "An original pattern, written for the sound",
-        "part": "The whole song: parts AABB, with mod.depth on mod lanes, with the reverb on",
+        "part": "The whole song: parts AABB, with the mod wheel on mod lanes, with the reverb on",
         "originalKey": null,
         "originalBpm": null,
         "leads": [],
-        "notes": "An A minor head that climbs to E and comes home (part A), and a bridge that starts on E and reaches C5 before falling to A (part B). The MOD DEPTH lane widens the vibrato through each phrase, most in the bridge, and a club-sized room. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "notes": "An A minor head that climbs to E and comes home (part A), and a bridge that starts on E and reaches C5 before falling to A (part B). The mod wheel lane widens the vibrato through each phrase, most in the bridge, as the sound’s lesson says a player would; between swells it rests, and the vibrato is the lesson’s MOD DEPTH 0.8, which the wheel only adds to. A club-sized room. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
         "listenedAt": null
       }
     },

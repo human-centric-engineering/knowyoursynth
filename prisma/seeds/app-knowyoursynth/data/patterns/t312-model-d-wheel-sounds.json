@@ -1,0 +1,6619 @@
+{
+  "task": "t-312",
+  "researchedBy": "Claude Opus 5.5 (Claude Code), composed for the sound",
+  "researchedAt": "2026-11-24",
+  "patterns": [
+    {
+      "key": "researched:model-d-wheel/delayed-vibrato-lead",
+      "name": "Delayed Vibrato Lead",
+      "role": "lead_line",
+      "tempo": {
+        "min": 82,
+        "max": 110
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "70s progressive rock"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 96,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 2,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 6
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0083
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0167
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.025
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.007
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.014
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.021
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.028
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.035
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 6
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0117
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0233
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.035
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.01
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.02
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.03
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.04
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.05
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.025
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 0, 1, 0],
+        "lanes": ["@wheel"]
+      },
+      "sounds": ["model-d/wheel-delayed-vibrato"],
+      "research": {
+        "work": "An original pattern, written for Delayed Vibrato Lead",
+        "part": "The whole song: parts AABA, with the mod wheel on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "D dorian at 96. A climbs D–F to a long A, steps down G–F–E to D and C, and lands on a long D. B answers a fourth higher: A–C to a long D, down through C, A and G to F and E, and home to the long D. One hand on the mod wheel: it stays down on the short notes and comes up two steps into each long one, a little more each time, most on B’s last D, and is down again before the next note. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/square-wave-trill",
+      "name": "Square-Wave Trill",
+      "role": "lead_line",
+      "tempo": {
+        "min": 85,
+        "max": 115
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Baroque ornament"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 100,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 7,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 73,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 68,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 66,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 1, 0, 1],
+        "lanes": ["@wheel"]
+      },
+      "sounds": ["model-d/wheel-square-trill"],
+      "research": {
+        "work": "An original pattern, written for Square-Wave Trill",
+        "part": "The whole song: parts ABAB, with the mod wheel on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "G major at 100. A runs up and down the G and D chords and lands on a long note trilled between E and F♯, then does the same over E minor and D and lands on a trill between C and D, a half cadence. B steps down the scale to a trill between G and A, then turns round A to a trill between F and G, back to the top. One hand on the mod wheel: it goes to the same place on each phrase’s long note and back down for the next phrase, so every trill is the same whole tone. Each trilled note is written between its two notes, because the LFO swings the same distance either side of the key. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/wheel-wah-bass",
+      "name": "Wheel Wah Bass",
+      "role": "bass_line",
+      "tempo": {
+        "min": 88,
+        "max": 120
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "70s funk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 104,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 4,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.04
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.08
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.12
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.128
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.096
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.064
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 42,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.032
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0667
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1333
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2022
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2043
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2065
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2087
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2109
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.213
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2152
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2174
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2196
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2217
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2239
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2261
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2283
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2304
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2326
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2348
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.237
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2391
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2413
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 52,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2435
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 42,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2457
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2478
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.25
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.15
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 47,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.05
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 0, 1, 0],
+        "lanes": ["@wheel"]
+      },
+      "sounds": ["model-d/wheel-wah-bass"],
+      "research": {
+        "work": "An original pattern, written for Wheel Wah Bass",
+        "part": "The whole song: parts AABA, with the mod wheel on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "E minor at 104. A is a two-bar groove on E: the root, an off-beat G and A, an octave D and a run down B–A–G, then a second bar ending on F♯ under the turnaround. B moves the groove to A and then B. One hand on the mod wheel, the way a bassist rides a wah pedal: down for A’s first bar, up through its second and down for the turnaround; in B up from the start and deeper, and down again before A comes back. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/noise-growl-bass",
+      "name": "Noise Growl Bass",
+      "role": "bass_line",
+      "tempo": {
+        "min": 100,
+        "max": 136
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Industrial"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 118,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 4,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.47
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.44
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.4
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0667,
+                  "filter.cutoff": -1.37
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1333,
+                  "filter.cutoff": -1.34
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2,
+                  "filter.cutoff": -1.31
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1,
+                  "filter.cutoff": -1.27
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.24
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.21
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.18
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.15
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0833,
+                  "filter.cutoff": -1.11
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1667,
+                  "filter.cutoff": -1.08
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.25,
+                  "filter.cutoff": -1.05
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.125,
+                  "filter.cutoff": -1.02
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.98
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.95
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.92
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.89
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.85
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.82
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.79
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.76
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 34,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.73
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.69
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.66
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.63
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1,
+                  "filter.cutoff": -0.6
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2,
+                  "filter.cutoff": -0.56
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3,
+                  "filter.cutoff": -0.53
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.15,
+                  "filter.cutoff": -0.5
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.53
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.56
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.6
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1,
+                  "filter.cutoff": -0.63
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2,
+                  "filter.cutoff": -0.66
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3,
+                  "filter.cutoff": -0.69
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.15,
+                  "filter.cutoff": -0.73
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.76
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.79
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.82
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 26,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -0.85
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 32,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1167,
+                  "filter.cutoff": -0.89
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2333,
+                  "filter.cutoff": -0.92
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.35,
+                  "filter.cutoff": -0.95
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.175,
+                  "filter.cutoff": -0.98
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.02
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.05
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.08
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 24,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.11
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 27,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.15
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.18
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.21
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.24
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.27
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.31
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.34
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.37
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 28,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1333,
+                  "filter.cutoff": -1.4
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2667,
+                  "filter.cutoff": -1.44
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.4,
+                  "filter.cutoff": -1.47
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.cutoff": -1.5
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 0, 1, 1],
+        "lanes": ["@wheel", "filter.cutoff"]
+      },
+      "sounds": ["model-d/wheel-noise-growl"],
+      "research": {
+        "work": "An original pattern, written for Noise Growl Bass",
+        "part": "The whole song: parts AABB, with the mod wheel and filter.cutoff on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "E phrygian at 118, in octave-low pulses: three hits on the root, then a held note, G and then the flat fifth B♭, and a bar that walks G–A–B♭–A–G. B moves the same shape down to D and then C, landing on E. One hand on the mod wheel, pushed up into each held note and dropped for the hits, harder in B; the other turns the cutoff slowly up through A and back through B. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/contour-pitch-zap",
+      "name": "Contour Pitch Zap",
+      "role": "bass_line",
+      "tempo": {
+        "min": 102,
+        "max": 138
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "80s electro"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 120,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 9,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "fenv.decay": 2.4
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0097,
+                  "fenv.decay": 2.38
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0194,
+                  "fenv.decay": 2.36
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.029,
+                  "fenv.decay": 2.34
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0387,
+                  "fenv.decay": 2.32
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0484,
+                  "fenv.decay": 2.3
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0581,
+                  "fenv.decay": 2.28
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0677,
+                  "fenv.decay": 2.26
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0774,
+                  "fenv.decay": 2.25
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0871,
+                  "fenv.decay": 2.23
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0968,
+                  "fenv.decay": 2.21
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1065,
+                  "fenv.decay": 2.19
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1161,
+                  "fenv.decay": 2.17
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1258,
+                  "fenv.decay": 2.15
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1355,
+                  "fenv.decay": 2.13
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1452,
+                  "fenv.decay": 2.11
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1548,
+                  "fenv.decay": 2.09
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1645,
+                  "fenv.decay": 2.07
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1742,
+                  "fenv.decay": 2.05
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1839,
+                  "fenv.decay": 2.03
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1935,
+                  "fenv.decay": 2.01
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2032,
+                  "fenv.decay": 1.99
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2129,
+                  "fenv.decay": 1.97
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2226,
+                  "fenv.decay": 1.95
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2323,
+                  "fenv.decay": 1.94
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2419,
+                  "fenv.decay": 1.92
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2516,
+                  "fenv.decay": 1.9
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2613,
+                  "fenv.decay": 1.88
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.271,
+                  "fenv.decay": 1.86
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2806,
+                  "fenv.decay": 1.84
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2903,
+                  "fenv.decay": 1.82
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3,
+                  "fenv.decay": 1.8
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3,
+                  "fenv.decay": 1.8
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3104,
+                  "fenv.decay": 1.79
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3208,
+                  "fenv.decay": 1.78
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3313,
+                  "fenv.decay": 1.76
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3417,
+                  "fenv.decay": 1.75
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3521,
+                  "fenv.decay": 1.74
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3625,
+                  "fenv.decay": 1.73
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3729,
+                  "fenv.decay": 1.71
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 29,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3833,
+                  "fenv.decay": 1.7
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3938,
+                  "fenv.decay": 1.69
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 33,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.4042,
+                  "fenv.decay": 1.68
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.4146,
+                  "fenv.decay": 1.66
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.425,
+                  "fenv.decay": 1.65
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.4354,
+                  "fenv.decay": 1.64
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.4458,
+                  "fenv.decay": 1.63
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.4563,
+                  "fenv.decay": 1.61
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.4667,
+                  "fenv.decay": 1.6
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.4771,
+                  "fenv.decay": 1.59
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.4875,
+                  "fenv.decay": 1.58
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 31,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.4979,
+                  "fenv.decay": 1.56
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.5083,
+                  "fenv.decay": 1.55
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.5188,
+                  "fenv.decay": 1.54
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.5292,
+                  "fenv.decay": 1.53
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.5396,
+                  "fenv.decay": 1.51
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.55,
+                  "fenv.decay": 1.5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.4714,
+                  "fenv.decay": 1.63
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3929,
+                  "fenv.decay": 1.76
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3143,
+                  "fenv.decay": 1.89
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 36,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2357,
+                  "fenv.decay": 2.01
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1571,
+                  "fenv.decay": 2.14
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 35,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0786,
+                  "fenv.decay": 2.27
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 40,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "fenv.decay": 2.4
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 1, 0, 1],
+        "lanes": ["@wheel", "fenv.decay"]
+      },
+      "sounds": ["model-d/wheel-contour-zap"],
+      "research": {
+        "work": "An original pattern, written for Contour Pitch Zap",
+        "part": "The whole song: parts ABAB, with the mod wheel and fenv.decay on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "A minor at 120, a syncopated electro line: root, off-beat root, octave, then C–D–E; the second bar turns to G. B moves to F and G and climbs C–D, then falls E–D–C–B. One hand on the mod wheel, up slowly through A so the plain bass turns into zaps, on up through B to its widest, and back down for A; the other shortens the filter decay as the wheel rises, so the zaps tighten, and lets it out again at the end. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/fm-clang-build",
+      "name": "FM Clang Build",
+      "role": "bass_line",
+      "tempo": {
+        "min": 109,
+        "max": 147
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Industrial techno"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 128,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 2,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0032,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0065,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0097,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0129,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0161,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0194,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0226,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0258,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.029,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0323,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0355,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0387,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0419,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0452,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0484,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0516,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0548,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0581,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0613,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0645,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0677,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.071,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0742,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0774,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0806,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 41,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0839,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0871,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 39,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0903,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0935,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 38,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0968,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1,
+                  "osc3.freq": 0
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.12,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.13,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.14,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.15,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.16,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.17,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.18,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.19,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.21,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.22,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.23,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.24,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 53,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.25,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 50,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.26,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.27,
+                  "osc3.freq": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.28,
+                  "osc3.freq": 3.5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.29,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.3,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.31,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.32,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.33,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 48,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.34,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.35,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 46,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.36,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.37,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.38,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.39,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 43,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.4,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2667,
+                  "osc3.freq": 7
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 45,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1333,
+                  "osc3.freq": 3.5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "osc3.freq": 0
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 0, 1, 1],
+        "lanes": ["@wheel", "osc3.freq"]
+      },
+      "sounds": ["model-d/wheel-fm-build"],
+      "research": {
+        "work": "An original pattern, written for FM Clang Build",
+        "part": "The whole song: parts AABB, with the mod wheel and osc3.freq on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "D minor at 128, a pumping riff: root, octave and the minor third, then C–A; the second bar ends on the flat second E♭ falling to D. B moves it to G and A. AABB. One hand on the mod wheel, up through the whole song, slowly through A’s two passes and steeply through B, and back down as the loop comes round; the other turns Oscillator 3 a fifth up half way through each pass of B, so the metal changes colour at the top of the build, and back down as that pass ends. Each A starts with the wheel where the hand has it: the lane’s A rises 0 to 10% and plays twice, so the second pass jumps back, a small move the hand makes on the downbeat. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/wheel-bell-strike",
+      "name": "Wheel Bell Strike",
+      "role": "lead_line",
+      "tempo": {
+        "min": 71,
+        "max": 97
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Ambient electronica"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 84,
+        "stepSize": "1/8",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 0,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1333
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1067
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.08
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0533
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0267
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1333
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1067
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.08
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0533
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0267
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0089
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0178
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0267
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0356
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0444
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0533
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0622
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0711
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.08
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.22
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1833
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 71,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1467
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.11
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0733
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0367
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.22
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1833
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1467
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.11
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0733
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0367
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0178
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 6
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0356
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0533
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0711
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0889
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1067
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1244
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1422
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.16
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 1],
+        "lanes": ["@wheel"]
+      },
+      "sounds": ["model-d/wheel-bell-strike"],
+      "research": {
+        "work": "An original pattern, written for Wheel Bell Strike",
+        "part": "The whole song: parts AB, with the mod wheel on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "C major at 84, in eighth notes. A strikes G and falls to E, C and D, rings on E, then strikes A and comes down to C. B starts higher on C and B, rings on E, and comes home through F–E–D–E to a long C. One hand on the mod wheel: up for each phrase’s first strike, so it clangs, easing down over its first bar so the soft notes after ring pure, and coming back up into the next phrase; part B leans harder. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/seasick-breakdown",
+      "name": "Seasick Breakdown",
+      "role": "lead_line",
+      "tempo": {
+        "min": 104,
+        "max": 140
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Progressive house"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 122,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 5,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0032
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0065
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0097
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0129
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0161
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0194
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0226
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 6
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0258
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.029
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0323
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0355
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0387
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0419
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0452
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0484
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0516
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0548
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0581
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0613
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 69,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0645
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0677
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.071
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0742
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0774
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0806
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0839
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0871
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0903
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0935
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0968
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 0, 1, 1],
+        "lanes": ["@wheel"]
+      },
+      "sounds": ["model-d/wheel-seasick-breakdown"],
+      "research": {
+        "work": "An original pattern, written for Seasick Breakdown",
+        "part": "The whole song: parts AABB, with the mod wheel on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "F major at 122. A is a bouncy off-beat hook: F–A–C up and back, a G to F, then on to D and down to G, played twice with the wheel down. B is the breakdown, long notes falling D–C–A–G, then B♭–A–G held, played twice. One hand on the mod wheel: still through A, then up slowly through each pass of B, so the lead loses its footing, and down at once for A, as a drop snaps back in. The second B pass starts where the first did, a quick move back down for the hand. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/siren-riser",
+      "name": "Siren Riser",
+      "role": "lead_line",
+      "tempo": {
+        "min": 136,
+        "max": 184
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "Jungle"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 160,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 9,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 55,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 2
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 57,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0103
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0207
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.031
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0414
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0517
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0621
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0724
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 60,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.0828
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0931
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1034
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1138
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1241
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1345
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1448
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1552
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 62,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.1655
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1759
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1862
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1966
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2069
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2172
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2276
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2379
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 64,
+                    "gate": 8
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0.2483
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2586
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.269
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2793
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.2897
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.3
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.15
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 0, 0, 1],
+        "lanes": ["@wheel"]
+      },
+      "sounds": ["model-d/wheel-siren-riser"],
+      "research": {
+        "work": "An original pattern, written for Siren Riser",
+        "part": "The whole song: parts AAAB, with the mod wheel on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "A minor at 160, jungle tempo. A is a syncopated stab riff on A, C, G and E, played three times with the wheel down. B is the riser: four long notes climbing A–C–D–E, and one hand on the mod wheel pushes it up through all four, so they swoop wider and wider into a siren, and drops it just before the stabs come back. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    },
+    {
+      "key": "researched:model-d-wheel/filter-vibrato-funk",
+      "name": "Filter-Vibrato Funk",
+      "role": "lead_line",
+      "tempo": {
+        "min": 83,
+        "max": 113
+      },
+      "inspiredBy": {
+        "kind": "genre",
+        "label": "70s funk"
+      },
+      "fidelity": "in_the_style_of",
+      "sources": [],
+      "pattern": {
+        "version": 1,
+        "bpm": 98,
+        "stepSize": "1/16",
+        "loop": true,
+        "direction": "forward",
+        "swing": 50,
+        "transpose": 0,
+        "root": 7,
+        "scale": "chromatic",
+        "parts": [
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.06,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.12,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 6
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.0375,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.075,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1125,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.15,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 65,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 67,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              }
+            ]
+          },
+          {
+            "steps": [
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.1
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.21
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.31
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 79,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.42
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.05,
+                  "filter.emphasis": 5.52
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.1,
+                  "filter.emphasis": 5.63
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.15,
+                  "filter.emphasis": 5.73
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 77,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.83
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.94
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.04
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.15
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 4
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.25
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.04,
+                  "filter.emphasis": 6.35
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.08,
+                  "filter.emphasis": 6.46
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.12,
+                  "filter.emphasis": 6.56
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.67
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.77
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.88
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.98
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 74,
+                    "gate": 6
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 7.08
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 7.19
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.045,
+                  "filter.emphasis": 7.29
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.09,
+                  "filter.emphasis": 7.4
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.135,
+                  "filter.emphasis": 7.5
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0.18,
+                  "filter.emphasis": 7.14
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.79
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.43
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 72,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 6.07
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.71
+                }
+              },
+              {
+                "on": true,
+                "notes": [
+                  {
+                    "note": 70,
+                    "gate": 1
+                  }
+                ],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5.36
+                }
+              },
+              {
+                "on": true,
+                "notes": [],
+                "mod": {
+                  "@wheel": 0,
+                  "filter.emphasis": 5
+                }
+              }
+            ]
+          }
+        ],
+        "chain": [0, 1, 0, 1],
+        "lanes": ["@wheel", "filter.emphasis"]
+      },
+      "sounds": ["model-d/wheel-filter-vibrato-funk"],
+      "research": {
+        "work": "An original pattern, written for Filter-Vibrato Funk",
+        "part": "The whole song: parts ABAB, with the mod wheel and filter.emphasis on mod lanes",
+        "originalKey": null,
+        "originalBpm": null,
+        "leads": [],
+        "notes": "G minor pentatonic at 98, a slinky line: G–B♭–C up to a held D, a flick to F and down D–C–B♭–C to a long G. B answers higher, up to a held G, down to a held C, then B♭–C to a long D. One hand on the mod wheel, up on each held note once it has sounded and down for the quick notes, most on each part’s last long note; the other turns EMPHASIS up through B and back for A. An original song for the sound: no free lead has this part, so the notes are written to the style and taken from no record (owner ruling, 2026-11-02).",
+        "listenedAt": null
+      }
+    }
+  ],
+  "notRecreated": []
+}

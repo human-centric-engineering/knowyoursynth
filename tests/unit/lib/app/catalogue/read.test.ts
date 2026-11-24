@@ -86,7 +86,7 @@ describe('listSynths', () => {
         summary: synthRow.summary,
         design: 'faithful',
         definitionVersion: 1,
-        soundCount: 230,
+        soundCount: 240,
       },
     ]);
     expect(prisma.synth.findMany).toHaveBeenCalledWith(
@@ -121,8 +121,8 @@ describe('getSynthDetail', () => {
     expect(prisma.synth.findFirst).toHaveBeenCalledWith(
       expect.objectContaining({ where: { id: 'model-d', listed: true } })
     );
-    expect(detail?.synth).toMatchObject({ id: 'model-d', definitionVersion: 1, soundCount: 230 });
-    expect(detail?.sounds).toHaveLength(230);
+    expect(detail?.synth).toMatchObject({ id: 'model-d', definitionVersion: 1, soundCount: 240 });
+    expect(detail?.sounds).toHaveLength(240);
     const first = firstModelDSound();
     expect(detail?.sounds[0]).toMatchObject({ id: first.id, name: first.name, version: 1 });
     expect(detail?.lineage?.title).toBe('From the Moog modular to the Model D');
@@ -335,7 +335,7 @@ describe('getSynthDetail', () => {
 
     const detail = await getSynthDetail('model-d');
 
-    expect(detail?.sounds).toHaveLength(228);
+    expect(detail?.sounds).toHaveLength(238);
     expect(detail?.sounds.map((x) => x.id)).not.toContain(broken.slug);
     expect(detail?.sounds.map((x) => x.id)).not.toContain(oldVersion.slug);
     expect(logger.error).toHaveBeenCalledWith(

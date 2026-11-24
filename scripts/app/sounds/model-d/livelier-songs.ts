@@ -19,6 +19,7 @@ import type { PatternFx, Step, StepSize } from '@/lib/app/sequencer/pattern';
 import type { PatternRole } from '@prisma/client';
 import type { Lane, SongSpec } from '@/scripts/app/sounds/lane-kit';
 import { wave } from '@/scripts/app/sounds/lane-kit';
+import { onWheel } from '@/scripts/app/sounds/model-d/lane-sounds';
 
 export interface LivelierSpec {
   /** The Model D sound's slug. */
@@ -800,14 +801,15 @@ export const LIVELIER: LivelierSpec[] = [
       'A3:4 . . .'
     ),
     lanes: {
-      a: { 'mod.depth': wave(0.4, 1.2, 32) },
-      b: { 'mod.depth': wave(0.4, 2, 32) },
+      // The lesson leaves MOD DEPTH at 0.8, so the wheel makes up the rest of each position.
+      a: { '@wheel': onWheel(wave(0.8, 1.2, 32), 0.8) },
+      b: { '@wheel': onWheel(wave(0.8, 2, 32), 0.8) },
     },
     chain: [0, 0, 1, 1],
     genre: 'Jazz',
     fx: { reverb: reverb(0.5, 0.22) },
     notes:
-      'An A minor head that climbs to E and comes home (part A), and a bridge that starts on E and reaches C5 before falling to A (part B). The MOD DEPTH lane widens the vibrato through each phrase, most in the bridge, and a club-sized room.',
+      'An A minor head that climbs to E and comes home (part A), and a bridge that starts on E and reaches C5 before falling to A (part B). The mod wheel lane widens the vibrato through each phrase, most in the bridge, as the sound’s lesson says a player would; between swells it rests, and the vibrato is the lesson’s MOD DEPTH 0.8, which the wheel only adds to. A club-sized room.',
   },
   {
     sound: 'open-trumpet-lead',

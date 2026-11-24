@@ -13,6 +13,10 @@
  *
  * A lane is a function of the step: what it plays, and where it is in the part. Return `null` to leave the control at
  * the panel's value on that step.
+ *
+ * A lane may play a performance wheel the synth declares (`@wheel`, `f-performance-wheels` t-312), as it plays a
+ * knob: the hand check reads it from the wheel at rest, the readouts name it, and the lesson's words are checked to
+ * say the wheel plays it (`wheelWordsProblems`). The lesson never sets it: it is no panel control.
  */
 import type {
   ControlValue,
@@ -23,7 +27,8 @@ import type {
   PresetTweak,
   SynthDef,
 } from '@/lib/app/synths/contract';
-import { presetState } from '@/lib/app/synths/lib/patch';
+import { presetState, WHEEL } from '@/lib/app/synths/lib/patch';
+import { isPerformanceId, performanceControl } from '@/lib/app/synths/lib/performance';
 import {
   PATTERN_VERSION,
   PatternSchema,
@@ -155,8 +160,12 @@ export interface LaneSoundSpec extends Omit<SoundSpec, 'bpm' | 'riff' | 'steps'>
 }
 
 // `+ 0` turns a -0 into 0, as JSON stores it, so a pattern read back from its file equals the one built.
-const round = (v: ControlValue): ControlValue =>
-  typeof v === 'number' ? Math.round(v * 100) / 100 + 0 : v;
+// A wheel's lane runs 0..1 (or -1..1), not a knob's 0..10, and the Model D's wheel stands for a squared knob depth, so
+// small values carry most of a vibrato: it keeps four decimals, fine enough that a smooth swell stays smooth.
+const round = (v: ControlValue, id = ''): ControlValue => {
+  const at = isPerformanceId(id) ? 10000 : 100;
+  return typeof v === 'number' ? Math.round(v * at) / at + 0 : v;
+};
 
 /** Builds the pattern, checking each lane value against the synth's control and the pattern against the riff rule. */
 export function buildPattern(def: SynthDef, s: LanePatternSpec): Pattern {
@@ -219,7 +228,7 @@ function assemble(def: SynthDef, s: LanePatternSpec | SongSpec, minLanes: number
           const raw = lane(c);
           if (raw === null) continue;
           // Checked as it is stored, so a value rounded past an end of its knob is caught.
-          const v = round(raw);
+          const v = round(raw, id);
           const control = laneControl(def, id)!;
           if (laneValue(control, v) === null)
             throw new Error(`${s.name}: ${id} cannot take ${String(v)} (step ${c.i + 1})`);
@@ -358,7 +367,7 @@ export function laneReadout(
   v: ControlValue,
   values: Record<string, ControlValue>
 ): string {
-  const c = def.controls.find((x) => x.id === id);
+  const c = def.controls.find((x) => x.id === id) ?? performanceControl(def, id);
   if (!c) throw new Error(`${def.id}: no control ${id}`);
   // A panel label can run over two lines (CUTOFF / FREQUENCY); a readout is one.
   const name = r.names[id] ?? (c.label ?? id).replace(/\s*\n\s*/g, ' ');
@@ -373,6 +382,42 @@ export function laneReadout(
   return shown && shown !== n ? `${name} ${n} (${shown})` : `${name} ${n}`;
 }
 
+/** A lane's id as a batch's research names it: the control's id, or "the mod wheel" for the wheel's lane. */
+export const laneInWords = (id: string): string => (id === WHEEL ? 'the mod wheel' : id);
+
+/**
+ * Whether tweak `t` is about lane `id`: it names the lane's control, or, for the mod wheel's lane, which no tweak can
+ * name (a tweak points at a panel control), it says to move the mod wheel.
+ */
+export const tweakNamesLane = (t: PresetTweak, id: string): boolean =>
+  t.id === id || (id === WHEEL && /mod wheel/i.test(t.try));
+
+/**
+ * What a sound whose pattern plays the mod wheel must say about it (t-312): its `how` and one of its steps name the
+ * wheel, and a tweak says to redraw the wheel's lane. A lesson that still says a knob plays what the wheel now does
+ * teaches the wrong control.
+ */
+export function wheelWordsProblems(s: LaneSoundSpec): string[] {
+  const lanes = new Set(s.pattern.parts.flatMap((p) => Object.keys(p.lanes)));
+  if (!lanes.has(WHEEL)) return [];
+  const problems: string[] = [];
+  if (!/mod wheel/i.test(s.how)) problems.push('its how never names the mod wheel');
+  if (!s.steps.some((st) => /mod wheel|the wheel/i.test(st.why)))
+    problems.push('no step says the wheel brings the modulation in');
+  if (!s.tweaks.some((t) => tweakNamesLane(t, WHEEL) && /mod wheel lane/i.test(t.try)))
+    problems.push('no tweak redraws the mod wheel lane');
+  const words = [
+    s.how,
+    s.pattern.notes,
+    ...Object.values(s.context),
+    ...s.steps.flatMap((st) => [st.why, st.listen]),
+    ...s.tweaks.flatMap((t) => [t.try, t.hear]),
+  ];
+  if (/depth lane/i.test(words.join(' ')))
+    problems.push('its words still call the wheel the depth lane');
+  return problems.map((p) => `${s.name}: ${p}`);
+}
+
 /** The finished sounds: each step's text with a readout line for every control it sets, at that step's panel. */
 export function writeLaneSounds(
   def: SynthDef,
@@ -380,6 +425,14 @@ export function writeLaneSounds(
   sounds: { spec: LaneSoundSpec; riff: PhraseNote[]; bpm: number }[]
 ): Preset[] {
   return sounds.map(({ spec: s, riff, bpm }) => {
+    for (const st of s.steps)
+      for (const id of Object.keys(st.set ?? {}))
+        if (isPerformanceId(id))
+          throw new Error(
+            `${s.name}: "${st.title}" sets ${id}, which is no panel control: its lane plays it`
+          );
+    const words = wheelWordsProblems(s);
+    if (words.length) throw new Error(words.join('\n'));
     const phrase: Phrase = { bpm, loop: true, steps: riff };
     const bare = s.steps.map((st) => ({
       title: st.title,

@@ -1,6 +1,6 @@
 # Sounds played by their mod lanes
 
-`f-lane-sounds` (t-300, t-301). A **lane sound** is a library sound whose default pattern is a whole song: a chained
+`f-lane-sounds` (t-300, t-301), and the wheel (`f-performance-wheels` t-312). A **lane sound** is a library sound whose default pattern is a whole song: a chained
 A/B pattern with one or two mod lanes that play the controls its lesson teaches. Play plays it whole (t-300,
 [a default may carry both](./pattern-library.md#a-sounds-riff-is-its-default-pattern)).
 
@@ -83,7 +83,7 @@ The lanes then ride it slowly. Each of these is one of the Model D's thirty:
 | -------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------- |
 | A brighter or squelchier note on the accents | The envelope, on every note; the lane rides its size slowly                           | Dub Pressure, Night Drive             |
 | A note brighter because it is higher         | Keyboard control (filter tracking)                                                    | Italo Octaves, Electro Zap            |
-| An accent that rolls across the beat         | The LFO at the cross-rhythm's rate, sent to the filter; the lane rides MOD DEPTH      | Glass Arpeggio, Contour Marimba       |
+| An accent that rolls across the beat         | The LFO at the cross-rhythm's rate, sent to the filter; the lane rides the mod wheel  | Glass Arpeggio, Contour Marimba       |
 | A gate rhythm (long and short sixteenths)    | The notes' gate lengths, with sustain up and the release off                          | Gated Trance Pulse                    |
 | Octave leaps                                 | The notes; the RANGE switches move per half bar                                       | Octave-Leap Electro                   |
 | A drum kit on one voice                      | The notes, through a key-tracking filter: low notes dark (kick), high open (hats)     | One-Voice Drum Kit                    |
@@ -100,7 +100,9 @@ own changes which of these routes exist.
 Each sound is a lesson, as every library sound is (`lesson-writer.ts`), and a song:
 
 - **The lesson** builds the patch a step at a time. A control a lane plays is left at a resting value, and the step
-  says so ("MOD DEPTH stays at 0: the lane raises it").
+  says so ("FILTER DECAY stays at 3: the lane rides it"). A wheel's lane is the same, said of the knob the wheel adds
+  to ("MOD DEPTH stays at 0: the wheel brings it in"), and the lesson never sets the wheel
+  ([Performance inputs](#performance-inputs-a-lane-on-the-wheel)).
 - **The song** is two parts of 32 sixteenths (or 1/8 steps for slow ones), chained so both play (`AAAB`, `ABAB`,
   `AABB`). The riff the sound stores is part A's first loop, so it must pass `riffProblem`: forward or reverse, no
   chance or conditions, no rests after part A's last note.
@@ -111,11 +113,87 @@ Each sound is a lesson, as every library sound is (`lesson-writer.ts`), and a so
 - **Credits** follow the library's rule: no person's name. `artist` is the genre or tradition, the pattern is _In the
   style of_ it, with no lead (owner ruling, 2026-11-02).
 
+## Performance inputs: a lane on the wheel
+
+`f-performance-wheels` t-312. A synth that declares a performance wheel (`SynthDef.performance`,
+[`sequencer.md`](./sequencer.md), Performance wheels) offers it as a lane by a reserved id: `@wheel` for the mod
+wheel. Where a lane rides the modulation a player brings in while playing, the wheel is the control a player would
+use, and the lane goes on it.
+
+### When it is the wheel's job
+
+A lane that brings modulation in and out as the music goes is the wheel's: vibrato swelling on held notes, how deep
+a wobble goes, how much FM, a filter's wah brought in after the first bar. A knob that is set for a section and left
+(an LFO's rate, a waveform, a filter's cutoff) stays a knob. On the Model D that split is MOD DEPTH and the mod
+wheel: the knob sets a depth that stays, the wheel adds to it as the player pushes.
+
+Twelve of the Model D's thirty lane sounds, and one of its livelier songs (Tenor Sax Lead), rode MOD DEPTH for vibrato or
+wobble. They now ride the wheel. Their other lane stays.
+
+### Moving a knob's lane onto the wheel
+
+The wheel's lane must play what the knob's did, read from how the synth's `toEngine()` combines the two. The Model D
+adds the wheel to the depth MOD DEPTH gives, (d ÷ 10)², so a MOD DEPTH lane at d is the wheel at (d ÷ 10)² with the
+knob at 0 (`onWheel` in `model-d/lane-sounds.ts`). The lesson then sets the knob to 0, and a lesson that had it up
+(Rate-Step Wobble Bass's MOD DEPTH 5) changes its finished panel: re-record that sound's check baseline entry. A library sound whose lesson keeps the
+knob up (Tenor Sax Lead's 0.8) passes that position as `onWheel(lane, 0.8)`: the wheel makes up only the rest, and a
+position below the panel's rests the wheel, since it can only add. Another
+synth's wheel may scale a knob's amount rather than add to it, so read its `toEngine()` before converting.
+
+### What the kit does with it
+
+- **The hand check** reads the wheel's lane as it reads a knob's, from the wheel at rest (down): a step the lane
+  leaves alone is the wheel down. **One hand on the wheel is advised, not enforced** (owner ruling, t-312): a sound
+  may ride the wheel and a knob, as a player does with one hand on the wheel and one on the panel.
+- **Its values keep four decimals.** The wheel runs 0 to 1 where a knob runs 0 to 10, and on the Model D it stands
+  for a squared MOD DEPTH, (d / 10)², so the small values carry most of a vibrato: at three decimals depths 0.4 to
+  0.47 all land on 0.002, and a smooth swell becomes a staircase. On the Model D the wheel at full moves the pitch
+  14 semitones, so a hundredth would step vibrato in 14-cent jumps.
+- **The lesson never sets it.** It is no panel control, so `validatePreset` would refuse it: `writeLaneSounds`
+  refuses a step that sets one, by name.
+- **The words are checked** (`wheelWordsProblems`): the `how` names the mod wheel, a step says the wheel brings the
+  modulation in, a tweak says to redraw the mod wheel lane, and nothing still calls it the depth lane. A tweak and
+  `context` point at panel controls, so they name the knob the wheel adds to (`mod.depth`) and say the wheel in
+  words. A tweak is about the wheel's lane when its `try` says to move the mod wheel (`tweakNamesLane`); the seed test
+  reads it the same way.
+- **Readouts and records** name it "Mod wheel" (`laneReadout`) and "the mod wheel" in a batch's research
+  (`laneInWords`).
+
+### The Model D's ten
+
+`scripts/app/sounds/model-d/wheel-sounds.ts`, written by `write-lane-sounds.ts` as the batch
+`t312-model-d-wheel-sounds.json` beside t-301's. Each is a different musical use of the wheel, and its notes are a
+line one hand could play:
+
+| Sound                | What the wheel brings in                                                  | Other lane      |
+| -------------------- | ------------------------------------------------------------------------- | --------------- |
+| Delayed Vibrato Lead | Vibrato, two steps into each long note                                    |                 |
+| Square-Wave Trill    | A square LFO on the pitch: a trill, as wide as the wheel is pushed        |                 |
+| Wheel Wah Bass       | A beat-synced LFO on the filter, ridden like a wah pedal                  |                 |
+| Noise Growl Bass     | Noise (source B) on the filter: a growl on the held notes                 | CUTOFF          |
+| Contour Pitch Zap    | The filter contour (source A) on the pitch: each note fires down          | Filter DECAY    |
+| FM Clang Build       | Oscillator 3 at audio rate on the pitch, rising through the whole song    | Osc 3 FREQUENCY |
+| Wheel Bell Strike    | Inharmonic FM on each phrase's first strike                               |                 |
+| Seasick Breakdown    | A slow LFO on the pitch, rising through the breakdown                     |                 |
+| Siren Riser          | Oscillator 3 off the keyboard as a slow wave on the pitch: a siren        |                 |
+| Filter-Vibrato Funk  | A vibrato-rate LFO on the filter, not the pitch: tone throbs, pitch holds | EMPHASIS        |
+
+**Check the wheel's facts on the synth.** The Model D's LFO swings both ways from the key, so the trill's notes are
+written between the two it plays. Its wheel goes where MOD MIX and the modulation switches send MOD DEPTH, so each
+lesson sets those up before the wheel comes in; `wheelReach` (`lib/app/synths/lib/routing.ts`) says where that is.
+
+### A wheel set for another synth
+
+1. Read its `toEngine()` for where `ctx.wheel` goes and how it meets the panel's knobs.
+2. Look through its lane sounds for lanes that are the wheel's job, and move them as above.
+3. Write its wheel sounds as the Model D's are, from what its wheel reaches: a wheel that only does vibrato has
+   fewer uses than one that reaches the filter and the oscillators.
+
 ## A set for another synth
 
-1. **Copy the Model D's two files** into `scripts/app/sounds/<synth>/`: `lane-sounds.ts` (its `READOUTS`, the
-   panel's names for its controls, and the specs) and `write-lane-sounds.ts` (the paths, the slug and the batch's
-   task).
+1. **Copy the Model D's files** into `scripts/app/sounds/<synth>/`: `lane-sounds.ts` (its `READOUTS`, the
+   panel's names for its controls, and the specs), `wheel-sounds.ts` if it has a wheel, and `write-lane-sounds.ts`
+   (the paths, the slug, and each set's batch and task).
 2. **Read the synth's facts** against [Where the fast part goes instead](#where-the-fast-part-goes-instead): velocity,
    keyboard tracking, its LFO's routing and range, envelope shape, a sequencer of its own
    ([`sequencer-synths.md`](./sequencer-synths.md)).

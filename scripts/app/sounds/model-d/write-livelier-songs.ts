@@ -18,7 +18,7 @@ import modelD from '@/lib/app/synths/defs/model-d';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { phraseOf } from '@/lib/app/patterns/library';
 import { PatternSchema, type Pattern } from '@/lib/app/sequencer/pattern';
-import { buildSong, checkHands } from '@/scripts/app/sounds/lane-kit';
+import { buildSong, checkHands, laneInWords, tweakNamesLane } from '@/scripts/app/sounds/lane-kit';
 import {
   LIVELIER,
   livelierKey as key,
@@ -81,9 +81,8 @@ function build(s: LivelierSpec) {
   if (!raw) throw new Error(`${s.sound}: not in the Model D's library`);
   const checked = validatePreset(modelD, raw);
   if (!checked.ok) throw new Error(`${s.sound}: ${JSON.stringify(checked.problems)}`);
-  const tweaks = new Set(checked.value.tweaks.map((t) => t.id));
   for (const id of pattern.lanes ?? [])
-    if (!tweaks.has(id))
+    if (!checked.value.tweaks.some((t) => tweakNamesLane(t, id)))
       throw new Error(`${s.sound}: a lane on ${id}, which none of its tweaks names`);
   if (pattern.lanes?.length) checkHands(modelD, checked.value, pattern);
   return { spec: s, pattern, from, raw };
@@ -131,7 +130,7 @@ const batch = {
       work: from
         ? `A variation on ${(spec.a as { from: string }).from.replace('researched:', '')}, written for the sound`
         : `An original pattern, written for the sound`,
-      part: `The whole song: parts ${partsOf(pattern)}${pattern.lanes?.length ? `, with ${pattern.lanes.join(' and ')} on mod lanes` : ''}${pattern.fx ? `, with the ${Object.keys(pattern.fx).join(' and ')} on` : ''}`,
+      part: `The whole song: parts ${partsOf(pattern)}${pattern.lanes?.length ? `, with ${pattern.lanes.map(laneInWords).join(' and ')} on mod lanes` : ''}${pattern.fx ? `, with the ${Object.keys(pattern.fx).join(' and ')} on` : ''}`,
       originalKey: null,
       originalBpm: null,
       leads: [],
