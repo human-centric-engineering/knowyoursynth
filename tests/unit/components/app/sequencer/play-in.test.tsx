@@ -650,6 +650,40 @@ describe('live record of the performance wheels (t-310)', () => {
       expect(state.modShown).toEqual({ [WHEEL]: 0.4 });
     });
 
+    it('is the transport’s Ride the wheel, there only once the pattern has a wheel lane', async () => {
+      function WithSequencer() {
+        const [lanes] = useState<LaneTarget>(() => ({ def: WHEELS, paramsFor: () => null }));
+        const seq = useSequencer({ engine, ensureAudio: async () => true, riff: null, lanes });
+        state = seq;
+        return (
+          <Sequencer
+            seq={seq}
+            def={WHEELS}
+            panel={{ [WHEEL]: 0, [BEND]: 0 }}
+            playing={seq.playing}
+            onPlay={() => void seq.play()}
+            onStop={seq.stop}
+            transport
+          />
+        );
+      }
+      render(<WithSequencer />);
+      const ride = () => screen.queryByRole('button', { name: /Ride the wheel/ });
+      expect(ride()).toBeNull();
+      act(() => state.setKeys('live'));
+      await act(async () => {
+        await state.play({ countIn: false });
+      });
+      fire(loopEvent({ beats: 4 }));
+      move(WHEEL, 0.4, 1.2);
+      settle();
+      expect(ride()).not.toBeNull();
+      fireEvent.click(ride()!);
+      expect(state.playAlong).toBe(true);
+      fireEvent.click(ride()!);
+      expect(state.playAlong).toBe(false);
+    });
+
     it('is not offered on a pattern without a wheel lane', async () => {
       await start();
       expect(state.canPlayAlong).toBe(false);
