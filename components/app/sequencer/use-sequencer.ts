@@ -764,6 +764,7 @@ export function useSequencer({
     if (snap.named) {
       heldRef.current++;
       setLoaded(snap.named.loaded);
+      setOpened((n) => n + 1);
       setBaseline(snap.named.baseline);
     }
     lastGroup.current = null;
@@ -1228,12 +1229,15 @@ export function useSequencer({
   const setPlayAlong = useCallback(
     (on: boolean) => {
       if (playAlongRef.current === on) return;
+      // A wheel moved in live record just before is written now, and the next move after is a move.
+      flushWheels();
+      wheelLast.current.clear();
       playAlongRef.current = on;
       setPlayAlongState(on);
       // Heard from now: the loop playing is sent again with or without its wheel lanes.
       replay();
     },
-    [replay]
+    [replay, flushWheels]
   );
   const setArp = useCallback(
     (a: ArpSettings) => {

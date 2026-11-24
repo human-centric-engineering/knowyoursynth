@@ -695,6 +695,16 @@ describe('live record of the performance wheels (t-310)', () => {
       expect(lane(WHEEL)).toEqual(was);
     });
 
+    it('writes a move made just before it goes on at once, and nothing after', async () => {
+      await start();
+      move(WHEEL, 0.4, 1.2);
+      act(() => state.setPlayAlong(true));
+      expect(lane(WHEEL)[1]).toBe(0.4);
+      move(WHEEL, 0.9, 7.2);
+      settle();
+      expect(lane(WHEEL)[7]).toBeUndefined();
+    });
+
     it('does not send the loop again as the panel moves, when only its wheel lanes would play', async () => {
       function Moving({ n }: { n: number }) {
         // a new target each render, as the page's is when the wheel moves

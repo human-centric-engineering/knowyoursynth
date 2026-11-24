@@ -646,7 +646,7 @@ export function Sequencer({
             <Toggle
               label="Ride the wheel"
               on={seq.playAlong}
-              help="The wheel lane stops moving the wheel. Its moves show as a dashed outline on the wheel for you to follow, with the wheel on screen or on your MIDI keyboard, and a word under the wheels says how close you are."
+              help="The wheel lane stops moving the wheel. Its moves show as a dashed outline on the wheel for you to follow, with the wheel on screen or on your MIDI keyboard, and a word under the wheels says how close you are. Through MIDI out, your wheel isn’t sent: the synth’s own wheel is the one it hears."
               onClick={() => seq.setPlayAlong(!seq.playAlong)}
             />
           )}
