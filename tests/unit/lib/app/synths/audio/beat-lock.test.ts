@@ -11,7 +11,7 @@
 import { describe, expect, it } from 'vitest';
 import { createBeatLock, snapStage, snapStep } from '@/lib/app/synths/audio/beat-lock';
 import { createMoog, MOOG_DESTS, MOOG_SIGNALS } from '@/lib/app/synths/audio/moog-core';
-import type { MeterEvent } from '@/lib/app/synths/audio/dsp-core';
+import { createSynth, type MeterEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, MoogParams } from '@/lib/app/synths/contract';
 import system55 from '@/lib/app/synths/defs/system-55';
 import { FOLLOW_960 } from '@/lib/app/synths/defs/moog900/modules';
@@ -221,18 +221,29 @@ describe('the clock reaching the System 55’s 960 from the voice’s riff playe
       cables: [{ src: 's960a', dst: 'q0In', amt: 1, add: false }],
     };
   };
-  /** The 960's stage at each meter reading over two seconds of a one-bar riff, and the sample it was read at. */
-  const stages = (p: EngineParams) => {
-    const { events } = render(p, {
-      len: 2 * SR,
-      events: [[0, { type: 'phrase', phrase: { bpm: 120, loop: true, steps: [[0, 60, 4]] } }]],
+  /**
+   * The 960's stage at each meter reading over two seconds of a one-bar riff (or, with `pattern`, the page's pattern
+   * player playing the same bar), and the sample the reading's block ended on, counted from where the run starts: the
+   * riff starts on the message's sample, the pattern player on the next block.
+   */
+  const stages = (p: EngineParams, pattern = false) => {
+    const rows: { t: number; seq: number | undefined }[] = [];
+    let end = 0;
+    const syn = createSynth(SR, (e) => {
+      if (e.type === 'meter') rows.push({ t: end - (pattern ? 128 : 0), seq: e.seq });
     });
-    return events
-      .filter((e): e is MeterEvent => e.type === 'meter')
-      .map((e, i) => ({ t: (i + 1) * 2048, seq: e.seq }));
+    syn.handle({ type: 'params', p });
+    syn.handle(
+      pattern
+        ? { type: 'pattern', loop: { notes: [[0, 60, 4]], beats: 4 }, bpm: 120 }
+        : { type: 'phrase', phrase: { bpm: 120, loop: true, steps: [[0, 60, 4]] } }
+    );
+    const buf = new Float32Array(128);
+    for (end = 128; end <= 2 * SR; end += 128) syn.process(buf, 128);
+    return rows;
   };
-  /** Readings at least a block clear of a step at `len` samples a step, so where a meter falls cannot tip them. */
-  const clear = (len: number) => (r: { t: number }) => Math.min(r.t % len, len - (r.t % len)) > 256;
+  /** Readings at least a block clear of a step at `len` samples a step: the meter reads somewhere in its block. */
+  const clear = (len: number) => (r: { t: number }) => Math.min(r.t % len, len - (r.t % len)) > 128;
 
   it('sets follow from the 960 CLOCK switch, which starts at FREE, as the hardware runs', () => {
     expect(params(true).follow).toBe(true);
@@ -245,6 +256,18 @@ describe('the clock reaching the System 55’s 960 from the voice’s riff playe
     const on = stages(params(true)).filter(clear(6000));
     expect(on.length).toBeGreaterThan(20);
     for (const r of on) expect(r.seq).toBe(Math.floor(r.t / 6000) % 8);
+  });
+
+  it('following, the pattern player’s clock moves it the same way', () => {
+    const on = stages(params(true), true).filter(clear(6000));
+    expect(on.length).toBeGreaterThan(20);
+    for (const r of on) expect(r.seq).toBe(Math.floor(r.t / 6000) % 8);
+  });
+
+  it('following, with nothing playing, it stands on stage 1', () => {
+    const { events } = render(params(true), { len: SR, events: [] });
+    const seen = events.filter((e): e is MeterEvent => e.type === 'meter').map((e) => e.seq);
+    expect(new Set(seen)).toEqual(new Set([0]));
   });
 
   it('at FREE, the 960 keeps its own rate and drifts off the sixteenths', () => {

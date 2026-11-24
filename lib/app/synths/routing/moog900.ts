@@ -203,12 +203,10 @@ const KINDS: Record<string, Kind> = {
   },
 };
 
-/** The output panel's jacks are `j.out.*`, under no module's id. */
+/** The output panel's jacks are `j.out.*` and its controls `out.*` (the System 55's 960 CLOCK), under no module's id. */
 const OUT = 'appout';
-const jackModule = (id: string) => {
-  const m = id.split('.')[1];
-  return m === 'out' ? OUT : m;
-};
+const onPanel = (m: string) => (m === 'out' ? OUT : m);
+const jackModule = (id: string) => onPanel(id.split('.')[1]);
 
 /** The output signal that numbers a module's engine slot, and the reading that slot reports. */
 const SLOT_SIGNALS: [RegExp, 'vco' | 'env' | 'amp'][] = [
@@ -248,7 +246,7 @@ export function moog900Routing(def: SynthDef): SynthRouting {
       name: k.name.replace('#', n).trim(),
       module: a.module,
       description: k.description,
-      controls: def.controls.filter((c) => c.id.split('.')[0] === a.id).map((c) => c.id),
+      controls: def.controls.filter((c) => onPanel(c.id.split('.')[0]) === a.id).map((c) => c.id),
     };
     if (k.specs) block.specs = k.specs;
     if (k.passes) block.passes = true;
