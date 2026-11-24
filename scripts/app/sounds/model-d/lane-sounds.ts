@@ -16,13 +16,14 @@ export const lfoAt = (hz: number): number =>
 
 /**
  * A lane written as MOD DEPTH positions, played on the mod wheel instead (t-312). The Model D adds the wheel to the
- * depth MOD DEPTH gives, (d / 10)², so with the knob at 0 the wheel at (d / 10)² is the knob at d.
+ * depth MOD DEPTH gives, (d / 10)², so the wheel plays the knob at d by making up what the panel's `panel` does not:
+ * with the knob at 0 that is all of (d / 10)². A position below the panel's is the panel's: the wheel only adds.
  */
 export const onWheel =
-  (depth: Lane): Lane =>
+  (depth: Lane, panel = 0): Lane =>
   (c) => {
     const d = depth(c);
-    return typeof d === 'number' ? (d / 10) ** 2 : d;
+    return typeof d === 'number' ? Math.max(0, (d / 10) ** 2 - (panel / 10) ** 2) : d;
   };
 
 /** The LFO rate for `perBeat` cycles a beat at `bpm`. */

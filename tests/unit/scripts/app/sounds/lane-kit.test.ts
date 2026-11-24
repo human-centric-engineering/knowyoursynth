@@ -307,8 +307,8 @@ describe('a mod wheel lane (t-312)', () => {
     tweaks: [laneTweak('mod.depth', 'redraw the mod wheel lane higher.', 'Wider.')],
     pattern: spec({
       parts: [
-        { notes: A, lanes: { '@wheel': ramp(0, 0.0123) } },
-        { notes: A, lanes: { '@wheel': ramp(0.0123, 0) } },
+        { notes: A, lanes: { '@wheel': ramp(0, 0.012345) } },
+        { notes: A, lanes: { '@wheel': ramp(0.012345, 0) } },
       ],
     }),
     ...over,
@@ -318,11 +318,11 @@ describe('a mod wheel lane (t-312)', () => {
       { spec: s, riff: [[0, 45, 0.25]], bpm: 120 },
     ]);
 
-  it('is played as the wheel, kept to a thousandth of its travel', () => {
+  it('is played as the wheel, kept to four decimals of its travel', () => {
     const p = buildPattern(modelD, wheelSpec().pattern);
     expect(p.lanes).toEqual(['@wheel']);
-    // A knob keeps a hundredth of its 0..10; the wheel runs 0..1, so it keeps the same share of its travel.
-    expect(p.parts[0].steps[7].mod).toEqual({ '@wheel': 0.012 });
+    // A knob keeps a hundredth of its 0..10; the wheel runs 0..1 and stands for a squared depth, so it keeps four.
+    expect(p.parts[0].steps[7].mod).toEqual({ '@wheel': 0.0123 });
   });
 
   it('is named in readouts and words, and a tweak is about it when it says to move the mod wheel', () => {
@@ -356,6 +356,22 @@ describe('a mod wheel lane (t-312)', () => {
       'Wheel Test: its words still call the wheel the depth lane',
     ]);
     expect(() => write(knob)).toThrow(/its how never names the mod wheel/);
+    // A step's listen, or a second tweak, still calling it the depth lane is caught too.
+    const listen = wheelSpec({
+      steps: [{ ...wheelSpec().steps[0], listen: 'vibrato once the depth lane rises.' }],
+    });
+    expect(wheelWordsProblems(listen)).toEqual([
+      'Wheel Test: its words still call the wheel the depth lane',
+    ]);
+    const tweak = wheelSpec({
+      tweaks: [
+        ...wheelSpec().tweaks,
+        laneTweak('mod.depth', 'draw the depth lane higher.', 'Wider.'),
+      ],
+    });
+    expect(wheelWordsProblems(tweak)).toEqual([
+      'Wheel Test: its words still call the wheel the depth lane',
+    ]);
     // A sound with no wheel lane has nothing to say about one.
     expect(wheelWordsProblems({ ...knob, pattern: spec() })).toEqual([]);
   });

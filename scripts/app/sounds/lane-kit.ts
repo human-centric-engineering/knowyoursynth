@@ -160,9 +160,10 @@ export interface LaneSoundSpec extends Omit<SoundSpec, 'bpm' | 'riff' | 'steps'>
 }
 
 // `+ 0` turns a -0 into 0, as JSON stores it, so a pattern read back from its file equals the one built.
-// A wheel's lane runs 0..1 (or -1..1), not a knob's 0..10, so it keeps a decimal more: the same share of its travel.
+// A wheel's lane runs 0..1 (or -1..1), not a knob's 0..10, and the Model D's wheel stands for a squared knob depth, so
+// small values carry most of a vibrato: it keeps four decimals, fine enough that a smooth swell stays smooth.
 const round = (v: ControlValue, id = ''): ControlValue => {
-  const at = isPerformanceId(id) ? 1000 : 100;
+  const at = isPerformanceId(id) ? 10000 : 100;
   return typeof v === 'number' ? Math.round(v * at) / at + 0 : v;
 };
 
@@ -405,7 +406,14 @@ export function wheelWordsProblems(s: LaneSoundSpec): string[] {
     problems.push('no step says the wheel brings the modulation in');
   if (!s.tweaks.some((t) => tweakNamesLane(t, WHEEL) && /mod wheel lane/i.test(t.try)))
     problems.push('no tweak redraws the mod wheel lane');
-  if (/depth lane/i.test([s.how, s.pattern.notes, ...Object.values(s.context)].join(' ')))
+  const words = [
+    s.how,
+    s.pattern.notes,
+    ...Object.values(s.context),
+    ...s.steps.flatMap((st) => [st.why, st.listen]),
+    ...s.tweaks.flatMap((t) => [t.try, t.hear]),
+  ];
+  if (/depth lane/i.test(words.join(' ')))
     problems.push('its words still call the wheel the depth lane');
   return problems.map((p) => `${s.name}: ${p}`);
 }

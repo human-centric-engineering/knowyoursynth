@@ -110,4 +110,23 @@ describe('onWheel', () => {
       9
     );
   });
+
+  it('makes up only what a panel MOD DEPTH does not give, and never goes below the panel', () => {
+    const panel: ControlValues = {
+      ...modelD.init,
+      'mod.toOsc': true,
+      'mod.mix': 10,
+      'lfo.rate': lfoAt(5),
+      'mod.depth': 0.8,
+    };
+    const amt = (v: ControlValues, wheel: number) =>
+      modelD.toEngine(v, { wheel, patched: {} }).routes?.find((r) => r.dst === 'pitchAll')?.amt;
+    const [c] = cells('A2', 1);
+    expect(amt(panel, onWheel(() => 1.2, 0.8)(c) as number)).toBeCloseTo(
+      amt({ ...panel, 'mod.depth': 1.2 }, 0)!,
+      9
+    );
+    // Below the panel's position the wheel rests: it can only add.
+    expect(onWheel(() => 0.4, 0.8)(c)).toBe(0);
+  });
 });

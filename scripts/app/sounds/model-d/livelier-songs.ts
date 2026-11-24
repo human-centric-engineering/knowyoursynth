@@ -801,8 +801,9 @@ export const LIVELIER: LivelierSpec[] = [
       'A3:4 . . .'
     ),
     lanes: {
-      a: { '@wheel': onWheel(wave(0.4, 1.2, 32)) },
-      b: { '@wheel': onWheel(wave(0.4, 2, 32)) },
+      // The lesson leaves MOD DEPTH at 0.8, so the wheel makes up the rest of each position.
+      a: { '@wheel': onWheel(wave(0.4, 1.2, 32), 0.8) },
+      b: { '@wheel': onWheel(wave(0.4, 2, 32), 0.8) },
     },
     chain: [0, 0, 1, 1],
     genre: 'Jazz',

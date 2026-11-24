@@ -112,27 +112,9 @@ function build(set: LaneSet) {
   return { set, built, sounds, problems };
 }
 
-/** Writes a built set: its sounds into the library, its batch, and its sounds' defaults. */
-function write({ set, built, sounds }: ReturnType<typeof build>): number {
-  const mineBefore = new Set(
-    soundsBefore(set.batch)
-      .filter((k) => k.startsWith(SLUG))
-      .map((k) => k.slice(SLUG.length))
-  );
-  const ids = new Set(sounds.map((s) => s.id));
-  const library = readFile(LibraryFile, SOUNDS);
-  const clash = library.data.sounds.filter((s) => ids.has(s.id) && !mineBefore.has(s.id));
-  if (clash.length) throw new Error(`already in the library: ${clash.map((s) => s.id).join(', ')}`);
-  const replaced = new Set([...ids, ...mineBefore]);
-  const kept = Items.parse(library.raw.sounds).filter(
-    (_, i) => !replaced.has(library.data.sounds[i].id)
-  );
-  writeFileSync(
-    SOUNDS,
-    `${JSON.stringify({ ...library.raw, sounds: [...kept, ...(sounds satisfies Preset[])] }, null, 2)}\n`
-  );
-
-  const batch = {
+/** A built set's batch: its laned patterns, each with the research record a written-for-the-sound song carries. */
+function batchOf({ set, built }: ReturnType<typeof build>) {
+  return {
     task: set.task,
     researchedBy: 'Claude Opus 5.5 (Claude Code), composed for the sound',
     researchedAt: set.researchedAt,
@@ -161,41 +143,62 @@ function write({ set, built, sounds }: ReturnType<typeof build>): number {
     })),
     notRecreated: [],
   };
-  writeFileSync(set.batch, `${JSON.stringify(batch, null, 2)}\n`);
-
-  const defaults = readFile(DefaultsFile, DEFAULTS);
-  const mine = new Set([...replaced].map((id) => `${SLUG}${id}`));
-  const keptDefaults = Items.parse(defaults.raw.defaults).filter(
-    (_, i) => !mine.has(defaults.data.defaults[i].sound)
-  );
-  writeFileSync(
-    DEFAULTS,
-    `${JSON.stringify(
-      {
-        ...defaults.raw,
-        defaults: [
-          ...keptDefaults,
-          ...built.map(({ spec }) => ({ sound: `${SLUG}${spec.id}`, pattern: spec.pattern.key })),
-        ],
-      },
-      null,
-      2
-    )}\n`
-  );
-  return kept.length + sounds.length;
 }
 
-// Every set is built and checked before any is written, so a refused sound leaves every file as it was.
+// Every set is built and checked before any file is written, so a refused sound leaves every file as it was. The sets
+// are written as one: what any set's last run wrote is this script's, so a sound may move from one set to the other.
 const builds = SETS.map(build);
 const problems = builds.flatMap((b) => b.problems);
+const sounds = builds.flatMap((b) => b.sounds);
+const ids = new Set<string>();
+for (const s of sounds)
+  if (ids.has(s.id)) problems.push(`${s.id}: in two sets`);
+  else ids.add(s.id);
+const mineBefore = new Set(
+  SETS.flatMap((set) => soundsBefore(set.batch))
+    .filter((k) => k.startsWith(SLUG))
+    .map((k) => k.slice(SLUG.length))
+);
+const library = readFile(LibraryFile, SOUNDS);
+const clash = library.data.sounds.filter((s) => ids.has(s.id) && !mineBefore.has(s.id));
+if (clash.length) problems.push(`already in the library: ${clash.map((s) => s.id).join(', ')}`);
 if (problems.length) throw new Error(problems.join('\n'));
-let total = 0;
-for (const b of builds) total = write(b);
+
+const replaced = new Set([...ids, ...mineBefore]);
+const kept = Items.parse(library.raw.sounds).filter(
+  (_, i) => !replaced.has(library.data.sounds[i].id)
+);
+writeFileSync(
+  SOUNDS,
+  `${JSON.stringify({ ...library.raw, sounds: [...kept, ...(sounds satisfies Preset[])] }, null, 2)}\n`
+);
+for (const b of builds) writeFileSync(b.set.batch, `${JSON.stringify(batchOf(b), null, 2)}\n`);
+const defaults = readFile(DefaultsFile, DEFAULTS);
+const mine = new Set([...replaced].map((id) => `${SLUG}${id}`));
+const keptDefaults = Items.parse(defaults.raw.defaults).filter(
+  (_, i) => !mine.has(defaults.data.defaults[i].sound)
+);
+writeFileSync(
+  DEFAULTS,
+  `${JSON.stringify(
+    {
+      ...defaults.raw,
+      defaults: [
+        ...keptDefaults,
+        ...builds.flatMap((b) =>
+          b.built.map(({ spec }) => ({ sound: `${SLUG}${spec.id}`, pattern: spec.pattern.key }))
+        ),
+      ],
+    },
+    null,
+    2
+  )}\n`
+);
 
 execFileSync('npx', ['prettier', '--write', SOUNDS, DEFAULTS, ...SETS.map((s) => s.batch)], {
   cwd: ROOT,
   stdio: 'ignore',
 });
 console.log(
-  `${builds.map((b) => `${b.sounds.length} (${b.set.task})`).join(' and ')} lane sounds written; the library has ${total}`
+  `${builds.map((b) => `${b.sounds.length} (${b.set.task})`).join(' and ')} lane sounds written; the library has ${kept.length + sounds.length}`
 );
