@@ -907,7 +907,9 @@ export function useSequencer({
     const p = patternRef.current;
     const target = lanesRef.current;
     if (!playingRef.current) return;
-    if (!lanesSent.current && !(target && lanesPlay(target.def, p))) return;
+    // Played along with, the loop goes without its wheel lanes: the hand's wheel moving changes nothing it plays.
+    const played = playAlongRef.current ? alongPattern(p) : p;
+    if (!lanesSent.current && !(target && lanesPlay(target.def, played))) return;
     laneResentAt.current = Date.now();
     replay();
   }, [replay]);
@@ -1175,7 +1177,8 @@ export function useSequencer({
 
   const wheelIn = useCallback(
     (id: string, v: number) => {
-      if (keysRef.current !== 'live' || !isPerformanceId(id)) return;
+      // Played along with, the hand follows the lane: it doesn't write over it.
+      if (keysRef.current !== 'live' || playAlongRef.current || !isPerformanceId(id)) return;
       const target = lanesRef.current;
       const c = target ? laneControl(target.def, id) : null;
       const value = c ? wheelValue(c, v) : null;

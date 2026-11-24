@@ -1464,21 +1464,22 @@ function Synth({
   const seqWheelLane =
     (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
   // A lane plays the wheel for the whole run, the steps it leaves alone included, as MIDI out has it. Not while it is
-  // played along with (t-311): the hand's wheel plays then, and nothing of the lane's is sent to be echoed.
+  // played along with (t-311): the hand's wheel plays then.
   const alongPlaying = seq.playAlong && seq.playing;
   const wheelLanePlaying = seqWheelLane && seq.playing && !seq.playAlong;
+  // Echoes are still told apart while it is played along with: a value the lane sent just before can come back after.
   useEffect(() => {
-    wheelLaneSending.current = wheelLanePlaying && midiOut.sending;
-  }, [wheelLanePlaying, midiOut.sending]);
+    wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
+  }, [seqWheelLane, midiOut.sending, seq.playing]);
   // The pitch wheel's lane, likewise.
   const seqBendLane = (seq.pattern.lanes?.includes(BEND) ?? false) && bendRange !== null;
   const bendLanePlaying = seqBendLane && seq.playing && !seq.playAlong;
   useEffect(() => {
-    bendLaneSending.current = bendLanePlaying && midiOut.sending;
-  }, [bendLanePlaying, midiOut.sending]);
+    bendLaneSending.current = seqBendLane && midiOut.sending && seq.playing;
+  }, [seqBendLane, midiOut.sending, seq.playing]);
   // Playing along: the lanes' wheels as ghosts, and how closely the hand follows them.
   const { ghost } = seq;
-  const follow = usePlayAlong({ on: alongPlaying, ghost, wheel, bend });
+  const follow = usePlayAlong({ on: alongPlaying, ghost, wheel, bend, run: seq.loaded });
   const along = useMemo(
     () =>
       alongPlaying

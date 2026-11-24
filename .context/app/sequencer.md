@@ -548,12 +548,15 @@ at once when an edit takes the lane off. The scheduler keeps the wheels a lane m
 
 **Riding the wheel** (t-311, `lib/app/sequencer/play-along.ts`). On a pattern with a wheel lane the synth plays, the
 transport's **Ride the wheel** turns the lanes off the wheels: loops are compiled without them (`alongPattern`), so the
-voice and MIDI out play the hand's wheels, and the switch replays the loop playing so it is heard at once. What the
+voice plays the hand's wheels, and MIDI out puts a wheel a lane moved back to the hand's once, then leaves the
+hardware's wheel to the player, as with no lane. The switch replays the loop playing so it is heard at once. What the
 lanes set on the step being heard comes back as `ghost` rather than in `modShown`, drawn on each wheel as a dashed
 outline. `usePlayAlong` compares the hand with the ghost every 100 ms (`closeness`, across the wheel's travel) into a
 running score that leans to the last second (`follow`), and the line under the wheels says Right with it, Close or
 Catch it up (`followSign`) once there are five samples. A step whose wheel lanes set nothing isn't counted. It is the
-page's, not the pattern's: it isn't saved, and goes off on a pattern without a wheel lane.
+page's, not the pattern's: it isn't saved, and goes off on a pattern without a wheel lane. Another pattern opened
+mid-run starts the score again. Live record writes no wheel moves while it is on: the hand follows the lane, it does
+not write over it.
 
 **Library sounds played by their lanes** (`f-lane-sounds`). A library sound's default may carry lanes and a part B
 (t-300). Such a sound is loaded into the sequencer as it is picked, so Play plays its lanes at once

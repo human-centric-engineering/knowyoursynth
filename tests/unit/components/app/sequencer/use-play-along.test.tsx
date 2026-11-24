@@ -59,6 +59,17 @@ describe('usePlayAlong', () => {
     expect(result.current).toBeNull();
   });
 
+  it('starts afresh when another pattern is played along with', () => {
+    const a: Props = { on: true, ghost: { [WHEEL]: 0.5 }, wheel: 0.5, bend: 0, run: 'a' };
+    const { result, rerender } = mount(a);
+    samples(FOLLOW_MIN_SAMPLES);
+    expect(result.current).not.toBeNull();
+    rerender({ ...a, run: 'b' });
+    expect(result.current).toBeNull();
+    samples(FOLLOW_MIN_SAMPLES - 1);
+    expect(result.current).toBeNull();
+  });
+
   it('is cleared when play-along stops, and starts afresh', () => {
     const on: Props = { on: true, ghost: { [WHEEL]: 0.5 }, wheel: 0.5, bend: 0 };
     const { result, rerender } = mount(on);

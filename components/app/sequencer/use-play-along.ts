@@ -29,6 +29,7 @@ export function usePlayAlong({
   ghost,
   wheel,
   bend,
+  run,
 }: {
   /** Play-along is on and the pattern plays. */
   on: boolean;
@@ -37,6 +38,8 @@ export function usePlayAlong({
   /** The hand's wheels. */
   wheel: number;
   bend: number;
+  /** What is being played along with: another pattern opened mid-run starts the score again. */
+  run?: unknown;
 }): FollowSign | null {
   const [sign, setSign] = useState<FollowSign | null>(null);
   const now = useRef({ ghost, wheel, bend });
@@ -45,10 +48,8 @@ export function usePlayAlong({
   }, [ghost, wheel, bend]);
 
   useEffect(() => {
-    if (!on) {
-      setSign(null);
-      return undefined;
-    }
+    setSign(null);
+    if (!on) return undefined;
     let f: Follow = NO_FOLLOW;
     let said = '';
     const id = setInterval(() => {
@@ -67,7 +68,7 @@ export function usePlayAlong({
       setSign(next);
     }, FOLLOW_SAMPLE_MS);
     return () => clearInterval(id);
-  }, [on]);
+  }, [on, run]);
 
   return sign;
 }
