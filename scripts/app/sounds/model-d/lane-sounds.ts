@@ -26,7 +26,7 @@ export const onWheel =
   };
 
 /** The LFO rate for `perBeat` cycles a beat at `bpm`. */
-const lfoSync = (bpm: number, perBeat: number) => lfoAt((bpm / 60) * perBeat);
+export const lfoSync = (bpm: number, perBeat: number): number => lfoAt((bpm / 60) * perBeat);
 
 /** The Model D's controls as its lessons name them: the panel prints VOLUME on all three mixer knobs. */
 export const READOUTS: Readouts = {

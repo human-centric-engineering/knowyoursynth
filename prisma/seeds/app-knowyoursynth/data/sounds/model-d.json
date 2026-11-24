@@ -22869,6 +22869,1006 @@
           "hear": "A heavier, darker line."
         }
       ]
+    },
+    {
+      "id": "wheel-delayed-vibrato",
+      "name": "Delayed Vibrato Lead",
+      "ref": "A warm, singing 70s lead whose vibrato comes in on the mod wheel only once each long note has settled",
+      "artist": "70s progressive rock",
+      "tags": ["lead", "prog", "70s"],
+      "level": 1,
+      "blurb": "A warm, wide lead that sings: each long note starts still, then blooms into vibrato.",
+      "how": "Two sawtooths a hair apart make a warm, wide lead. The LFO is on the oscillators at a singer’s vibrato speed, but MOD DEPTH is left at 0: the vibrato is on the mod wheel, and the lane pushes the wheel up only once a long note has settled, then takes it back down before the next. That delay is what makes a synth lead sing. Open the sequencer: the mod wheel lane is under the steps, and the wheel beside the keys moves with it.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 62, 0.5],
+          [0.5, 65, 0.25],
+          [1, 69, 1.5],
+          [2.5, 67, 0.25],
+          [3, 65, 0.25],
+          [3.5, 64, 0.25],
+          [4, 62, 0.5],
+          [4.5, 60, 0.25],
+          [5, 62, 2],
+          [7.5, 57, 0.25],
+          [7.75, 60, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two sawtooths, a hair apart",
+          "module": "osc",
+          "why": "Two sawtooths at the same pitch, the second tuned a hair sharp, beat slowly against each other: the lead is wide and never quite still. A little glide joins the notes.\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.12 (+0.1 st)\n- Osc 1 VOLUME 7\n- Osc 2 switch on\n- Osc 2 VOLUME 6\n- GLIDE 1 (20 ms)\n- Listen for: a bright, wide tone with a slow shimmer.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.freq": 0.12,
+            "mix.osc1": 7,
+            "mix.osc2On": true,
+            "mix.osc2": 6,
+            "ctl.glide": 1
+          }
+        },
+        {
+          "title": "A filter that blooms",
+          "module": "filter",
+          "why": "The filter is half open, and its envelope opens it a little more as each note starts and settles back to a held brightness.\n- CUTOFF 1 (1.3 kHz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 1 (24 ms)\n- Filter DECAY 4 (600 ms)\n- Filter SUSTAIN 5\n- Loudness ATTACK 0.3 (6 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: each note opens a touch as it starts, then holds.",
+          "set": {
+            "filter.cutoff": 1,
+            "filter.emphasis": 3,
+            "filter.contour": 4,
+            "fenv.attack": 1,
+            "fenv.decay": 4,
+            "fenv.sustain": 5,
+            "aenv.attack": 0.3,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato on the wheel",
+          "module": "mod",
+          "why": "The LFO goes to the oscillators at a singer’s vibrato speed. MOD DEPTH stays at 0: the wheel brings it in, so the player decides on each note how much, and when.\n- OSCILLATOR MODULATION on\n- LFO RATE 5.67 (5.51 Hz)\n- LFO shape triangle\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: a still lead: push the mod wheel up a little on a held note and it starts to sing.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.rate": 5.67,
+            "lfo.shape": "tri",
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane brings vibrato in two steps into each long note and takes it out before the next.",
+        "lfo.rate": "The vibrato’s speed. A singer’s is about 5.5 Hz; slower is lazy, faster nervous.",
+        "osc2.freq": "Oscillator 2 a hair sharp, so the lead is wide and moves.",
+        "filter.contour": "How much each note brightens as it starts."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, redraw the mod wheel lane up from the first step of each long note.",
+          "hear": "Vibrato from the attack: more an organ’s than a singer’s."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn down to 5",
+          "hear": "A slower, lazier vibrato."
+        },
+        {
+          "id": "osc2.freq",
+          "try": "Set to 0",
+          "hear": "The width goes: a plainer, stiller lead."
+        }
+      ]
+    },
+    {
+      "id": "wheel-square-trill",
+      "name": "Square-Wave Trill",
+      "ref": "A bright, harpsichord-like line whose held notes break into a trill when the mod wheel brings in a square LFO",
+      "artist": "Baroque ornament",
+      "tags": ["lead", "baroque", "classical"],
+      "level": 2,
+      "blurb": "A bright, plucked line whose long notes shiver into a trill at a push of the wheel.",
+      "how": "A narrow pulse with a quick decay is a bright, harpsichord-like pluck. A square-wave LFO on the pitch jumps between two values instead of sweeping, so on the mod wheel it is a trill: the note flips up and down by the same amount, fast. How far the wheel goes is the trill’s width, about a semitone either side of the key. The lane brings it in on each phrase’s long note, as a player adds an ornament, and the wheel is down for everything else. Because the Model D’s LFO swings both ways from the key, the trilled notes are written between the two notes the trill plays.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.25],
+          [0.25, 71, 0.25],
+          [0.5, 74, 0.25],
+          [0.75, 71, 0.25],
+          [1, 72, 0.25],
+          [1.25, 69, 0.25],
+          [1.5, 66, 0.25],
+          [1.75, 69, 0.25],
+          [2, 67, 0.25],
+          [2.5, 71, 0.25],
+          [3, 65, 1],
+          [4, 64, 0.25],
+          [4.25, 67, 0.25],
+          [4.5, 71, 0.25],
+          [4.75, 67, 0.25],
+          [5, 69, 0.25],
+          [5.25, 66, 0.25],
+          [5.5, 62, 0.25],
+          [5.75, 66, 0.25],
+          [6, 67, 0.25],
+          [6.5, 69, 0.25],
+          [7, 73, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright pluck",
+          "module": "osc",
+          "why": "A narrow pulse is thin and bright, and a quiet sawtooth an octave down gives it a body.\n- Osc 1 WAVEFORM narrow pulse\n- Osc 1 VOLUME 8\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 2 VOLUME 3\n- Listen for: a thin, nasal tone.",
+          "set": {
+            "osc1.wave": "narrow",
+            "mix.osc1": 8,
+            "osc2.range": "16",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc2": 3
+          }
+        },
+        {
+          "title": "Plucked, and held",
+          "module": "filter",
+          "why": "The filter opens sharply on each note and falls back, and the loudness falls to a held level, so a long note keeps sounding for the trill.\n- CUTOFF 0.5 (893 Hz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 5\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.5 (260 ms)\n- Filter SUSTAIN 3\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 7\n- Listen for: a plucked front, then a quieter held tone.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 2,
+            "filter.contour": 5,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 3,
+            "aenv.attack": 0,
+            "aenv.decay": 3,
+            "aenv.sustain": 7
+          }
+        },
+        {
+          "title": "A square LFO, on the wheel",
+          "module": "mod",
+          "why": "A square LFO flips between two values, so on the pitch it is a trill, not a vibrato. Seven flips a second is a quick ornament. MOD DEPTH stays at 0: the wheel brings it in, and how far it goes is how wide the trill is.\n- OSCILLATOR MODULATION on\n- LFO shape square\n- LFO RATE 5.96 (7.01 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: nothing until the mod wheel comes up: then the note flips up and down.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.shape": "sq",
+            "lfo.rate": 5.96,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane brings the trill in on each phrase’s long note. At about 7% it flips a semitone either side of the key: a whole-tone trill.",
+        "lfo.shape": "Square, so the pitch jumps rather than sweeps. On triangle the trill turns into a vibrato.",
+        "lfo.rate": "How fast the trill goes. Faster is a shiver; slower a pair of alternating notes.",
+        "aenv.sustain": "Keeps the long notes sounding long enough to trill."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, push the mod wheel lane up to 14% on the long notes.",
+          "hear": "A trill a whole tone either side: wild, more a siren than an ornament."
+        },
+        {
+          "id": "lfo.shape",
+          "try": "Switch to triangle",
+          "hear": "The trill becomes a wide, wavering vibrato."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn down to 4.5",
+          "hear": "A slow, deliberate trill you can count."
+        }
+      ]
+    },
+    {
+      "id": "wheel-wah-bass",
+      "name": "Wheel Wah Bass",
+      "ref": "A rubbery funk bass whose filter wah-wahs in time when the mod wheel brings a tempo-synced LFO in",
+      "artist": "70s funk",
+      "tags": ["bass", "funk", "70s"],
+      "level": 2,
+      "blurb": "A rubbery funk bass that starts to wah in time as the wheel goes up.",
+      "how": "Two oscillators an octave down make a fat bass, through a resonant filter. The LFO is set to the song’s quarter notes and sent to the filter, so it opens and shuts on the beat: a wah pedal rocked in time. MOD DEPTH is left at 0 and the mod wheel brings the wah in. The lane plays it as a bassist would ride a pedal: dry for the first bar, then the wheel goes up through the groove and down again for the turnaround, deepest in part B.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 40, 0.5],
+          [0.75, 40, 0.25],
+          [1.25, 43, 0.25],
+          [1.75, 45, 0.25],
+          [2, 40, 0.5],
+          [2.5, 50, 0.25],
+          [3, 47, 0.25],
+          [3.5, 45, 0.25],
+          [3.75, 43, 0.25],
+          [4, 40, 0.5],
+          [4.75, 40, 0.25],
+          [5.25, 43, 0.25],
+          [5.75, 45, 0.25],
+          [6, 47, 0.5],
+          [6.5, 45, 0.25],
+          [7, 43, 0.25],
+          [7.5, 42, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A fat bass",
+          "module": "osc",
+          "why": "A sawtooth and a square, both an octave down, make a thick bass with a hollow middle.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM square\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 5\n- Listen for: a buzzy, thick bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "osc2.range": "16",
+            "osc2.wave": "sq",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "A dark, vocal filter",
+          "module": "filter",
+          "why": "The filter sits low with plenty of emphasis, so when something opens it there is a vowel in it. A short envelope pops each note.\n- CUTOFF -1.5 (224 Hz)\n- EMPHASIS 6\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2 (200 ms)\n- Filter SUSTAIN 1\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2 (200 ms)\n- Loudness SUSTAIN 8\n- Listen for: a muffled, slightly honky bass with a pop on each note.",
+          "set": {
+            "filter.cutoff": -1.5,
+            "filter.emphasis": 6,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 1,
+            "aenv.attack": 0,
+            "aenv.decay": 2,
+            "aenv.sustain": 8
+          }
+        },
+        {
+          "title": "A wah on the wheel",
+          "module": "mod",
+          "why": "FILTER MODULATION sends the LFO to the cutoff, one sweep a beat at the song’s tempo. MOD DEPTH stays at 0: the wheel brings it in, as a foot brings a wah pedal in.\n- FILTER MODULATION on\n- LFO shape triangle\n- LFO RATE 4.28 (1.74 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: no wah yet: push the mod wheel up and the bass starts to say “wow” on every beat.",
+          "set": {
+            "mod.toFilter": true,
+            "lfo.shape": "tri",
+            "lfo.rate": 4.28,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane brings the wah in after the first bar and takes it out for the turnaround, deepest in part B.",
+        "lfo.rate": "Set to one sweep a beat at 104 bpm. Twice as fast is a sixteenth-note wah; half is lazier.",
+        "filter.emphasis": "The vowel in the wah. Higher is more vocal; low is a plain swell.",
+        "filter.cutoff": "Where the wah starts from. Lower is darker and deeper."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, redraw the mod wheel lane high from the first step.",
+          "hear": "The wah never stops: a pedal left rocking."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn to 5.11",
+          "hear": "Two wahs a beat: busier, more like a clavinet."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "Push up to 8",
+          "hear": "A screaming, talking wah."
+        }
+      ]
+    },
+    {
+      "id": "wheel-noise-growl",
+      "name": "Noise Growl Bass",
+      "ref": "A dark, grinding industrial bass that growls when the mod wheel lets noise shake its filter",
+      "artist": "Industrial",
+      "tags": ["bass", "industrial", "dark"],
+      "level": 3,
+      "blurb": "A dark, grinding bass that snarls as the wheel lets noise into its filter.",
+      "how": "A sawtooth and a square, an octave down, through a resonant filter, make a hard bass. Mod source B is set to noise and MOD MIX fully right, so the modulation is random: sent to the filter, it shakes the cutoff many times a second, and the bass growls like a throat. MOD DEPTH stays at 0, and the mod wheel brings the growl in on the held notes. A second lane turns the cutoff slowly up through part A and down through part B, so one hand rides the wheel and the other the filter.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [
+          [0, 28, 0.25],
+          [0.25, 28, 0.25],
+          [0.75, 28, 0.25],
+          [1, 31, 1],
+          [2, 28, 0.25],
+          [2.25, 28, 0.25],
+          [2.75, 28, 0.25],
+          [3, 34, 1],
+          [4, 28, 0.25],
+          [4.25, 28, 0.25],
+          [4.75, 28, 0.25],
+          [5, 31, 0.5],
+          [5.5, 33, 0.25],
+          [6, 34, 0.5],
+          [6.5, 33, 0.25],
+          [7, 31, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A hard bass",
+          "module": "osc",
+          "why": "A sawtooth and a square an octave down, the square a hair flat, make a hard, slightly beating bass.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM square\n- Osc 2 FREQUENCY -0.1 (-0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 6\n- Listen for: a thick, buzzing bass that beats slowly.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "osc2.range": "16",
+            "osc2.wave": "sq",
+            "osc2.freq": -0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "A tight, resonant filter",
+          "module": "filter",
+          "why": "The filter is low and resonant, so a shake of the cutoff is heard as a snarl. The envelope gives each note a short bark.\n- CUTOFF -1 (317 Hz)\n- EMPHASIS 5\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.5 (260 ms)\n- Filter SUSTAIN 2\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 9\n- Listen for: a dark, barking bass.",
+          "set": {
+            "filter.cutoff": -1,
+            "filter.emphasis": 5,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 2,
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Noise on the filter, on the wheel",
+          "module": "mod",
+          "why": "Mod source B is noise, and MOD MIX fully right takes only it. FILTER MODULATION sends it to the cutoff. MOD DEPTH stays at 0: the wheel brings it in.\n- Mod source B NOISE\n- MOD MIX 10\n- FILTER MODULATION on\n- MOD DEPTH 0\n- Listen for: still clean: push the mod wheel up and the bass starts to growl and grind.",
+          "set": {
+            "mod.srcB": "noise",
+            "mod.mix": 10,
+            "mod.toFilter": true,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane brings the growl in on the held notes, a little more each time.",
+        "filter.cutoff": "The other lane: up slowly through part A, down through part B, so the growl gets brighter and then sinks.",
+        "mod.srcB": "Noise, so the filter shakes at random: a growl. On the LFO it would be a regular wobble.",
+        "filter.emphasis": "The edge of the growl. Higher is a snarl; lower a rumble."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, draw the mod wheel lane high on every note.",
+          "hear": "The whole line grinds, a machine instead of a voice."
+        },
+        {
+          "id": "filter.cutoff",
+          "try": "In the sequencer's Mod lanes, flatten the cutoff lane at -2.",
+          "hear": "A darker growl, more felt than heard."
+        },
+        {
+          "id": "mod.srcB",
+          "try": "Switch to the LFO",
+          "hear": "The growl turns into a steady wobble."
+        }
+      ]
+    },
+    {
+      "id": "wheel-contour-zap",
+      "name": "Contour Pitch Zap",
+      "ref": "An electro bass whose notes fire like lasers when the mod wheel sends the filter contour to the pitch",
+      "artist": "80s electro",
+      "tags": ["bass", "electro", "fx"],
+      "level": 3,
+      "blurb": "A punchy electro bass that turns into laser zaps as the wheel goes up.",
+      "how": "On the Model D, mod source A can be the filter contour as well as Oscillator 3. With MOD MIX fully left and OSCILLATOR MODULATION on, the contour moves the pitch: every note starts high and drops to its key as the contour decays, a zap. MOD DEPTH stays at 0, so the mod wheel sets how far each note falls. The lane leaves the bass plain at first, then pushes the wheel up through each part, so the line turns from a bass into lasers; a second lane shortens the filter decay as it goes, so the zaps get tighter.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.25],
+          [0.75, 33, 0.25],
+          [1.5, 45, 0.25],
+          [2, 33, 0.25],
+          [2.5, 36, 0.25],
+          [3.25, 38, 0.25],
+          [3.75, 40, 0.25],
+          [4, 33, 0.25],
+          [4.75, 33, 0.25],
+          [5.5, 45, 0.25],
+          [6, 31, 0.25],
+          [6.75, 31, 0.25],
+          [7.25, 40, 0.25],
+          [7.75, 43, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square bass",
+          "module": "osc",
+          "why": "A square and a sawtooth an octave down make a round but punchy bass.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM square\n- Osc 2 RANGE 16'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 4\n- Listen for: a hollow, punchy bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "sq",
+            "osc2.range": "16",
+            "osc2.wave": "saw",
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 4
+          }
+        },
+        {
+          "title": "A short contour",
+          "module": "filter",
+          "why": "The filter contour is quick: it jumps open on each note and falls away. That same contour is what will move the pitch.\n- CUTOFF -0.5 (448 Hz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 5\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.2 (220 ms)\n- Filter SUSTAIN 0\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 6\n- Listen for: a blip of brightness on each note.",
+          "set": {
+            "filter.cutoff": -0.5,
+            "filter.emphasis": 3,
+            "filter.contour": 5,
+            "fenv.attack": 0,
+            "fenv.decay": 2.2,
+            "fenv.sustain": 0,
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 6
+          }
+        },
+        {
+          "title": "The contour on the pitch, on the wheel",
+          "module": "mod",
+          "why": "Mod source A set to FILTER EG picks the contour, MOD MIX fully left takes only it, and OSCILLATOR MODULATION sends it to the pitch. MOD DEPTH stays at 0: the wheel brings it in, and sets how far each note falls.\n- Mod source A FILTER EG\n- MOD MIX 0\n- OSCILLATOR MODULATION on\n- MOD DEPTH 0\n- Listen for: plain notes: push the mod wheel up and each one fires down from above, “pew”.",
+          "set": {
+            "mod.srcA": "eg",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane sets how far each note drops, rising through each part from plain to lasers.",
+        "fenv.decay": "The other lane: how long each zap takes to fall. Shorter is a click; longer a slow swoop.",
+        "mod.srcA": "The filter contour, so every note’s pitch falls with its brightness.",
+        "filter.contour": "How bright each zap is; the pitch drop is the wheel’s."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, push the mod wheel lane to 60% all the way through.",
+          "hear": "Every note a laser, from the first."
+        },
+        {
+          "id": "fenv.decay",
+          "try": "In the sequencer's Mod lanes, flatten the decay lane at 4.",
+          "hear": "Slow, swooping falls: a bomb drop on every note."
+        },
+        {
+          "id": "mod.srcA",
+          "try": "Switch to Oscillator 3",
+          "hear": "The zap turns into a metallic clang."
+        }
+      ]
+    },
+    {
+      "id": "wheel-fm-build",
+      "name": "FM Clang Build",
+      "ref": "A techno riff that grows from a plain bass into a metallic clang as the mod wheel turns up audio-rate FM",
+      "artist": "Industrial techno",
+      "tags": ["bass", "techno", "build"],
+      "level": 3,
+      "blurb": "A driving techno riff that grows harsher and more metallic all the way through the song.",
+      "how": "Oscillator 3 is taken out of the mixer and used at audio rate, following the keyboard, as a modulator: mod source A, MOD MIX fully left, OSCILLATOR MODULATION on. That is frequency modulation, and the more of it, the more the plain sawtooth turns into metal. MOD DEPTH stays at 0, so the mod wheel is the amount: the lane pushes it slowly up through the whole song, the long build of a techno track, and drops it for the loop. The other hand turns Oscillator 3 a fifth up half way through part B, which changes the colour of the metal.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [
+          [0, 38, 0.25],
+          [0.5, 38, 0.25],
+          [0.75, 50, 0.25],
+          [1.25, 38, 0.25],
+          [1.5, 41, 0.25],
+          [2, 38, 0.25],
+          [2.5, 38, 0.25],
+          [2.75, 50, 0.25],
+          [3.25, 48, 0.25],
+          [3.5, 45, 0.25],
+          [4, 38, 0.25],
+          [4.5, 38, 0.25],
+          [4.75, 50, 0.25],
+          [5.25, 38, 0.25],
+          [5.5, 41, 0.25],
+          [6, 43, 0.25],
+          [6.5, 41, 0.25],
+          [7, 39, 0.25],
+          [7.5, 38, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "One sawtooth",
+          "module": "osc",
+          "why": "A single sawtooth an octave down is the plain riff that the FM will turn to metal.\n- Osc 1 RANGE 16'\n- Osc 1 WAVEFORM sawtooth\n- Osc 1 VOLUME 8\n- Listen for: a plain, buzzy bass.",
+          "set": {
+            "osc1.range": "16",
+            "osc1.wave": "saw",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Oscillator 3, out of the mix",
+          "module": "osc",
+          "why": "Oscillator 3 stays out of the mixer but keeps following the keyboard, an octave up: heard only through what it does to the others.\n- Osc 3 RANGE 8'\n- Osc 3 WAVEFORM triangle\n- OSC 3 CONTROL on\n- Osc 3 FREQUENCY 0 (0 st)\n- Listen for: no change: Oscillator 3 is silent.",
+          "set": {
+            "osc3.range": "8",
+            "osc3.wave": "tri",
+            "osc3.kbd": true,
+            "osc3.freq": 0
+          }
+        },
+        {
+          "title": "A tight filter",
+          "module": "filter",
+          "why": "A punchy envelope and some emphasis keep the riff tight however harsh the FM makes it.\n- CUTOFF 0.5 (893 Hz)\n- EMPHASIS 3\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.5 (260 ms)\n- Filter SUSTAIN 2\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 7\n- Listen for: a tight, punchy bass.",
+          "set": {
+            "filter.cutoff": 0.5,
+            "filter.emphasis": 3,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 2,
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 7
+          }
+        },
+        {
+          "title": "FM, on the wheel",
+          "module": "mod",
+          "why": "MOD MIX fully left picks source A, Oscillator 3, and OSCILLATOR MODULATION sends it to the pitch at audio rate. MOD DEPTH stays at 0: the wheel brings it in, and is the amount of FM.\n- Mod source A OSC 3\n- MOD MIX 0\n- OSCILLATOR MODULATION on\n- MOD DEPTH 0\n- Listen for: push the mod wheel up slowly: the bass turns gritty, then clangs like metal.",
+          "set": {
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane is the amount of FM, rising through the whole song.",
+        "osc3.freq": "The other lane: Oscillator 3’s tuning, the FM ratio. 0 is harmonic and hard; a fifth up is sweeter; off the semitones it goes bell-like.",
+        "osc3.range": "Oscillator 3 an octave above the riff. Lower is a growl; higher a whine.",
+        "filter.emphasis": "Bite on top of the metal."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, redraw the mod wheel lane as one steep climb in the last part.",
+          "hear": "A sudden build: the riff stays plain and then tears."
+        },
+        {
+          "id": "osc3.freq",
+          "try": "In the sequencer's Mod lanes, set the frequency lane to 0.5 all the way through.",
+          "hear": "An inharmonic ratio: the metal turns to bells."
+        },
+        {
+          "id": "osc3.range",
+          "try": "Switch to 16",
+          "hear": "A deeper, growling FM."
+        }
+      ]
+    },
+    {
+      "id": "wheel-bell-strike",
+      "name": "Wheel Bell Strike",
+      "ref": "A slow, ringing bell melody whose strikes turn metallic when the mod wheel adds inharmonic FM",
+      "artist": "Ambient electronica",
+      "tags": ["keys", "bell", "ambient"],
+      "level": 2,
+      "blurb": "A soft, ringing melody whose strongest notes ring out like struck metal bells.",
+      "how": "A triangle rings and dies away like a struck bar. Oscillator 3, out of the mixer and a little more than an octave up, frequency-modulates it: that ratio is off the harmonic series, so the tone it adds is a bell’s clang rather than a buzz. MOD DEPTH is left at 0 and the mod wheel brings the clang in. The lane pushes it up for each phrase’s first, strongest strike and lets it down for the soft notes after, the way a player leans on a phrase’s first bell; part B leans harder.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [
+          [0, 67, 1],
+          [1, 64, 0.5],
+          [2, 60, 0.5],
+          [3, 62, 0.5],
+          [4, 64, 2],
+          [8, 69, 1],
+          [9, 67, 0.5],
+          [10, 64, 0.5],
+          [11, 62, 0.5],
+          [12, 60, 2],
+          [15, 62, 0.5],
+          [15.5, 64, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A ringing triangle",
+          "module": "osc",
+          "why": "A triangle is nearly a pure tone. On its own, with a long decay, it is a soft glockenspiel or a vibraphone bar.\n- Osc 1 RANGE 4'\n- Osc 1 WAVEFORM triangle\n- Osc 1 VOLUME 8\n- Listen for: a soft, pure tone.",
+          "set": {
+            "osc1.range": "4",
+            "osc1.wave": "tri",
+            "mix.osc1": 8
+          }
+        },
+        {
+          "title": "Oscillator 3, off the harmonics",
+          "module": "osc",
+          "why": "Oscillator 3 follows the keyboard, out of the mixer, an octave up and a semitone and a bit more: a ratio no harmonic has, which is what makes a bell.\n- Osc 3 RANGE 2'\n- Osc 3 WAVEFORM triangle\n- OSC 3 CONTROL on\n- Osc 3 FREQUENCY 1.4 (+1.4 st)\n- Listen for: no change: Oscillator 3 is silent.",
+          "set": {
+            "osc3.range": "2",
+            "osc3.wave": "tri",
+            "osc3.kbd": true,
+            "osc3.freq": 1.4
+          }
+        },
+        {
+          "title": "Struck, and ringing away",
+          "module": "env",
+          "why": "No sustain and a long decay, with LOUD DECAY on so the ring carries on after the key is let go: a strike and a ring, as a bell’s.\n- CUTOFF 2.5 (3.6 kHz)\n- EMPHASIS 0\n- AMOUNT OF CONTOUR 2\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 5 (770 ms)\n- Filter SUSTAIN 0\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 6 (1.0 s)\n- Loudness SUSTAIN 0\n- LOUD DECAY switch on\n- Listen for: each note strikes and rings away.",
+          "set": {
+            "filter.cutoff": 2.5,
+            "filter.emphasis": 0,
+            "filter.contour": 2,
+            "fenv.attack": 0,
+            "fenv.decay": 5,
+            "fenv.sustain": 0,
+            "aenv.attack": 0,
+            "aenv.decay": 6,
+            "aenv.sustain": 0,
+            "env.loudDecay": true
+          }
+        },
+        {
+          "title": "The clang, on the wheel",
+          "module": "mod",
+          "why": "MOD MIX fully left picks Oscillator 3 and OSCILLATOR MODULATION sends it to the pitch. MOD DEPTH stays at 0: the wheel brings it in, and how far is how metallic the bell is.\n- Mod source A OSC 3\n- MOD MIX 0\n- OSCILLATOR MODULATION on\n- MOD DEPTH 0\n- Listen for: push the mod wheel up a little and strike a note: it clangs like a bell.",
+          "set": {
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane leans on each phrase’s first strike and eases off for the soft notes after.",
+        "osc3.freq": "The bell’s ratio. Near a whole semitone it turns harmonic and buzzy; between, it is a bell.",
+        "aenv.decay": "How long each bell rings.",
+        "osc1.range": "Two octaves up for a small bell; lower is a gong."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, push the mod wheel lane up to 30% on every note.",
+          "hear": "Every note a heavy, clanging church bell."
+        },
+        {
+          "id": "osc3.freq",
+          "try": "Move between 1 and 2",
+          "hear": "The bell changes metal: brass, steel, glass."
+        },
+        {
+          "id": "aenv.decay",
+          "try": "Turn up to 8",
+          "hear": "The bells ring into each other, a wash."
+        }
+      ]
+    },
+    {
+      "id": "wheel-seasick-breakdown",
+      "name": "Seasick Breakdown",
+      "ref": "A house lead that turns woozy and seasick in the breakdown as the mod wheel brings in a slow, deep pitch sway",
+      "artist": "Progressive house",
+      "tags": ["lead", "house", "fx"],
+      "level": 1,
+      "blurb": "A bright house lead that lurches and sways out of tune in the breakdown, then snaps back.",
+      "how": "Two sawtooths make a bright house lead. The LFO is slow, under one sway a second, and sent to the oscillators, so on the mod wheel the whole lead drifts sharp and flat like a ship: seasick. MOD DEPTH stays at 0. Part A plays it straight, wheel down. Part B is the breakdown: the lane pushes the wheel up through it, so the lead slowly loses its footing, and pulls it back down as the drop comes round.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0, 65, 0.25],
+          [0.5, 69, 0.25],
+          [1, 72, 0.25],
+          [1.5, 69, 0.25],
+          [2, 67, 0.25],
+          [2.5, 69, 0.25],
+          [3, 65, 0.5],
+          [4, 65, 0.25],
+          [4.5, 69, 0.25],
+          [5, 72, 0.25],
+          [5.5, 74, 0.25],
+          [6, 72, 0.25],
+          [6.5, 69, 0.25],
+          [7, 67, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A bright house lead",
+          "module": "osc",
+          "why": "Two sawtooths, one an octave up, make a bright, full lead.\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 RANGE 4'\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.08 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 5\n- Listen for: a bright, full lead.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.range": "4",
+            "osc2.wave": "saw",
+            "osc2.freq": 0.08,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 5
+          }
+        },
+        {
+          "title": "Open and plucky",
+          "module": "filter",
+          "why": "A fairly open filter and a quick envelope give each note a pluck, and the loudness holds the long notes.\n- CUTOFF 1.5 (1.8 kHz)\n- EMPHASIS 2\n- AMOUNT OF CONTOUR 4\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2.5 (260 ms)\n- Filter SUSTAIN 4\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 8\n- Listen for: a plucked, bright lead.",
+          "set": {
+            "filter.cutoff": 1.5,
+            "filter.emphasis": 2,
+            "filter.contour": 4,
+            "fenv.attack": 0,
+            "fenv.decay": 2.5,
+            "fenv.sustain": 4,
+            "aenv.attack": 0,
+            "aenv.decay": 3,
+            "aenv.sustain": 8
+          }
+        },
+        {
+          "title": "A slow sway, on the wheel",
+          "module": "mod",
+          "why": "The LFO is slow, under one cycle a second, and goes to the oscillators. MOD DEPTH stays at 0: the wheel brings it in, and the further it goes, the wider the sway.\n- OSCILLATOR MODULATION on\n- LFO shape triangle\n- LFO RATE 3.18 (0.70 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: in tune: push the mod wheel up and the lead drifts sharp and flat.",
+          "set": {
+            "mod.toOsc": true,
+            "lfo.shape": "tri",
+            "lfo.rate": 3.18,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane is down for part A and rises through the breakdown, part B, then drops for the return.",
+        "lfo.rate": "The sway’s speed. Slower is a ship; faster a warped record.",
+        "osc2.range": "Oscillator 2 an octave up, for the brightness.",
+        "filter.contour": "The pluck on each note."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, push the mod wheel lane to 10% in part A too.",
+          "hear": "Seasick from the start: the whole song lurches."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn up to 4",
+          "hear": "A faster wobble, like tape gone wrong."
+        },
+        {
+          "id": "lfo.shape",
+          "try": "Switch to square",
+          "hear": "The pitch jumps between two places: a dizzy lurch."
+        }
+      ]
+    },
+    {
+      "id": "wheel-siren-riser",
+      "name": "Siren Riser",
+      "ref": "A jungle stab line that rises into a wailing siren when the mod wheel sends a slow Oscillator 3 to the pitch",
+      "artist": "Jungle",
+      "tags": ["lead", "jungle", "fx"],
+      "level": 3,
+      "blurb": "A rave stab line that wails into a siren as the wheel goes up into the drop.",
+      "how": "Oscillator 3 is taken off the keyboard and set very low, so it is no longer a tone: it is a slow wave, about one cycle a second, a second LFO. Mod source A picks it, MOD MIX fully left, and OSCILLATOR MODULATION sends it to the pitch, so with the mod wheel up the notes swoop up and down: a siren. MOD DEPTH stays at 0. Part A is the stabs, wheel down; part B holds long notes while the wheel goes up, so they rise into a wailing siren before the stabs come back.",
+      "phrase": {
+        "bpm": 160,
+        "loop": true,
+        "steps": [
+          [0, 57, 0.25],
+          [0.75, 57, 0.25],
+          [1.5, 60, 0.25],
+          [2.25, 57, 0.25],
+          [3, 55, 0.25],
+          [3.5, 57, 0.25],
+          [4, 57, 0.25],
+          [4.75, 57, 0.25],
+          [5.5, 64, 0.25],
+          [6.25, 62, 0.25],
+          [7, 60, 0.25],
+          [7.5, 57, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A rave stab",
+          "module": "osc",
+          "why": "Two sawtooths a fifth apart, so each key is a hard, open chord.\n- Osc 1 WAVEFORM sawtooth\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 7 (+7 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 8\n- Osc 2 VOLUME 6\n- Listen for: a hard, open chord on every key.",
+          "set": {
+            "osc1.wave": "saw",
+            "osc2.wave": "saw",
+            "osc2.freq": 7,
+            "mix.osc2On": true,
+            "mix.osc1": 8,
+            "mix.osc2": 6
+          }
+        },
+        {
+          "title": "Oscillator 3 as a slow wave",
+          "module": "osc",
+          "why": "OSC 3 CONTROL off takes Oscillator 3 off the keyboard, and the lowest range with FREQUENCY turned down makes it about one cycle a second. It stays out of the mixer.\n- OSC 3 CONTROL off\n- Osc 3 RANGE LO\n- Osc 3 WAVEFORM triangle\n- Osc 3 FREQUENCY -6 (-6 st)\n- Listen for: no change: Oscillator 3 is silent and slow.",
+          "set": {
+            "osc3.kbd": false,
+            "osc3.range": "lo",
+            "osc3.wave": "tri",
+            "osc3.freq": -6
+          }
+        },
+        {
+          "title": "Bright and punchy",
+          "module": "filter",
+          "why": "An open, resonant filter with a quick envelope, and loudness that holds for the long siren notes.\n- CUTOFF 2 (2.5 kHz)\n- EMPHASIS 4\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0 (3 ms)\n- Filter DECAY 2 (200 ms)\n- Filter SUSTAIN 4\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 2.5 (260 ms)\n- Loudness SUSTAIN 9\n- Listen for: a bright stab with a ringing edge.",
+          "set": {
+            "filter.cutoff": 2,
+            "filter.emphasis": 4,
+            "filter.contour": 3,
+            "fenv.attack": 0,
+            "fenv.decay": 2,
+            "fenv.sustain": 4,
+            "aenv.attack": 0,
+            "aenv.decay": 2.5,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "The siren, on the wheel",
+          "module": "mod",
+          "why": "MOD MIX fully left picks source A, Oscillator 3, and OSCILLATOR MODULATION sends it to the pitch. MOD DEPTH stays at 0: the wheel brings it in, and how far it goes is how wide the siren swoops.\n- Mod source A OSC 3\n- MOD MIX 0\n- OSCILLATOR MODULATION on\n- MOD DEPTH 0\n- Listen for: hold a note and push the mod wheel up: it swoops up and down, a siren.",
+          "set": {
+            "mod.srcA": "osc3",
+            "mod.mix": 0,
+            "mod.toOsc": true,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane is down for the stabs and rises through the long notes of part B into a full siren.",
+        "osc3.freq": "The siren’s speed: Oscillator 3 is the slow wave. Turn it up for a faster wail.",
+        "osc3.wave": "A triangle swoops evenly up and down. Sawtooth is a siren that rises and drops.",
+        "osc2.freq": "Oscillator 2 a fifth up, so the stab is a chord."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, redraw the mod wheel lane at 25% through part A as well.",
+          "hear": "The stabs wail too: the whole track is an alarm."
+        },
+        {
+          "id": "osc3.wave",
+          "try": "Switch to sawtooth",
+          "hear": "A siren that rises slowly and drops at once."
+        },
+        {
+          "id": "osc3.freq",
+          "try": "Turn up to -3",
+          "hear": "A faster, more frantic wail."
+        }
+      ]
+    },
+    {
+      "id": "wheel-filter-vibrato-funk",
+      "name": "Filter-Vibrato Funk",
+      "ref": "A slinky funk lead whose held notes shimmer in tone, not pitch, when the mod wheel sends a fast LFO to the filter",
+      "artist": "70s funk",
+      "tags": ["lead", "funk", "70s"],
+      "level": 2,
+      "blurb": "A slinky funk lead whose long notes shimmer and throb in tone, held still in pitch.",
+      "how": "A square and a sawtooth through a resonant filter make a vocal funk lead. The LFO is at a vibrato’s speed, but sent to the filter instead of the pitch: so with the mod wheel up the note stays in tune and its tone throbs, a shimmer like a voice through a talk box. MOD DEPTH stays at 0, and the lane pushes the wheel up on the held notes only. The other hand turns EMPHASIS up through part B, so the shimmer gets more vocal.",
+      "phrase": {
+        "bpm": 98,
+        "loop": true,
+        "steps": [
+          [0, 67, 0.25],
+          [0.5, 70, 0.25],
+          [1, 72, 0.25],
+          [1.5, 74, 1],
+          [2.75, 77, 0.25],
+          [3, 74, 0.25],
+          [3.5, 72, 0.25],
+          [4, 70, 0.25],
+          [4.5, 72, 0.25],
+          [5, 67, 1.5],
+          [7, 65, 0.25],
+          [7.5, 67, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A vocal lead",
+          "module": "osc",
+          "why": "A square and a sawtooth together are hollow and bright at once, a good start for a vocal tone.\n- Osc 1 WAVEFORM square\n- Osc 2 WAVEFORM sawtooth\n- Osc 2 FREQUENCY 0.1 (+0.1 st)\n- Osc 2 switch on\n- Osc 1 VOLUME 7\n- Osc 2 VOLUME 5\n- GLIDE 1.5 (45 ms)\n- Listen for: a hollow, bright tone.",
+          "set": {
+            "osc1.wave": "sq",
+            "osc2.wave": "saw",
+            "osc2.freq": 0.1,
+            "mix.osc2On": true,
+            "mix.osc1": 7,
+            "mix.osc2": 5,
+            "ctl.glide": 1.5
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "The filter sits in the middle with emphasis, so moving the cutoff a little changes the vowel. Keyboard control keeps the vowel with the line.\n- CUTOFF 0 (632 Hz)\n- EMPHASIS 5\n- KEYBOARD CONTROL 1 on\n- AMOUNT OF CONTOUR 3\n- Filter ATTACK 0.5 (9 ms)\n- Filter DECAY 3 (350 ms)\n- Filter SUSTAIN 4\n- Loudness ATTACK 0 (3 ms)\n- Loudness DECAY 3 (350 ms)\n- Loudness SUSTAIN 9\n- Listen for: a nasal, “aah” tone.",
+          "set": {
+            "filter.cutoff": 0,
+            "filter.emphasis": 5,
+            "filter.kbd1": true,
+            "filter.contour": 3,
+            "fenv.attack": 0.5,
+            "fenv.decay": 3,
+            "fenv.sustain": 4,
+            "aenv.attack": 0,
+            "aenv.decay": 3,
+            "aenv.sustain": 9
+          }
+        },
+        {
+          "title": "Vibrato on the filter, on the wheel",
+          "module": "mod",
+          "why": "FILTER MODULATION sends the LFO to the cutoff at a vibrato’s speed. MOD DEPTH stays at 0: the wheel brings it in. On the filter, not the pitch, the note shimmers in tone and stays in tune.\n- FILTER MODULATION on\n- LFO shape triangle\n- LFO RATE 5.77 (5.99 Hz)\n- MOD MIX 10\n- MOD DEPTH 0\n- Listen for: a still tone: push the mod wheel up on a held note and it throbs “wah-wah-wah”.",
+          "set": {
+            "mod.toFilter": true,
+            "lfo.shape": "tri",
+            "lfo.rate": 5.77,
+            "mod.mix": 10,
+            "mod.depth": 0
+          }
+        }
+      ],
+      "context": {
+        "mod.depth": "Stays at 0: the mod wheel lane brings the shimmer in on the held notes only.",
+        "filter.emphasis": "The other lane: up through part B, so the shimmer turns from a throb into a voice.",
+        "lfo.rate": "The shimmer’s speed. A vibrato’s is about 6 Hz.",
+        "mod.toFilter": "The LFO goes to the filter, not the pitch: the note stays in tune."
+      },
+      "tweaks": [
+        {
+          "id": "mod.depth",
+          "try": "In the sequencer's Mod lanes, draw the mod wheel lane high on the short notes too.",
+          "hear": "The whole line throbs, like a rotary speaker."
+        },
+        {
+          "id": "filter.emphasis",
+          "try": "In the sequencer's Mod lanes, flatten the emphasis lane at 8.",
+          "hear": "A whistling, squealing shimmer on every held note."
+        },
+        {
+          "id": "mod.toOsc",
+          "try": "Switch on as well",
+          "hear": "Pitch and tone shimmer together: a singer’s vibrato."
+        }
+      ]
     }
   ]
 }
