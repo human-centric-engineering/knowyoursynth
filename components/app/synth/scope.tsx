@@ -1061,6 +1061,7 @@ export interface ScopeDialogProps extends Pick<
   | 'wheelSays'
   | 'wheelLane'
   | 'bend'
+  | 'along'
   | 'octave'
   | 'onOctave'
   | 'hold'
@@ -1101,6 +1102,7 @@ export function ScopeDialog({
   wheelSays,
   wheelLane,
   bend,
+  along,
   octave,
   onOctave,
   hold,
@@ -1405,6 +1407,7 @@ export function ScopeDialog({
               wheelSays={wheelSays}
               wheelLane={wheelLane}
               bend={bend}
+              along={along}
               hold={hold}
               onHold={onHold}
               noteOn={noteOn}

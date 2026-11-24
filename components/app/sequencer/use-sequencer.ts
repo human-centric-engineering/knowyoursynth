@@ -92,6 +92,7 @@ import {
 } from '@/lib/app/synths/audio/pattern-player';
 import { NO_BACKING, type BackingSettings } from '@/lib/app/synths/audio/backing';
 import { logger } from '@/lib/logging';
+import { alongPattern } from '@/lib/app/sequencer/play-along';
 import type { ChosenStep, StepButton } from '@/components/app/sequencer/panel-buttons';
 import type { SequencerOut } from '@/components/app/sequencer/use-midi-out';
 import type { SequencerClock } from '@/components/app/sequencer/use-clock-in';
@@ -307,6 +308,15 @@ export interface Sequencer {
   setLiveMode: (m: LiveMode) => void;
   /** What the mod lanes set on the step being heard, for the panel to show; null when they set nothing (or stopped). */
   modShown: ControlValues | null;
+  /**
+   * Play-along (t-311): the pattern's wheel lanes stop playing the wheels, and the hand's play instead. Not part of
+   * the pattern. `canPlayAlong`: the pattern has a wheel lane this synth plays.
+   */
+  playAlong: boolean;
+  setPlayAlong: (on: boolean) => void;
+  canPlayAlong: boolean;
+  /** With play-along on, what the wheel lanes set on the step being heard: the ghost on the wheels. Else null. */
+  ghost: ControlValues | null;
 }
 
 /** An Undo step: the pattern, and for one a whole new pattern replaced, what it was named and saved as. */
@@ -473,6 +483,8 @@ export function useSequencer({
     quantiseRef.current = on;
     setQuantiseState(on);
   }, []);
+  const [playAlong, setPlayAlongState] = useState(false);
+  const playAlongRef = useRef(false);
   const [liveMode, setLiveModeState] = useState<LiveMode>('overdub');
   const liveModeRef = useRef<LiveMode>('overdub');
   const setLiveMode = useCallback((m: LiveMode) => {
@@ -524,7 +536,10 @@ export function useSequencer({
       arpFrom: number | undefined
     ) => {
       const opts = { loop: index, from, fill: fillRef.current, arp: arpInput(arpFrom, seed) };
-      const c = compileLoop(p, { ...opts, rng: seededRng(seed) });
+      // Played along with, the wheel lanes go nowhere: the hand's wheels play (t-311). Only the lanes change, so the
+      // notes and their draws are the same either way.
+      const played = playAlongRef.current ? alongPattern(p) : p;
+      const c = compileLoop(played, { ...opts, rng: seededRng(seed) });
       const info: LoopInfo = {
         seed,
         from,
@@ -541,11 +556,11 @@ export function useSequencer({
         if (k < index - 4) loops.current.delete(k);
       });
       const loop: PatternLoop = { notes: c.notes, beats: c.beats };
-      const lanes = lanePlay(p, c.mods);
+      const lanes = lanePlay(played, c.mods);
       if (lanes) {
         loop.params = lanes.params;
         loop.mods = lanes.mods;
-        loop.lanes = p.lanes;
+        loop.lanes = played.lanes;
       }
       lanesSent.current = !!lanes;
       return loop;
@@ -912,6 +927,7 @@ export function useSequencer({
   );
 
   const [modShown, setModShown] = useState<ControlValues | null>(null);
+  const [ghost, setGhost] = useState<ControlValues | null>(null);
 
   const liveHits = useRef(new Map<number, LiveHit>());
   /** Which steps live record has written on this time round, so notes struck together are a chord. */
@@ -1201,6 +1217,16 @@ export function useSequencer({
     },
     [replay, flushWheels]
   );
+  const setPlayAlong = useCallback(
+    (on: boolean) => {
+      if (playAlongRef.current === on) return;
+      playAlongRef.current = on;
+      setPlayAlongState(on);
+      // Heard from now: the loop playing is sent again with or without its wheel lanes.
+      replay();
+    },
+    [replay]
+  );
   const setArp = useCallback(
     (a: ArpSettings) => {
       arpRef.current = a;
@@ -1235,6 +1261,7 @@ export function useSequencer({
   useEffect(() => {
     if (!playing || !hasLanes) {
       setModShown(null);
+      setGhost(null);
       return;
     }
     let raf = 0;
@@ -1247,16 +1274,28 @@ export function useSequencer({
         at && target
           ? stepOverrides(target.def, p.parts[at.part]?.steps[at.step]?.mod, p.lanes ?? [])
           : null;
-      const key = set ? JSON.stringify(set) : '';
+      // Played along with, the wheel lanes' values are the ghost, not what the wheels show.
+      const along = playAlongRef.current;
+      const key = `${along}|${set ? JSON.stringify(set) : ''}`;
       if (key !== last) {
         last = key;
-        setModShown(set);
+        const [shown, wheels] = along ? splitWheels(set) : [set, null];
+        setModShown(shown);
+        setGhost(wheels);
       }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [playing, hasLanes, position]);
+
+  const canPlayAlong =
+    !!lanes &&
+    (pattern.lanes ?? []).some((id) => isPerformanceId(id) && !!laneControl(lanes.def, id));
+  // A pattern with no wheel lane to ride has nothing to play along with: it plays as written.
+  useEffect(() => {
+    if (!canPlayAlong && playAlongRef.current) setPlayAlong(false);
+  }, [canPlayAlong, setPlayAlong]);
 
   return {
     pattern,
@@ -1295,5 +1334,21 @@ export function useSequencer({
     setQuantise,
     liveMode,
     setLiveMode,
+    playAlong,
+    setPlayAlong,
+    canPlayAlong,
+    ghost,
   };
+}
+
+/** A step's lane values split into the panel's and the wheels': each null when it has none. */
+function splitWheels(set: ControlValues | null): [ControlValues | null, ControlValues | null] {
+  if (!set) return [null, null];
+  let panel: ControlValues | null = null;
+  let wheels: ControlValues | null = null;
+  for (const [id, v] of Object.entries(set)) {
+    if (isPerformanceId(id)) (wheels ??= {})[id] = v;
+    else (panel ??= {})[id] = v;
+  }
+  return [panel, wheels];
 }

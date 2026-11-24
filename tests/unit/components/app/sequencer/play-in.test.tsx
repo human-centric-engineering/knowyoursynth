@@ -615,6 +615,47 @@ describe('live record of the performance wheels (t-310)', () => {
     expect(state.canUndo).toBe(false);
   });
 
+  describe('riding the wheel along with the pattern (t-311)', () => {
+    /** A take on the mod wheel: 0.4 on step 2 and 0.8 on step 5, written, then out of live record. */
+    const recorded = async () => {
+      await start();
+      move(WHEEL, 0.4, 1.2);
+      move(WHEEL, 0.8, 4.2);
+      settle();
+      act(() => state.setKeys('edit'));
+    };
+
+    it('sends the loop without the wheel lane while on, and with it again once off', async () => {
+      await recorded();
+      expect(state.canPlayAlong).toBe(true);
+      expect(lastOf('patternEdit')?.loop.lanes).toEqual([WHEEL]);
+      act(() => state.setPlayAlong(true));
+      const along = lastOf('patternEdit')?.loop;
+      expect(along?.lanes).toBeUndefined();
+      expect(along?.mods).toBeUndefined();
+      act(() => state.setPlayAlong(false));
+      expect(lastOf('patternEdit')?.loop.lanes).toEqual([WHEEL]);
+    });
+
+    it('shows the lane’s wheel as the ghost, not on the wheel, on the step being heard', async () => {
+      await recorded();
+      act(() => state.setPlayAlong(true));
+      at(1.5);
+      act(() => void vi.advanceTimersByTime(50));
+      expect(state.ghost).toEqual({ [WHEEL]: 0.4 });
+      expect(state.modShown).toBeNull();
+      act(() => state.setPlayAlong(false));
+      act(() => void vi.advanceTimersByTime(50));
+      expect(state.ghost).toBeNull();
+      expect(state.modShown).toEqual({ [WHEEL]: 0.4 });
+    });
+
+    it('is not offered on a pattern without a wheel lane', async () => {
+      await start();
+      expect(state.canPlayAlong).toBe(false);
+    });
+  });
+
   it('starts another Undo for a wheel moved again after a pause', async () => {
     await start();
     move(WHEEL, 0.3, 1.2);

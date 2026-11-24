@@ -129,6 +129,7 @@ import {
   type LaneTarget,
   type LoadedPattern,
 } from '@/components/app/sequencer/use-sequencer';
+import { usePlayAlong } from '@/components/app/sequencer/use-play-along';
 import { SharedPatternStrip } from '@/components/app/sharing/shared-pattern-strip';
 import { voiceMode } from '@/lib/app/synths/audio/pattern-player';
 import { useMyPatterns } from '@/components/app/sequencer/use-my-patterns';
@@ -1462,17 +1463,33 @@ function Synth({
   // Only on a synth with a wheel: elsewhere the lane is kept and silent, and sends nothing to be echoed.
   const seqWheelLane =
     (seq.pattern.lanes?.includes(WHEEL) ?? false) && Boolean(synthDef.performance?.wheel);
-  // A lane plays the wheel for the whole run, the steps it leaves alone included, as MIDI out has it.
-  const wheelLanePlaying = seqWheelLane && seq.playing;
+  // A lane plays the wheel for the whole run, the steps it leaves alone included, as MIDI out has it. Not while it is
+  // played along with (t-311): the hand's wheel plays then, and nothing of the lane's is sent to be echoed.
+  const alongPlaying = seq.playAlong && seq.playing;
+  const wheelLanePlaying = seqWheelLane && seq.playing && !seq.playAlong;
   useEffect(() => {
-    wheelLaneSending.current = seqWheelLane && midiOut.sending && seq.playing;
-  }, [seqWheelLane, midiOut.sending, seq.playing]);
+    wheelLaneSending.current = wheelLanePlaying && midiOut.sending;
+  }, [wheelLanePlaying, midiOut.sending]);
   // The pitch wheel's lane, likewise.
   const seqBendLane = (seq.pattern.lanes?.includes(BEND) ?? false) && bendRange !== null;
-  const bendLanePlaying = seqBendLane && seq.playing;
+  const bendLanePlaying = seqBendLane && seq.playing && !seq.playAlong;
   useEffect(() => {
-    bendLaneSending.current = seqBendLane && midiOut.sending && seq.playing;
-  }, [seqBendLane, midiOut.sending, seq.playing]);
+    bendLaneSending.current = bendLanePlaying && midiOut.sending;
+  }, [bendLanePlaying, midiOut.sending]);
+  // Playing along: the lanes' wheels as ghosts, and how closely the hand follows them.
+  const { ghost } = seq;
+  const follow = usePlayAlong({ on: alongPlaying, ghost, wheel, bend });
+  const along = useMemo(
+    () =>
+      alongPlaying
+        ? {
+            wheel: seqWheelLane ? (shownWheel(ghost) ?? null) : null,
+            bend: seqBendLane ? (shownBend(ghost) ?? null) : null,
+            follow,
+          }
+        : null,
+    [alongPlaying, seqWheelLane, seqBendLane, ghost, follow]
+  );
   // The pitch wheel beside the keys, on a synth that declares one.
   const pitchWheel = useMemo(
     () =>
@@ -3611,6 +3628,7 @@ function Synth({
                     wheelSays={wheelSaid}
                     wheelLane={wheelLanePlaying}
                     bend={pitchWheel}
+                    along={along}
                     hold={hold}
                     onHold={setHoldMode}
                     noteOn={noteOn}
@@ -3804,6 +3822,7 @@ function Synth({
         wheelSays={wheelSaid}
         wheelLane={wheelLanePlaying}
         bend={pitchWheel}
+        along={along}
         onWheel={setWheel}
         octave={octave}
         onOctave={setOctave}
