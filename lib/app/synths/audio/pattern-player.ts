@@ -77,6 +77,11 @@ export interface PatternLoop {
    * (`f-midi-out` t-90). The player plays `params` and does not read these.
    */
   mods?: [beat: number, set: ControlValues | null][];
+  /**
+   * The pattern's lanes, with `mods`: a performance wheel's lane sends the hand's wheel on a step it leaves alone, so
+   * MIDI out needs to know the loop has it (t-313). The player does not read these.
+   */
+  lanes?: readonly string[];
 }
 
 /** A settings change, timed to its sample. */

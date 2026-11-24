@@ -454,6 +454,8 @@ describe('the lanes playing', () => {
       [0.5, { cutoff: 10 }],
       [0.75, null],
     ]);
+    // With the lanes they are of, so MIDI out knows a wheel's lane from the loop's first step (t-313).
+    expect(start.loop.lanes).toEqual(laned().lanes);
   });
 
   it('sends no settings at all for lanes this synth has no control for', async () => {
@@ -466,6 +468,7 @@ describe('the lanes playing', () => {
     await act(async () => void (await state.play()));
     expect(sentOf('pattern').at(-1)!.loop.params).toBeUndefined();
     expect(sentOf('pattern').at(-1)!.loop.mods).toBeUndefined();
+    expect(sentOf('pattern').at(-1)!.loop.lanes).toBeUndefined();
     // And the pattern is held as it was
     expect(state.pattern).toEqual(p);
   });
