@@ -1585,6 +1585,130 @@ describe('a performance wheel’s lane as its CC (f-performance-wheels)', () => 
     expect(last?.[1]).toBe(90);
   });
 
+  describe('where a wheel lane gives way (t-315, t-316)', () => {
+    /** A wheel lane on `w` as CC 1, sent only while the loop has the lane, as `ccLookup` does; the hand's is 20. */
+    const laned: CcLookup = Object.assign(
+      (set: Record<string, unknown>, lanes?: readonly string[]): [number, number][] =>
+        lanes?.includes('w') ? [[1, typeof set.w === 'number' ? set.w : 20]] : [],
+      { rest: (): [number, number][] => [[1, 20]] }
+    );
+    const withLane = (mods: [number, Record<string, number> | null][]): PatternLoop => ({
+      ...modded(mods),
+      lanes: ['w'],
+    });
+
+    it('puts the wheel back at the start of a chained part that sets no wheel value', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      // The page sends a part with no lane values as a loop without mods or lanes (`lanePlay`).
+      t.s.message({ type: 'patternNext', loop: loop([[0, 60, 0.5]]) });
+      t.run(1200);
+      expect(cc1(t.sent)).toEqual([
+        [0, 127],
+        [1000, 20],
+      ]);
+      t.s.message({ type: 'stopPattern' });
+      expect(cc1(t.sent)).toHaveLength(2);
+    });
+
+    it('puts the wheel back at the start of a loop whose lanes no longer include it', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      t.s.message({ type: 'patternNext', loop: { ...modded([[0, null]]), lanes: ['x'] } });
+      t.run(1200);
+      expect(cc1(t.sent)).toEqual([
+        [0, 127],
+        [1000, 20],
+      ]);
+    });
+
+    it('keeps the wheel on the lane into a loop that still has it', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      t.s.message({ type: 'patternNext', loop: withLane([[0, { w: 90 }]]) });
+      t.run(1200);
+      expect(cc1(t.sent)).toEqual([
+        [0, 127],
+        [1000, 90],
+      ]);
+    });
+
+    it('puts the wheel back once, even when the loops without the lane were caught up past', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      t.run(200);
+      const plain = loop([[0, 60, 0.5]]);
+      t.s.message({ type: 'patternNext', loop: plain });
+      // The timer held up: the player is two loops on, in the plain one played again, before the next pump.
+      t.s.event(ev({ index: 1, frame: 1000 }));
+      t.s.event(ev({ index: 2, frame: 2000 }));
+      t.now = 2000;
+      t.s.pump();
+      expect(cc1(t.sent).map(([, v]) => v)).toEqual([127, 20]);
+    });
+
+    it('puts the wheel back now when an edit takes its lane off mid-run, and Stop leaves it there', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      t.run(300);
+      t.s.message({ type: 'patternEdit', loop: loop([[0.5, 60, 0.25]]) });
+      t.s.pump();
+      expect(cc1(t.sent)).toEqual([
+        [0, 127],
+        [300, 20],
+      ]);
+      t.s.message({ type: 'stopPattern' });
+      expect(cc1(t.sent)).toHaveLength(2);
+    });
+
+    it('puts the wheel back on Stop straight after an edit, before anything is sent again', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      t.run(300);
+      t.s.message({ type: 'patternEdit', loop: withLane([[0, { w: 127 }]]) });
+      t.s.message({ type: 'stopPattern' });
+      expect(cc1(t.sent).at(-1)?.[1]).toBe(20);
+    });
+
+    it('puts the wheel back on Stop after the lookup is given again mid-run', () => {
+      const t = setup();
+      t.s.setCcs(laned);
+      start(t, withLane([[0, { w: 127 }]]));
+      t.run(300);
+      t.s.setCcs(Object.assign((...a: Parameters<CcLookup>) => laned(...a), { rest: laned.rest }));
+      t.s.message({ type: 'stopPattern' });
+      expect(cc1(t.sent).at(-1)?.[1]).toBe(20);
+    });
+
+    it('centres pitch bend on Stop after its lane is taken off mid-run', () => {
+      const bend: CcLookup = Object.assign(
+        (set: Record<string, unknown>, lanes?: readonly string[]): [number, number][] =>
+          lanes?.includes('b') ? [[PITCH_BEND, typeof set.b === 'number' ? set.b : 8192]] : [],
+        { rest: (): [number, number][] => [[PITCH_BEND, 8192]] }
+      );
+      const pb = (sent: Sent[]) => sent.filter(([, d]) => (d[0] & 0xf0) === 0xe0).map(([, d]) => d);
+      // Taken off and stopped before the next pump, and taken off with a pump between.
+      for (const pumped of [false, true]) {
+        const t = setup();
+        t.s.setCcs(bend);
+        start(t, { ...modded([[0, { b: 16383 }]]), lanes: ['b'] });
+        t.run(300);
+        t.s.message({ type: 'patternEdit', loop: loop([[0.5, 60, 0.25]]) });
+        if (pumped) t.s.pump();
+        t.s.message({ type: 'stopPattern' });
+        expect(pb(t.sent)[0]).toEqual([0xe0, 0x7f, 0x7f]);
+        expect(pb(t.sent).at(-1)).toEqual([0xe0, 0x00, 0x40]);
+        expect(pb(t.sent)).toHaveLength(2);
+      }
+    });
+  });
+
   it('leaves the wheel where the lane has it through a silence mid-run', () => {
     const t = setup();
     t.s.setCcs(wheel);

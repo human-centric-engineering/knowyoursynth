@@ -38,7 +38,9 @@
  * has gone (an edit, a CC given mid-run, a held-up timer, a change of port) aren't sent late one by one: only the
  * value in effect on each CC, now.
  * Nothing is sent back on Stop: the hardware keeps the last value, as it has no panel value to go back to. A
- * performance wheel's lane is the exception (`CcLookup.rest`): the wheel goes back to the hand's, once a lane moved it.
+ * performance wheel's lane is the exception (`CcLookup.rest`): the wheel goes back to the hand's, once a lane moved it,
+ * on Stop and wherever the lane gives way mid-run (a loop without it, an edit that takes it off, t-316), as the
+ * browser's voice plays the hand's wheel there.
  * The pitch wheel's lane rides the same path as pitch bend (`PITCH_BEND`), turned into its bytes as it goes out.
  *
  * With a program set (`setProgram`, `f-midi-hardware-lead` t-92), a run from the top first calls up that patch: Bank
@@ -133,6 +135,11 @@ interface Cursor {
   /** Where its lanes' values change, in order, and the next not yet reached. */
   mods: Mod[];
   k: number;
+  /**
+   * A wheel a lane moved goes back to the hand's at its start, unless its own lanes have the wheel: it took over from
+   * a loop that may have (a chained part, an edit, t-316).
+   */
+  rest: boolean;
 }
 
 /** From beat `b` of the loop, the lanes' values: `null` for none. */
@@ -171,6 +178,8 @@ export interface MidiScheduler {
 }
 
 const NO_CCS: ReadonlySet<number> = new Set();
+/** The lanes' change that puts the wheels back at a loop's start (`Cursor.rest`), told apart by identity. */
+const REST: ControlValues = Object.freeze({});
 const lanesOf = (loop: PatternLoop): readonly string[] | undefined =>
   Array.isArray(loop.lanes) ? loop.lanes.filter((id) => typeof id === 'string') : undefined;
 const byStart = (a: PhraseNote, b: PhraseNote) => a[0] - b[0] || a[1] - b[1];
@@ -240,6 +249,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   /** What the lanes' values are sent as, and the value last sent on each CC since the last release. */
   let ccs: CcLookup | null = null;
   const ccSent = new Map<number, number>();
+  /**
+   * Per CC, the value a lane last sent on it since it last went back to the hand's: the wheels Stop puts back. Kept
+   * through an edit and a new lookup, which clear `ccSent` (t-315); `restOwed` reads only the wheels in it.
+   */
+  const moved = new Map<number, number>();
   /** Per CC, the value in effect from changes whose time has gone, still to be sent (`sendMod`). */
   const behind = new Map<number, number>();
   /** Per CC, the latest time a value was handed to the port for, on this port and channel. */
@@ -322,7 +336,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
   /** A wheel a lane moved, and where it goes back to (`CcLookup.rest`): the hand's. None on the CCs in `skip`. */
   function restOwed(skip: ReadonlySet<number> = NO_CCS): [cc: number, value: number][] {
     return (ccs?.rest?.() ?? []).filter(([cc, v]) => {
-      const sent = ccSent.get(cc);
+      const sent = moved.get(cc);
       return sent !== undefined && sent !== v && !skip.has(cc);
     });
   }
@@ -338,6 +352,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       const at = Math.max(now, holdUntil, ccAt.get(cc) ?? now);
       out(ccMessage(channel, cc, v), at);
       ccAt.set(cc, at);
+      moved.delete(cc);
     }
   }
 
@@ -363,7 +378,10 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     held.clear();
     downAt.clear();
     lagOf.clear();
-    if (port && restWheels) rest(restOwed());
+    if (restWheels) {
+      if (port) rest(restOwed());
+      moved.clear();
+    }
     ccSent.clear();
     offs.length = 0;
     dirty = false;
@@ -381,7 +399,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     const sends = ccs && mods.length > 0 ? ccs({}, lanesOf(loop)) : [];
     const owed = restOwed(new Set(sends.map(([cc]) => cc)));
     release(false, false);
-    cur = { index, start: 0, loop, notes: sorted(loop), i: 0, mods, k: 0 };
+    cur = { index, start: 0, loop, notes: sorted(loop), i: 0, mods, k: 0, rest: false };
     next = undefined;
     starts.clear();
     starts.set(index, 0);
@@ -425,6 +443,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
       i: 0,
       mods: loop === c.loop ? c.mods : modsOf(loop),
       k: 0,
+      // Carried on if a loop was turned past before its start was reached (`event` catching up).
+      rest: c.rest || loop !== c.loop,
     };
     starts.set(cur.index, start);
     if (clockOn && !started && startG === null) startG = start;
@@ -528,7 +548,8 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     let i = 0;
     while (i < notes.length && c.start + notes[i][0] < sentTo) i++;
     // The lanes from the start: what is passed sends only the value in effect, which goes whatever was last sent.
-    cur = { ...c, loop, notes, i, mods: modsOf(loop), k: 0 };
+    // A wheel whose lane the edit took off goes back to the hand's, now: its start has passed.
+    cur = { ...c, loop, notes, i, mods: modsOf(loop), k: 0, rest: true };
     ccSent.clear();
   }
 
@@ -559,7 +580,9 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
         const c: Cursor = cur;
         if (c.i < c.notes.length && c.notes[c.i][0] < c.loop.beats)
           on = { g: c.start + c.notes[c.i][0], note: c.notes[c.i] };
-        if (ccs && c.k < c.mods.length && c.mods[c.k][0] < c.loop.beats)
+        // The wheels' put-back goes first at the loop's start, before its own lanes' first values.
+        if (ccs && c.rest) mod = { g: c.start, set: REST };
+        else if (ccs && c.k < c.mods.length && c.mods[c.k][0] < c.loop.beats)
           mod = { g: c.start + c.mods[c.k][0], set: c.mods[c.k][1] };
         if (on || mod) break;
         if (c.start + c.loop.beats >= to || !turn()) break;
@@ -608,6 +631,7 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     // Not while a patch loads, which would set it back.
     const at = Math.max(when, holdUntil);
     ccSent.set(cc, v);
+    moved.set(cc, v);
     out(ccMessage(channel, cc, v), at);
     // A value handed over for later on this CC (before an edit, or a silence) can't be taken back: this one goes again
     // at that time too, after it, so the hardware ends on this one. Changes come in time order, so the latest wins.
@@ -623,6 +647,11 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
    * time.
    */
   function sendMod(c: Cursor, g: number, raw: ControlValues | null, a: Anchor, now: number) {
+    if (raw === REST) {
+      c.rest = false;
+      putBack(c, msAt(a, g), now);
+      return;
+    }
     c.k++;
     if (!ccs) return;
     // A change to no lane values still sends a wheel lane's hand value (`ccLookup`); a lane given a CC sends nothing.
@@ -634,6 +663,23 @@ export function createMidiScheduler(clock: MidiClock): MidiScheduler {
     }
     catchUp(now);
     for (const [cc, v] of ccs(set, lanesOf(c.loop))) ccOut(cc, v, due);
+  }
+
+  /**
+   * The wheels a lane moved that loop `c` has no lane for, back to the hand's at `due` (now, if it has gone), as the
+   * browser's voice plays the hand's wheel through a loop without the lane. One the loop's lanes send is left to them.
+   */
+  function putBack(c: Cursor, due: number, now: number) {
+    if (!ccs) return;
+    const keep = new Set(ccs({}, lanesOf(c.loop)).map(([cc]) => cc));
+    const owed = restOwed(keep);
+    if (owed.length === 0) return;
+    // After a value gathered from a loop before, which would otherwise land on top of it.
+    catchUp(now);
+    for (const [cc, v] of owed) {
+      ccOut(cc, v, Math.max(now, due));
+      moved.delete(cc);
+    }
   }
 
   /** The values in effect gathered in `behind`, sent now: before anything later is. */
