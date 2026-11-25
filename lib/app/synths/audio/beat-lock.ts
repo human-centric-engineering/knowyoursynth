@@ -108,7 +108,8 @@ export function createBeatLock(sr: number): BeatLock {
     if (run && pulses > 0) since++;
     if (qPulses > 0) {
       if (run) {
-        if (pulses > 0) period = since;
+        // several pulses on one sample (the tempo raised) share the samples since the last
+        if (pulses > 0) period = since / qPulses;
         pulses += qPulses;
         since = 0;
       }

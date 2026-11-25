@@ -776,7 +776,10 @@ export function createMoog(
       // Following the app's clock, a clock slow enough to be a tempo is locked to the beat (`beat-lock.ts`): Start puts
       // it on stage 1 at the run's first beat, each stage lasts a whole division of the beat (row C timing: a whole
       // number of pulses), and Stop holds it. Faster, it is an oscillator, and runs free.
-      const locked = follow && q.hz <= LOCK_MAX_HZ;
+      // tempo or tone is FREQUENCY RANGE and VERNIER with the control input; row C timing is a stage's rhythm, not its
+      // rate, so it does not change which
+      const locked =
+        follow && Math.min(q.hz * Math.exp(ev(DI.s960cv) * Math.LN2), sr) <= LOCK_MAX_HZ;
       if (locked) {
         // A start, or the 960 taking the lock during a run (patched, or FREQUENCY RANGE turned down to a tempo): stage 1
         // from the step the run is on. A STOP stage the skip lands on still holds it.
@@ -892,9 +895,7 @@ export function createMoog(
   /** The 960's current stage (0-based) and whether it is running, for the panel lamps. */
   // a 960 locked to the app's clock runs only while the clock does
   const seqState = (): { stage: number; run: boolean } | null =>
-    sq.p
-      ? { stage: sq.st, run: sq.run && (!(follow && sq.p.hz <= LOCK_MAX_HZ) || lock.running()) }
-      : null;
+    sq.p ? { stage: sq.st, run: sq.run && (!sq.locked || lock.running()) } : null;
   const out: MoogMeters = {
     vco: vco.map(() => 0),
     vcoHz: vco.map(() => 0),

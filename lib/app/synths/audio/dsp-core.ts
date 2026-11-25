@@ -1379,6 +1379,8 @@ function createVoice(
   function ownClock(at: ClockAt, from?: number) {
     const to = P && P.moog ? 'moog' : 'subharm';
     if (at === 'start') {
+      // a start to the other engine stops the one the last run went to
+      if (clockTo && clockTo !== to) sendClock(clockTo, 'stop');
       clockRun = true;
       clockTo = to;
       clockPulse = from || 0;
@@ -2307,8 +2309,10 @@ function createVoice(
             ownClock('pulse');
           }
         } else if (phrase.clocked) {
-          // the voice has left the Subharmonicon (`off()` ended its run): a start is owed if it comes back
+          // the voice no longer follows (it has left the Subharmonicon, or the 960 is at FREE): its run ends, and a start
+          // is owed if it comes back
           phrase.clocked = false;
+          ownClock('stop');
         }
         const evs = phrase.evs;
         while (phraseIdx < evs.length && evs[phraseIdx].t! <= phrasePos) {
@@ -2327,6 +2331,8 @@ function createVoice(
             phrasePos = 0;
             phraseIdx = 0;
             phrase.pulse = 0;
+            // the clock's count starts again with the riff, so a change of engine still finds its sixteenths
+            clockPulse = 0;
           } else {
             stopPhrase();
           }

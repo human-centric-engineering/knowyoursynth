@@ -98,6 +98,24 @@ describe('the beat lock’s view of the pulses', () => {
     }
     expect(l.beat()).toBeCloseTo(3.5 + 1 / 24, 9);
   });
+
+  it('keeps the tempo when several pulses arrive on one sample', () => {
+    const l = createBeatLock(SR);
+    l.clock('start');
+    for (let i = 0; i <= 2 * PULSE; i++) {
+      if (i % PULSE === 0) l.clock('pulse');
+      l.step();
+    }
+    // two at once, a pulse late: the period is still a pulse's
+    for (let i = 1; i <= 2 * PULSE; i++) {
+      if (i === 2 * PULSE) {
+        l.clock('pulse');
+        l.clock('pulse');
+      }
+      l.step();
+    }
+    expect(l.bps()).toBeCloseTo(2, 9);
+  });
 });
 
 /** A bare Moog core with the 960 read by a cable (row A), and its stage recorded each sample. */
@@ -105,7 +123,16 @@ function rig(s960: Partial<NonNullable<MoogParams['s960']>>, follow: boolean) {
   const SI = Object.fromEntries(MOOG_SIGNALS.map((n, i) => [n, i]));
   const DI = Object.fromEntries(MOOG_DESTS.map((n, i) => [n, i]));
   const S = new Float64Array(MOOG_SIGNALS.length);
-  const m = createMoog(SR, S, SI, DI, () => 0, new Uint8Array(MOOG_DESTS.length));
+  // every input 0 V but the 960's control input, which `cv` sets
+  const io = { cv: 0 };
+  const m = createMoog(
+    SR,
+    S,
+    SI,
+    DI,
+    (d: number) => (d === DI.s960cv ? io.cv : 0),
+    new Uint8Array(MOOG_DESTS.length)
+  );
   const q: NonNullable<MoogParams['s960']> = {
     hz: 7.94, // 3.97 steps a beat at 120 BPM: a near miss that drifts free
     timing: false,
@@ -139,7 +166,7 @@ function rig(s960: Partial<NonNullable<MoogParams['s960']>>, follow: boolean) {
   /** New settings for the 960, as the panel sends them. */
   const reset960 = (o: Partial<NonNullable<MoogParams['s960']>>) =>
     m.set({ vco: [], s960: { ...q, ...o } }, new Set(['s960a', 's960clk']), follow);
-  return { m, run, moves, reset960 };
+  return { m, run, moves, reset960, io };
 }
 
 describe('the 960 locked to the app’s clock', () => {
@@ -241,6 +268,14 @@ describe('the 960 locked to the app’s clock', () => {
     expect(t.m.seqState()!.run).toBe(false);
     t.run(PULSE, { start: true, pulses: true });
     expect(t.m.seqState()!.run).toBe(true);
+  });
+
+  it('runs free when its control input pushes it to a tone, however low FREQUENCY RANGE is', () => {
+    const t = rig({ hz: 5 }, true);
+    // +5 V at 1 V/oct: 160 Hz, a step every 300 samples
+    t.io.cv = 5;
+    const { stage } = t.run(SR / 10, { start: true, pulses: true });
+    expect(t.moves(stage)[0]).toBe(300);
   });
 
   it('runs free when it is fast enough to be an oscillator, with or without the clock', () => {
@@ -352,5 +387,35 @@ describe('the clock reaching the System 55’s 960 from the voice’s riff playe
     // it moves on every sixteenth after the change, rather than waiting on a start that has already gone
     const on = rows.filter(clear(6000));
     expect(new Set(on.map((r) => r.seq)).size).toBeGreaterThan(4);
+  });
+
+  it('a riff whose 960 goes to FREE ends its clock run, so BEAT again with nothing playing holds it where it is', () => {
+    let seq: number | undefined;
+    const syn = createSynth(SR, (e) => {
+      if (e.type === 'meter') seq = e.seq;
+    });
+    const buf = new Float32Array(128);
+    const play = (n: number) => {
+      for (let k = 0; k < n; k += 128) syn.process(buf, 128);
+    };
+    syn.handle({ type: 'params', p: params(true) });
+    syn.handle({ type: 'phrase', phrase: { bpm: 120, loop: true, steps: [[0, 60, 4]] } });
+    play(BEAT);
+    // FREE mid-riff, the riff stopped, and the 960 left to run on its own a while
+    syn.handle({ type: 'params', p: params(false) });
+    play(1280);
+    syn.handle({ type: 'stopPhrase' });
+    // a step free is 6316 samples: this ends mid-step, not on one
+    play(SR / 4);
+    const free = seq;
+    expect(free).not.toBe(0);
+    // back to BEAT with nothing playing: no run to take the lock from, so it waits where it is
+    syn.handle({ type: 'params', p: params(true) });
+    const held: (number | undefined)[] = [];
+    for (let k = 0; k < SR / 4; k += 128) {
+      syn.process(buf, 128);
+      held.push(seq);
+    }
+    expect(new Set(held)).toEqual(new Set([free]));
   });
 });
