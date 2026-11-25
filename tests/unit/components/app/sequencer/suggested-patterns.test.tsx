@@ -359,6 +359,8 @@ describe('Suits this sound', () => {
     const placeholder = document.querySelector('.kys-patfind');
     expect(placeholder).not.toBeNull();
     expect(placeholder?.getAttribute('aria-hidden')).toBe('true');
+    // Tiles, as the sequencer's lists are.
+    expect(placeholder?.classList.contains('is-grid')).toBe(true);
     expect(screen.getByText('Matching the library to the patch…')).toBeTruthy();
     // Only the real lists are lists: the placeholders are none.
     expect(screen.getAllByRole('list').map((l) => l.getAttribute('aria-label'))).toEqual([

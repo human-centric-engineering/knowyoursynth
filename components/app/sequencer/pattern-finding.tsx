@@ -26,7 +26,7 @@ export function FindingRows({
   grid?: boolean;
 }) {
   return (
-    <div className={`kys-patfind${grid ? 'is-grid' : ''}`} aria-hidden="true">
+    <div className={grid ? 'kys-patfind is-grid' : 'kys-patfind'} aria-hidden="true">
       {Array.from({ length: sections }, (_, s) => (
         <div key={s} className="kys-patfind-section">
           {heading && <span className="kys-patfind-bar kys-patfind-h" />}
