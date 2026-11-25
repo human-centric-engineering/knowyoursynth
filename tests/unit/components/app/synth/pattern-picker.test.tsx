@@ -508,11 +508,12 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('says its status inside the bottom sheet, which hides everything outside it from screen readers', () => {
+  it('says its status inside the bottom sheet, which hides everything outside it from screen readers', async () => {
     render(<Picker sheet ranked={{ ...NO_FRESHER, state: 'reading', result: null }} />);
-    expect(within(dialog()).getByRole('status').textContent).toBe(
-      'Finding patterns that suit the patch'
-    );
+    const status = within(dialog()).getByRole('status');
+    // Mounted empty with the sheet, then filled, so what it opens with is heard.
+    expect(status.textContent).toBe('');
+    await waitFor(() => expect(status.textContent).toBe('Finding patterns that suit the patch'));
   });
 
   it('is a bottom sheet below lg', () => {

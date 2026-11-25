@@ -128,11 +128,9 @@ export function PatternPicker(props: PatternPickerProps) {
   // The list's one status, there before anything is said in it (t-264): beside the popover, or in the sheet, since a
   // modal sheet hides everything outside it from screen readers. It counts what is shown: the sound's own and the library's.
   const ranks = ranked.result?.sections.reduce((n, s) => n + s.patterns.length, 0);
-  const statusLine = (
-    <span className="sr-only" role="status">
-      {open ? findingStatus(ranked.state, ranks === undefined ? null : shownCount(own, ranks)) : ''}
-    </span>
-  );
+  const statusText = open
+    ? findingStatus(ranked.state, ranks === undefined ? null : shownCount(own, ranks))
+    : '';
 
   return (
     <div className="kys-patpick">
@@ -167,7 +165,11 @@ export function PatternPicker(props: PatternPickerProps) {
       <span className="sr-only" aria-live="polite">
         {`Pattern: ${plays}${edited ? ', edited' : ''}`}
       </span>
-      {!sheet && statusLine}
+      {!sheet && (
+        <span className="sr-only" role="status">
+          {statusText}
+        </span>
+      )}
       {sheet ? (
         <BottomSheet
           title="Patterns"
@@ -175,7 +177,7 @@ export function PatternPicker(props: PatternPickerProps) {
           onOpenChange={onOpenChange}
           fallbackFocus={() => button.current}
         >
-          {statusLine}
+          <MountedStatus text={statusText} />
           <PickerBody {...props} onDone={() => onOpenChange(false)} />
         </BottomSheet>
       ) : (
@@ -193,6 +195,23 @@ export function PatternPicker(props: PatternPickerProps) {
         )
       )}
     </div>
+  );
+}
+
+/**
+ * A status that mounts with what holds it (the sheet): mounted empty and filled just after, so a screen reader hears the
+ * text it opens with, which it would not for a region already holding it as it appears.
+ */
+function MountedStatus({ text }: { text: string }) {
+  const [said, setSaid] = useState('');
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setSaid(text));
+    return () => cancelAnimationFrame(id);
+  }, [text]);
+  return (
+    <span className="sr-only" role="status">
+      {said}
+    </span>
   );
 }
 
