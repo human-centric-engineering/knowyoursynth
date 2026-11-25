@@ -110,10 +110,10 @@ describe('useRankedPatterns', () => {
 
   it('waits for the panel to settle, then reads it once, as it came, and ranks the library for it', async () => {
     const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
-      initialProps: base(),
+      initialProps: base({ panel: MOVED }),
     });
-    // the start sound loaded onto the panel just now: the same values, newly set
-    rerender(base({ open: true, panel: { values: { ...def.init }, cables: [] } }));
+    // the start sound loaded onto the panel just now
+    rerender(base({ open: true }));
     expect(result.current.state).toBe('reading');
     await settle(SETTLE_MS - 1);
     expect(post).not.toHaveBeenCalled();
@@ -187,9 +187,9 @@ describe('useRankedPatterns', () => {
 
   it('waits again when the panel changes before it has settled, then reads it as it settled', async () => {
     const { rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
-      initialProps: base(),
+      initialProps: base({ panel: MOVED }),
     });
-    rerender(base({ open: true, panel: { values: { ...def.init }, cables: [] } }));
+    rerender(base({ open: true }));
     await settle(SETTLE_MS - 100);
     // a patch's glide, still moving the panel as the picker opened
     rerender(base({ open: true, panel: MOVED }));

@@ -164,15 +164,15 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
   useEffect(() => {
     latest.current = input;
   });
-  // The panel, and when it last changed: the first run, on mount, is not a change (0: long settled when the page opened).
+  // The panel, and when its values or cables last changed (0: long settled when the page opened). The same values in new
+  // objects, as on mount (twice under StrictMode), are not a change.
   const panelRef = useRef(input.panel);
   const changedAt = useRef(0);
   const { values, cables } = input.panel;
-  const mounted = useRef(false);
   useEffect(() => {
+    const was = panelRef.current;
     panelRef.current = { values, cables };
-    if (mounted.current) changedAt.current = Date.now();
-    mounted.current = true;
+    if (!samePanel(was, panelRef.current)) changedAt.current = Date.now();
   }, [values, cables]);
   // Since when nothing has been playing (null: something is; 0: nothing has since the page opened).
   const busyRef = useRef(busy);
@@ -278,7 +278,10 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
             const oldest = answers.current.keys().next().value;
             if (answers.current.size > KEEP_ANSWERS && oldest !== undefined)
               answers.current.delete(oldest);
-            pending.catch(() => answers.current.delete(key));
+            const mine = pending;
+            pending.catch(() => {
+              if (answers.current.get(key) === mine) answers.current.delete(key);
+            });
           }
           outcome = { result: await pending };
         }
@@ -356,7 +359,11 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
             return;
           }
           // Offered, not swapped in; a far move back to nothing more to offer is not worth offering.
-          if (!('result' in answer.outcome)) return;
+          if (!('result' in answer.outcome)) {
+            fresher.current = null;
+            setView(viewOf(showing, null));
+            return;
+          }
           fresher.current = answer;
           setView(viewOf(showing, answer));
         },
