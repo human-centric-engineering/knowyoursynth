@@ -49,10 +49,16 @@ const IDLE_TIMEOUT_MS = 2000;
 /** How many answers are kept for the visit; the oldest goes first. */
 const KEEP_ANSWERS = 50;
 
-/** The panel readings the page's pickers share: one reader, one reading at a time. */
+/** The panel readings the page's pickers share: one reader, one reading at a time, its worker started with the page. */
 export function usePatchReadings(): PatchReadings {
-  const [readings] = useState(() => createPatchReadings(createKindReader()));
-  useEffect(() => () => readings.dispose(), [readings]);
+  const [{ reader, readings }] = useState(() => {
+    const r = createKindReader();
+    return { reader: r, readings: createPatchReadings(r) };
+  });
+  useEffect(() => {
+    reader.warm();
+    return () => readings.dispose();
+  }, [reader, readings]);
   return readings;
 }
 
@@ -342,8 +348,11 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
             return;
           }
           // The same answer, for a patch moved only a little: still the one shown.
+          // Moved back to it: what was offered is for a patch no longer on the panel.
           if (answer.outcome === showing.outcome || resultOf(answer) === resultOf(showing)) {
             shown.current = { ...showing, read: answer.read ?? showing.read };
+            fresher.current = null;
+            setView(viewOf(shown.current, null));
             return;
           }
           // Offered, not swapped in; a far move back to nothing more to offer is not worth offering.

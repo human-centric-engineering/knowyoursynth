@@ -27,7 +27,7 @@ vi.mock('@/lib/logging', () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 vi.mock('@/lib/api/client', () => ({ apiClient: { post: vi.fn() } }));
-const detector = { read: vi.fn(), dispose: vi.fn(), onPageThread: false };
+const detector = { read: vi.fn(), warm: vi.fn(), dispose: vi.fn(), onPageThread: false };
 let readings: PatchReadings;
 
 const post = apiClient.post as Mock;

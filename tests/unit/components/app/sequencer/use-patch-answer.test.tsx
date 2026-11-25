@@ -37,11 +37,16 @@ vi.mock('@/lib/logging', () => ({
   logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 vi.mock('@/lib/api/client', () => ({ apiClient: { post: vi.fn() } }));
-const made = vi.hoisted(() => ({ dispose: vi.fn() }));
+const made = vi.hoisted(() => ({ dispose: vi.fn(), warm: vi.fn() }));
 vi.mock('@/lib/app/patterns/suggest-detect', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/app/patterns/suggest-detect')>()),
   // Only `usePatchReadings` makes its own; every other test hands the hooks readings over the fake below.
-  createKindReader: () => ({ read: vi.fn(), dispose: made.dispose, onPageThread: false }),
+  createKindReader: () => ({
+    read: vi.fn(),
+    warm: made.warm,
+    dispose: made.dispose,
+    onPageThread: false,
+  }),
 }));
 
 const post = apiClient.post as Mock;
@@ -87,6 +92,7 @@ const START = { slug: 'fat-bass', panel: () => PANEL };
  */
 const detector = {
   onPageThread: false,
+  warm: vi.fn(),
   read: vi.fn<(p: EngineParams, opts?: ReadOptions) => Promise<SoundFeatures>>(),
   dispose: vi.fn(),
 };
@@ -122,6 +128,7 @@ beforeEach(() => {
   });
   detector.dispose.mockReset();
   made.dispose.mockReset();
+  made.warm.mockReset();
   readings = createPatchReadings(detector);
 });
 afterEach(() => {
@@ -302,6 +309,25 @@ describe('an open picker', () => {
     expect(result.current).toMatchObject({ state: 'ready', result: R2, fresher: null });
   });
 
+  it('stops offering a newer answer once the patch is back where its list was found', async () => {
+    post.mockResolvedValueOnce(R1).mockResolvedValueOnce(R2);
+    const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: ranked({ open: true, panel: MOVED }),
+    });
+    await wait(SETTLE_MS);
+    expect(result.current).toMatchObject({ state: 'ready', result: R1, fresher: null });
+    heard = async () => FAR;
+    rerender(ranked({ open: true, panel: MOVED_MORE }));
+    await wait(SETTLE_MS);
+    expect(result.current).toMatchObject({ result: R1, fresher: R2 });
+
+    heard = async () => FEATURES;
+    rerender(ranked({ open: true, panel: { values: { ...MOVED.values }, cables: [] } }));
+    await wait(SETTLE_MS);
+    expect(post).toHaveBeenCalledTimes(2);
+    expect(result.current).toMatchObject({ state: 'ready', result: R1, fresher: null });
+  });
+
   it('reads at once in the worker when opened while something plays', async () => {
     const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
       initialProps: ranked({ busy: true }),
@@ -438,8 +464,9 @@ describe('one detector for the page', () => {
     ]);
   });
 
-  it('lets the reader go when the page does', () => {
+  it('starts its worker with the page, and lets the reader go when the page does', () => {
     const { unmount } = renderHook(() => usePatchReadings());
+    expect(made.warm).toHaveBeenCalledTimes(1);
     unmount();
     expect(made.dispose).toHaveBeenCalledTimes(1);
   });

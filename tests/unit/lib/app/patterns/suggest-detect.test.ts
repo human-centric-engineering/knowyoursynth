@@ -208,6 +208,22 @@ describe('one reading at a time (t-263)', () => {
     expect(sent).toHaveLength(1);
   });
 
+  it('knows a host blocks workers once warmed, before anything is read', () => {
+    vi.stubGlobal('Worker', undefined);
+    const reader = createKindReader();
+    expect(reader.onPageThread).toBe(false);
+    reader.warm();
+    expect(reader.onPageThread).toBe(true);
+  });
+
+  it('starts its worker when warmed, and reads through that one', async () => {
+    const reader = createKindReader();
+    reader.warm();
+    expect(workers).toHaveLength(1);
+    expect(await reader.read(PATCH)).toEqual(FEATURES);
+    expect(workers).toHaveLength(1);
+  });
+
   it('skips background work rather than read it on the page’s thread', async () => {
     vi.stubGlobal('Worker', undefined);
     const reader = createKindReader();
@@ -249,6 +265,7 @@ describe('createPatchReadings', () => {
   const PANEL = { values: { ...def.init }, cables: [] };
   const fake = (): KindReader & { read: ReturnType<typeof vi.fn> } => ({
     read: vi.fn(async () => FEATURES),
+    warm: vi.fn(),
     dispose: vi.fn(),
     onPageThread: false,
   });

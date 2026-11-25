@@ -50,6 +50,11 @@ export interface KindReader {
   read(params: EngineParams, opts?: ReadOptions): Promise<SoundFeatures>;
   /** Whether readings are made on the page's thread: the host blocks workers, or the worker gave up. */
   readonly onPageThread: boolean;
+  /**
+   * Starts the worker now rather than at the first reading, so a host that blocks workers is known (`onPageThread`)
+   * before anything is asked of it: a first reading asked while something plays is then not read on the page's thread.
+   */
+  warm(): void;
   /** Lets the worker go and rejects every reading not finished. The reader can be used again after. */
   dispose(): void;
 }
@@ -165,6 +170,9 @@ export function createKindReader(): KindReader {
     },
     get onPageThread() {
       return worker === null;
+    },
+    warm() {
+      spawn();
     },
     dispose() {
       epoch += 1;

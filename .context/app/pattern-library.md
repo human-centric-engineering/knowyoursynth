@@ -1844,7 +1844,8 @@ time, and a panel read once whichever picker asks.
   patch is read and asked about at idle (`requestIdleCallback`). Opening then shows the answer with nothing more asked.
 - **Never while anything plays.** The page passes `busy`: the transport, or a note sounding from the keys, the arp or
   MIDI in (a key down, an arp key held, a note under Hold). A reading or request not started when it turns true is not
-  started. Where the detector reads on the page's thread (workers blocked), nothing is prepared at all.
+  started. Where the detector reads on the page's thread (workers blocked), nothing is prepared at all. The worker is
+  started with the page (`warm`), so a blocked one is known before the first reading.
 - **Asked again on a far move.** An answer keeps the reading it was found for; a later reading `movedFar` from it is
   asked about again, a nearer one keeps it.
 - **Opened while something plays**, the patch is read at once, in the worker: off the page's thread and the audio
