@@ -349,6 +349,57 @@ describe('Suits this sound', () => {
     expect(suggestedNow?.fresher).toBeNull();
   });
 
+  it('shows placeholders for Suits this sound while it is found, under the sound’s own, and they go when it is ready', async () => {
+    render(<Page panel={FAR} />);
+    await open(`${BASS.name}’s patterns`);
+    await waitForState('reading');
+    await waitFor(() =>
+      expect(screen.getByRole('list', { name: `${BASS.name}’s patterns` })).toBeTruthy()
+    );
+    const placeholder = document.querySelector('.kys-patfind');
+    expect(placeholder).not.toBeNull();
+    expect(placeholder?.getAttribute('aria-hidden')).toBe('true');
+    expect(screen.getByText('Matching the library to the patch…')).toBeTruthy();
+    // Only the real lists are lists: the placeholders are none.
+    expect(screen.getAllByRole('list').map((l) => l.getAttribute('aria-label'))).toEqual([
+      `${BASS.name}’s patterns`,
+    ]);
+    await waitForState('ready');
+    expect(document.querySelector('.kys-patfind')).toBeNull();
+    expect(screen.getByRole('list', { name: 'Suits this sound' })).toBeTruthy();
+  });
+
+  it('says one status while Patterns is open: finding, then how many were found', async () => {
+    render(<Page panel={FAR} fromLibrary={false} />);
+    const status = () => screen.getAllByRole('status');
+    expect(status()).toHaveLength(1);
+    expect(status()[0].textContent).toBe('');
+    await open('Patterns that suit this sound');
+    await waitFor(() =>
+      expect(status()[0].textContent).toBe('Finding patterns that suit the patch')
+    );
+    expect(status()).toHaveLength(1);
+    await waitForState('ready');
+    await waitFor(() => expect(status()[0].textContent).toBe('Found 1 pattern'));
+    expect(status()).toHaveLength(1);
+  });
+
+  it('offers the newer list in a bar only once there is one, and swaps it in when Update the list is pressed', async () => {
+    const { rerender } = render(<Page panel={FAR} fromLibrary={false} />);
+    await open('Patterns that suit this sound');
+    await waitForState('ready');
+    expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
+    server.suits = [HELD, OWN];
+    rerender(<Page panel={AS_IT_CAME} fromLibrary={false} />);
+    await waitFor(() => expect(suggestedNow?.fresher).toBeTruthy(), { timeout: 5000 });
+    expect(screen.getByText('The patch has changed.')).toBeTruthy();
+    const suits = () => within(screen.getByRole('list', { name: 'Suits this sound' }));
+    expect(suits().getAllByRole('button')).toHaveLength(1);
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Update the list' })));
+    expect(suits().getAllByRole('button')).toHaveLength(2);
+    expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
+  });
+
   it('takes a lesson step of a library sound as it came, not as moved far from the finished sound', async () => {
     const step = { slug: BASS.id, panel: () => presetState(DEF, BASS, 0) };
     // The first step is far from the finished sound, so comparing against that would offer more.

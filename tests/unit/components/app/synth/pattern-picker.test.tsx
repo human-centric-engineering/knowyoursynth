@@ -10,6 +10,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { useState } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import {
@@ -20,7 +22,8 @@ import {
 import type { RankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 
 /** What the picker reads of the hook. */
-type Ranked = Pick<RankedPatterns, 'state' | 'result'>;
+type Ranked = Pick<RankedPatterns, 'state' | 'result' | 'fresher' | 'take'>;
+const NO_FRESHER = { fresher: null, take: () => {} };
 import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { apiClient } from '@/lib/api/client';
 import { newPattern } from '@/lib/app/sequencer/pattern';
@@ -109,6 +112,7 @@ const SECTIONS: RankSection[] = [
   { role: 'chord_stabs', label: 'Chord stabs', share: 0.05, patterns: [CHORD] },
 ];
 const READY: Ranked = {
+  ...NO_FRESHER,
   state: 'ready',
   result: {
     category: 'lead',
@@ -356,14 +360,81 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
   });
 
   it('says it is waiting while the sound on the panel is still loading', () => {
-    render(<Picker own={null} ranked={{ state: 'off', result: null }} />);
-    expect(within(dialog()).getByRole('status').textContent).toMatch(/Waiting for the sound/);
+    render(<Picker own={null} ranked={{ ...NO_FRESHER, state: 'off', result: null }} />);
+    expect(within(dialog()).getByText(/Waiting for the sound/)).toBeTruthy();
+    expect(screen.getByRole('status').textContent).toBe('');
   });
 
-  it('shows the sound’s own at once while the patch is read, and a line saying so', () => {
-    render(<Picker ranked={{ state: 'reading', result: null }} />);
+  it('shows placeholders while the library is ranked, the sound’s own at once above them, and they go when it is ready', () => {
+    const { rerender } = render(
+      <Picker ranked={{ ...NO_FRESHER, state: 'reading', result: null }} />
+    );
+    // The sound's own are real and listed; under them, placeholders where the sections will be.
     expect(sectionNames()).toEqual(['Fat bass’s patterns']);
-    expect(within(dialog()).getByRole('status').textContent).toMatch(/Listening to the patch/);
+    expect(names('Fat bass’s patterns')).toEqual(['Fat riffDefault', 'Octave walk']);
+    const placeholder = dialog().querySelector('.kys-patfind');
+    expect(placeholder).not.toBeNull();
+    expect(placeholder?.querySelectorAll('.kys-patfind-row').length).toBeGreaterThan(0);
+    expect(within(dialog()).getByText('Matching the library to the patch…')).toBeTruthy();
+    rerender(<Picker ranked={READY} />);
+    expect(dialog().querySelector('.kys-patfind')).toBeNull();
+    expect(sectionNames()).toEqual(['Fat bass’s patterns', 'Lead line', 'Held', 'Chord stabs']);
+  });
+
+  it('hides the placeholders from screen readers, which hear one status: finding, then how many were found', () => {
+    const { rerender } = render(
+      <Picker ranked={{ ...NO_FRESHER, state: 'reading', result: null }} />
+    );
+    expect(dialog().querySelector('.kys-patfind')?.getAttribute('aria-hidden')).toBe('true');
+    // No row of the placeholders is a list item or a button anyone can reach.
+    expect(within(dialog()).queryAllByRole('list')).toHaveLength(1);
+    const statuses = screen.getAllByRole('status');
+    expect(statuses).toHaveLength(1);
+    expect(statuses[0].textContent).toBe('Finding patterns that suit the patch');
+    rerender(<Picker ranked={READY} />);
+    expect(screen.getAllByRole('status')).toHaveLength(1);
+    // Every library row, not the sound's own: the sections' patterns.
+    expect(screen.getByRole('status').textContent).toBe(`Found ${LEADS.length + 2} patterns`);
+  });
+
+  it('pulses its placeholders only where motion is wanted', () => {
+    const css = readFileSync(join(process.cwd(), 'components/app/synth/synth.css'), 'utf8');
+    const rule = /\.kys-patfind-bar\s*\{([^}]*)\}/.exec(css);
+    expect(rule?.[1]).toMatch(/animation:\s*kys-patfind-pulse/);
+    const reduced = [
+      ...css.matchAll(/@media \(prefers-reduced-motion: reduce\)\s*\{([\s\S]*?)\n\}/g),
+    ]
+      .map((m) => m[1])
+      .find((body) => body.includes('.kys-patfind-bar'));
+    expect(reduced).toMatch(/\.kys-patfind-bar\s*\{\s*animation:\s*none;/);
+  });
+
+  it('offers a newer list only with one to offer, and shows it when Update the list is pressed', () => {
+    const fresherResult = {
+      ...READY.result!,
+      sections: [{ role: 'held' as const, label: 'Held', share: 1, patterns: [HELD] }],
+    };
+    const { rerender } = render(<Picker />);
+    expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
+    expect(within(dialog()).queryByText('The patch has changed.')).toBeNull();
+
+    // The hook: pressing takes the fresher answer in as the one shown.
+    function Offering() {
+      const [r, setR] = useState<Ranked>({
+        ...READY,
+        fresher: fresherResult,
+        take: () => setR({ ...READY, result: fresherResult, fresher: null }),
+      });
+      return <Picker ranked={r} />;
+    }
+    rerender(<Offering />);
+    expect(within(dialog()).getByText('The patch has changed.')).toBeTruthy();
+    // Still the list it opened on until asked.
+    expect(sectionNames()).toEqual(['Fat bass’s patterns', 'Lead line', 'Held', 'Chord stabs']);
+    fireEvent.click(screen.getByRole('button', { name: 'Update the list' }));
+    expect(sectionNames()).toEqual(['Fat bass’s patterns', 'Held']);
+    expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
+    expect(screen.getByRole('status').textContent).toBe('Found 1 pattern');
   });
 
   it('says which category it lists, and that it is the sound’s as it came when that is not the one heard', () => {
@@ -373,20 +444,24 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
     ).toBeTruthy();
     unmount();
     const asCame = { ...READY.result!, category: 'bass' as const };
-    render(<Picker ranked={{ state: 'ready', result: asCame }} />);
+    render(<Picker ranked={{ ...NO_FRESHER, state: 'ready', result: asCame }} />);
     expect(
       within(dialog()).getByText(/As the sound came, the library’s bass patterns/)
     ).toBeTruthy();
   });
 
   it('says the library could not be read, and lists it by part and name with no reading', () => {
-    const { unmount } = render(<Picker ranked={{ state: 'error', result: null }} />);
+    const { unmount } = render(<Picker ranked={{ ...NO_FRESHER, state: 'error', result: null }} />);
     expect(within(dialog()).getByText(/The library could not be read/)).toBeTruthy();
     unmount();
     render(
       <Picker
         own={null}
-        ranked={{ state: 'ready', result: { reading: null, category: null, sections: SECTIONS } }}
+        ranked={{
+          ...NO_FRESHER,
+          state: 'ready',
+          result: { reading: null, category: null, sections: SECTIONS },
+        }}
       />
     );
     expect(within(dialog()).getByText(/listed by part and name/)).toBeTruthy();
