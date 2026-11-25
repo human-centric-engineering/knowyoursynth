@@ -3,36 +3,37 @@
 /**
  * The whole library ranked for the patch on the panel (`f-pattern-picker` t-213), for the Play deck's pattern picker.
  *
- * Nothing happens until the picker is open. Then, once the panel has settled (`SETTLE_MS` since it last changed, which
- * a panel left alone has long been), the sound detector reads the patch in the probe worker (`createKindReader`), and
- * one call to `POST /api/v1/library-patterns/rank` returns every public pattern in a section per role, as lean rows.
- * Unlike "Suits this sound" (`useSuggestedPatterns`) there is no `movedFar` gate: the sound's own patterns lead the
- * picker anyway, so the library is ranked under them whatever the patch.
+ * One call to `POST /api/v1/library-patterns/rank` returns every public pattern in a section per role, as lean rows,
+ * for what the sound detector hears of the patch. When it is asked (in the background with the picker closed, so it
+ * usually opens on an answer already there), when it is asked again (the patch moved far from what it was found for),
+ * and what the open picker shows meanwhile (it holds still, and offers a newer answer as `fresher`) are
+ * `usePatchAnswer`'s (`f-pattern-prefetch` t-263). Unlike "Suits this sound" (`useSuggestedPatterns`) there is no
+ * `movedFar` gate on the start sound: the sound's own patterns lead the picker anyway, so the library is ranked under
+ * them whatever the patch.
  *
- * The answer holds while the picker is open, so nothing jumps under the pointer: a knob turned meanwhile is read the
- * next time it opens. A panel unchanged since it was last read is not read again, and the answer for each reading is
- * kept for the visit, so a patch that comes back to where it was is not asked about again.
- *
- * Only patterns of the patch's category are listed (t-255). So the start sound is read too, once per start: a patch not
- * moved far from it (`movedFar`) is that sound as it came (`asCame`), listed by its tag; one moved far, or with no
- * start, by the category the detector hears. A reading that fails (the detector could not run, the panel could not be
- * worked out) asks for the library without features, which the endpoint lists by role and name, so the picker is never
- * empty.
+ * Only patterns of the patch's category are listed (t-255): a patch not moved far from its start sound is that sound
+ * as it came (`asCame`), listed by its tag; one moved far, or with no start, by the category the detector hears. A
+ * reading that fails (the detector could not run, the panel could not be worked out), or is not made (opened while
+ * something plays, where the detector reads on the page's thread), asks for the library without features, which the
+ * endpoint lists by role and name, so the picker is never empty.
  */
 
-import { useEffect, useRef, useState } from 'react';
 import { apiClient } from '@/lib/api/client';
-import { logger } from '@/lib/logging';
-import { createKindReader, type KindReader } from '@/lib/app/patterns/suggest-detect';
 import { movedFar } from '@/lib/app/patterns/suggest';
+import type { PatchReadings, PatchStart } from '@/lib/app/patterns/suggest-detect';
 // Type only: this module reaches the browser, and the read module holds the database client.
 import type { RankResult } from '@/lib/app/patterns/rank-read';
-import { SETTLE_MS, type PanelState } from '@/components/app/sequencer/use-suggested-patterns';
-import { engineOf } from '@/lib/app/synths/lib/predict';
-import type { SoundFeatures } from '@/lib/app/synths/lib/soundkind';
+import {
+  usePatchAnswer,
+  type Ask,
+  type PatchAnswer,
+} from '@/components/app/sequencer/use-patch-answer';
+import type { PanelState } from '@/components/app/sequencer/use-suggested-patterns';
 import type { SynthDef } from '@/lib/app/synths/contract';
 
 export interface RankInput {
+  /** The page's panel readings, shared with `useSuggestedPatterns` (`usePatchReadings`). */
+  readings: PatchReadings;
   synthId: string;
   def: SynthDef;
   /** The panel now. */
@@ -41,11 +42,13 @@ export interface RankInput {
    * The library sound the patch started as, if it did, as `useSuggestedPatterns` takes it: its own patterns are left
    * out of the sections, and while the patch has not moved far from it the library is limited to its category.
    */
-  start: { slug: string; panel: () => PanelState } | null;
-  /** Whether the picker is open: nothing is read while it is not. */
+  start: PatchStart | null;
+  /** Whether the picker is open. */
   open: boolean;
   /** False while what is on the panel is not settled yet (one of the user's sounds still loading). */
   enabled?: boolean;
+  /** Something is playing: nothing is worked out in the background. */
+  busy?: boolean;
 }
 
 /**
@@ -54,165 +57,45 @@ export interface RankInput {
  */
 export type RankState = 'off' | 'reading' | 'ready' | 'error';
 
-export interface RankedPatterns {
+export interface RankedPatterns extends Omit<PatchAnswer<RankResult>, 'state'> {
   state: RankState;
-  result: RankResult | null;
 }
 
-/** How many answers are kept for the visit; the oldest goes first. */
-const KEEP_ANSWERS = 50;
-
-const OFF: RankedPatterns = { state: 'off', result: null };
-const READING: RankedPatterns = { state: 'reading', result: null };
-
 export function useRankedPatterns(input: RankInput): RankedPatterns {
-  const { synthId, def, panel, start, open, enabled = true } = input;
+  const { synthId, start, enabled = true, busy = false } = input;
   const sound = start?.slug ?? null;
-  const [status, setStatus] = useState<RankedPatterns>(OFF);
-  const reader = useRef<KindReader | null>(null);
-  const answers = useRef(new Map<string, Promise<RankResult>>());
-  // Each start's reading, by the start itself: a new sound, or a new lesson step of it, is a new start.
-  const starts = useRef(new WeakMap<object, Promise<SoundFeatures | null>>());
-  // The start as it is when the picker reads it: a new lesson step while it is open does not rank it again.
-  const startRef = useRef(start);
-  useEffect(() => {
-    startRef.current = start;
-  }, [start]);
-  // The last panel the detector read, and what it heard.
-  const lastRead = useRef<
-    (PanelState & { def: SynthDef; features: Promise<SoundFeatures | null> }) | null
-  >(null);
-  useEffect(
-    () => () => {
-      reader.current?.dispose();
-      reader.current = null;
-    },
-    []
-  );
-
-  // The panel as it is when the picker reads it, and when it last changed: read through refs, so a change while the
-  // picker is open does not rank it again.
-  const panelRef = useRef(panel);
-  const changedAt = useRef(0);
-  const { values, cables } = panel;
-  useEffect(() => {
-    panelRef.current = { values, cables };
-    changedAt.current = Date.now();
-  }, [values, cables]);
-
-  const on = open && enabled;
-  useEffect(() => {
-    if (!on) {
-      setStatus(OFF);
-      return undefined;
-    }
-    let live = true;
-    setStatus(READING);
-    const read = () => (reader.current ??= createKindReader());
-    const rank = () => {
-      const now = panelRef.current;
-      // The panel read last time, unchanged since, is not read again; one that could not be read is tried again.
-      let heard = lastRead.current;
-      if (
-        !heard ||
-        heard.def !== def ||
-        heard.values !== now.values ||
-        heard.cables !== now.cables
-      ) {
-        const entry = {
-          def,
-          values: now.values,
-          cables: now.cables,
-          features: Promise.resolve<SoundFeatures | null>(null),
-        };
-        // Working out the panel's sound (engineOf) can throw: that is a reading that failed, ranked without features.
-        entry.features = Promise.resolve()
-          .then(() => read().read(engineOf(def, now.values, now.cables, 0)))
-          .catch((err: unknown): SoundFeatures | null => {
-            if (lastRead.current === entry) lastRead.current = null;
-            logger.warn('pattern picker: the patch could not be read', {
-              synthId,
-              err: String(err),
-            });
-            return null;
-          });
-        heard = entry;
-        lastRead.current = entry;
-      }
-      // The start sound as it came, read once per start.
-      const from = startRef.current;
-      let startRead: Promise<SoundFeatures | null> = Promise.resolve(null);
-      if (from) {
-        let kept = starts.current.get(from);
-        if (!kept) {
-          kept = Promise.resolve()
-            .then(() => {
-              const p = from.panel();
-              return read().read(engineOf(def, p.values, p.cables, 0));
-            })
-            .catch((err: unknown): SoundFeatures | null => {
-              starts.current.delete(from);
-              logger.warn('pattern picker: the start sound could not be read', {
-                synthId,
-                err: String(err),
-              });
-              return null;
-            });
-          starts.current.set(from, kept);
-        }
-        startRead = kept;
-      }
-      Promise.all([startRead, heard.features])
-        .then(([was, features]) => {
-          if (!live) return null;
-          // Still the sound as it came: listed by its tag. A patch or start that could not be read is taken to be, as
-          // nothing says it has moved.
-          const asCame = !!from && (!features || !was || !movedFar(was, features));
-          const key = `${synthId}|${sound ?? ''}|${asCame}|${features ? JSON.stringify(features) : ''}`;
-          let asked = answers.current.get(key);
-          if (!asked) {
-            asked = apiClient.post<RankResult>('/api/v1/library-patterns/rank', {
-              body: {
-                synthId,
-                ...(sound ? { sound } : {}),
-                ...(features ? { features } : {}),
-                ...(asCame ? { asCame } : {}),
-              },
-            });
-            answers.current.set(key, asked);
-            const oldest = answers.current.keys().next().value;
-            if (answers.current.size > KEEP_ANSWERS && oldest !== undefined)
-              answers.current.delete(oldest);
-            asked.catch(() => answers.current.delete(key));
-          }
-          return asked;
-        })
-        .then(
-          (result) => {
-            if (live && result) setStatus({ state: 'ready', result });
+  const ask: Ask<RankResult> = (was, features) => {
+    // Still the sound as it came: listed by its tag. A patch or start that could not be read is taken to be, as
+    // nothing says it has moved.
+    const asCame = !!was && (!features || !was.features || !movedFar(was.features, features));
+    const group = `${asCame}`;
+    return {
+      group,
+      key: `${group}|${features ? JSON.stringify(features) : ''}`,
+      request: () =>
+        apiClient.post<RankResult>('/api/v1/library-patterns/rank', {
+          body: {
+            synthId,
+            ...(sound ? { sound } : {}),
+            ...(features ? { features } : {}),
+            ...(asCame ? { asCame } : {}),
           },
-          (err: unknown) => {
-            if (!live) return;
-            logger.warn('pattern picker: the library could not be ranked', {
-              synthId,
-              err: String(err),
-            });
-            setStatus({ state: 'error', result: null });
-          }
-        );
+        }),
     };
-    // Still settling when the wait is up (a patch's glide, a knob turned as it opened): wait again from its last change.
-    const left = () => SETTLE_MS - (Date.now() - changedAt.current);
-    const settle = () => {
-      if (left() > 0) t = setTimeout(settle, left());
-      else rank();
-    };
-    let t = setTimeout(settle, Math.max(0, left()));
-    return () => {
-      live = false;
-      clearTimeout(t);
-    };
-  }, [on, synthId, def, sound]);
-
-  return status;
+  };
+  const answer = usePatchAnswer<RankResult>({
+    readings: input.readings,
+    synthId,
+    def: input.def,
+    panel: input.panel,
+    start,
+    scope: `${synthId}|${sound ?? ''}`,
+    open: input.open,
+    enabled,
+    busy,
+    ask,
+    label: 'pattern picker',
+  });
+  // Ranking never says `near`: there is always a library to rank.
+  return { ...answer, state: answer.state === 'near' ? 'ready' : answer.state };
 }
