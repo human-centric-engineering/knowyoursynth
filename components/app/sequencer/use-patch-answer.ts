@@ -221,8 +221,10 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
           const panelRead = asCame
             ? startRead
             : readings.panel(d, now, opts).catch(failed('the patch'));
-          was = s ? { features: await startRead } : null;
-          features = await panelRead;
+          // Both awaited together: one skipped leaves the other's rejection handled.
+          const [w, f] = await Promise.all([startRead, panelRead]);
+          was = s ? { features: w } : null;
+          features = f;
         }
       } catch (err) {
         if (err instanceof ReadSkipped) return null;

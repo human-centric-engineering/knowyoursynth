@@ -309,6 +309,23 @@ describe('with the detector on the page’s thread', () => {
     expect(post).not.toHaveBeenCalled();
   });
 
+  it('lets go quietly of background work it finds it cannot do off the page’s thread', async () => {
+    // Not known until the first reading tries the worker: the start sound and a moved panel, both skipped.
+    detector.read.mockImplementation(async (_p, opts) => {
+      if (opts?.background) {
+        detector.onPageThread = true;
+        throw new ReadSkipped('page-thread');
+      }
+      return FEATURES;
+    });
+    const { result } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: ranked({ panel: MOVED }),
+    });
+    await wait(SETTLE_MS * 5 + QUIET_MS);
+    expect(post).not.toHaveBeenCalled();
+    expect(result.current.state).toBe('off');
+  });
+
   it('ranks without a reading when opened while something plays, and offers the list for the patch once quiet', async () => {
     detector.onPageThread = true;
     post.mockResolvedValueOnce(R1).mockResolvedValueOnce(R2);
