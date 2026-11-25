@@ -362,7 +362,9 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
   it('says it is waiting while the sound on the panel is still loading', () => {
     render(<Picker own={null} ranked={{ ...NO_FRESHER, state: 'off', result: null }} />);
     expect(within(dialog()).getByText(/Waiting for the sound/)).toBeTruthy();
-    expect(screen.getByRole('status').textContent).toBe('');
+    expect(screen.getByRole('status').textContent).toBe(
+      'Waiting for the sound on the panel to load'
+    );
   });
 
   it('shows placeholders while the library is ranked, the sound’s own at once above them, and they go when it is ready', () => {

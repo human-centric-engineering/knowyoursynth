@@ -9,6 +9,8 @@
  *   swapped in under the pointer.
  */
 
+import { useRef } from 'react';
+
 /** Widths for the placeholder names, so the rows read as a list rather than a block. */
 const NAME_WIDTHS = ['62%', '48%', '70%', '55%', '40%'];
 
@@ -48,10 +50,23 @@ export function FindingRows({
 }
 
 export function FresherBar({ onTake }: { onTake: () => void }) {
+  const bar = useRef<HTMLDivElement | null>(null);
+  // Taking the list takes the bar away, and the focused button with it: focus stays in the picker, on the first thing
+  // there to focus, rather than falling to the page (where the popover's Escape no longer reaches it).
+  const take = () => {
+    const around = bar.current?.parentElement ?? null;
+    onTake();
+    requestAnimationFrame(() => {
+      if (!around || (document.activeElement && document.activeElement !== document.body)) return;
+      around
+        .querySelector<HTMLElement>('input, button, a[href], [tabindex]:not([tabindex="-1"])')
+        ?.focus();
+    });
+  };
   return (
-    <div className="kys-patfind-fresher">
+    <div className="kys-patfind-fresher" ref={bar}>
       <span>The patch has changed.</span>
-      <button type="button" className="kys-patfind-take" onClick={onTake}>
+      <button type="button" className="kys-patfind-take" onClick={take}>
         Update the list
       </button>
     </div>
@@ -59,11 +74,12 @@ export function FresherBar({ onTake }: { onTake: () => void }) {
 }
 
 /**
- * What the picker's one status says: that patterns are being found, then how many were. Empty otherwise (closed,
- * waiting for the sound to load, or nothing to find), so nothing is said.
+ * What the picker's one status says: that it is waiting for the sound to load, that patterns are being found, then
+ * how many are shown. Empty otherwise (an error, said where it is shown, or a count not known yet), so nothing is said.
  */
 export function findingStatus(state: string, found: number | null): string {
+  if (state === 'off') return 'Waiting for the sound on the panel to load';
   if (state === 'reading') return 'Finding patterns that suit the patch';
-  if (state !== 'ready' || found === null) return '';
+  if ((state !== 'ready' && state !== 'near') || found === null) return '';
   return found === 1 ? 'Found 1 pattern' : `Found ${found} patterns`;
 }

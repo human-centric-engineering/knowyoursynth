@@ -362,6 +362,11 @@ export function PatternLibrary({
   // Being found: placeholders where "Suits this sound" will be, under the sound's own (t-264).
   const finding =
     !!suggested && (suggested.state === 'reading' || (suggested.state === 'off' && pickerOpen));
+  // How many patterns Patterns shows once found: the sound's own and what suits it (null while the own are read).
+  const shownCount =
+    soundPatterns && soundPatterns.patterns === null
+      ? null
+      : (soundPatterns?.patterns?.length ?? 0) + (suits?.suggestions.length ?? 0);
   // Said only where the picker has nothing else to show: no patterns of the sound's own to look at meanwhile.
   const ownNone = !soundPatterns?.patterns?.length;
   const suggestLine = !suggested
@@ -612,12 +617,7 @@ export function PatternLibrary({
       {/* What Patterns is finding, and how many it found (t-264): one status, there before anything is said. */}
       {suggested && (
         <span className="sr-only" role="status">
-          {pickerOpen
-            ? findingStatus(
-                finding ? 'reading' : suggested.state,
-                suits?.suggestions.length ?? null
-              )
-            : ''}
+          {pickerOpen ? findingStatus(finding ? 'reading' : suggested.state, shownCount) : ''}
         </span>
       )}
       {status && (
@@ -649,7 +649,7 @@ export function PatternLibrary({
             ) : soundPatterns.patterns.length === 0 ? (
               <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
             ) : null)}
-          {suits && suggested?.fresher && <FresherBar onTake={suggested.take} />}
+          {suggested?.fresher && <FresherBar onTake={suggested.take} />}
           {pickerGroups.length > 0 && (
             <SoundPatternPicker
               groups={pickerGroups}

@@ -8,7 +8,8 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { useState } from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { FindingRows, FresherBar, findingStatus } from '@/components/app/sequencer/pattern-finding';
 
 describe('FindingRows', () => {
@@ -38,6 +39,23 @@ describe('FresherBar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Update the list' }));
     expect(onTake).toHaveBeenCalledTimes(1);
   });
+
+  it('keeps focus in the picker when taking the list takes the bar away', async () => {
+    function Around() {
+      const [shown, setShown] = useState(true);
+      return (
+        <div>
+          <input aria-label="Search" />
+          {shown && <FresherBar onTake={() => setShown(false)} />}
+        </div>
+      );
+    }
+    render(<Around />);
+    const take = screen.getByRole('button', { name: 'Update the list' });
+    take.focus();
+    fireEvent.click(take);
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText('Search')));
+  });
 });
 
 describe('findingStatus', () => {
@@ -48,8 +66,17 @@ describe('findingStatus', () => {
     expect(findingStatus('ready', 0)).toBe('Found 0 patterns');
   });
 
-  it('says nothing when closed, waiting, failed, with nothing to find, or with no count', () => {
-    for (const state of ['off', 'near', 'error']) expect(findingStatus(state, 3)).toBe('');
+  it('says it is waiting for the sound to load', () => {
+    expect(findingStatus('off', null)).toBe('Waiting for the sound on the panel to load');
+  });
+
+  it('says how many are shown when there was nothing to ask', () => {
+    expect(findingStatus('near', 6)).toBe('Found 6 patterns');
+  });
+
+  it('says nothing when failed or with no count', () => {
+    expect(findingStatus('error', 3)).toBe('');
     expect(findingStatus('ready', null)).toBe('');
+    expect(findingStatus('near', null)).toBe('');
   });
 });

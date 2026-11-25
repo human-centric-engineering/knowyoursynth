@@ -402,6 +402,22 @@ describe('Suits this sound', () => {
     expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
   });
 
+  it('offers the list for a library sound moved far after Patterns opened on it as it came', async () => {
+    const { rerender } = render(<Page panel={AS_IT_CAME} />);
+    await open(`${BASS.name}’s patterns`);
+    await waitForState('near');
+    // Nothing was asked, so it says how many of the sound's own are shown.
+    await waitFor(() =>
+      expect(screen.getByRole('status').textContent).toMatch(/^Found \d+ patterns?$/)
+    );
+    expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
+    rerender(<Page panel={FAR} />);
+    await waitFor(() => expect(suggestedNow?.fresher).toBeTruthy(), { timeout: 5000 });
+    expect(suggestState).toBe('near');
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Update the list' })));
+    expect(screen.getByRole('list', { name: 'Suits this sound' })).toBeTruthy();
+  });
+
   it('takes a lesson step of a library sound as it came, not as moved far from the finished sound', async () => {
     const step = { slug: BASS.id, panel: () => presetState(DEF, BASS, 0) };
     // The first step is far from the finished sound, so comparing against that would offer more.

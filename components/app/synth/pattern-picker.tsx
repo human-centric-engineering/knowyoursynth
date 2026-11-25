@@ -362,7 +362,7 @@ function PickerBody({
         />
       </label>
       {status && line(status, 'alert')}
-      {result && ranked.fresher && <FresherBar onTake={ranked.take} />}
+      {ranked.fresher && <FresherBar onTake={ranked.take} />}
       <div className="kys-patpick-scroll kys-scroll">
         {own && (
           <section className="kys-patpick-section" aria-label={`${own.sound.name}’s patterns`}>
