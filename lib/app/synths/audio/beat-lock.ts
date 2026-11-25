@@ -40,13 +40,19 @@ export function snapStage(hz: number, bps: number): number {
 export type LockEvent = 'start' | 'stop' | null;
 
 export interface BeatLock {
-  /** Take a `clock` message; it is acted on at the next `step()`. */
-  clock: (at: ClockAt) => void;
+  /**
+   * Take a `clock` message; it is acted on at the next `step()`. A start may say where the run is: `from` = the first
+   * pulse to come, counted from the run's first beat (a run started part-way, on a sixteenth), so `beat()` is the run's.
+   */
+  clock: (at: ClockAt, from?: number) => void;
   /** One sample: the clock's start or stop, if one arrived since the last. Call before reading `beat()`. */
   step: () => LockEvent;
   /** A run is going: started and not stopped. */
   running: () => boolean;
-  /** Beats since the run's first beat, between pulses taken on at the last pulses' rate. 0 before the first pulse. */
+  /**
+   * Beats since the run's first beat, between pulses taken on at the last pulses' rate. Before the first pulse, where
+   * the run started (0, or the start's `from`).
+   */
   beat: () => number;
   /** The app's beats a second, from the pulses; 0 until two have arrived. */
   bps: () => number;
@@ -61,16 +67,19 @@ export interface BeatLock {
 export function createBeatLock(sr: number): BeatLock {
   let qStart = false,
     qStop = false,
-    qPulses = 0;
+    qPulses = 0,
+    qFrom = 0;
   let run = false,
+    base = 0,
     pulses = 0,
     since = 0,
     period = 0;
 
-  function clock(at: ClockAt) {
+  function clock(at: ClockAt, from = 0) {
     if (at === 'start') {
       // a start takes back a stop not yet taken, and the pulses before it
       qStart = true;
+      qFrom = from > 0 ? Math.round(from) : 0;
       qStop = false;
       qPulses = 0;
     } else if (at === 'stop') {
@@ -90,6 +99,7 @@ export function createBeatLock(sr: number): BeatLock {
     if (qStart) {
       qStart = false;
       run = true;
+      base = qFrom;
       pulses = 0;
       since = 0;
       period = 0;
@@ -108,16 +118,18 @@ export function createBeatLock(sr: number): BeatLock {
   }
 
   const beat = (): number =>
-    !run || pulses === 0
+    !run
       ? 0
-      : (pulses - 1 + (period > 0 ? Math.min(since / period, 1) : 0)) / CLOCK_PPQ;
+      : pulses === 0
+        ? base / CLOCK_PPQ
+        : (base + pulses - 1 + (period > 0 ? Math.min(since / period, 1) : 0)) / CLOCK_PPQ;
   const bps = (): number => (period > 0 ? sr / (period * CLOCK_PPQ) : 0);
 
   function reset() {
     qStart = qStop = false;
-    qPulses = 0;
+    qPulses = qFrom = 0;
     run = false;
-    pulses = since = period = 0;
+    base = pulses = since = period = 0;
   }
 
   return { clock, step, running: () => run, beat, bps, reset };

@@ -72,7 +72,8 @@ export type SynthMessage =
    * {@link CLOCK_PPQ} a beat, the run stops. The pattern player sends it while the synth's settings `follow`; the voice's
    * own riff player makes it for the Subharmonicon.
    */
-  | { type: 'clock'; at: ClockAt }
+  /** The app's clock; a start's `from` is its first pulse, counted from the run's first beat (`beat-lock.ts`). */
+  | { type: 'clock'; at: ClockAt; from?: number }
   | { type: 'offset'; semi?: number }
   /** LFO phases. A value past 1 also counts the cycles, which a `common` LFO's sample and hold is drawn from. */
   | { type: 'phase'; lfo?: number; lfo2?: number; lfo3?: number }
@@ -1362,10 +1363,45 @@ function createVoice(
     phrase!.len = Math.round(phrase!.beats * spb);
     if (old) phrasePos = Math.min(Math.round((phrasePos * phrase!.len) / old), phrase!.len - 1);
   }
-  /** The app's clock to the synth's own sequencer: the Subharmonicon's, or the Moog 960 (`f-own-sequencer`). */
-  function ownClock(at: ClockAt) {
-    if (P && P.moog) moog.clock(at);
+  /**
+   * The app's clock to the synth's own sequencer: the Subharmonicon's, or the Moog 960 (`f-own-sequencer`). A run's
+   * messages go to the engine that took its start; if the voice's settings move to the other engine mid-run, the first
+   * engine is stopped and the other started where the run is (the Subharmonicon only on a sixteenth, as it counts its
+   * clocks from its start), so neither is left running or waiting on a start that never comes.
+   */
+  let clockRun = false,
+    clockTo: 'moog' | 'subharm' | null = null,
+    clockPulse = 0;
+  function sendClock(to: 'moog' | 'subharm', at: ClockAt, from?: number) {
+    if (to === 'moog') moog.clock(at, from);
     else subharm.clock(at);
+  }
+  function ownClock(at: ClockAt, from?: number) {
+    const to = P && P.moog ? 'moog' : 'subharm';
+    if (at === 'start') {
+      clockRun = true;
+      clockTo = to;
+      clockPulse = from || 0;
+      sendClock(to, 'start', clockPulse);
+      return;
+    }
+    if (at === 'stop') {
+      if (clockTo) sendClock(clockTo, 'stop');
+      clockRun = false;
+      clockTo = null;
+      return;
+    }
+    if (!clockRun) return;
+    if (clockTo !== to) {
+      if (clockTo) sendClock(clockTo, 'stop');
+      clockTo = null;
+      if (to === 'moog' || clockPulse % (CLOCK_PPQ / SUBHARM_PPQ) === 0) {
+        clockTo = to;
+        sendClock(to, 'start', clockPulse);
+      }
+    }
+    if (clockTo) sendClock(clockTo, 'pulse');
+    clockPulse++;
   }
   function stopPhrase(silent?: boolean) {
     if (!phrase) return;
@@ -1404,7 +1440,7 @@ function createVoice(
         subharm.press(m.name);
         break;
       case 'clock':
-        ownClock(m.at);
+        ownClock(m.at, m.from);
         break;
       case 'offset':
         vOff = m.semi || 0;
@@ -2264,7 +2300,7 @@ function createVoice(
             // back on the synth part-way through the riff, its clock starts again on the riff's next sixteenth
             phrase.pulse =
               Math.ceil((phrasePos / phrase.spb) * SUBHARM_PPQ - 1e-6) * (CLOCK_PPQ / SUBHARM_PPQ);
-            ownClock('start');
+            ownClock('start', phrase.pulse);
           }
           while (Math.round((phrase.pulse * phrase.spb) / CLOCK_PPQ) <= phrasePos) {
             phrase.pulse++;

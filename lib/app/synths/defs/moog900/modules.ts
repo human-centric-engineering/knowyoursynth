@@ -1816,7 +1816,6 @@ export function cm1a(r: Rack, x0: number, y0: number, id = 'cm1a'): void {
   });
 }
 
-/** The app's own output, printed on a blank panel. Not part of the hardware. */
 /** The app's switch that keeps the 960 to the app's clock (`appOut`'s `follow960`), and what `toEngine()` reads. */
 export const FOLLOW_960 = 'out.follow960';
 

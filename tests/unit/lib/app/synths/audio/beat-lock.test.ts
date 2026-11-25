@@ -14,6 +14,7 @@ import { createMoog, MOOG_DESTS, MOOG_SIGNALS } from '@/lib/app/synths/audio/moo
 import { createSynth, type MeterEvent } from '@/lib/app/synths/audio/dsp-core';
 import type { EngineParams, MoogParams } from '@/lib/app/synths/contract';
 import system55 from '@/lib/app/synths/defs/system-55';
+import subharmonicon from '@/lib/app/synths/defs/subharmonicon';
 import { FOLLOW_960 } from '@/lib/app/synths/defs/moog900/modules';
 import { render } from '@/tests/unit/lib/app/synths/audio/render';
 
@@ -84,6 +85,19 @@ describe('the beat lock’s view of the pulses', () => {
     expect(l.step()).toBe('stop');
     expect(l.running()).toBe(false);
   });
+
+  it('counts from where a start says the run is, so a run started part-way keeps the run’s beat', () => {
+    const l = createBeatLock(SR);
+    // started at beat 3.5: its first pulse is the run's 84th
+    l.clock('start', 84);
+    l.step();
+    expect(l.beat()).toBeCloseTo(3.5, 9);
+    for (let i = 1; i <= 2 * PULSE; i++) {
+      if (i % PULSE === 0) l.clock('pulse');
+      l.step();
+    }
+    expect(l.beat()).toBeCloseTo(3.5 + 1 / 24, 9);
+  });
 });
 
 /** A bare Moog core with the 960 read by a cable (row A), and its stage recorded each sample. */
@@ -103,11 +117,14 @@ function rig(s960: Partial<NonNullable<MoogParams['s960']>>, follow: boolean) {
   };
   m.set({ vco: [], s960: q }, new Set(['s960a', 's960clk']), follow);
   /** Run `n` samples; with `pulses`, a pulse every PULSE samples counted from this call's first. */
-  const run = (n: number, o: { start?: boolean; stop?: boolean; pulses?: boolean } = {}) => {
+  const run = (
+    n: number,
+    o: { start?: boolean; from?: number; stop?: boolean; pulses?: boolean } = {}
+  ) => {
     const stage: number[] = [];
     const clk: number[] = [];
     if (o.stop) m.clock('stop');
-    if (o.start) m.clock('start');
+    if (o.start) m.clock('start', o.from);
     for (let i = 0; i < n; i++) {
       if (o.pulses && i % PULSE === 0) m.clock('pulse');
       m.step(60, false);
@@ -119,7 +136,10 @@ function rig(s960: Partial<NonNullable<MoogParams['s960']>>, follow: boolean) {
   /** The samples the stage changed on. */
   const moves = (stage: number[]) =>
     stage.flatMap((s, i) => (i > 0 && s !== stage[i - 1] ? [i] : []));
-  return { m, run, moves };
+  /** New settings for the 960, as the panel sends them. */
+  const reset960 = (o: Partial<NonNullable<MoogParams['s960']>>) =>
+    m.set({ vco: [], s960: { ...q, ...o } }, new Set(['s960a', 's960clk']), follow);
+  return { m, run, moves, reset960 };
 }
 
 describe('the 960 locked to the app’s clock', () => {
@@ -186,6 +206,41 @@ describe('the 960 locked to the app’s clock', () => {
     expect(at.slice(0, 4)).toEqual([3000, 15000, 27000, 39000]);
     expect(at[7]).toBe(87000);
     expect(at[8]).toBe(90000);
+  });
+
+  it('started part-way, keeps to the run’s beat: stage 1 until the beat, then a step on each', () => {
+    // one step a beat, started at beat 3.5 (pulse 84): stage 1 holds to beat 4, half a beat on
+    const t = rig({ hz: 2 }, true);
+    const { stage } = t.run(2 * BEAT, { start: true, from: 84, pulses: true });
+    expect(stage[0]).toBe(0);
+    expect(t.moves(stage)).toEqual([BEAT / 2, (3 * BEAT) / 2]);
+  });
+
+  it('taking the lock during a run, starts on stage 1 on the run’s grid, without walking the beats it missed', () => {
+    // an oscillator until FREQUENCY RANGE comes down to a tempo, two beats into the run
+    const t = rig({ hz: 100 }, true);
+    t.run(2 * BEAT, { start: true, pulses: true });
+    t.reset960({ hz: 7.94 });
+    const { stage } = t.run(BEAT, { pulses: true });
+    expect(stage[0]).toBe(0);
+    expect(t.moves(stage)).toEqual([6000, 12000, 18000]);
+  });
+
+  it('on a start, a STOP stage a skipped stage 1 lands on holds it', () => {
+    const t = rig(
+      { mode: ['skip', 'stop', 'normal', 'normal', 'normal', 'normal', 'normal', 'normal'] },
+      true
+    );
+    const { stage } = t.run(BEAT, { start: true, pulses: true });
+    expect(new Set(stage)).toEqual(new Set([1]));
+  });
+
+  it('reads as stopped until the clock starts it, then running', () => {
+    const t = rig({}, true);
+    t.run(PULSE);
+    expect(t.m.seqState()!.run).toBe(false);
+    t.run(PULSE, { start: true, pulses: true });
+    expect(t.m.seqState()!.run).toBe(true);
   });
 
   it('runs free when it is fast enough to be an oscillator, with or without the clock', () => {
@@ -276,5 +331,26 @@ describe('the clock reaching the System 55’s 960 from the voice’s riff playe
     for (const r of off) expect(r.seq).toBe(Math.floor(r.t / len) % 8);
     // by two seconds it is a step and more behind the locked one
     expect(off[off.length - 1].seq).not.toBe(Math.floor(off[off.length - 1].t / 6000) % 8);
+  });
+
+  it('following, a riff whose voice moves from the Subharmonicon to the System 55 mid-run starts the 960 there', () => {
+    const rows: { t: number; seq: number | undefined }[] = [];
+    let end = 0;
+    const syn = createSynth(SR, (e) => {
+      if (e.type === 'meter') rows.push({ t: end, seq: e.seq });
+    });
+    syn.handle({
+      type: 'params',
+      p: subharmonicon.toEngine(subharmonicon.init, { wheel: 0, patched: {} }),
+    });
+    syn.handle({ type: 'phrase', phrase: { bpm: 120, loop: true, steps: [[0, 60, 4]] } });
+    const buf = new Float32Array(128);
+    for (end = 128; end <= BEAT; end += 128) syn.process(buf, 128);
+    syn.handle({ type: 'params', p: params(true) });
+    rows.length = 0;
+    for (; end <= BEAT + SR; end += 128) syn.process(buf, 128);
+    // it moves on every sixteenth after the change, rather than waiting on a start that has already gone
+    const on = rows.filter(clear(6000));
+    expect(new Set(on.map((r) => r.seq)).size).toBeGreaterThan(4);
   });
 });

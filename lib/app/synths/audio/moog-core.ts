@@ -146,8 +146,11 @@ export interface Moog {
    * to the app's clock (`EngineParams.follow`).
    */
   set: (m: MoogParams, used: Set<string>, follow?: boolean) => void;
-  /** The app's master clock (`f-own-sequencer`): the 960 locks to it while it follows. */
-  clock: (at: ClockAt) => void;
+  /**
+   * The app's master clock (`f-own-sequencer`): the 960 locks to it while it follows. A start's `from` is its first
+   * pulse, counted from the run's first beat (`beat-lock.ts`).
+   */
+  clock: (at: ClockAt, from?: number) => void;
   /** One sample: `note` = the key pitch (MIDI, already glided), `gate` = a key is held. */
   step: (note: number, gate: boolean) => void;
   /** Envelope slot i's level (0-based). */
@@ -307,9 +310,12 @@ export function createMoog(
     prevIn: new Float64Array(8),
     btn: null as S960['btn'] | null,
     // locked to the app's clock: where the stage began and how long it lasts, in beats from the run's first beat (0 =
-    // not known until the pulses give the beat's rate)
+    // not known until the pulses give the beat's rate), where the 960 took the lock, and whether it was locked on the
+    // last sample
     at: 0,
     len: 0,
+    from: 0,
+    locked: false,
   };
   // the 960 follows the app's clock (`EngineParams.follow`), and the pulses it locks to
   let follow = false;
@@ -772,10 +778,13 @@ export function createMoog(
       // number of pulses), and Stop holds it. Faster, it is an oscillator, and runs free.
       const locked = follow && q.hz <= LOCK_MAX_HZ;
       if (locked) {
-        if (le === 'start') {
+        // A start, or the 960 taking the lock during a run (patched, or FREQUENCY RANGE turned down to a tempo): stage 1
+        // from the step the run is on. A STOP stage the skip lands on still holds it.
+        if (le === 'start' || (!sq.locked && lock.running())) {
           sq.st = 0;
-          if (q.mode[0] === 'skip') advance960();
           sq.run = true;
+          if (q.mode[0] === 'skip') advance960();
+          sq.from = lock.beat();
           sq.at = 0;
           sq.len = 0;
         } else if (le === 'stop') sq.run = false;
@@ -783,7 +792,13 @@ export function createMoog(
           const bps = lock.bps(),
             b = lock.beat();
           const len = (): number => (q.timing ? snapStage(rate(), bps) : snapStep(rate(), bps));
-          if (sq.len === 0 && bps > 0) sq.len = len();
+          if (sq.len === 0 && bps > 0) {
+            sq.len = len();
+            sq.at = Math.floor(sq.from / sq.len + 1e-9) * sq.len;
+          }
+          // far behind (the step shortened a long way at once), the grid is moved up rather than walked a step a pass
+          if (sq.len > 0 && b - sq.at > 4 * sq.len)
+            sq.at += Math.floor((b - sq.at) / sq.len - 1) * sq.len;
           // the grid keeps time while the 960 is held (OSC OFF, a STOP stage), so it moves on again on the beat
           while (sq.len > 0 && b >= sq.at + sq.len - 1e-9) {
             sq.at += sq.len;
@@ -805,7 +820,8 @@ export function createMoog(
       S[SI.s960b] = rowV(1);
       S[SI.s960c] = rowV(2);
       for (let k = 0; k < 8; k++) S[S960_O[k]] = k === sq.st ? 5 : 0;
-    }
+      sq.locked = locked;
+    } else sq.locked = false;
     // ── 962 sequential switch ──
     if (sw.on) {
       for (let k = 0; k < 3; k++) {
@@ -874,8 +890,11 @@ export function createMoog(
   /** Whether envelope slot i (0-based) is past its attack: for the panel lamps and the meter. */
   const envLevel = (i: number): number => (env[i] ? env[i].level : 0);
   /** The 960's current stage (0-based) and whether it is running, for the panel lamps. */
+  // a 960 locked to the app's clock runs only while the clock does
   const seqState = (): { stage: number; run: boolean } | null =>
-    sq.p ? { stage: sq.st, run: sq.run } : null;
+    sq.p
+      ? { stage: sq.st, run: sq.run && (!(follow && sq.p.hz <= LOCK_MAX_HZ) || lock.running()) }
+      : null;
   const out: MoogMeters = {
     vco: vco.map(() => 0),
     vcoHz: vco.map(() => 0),
@@ -893,5 +912,12 @@ export function createMoog(
     for (let i = 0; i < vca.length; i++) out.amp[i] = vca[i].on ? Math.min(vca[i].g, 1) : 0;
     return out;
   }
-  return { set, clock: (at: ClockAt) => lock.clock(at), step, envLevel, seqState, meters };
+  return {
+    set,
+    clock: (at: ClockAt, from?: number) => lock.clock(at, from),
+    step,
+    envLevel,
+    seqState,
+    meters,
+  };
 }
