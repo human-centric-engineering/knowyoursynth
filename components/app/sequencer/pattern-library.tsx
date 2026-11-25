@@ -46,7 +46,12 @@ import {
 } from '@/components/app/sequencer/sound-pattern-picker';
 import { soundDefaultOf, type SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import type { SuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
-import { FindingRows, FresherBar, findingStatus } from '@/components/app/sequencer/pattern-finding';
+import {
+  FindingRows,
+  FresherBar,
+  findingStatus,
+  shownCount,
+} from '@/components/app/sequencer/pattern-finding';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { PatternSharing } from '@/components/app/sharing/pattern-sharing';
@@ -362,11 +367,8 @@ export function PatternLibrary({
   // Being found: placeholders where "Suits this sound" will be, under the sound's own (t-264).
   const finding =
     !!suggested && (suggested.state === 'reading' || (suggested.state === 'off' && pickerOpen));
-  // How many patterns Patterns shows once found: the sound's own and what suits it (null while the own are read).
-  const shownCount =
-    soundPatterns && soundPatterns.patterns === null
-      ? null
-      : (soundPatterns?.patterns?.length ?? 0) + (suits?.suggestions.length ?? 0);
+  // How many patterns Patterns shows once found: the sound's own and what suits it.
+  const shown = shownCount(soundPatterns, suits?.suggestions.length ?? 0);
   // Said only where the picker has nothing else to show: no patterns of the sound's own to look at meanwhile.
   const ownNone = !soundPatterns?.patterns?.length;
   const suggestLine = !suggested
@@ -617,7 +619,7 @@ export function PatternLibrary({
       {/* What Patterns is finding, and how many it found (t-264): one status, there before anything is said. */}
       {suggested && (
         <span className="sr-only" role="status">
-          {pickerOpen ? findingStatus(finding ? 'reading' : suggested.state, shownCount) : ''}
+          {pickerOpen ? findingStatus(finding ? 'reading' : suggested.state, shown) : ''}
         </span>
       )}
       {status && (
@@ -649,7 +651,12 @@ export function PatternLibrary({
             ) : soundPatterns.patterns.length === 0 ? (
               <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
             ) : null)}
-          {suggested?.fresher && <FresherBar onTake={suggested.take} />}
+          {suggested?.fresher && (
+            <FresherBar
+              onTake={suggested.take}
+              focusIn='ul[aria-label="Suits this sound"] button'
+            />
+          )}
           {pickerGroups.length > 0 && (
             <SoundPatternPicker
               groups={pickerGroups}

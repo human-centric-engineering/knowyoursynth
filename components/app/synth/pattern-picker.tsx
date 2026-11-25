@@ -31,7 +31,12 @@ import type { SoundPatterns } from '@/components/app/sequencer/use-sound-pattern
 import { PatternCredit, patternLength } from '@/components/app/sequencer/sound-pattern-picker';
 import type { RankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import { BottomSheet } from '@/components/app/ui/bottom-sheet';
-import { FindingRows, FresherBar, findingStatus } from '@/components/app/sequencer/pattern-finding';
+import {
+  FindingRows,
+  FresherBar,
+  findingStatus,
+  shownCount,
+} from '@/components/app/sequencer/pattern-finding';
 
 /** How many patterns a library section shows before "Show all N". */
 export const SECTION_FEW = 5;
@@ -59,7 +64,7 @@ export interface PatternPickerProps {
 }
 
 export function PatternPicker(props: PatternPickerProps) {
-  const { plays, edited = false, open, onOpenChange, sheet, ranked } = props;
+  const { plays, edited = false, open, onOpenChange, sheet, ranked, own } = props;
   const button = useRef<HTMLButtonElement | null>(null);
   const pop = useRef<HTMLDivElement | null>(null);
   const popId = useId();
@@ -120,6 +125,15 @@ export function PatternPicker(props: PatternPickerProps) {
     button.current?.focus({ preventScroll: true });
   };
 
+  // The list's one status, there before anything is said in it (t-264): beside the popover, or in the sheet, since a
+  // modal sheet hides everything outside it from screen readers. It counts what is shown: the sound's own and the library's.
+  const ranks = ranked.result?.sections.reduce((n, s) => n + s.patterns.length, 0);
+  const statusLine = (
+    <span className="sr-only" role="status">
+      {open ? findingStatus(ranked.state, ranks === undefined ? null : shownCount(own, ranks)) : ''}
+    </span>
+  );
+
   return (
     <div className="kys-patpick">
       <button
@@ -153,15 +167,7 @@ export function PatternPicker(props: PatternPickerProps) {
       <span className="sr-only" aria-live="polite">
         {`Pattern: ${plays}${edited ? ', edited' : ''}`}
       </span>
-      {/* The list's one status, here rather than in it so it is there before anything is said (t-264). */}
-      <span className="sr-only" role="status">
-        {open
-          ? findingStatus(
-              ranked.state,
-              ranked.result?.sections.reduce((n, s) => n + s.patterns.length, 0) ?? null
-            )
-          : ''}
-      </span>
+      {!sheet && statusLine}
       {sheet ? (
         <BottomSheet
           title="Patterns"
@@ -169,6 +175,7 @@ export function PatternPicker(props: PatternPickerProps) {
           onOpenChange={onOpenChange}
           fallbackFocus={() => button.current}
         >
+          {statusLine}
           <PickerBody {...props} onDone={() => onOpenChange(false)} />
         </BottomSheet>
       ) : (

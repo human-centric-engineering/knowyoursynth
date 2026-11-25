@@ -49,7 +49,14 @@ export function FindingRows({
   );
 }
 
-export function FresherBar({ onTake }: { onTake: () => void }) {
+export function FresherBar({
+  onTake,
+  focusIn,
+}: {
+  onTake: () => void;
+  /** Where focus goes once the list is taken: the first control matching this, in the picker; else its first control. */
+  focusIn?: string;
+}) {
   const bar = useRef<HTMLDivElement | null>(null);
   // Taking the list takes the bar away, and the focused button with it: focus stays in the picker, on the first thing
   // there to focus, rather than falling to the page (where the popover's Escape no longer reaches it).
@@ -58,9 +65,11 @@ export function FresherBar({ onTake }: { onTake: () => void }) {
     onTake();
     requestAnimationFrame(() => {
       if (!around || (document.activeElement && document.activeElement !== document.body)) return;
-      around
-        .querySelector<HTMLElement>('input, button, a[href], [tabindex]:not([tabindex="-1"])')
-        ?.focus();
+      const first = 'input, button, a[href], [tabindex]:not([tabindex="-1"])';
+      (
+        (focusIn && around.querySelector<HTMLElement>(focusIn)) ||
+        around.querySelector<HTMLElement>(first)
+      )?.focus();
     });
   };
   return (
@@ -82,4 +91,16 @@ export function findingStatus(state: string, found: number | null): string {
   if (state === 'reading') return 'Finding patterns that suit the patch';
   if ((state !== 'ready' && state !== 'near') || found === null) return '';
   return found === 1 ? 'Found 1 pattern' : `Found ${found} patterns`;
+}
+
+/**
+ * How many patterns the picker shows: the sound's own and `more` (what was found for the patch). Null while the own
+ * are still being read, so no count is said before it is known; own that could not be read count as none.
+ */
+export function shownCount(
+  own: { patterns: readonly unknown[] | null; error?: boolean } | null | undefined,
+  more: number
+): number | null {
+  if (own && own.patterns === null && !own.error) return null;
+  return (own?.patterns?.length ?? 0) + more;
 }

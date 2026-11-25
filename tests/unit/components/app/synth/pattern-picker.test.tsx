@@ -395,8 +395,10 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
     expect(statuses[0].textContent).toBe('Finding patterns that suit the patch');
     rerender(<Picker ranked={READY} />);
     expect(screen.getAllByRole('status')).toHaveLength(1);
-    // Every library row, not the sound's own: the sections' patterns.
-    expect(screen.getByRole('status').textContent).toBe(`Found ${LEADS.length + 2} patterns`);
+    // Every row shown: the sound's own and the sections' patterns.
+    expect(screen.getByRole('status').textContent).toBe(
+      `Found ${OWN.patterns!.length + LEADS.length + 2} patterns`
+    );
   });
 
   it('pulses its placeholders only where motion is wanted', () => {
@@ -436,7 +438,9 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Update the list' }));
     expect(sectionNames()).toEqual(['Fat bass’s patterns', 'Held']);
     expect(screen.queryByRole('button', { name: 'Update the list' })).toBeNull();
-    expect(screen.getByRole('status').textContent).toBe('Found 1 pattern');
+    expect(screen.getByRole('status').textContent).toBe(
+      `Found ${OWN.patterns!.length + 1} patterns`
+    );
   });
 
   it('says which category it lists, and that it is the sound’s as it came when that is not the one heard', () => {
@@ -502,6 +506,13 @@ describe('the pattern picker (the sequencer’s Pattern readout)', () => {
     expect(sectionNames()).toEqual(['Fat bass’s patterns', 'Lead line', 'Held', 'Chord stabs']);
     fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'Escape' });
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('says its status inside the bottom sheet, which hides everything outside it from screen readers', () => {
+    render(<Picker sheet ranked={{ ...NO_FRESHER, state: 'reading', result: null }} />);
+    expect(within(dialog()).getByRole('status').textContent).toBe(
+      'Finding patterns that suit the patch'
+    );
   });
 
   it('is a bottom sheet below lg', () => {
