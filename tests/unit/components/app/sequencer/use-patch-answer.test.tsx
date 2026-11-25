@@ -243,6 +243,22 @@ describe('found in the background', () => {
     expect(result.current).toMatchObject({ state: 'ready', result: R2 });
   });
 
+  it('keeps answers per sound: the same reading for another start sound is asked about again', async () => {
+    post.mockResolvedValueOnce(R1).mockResolvedValueOnce(R2);
+    const other = { slug: 'other-bass', panel: () => PANEL };
+    const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: ranked({ open: true }),
+    });
+    await wait(SETTLE_MS);
+    expect(result.current).toMatchObject({ state: 'ready', result: R1 });
+    rerender(ranked({ start: other }));
+    rerender(ranked({ start: other, open: true }));
+    await wait(SETTLE_MS);
+    expect(post).toHaveBeenCalledTimes(2);
+    expect(post.mock.calls[1][1]).toMatchObject({ body: { sound: 'other-bass' } });
+    expect(result.current).toMatchObject({ state: 'ready', result: R2 });
+  });
+
   it('waits on the browser being idle where it can', async () => {
     const idle: Array<() => void> = [];
     vi.stubGlobal('requestIdleCallback', (run: () => void) => idle.push(run));
@@ -298,6 +314,40 @@ describe('an open picker', () => {
     expect(detector.read.mock.calls[0][1]).toMatchObject({ background: false });
     expect(result.current.state).toBe('ready');
   });
+
+  it('holds its list when the start is made again for the same sound, as a lesson steps on', async () => {
+    const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: ranked({ open: true }),
+    });
+    await wait(SETTLE_MS);
+    expect(result.current).toMatchObject({ state: 'ready', result: R1 });
+    rerender(ranked({ open: true, start: { slug: 'fat-bass', panel: () => PANEL } }));
+    expect(result.current).toMatchObject({ state: 'ready', result: R1 });
+    await wait(SETTLE_MS * 2);
+    expect(post).toHaveBeenCalledTimes(1);
+    expect(result.current).toMatchObject({ state: 'ready', result: R1 });
+  });
+
+  it('stays in error while open as notes play, and tries again once opened again', async () => {
+    post.mockRejectedValueOnce(new Error('offline'));
+    const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: ranked({ open: true }),
+    });
+    await wait(SETTLE_MS);
+    expect(result.current.state).toBe('error');
+    rerender(ranked({ open: true, busy: true }));
+    await wait(SETTLE_MS);
+    rerender(ranked({ open: true, panel: MOVED }));
+    await wait(SETTLE_MS * 2);
+    expect(post).toHaveBeenCalledTimes(1);
+    expect(result.current.state).toBe('error');
+
+    rerender(ranked({ open: false, panel: MOVED }));
+    rerender(ranked({ open: true, panel: MOVED }));
+    await wait(SETTLE_MS);
+    expect(post).toHaveBeenCalledTimes(2);
+    expect(result.current).toMatchObject({ state: 'ready', result: R1 });
+  });
 });
 
 describe('with the detector on the page’s thread', () => {
@@ -326,7 +376,7 @@ describe('with the detector on the page’s thread', () => {
     expect(result.current.state).toBe('off');
   });
 
-  it('ranks without a reading when opened while something plays, and offers the list for the patch once quiet', async () => {
+  it('ranks without a reading when opened while something plays, and shows the list for the patch once quiet', async () => {
     detector.onPageThread = true;
     post.mockResolvedValueOnce(R1).mockResolvedValueOnce(R2);
     const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
@@ -349,7 +399,8 @@ describe('with the detector on the page’s thread', () => {
     expect(detector.read).not.toHaveBeenCalled();
     await wait(1);
     expect(detector.read).toHaveBeenCalledTimes(1);
-    expect(result.current).toMatchObject({ state: 'ready', result: R1, fresher: R2 });
+    // the list found without a reading gives way to the first found with one, not offered
+    expect(result.current).toMatchObject({ state: 'ready', result: R2, fresher: null });
   });
 
   it('waits for quiet before reading for "Suits this sound" opened while something plays', async () => {

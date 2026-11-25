@@ -1849,7 +1849,7 @@ time, and a panel read once whichever picker asks.
   asked about again, a nearer one keeps it.
 - **Opened while something plays**, the patch is read at once, in the worker: off the page's thread and the audio
   thread. Where the detector is on the page's thread, the Play deck's picker ranks without a reading (role and name)
-  and reads once quiet, offering the list for the patch then; Suits this sound waits for quiet.
+  and reads once quiet, showing the list for the patch in its place then; Suits this sound waits for quiet.
 
 #### The ranking
 

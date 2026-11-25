@@ -2060,6 +2060,7 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
+      setSounding(false);
       if (playing) holdForLoad('riff');
       else if (seq.playing) holdForLoad('pattern');
     };

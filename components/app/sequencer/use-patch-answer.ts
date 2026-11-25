@@ -16,7 +16,8 @@
  * - **Held while open.** An open picker's answer does not change under the pointer. A newer far-moved answer found
  *   while it is open is offered (`fresher`, taken with `take`), not swapped in. A closed picker takes it silently.
  * - **Opened while busy.** The user's request: the patch is read at once, in the worker. Where the detector reads on
- *   the page's thread it is not read while busy; the hook asks without a reading, and reads once quiet.
+ *   the page's thread it is not read while busy; the hook asks without a reading, and reads once quiet, showing the
+ *   answer found with the reading in place of the one found without (not offered: that one was never for the patch).
  * - **One reading for a patch as it came.** A panel holding the start sound's values and cables is that sound's
  *   reading, not a second one.
  */
@@ -119,6 +120,10 @@ interface View<T> {
   fresher: T | null;
 }
 
+/** Whether two starts are the same sound: a start rebuilt for the same sound (a lesson's next step) is not a new one. */
+const sameStart = (a: PatchStart | null, b: PatchStart | null): boolean =>
+  a === b || (!!a && !!b && a.slug === b.slug);
+
 const resultOf = <T>(a: Answer<T> | null): T | null =>
   a && 'result' in a.outcome ? a.outcome.result : null;
 
@@ -153,13 +158,15 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
   useEffect(() => {
     latest.current = input;
   });
-  // The panel, and when it last changed (0: long settled when the page opened).
+  // The panel, and when it last changed: the first run, on mount, is not a change (0: long settled when the page opened).
   const panelRef = useRef(input.panel);
   const changedAt = useRef(0);
   const { values, cables } = input.panel;
+  const mounted = useRef(false);
   useEffect(() => {
     panelRef.current = { values, cables };
-    changedAt.current = Date.now();
+    if (mounted.current) changedAt.current = Date.now();
+    mounted.current = true;
   }, [values, cables]);
   // Since when nothing has been playing (null: something is; 0: nothing has since the page opened).
   const busyRef = useRef(busy);
@@ -175,6 +182,8 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
   const shown = useRef<Answer<T> | null>(null);
   const fresher = useRef<Answer<T> | null>(null);
   const answers = useRef(new Map<string, Promise<T>>());
+  // What the open picker could not work out: it stays in error for that until closed.
+  const failedFor = useRef<{ scope: string; def: SynthDef; start: PatchStart | null } | null>(null);
 
   /** Whether `a` was found for what is on the panel now. */
   const current = useCallback((a: Answer<T> | null): a is Answer<T> => {
@@ -183,7 +192,7 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
       !!a &&
       a.scope === sc &&
       a.def === d &&
-      a.start === s &&
+      sameStart(a.start, s) &&
       !!a.read &&
       samePanel(a.read, panelRef.current)
     );
@@ -243,7 +252,7 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
         f &&
         f.scope === sc &&
         f.def === d &&
-        f.start === s &&
+        sameStart(f.start, s) &&
         f.group === group &&
         (features ? !!f.features && !movedFar(f.features, features) : true);
       let answer: Answer<T>;
@@ -253,15 +262,16 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
         let outcome: Answer<T>['outcome'];
         if (asked === 'near') outcome = { near: true };
         else {
-          let pending = answers.current.get(asked.key);
+          // Kept per scope: a key is only one picker's reading, and the same reading for another sound is not its answer.
+          const key = `${sc}|${asked.key}`;
+          let pending = answers.current.get(key);
           if (!pending) {
             if (signal?.aborted) return null;
             pending = asked.request();
-            answers.current.set(asked.key, pending);
+            answers.current.set(key, pending);
             const oldest = answers.current.keys().next().value;
             if (answers.current.size > KEEP_ANSWERS && oldest !== undefined)
               answers.current.delete(oldest);
-            const key = asked.key;
             pending.catch(() => answers.current.delete(key));
           }
           outcome = { result: await pending };
@@ -270,7 +280,7 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
       }
       // Kept only while it is still for what the picker is about.
       const l = latest.current;
-      if (l.scope === sc && l.def === d && l.start === s) found.current = answer;
+      if (l.scope === sc && l.def === d && sameStart(l.start, s)) found.current = answer;
       return answer;
     },
     [readings]
@@ -282,11 +292,16 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
     if (!on) {
       shown.current = null;
       fresher.current = null;
+      failedFor.current = null;
       setView({ state: 'off', result: null, fresher: null });
       return undefined;
     }
+    const fail = failedFor.current;
+    if (fail && fail.scope === scope && fail.def === def && sameStart(fail.start, start))
+      return undefined;
+    failedFor.current = null;
     const was = shown.current;
-    if (!was || was.scope !== scope || was.def !== def || was.start !== start) {
+    if (!was || was.scope !== scope || was.def !== def || !sameStart(was.start, start)) {
       // Just opened, or about something else now.
       shown.current = null;
       fresher.current = null;
@@ -296,7 +311,7 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
         return undefined;
       }
       setView({ state: 'reading', result: null, fresher: null });
-    } else if (viewRef.current.state === 'error' || current(fresher.current ?? was)) {
+    } else if (current(fresher.current ?? was)) {
       return undefined;
     }
     let live = true;
@@ -319,6 +334,13 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
             setView(viewOf(answer, null));
             return;
           }
+          // One asked without a reading (busy on the page's thread) gives way to the first found with one.
+          if (!showing.features && answer.features) {
+            shown.current = answer;
+            fresher.current = null;
+            setView(viewOf(answer, null));
+            return;
+          }
           // The same answer, for a patch moved only a little: still the one shown.
           if (answer.outcome === showing.outcome || resultOf(answer) === resultOf(showing)) {
             shown.current = { ...showing, read: answer.read ?? showing.read };
@@ -335,7 +357,9 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
             synthId: latest.current.synthId,
             err: String(err),
           });
-          if (!shown.current) setView({ state: 'error', result: null, fresher: null });
+          if (shown.current) return;
+          failedFor.current = { scope, def, start };
+          setView({ state: 'error', result: null, fresher: null });
         }
       );
     };

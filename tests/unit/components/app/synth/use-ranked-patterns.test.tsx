@@ -112,7 +112,8 @@ describe('useRankedPatterns', () => {
     const { result, rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
       initialProps: base(),
     });
-    rerender(base({ open: true }));
+    // the start sound loaded onto the panel just now: the same values, newly set
+    rerender(base({ open: true, panel: { values: { ...def.init }, cables: [] } }));
     expect(result.current.state).toBe('reading');
     await settle(SETTLE_MS - 1);
     expect(post).not.toHaveBeenCalled();
@@ -123,6 +124,15 @@ describe('useRankedPatterns', () => {
       body: { synthId: 'model-d', sound: 'fat-bass', features: FEATURES, asCame: true },
     });
     expect(result.current).toMatchObject({ state: 'ready', result: RESULT, fresher: null });
+  });
+
+  it('does not wait on a panel unchanged since the page opened', async () => {
+    const { result } = renderHook((p: RankInput) => useRankedPatterns(p), {
+      initialProps: base({ open: true }),
+    });
+    await settle(0);
+    expect(detector.read).toHaveBeenCalledTimes(1);
+    expect(result.current).toMatchObject({ state: 'ready', result: RESULT });
   });
 
   it('opens on a panel long settled without waiting, and names no sound when the patch started as none', async () => {
@@ -179,7 +189,7 @@ describe('useRankedPatterns', () => {
     const { rerender } = renderHook((p: RankInput) => useRankedPatterns(p), {
       initialProps: base(),
     });
-    rerender(base({ open: true }));
+    rerender(base({ open: true, panel: { values: { ...def.init }, cables: [] } }));
     await settle(SETTLE_MS - 100);
     // a patch's glide, still moving the panel as the picker opened
     rerender(base({ open: true, panel: MOVED }));
