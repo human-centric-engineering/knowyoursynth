@@ -151,7 +151,7 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
   // the controls the app adds to a ported panel (the System 55's 960 CLOCK, t-291), their print and their init values
   const appOwn = new Set(ported.controls.filter((c) => c.appOnly).map((c) => c.id));
   const own = (def: SynthDef): SynthDef =>
-    appOwn.size === 0
+    appOwn.size === 0 && !def.decor.some((d) => d.appOnly) && !def.marks?.some((m) => m.appOnly)
       ? def
       : {
           ...def,

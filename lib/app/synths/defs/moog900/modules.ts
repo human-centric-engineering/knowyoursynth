@@ -1930,10 +1930,10 @@ function follow960Switch(r: Rack, cx: number, y0: number): void {
   // the whole box carries the card, so pointing at its title or FREE / BEAT explains it; the rocker keeps its own
   r.marks.push({
     id: 'out.follow960.box',
-    name: '960 CLOCK (app only)',
+    name: '960 CLOCK (app)',
     module: 'mod',
     appOnly: true,
-    help: 'Not on the hardware: the app’s switch for how the 960 sequencer keeps time. At FREE it runs on its own clock, as the real one does, and drifts against the drums. At BEAT it keeps to the app’s tempo: Play starts it on stage 1, its steps land on the beat, and Stop stops it.',
+    help: 'Not on the hardware: the app’s switch for how the 960 sequencer keeps time. At FREE it runs on its own clock, as the real one does, and drifts against the drums. At BEAT it keeps to the app’s tempo: Play starts it on stage 1, its steps land on the beat, and Stop stops it. A 960 clock fast enough to be a tone always runs free.',
     rect: box,
   });
   (
