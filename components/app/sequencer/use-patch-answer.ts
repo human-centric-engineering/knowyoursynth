@@ -25,6 +25,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { logger } from '@/lib/logging';
 import { movedFar } from '@/lib/app/patterns/suggest';
 import {
+  createKindReader,
   createPatchReadings,
   ReadSkipped,
   samePanel,
@@ -49,7 +50,7 @@ const KEEP_ANSWERS = 50;
 
 /** The panel readings the page's pickers share: one reader, one reading at a time. */
 export function usePatchReadings(): PatchReadings {
-  const [readings] = useState(() => createPatchReadings());
+  const [readings] = useState(() => createPatchReadings(createKindReader()));
   useEffect(() => () => readings.dispose(), [readings]);
   return readings;
 }
@@ -227,7 +228,8 @@ export function usePatchAnswer<T>(input: PatchAnswerInput<T>): PatchAnswer<T> {
         if (err instanceof ReadSkipped) return null;
         throw err;
       }
-      const asked = ask(deferred ? null : was, features);
+      // Not read is not known: a start not read is taken to be, as one that could not be.
+      const asked = ask(deferred && s ? { features: null } : was, features);
       if (asked === null) {
         if (deferred) return null;
         throw new Error('the patch could not be read');

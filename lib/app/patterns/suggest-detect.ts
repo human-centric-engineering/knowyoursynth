@@ -71,6 +71,7 @@ export function createKindReader(): KindReader {
   const pending = new Map<number, Pending>();
   // One reading at a time: each waits on the one before it. A dispose starts a new epoch, so what was waiting goes.
   let queue: Promise<unknown> = Promise.resolve();
+  let queued = 0;
   let epoch = 0;
 
   /** On the page's thread, after a turn of the event loop so the caller's frame paints first. */
@@ -151,8 +152,15 @@ export function createKindReader(): KindReader {
   return {
     read(params, opts = {}) {
       const mine = epoch;
-      const turn = queue.then(() => begin(params, opts, mine));
-      queue = turn.catch(() => undefined);
+      // Begun at once with nothing ahead of it, so a reading the page waits on starts in the same turn it is asked.
+      const turn =
+        queued === 0 ? begin(params, opts, mine) : queue.then(() => begin(params, opts, mine));
+      queued += 1;
+      queue = turn
+        .catch(() => undefined)
+        .then(() => {
+          queued -= 1;
+        });
       return turn;
     },
     get onPageThread() {
@@ -211,7 +219,7 @@ interface Kept {
   features: Promise<SoundFeatures>;
 }
 
-export function createPatchReadings(reader: KindReader = createKindReader()): PatchReadings {
+export function createPatchReadings(reader: KindReader): PatchReadings {
   let panels: Kept[] = [];
   let starts = new WeakMap<PatchStart, { panel?: PanelState; features?: Promise<SoundFeatures> }>();
 
