@@ -1490,12 +1490,16 @@ old name for the links to it. The rest of the sequencer's strip is unchanged.
   (or could not be read), so `/rank` limits the list to that sound's tag. A panel holding the start sound's values and
   cables is that sound's reading, not a second one. When it reads is
   [Found in the background](#found-in-the-background).
-- **While it is read**, the sound's own show and a line says the patch is being listened to. A reading that fails is
+- **While it is read**, the sound's own show at once, and under them a line says the library is being matched to the
+  patch, over placeholder rows shaped like the sections (t-264, `FindingRows` in
+  `components/app/sequencer/pattern-finding.tsx`; their pulse is off under `prefers-reduced-motion`, and they are
+  `aria-hidden`). A screen reader hears one status instead: finding, then how many were found. A reading that fails is
   asked for without features, which `/rank` lists by role and name, so the sections always come. A read of `/rank`
   that fails says so; closing and opening the picker tries again. While one of the user's sounds is still loading, a
   line says the picker is waiting for it.
 - **The order holds while it is open.** Nothing moves under the pointer. A patch moved far while it is open is ranked
-  again, and the new list is offered (the hook's `fresher`, taken with `take`), not swapped in.
+  again, and the new list is offered (the hook's `fresher`), not swapped in: a quiet bar at the top of the list says
+  the patch has changed, and its Update the list takes it (`take`; `FresherBar`).
 - **Each section shows its best five** (`SECTION_FEW`), its count in its heading, and **Show all N**. An empty section
   is not drawn. Above the sections, a line says what the patch was heard as (the reading's summary).
 - **The search** filters the sound's own and every section by name and Inspired by: every word typed has to be in
@@ -1513,7 +1517,7 @@ old name for the links to it. The rest of the sequencer's strip is unchanged.
   default is the row marked. Play shows whenever the sequencer holds a loaded pattern, so a picked one can be played.
 
 Tested in `tests/unit/components/app/synth/pattern-picker.test.tsx` (own first, sections, Show all, search, picks, the
-lines while reading and on failure, closing, the sheet) and `tests/unit/components/app/synth/synth-page-pattern-picker.test.tsx`
+lines while reading and on failure, the placeholders, the status and the update bar, closing, the sheet) and `tests/unit/components/app/synth/synth-page-pattern-picker.test.tsx`
 (on the page: Play with the sequencer closed playing a picked pattern and a user sound's pattern, a pick taking over
 from the riff, and the riff back after another patch).
 
@@ -1851,6 +1855,11 @@ time, and a panel read once whichever picker asks.
 - **Opened while something plays**, the patch is read at once, in the worker: off the page's thread and the audio
   thread. Where the detector is on the page's thread, the Play deck's picker ranks without a reading (role and name)
   and reads once quiet, showing the list for the patch in its place then; Suits this sound waits for quiet.
+- **Shown being found.** When it does have to be found as the picker opens, both show it being found rather than one
+  plain line (t-264, `pattern-finding.tsx`): placeholder rows where the list will be, the sound's own above them, one
+  status for a screen reader, and a newer list offered in a bar (Update the list) rather than swapped in. In the
+  sequencer's Patterns the placeholders sit under a "Suits this sound" heading; a library sound as it came shows them
+  only until it is found to need none.
 
 #### The ranking
 
