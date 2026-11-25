@@ -576,6 +576,10 @@ export function SynthPanel({
         <Leds decor={decor} ctx={ctx} values={values} />
         {heatOn && !areasOn && <HeatLayer def={shown} values={values} outline={outline} />}
         <LessonAreaLayer def={shown} quiet={areasOn} />
+        {/* under the controls, so a control inside a mark (the 960 CLOCK's rocker) keeps its own card */}
+        {def.marks?.map((m) => (
+          <Mark key={m.id} m={m} />
+        ))}
         {def.controls.map((c) => {
           if (!isShown(c, values)) return null;
           const value = drawn(c.id);
@@ -620,9 +624,6 @@ export function SynthPanel({
             return <MenuRow key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           return <Switch key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
         })}
-        {def.marks?.map((m) => (
-          <Mark key={m.id} m={m} />
-        ))}
         {def.jacks.map((j) =>
           inMatrix.has(j.id) ? null : (
             <Jack key={j.id} j={j} ctx={ctx} pending={pending === j.id} onJack={onJack} />

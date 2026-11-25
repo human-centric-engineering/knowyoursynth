@@ -411,6 +411,8 @@ export interface PanelMark {
   help: string;
   module: SynthModule;
   rect: ViewRect;
+  /** The app adds it to a ported panel (the System 55's 960 CLOCK box): the prototype parity check leaves it out. */
+  appOnly?: boolean;
 }
 
 // ─── Control ─────────────────────────────────────────────────────────────────

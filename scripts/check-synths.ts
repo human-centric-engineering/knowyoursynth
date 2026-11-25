@@ -151,12 +151,14 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
   // the controls the app adds to a ported panel (the System 55's 960 CLOCK, t-291), their print and their init values
   const appOwn = new Set(ported.controls.filter((c) => c.appOnly).map((c) => c.id));
   const own = (def: SynthDef): SynthDef =>
-    appOwn.size === 0
+    appOwn.size === 0 && !def.decor.some((d) => d.appOnly) && !def.marks?.some((m) => m.appOnly)
       ? def
       : {
           ...def,
           controls: def.controls.filter((c) => !c.appOnly),
           decor: def.decor.filter((d) => !d.appOnly),
+          // the app's own marks go; a synth left with none compares as having none, as the prototype's does
+          marks: ((ms) => (ms?.length ? ms : undefined))(def.marks?.filter((m) => !m.appOnly)),
           init: Object.fromEntries(Object.entries(def.init).filter(([k]) => !appOwn.has(k))),
         };
   // The modular case's rows are the app's own too, re-packed without their blank plates (t-232); they are cut from the

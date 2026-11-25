@@ -93,7 +93,7 @@ m961(rack, X(111), BOT);
 m962(rack, X(132), BOT);
 appOut(rack, X(140), BOT, 8, 'BP8', { follow960: true });
 
-const { controls, jacks, decor, areas } = rack;
+const { controls, jacks, decor, areas, marks } = rack;
 const H = BOT + ROW_H + 64;
 decor.unshift(
   { t: 'rect', x: 0, y: 0, w: W, h: H, r: 10, fill: '#0b0b0c', hw: true },
@@ -120,6 +120,7 @@ const system55: SynthDef & { version: number } = {
   destNames: rack.destNames,
   decor,
   areas,
+  marks,
   controls,
   jacks,
   init: initOf(controls),
