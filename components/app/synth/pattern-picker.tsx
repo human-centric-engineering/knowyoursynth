@@ -8,6 +8,8 @@
  * The list is the patch's own patterns first (`useSoundPatterns`, the default marked), then the public library's
  * patterns of the patch's category (t-255) in a section per role, ordered by how well each suits the patch
  * (`useRankedPatterns`, `POST /library-patterns/rank`).
+ * While it is ranked, placeholder rows stand where the sections will be, and a newer ranking found while it is open is
+ * offered in a bar rather than swapped in (`f-pattern-prefetch` t-264, `pattern-finding.tsx`).
  * Each section shows its best few, with "Show all N". The search, at the top as the patch library's is, filters every
  * section by name and Inspired by. A library row has no notes, so a pick reads its one pattern
  * (`GET /api/v1/library-patterns/:id`) and loads it into the sequencer (`seq.load`), leaving the sequencer closed: Play
@@ -29,6 +31,12 @@ import type { SoundPatterns } from '@/components/app/sequencer/use-sound-pattern
 import { PatternCredit, patternLength } from '@/components/app/sequencer/sound-pattern-picker';
 import type { RankedPatterns } from '@/components/app/synth/use-ranked-patterns';
 import { BottomSheet } from '@/components/app/ui/bottom-sheet';
+import {
+  FindingRows,
+  FresherBar,
+  findingStatus,
+  shownCount,
+} from '@/components/app/sequencer/pattern-finding';
 
 /** How many patterns a library section shows before "Show all N". */
 export const SECTION_FEW = 5;
@@ -45,8 +53,8 @@ export interface PatternPickerProps {
   sheet: boolean;
   /** The sound's own patterns, or null with no library sound on the panel. */
   own: SoundPatterns | null;
-  /** The library, ranked for the patch. */
-  ranked: Pick<RankedPatterns, 'state' | 'result'>;
+  /** The library, ranked for the patch, and a newer ranking to offer while the list is open. */
+  ranked: Pick<RankedPatterns, 'state' | 'result' | 'fresher' | 'take'>;
   /** The library pattern the sequencer holds as it came, if it holds one: marked in the list. */
   current: string | null;
   /** Loads a pattern into the sequencer (`seq.load`): the pattern now held, or null if it was refused. */
@@ -56,7 +64,7 @@ export interface PatternPickerProps {
 }
 
 export function PatternPicker(props: PatternPickerProps) {
-  const { plays, edited = false, open, onOpenChange, sheet } = props;
+  const { plays, edited = false, open, onOpenChange, sheet, ranked, own } = props;
   const button = useRef<HTMLButtonElement | null>(null);
   const pop = useRef<HTMLDivElement | null>(null);
   const popId = useId();
@@ -117,6 +125,13 @@ export function PatternPicker(props: PatternPickerProps) {
     button.current?.focus({ preventScroll: true });
   };
 
+  // The list's one status, there before anything is said in it (t-264): beside the popover, or in the sheet, since a
+  // modal sheet hides everything outside it from screen readers. It counts what is shown: the sound's own and the library's.
+  const ranks = ranked.result?.sections.reduce((n, s) => n + s.patterns.length, 0);
+  const statusText = open
+    ? findingStatus(ranked.state, ranks === undefined ? null : shownCount(own, ranks))
+    : '';
+
   return (
     <div className="kys-patpick">
       <button
@@ -150,6 +165,11 @@ export function PatternPicker(props: PatternPickerProps) {
       <span className="sr-only" aria-live="polite">
         {`Pattern: ${plays}${edited ? ', edited' : ''}`}
       </span>
+      {!sheet && (
+        <span className="sr-only" role="status">
+          {statusText}
+        </span>
+      )}
       {sheet ? (
         <BottomSheet
           title="Patterns"
@@ -157,6 +177,7 @@ export function PatternPicker(props: PatternPickerProps) {
           onOpenChange={onOpenChange}
           fallbackFocus={() => button.current}
         >
+          <MountedStatus text={statusText} />
           <PickerBody {...props} onDone={() => onOpenChange(false)} />
         </BottomSheet>
       ) : (
@@ -174,6 +195,23 @@ export function PatternPicker(props: PatternPickerProps) {
         )
       )}
     </div>
+  );
+}
+
+/**
+ * A status that mounts with what holds it (the sheet): mounted empty and filled just after, so a screen reader hears the
+ * text it opens with, which it would not for a region already holding it as it appears.
+ */
+function MountedStatus({ text }: { text: string }) {
+  const [said, setSaid] = useState('');
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setSaid(text));
+    return () => cancelAnimationFrame(id);
+  }, [text]);
+  return (
+    <span className="sr-only" role="status">
+      {said}
+    </span>
   );
 }
 
@@ -330,7 +368,7 @@ function PickerBody({
     />
   );
 
-  const line = (text: ReactNode, role?: 'status' | 'alert') => (
+  const line = (text: ReactNode, role?: 'alert') => (
     <p className="kys-patpick-line" role={role}>
       {text}
     </p>
@@ -350,6 +388,7 @@ function PickerBody({
         />
       </label>
       {status && line(status, 'alert')}
+      {ranked.fresher && <FresherBar onTake={ranked.take} />}
       <div className="kys-patpick-scroll kys-scroll">
         {own && (
           <section className="kys-patpick-section" aria-label={`${own.sound.name}’s patterns`}>
@@ -372,9 +411,13 @@ function PickerBody({
             )}
           </section>
         )}
-        {ranked.state === 'off' && line('Waiting for the sound on the panel to load…', 'status')}
-        {ranked.state === 'reading' &&
-          line('Listening to the patch to put the library in order for it…', 'status')}
+        {ranked.state === 'off' && line('Waiting for the sound on the panel to load…')}
+        {ranked.state === 'reading' && (
+          <>
+            {line('Matching the library to the patch…')}
+            <FindingRows sections={2} rows={3} />
+          </>
+        )}
         {ranked.state === 'error' &&
           line(
             'The library could not be read. Close the patterns and open them again to try again.'

@@ -935,6 +935,110 @@ svg .kys-hit:focus-visible {
   background: rgb(var(--kys-wash) / 0.07);
 }
 
+/* Patterns being found for the patch (f-pattern-prefetch t-264): placeholder rows shaped like the real ones, gently
+ * pulsing, and the bar offering a newer list. Shared by the Pattern picker and the sequencer's Patterns. */
+@keyframes kys-patfind-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.kys-patfind {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kys-patfind-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+}
+.kys-patfind.is-grid .kys-patfind-section {
+  padding-top: 0;
+}
+.kys-patfind-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.kys-patfind.is-grid .kys-patfind-rows {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 4px;
+}
+.kys-patfind-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 7px;
+}
+.kys-patfind.is-grid .kys-patfind-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgb(var(--kys-wash, 255 255 255) / 0.04);
+}
+.kys-patfind-bar {
+  display: block;
+  border-radius: 4px;
+  background: rgb(var(--kys-wash, 255 255 255) / 0.1);
+  animation: kys-patfind-pulse 1.6s ease-in-out infinite;
+}
+.kys-patfind-h {
+  width: 88px;
+  height: 9px;
+}
+.kys-patfind-name {
+  height: 11px;
+}
+.kys-patfind-meta {
+  flex: none;
+  width: 42px;
+  height: 9px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kys-patfind-bar {
+    animation: none;
+  }
+}
+.kys-patfind-fresher {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 10px;
+  margin: 0 14px;
+  padding: 6px 6px 6px 10px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  color: var(--kys-muted);
+  background: rgb(var(--kys-wash, 255 255 255) / 0.06);
+}
+/* In the sequencer's Patterns, as wide as its list and without the picker's gutter. */
+.kys-seq-lib > .kys-patfind-fresher {
+  max-width: 640px;
+  margin: 0;
+}
+.kys-patfind-take {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--kys-accent);
+}
+.kys-patfind-take:hover,
+.kys-patfind-take:focus-visible {
+  background: rgb(var(--kys-wash, 255 255 255) / 0.08);
+}
+
 /* The learning layers on the bar: lit in the accent while they are over the panel. */
 .kys-layer {
   display: inline-flex;

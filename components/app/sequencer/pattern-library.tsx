@@ -7,7 +7,8 @@
  * - With a library sound on the panel, Patterns: its patterns, default first (`f-pattern-library` t-123,
  *   `SoundPatternPicker`). The default opens in place of the riff it is, and any other opens as a library riff does.
  *   Under them, once the patch has moved far from the sound, or for any other patch on its own, "Suits this sound":
- *   library patterns that suit what the patch sounds like now (t-125, `useSuggestedPatterns`).
+ *   library patterns that suit what the patch sounds like now (t-125, `useSuggestedPatterns`), placeholders standing in
+ *   while they are found and a newer list offered in a bar (t-264, `pattern-finding.tsx`).
  * - Save, Save as, Rename and Delete, against My patterns (`/api/v1/patterns`). Signed out, a link to sign in instead.
  * - My patterns: the user's saved patterns, any of which opens in place of what is held (Undo brings that back).
  * - Library: any synth's library riffs, as a starting point. A riff from one synth plays on any other.
@@ -45,6 +46,12 @@ import {
 } from '@/components/app/sequencer/sound-pattern-picker';
 import { soundDefaultOf, type SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import type { SuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
+import {
+  FindingRows,
+  FresherBar,
+  findingStatus,
+  shownCount,
+} from '@/components/app/sequencer/pattern-finding';
 import type { LibraryPatternView } from '@/lib/app/patterns/library';
 import { PlayerTip } from '@/components/app/synth/player-tip';
 import { PatternSharing } from '@/components/app/sharing/pattern-sharing';
@@ -357,19 +364,22 @@ export function PatternLibrary({
       patterns: suits.suggestions.map((s) => s.pattern),
       reasons: new Map(suits.suggestions.map((s) => [s.id, capitalise(s.reason)])),
     });
+  // Being found: placeholders where "Suits this sound" will be, under the sound's own (t-264).
+  const finding =
+    !!suggested && (suggested.state === 'reading' || (suggested.state === 'off' && pickerOpen));
+  // How many patterns Patterns shows once found: the sound's own and what suits it.
+  const shown = shownCount(soundPatterns, suits?.suggestions.length ?? 0);
   // Said only where the picker has nothing else to show: no patterns of the sound's own to look at meanwhile.
   const ownNone = !soundPatterns?.patterns?.length;
   const suggestLine = !suggested
     ? null
-    : (suggested.state === 'reading' || (suggested.state === 'off' && panel === 'sound')) && ownNone
-      ? 'Listening to the patch for patterns that suit it…'
-      : suggested.state === 'error'
-        ? 'Patterns that suit this sound could not be worked out. Close Patterns and open it again to try again.'
-        : suits && !suits.suggestions.length && ownNone
-          ? suits.reading
-            ? 'No library pattern suits this sound yet.'
-            : 'The patch is silent, so there is nothing to suit yet.'
-          : null;
+    : suggested.state === 'error'
+      ? 'Patterns that suit this sound could not be worked out. Close Patterns and open it again to try again.'
+      : suits && !suits.suggestions.length && ownNone
+        ? suits.reading
+          ? 'No library pattern suits this sound yet.'
+          : 'The patch is silent, so there is nothing to suit yet.'
+        : null;
 
   const openSharing = () => {
     if (panel === 'share') {
@@ -606,6 +616,12 @@ export function PatternLibrary({
         </div>
       )}
 
+      {/* What Patterns is finding, and how many it found (t-264): one status, there before anything is said. */}
+      {suggested && (
+        <span className="sr-only" role="status">
+          {pickerOpen ? findingStatus(finding ? 'reading' : suggested.state, shown) : ''}
+        </span>
+      )}
       {status && (
         <p className="kys-seq-lib-status" role="status">
           {status}
@@ -635,6 +651,12 @@ export function PatternLibrary({
             ) : soundPatterns.patterns.length === 0 ? (
               <p className="kys-seq-lib-empty">{soundPatterns.sound.name} has no patterns yet.</p>
             ) : null)}
+          {suggested?.fresher && (
+            <FresherBar
+              onTake={suggested.take}
+              focusIn='ul[aria-label="Suits this sound"] button'
+            />
+          )}
           {pickerGroups.length > 0 && (
             <SoundPatternPicker
               groups={pickerGroups}
@@ -642,6 +664,15 @@ export function PatternLibrary({
               synthId={synthId}
               onPick={openSoundPattern}
             />
+          )}
+          {finding && (
+            <div className="kys-seq-lib-browser is-patterns">
+              <section className="kys-seq-pat-group">
+                <h3 className="kys-seq-lib-label">Suits this sound</h3>
+                <p className="kys-seq-pat-note">Matching the library to the patch…</p>
+                <FindingRows heading={false} rows={4} grid />
+              </section>
+            </div>
           )}
           {suggestLine && <p className="kys-seq-lib-empty">{suggestLine}</p>}
         </>
