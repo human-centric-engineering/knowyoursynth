@@ -164,8 +164,8 @@ function rig(s960: Partial<NonNullable<MoogParams['s960']>>, follow: boolean) {
   const moves = (stage: number[]) =>
     stage.flatMap((s, i) => (i > 0 && s !== stage[i - 1] ? [i] : []));
   /** New settings for the 960, as the panel sends them. */
-  const reset960 = (o: Partial<NonNullable<MoogParams['s960']>>) =>
-    m.set({ vco: [], s960: { ...q, ...o } }, new Set(['s960a', 's960clk']), follow);
+  const reset960 = (o: Partial<NonNullable<MoogParams['s960']>>, follows = follow) =>
+    m.set({ vco: [], s960: { ...q, ...o } }, new Set(['s960a', 's960clk']), follows);
   return { m, run, moves, reset960, io };
 }
 
@@ -243,14 +243,36 @@ describe('the 960 locked to the app’s clock', () => {
     expect(t.moves(stage)).toEqual([BEAT / 2, (3 * BEAT) / 2]);
   });
 
-  it('taking the lock during a run, starts on stage 1 on the run’s grid, without walking the beats it missed', () => {
+  it('taking the lock during a run, keeps its stage and steps on the run’s grid, without walking the beats it missed', () => {
     // an oscillator until FREQUENCY RANGE comes down to a tempo, two beats into the run
     const t = rig({ hz: 100 }, true);
-    t.run(2 * BEAT, { start: true, pulses: true });
+    const free = t.run(2 * BEAT, { start: true, pulses: true });
     t.reset960({ hz: 7.94 });
     const { stage } = t.run(BEAT, { pulses: true });
-    expect(stage[0]).toBe(0);
+    expect(stage[0]).toBe(free.stage[2 * BEAT - 1]);
     expect(t.moves(stage)).toEqual([6000, 12000, 18000]);
+  });
+
+  it('pushed to a tone and back by its control input, plays on through its stages rather than back to stage 1', () => {
+    const t = rig({}, true);
+    t.run(BEAT + 3 * PULSE, { start: true, pulses: true });
+    expect(t.m.seqState()!.stage).toBe(4);
+    // a moment at a tone (+5 V: 250 Hz), shorter than a step, then back to the tempo
+    t.io.cv = 5;
+    t.run(1, { pulses: false });
+    t.io.cv = 0;
+    const { stage } = t.run(PULSE - 1);
+    expect(stage[stage.length - 1]).not.toBe(0);
+  });
+
+  it('on a start, its clock output rises with stage 1, whatever phase the clock was left at', () => {
+    // free at FREE, left late in a cycle (7.94 Hz: 6045 samples a cycle, the output low after 90 %)
+    const t = rig({}, false);
+    const free = t.run(5900);
+    expect(free.clk[5899]).toBe(0);
+    t.reset960({}, true);
+    const { clk } = t.run(PULSE, { start: true, pulses: true });
+    expect(clk[0]).toBe(5);
   });
 
   it('on a start, a STOP stage a skipped stage 1 lands on holds it', () => {

@@ -781,16 +781,20 @@ export function createMoog(
       const locked =
         follow && Math.min(q.hz * Math.exp(ev(DI.s960cv) * Math.LN2), sr) <= LOCK_MAX_HZ;
       if (locked) {
-        // A start, or the 960 taking the lock during a run (patched, or FREQUENCY RANGE turned down to a tempo): stage 1
-        // from the step the run is on. A STOP stage the skip lands on still holds it.
-        if (le === 'start' || (!sq.locked && lock.running())) {
+        // A start puts it on stage 1 (a STOP stage the skip lands on still holds it); taking the lock during a run
+        // (patched, FREQUENCY RANGE turned down to a tempo, its control input bringing it back from a tone) keeps its
+        // stage. Either way its steps are measured from the step the run is on.
+        const start = le === 'start';
+        if (start) {
           sq.st = 0;
           sq.run = true;
           if (q.mode[0] === 'skip') advance960();
+        } else if (le === 'stop') sq.run = false;
+        if (start || (!sq.locked && lock.running())) {
           sq.from = lock.beat();
           sq.at = 0;
           sq.len = 0;
-        } else if (le === 'stop') sq.run = false;
+        }
         if (lock.running()) {
           const bps = lock.bps(),
             b = lock.beat();

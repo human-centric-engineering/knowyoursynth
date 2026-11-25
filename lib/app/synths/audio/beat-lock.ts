@@ -56,8 +56,6 @@ export interface BeatLock {
   beat: () => number;
   /** The app's beats a second, from the pulses; 0 until two have arrived. */
   bps: () => number;
-  /** Forget the run (the core has gone). */
-  reset: () => void;
 }
 
 /**
@@ -126,12 +124,5 @@ export function createBeatLock(sr: number): BeatLock {
         : (base + pulses - 1 + (period > 0 ? Math.min(since / period, 1) : 0)) / CLOCK_PPQ;
   const bps = (): number => (period > 0 ? sr / (period * CLOCK_PPQ) : 0);
 
-  function reset() {
-    qStart = qStop = false;
-    qPulses = qFrom = 0;
-    run = false;
-    base = pulses = since = period = 0;
-  }
-
-  return { clock, step, running: () => run, beat, bps, reset };
+  return { clock, step, running: () => run, beat, bps };
 }

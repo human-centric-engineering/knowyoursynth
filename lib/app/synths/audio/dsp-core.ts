@@ -2331,8 +2331,8 @@ function createVoice(
             phrasePos = 0;
             phraseIdx = 0;
             phrase.pulse = 0;
-            // the clock's count starts again with the riff, so a change of engine still finds its sixteenths
-            clockPulse = 0;
+            // the riff's clock count starts again with it, so a change of engine still finds its sixteenths
+            if (phrase.clocked) clockPulse = 0;
           } else {
             stopPhrase();
           }
