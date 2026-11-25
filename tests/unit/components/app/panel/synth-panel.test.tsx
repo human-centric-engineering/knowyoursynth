@@ -710,4 +710,13 @@ describe('SynthPanel touch plates and marks', () => {
     fireEvent.pointerEnter(mark, { clientX: 5, clientY: 6, pointerType: 'mouse' });
     expect(focusStore.get()).toMatchObject({ kind: 'mark', id: 'sun', tip: true });
   });
+
+  it('draws marks under the controls, so a control inside a mark keeps its own card', () => {
+    const { container } = render(<SynthPanel {...props({ def: withPlate })} />);
+    const mark = container.querySelector('rect[aria-label="The sun"]');
+    if (!mark) throw new Error('no mark drawn');
+    const plate = screen.getByRole('button', { name: 'Plate 1' });
+    // later in the SVG is on top: the control must come after the mark
+    expect(mark.compareDocumentPosition(plate) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
