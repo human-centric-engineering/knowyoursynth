@@ -446,6 +446,11 @@ export interface ControlCommon {
   labelGap?: number;
   /** How this synth names or does it differently from most synths. */
   unusual?: string;
+  /**
+   * A control the app adds to a ported synth's panel, not on the hardware (the System 55's 960 CLOCK): the prototype
+   * has none, so the parity check leaves it and its `init` value out.
+   */
+  appOnly?: boolean;
   show?: ShowCondition | ShowCondition[];
   /** A panel mode: changes what the panel shows, never the sound. `toEngine` ignores it; the sound map skips it. */
   ui?: boolean;
@@ -849,6 +854,11 @@ export type Jack = InputJack | OutputJack;
 export interface DecorCommon {
   /** Faceplate artwork printed in the hardware view only, left out of the outline view. */
   hw?: boolean;
+  /**
+   * Print for a control the app adds to a ported synth's panel, which the prototype has none of (the System 55's 960
+   * CLOCK): left out of the prototype parity check, as the control is ({@link ControlCommon.appOnly}).
+   */
+  appOnly?: boolean;
   /**
    * A maker's mark: a logo, a wordmark or a model badge. The neutral design (D11) leaves every
    * `brand` item out, so tag each one, and nothing else.
@@ -2395,10 +2405,13 @@ export interface SubharmParams {
  * its master clock, as a MIDI clock is to the hardware. See `.context/app/sequencer-synths.md`.
  */
 export interface OwnSequencer {
-  /** The control lit when the sound uses the sequencer (the Subharmonicon's PLAY). */
+  /** The control lit when the sound uses the sequencer (the Subharmonicon's PLAY, the System 55's 960 CLOCK at BEAT). */
   run: string;
-  /** The clocks the sequencer takes a beat from a MIDI clock (the Subharmonicon: 4, a sixteenth each). */
-  ppq: number;
+  /**
+   * The clocks the sequencer takes a beat from a MIDI clock (the Subharmonicon: 4, a sixteenth each). Absent, the
+   * sequencer keeps its own rate and is locked to the beat instead (the System 55's 960, `audio/beat-lock.ts`).
+   */
+  ppq?: number;
 }
 
 /**

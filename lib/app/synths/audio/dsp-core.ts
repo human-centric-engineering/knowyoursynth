@@ -72,7 +72,8 @@ export type SynthMessage =
    * {@link CLOCK_PPQ} a beat, the run stops. The pattern player sends it while the synth's settings `follow`; the voice's
    * own riff player makes it for the Subharmonicon.
    */
-  | { type: 'clock'; at: ClockAt }
+  /** The app's clock; a start's `from` is its first pulse, counted from the run's first beat (`beat-lock.ts`). */
+  | { type: 'clock'; at: ClockAt; from?: number }
   | { type: 'offset'; semi?: number }
   /** LFO phases. A value past 1 also counts the cycles, which a `common` LFO's sample and hold is drawn from. */
   | { type: 'phase'; lfo?: number; lfo2?: number; lfo3?: number }
@@ -1037,7 +1038,7 @@ function createVoice(
     const first = !P;
     P = p;
     compile();
-    if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)));
+    if (p.moog) moog.set(p.moog, new Set((p.cables || []).map((c) => c.src)), !!p.follow);
     if (p.solar) solar.set(p.solar);
     if (p.subharm) subharm.set(p.subharm, !!p.follow);
     else subharm.off();
@@ -1362,9 +1363,51 @@ function createVoice(
     phrase!.len = Math.round(phrase!.beats * spb);
     if (old) phrasePos = Math.min(Math.round((phrasePos * phrase!.len) / old), phrase!.len - 1);
   }
+  /**
+   * The app's clock to the synth's own sequencer: the Subharmonicon's, or the Moog 960 (`f-own-sequencer`). A run's
+   * messages go to the engine that took its start; if the voice's settings move to the other engine mid-run, the first
+   * engine is stopped and the other started where the run is (the Subharmonicon only on a sixteenth, as it counts its
+   * clocks from its start), so neither is left running or waiting on a start that never comes.
+   */
+  let clockRun = false,
+    clockTo: 'moog' | 'subharm' | null = null,
+    clockPulse = 0;
+  function sendClock(to: 'moog' | 'subharm', at: ClockAt, from?: number) {
+    if (to === 'moog') moog.clock(at, from);
+    else subharm.clock(at);
+  }
+  function ownClock(at: ClockAt, from?: number) {
+    const to = P && P.moog ? 'moog' : 'subharm';
+    if (at === 'start') {
+      // a start to the other engine stops the one the last run went to
+      if (clockTo && clockTo !== to) sendClock(clockTo, 'stop');
+      clockRun = true;
+      clockTo = to;
+      clockPulse = from || 0;
+      sendClock(to, 'start', clockPulse);
+      return;
+    }
+    if (at === 'stop') {
+      if (clockTo) sendClock(clockTo, 'stop');
+      clockRun = false;
+      clockTo = null;
+      return;
+    }
+    if (!clockRun) return;
+    if (clockTo !== to) {
+      if (clockTo) sendClock(clockTo, 'stop');
+      clockTo = null;
+      if (to === 'moog' || clockPulse % (CLOCK_PPQ / SUBHARM_PPQ) === 0) {
+        clockTo = to;
+        sendClock(to, 'start', clockPulse);
+      }
+    }
+    if (clockTo) sendClock(clockTo, 'pulse');
+    clockPulse++;
+  }
   function stopPhrase(silent?: boolean) {
     if (!phrase) return;
-    if (phrase.clocked) subharm.clock('stop');
+    if (phrase.clocked) ownClock('stop');
     phrase = null;
     for (const n of Array.from(phraseHeld)) noteOff(n);
     phraseHeld.clear();
@@ -1399,7 +1442,7 @@ function createVoice(
         subharm.press(m.name);
         break;
       case 'clock':
-        subharm.clock(m.at);
+        ownClock(m.at, m.from);
         break;
       case 'offset':
         vOff = m.semi || 0;
@@ -2250,24 +2293,26 @@ function createVoice(
     for (let i = 0; i < n; i++) {
       // ── phrase player ──
       if (phrase) {
-        // The riff is the Subharmonicon's master clock, as the pattern player is (`f-own-sequencer`): a start, then
-        // pulses at CLOCK_PPQ a beat, each sent before the riff's notes on its sample so a key there finds the
-        // sequencers running.
-        if (p.subharm) {
+        // The riff is the master clock of a synth's own sequencer, as the pattern player is (`f-own-sequencer`): the
+        // Subharmonicon's, or a 960 that follows the clock. A start, then pulses at CLOCK_PPQ a beat, each sent before
+        // the riff's notes on its sample so a key there finds the sequencers running.
+        if (p.subharm || (mg && p.follow)) {
           if (!phrase.clocked) {
             phrase.clocked = true;
             // back on the synth part-way through the riff, its clock starts again on the riff's next sixteenth
             phrase.pulse =
               Math.ceil((phrasePos / phrase.spb) * SUBHARM_PPQ - 1e-6) * (CLOCK_PPQ / SUBHARM_PPQ);
-            subharm.clock('start');
+            ownClock('start', phrase.pulse);
           }
           while (Math.round((phrase.pulse * phrase.spb) / CLOCK_PPQ) <= phrasePos) {
             phrase.pulse++;
-            subharm.clock('pulse');
+            ownClock('pulse');
           }
         } else if (phrase.clocked) {
-          // the voice has left the Subharmonicon (`off()` ended its run): a start is owed if it comes back
+          // the voice no longer follows (it has left the Subharmonicon, or the 960 is at FREE): its run ends, and a start
+          // is owed if it comes back
           phrase.clocked = false;
+          ownClock('stop');
         }
         const evs = phrase.evs;
         while (phraseIdx < evs.length && evs[phraseIdx].t! <= phrasePos) {
@@ -2286,6 +2331,8 @@ function createVoice(
             phrasePos = 0;
             phraseIdx = 0;
             phrase.pulse = 0;
+            // the riff's clock count starts again with it, so a change of engine still finds its sixteenths
+            if (phrase.clocked) clockPulse = 0;
           } else {
             stopPhrase();
           }

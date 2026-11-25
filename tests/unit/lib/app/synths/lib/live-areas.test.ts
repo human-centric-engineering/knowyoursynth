@@ -92,8 +92,9 @@ describe('liveAreas on Model D', () => {
 
 describe('liveAreas on a section of jacks alone', () => {
   it('lights all of a section whose jacks are one block’s once one of them is patched', () => {
-    // The System 55's output module: L and R, both the app output's.
-    const { def, r } = load('system-55');
+    // The System 35's output module: L and R, both the app output's. (The System 55's also carries the app's 960
+    // CLOCK switch, so it is no longer jacks alone.)
+    const { def, r } = load('system-35');
     const { cells } = panelCells(def, ['j.out.l'], def.init);
     expect(cells['j.out.r']).toBeTruthy();
     const out = liveAreas(def, r, ['j.out.l'], def.init).find((a) => a.id === 'appout');

@@ -152,7 +152,11 @@ function spread(min: number, max: number, count: number): number[] {
   );
 }
 
-/** The panel settings the grid covers: `init`, then each control moved on its own across its values. */
+/**
+ * The panel settings the grid covers: `init`, then each control moved on its own across its values. A control the app
+ * adds to a ported panel (`appOnly`, the System 55's 960 CLOCK) is left at `init`: the prototype the goldens are
+ * recorded from has none, so it is tested beside its own code instead.
+ */
 export function settings(def: SynthDef): [key: string, values: ControlValues][] {
   const out: [string, ControlValues][] = [['init', def.init]];
   const add = (id: string, value: ControlValue): void => {
@@ -160,6 +164,7 @@ export function settings(def: SynthDef): [key: string, values: ControlValues][] 
       out.push([`${id}=${JSON.stringify(value)}`, { ...def.init, [id]: value }]);
   };
   for (const c of def.controls) {
+    if (c.appOnly) continue;
     if (c.kind === 'cont') spread(c.min, c.max, 5).forEach((v) => add(c.id, v));
     else if (c.kind === 'enum') c.options.forEach((o) => add(c.id, o.v));
     else add(c.id, !def.init[c.id]);

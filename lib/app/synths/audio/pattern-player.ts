@@ -503,7 +503,7 @@ export function withPatterns(synth: Synth, sr: number, onEvent: SynthEventHandle
         // beat as the backing's bar does, and the first is the next one on a sixteenth: the synth counts its clocks from
         // its start, so they fall on the drums' grid
         pulse = Math.ceil((beatsDone + pos / spb()) * SUBHARM_PPQ - 1e-6) * PULSES_PER_CLOCK;
-        synth.handle({ type: 'clock', at: 'start' });
+        synth.handle({ type: 'clock', at: 'start', from: pulse });
       }
       while (pulseAt() <= pos) {
         pulse++;

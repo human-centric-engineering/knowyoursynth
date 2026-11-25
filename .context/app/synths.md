@@ -212,6 +212,12 @@ friends, listed on `DecorFill`). `led` lights by `litWhen` (see `LitWhen`).
 `registry.test.ts` fails on any `logo` without the tag; a wordmark drawn as `text` has to be
 tagged by hand.
 
+**Tag what the app adds to a ported panel `appOnly: true`**, on the control and on each item of its print: a
+control the hardware does not have, such as the System 55's 960 CLOCK switch (`.context/app/sequencer-synths.md`).
+The prototype parity check in `check:synths`, the goldens grid and the Default patch checklist leave `appOnly`
+controls out (and the control's `init` value), so an untagged one fails all three against a prototype that never had
+it.
+
 **A panel printed in another language keeps its own lettering** and carries a `translation`:
 the language (`'Russian'`) and an `english` table keyed by whole printed strings (a control's
 `label`, an option or scale label, a `text`, `frame` or `tab` string, `\n` included). The foot

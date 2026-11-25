@@ -11,6 +11,7 @@ import {
   HP,
   ROW_H,
   SYSTEM_THEME,
+  FOLLOW_960,
   appOut,
   blank,
   caseWordmark,
@@ -90,7 +91,7 @@ m903a(rack, X(86), BOT);
 cp35(rack, X(90), BOT);
 m961(rack, X(111), BOT);
 m962(rack, X(132), BOT);
-appOut(rack, X(140), BOT, 8, 'BP8');
+appOut(rack, X(140), BOT, 8, 'BP8', { follow960: true });
 
 const { controls, jacks, decor, areas } = rack;
 const H = BOT + ROW_H + 64;
@@ -124,6 +125,8 @@ const system55: SynthDef & { version: number } = {
   init: initOf(controls),
   defaultPatch: moog900DefaultPatch(controls),
   toEngine: (v) => rackToEngine(rack, v),
+  // the 960 locks to the app's clock at BEAT (`f-own-sequencer`): switched there while nothing plays, it presses Play
+  ownSequencer: { run: FOLLOW_960 },
 };
 
 export default system55;

@@ -125,7 +125,8 @@ const isBaseline = (v: unknown): v is Baseline =>
  * the `brand` tags, what it says about a control or area (`help`, which says how the app works: the sequencer took
  * over the riff's transport in t-80, and the sequencer synths' buttons in t-85), and the buttons that drive the app's
  * sequencer (`seqButtons`), which the prototype has no sequencer for, and the Default patch (`defaultPatch`), which the
- * prototype never had, and the wheels a pattern's lanes play (`performance`). A control may also gain a `name`
+ * prototype never had, and the wheels a pattern's lanes play (`performance`), and what the app adds to a panel: a
+ * control (`appOnly`, with its print and its `init` value) and the sequencer it runs (`ownSequencer`). A control may also gain a `name`
  * where the prototype's has none, so the app and the lesson text show what it is rather than its id (t-192); a name
  * the prototype gives must still match. None of these changes the sound.
  */
@@ -144,7 +145,20 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
     // the wheels a pattern's lanes can play (`f-performance-wheels`): the prototype has no lanes, and the baseline
     // renders with the wheels at rest, as they are before anyone touches them
     'performance',
+    // a synth's own sequencer on the app's clock (`f-own-sequencer`): the prototype's free-runs
+    'ownSequencer',
   ]);
+  // the controls the app adds to a ported panel (the System 55's 960 CLOCK, t-291), their print and their init values
+  const appOwn = new Set(ported.controls.filter((c) => c.appOnly).map((c) => c.id));
+  const own = (def: SynthDef): SynthDef =>
+    appOwn.size === 0
+      ? def
+      : {
+          ...def,
+          controls: def.controls.filter((c) => !c.appOnly),
+          decor: def.decor.filter((d) => !d.appOnly),
+          init: Object.fromEntries(Object.entries(def.init).filter(([k]) => !appOwn.has(k))),
+        };
   // The modular case's rows are the app's own too, re-packed without their blank plates (t-232); they are cut from the
   // long panel, which is still compared here, as is the rest of the `modular` spec.
   const plain = (def: SynthDef): unknown =>
@@ -173,7 +187,7 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
     }
     return a === b ? null : `${path}: ${JSON.stringify(a)}, the prototype has ${JSON.stringify(b)}`;
   };
-  return diff(plain(ported), plain(prototype), '');
+  return diff(plain(own(ported)), plain(prototype), '');
 }
 
 /**

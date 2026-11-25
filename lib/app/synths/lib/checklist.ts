@@ -28,9 +28,12 @@ export function patternTest(pattern: string): (id: string) => boolean {
   return (id) => re.test(id);
 }
 
-/** The controls the checklist has to cover: every one that shapes the sound and is on the panel, not behind a menu. */
+/**
+ * The controls the checklist has to cover: every one that shapes the sound and is on the panel, not behind a menu, and
+ * on the hardware (an `appOnly` control is not there to set).
+ */
 export const checklistRequired = (def: SynthDef): Control[] =>
-  def.controls.filter((c) => !c.ui && !c.deep);
+  def.controls.filter((c) => !c.ui && !c.deep && !c.appOnly);
 
 /**
  * The controls a step covers, in panel order: every control its patterns match, `ui` ones aside. A `*` pattern leaves

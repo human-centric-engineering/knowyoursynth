@@ -19,9 +19,9 @@ clock:
   (`SynthMessage`), pulses at `CLOCK_PPQ` (24) a beat counted from the run's first beat. The page's pattern player
   sends it while the synth's settings carry `follow` (`pattern-player.ts`): start on the loop's first sample, after
   the count-in, then each pulse on its own sample before the notes there, and stop when the pattern stops or is
-  muted. The voice's own riff player sends it to the Subharmonicon (`dsp-core.ts`), so the synth check, the goldens
-  and a lesson's Replay hear what the page plays.
-- **The core counts the pulses down to its own clock**: the Subharmonicon's is every sixth (`SUBHARM_PPQ` 4, a
+  muted. The voice's own riff player sends it to the Subharmonicon and to a 960 that follows (`dsp-core.ts`), so
+  the synth check, the goldens and a lesson's Replay hear what the page plays.
+- **The core counts the pulses down to its own clock** (or locks its own rate to the beat: below): the Subharmonicon's is every sixth (`SUBHARM_PPQ` 4, a
   sixteenth each). Start brings the sequencers and rhythm generators back to step 1 and the downbeat and runs them
   if PLAY is lit; Stop stops them. Lighting PLAY inside a run starts them on the next clock.
 - **`follow`**: the definition's `toEngine()` sets `EngineParams.follow`, so a lit PLAY waits for the clock rather
@@ -34,6 +34,41 @@ clock:
 
 What is the app's, where the manual is silent: the riff and pattern players reset the sequencers at every start (a
 MIDI Start), and while the sequencers run a key never holds the envelopes open, and fires them only with EG off.
+
+## Two ways to follow: counting pulses, or locking to the beat
+
+A core follows the clock in one of two ways. Choose by what the hardware's own clock control is.
+
+|                              | Pulse counting                                                                                 | Beat locking                                                                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Fits**                     | A clock control that is a tempo, and hardware that takes MIDI clock: the Subharmonicon's TEMPO | A free-running oscillator with no tempo on it: the 960's FREQUENCY RANGE and VERNIER, the Easel's and the Solar 42N's pulsers  |
+| **How**                      | The core takes every n-th of the 24 pulses as its own clock (`SUBHARM_PPQ` 4: every sixth)     | The core keeps its own rate as a request, and each step lasts the nearest whole division of the beat, measured from the pulses |
+| **The panel's rate control** | The app's tempo (`SynthDef.tempo`, `tempoMap`)                                                 | How many steps a beat; the tempo is the bar's                                                                                  |
+| **Code**                     | The core's own `clock()`                                                                       | `audio/beat-lock.ts`: `createBeatLock`, `snapStep`, `snapStage`                                                                |
+
+**Beat locking** (t-291, the System 55's 960; the Easel and Solar 42N reuse it). While the sound follows:
+
+- **Start** puts the sequencer on stage 1 at the run's first beat; **Stop** holds it where it is, and its clock
+  output goes quiet.
+- **Its rate snaps** to a whole number of steps a beat (1 to 24), or below one a beat to a whole number of beats a
+  step. The rate the knobs set is read again at each step, so a control voltage on the clock moves it in whole
+  divisions. A near miss (3.97 steps a beat) becomes exact and never drifts against the drums.
+- **A rate that changes stage by stage** (the 960's row C timing) snaps each stage to whole pulses, a 24th of a beat,
+  so a gallop's long and short stages keep their ratio, tightened to the beat.
+- **A STOP stage holds until the next Start**; the beat keeps counting meanwhile, so the next start, or OSC ON, finds
+  it.
+- **A clock faster than `LOCK_MAX_HZ` (20 Hz) is an oscillator**, not a tempo, and runs free.
+- **A sound can stay free.** On the System 55 that is the app-only 960 CLOCK switch (`out.follow960`, on the
+  output's blank panel, marked `appOnly`): FREE, the default, runs the 960 as the hardware does, so a hand-made
+  patch behaves as it would on the real system; BEAT sets `follow`. It is the definition's `ownSequencer.run`, so a
+  lesson step switching it to BEAT presses Play, as the Subharmonicon's PLAY does. `appOnly` keeps the switch out of
+  the prototype parity check, the goldens grid and the hardware Default patch checklist.
+
+**Choosing per sound.** Follow wherever the sequence is a rhythm the drums should share. Leave it free, and say why in
+the switch's context line, when the speed itself moves (a control voltage that surges or accelerates the clock), or
+the clock is an oscillator. Where a sound's riff is only a held note and its tempo sat far from the sequencer's
+speed, set the riff's BPM so the sequencer lands on a whole division (the System 55's Berlin sequence: 83 BPM, four
+steps a beat), rather than letting the snap change how fast it plays.
 
 ## Who plays a sound
 
@@ -93,9 +128,11 @@ that passes the pattern library's rules.
 ## Bringing another synth onto it
 
 1. Its core takes `clock()` (start, pulse, stop) and runs its sequencer on it: its own clocks a beat from the 24
-   pulses, start from its first step, stop on stop.
+   pulses, or, for a clock with no tempo control, a beat lock (`createBeatLock`) and its rate snapped to the beat;
+   start from its first step, stop on stop.
 2. Its `toEngine()` sets `follow: true`, and the core holds its run control's start until a clock starts while
    `follow` is set.
-3. Its definition names `ownSequencer` (`run`, `ppq`) and, if it has a tempo control, `tempo` and `tempoMap`.
+3. Its definition names `ownSequencer` (`run`, and `ppq` when it counts pulses) and, if it has a tempo control,
+   `tempo` and `tempoMap`. The voice's riff player must clock the core too (`ownClock` in `dsp-core.ts`).
 4. Its keys transpose a running sequence, and leave the envelopes to the steps while the steps fire them.
 5. Its sounds follow the method above.
