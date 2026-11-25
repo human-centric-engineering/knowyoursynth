@@ -384,10 +384,11 @@ describe('Suits this sound', () => {
         state = suggested.state;
         const { want } = suggested;
         useEffect(() => {
-          want(picker);
           let raf = 0;
           const turn = () => {
             frame += 1;
+            // opened once the glide is under way: a panel untouched since the page opened would be read at once
+            if (frame === 1) want(picker);
             setPanel({
               values: { ...FAR.values, 'filter.cutoff': frame / FRAMES },
               cables: FAR.cables,
