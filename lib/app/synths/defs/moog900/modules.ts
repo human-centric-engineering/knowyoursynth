@@ -1843,7 +1843,7 @@ export function appOut(
   r.decor.push({
     t: 'rect',
     x: cx - 52,
-    y: y0 + 56,
+    y: y0 + 96,
     w: 104,
     h: 150,
     r: 8,
@@ -1854,10 +1854,10 @@ export function appOut(
   });
   (
     [
-      ['OUTPUT', 76, 12, 700],
-      ['THIS APP ONLY', 92, 8, 600],
-      ['NOT ON THE', 188, 7, 500],
-      ['HARDWARE', 197, 7, 500],
+      ['OUTPUT', 116, 12, 700],
+      ['THIS APP ONLY', 132, 8, 600],
+      ['NOT ON THE', 228, 7, 500],
+      ['HARDWARE', 237, 7, 500],
     ] as const
   ).forEach(([text, y, size, weight]) =>
     r.decor.push({
@@ -1880,7 +1880,7 @@ export function appOut(
     r.decor.push({
       t: 'text',
       x,
-      y: y0 + 120,
+      y: y0 + 160,
       text: s,
       size: 9,
       anchor: 'middle',
@@ -1890,7 +1890,7 @@ export function appOut(
     r.jacks.push({
       id: `j.out.${s.toLowerCase()}`,
       x,
-      y: y0 + 142,
+      y: y0 + 182,
       r: 10,
       labelPos: 'none',
       label: `OUTPUT ${s}`,
@@ -1915,12 +1915,11 @@ export function appOut(
 
 /** The 960's FREE / BEAT switch, under the app's output on its panel (`appOut`). */
 function follow960Switch(r: Rack, cx: number, y0: number): void {
+  // between the output block (which ends at y0+246, where the prototype has it) and the blank panel's label
+  const box = { x: cx - 52, y: y0 + 250, w: 104, h: 68 };
   r.decor.push({
     t: 'rect',
-    x: cx - 52,
-    y: y0 + 218,
-    w: 104,
-    h: 78,
+    ...box,
     r: 8,
     fill: 'none',
     stroke: '#e0a040',
@@ -1933,15 +1932,16 @@ function follow960Switch(r: Rack, cx: number, y0: number): void {
     id: 'out.follow960.box',
     name: '960 CLOCK (app only)',
     module: 'mod',
+    appOnly: true,
     help: 'Not on the hardware: the app’s switch for how the 960 sequencer keeps time. At FREE it runs on its own clock, as the real one does, and drifts against the drums. At BEAT it keeps to the app’s tempo: Play starts it on stage 1, its steps land on the beat, and Stop stops it.',
-    rect: { x: cx - 52, y: y0 + 218, w: 104, h: 78 },
+    rect: box,
   });
   (
     [
-      ['960 CLOCK', cx, 236, 9, 700],
-      ['FREE', cx - 36, 264, 7, 600],
-      ['BEAT', cx + 36, 264, 7, 600],
-      ['THIS APP ONLY', cx, 288, 7, 500],
+      ['960 CLOCK', cx, 265, 9, 700],
+      ['FREE', cx - 36, 291, 7, 600],
+      ['BEAT', cx + 36, 291, 7, 600],
+      ['THIS APP ONLY', cx, 311, 7, 500],
     ] as const
   ).forEach(([text, x, y, size, weight]) =>
     r.decor.push({
@@ -1960,7 +1960,7 @@ function follow960Switch(r: Rack, cx: number, y0: number): void {
     id: FOLLOW_960,
     type: 'rocker',
     x: cx,
-    y: y0 + 261,
+    y: y0 + 288,
     w: 30,
     h: 16,
     color: 'black',

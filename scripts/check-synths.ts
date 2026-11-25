@@ -157,6 +157,8 @@ function definitionDrift(ported: SynthDef, prototype: SynthDef): string | null {
           ...def,
           controls: def.controls.filter((c) => !c.appOnly),
           decor: def.decor.filter((d) => !d.appOnly),
+          // the app's own marks go; a synth left with none compares as having none, as the prototype's does
+          marks: ((ms) => (ms?.length ? ms : undefined))(def.marks?.filter((m) => !m.appOnly)),
           init: Object.fromEntries(Object.entries(def.init).filter(([k]) => !appOwn.has(k))),
         };
   // The modular case's rows are the app's own too, re-packed without their blank plates (t-232); they are cut from the
