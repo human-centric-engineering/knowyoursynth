@@ -46,7 +46,7 @@ export interface PatternPickerProps {
   /** The sound's own patterns, or null with no library sound on the panel. */
   own: SoundPatterns | null;
   /** The library, ranked for the patch. */
-  ranked: RankedPatterns;
+  ranked: Pick<RankedPatterns, 'state' | 'result'>;
   /** The library pattern the sequencer holds as it came, if it holds one: marked in the list. */
   current: string | null;
   /** Loads a pattern into the sequencer (`seq.load`): the pattern now held, or null if it was refused. */

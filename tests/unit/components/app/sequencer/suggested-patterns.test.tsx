@@ -22,7 +22,9 @@ import {
   useSuggestedPatterns,
   type PanelState,
   type SuggestState,
+  type SuggestedPatterns,
 } from '@/components/app/sequencer/use-suggested-patterns';
+import { usePatchReadings } from '@/components/app/sequencer/use-patch-answer';
 import { apiClient } from '@/lib/api/client';
 import { importPhrase } from '@/lib/app/sequencer/import';
 import { patternFacts } from '@/lib/app/patterns/library-facts';
@@ -119,6 +121,8 @@ const HELD = view(
 );
 
 let suggestState: SuggestState = 'off';
+/** The hook's answer as last rendered. */
+let suggestedNow: SuggestedPatterns | null = null;
 const START = { slug: BASS.id, panel: () => presetState(DEF, BASS) };
 
 /** A library sound (`fromLibrary`) or another patch on the panel, at `panel`. */
@@ -141,7 +145,9 @@ function Page({
     fromLibrary ? { synthId: 'model-d', slug: BASS.id, name: BASS.name, defaultId: OWN.id } : null,
     true
   );
+  const readings = usePatchReadings();
   const suggested = useSuggestedPatterns({
+    readings,
     synthId: 'model-d',
     def: DEF,
     panel,
@@ -149,6 +155,7 @@ function Page({
     ownPatterns: soundPatterns?.patterns?.length ?? null,
   });
   suggestState = suggested.state;
+  suggestedNow = suggested;
   if (!open) return null;
   return (
     <Sequencer
@@ -189,6 +196,7 @@ beforeEach(() => {
   server.own = [OWN];
   server.suits = [HELD];
   suggestState = 'off';
+  suggestedNow = null;
 });
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -324,14 +332,21 @@ describe('Suits this sound', () => {
     expect(screen.getByText('No library pattern suits this sound yet.')).toBeTruthy();
   });
 
-  it('takes away what suited the patch before while the new one is read', async () => {
+  it('holds what suits the patch while the picker is open, and offers the list for a patch moved far', async () => {
     const { rerender } = render(<Page panel={FAR} fromLibrary={false} />);
     await open('Patterns that suit this sound');
     await waitForState('ready');
+    const before = suggestedNow?.result;
     rerender(<Page panel={AS_IT_CAME} fromLibrary={false} />);
-    expect(suggestState).toBe('reading');
-    expect(screen.queryByRole('list', { name: 'Suits this sound' })).toBeNull();
-    await waitForState('ready');
+    // Asked again for the patch as it is now, and offered rather than swapped in under the pointer.
+    await waitFor(() => expect(suggestedNow?.fresher).toBeTruthy(), { timeout: 5000 });
+    expect(post()).toHaveBeenCalledTimes(2);
+    expect(suggestState).toBe('ready');
+    expect(suggestedNow?.result).toBe(before);
+    const fresher = suggestedNow?.fresher;
+    act(() => suggestedNow?.take());
+    expect(suggestedNow?.result).toBe(fresher);
+    expect(suggestedNow?.fresher).toBeNull();
   });
 
   it('takes a lesson step of a library sound as it came, not as moved far from the finished sound', async () => {
@@ -358,7 +373,9 @@ describe('Suits this sound', () => {
       let state: SuggestState = 'off';
       function Gliding() {
         const [panel, setPanel] = useState(FAR);
+        const readings = usePatchReadings();
         const suggested = useSuggestedPatterns({
+          readings,
           synthId: 'model-d',
           def: DEF,
           panel,
@@ -367,10 +384,11 @@ describe('Suits this sound', () => {
         state = suggested.state;
         const { want } = suggested;
         useEffect(() => {
-          want(picker);
           let raf = 0;
           const turn = () => {
             frame += 1;
+            // opened once the glide is under way: a panel untouched since the page opened would be read at once
+            if (frame === 1) want(picker);
             setPanel({
               values: { ...FAR.values, 'filter.cutoff': frame / FRAMES },
               cables: FAR.cables,

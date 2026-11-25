@@ -52,8 +52,11 @@ vi.mock('@/lib/auth/client', () => ({
     isPending: false,
   }),
 }));
-vi.mock('@/lib/app/patterns/suggest-detect', () => ({
+vi.mock('@/lib/app/patterns/suggest-detect', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/app/patterns/suggest-detect')>()),
   createKindReader: () => ({
+    onPageThread: false,
+    warm: () => undefined,
     // a whole reading, so how far the patch is from its sound (`movedFar`) can be worked out
     read: async () => ({
       silent: false,

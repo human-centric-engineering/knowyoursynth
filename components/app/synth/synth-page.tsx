@@ -141,6 +141,7 @@ import {
 import { RIFF_FALLBACK } from '@/lib/app/patterns/riff-name';
 import { useSoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { useSuggestedPatterns } from '@/components/app/sequencer/use-suggested-patterns';
+import { usePatchReadings } from '@/components/app/sequencer/use-patch-answer';
 import { PatternPicker } from '@/components/app/synth/pattern-picker';
 import { useBacking, useBackingPref } from '@/components/app/sequencer/use-backing';
 import { useRankedPatterns } from '@/components/app/synth/use-ranked-patterns';
@@ -1193,6 +1194,25 @@ function Synth({
   }, [mapOn, synthDef, sess.values, sess.cables, wheel, probeLow, probeHigh, soundKey]);
 
   const heldRef = useRef(new Set<number>());
+  // Whether a note is sounding from the keys, the arp or MIDI in: a key down, an arp key held, or a note under Hold. The
+  // pattern pickers work nothing out in the background meanwhile (`f-pattern-prefetch` t-263). Set only when it
+  // changes, as the keys move on every note.
+  const [sounding, setSoundingNow] = useState(false);
+  const soundingRef = useRef(false);
+  const setSounding = useCallback((on: boolean) => {
+    if (soundingRef.current === on) return;
+    soundingRef.current = on;
+    setSoundingNow(on);
+  }, []);
+  const syncSounding = useCallback(
+    (holding: boolean) =>
+      setSounding(
+        downRef.current.size > 0 ||
+          seqTook.current.size > 0 ||
+          (holding && heldRef.current.size > 0)
+      ),
+    [setSounding]
+  );
   // The keys down now, held or not, as presses per note (a MIDI key and a computer key can both be on one note): under
   // Hold, a note pressed while another is down joins the chord.
   const downRef = useRef(new Map<number, number>());
@@ -1210,6 +1230,7 @@ function Synth({
       void ensureAudio();
       if (noteToSeq.current(n, v)) {
         seqTook.current.set(n, (seqTook.current.get(n) ?? 0) + 1);
+        setSounding(true);
         return;
       }
       // The page sounds this one: an arp count left for the note (a release that never arrived) is not its release.
@@ -1224,8 +1245,9 @@ function Synth({
       }
       downRef.current.set(n, (downRef.current.get(n) ?? 0) + 1);
       engine.send({ type: 'noteOn', n, v });
+      setSounding(true);
     },
-    [engine, ensureAudio, hold, isLoading]
+    [engine, ensureAudio, hold, isLoading, setSounding]
   );
   // Hold keeps only the notes started under it: one already sounding when Hold went on still stops when released.
   const noteOff = useCallback(
@@ -1237,6 +1259,7 @@ function Synth({
           seqTook.current.delete(n);
           seqNoteOut.current(n);
         }
+        syncSounding(hold);
         return;
       }
       seqNoteOut.current(n);
@@ -1248,8 +1271,9 @@ function Synth({
       }
       downRef.current.delete(n);
       if (!hold || !heldRef.current.has(n)) engine?.send({ type: 'noteOff', n });
+      syncSounding(hold);
     },
-    [engine, hold]
+    [engine, hold, syncSounding]
   );
   const setHoldMode = (h: boolean) => {
     setHold(h);
@@ -1263,6 +1287,7 @@ function Synth({
       downRef.current.clear();
       seqTook.current.clear();
     }
+    syncSounding(h);
   };
 
   const rememberMidi = useCallback((v: boolean) => writeStored(STORAGE_KEYS.midi, v), []);
@@ -1776,7 +1801,12 @@ function Synth({
     () => ({ values: sess.values, cables: sess.cables }),
     [sess.values, sess.cables]
   );
+  // One sound detector for both pickers, which work nothing out in the background while anything plays (t-263).
+  const patchReadings = usePatchReadings();
+  const busy = transportPlaying || sounding;
   const suggested = useSuggestedPatterns({
+    readings: patchReadings,
+    busy,
     synthId,
     def: synthDef,
     panel: suggestPanel,
@@ -1786,6 +1816,8 @@ function Synth({
   });
   // Under the sound's own, the whole library ranked for the patch, read while the picker is open.
   const ranked = useRankedPatterns({
+    readings: patchReadings,
+    busy,
     synthId,
     def: synthDef,
     panel: suggestPanel,
@@ -2028,6 +2060,7 @@ function Synth({
       heldRef.current.clear();
       seqTook.current.forEach((_, n) => seqNoteOut.current(n));
       seqTook.current.clear();
+      setSounding(false);
       if (playing) holdForLoad('riff');
       else if (seq.playing) holdForLoad('pattern');
     };

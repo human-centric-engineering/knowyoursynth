@@ -18,6 +18,9 @@ import {
   type PatternPickerProps,
 } from '@/components/app/synth/pattern-picker';
 import type { RankedPatterns } from '@/components/app/synth/use-ranked-patterns';
+
+/** What the picker reads of the hook. */
+type Ranked = Pick<RankedPatterns, 'state' | 'result'>;
 import type { SoundPatterns } from '@/components/app/sequencer/use-sound-patterns';
 import { apiClient } from '@/lib/api/client';
 import { newPattern } from '@/lib/app/sequencer/pattern';
@@ -105,7 +108,7 @@ const SECTIONS: RankSection[] = [
   { role: 'arp', label: 'Arpeggio', share: 0.05, patterns: [] },
   { role: 'chord_stabs', label: 'Chord stabs', share: 0.05, patterns: [CHORD] },
 ];
-const READY: RankedPatterns = {
+const READY: Ranked = {
   state: 'ready',
   result: {
     category: 'lead',
@@ -129,7 +132,7 @@ function Picker({
   startOpen = true,
 }: {
   own?: SoundPatterns | null;
-  ranked?: RankedPatterns;
+  ranked?: Ranked;
   load?: Mock<LoadFn>;
   onPicked?: () => void;
   sheet?: boolean;

@@ -1483,18 +1483,19 @@ old name for the links to it. The rest of the sequencer's strip is unchanged.
 - **Then the library's patterns of the patch's category** ([By category](#by-category)), from
   [`/rank`](#the-whole-library), in its sections. `useRankedPatterns`
   (`components/app/synth/use-ranked-patterns.ts`) reads the patch once the panel has settled (`SETTLE_MS` since it
-  last changed, waiting again if it changes before then, as a patch's glide does), in the probe worker
-  (`createKindReader`), and asks `/rank` with the features and the library sound
+  last changed, waiting again if it changes before then, as a patch's glide does), in the probe worker, and asks
+  `/rank` with the features and the library sound
   the patch started as, which leaves that sound's own out. There is no `movedFar` gate: the sound's own lead the list
   anyway. It reads the start sound too, once per start, and says `asCame` while the patch is not moved far from it
-  (or could not be read), so `/rank` limits the list to that sound's tag. A panel unchanged since it was last read is not read again, and each reading's answer is kept for the
-  visit (up to 50).
+  (or could not be read), so `/rank` limits the list to that sound's tag. A panel holding the start sound's values and
+  cables is that sound's reading, not a second one. When it reads is
+  [Found in the background](#found-in-the-background).
 - **While it is read**, the sound's own show and a line says the patch is being listened to. A reading that fails is
   asked for without features, which `/rank` lists by role and name, so the sections always come. A read of `/rank`
   that fails says so; closing and opening the picker tries again. While one of the user's sounds is still loading, a
   line says the picker is waiting for it.
-- **The order holds while it is open.** The panel is read when the picker opens, not as it changes, so nothing moves
-  under the pointer. Opened again after the patch has moved, it is ranked again.
+- **The order holds while it is open.** Nothing moves under the pointer. A patch moved far while it is open is ranked
+  again, and the new list is offered (the hook's `fresher`, taken with `take`), not swapped in.
 - **Each section shows its best five** (`SECTION_FEW`), its count in its heading, and **Show all N**. An empty section
   is not drawn. Above the sections, a line says what the patch was heard as (the reading's summary).
 - **The search** filters the sound's own and every section by name and Inspired by: every word typed has to be in
@@ -1827,10 +1828,29 @@ after the refresh it starts.
 - **A library sound whose list is empty** brought no patterns of its own, so it is offered them at once.
 - **Anything else on the panel** (one of the user's sounds, a shared one, the tutor's) shows Suits this sound at once,
   under a Patterns button of its own.
-- **Only while the picker is open**, and only once the panel settles: 800 ms after the last change
-  (`useSuggestedPatterns`). A knob turned and turned again asks once, when it stops. The detector is deterministic, so
-  the same patch reads the same, and an answer is kept for the visit: a patch that comes back to where it was asks
-  nothing.
+- **Once the panel settles**: 800 ms after the last change (`useSuggestedPatterns`). A knob turned and turned again asks
+  once, when it stops. The detector is deterministic, so the same patch reads the same, and an answer is kept for the
+  visit: a patch that comes back to where it was asks nothing. When it reads, and what an open picker shows meanwhile,
+  are as for the Play deck's picker: [Found in the background](#found-in-the-background).
+
+#### Found in the background
+
+t-263 (`f-pattern-prefetch`). Both pickers' hooks sit on `usePatchAnswer`
+(`components/app/sequencer/use-patch-answer.ts`), and share one sound detector for the page (`usePatchReadings` over
+`createPatchReadings` and `createKindReader`, `lib/app/patterns/suggest-detect.ts`): one probe worker, one reading at a
+time, and a panel read once whichever picker asks.
+
+- **Prepared with the picker closed.** Once the panel has settled and nothing has played for `QUIET_MS` (1.5 s), the
+  patch is read and asked about at idle (`requestIdleCallback`). Opening then shows the answer with nothing more asked.
+- **Never while anything plays.** The page passes `busy`: the transport, or a note sounding from the keys, the arp or
+  MIDI in (a key down, an arp key held, a note under Hold). A reading or request not started when it turns true is not
+  started. Where the detector reads on the page's thread (workers blocked), nothing is prepared at all. The worker is
+  started with the page (`warm`), so a blocked one is known before the first reading.
+- **Asked again on a far move.** An answer keeps the reading it was found for; a later reading `movedFar` from it is
+  asked about again, a nearer one keeps it.
+- **Opened while something plays**, the patch is read at once, in the worker: off the page's thread and the audio
+  thread. Where the detector is on the page's thread, the Play deck's picker ranks without a reading (role and name)
+  and reads once quiet, showing the list for the patch in its place then; Suits this sound waits for quiet.
 
 #### The ranking
 

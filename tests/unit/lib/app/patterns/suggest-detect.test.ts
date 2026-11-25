@@ -9,8 +9,17 @@
  * @see lib/app/patterns/suggest-detect.ts
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createKindReader, KIND_WORKER_TIMEOUT_MS } from '@/lib/app/patterns/suggest-detect';
+import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
+import {
+  createKindReader,
+  createPatchReadings,
+  KIND_WORKER_TIMEOUT_MS,
+  ReadSkipped,
+  samePanel,
+  type KindReader,
+} from '@/lib/app/patterns/suggest-detect';
+import { getSynthDef } from '@/lib/app/synths/defs';
+import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import type { ProbeWorkerRequest } from '@/lib/app/synths/audio/probe';
 import { soundFeatures } from '@/lib/app/synths/lib/soundkind';
 import { monoParams } from '@/tests/unit/lib/app/synths/audio/render';
@@ -170,5 +179,165 @@ describe('createKindReader', () => {
     const reading = reader.read(PATCH);
     reader.dispose();
     await expect(reading).rejects.toThrow('disposed');
+  });
+});
+
+describe('one reading at a time (t-263)', () => {
+  it('sends the next reading only once the one before it has answered', async () => {
+    mode = 'silent';
+    const reader = createKindReader();
+    const first = reader.read(PATCH);
+    const second = reader.read(PATCH);
+    await Promise.resolve();
+    expect(sent).toHaveLength(1);
+    workers[0].onmessage?.({ data: { type: 'kind', id: 0, features: FEATURES } } as MessageEvent);
+    expect(await first).toEqual(FEATURES);
+    await vi.waitFor(() => expect(sent).toHaveLength(2));
+    workers[0].onmessage?.({ data: { type: 'kind', id: 1, features: FEATURES } } as MessageEvent);
+    expect(await second).toEqual(FEATURES);
+  });
+
+  it('skips a reading still waiting its turn once its signal is aborted', async () => {
+    const reader = createKindReader();
+    const ctl = new AbortController();
+    const first = reader.read(PATCH);
+    const second = reader.read(PATCH, { signal: ctl.signal });
+    ctl.abort();
+    expect(await first).toEqual(FEATURES);
+    await expect(second).rejects.toEqual(new ReadSkipped('aborted'));
+    expect(sent).toHaveLength(1);
+  });
+
+  it('knows a host blocks workers once warmed, before anything is read', () => {
+    vi.stubGlobal('Worker', undefined);
+    const reader = createKindReader();
+    expect(reader.onPageThread).toBe(false);
+    reader.warm();
+    expect(reader.onPageThread).toBe(true);
+  });
+
+  it('starts its worker when warmed, and reads through that one', async () => {
+    const reader = createKindReader();
+    reader.warm();
+    expect(workers).toHaveLength(1);
+    expect(await reader.read(PATCH)).toEqual(FEATURES);
+    expect(workers).toHaveLength(1);
+  });
+
+  it('skips background work rather than read it on the page’s thread', async () => {
+    vi.stubGlobal('Worker', undefined);
+    const reader = createKindReader();
+    await expect(reader.read(PATCH, { background: true })).rejects.toBeInstanceOf(ReadSkipped);
+    expect(reader.onPageThread).toBe(true);
+    // what someone is waiting on is still read
+    expect(await reader.read(PATCH)).toEqual(FEATURES);
+  });
+
+  it('skips background work waiting on a worker that gives up', async () => {
+    mode = 'silent';
+    const reader = createKindReader();
+    const reading = reader.read(PATCH, { background: true });
+    workers[0].onerror?.({ message: 'failed to load' } as ErrorEvent);
+    await expect(reading).rejects.toEqual(new ReadSkipped('page-thread'));
+  });
+
+  it('rejects what was waiting its turn when disposed, and reads in a new worker after', async () => {
+    mode = 'silent';
+    const reader = createKindReader();
+    const first = reader.read(PATCH);
+    const second = reader.read(PATCH);
+    reader.dispose();
+    await expect(first).rejects.toThrow('disposed');
+    await expect(second).rejects.toThrow('disposed');
+    mode = 'answer';
+    expect(await reader.read(PATCH)).toEqual(FEATURES);
+    expect(workers).toHaveLength(2);
+    expect(reader.onPageThread).toBe(false);
+  });
+});
+
+describe('createPatchReadings', () => {
+  const def = getSynthDef('model-d');
+  if (!def) throw new Error('model-d is not registered');
+  beforeAll(async () => {
+    await loadSynthDef('model-d');
+  });
+  const PANEL = { values: { ...def.init }, cables: [] };
+  const fake = (): KindReader & { read: ReturnType<typeof vi.fn> } => ({
+    read: vi.fn(async () => FEATURES),
+    warm: vi.fn(),
+    dispose: vi.fn(),
+    onPageThread: false,
+  });
+
+  it('reads a panel once, whatever object holds the same values and cables', async () => {
+    const reader = fake();
+    const readings = createPatchReadings(reader);
+    await readings.panel(def, PANEL);
+    await readings.panel(def, { values: { ...def.init }, cables: [] });
+    expect(reader.read).toHaveBeenCalledTimes(1);
+    await readings.panel(def, { values: { ...def.init, 'filter.cutoff': 3 }, cables: [] });
+    expect(reader.read).toHaveBeenCalledTimes(2);
+  });
+
+  it('reads the start sound once per start, and works out its panel once', async () => {
+    const reader = fake();
+    const readings = createPatchReadings(reader);
+    const panel = vi.fn(() => PANEL);
+    const start = { slug: 'fat-bass', panel };
+    await readings.start(def, start);
+    await readings.start(def, start);
+    expect(readings.startPanel(start)).toBe(PANEL);
+    expect(reader.read).toHaveBeenCalledTimes(1);
+    expect(panel).toHaveBeenCalledTimes(1);
+  });
+
+  it('tries a reading that failed again on the next ask', async () => {
+    const reader = fake();
+    reader.read.mockRejectedValueOnce(new Error('no audio'));
+    const readings = createPatchReadings(reader);
+    await expect(readings.panel(def, PANEL)).rejects.toThrow('no audio');
+    expect(await readings.panel(def, PANEL)).toEqual(FEATURES);
+    expect(reader.read).toHaveBeenCalledTimes(2);
+  });
+
+  it('reads again for a caller waiting on a reading someone else called off', async () => {
+    const reader = fake();
+    reader.read.mockRejectedValueOnce(new ReadSkipped('aborted'));
+    const readings = createPatchReadings(reader);
+    const ctl = new AbortController();
+    const theirs = readings.panel(def, PANEL, { background: true, signal: ctl.signal });
+    const mine = readings.panel(def, PANEL);
+    ctl.abort();
+    await expect(theirs).rejects.toBeInstanceOf(ReadSkipped);
+    expect(await mine).toEqual(FEATURES);
+  });
+
+  it('lets the reader go, and forgets what it read', async () => {
+    const reader = fake();
+    const readings = createPatchReadings(reader);
+    await readings.panel(def, PANEL);
+    readings.dispose();
+    expect(reader.dispose).toHaveBeenCalledTimes(1);
+    await readings.panel(def, PANEL);
+    expect(reader.read).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('samePanel', () => {
+  it('compares values and cables, not the objects that hold them', () => {
+    const cable = { from: 'a', to: 'b', color: 'red' };
+    expect(
+      samePanel({ values: { x: 1 }, cables: [cable] }, { values: { x: 1 }, cables: [{ ...cable }] })
+    ).toBe(true);
+    expect(samePanel({ values: { x: 1 }, cables: [] }, { values: { x: 2 }, cables: [] })).toBe(
+      false
+    );
+    expect(
+      samePanel({ values: { x: 1 }, cables: [] }, { values: { x: 1, y: 2 }, cables: [] })
+    ).toBe(false);
+    expect(samePanel({ values: { x: 1 }, cables: [] }, { values: { x: 1 }, cables: [cable] })).toBe(
+      false
+    );
   });
 });
