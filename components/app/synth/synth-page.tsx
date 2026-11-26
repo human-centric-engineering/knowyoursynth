@@ -418,6 +418,17 @@ const NO_FAMILIES: SynthFamily[] = [];
 const BLANK_MARK = 'kysBlankPanel';
 const pushedBlank = (state: unknown): boolean =>
   typeof state === 'object' && state !== null && BLANK_MARK in state;
+/**
+ * The state for a `replaceState` of this page's own address: the blank panel's mark when the entry has it, and nothing
+ * else. Never the entry's state as it is, which carries the router's own keys: given those, Next takes the write as its
+ * own and leaves its idea of the address where it was.
+ */
+const blankState = (state: unknown) => (pushedBlank(state) ? { [BLANK_MARK]: true } : null);
+/** The unmodelled member the address names on this synth's own page, if any. */
+function memberAt(synthId: string): string | null {
+  const url = new URL(window.location.href);
+  return url.pathname === synthHref(synthId) ? url.searchParams.get('member') : null;
+}
 
 /** Jacks with a cable in, inputs and outputs alike, as `toEngine` wants them. */
 const patchedJacks = (cables: Session['cables']) =>
@@ -540,12 +551,12 @@ function Synth({
   // Chosen in the toggle it shows at once, and the address follows; one the address names is taken in on arrival, and
   // as the browser's Back and Forward change it (below). The page under it stays as it is, so leaving it comes back to
   // the panel as it was.
-  const [blank, setBlank] = useState(memberParam);
-  const [blankParam, setBlankParam] = useState(memberParam);
-  if (memberParam !== blankParam) {
-    setBlankParam(memberParam);
-    setBlank(memberParam);
-  }
+  // On the client the address is read first: a page the router restores from its cache on Back was rendered before
+  // the address named the member, and the view restored on arrival rewrites the address from this. A server render
+  // and its hydration have the request's own query, so the two agree there.
+  const [blank, setBlank] = useState(() =>
+    typeof window === 'undefined' ? memberParam : (memberAt(synthId) ?? memberParam)
+  );
   const blankMember = detail.family?.members.find((m) => !m.synthId && m.slug === blank) ?? null;
   const blankSlug = blankMember?.slug ?? null;
   // Nothing plays while it shows: the keys, MIDI in and the scope's keyboard all go through `noteOn`.
@@ -578,7 +589,7 @@ function Synth({
           [ownLayout]: next.long,
         });
       }
-      window.history.replaceState(null, '', hereHref(next));
+      window.history.replaceState(blankState(window.history.state), '', hereHref(next));
     },
     [hereHref, ownLayout]
   );
@@ -2931,6 +2942,10 @@ function Synth({
       setTutorOpen(false);
       setTourOn(false);
       setSheet(null);
+      setAboutOpen(false);
+      setLineageOpen(false);
+      setLimitsOpen(false);
+      setScopeOpen(false);
     }
     setBlank(slug);
   };
@@ -2940,7 +2955,11 @@ function Synth({
     // From one blank panel to another the entry is replaced, keeping its mark: Back goes to the panel, not through
     // each member seen.
     if (blankSlug)
-      window.history.replaceState(window.history.state, '', memberHref(synthId, slug, view));
+      window.history.replaceState(
+        blankState(window.history.state),
+        '',
+        memberHref(synthId, slug, view)
+      );
     else window.history.pushState({ [BLANK_MARK]: true }, '', memberHref(synthId, slug, view));
   };
   const hideBlank = () => {
@@ -2950,7 +2969,7 @@ function Synth({
     // reopening the blank panel. Marked in the entry itself, so it holds across Back and Forward. One arrived on
     // directly has nothing before it on this page: its address is replaced.
     if (pushedBlank(window.history.state)) window.history.back();
-    else window.history.replaceState(window.history.state, '', synthHref(synthId, view));
+    else window.history.replaceState(null, '', synthHref(synthId, view));
   };
   // The browser's Back and Forward between this page and a member's blank panel. The address is written by hand above,
   // not through the router, which would render the page again from the server for what is only this page's own state.
@@ -2960,12 +2979,17 @@ function Synth({
   useEffect(() => {
     enterBlankRef.current = enterBlank;
   });
+  // A member the server names later in the page's life (a link to this page with another member) comes the same way.
+  const paramWas = useRef(memberParam);
+  useEffect(() => {
+    if (paramWas.current === memberParam) return;
+    paramWas.current = memberParam;
+    enterBlankRef.current(memberParam);
+  }, [memberParam]);
   useEffect(() => {
     if (!ownAddress) return undefined;
     const read = () => {
-      const url = new URL(window.location.href);
-      if (url.pathname === synthHref(synthId))
-        enterBlankRef.current(url.searchParams.get('member'));
+      if (window.location.pathname === synthHref(synthId)) enterBlankRef.current(memberAt(synthId));
     };
     read();
     window.addEventListener('popstate', read);

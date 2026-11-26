@@ -426,6 +426,36 @@ describe('an unmodelled member (t-321)', () => {
     expect(shown(instrument())).toBe(false);
   });
 
+  it('keeps the member in the address when the view the visitor last chose is restored on arrival', () => {
+    window.localStorage.setItem('kys.view', JSON.stringify({ outline: true, long: false }));
+    window.history.replaceState(null, '', '/synths/td-3?member=rebirth');
+    page(0);
+    expect(blankFace()).not.toBeNull();
+    expect(new URL(window.location.href).searchParams.get('member')).toBe('rebirth');
+    expect(new URL(window.location.href).searchParams.get('view')).toBe('outline');
+  });
+
+  it("writes its own address without the router's history keys, so the router follows it", () => {
+    window.history.replaceState({ __NA: true }, '', '/synths/td-3?member=rebirth');
+    const replace = vi.spyOn(window.history, 'replaceState');
+    page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the TD-3' }));
+    expect(replace).toHaveBeenLastCalledWith(null, '', '/synths/td-3');
+    replace.mockRestore();
+  });
+
+  it('closes the dialogs over the page as the blank panel comes', () => {
+    page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'About ›' }));
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    act(() => {
+      window.history.replaceState(null, '', '/synths/td-3?member=rebirth');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    expect(blankFace()).not.toBeNull();
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
   it('opens straight onto the member its address names, and a slug it does not have opens the synth', () => {
     const at = (memberParam: string) =>
       render(

@@ -181,9 +181,13 @@ year, its differences text a paragraph to each blank line, and a way back to the
   from its blank panel replaces it, keeping the mark. The way back steps back from a marked entry, so the browser's
   Back then leaves the page rather than reopening the blank panel, and the mark holds across Back and Forward. On an
   address arrived on directly there is no mark, and the way back replaces the address instead.
-- **The address is read on mount as well as on `popstate`.** Back to a member's address from another page restores
-  this page from the router's cache, rendered before the address named the member, so the server's `memberParam`
-  alone would open the panel.
+- **The address is read first.** On the client the page takes the member from the address before anything else,
+  then again on `popstate`: Back to a member's address from another page restores this page from the router's cache,
+  rendered before the address named the member, and the view restored on arrival rewrites the address from it. A
+  member the server names later in the page's life comes the same way.
+- **Its own writes carry no router state.** A `replaceState` of the page's address passes the blank panel's mark or
+  nothing, never the entry's state as it was: given the router's own keys, Next takes the write as its own and keeps
+  its idea of the address.
 - **Nothing plays.** However it is reached, it stops the riff or pattern and lets every note go, and a run that starts
   while it shows (a MIDI clock's Start, a load ending with a pattern waiting) is stopped as it starts. While it shows, `noteOn` drops every
   note, from the keys, MIDI in and the scope's keyboard alike.
@@ -192,7 +196,7 @@ year, its differences text a paragraph to each blank line, and a way back to the
   and the videos and links section. The panel, the dock, the sequencer rack and the videos and links are hidden with
   `display: none` and kept mounted, so they come back as they were; what measures them (the panel's fit around the dock
   and the rack) measures again as they show. What was open over the panel (the library, the lesson card, the tutor, a
-  phone's sheet) closes.
+  phone's sheet) closes, and so do the page's dialogs (About, History, What is not modelled, the scope).
 - **Switching on to another modelled member** carries the panel left underneath, as any switch does.
 - On a shared sound's or pattern's page the blank panel shows the same way, but the address stays the shared one, since
   a member's address is a synth's own page.
