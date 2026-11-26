@@ -11,8 +11,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { z } from 'zod';
 import { GET } from '@/app/api/v1/synths/[id]/route';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
+import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { modelDRows } from '@/tests/helpers/model-d-detail';
+import { synthRows } from '@/tests/helpers/synth-detail';
 import { bankDb } from '@/tests/helpers/bank-db';
 import {
   assertErrorResponse,
@@ -31,6 +33,8 @@ vi.mock('@/lib/db/client', () => ({
   prisma: {
     synth: { findFirst: vi.fn() },
     synthNote: { findMany: vi.fn() },
+    // A family sibling's library sounds (t-322).
+    synthSound: { findMany: vi.fn() },
     bankInstrument: { findMany: vi.fn() },
     bankSong: { findMany: vi.fn() },
     // A synth's family (`f-synth-families`): none unless a case gives one.
@@ -116,6 +120,62 @@ describe('GET /api/v1/synths/:id', () => {
     const body = await parseJsonResponse(await call('model-d'));
     expect(direct).not.toBeNull();
     expect(body).toEqual({ success: true, data: JSON.parse(JSON.stringify(direct)) });
+  });
+
+  it("serves a family member's sibling sounds already carried onto it, each with the member it was made on", async () => {
+    const td3 = synthRows('td-3');
+    const tb303 = synthRows('tb-303');
+    vi.mocked(prisma.synth.findFirst).mockImplementation((async (args: {
+      where: { id: string };
+    }) => (args.where.id === 'td-3' ? td3.stored : null)) as never);
+    const member = (slug: string) => ({
+      slug,
+      label: slug,
+      synthId: slug,
+      differences: '',
+      instrument: { id: `i-${slug}`, name: slug, maker: 'Roland', year: '1981' },
+      synth: { listed: true },
+    });
+    vi.mocked(prisma.synthFamily.findFirst).mockResolvedValue({
+      id: 'tb-303',
+      name: 'TB-303',
+      defaultMember: 'td-3',
+      members: [member('td-3'), member('tb-303')],
+    } as never);
+    vi.mocked(prisma.synthSound.findMany).mockResolvedValue(
+      tb303.stored.sounds.map(({ patterns: _p, ...s }) => ({ ...s, synthId: 'tb-303' })) as never
+    );
+
+    const body = await parseJsonResponse(await call('td-3'));
+
+    const { data } = z
+      .object({
+        data: z.object({
+          siblingSounds: z.array(
+            z.object({
+              id: z.string(),
+              name: z.string(),
+              from: z.object({ synthId: z.string(), name: z.string() }),
+              steps: z.array(z.object({ set: z.record(z.string(), z.unknown()).optional() })),
+              dropped: z.array(z.unknown()),
+              changed: z.array(z.unknown()),
+            })
+          ),
+        }),
+      })
+      .parse(body);
+    expect(data.siblingSounds).toHaveLength(tb303.stored.sounds.length);
+    expect(data.siblingSounds[0]).toMatchObject({
+      id: tb303.stored.sounds[0].slug,
+      name: tb303.stored.sounds[0].name,
+      from: { synthId: 'tb-303', name: 'TB-303' },
+    });
+    // Carried: its one step sets the panel under the TD-3's own control ids.
+    expect(data.siblingSounds[0].steps).toHaveLength(1);
+    const td3Ids = new Set(getSynthDef('td-3')?.controls.map((c) => c.id));
+    const set = Object.keys(data.siblingSounds[0].steps[0].set ?? {});
+    expect(set.length).toBeGreaterThan(0);
+    expect(set.filter((id) => !td3Ids.has(id))).toEqual([]);
   });
 
   it('is a 404 in the standard envelope for an id no listed synth has', async () => {

@@ -102,6 +102,7 @@ function page(id: (typeof IDS)[number], steps: CatalogueSound['steps'] = []) {
     notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
     links: { count: 0, kinds: [] },
     soundLinks: {},
+    siblingSounds: [],
     instruments: [],
     family: null,
   };

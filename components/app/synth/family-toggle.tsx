@@ -54,6 +54,8 @@ export function useOwnedInstruments(userId: string | null): ReadonlySet<string> 
 /** What the page carried in from another member, for the note. */
 export interface CarryNote {
   fromName: string;
+  /** The library sound it is, when it is a sibling's sound loaded from the library (t-322), not the panel switched from. */
+  soundName?: string;
   dropped: readonly Dropped[];
   changed: readonly Changed[];
 }
@@ -137,8 +139,9 @@ export function CarriedNote({ note, onDismiss }: { note: CarryNote; onDismiss?: 
     <div role="status" className="max-w-[60ch] text-[13px] leading-snug text-(--kys-muted)">
       <p className="flex flex-wrap items-baseline gap-x-2">
         <span>
-          Panel carried over from the {note.fromName}
-          {reasons.length ? '. What did not come across as it was:' : ', all of it.'}
+          {note.soundName
+            ? `${note.soundName} was made on the ${note.fromName}${reasons.length ? '. What did not come across as it was:' : ', and all of it came across.'}`
+            : `Panel carried over from the ${note.fromName}${reasons.length ? '. What did not come across as it was:' : ', all of it.'}`}
         </span>
         {onDismiss && (
           <button

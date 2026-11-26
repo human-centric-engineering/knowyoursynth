@@ -171,3 +171,90 @@ describe('LevelDots', () => {
     expect(screen.getByLabelText('Intermediate')).toBeTruthy();
   });
 });
+
+describe('Library: a family sibling’s sounds (t-322)', () => {
+  const sibling = (i: number, name: string, tag: string) => ({
+    key: `td-3/sib-${i}`,
+    fromName: 'TD-3',
+    preset: { ...sounds[i], id: `sibling:td-3/sib-${i}`, name, tags: [tag] },
+  });
+  const siblings = () => [
+    sibling(0, 'Squelch From Elsewhere', 'Bass'),
+    sibling(1, 'Rubber Line', 'Lead'),
+  ];
+
+  function setupSiblings(currentSibling: string | null = null) {
+    const onSelect = vi.fn();
+    const onSelectSibling = vi.fn();
+    render(
+      <Library
+        presets={sounds}
+        siblings={siblings()}
+        currentSibling={currentSibling}
+        onSelectSibling={onSelectSibling}
+        currentId={null}
+        onSelect={onSelect}
+      />
+    );
+    return { onSelect, onSelectSibling };
+  }
+  const siblingList = () => screen.getByRole('list', { name: 'From other versions' });
+
+  it('lists them after the synth’s own, under their own heading, each marked with the member it was made on', () => {
+    setupSiblings();
+
+    expect(screen.getByRole('heading', { name: 'From other versions' })).toBeInTheDocument();
+    const items = within(siblingList()).getAllByRole('button');
+    expect(items.map((b) => b.textContent)).toEqual([
+      expect.stringContaining('Squelch From Elsewhere'),
+      expect.stringContaining('Rubber Line'),
+    ]);
+    expect(items.every((b) => b.textContent?.includes('Made on the TD-3'))).toBe(true);
+    // The count is of the synth's own sounds.
+    expect(screen.getByText(`${sounds.length} of ${sounds.length}`)).toBeInTheDocument();
+  });
+
+  it('loads one by its key, and marks the one on the panel', () => {
+    const { onSelect, onSelectSibling } = setupSiblings('td-3/sib-1');
+
+    const [first, second] = within(siblingList()).getAllByRole('button');
+    expect(second).toHaveAttribute('aria-current', 'true');
+    expect(first).toHaveAttribute('aria-current', 'false');
+    fireEvent.click(first);
+    expect(onSelectSibling).toHaveBeenCalledWith('td-3/sib-0');
+    expect(onSelect).not.toHaveBeenCalled();
+  });
+
+  it('searches them as it does the synth’s own, and keeps the tutor away while one matches', () => {
+    setupSiblings();
+
+    fireEvent.change(search(), { target: { value: 'rubber line' } });
+
+    expect(within(siblingList()).getAllByRole('button')).toHaveLength(1);
+    expect(screen.queryByText(/No library patch matches/)).not.toBeInTheDocument();
+  });
+
+  it('lists none, nor their categories, where the page gives no way to load one', () => {
+    const only = [{ ...siblings()[0], preset: { ...sounds[0], tags: ['Nowhere else'] } }];
+    render(<Library presets={sounds} siblings={only} currentId={null} onSelect={vi.fn()} />);
+
+    expect(screen.queryByRole('heading', { name: 'From other versions' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Nowhere else' })).not.toBeInTheDocument();
+  });
+
+  it('offers a category only its siblings have, which shows them', () => {
+    const only = [{ ...siblings()[0], preset: { ...sounds[0], tags: ['Nowhere else'] } }];
+    render(
+      <Library
+        presets={sounds}
+        siblings={only}
+        onSelectSibling={vi.fn()}
+        currentId={null}
+        onSelect={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Nowhere else' }));
+    expect(within(siblingList()).getAllByRole('button')).toHaveLength(1);
+  });
+});
