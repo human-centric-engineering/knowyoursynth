@@ -2,6 +2,7 @@
   "id": "moog-modular-systems",
   "name": "System 15 · 35 · 55",
   "defaultMember": "system-15",
+  "originals": ["moog-modular", "moog-model-15", "moog-system-35", "moog-system-55"],
   "members": [
     {
       "slug": "system-15",
@@ -23,6 +24,24 @@
       "instrument": "behringer-system-55",
       "synth": "system-55",
       "differences": "The largest, after Moog's System 55: the most modules of the three, among them the 960 sequential controller and the 962 sequential switch."
+    },
+    {
+      "slug": "moog-model-15",
+      "label": "Moog Model 15",
+      "instrument": "moog-model-15",
+      "differences": "Moog's own 1973 original: the smallest of its modular systems, in a portable suitcase-style case, with two oscillators, two VCAs and a low-pass filter. Behringer's System 15 keeps essentially the same choice of modules, made smaller with modern parts, and adds a MIDI-to-CV converter."
+    },
+    {
+      "slug": "moog-system-35",
+      "label": "Moog System 35",
+      "instrument": "moog-system-35",
+      "differences": "Moog's own 1973 original: a mid-sized modular system in a wedge-shaped housing, made for studios and teaching. Behringer's System 35 keeps essentially the same choice of modules, made smaller with modern parts, and adds a MIDI-to-CV converter."
+    },
+    {
+      "slug": "moog-system-55",
+      "label": "Moog System 55",
+      "instrument": "moog-system-55",
+      "differences": "Moog's own 1973 original: the largest of its modular systems, with the most modules Moog offered. Behringer's System 55 keeps essentially the same choice of modules, made smaller with modern parts, and adds a MIDI-to-CV converter."
     }
   ]
 }

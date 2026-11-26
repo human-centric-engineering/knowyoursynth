@@ -1,0 +1,20 @@
+{
+  "id": "prophet-600",
+  "name": "Prophet-600",
+  "defaultMember": "pro-800",
+  "members": [
+    {
+      "slug": "pro-800",
+      "label": "Pro-800",
+      "instrument": "behringer-pro-800",
+      "synth": "pro-800",
+      "differences": "Behringer's copy of the Prophet-600 as a desktop module, with eight voices, the GliGli firmware's improvements, 400 patch memories, two CV inputs, and MIDI and USB. Its envelopes are faster and their linear curves differ from the original's, and its Poly-Mod, filter and LFO modulation ranges are narrower."
+    },
+    {
+      "slug": "prophet-600",
+      "label": "Prophet-600",
+      "instrument": "sequential-prophet-600",
+      "differences": "The original, Sequential Circuits' 1982 polysynth: a six-voice, cheaper Prophet, and one end of the first public MIDI connection, to a Roland Jupiter-6 at the 1983 NAMM show."
+    }
+  ]
+}

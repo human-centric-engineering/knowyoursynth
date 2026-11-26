@@ -15,10 +15,17 @@ import {
   type FamilyInstrument,
 } from '@/lib/app/families/data';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
-import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { BankReferenceFileSchema } from '@/lib/app/bank/data';
+import { BANK_DATA_DIR, loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { loadFamilyData } from '@/prisma/seeds/app-knowyoursynth/family-data';
 
 const bank = loadBankData();
+/** The reference list (b4), where every entry says where its facts were checked. */
+const bankReference = BankReferenceFileSchema.parse(
+  JSON.parse(readFileSync(join(BANK_DATA_DIR, 'reference.json'), 'utf8'))
+).instruments;
 const ctx: FamilyCheckContext = {
   instruments: new Map<string, FamilyInstrument>(
     bank.instruments.map((i) => [
@@ -232,13 +239,63 @@ describe('checkFamilies: a family that lists its originals (t-324)', () => {
 describe('the committed family seed data', () => {
   const families = loadFamilyData();
 
-  it('holds the three in-app pairs and the System 15 / 35 / 55 sizes', () => {
-    expect(Object.fromEntries(families.map((f) => [f.id, f.members.map((m) => m.synth)]))).toEqual({
+  it('holds the three in-app pairs, the System 15 / 35 / 55 sizes and every researched family (t-324)', () => {
+    expect(
+      Object.fromEntries(families.map((f) => [f.id, f.members.map((m) => m.synth ?? null)]))
+    ).toEqual({
+      'arp-2600': ['b2600', null, null],
+      cat: ['cat', null],
+      'cs-80': ['cs-80', null],
       grandmother: ['model-15', 'grandmother'],
-      'moog-modular-systems': ['system-15', 'system-35', 'system-55'],
+      'jupiter-8': ['jupiter-8', null],
+      kobol: ['kobol', null],
+      minimoog: ['model-d', null, null],
+      'moog-modular-systems': ['system-15', 'system-35', 'system-55', null, null, null],
+      'ms-20': ['k2', null],
+      'music-easel': ['buchla-easel', null],
+      'ob-xa': ['ub-xa-d', null],
+      odyssey: ['behringer-odyssey', null, null, null],
+      polivoks: ['polivoks', null],
+      'pro-one': ['pro-1', null],
+      'prophet-600': ['pro-800', null],
       'syncussion-sy-1': ['behringer-syncussion', 'pearl-syncussion'],
-      'tb-303': ['td-3', 'tb-303'],
+      'tb-303': ['td-3', 'tb-303', null],
+      'two-voice': ['2-xm', null],
+      wasp: ['wasp-deluxe', null],
     });
+  });
+
+  it('lists its originals only where the members do not share one: the Moog systems (t-324)', () => {
+    expect(families.filter((f) => f.originals).map((f) => [f.id, f.originals])).toEqual([
+      [
+        'moog-modular-systems',
+        ['moog-modular', 'moog-model-15', 'moog-system-35', 'moog-system-55'],
+      ],
+    ]);
+  });
+
+  it('gives every member a differences text, and a source for every reference-list instrument a member is (t-324)', () => {
+    const reference = new Set(bankReference.map((i) => i.id));
+    for (const family of families)
+      for (const member of family.members) {
+        expect(member.differences.length, `${family.id}/${member.slug}`).toBeGreaterThan(40);
+        if (reference.has(member.instrument))
+          expect(
+            bankReference.find((i) => i.id === member.instrument)?.source,
+            `${family.id}/${member.slug}`
+          ).toMatch(/^https:\/\//);
+      }
+  });
+
+  it('labels an announced member as announced, in its label and its differences (t-324)', () => {
+    const announced = families.flatMap((f) =>
+      f.members.filter((m) => /announced/i.test(m.label)).map((m) => `${f.id}/${m.slug}`)
+    );
+    expect(announced).toEqual(['cs-80/ds-80', 'polivoks/behringer-polivoks']);
+    for (const family of families)
+      for (const m of family.members)
+        if (/announced/i.test(m.label))
+          expect(m.differences).toMatch(/^Announced, not yet on sale\./);
   });
 
   it('passes the check against the committed databank and the definition registry', () => {
@@ -246,12 +303,28 @@ describe('the committed family seed data', () => {
     expect(checkFamilies(families, ctx)).toEqual([]);
   });
 
-  it('opens each family on the clone, the member most people are likely to own', () => {
+  it('opens each family on the member most people are likely to own: the clone where it is modelled', () => {
     expect(Object.fromEntries(families.map((f) => [f.id, f.defaultMember]))).toEqual({
+      'arp-2600': 'b2600',
+      cat: 'cat',
+      // the only modelled member: a family never opens on a blank panel
+      'cs-80': 'cs-80',
       grandmother: 'model-15',
+      'jupiter-8': 'jupiter-8',
+      kobol: 'kobol',
+      minimoog: 'model-d',
       'moog-modular-systems': 'system-15',
+      'ms-20': 'k2',
+      'music-easel': 'buchla-easel',
+      'ob-xa': 'ub-xa-d',
+      odyssey: 'behringer-odyssey',
+      polivoks: 'polivoks',
+      'pro-one': 'pro-1',
+      'prophet-600': 'pro-800',
       'syncussion-sy-1': 'behringer',
       'tb-303': 'td-3',
+      'two-voice': '2-xm',
+      wasp: 'wasp-deluxe',
     });
   });
 });

@@ -1,0 +1,20 @@
+{
+  "id": "kobol",
+  "name": "Kobol Expander",
+  "defaultMember": "kobol",
+  "members": [
+    {
+      "slug": "kobol",
+      "label": "Behringer",
+      "instrument": "behringer-kobol-expander",
+      "synth": "kobol",
+      "differences": "Behringer's copy of the Kobol Expander for Eurorack: duophonic, with two oscillators morphing through seven waveforms, a four-pole filter and 32 patch points, plus MIDI In and Thru, an external audio input and a 16-voice poly chain."
+    },
+    {
+      "slug": "kobol-expander",
+      "label": "RSF",
+      "instrument": "rsf-kobol-expander",
+      "differences": "The original, RSF's 1979 expander: the Kobol synthesizer's voice in a desktop case without a keyboard, with patch points, sold to be played from other synths. Two oscillators morph between triangle, square, sawtooth and pulse into a 24 dB low-pass filter, with two ADS envelopes, an LFO of several waveforms and a VCA."
+    }
+  ]
+}

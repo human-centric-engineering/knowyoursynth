@@ -1,0 +1,26 @@
+{
+  "id": "arp-2600",
+  "name": "2600",
+  "defaultMember": "b2600",
+  "members": [
+    {
+      "slug": "b2600",
+      "label": "Behringer 2600",
+      "instrument": "behringer-2600",
+      "synth": "b2600",
+      "differences": "Behringer's copy in a 19-inch rack case, 8U high and about two thirds the size of the original, with no speakers. A switch picks the 4012 or the 4072 filter, a digital reverb takes the spring's place, and it has 63 sliders against the original's 57. All three oscillators take pulse-width modulation, a switch halves or doubles the envelope times, and MIDI and USB play it, with the LFO and duophony of the 3620 keyboard built in."
+    },
+    {
+      "slug": "arp-2600",
+      "label": "ARP 2600",
+      "instrument": "arp-2600",
+      "differences": "The original, ARP's 1971 semi-modular built for teaching: every module wired to the next behind the panel, patch cords to override the wiring, a spring reverb and its own speakers, in a case about 33 inches wide. Until 1976 it used ARP's 4012 filter, a copy of Moog's ladder, then the 4072 after legal action by Moog. It was played from a separate keyboard, from 1974 the duophonic 3620 with an LFO of its own."
+    },
+    {
+      "slug": "korg-2600-fs",
+      "label": "Korg 2600 FS",
+      "instrument": "korg-arp-2600-fs",
+      "differences": "Korg's limited-edition full-size reproduction of 2020, after the early grey 2600. It adds a choice of the 4012 or 4072 filter, balanced XLR outputs, MIDI and a simple sequencer and arpeggiator, with a keyboard based on the 3620 that now sends aftertouch."
+    }
+  ]
+}

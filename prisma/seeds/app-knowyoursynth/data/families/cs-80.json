@@ -1,0 +1,20 @@
+{
+  "id": "cs-80",
+  "name": "CS-80",
+  "defaultMember": "cs-80",
+  "members": [
+    {
+      "slug": "cs-80",
+      "label": "CS-80",
+      "instrument": "yamaha-cs-80",
+      "synth": "cs-80",
+      "differences": "The original, Yamaha's 1977 polysynth: eight voices of two layered voices per note, a ribbon controller, and a keyboard that responds to velocity and to pressure on each key. Heard on Vangelis’s Blade Runner score."
+    },
+    {
+      "slug": "ds-80",
+      "label": "DS-80 (announced)",
+      "instrument": "behringer-ds-80",
+      "differences": "Announced, not yet on sale. Behringer's planned copy of the CS-80, first mentioned in July 2020. A prototype board shown in April 2022 held two voices and the digital control section, and nothing more had been said by January 2025."
+    }
+  ]
+}

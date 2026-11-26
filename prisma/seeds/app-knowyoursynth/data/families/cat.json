@@ -1,0 +1,20 @@
+{
+  "id": "cat",
+  "name": "Cat",
+  "defaultMember": "cat",
+  "members": [
+    {
+      "slug": "cat",
+      "label": "Behringer CAT",
+      "instrument": "behringer-cat",
+      "synth": "cat",
+      "differences": "Behringer's copy of the Cat's last edition, the duophonic SRM, as a desktop module without the keyboard. It adds CV inputs for both oscillators, the filter's cutoff and resonance and the VCA, CV outputs for both envelopes, and MIDI and USB."
+    },
+    {
+      "slug": "cat-srm",
+      "label": "Cat SRM",
+      "instrument": "octave-cat",
+      "differences": "The original, Octave's New York monosynth, a cheaper rival to the ARP Odyssey, in its last edition, the duophonic SRM, which can give each oscillator its own note. Two oscillators with a square sub-octave each, one filter, sample and hold, and looping ADSR and AR envelopes, played from its own keyboard."
+    }
+  ]
+}

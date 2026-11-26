@@ -1,0 +1,20 @@
+{
+  "id": "pro-one",
+  "name": "Pro-One",
+  "defaultMember": "pro-1",
+  "members": [
+    {
+      "slug": "pro-1",
+      "label": "Pro-1",
+      "instrument": "behringer-pro-1",
+      "synth": "pro-1",
+      "differences": "Behringer's copy of the Pro-One in an 80HP Eurorack case, without the keyboard. It adds a row of patch points, more CV inputs and outputs, an external audio input, MIDI and USB, and a mode that plays the two oscillators as two notes, which the original could not do. Over MIDI it reads only notes and the modulation wheel, not velocity. One reviewer found it matches the original's sound in every aspect."
+    },
+    {
+      "slug": "pro-one",
+      "label": "Pro-One",
+      "instrument": "sequential-pro-one",
+      "differences": "The original, Sequential Circuits' 1981 monosynth: one voice of the Prophet-5 in a small, cheap keyboard instrument, without patch memory. Two CEM3340-type oscillators feed a 4-pole CEM3320 low-pass filter, with the Prophet's modulation routing, a sequencer and an arpeggiator, played from a three-octave keyboard."
+    }
+  ]
+}

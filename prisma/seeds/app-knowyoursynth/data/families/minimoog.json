@@ -1,0 +1,26 @@
+{
+  "id": "minimoog",
+  "name": "Minimoog",
+  "defaultMember": "model-d",
+  "members": [
+    {
+      "slug": "model-d",
+      "label": "Model D",
+      "instrument": "behringer-model-d",
+      "synth": "model-d",
+      "differences": "Behringer's copy of the Minimoog Model D, modelled on Moog's 2016 reissue rather than the 1970s original, in a keyboardless case that fits Eurorack. It keeps the three oscillators, oscillator 3 as a modulation source and the two contours, and adds a square and triangle LFO, a switch that turns the 24 dB filter from low-pass to high-pass, patch points, a separate gate input for each contour, decay switches for each, and a chain of up to 16 units for polyphony. A Mod Depth knob stands in for the modulation wheel. One reviewer measured its filter self-oscillating down to about 64 Hz, against about 150 Hz on his vintage Minimoog."
+    },
+    {
+      "slug": "minimoog",
+      "label": "Minimoog",
+      "instrument": "moog-minimoog",
+      "differences": "The original, Moog's 1970 portable monosynth: three oscillators, the ladder filter and two contour generators wired together behind the panel, played from its own keyboard with pitch and modulation wheels. Oscillator 3 can be turned into a modulation source."
+    },
+    {
+      "slug": "minimoog-2016",
+      "label": "Model D (2016)",
+      "instrument": "moog-minimoog-model-d-2016",
+      "differences": "Moog's 2016 rebuild of the Model D on its original sound engine, the version the Behringer copies. It adds a velocity-sensitive keyboard, MIDI, CV outputs, an analogue LFO and the mixer overload modification."
+    }
+  ]
+}

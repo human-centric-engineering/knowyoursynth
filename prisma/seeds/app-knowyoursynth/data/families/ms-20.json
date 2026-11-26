@@ -1,0 +1,20 @@
+{
+  "id": "ms-20",
+  "name": "MS-20",
+  "defaultMember": "k2",
+  "members": [
+    {
+      "slug": "k2",
+      "label": "K-2",
+      "instrument": "behringer-k-2",
+      "synth": "k2",
+      "differences": "Behringer's copy of the Korg MS-20 in a keyboardless case that fits Eurorack: the same two oscillators and high-pass and low-pass filters with peak, with both the MS-20's first- and second-generation filter designs on board. It adds USB and MIDI. Behringer says the circuit uses matched transistors and JFETs; reviewers found it very close to the original, but not identical."
+    },
+    {
+      "slug": "ms-20",
+      "label": "MS-20",
+      "instrument": "korg-ms-20",
+      "differences": "The original, Korg's 1978 semi-modular monosynth: two oscillators, a high-pass and a low-pass filter in series, both able to scream, a patch panel, and an external signal processor for running a guitar or voice through it, played from its own keyboard. Korg changed its filter design in a second generation; the K-2 has both."
+    }
+  ]
+}

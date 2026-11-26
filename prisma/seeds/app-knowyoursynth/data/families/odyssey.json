@@ -1,0 +1,32 @@
+{
+  "id": "odyssey",
+  "name": "Odyssey",
+  "defaultMember": "behringer-odyssey",
+  "members": [
+    {
+      "slug": "behringer-odyssey",
+      "label": "Behringer",
+      "instrument": "behringer-odyssey",
+      "synth": "behringer-odyssey",
+      "differences": "Behringer's 2019 copy, in the Mk III's orange on black, with a full-size 37-note keyboard and all three of the original's filter versions to choose between. It adds MIDI, digital effects, a 32-step sequencer and an arpeggiator."
+    },
+    {
+      "slug": "mk-1",
+      "label": "Mk I",
+      "instrument": "arp-odyssey",
+      "differences": "The first Odyssey, ARP's model 2800, made from 1972 to 1975: white-faced, with a 2-pole low-pass filter beside a non-resonant high-pass, two oscillators, sync and ring modulation, and a slider for every setting."
+    },
+    {
+      "slug": "mk-2",
+      "label": "Mk II",
+      "instrument": "arp-odyssey",
+      "differences": "ARP's models 2810 to 2815, made from 1975 to 1978: black and gold, with CV and gate on every model and a four-pole low-pass filter close in design to Moog's."
+    },
+    {
+      "slug": "mk-3",
+      "label": "Mk III",
+      "instrument": "arp-odyssey",
+      "differences": "ARP's models 2820 to 2823, from 1978 until ARP went bankrupt in 1981: orange on black in a redesigned case, with ARP's four-pole 4075 filter and an XLR output. Three pressure-sensitive pads (PPC) bend the pitch up and down and add vibrato, in place of the rotary pitch bend."
+    }
+  ]
+}

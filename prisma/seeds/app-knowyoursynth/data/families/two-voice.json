@@ -1,0 +1,20 @@
+{
+  "id": "two-voice",
+  "name": "Two Voice",
+  "defaultMember": "2-xm",
+  "members": [
+    {
+      "slug": "2-xm",
+      "label": "2-XM",
+      "instrument": "behringer-2-xm",
+      "synth": "2-xm",
+      "differences": "Behringer's copy of the Two Voice in a Eurorack case, without the keyboard: two SEM voices, each with two oscillators, a multimode filter and two ADS envelopes. A mixer places the two voices in the stereo field, a CV and gate patch field is added, and MIDI and USB play them split, layered or in unison."
+    },
+    {
+      "slug": "two-voice",
+      "label": "Two Voice",
+      "instrument": "oberheim-two-voice",
+      "differences": "The original, Oberheim's 1975 pairing of two SEMs in one case with a keyboard and a small sequencer, each voice playable on its own: one of the first instruments to play two notes at once."
+    }
+  ]
+}

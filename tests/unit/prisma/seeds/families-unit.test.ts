@@ -76,11 +76,27 @@ describe('the 007-families seed unit', () => {
 
     await unit.run({ prisma, logger } as never);
 
+    // every family file, in file order (t-324)
     expect(vi.mocked(seedFamilies).mock.calls[0][1].map((f) => f.id)).toEqual([
+      'arp-2600',
+      'cat',
+      'cs-80',
       'grandmother',
+      'jupiter-8',
+      'kobol',
+      'minimoog',
       'moog-modular-systems',
+      'ms-20',
+      'music-easel',
+      'ob-xa',
+      'odyssey',
+      'polivoks',
+      'pro-one',
+      'prophet-600',
       'syncussion-sy-1',
       'tb-303',
+      'two-voice',
+      'wasp',
     ]);
     expect(unit.hashInputs).toContain('data/families/tb-303.json');
     expect(logger.warn).not.toHaveBeenCalled();

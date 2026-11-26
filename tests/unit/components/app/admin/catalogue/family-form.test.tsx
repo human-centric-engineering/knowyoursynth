@@ -83,7 +83,12 @@ describe('FamilyForm', () => {
   it('gives every field its ⓘ', () => {
     render(<FamilyForm family={FAMILY} options={OPTIONS} />);
 
-    for (const name of ['About the name', 'About the members', 'About the member it opens on'])
+    for (const name of [
+      'About the name',
+      'About the originals',
+      'About the members',
+      'About the member it opens on',
+    ])
       expect(screen.getByRole('button', { name })).toBeInTheDocument();
     for (const name of [
       'About the slug',
@@ -112,6 +117,24 @@ describe('FamilyForm', () => {
       },
     });
     expect(await screen.findByText('Saved.')).toBeInTheDocument();
+  });
+
+  it('sends the originals typed, split on commas and spaces, and none when the field is left empty (t-324)', async () => {
+    const user = userEvent.setup();
+    put.mockResolvedValue(FAMILY);
+    render(<FamilyForm family={{ ...FAMILY, originals: ['roland-tb-303'] }} options={OPTIONS} />);
+    const field = screen.getByLabelText(/Originals/, INPUT);
+    expect(field).toHaveValue('roland-tb-303');
+
+    await user.type(field, ',  korg-ms-20 ');
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+    expect(put.mock.calls[0][1]?.body).toMatchObject({
+      originals: ['roland-tb-303', 'korg-ms-20'],
+    });
+
+    await user.clear(field);
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+    expect(put.mock.calls[1][1]?.body).not.toHaveProperty('originals');
   });
 
   it('adds an unmodelled member without a synth', async () => {
