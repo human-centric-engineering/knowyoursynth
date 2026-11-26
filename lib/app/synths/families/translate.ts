@@ -124,7 +124,9 @@ function lacksReason(link: FamilyLink, from: SynthDef, to: SynthDef, id: string)
   const c = controlMap(from)[id];
   if (c) return `The ${to.name} has no ${displayName(from, c)}`;
   const j = jackMap(from)[id];
-  return `The ${to.name} has no ${j ? cleanName(j.name ?? j.label) : id} jack`;
+  return j
+    ? `The ${to.name} has no ${cleanName(j.name ?? j.label)} jack`
+    : `The ${to.name} has no ${id}`;
 }
 
 function optionLabel(c: Control, v: ControlValue): string {
@@ -154,8 +156,9 @@ export function translate(
   const link: FamilyLink = findLink(from.id, to.id, maps) ?? { from: from.id, to: to.id };
   const fromControls = controlMap(from);
   const toControls = controlMap(to);
-  // A `dropWhen` reads the panel as it stands: what was given, over the member's own init.
-  const panel: ControlValues = { ...from.init, ...values };
+  // A `dropWhen` reads the panel as it stands: what was given, over the member's Default patch, which is where a panel
+  // starts. A caller translating only part of a panel that is set elsewhere passes the whole panel, so it reads that.
+  const panel: ControlValues = { ...from.init, ...from.defaultPatch?.values, ...values };
 
   for (const [id, value] of Object.entries(values)) {
     const source = fromControls[id];

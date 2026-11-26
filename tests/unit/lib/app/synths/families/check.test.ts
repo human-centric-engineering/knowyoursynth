@@ -104,6 +104,59 @@ describe('checkFamilyMaps', () => {
     expect(problems.every((p) => /osc\.tun/.test(p))).toBe(true);
   });
 
+  it('fails a rename that lands on an id the member it comes from carries as itself', () => {
+    // the TD-3's own j.phones already carries as j.phones
+    const maps = withTdLink({ jacks: { 'j.cvOut': 'j.phones', 'j.gateOut': 'j.gate' } });
+
+    expect(checkFamilyMaps(maps, SYNTH_DEFS, TB_FAMILY)).toEqual([
+      'td-3 → tb-303: j.cvOut and j.phones both carry to jack j.phones',
+    ]);
+  });
+
+  it('fails a drop condition on an option the control lacks', () => {
+    const families = FAMILIES.filter((f) => f.id === 'grandmother');
+    const maps: FamilyMap[] = FAMILY_MAPS.filter((m) => m.family === 'grandmother').map((m) => ({
+      ...m,
+      links: m.links.map((l) =>
+        l.from === 'model-15'
+          ? {
+              ...l,
+              controls: {
+                ...l.controls,
+                'mix.3': {
+                  to: 'mix.noise',
+                  dropWhen: { when: { id: 'osc2.wave', in: ['saw+subb'] }, reason: 'x' },
+                },
+              },
+            }
+          : l
+      ),
+    }));
+
+    expect(checkFamilyMaps(maps, SYNTH_DEFS, families)).toEqual([
+      'model-15 → grandmother: mix.3 drops on osc2.wave saw+subb, which is no option of it',
+    ]);
+  });
+
+  it('fails a seeded member with no definition', () => {
+    const defs = SYNTH_DEFS.filter((d) => d.id !== 'tb-303');
+
+    expect(checkFamilyMaps([], defs, TB_FAMILY)).toEqual([
+      'family tb-303: no map from td-3 to tb-303',
+      'family tb-303: no map from tb-303 to td-3',
+    ]);
+    expect(
+      checkFamilyMaps(
+        FAMILY_MAPS.filter((m) => m.family === 'tb-303'),
+        defs,
+        TB_FAMILY
+      )
+    ).toEqual([
+      'td-3 → tb-303: no definition for tb-303',
+      'tb-303 → td-3: no definition for tb-303',
+    ]);
+  });
+
   it('fails a map for a family the seed data does not hold, or a link outside its family', () => {
     const maps: FamilyMap[] = [
       { family: 'tb-303', links: [{ from: 'td-3', to: 'model-15' }] },

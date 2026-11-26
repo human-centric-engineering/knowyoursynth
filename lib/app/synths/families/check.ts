@@ -72,9 +72,46 @@ function namingProblems(link: FamilyLink, from: SynthDef, to: SynthDef): string[
       if (target.kind !== 'enum' || !target.options.some((o) => o.v === toV))
         problems.push(`${at}: ${toId} has no option ${String(toV)} on the ${to.name}`);
     }
-    if (rule.dropWhen && !fc[rule.dropWhen.when.id])
-      problems.push(`${at}: ${id} drops on ${rule.dropWhen.when.id}, which the ${from.name} lacks`);
+    if (rule.dropWhen) {
+      const { when } = rule.dropWhen;
+      const on = fc[when.id];
+      if (!on) problems.push(`${at}: ${id} drops on ${when.id}, which the ${from.name} lacks`);
+      else if (on.kind === 'enum')
+        for (const v of 'eq' in when ? [when.eq] : when.in)
+          if (!on.options.some((o) => o.v === v))
+            problems.push(
+              `${at}: ${id} drops on ${when.id} ${String(v)}, which is no option of it`
+            );
+    }
   }
+  // Two ids of `from` landing on one id of `to` would lose one of them without a word.
+  const landing = (
+    ids: string[],
+    rename: (id: string) => string,
+    has: (id: string) => boolean,
+    what: string
+  ): void => {
+    const seen = new Map<string, string>();
+    for (const id of ids) {
+      const toId = rename(id);
+      if (!has(toId)) continue;
+      const first = seen.get(toId);
+      if (first) problems.push(`${at}: ${first} and ${id} both carry to ${what} ${toId}`);
+      else seen.set(toId, id);
+    }
+  };
+  landing(
+    from.controls.map((c) => c.id),
+    (id) => link.controls?.[id]?.to ?? id,
+    (id) => !!tc[id],
+    'control'
+  );
+  landing(
+    from.jacks.map((j) => j.id),
+    (id) => link.jacks?.[id] ?? id,
+    (id) => !!tj[id],
+    'jack'
+  );
   for (const [id, toId] of Object.entries(link.jacks ?? {})) {
     if (!fj[id]) problems.push(`${at}: names jack ${id}, which the ${from.name} lacks`);
     else if (!tj[toId])
@@ -108,8 +145,10 @@ function roundTripProblems(
   const back = translate(there.values, there.cables, to, from, maps);
   const changed = new Set(there.changed.map((c) => c.id));
   const dropped = new Set(there.dropped.flatMap((d) => (d.kind === 'control' ? [d.id] : [])));
-  // A `ui` control the other member lacks drops without being listed (`Translation.dropped`).
-  const unlisted = (id: string): boolean => !!controlMap(from)[id]?.ui && !controlMap(to)[id];
+  // A `ui` control that did not carry is never listed (`Translation.dropped`).
+  const link = maps.flatMap((m) => m.links).find((l) => l.from === from.id && l.to === to.id);
+  const unlisted = (id: string): boolean =>
+    !!controlMap(from)[id]?.ui && !((link?.controls?.[id]?.to ?? id) in there.values);
   const problems: string[] = [];
   for (const [id, v] of Object.entries(probe.values)) {
     if (changed.has(id) || dropped.has(id) || unlisted(id)) continue;
@@ -176,7 +215,10 @@ export function checkFamilyMaps(
         }
         const from = byId.get(a);
         const to = byId.get(b);
-        if (!from || !to) continue;
+        if (!from || !to) {
+          problems.push(`family ${family.id}: no definition for ${!from ? a : b}`);
+          continue;
+        }
         for (const probe of [...valuesOf(from), ...soundsOf(from)])
           problems.push(...roundTripProblems(probe, from, to, maps));
         // A library sound translated onto another member must be a sound that member can hold.

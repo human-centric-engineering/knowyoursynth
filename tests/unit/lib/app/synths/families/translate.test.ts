@@ -171,6 +171,14 @@ describe('translate', () => {
     ]);
   });
 
+  it('names an id neither member has plainly, not as a jack', () => {
+    const t = translate({ 'osc.old': 3 }, [], td3, tb303);
+
+    expect(t.dropped).toEqual([
+      { kind: 'control', id: 'osc.old', value: 3, reason: 'The TB-303 has no osc.old' },
+    ]);
+  });
+
   it('returns a copy when the two members are the same synth', () => {
     const values = { 'filter.cutoff': 3 };
     const t = translate(values, [['j.cv', 'j.mixIn']], tb303, tb303);
