@@ -60,6 +60,8 @@ vi.mock('@/lib/db/client', () => ({
     // "Heard on" (the databank): none, unless a test says otherwise.
     bankInstrument: { findMany: vi.fn(async () => []) },
     bankSong: { findMany: vi.fn(async () => []) },
+    // A synth's family (`f-synth-families`): none.
+    synthFamily: { findFirst: vi.fn(async () => null) },
   },
 }));
 // The real probe renders every job through the voice: hundreds of renders per map. Its measurement is replaced; its
