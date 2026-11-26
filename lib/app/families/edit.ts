@@ -5,8 +5,8 @@
  * The rules, each tested:
  *
  * - **Saved whole.** A save sends the family as its seed file holds it (`FamilyFileSchema`): its name, its default
- *   member, the originals it brings together (none: one shared original) and its members in toggle order. A member the save leaves out is removed, and the members' order is the
- *   order sent.
+ *   member, the originals it brings together (none: one shared original) and its members in toggle order. A member
+ *   the save leaves out is removed, and the members' order is the order sent.
  * - **Checked as the seed checks.** The family goes through `checkFamilies` against the databank and the catalogue as
  *   they stand, beside every other stored family, so a member whose instrument traces back to another original, or a
  *   synth already in another family, is refused, naming the problem. Another family's own problems never block it.

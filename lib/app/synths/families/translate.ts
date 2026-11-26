@@ -75,10 +75,10 @@ export interface FamilyMap {
 
 // ─── Results ─────────────────────────────────────────────────────────────────
 
-/** Something on the panel that did not come across, and why. */
 /**
- * A control or cable that did not carry. `cause` is the `dropWhen` condition that dropped a control the other member
- * has (t-326): set, the loss comes from how the rest of the panel is set, not from the control's own value.
+ * Something on the panel that did not come across, and why. `cause` is the `dropWhen` condition that dropped a control
+ * the other member has (t-326): set, the loss comes from how the rest of the panel is set, not from the control's own
+ * value.
  */
 export type Dropped =
   | { kind: 'control'; id: string; value: ControlValue; reason: string; cause?: ShowCondition }
