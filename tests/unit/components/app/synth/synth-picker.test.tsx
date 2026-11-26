@@ -9,6 +9,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
+import { FAMILY_SYNTHS, TB_303_FAMILY } from '@/tests/helpers/synth-family';
 
 const SYNTHS = [
   { id: 'model-d', name: 'Model D', maker: 'Moog', year: 1970, heritage: 'The original monosynth' },
@@ -173,5 +174,103 @@ describe('SynthPicker stars (f-my-sounds s4)', () => {
   it('shows no star while signed out or still loading', () => {
     renderStars(() => null);
     expect(screen.queryByRole('button', { name: /favourites$/ })).toBeNull();
+  });
+});
+
+describe('SynthPicker families (f-synth-families t-320)', () => {
+  const open = (synthId: string, owned?: ReadonlySet<string>) => {
+    const onSelect = vi.fn();
+    render(
+      <SynthPicker
+        synths={FAMILY_SYNTHS}
+        families={[TB_303_FAMILY]}
+        owned={owned}
+        synthId={synthId}
+        onSelect={onSelect}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { expanded: false }));
+    return onSelect;
+  };
+  const options = () => within(screen.getByRole('listbox')).getAllByRole('option');
+
+  it("lists a family as one entry with its members' makers and years", () => {
+    open('model-d');
+    expect(options()).toHaveLength(2);
+    const family = options()[1];
+    expect(family.textContent).toContain('TB-303');
+    expect(family.textContent).toContain('Behringer 2019 · Roland 1981 · Nobody 1997');
+  });
+
+  it('marks the family selected while one of its members is open', () => {
+    open('tb-303');
+    expect(options().map((o) => o.getAttribute('aria-selected'))).toEqual(['false', 'true']);
+  });
+
+  it('opens the member the user owns', () => {
+    const onSelect = open('model-d', new Set(['roland-tb-303']));
+    fireEvent.click(options()[1]);
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('tb-303');
+  });
+
+  it("opens the family's default member for a user who owns none of them", () => {
+    const onSelect = open('model-d', new Set(['moog-model-d']));
+    fireEvent.click(options()[1]);
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('td-3');
+  });
+
+  it('stays on the member open when its own family is chosen', () => {
+    const onSelect = open('tb-303');
+    fireEvent.click(options()[1]);
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it("finds a member by its own name, and opens that member, not the family's default", () => {
+    const onSelect = open('model-d');
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Find a synth' }), {
+      target: { value: 'TB-303' },
+    });
+    expect(options().map((o) => o.textContent)).toEqual([expect.stringContaining('Roland · 1981')]);
+    fireEvent.click(options()[0]);
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('tb-303');
+  });
+
+  it('opens the first match on Enter, and moves into the list on the down arrow', () => {
+    const onSelect = open('model-d');
+    const search = screen.getByRole('searchbox', { name: 'Find a synth' });
+    fireEvent.change(search, { target: { value: 'td' } });
+    fireEvent.keyDown(search, { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(options()[0]);
+    fireEvent.keyDown(search, { key: 'Enter' });
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('td-3');
+  });
+
+  it('says so when nothing matches, and starts afresh when opened again', () => {
+    open('model-d');
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Find a synth' }), {
+      target: { value: 'zzz' },
+    });
+    expect(screen.getByText('No synth matches that.')).toBeTruthy();
+    const trigger = screen.getByRole('button', { expanded: true });
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    expect(options()).toHaveLength(2);
+  });
+
+  it('opens nothing on Enter in an empty box', () => {
+    const onSelect = open('model-d');
+    fireEvent.keyDown(screen.getByRole('searchbox', { name: 'Find a synth' }), { key: 'Enter' });
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.getByRole('listbox')).toBeTruthy();
+  });
+
+  it('finds as you type on the list: the letter goes into the box, with the cursor', () => {
+    open('model-d');
+    fireEvent.keyDown(options()[0], { key: 'a' });
+    const search = screen.getByRole('searchbox', { name: 'Find a synth' });
+    expect(document.activeElement).toBe(search);
+    expect((search as HTMLInputElement).value).toBe('a');
+    expect(options().map((o) => o.textContent)).toEqual([expect.stringContaining('Roland')]);
   });
 });

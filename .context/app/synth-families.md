@@ -10,15 +10,18 @@ This page is the binding design. The research behind it (which app synths pair w
 how each clone differs, and the sources) is the Hub document `synth-families-originals-and-clones`.
 The owner's rulings (2026-11-26) are in the feature's journal.
 
-| What                            | Where                                                                   |
-| ------------------------------- | ----------------------------------------------------------------------- |
-| Tables                          | `SynthFamily`, `SynthFamilyMember` in `prisma/schema/app.prisma`        |
-| Shapes and the check            | `lib/app/families/data.ts` (`FamilyFileSchema`, `checkFamilies`)        |
-| Seed                            | `lib/app/families/seed.ts`, unit `007-families.ts`                      |
-| Seed data                       | `prisma/seeds/app-knowyoursynth/data/families/<id>.json`                |
-| Read                            | `lib/app/families/read.ts` (`listFamilies`, `getFamilyOf`)              |
-| Public API                      | `GET /api/v1/synths/families`, and `family` on `GET /api/v1/synths/:id` |
-| Carrying a panel across (t-319) | `lib/app/synths/families/`                                              |
+| What                            | Where                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| Tables                          | `SynthFamily`, `SynthFamilyMember` in `prisma/schema/app.prisma`          |
+| Shapes and the check            | `lib/app/families/data.ts` (`FamilyFileSchema`, `checkFamilies`)          |
+| Seed                            | `lib/app/families/seed.ts`, unit `007-families.ts`                        |
+| Seed data                       | `prisma/seeds/app-knowyoursynth/data/families/<id>.json`                  |
+| Read                            | `lib/app/families/read.ts` (`listFamilies`, `getFamilyOf`)                |
+| Public API                      | `GET /api/v1/synths/families`, and `family` on `GET /api/v1/synths/:id`   |
+| Carrying a panel across (t-319) | `lib/app/synths/families/`                                                |
+| Picker entries, which opens     | `components/app/synth/family-entries.ts` (`pickerEntries`, `familyOpens`) |
+| The toggle and its note         | `components/app/synth/family-toggle.tsx`                                  |
+| The carry across the navigation | `components/app/synth/family-carry.ts`                                    |
 
 ## The model
 
@@ -127,6 +130,39 @@ cables, named by its area ("The System 15 has no 921B Oscillator (5)").
 Ids are never renamed in a definition to make two members match. The map does that, and ids stay
 stable (`synths.md`). A family with no map still translates, under shared ids only, and
 `check:synths` fails until it has one. What it checks is in `.context/app/check/README.md`.
+
+## The picker and the toggle
+
+The picker (`synth-picker.tsx`) lists a family as one entry, where its first member is in the catalogue's order, with
+each member's maker and year. Choosing it opens the first member, in toggle order, that the signed-in user owns
+(`GET /api/v1/me/instruments`, matched on each member's instrument), else the family's default. Choosing the family
+you are already on keeps the member you have open: the toggle is what moves between them. The box over the list
+finds a synth by its name or maker, so a member is found as itself and opens as itself. A family is found by its name
+only when none of its members match on their own.
+
+The **version toggle** sits by the caption on a synth with a family, one segment per modelled member the catalogue
+serves. Unmodelled members are left out until they have a blank panel (t-321). A switch navigates to `/synths/<member>`,
+so the URL, saved sounds, favourites, progress and `SynthPreference` stay each member's own.
+
+The page is keyed by synth, so the panel is carried across the navigation by hand:
+
+1. The toggle loads the other member's definition and calls `translate()` on the panel as it stands, where this
+   member's definition is at hand.
+2. It leaves the result in `family-carry.ts`: module state, which a client navigation keeps, keyed by the member it
+   goes to. Not the URL, which would make a carried panel a link, and not storage, which outlives the one arrival it
+   is for.
+3. The member's page takes it in its arrival effect, where a synth switched to would get its Default patch, and lays
+   the values over that Default patch with the carried cables in place of the default's. It lands as a change the
+   visitor made, so the account's older panel does not replace it.
+4. Its note, under the patch's name, names each reason something did not carry or changed, once each.
+
+A carry is taken only by the member it was made for, and taking it clears it. The member takes it in the same commit
+that unmounts the page it came from; that page lets go of it as it unmounts (`releaseCarry`), on a timer that fires
+after the commit, so a link away or a navigation cut short leaves nothing for a later visit. `CARRY_TTL_MS` (60
+seconds) is the backstop. The note goes once anything else opens on the panel. A full reload, or the member opened in a new tab, opens as any arrival
+does. If the definition cannot be loaded, the switch goes ahead with nothing carried.
+
+A shared sound's or pattern's page passes no families, so its picker lists every synth alone; its toggle still shows.
 
 ## Not here
 

@@ -149,6 +149,16 @@ describe('getSynthDetail', () => {
     });
   });
 
+  it('serves the synth without a family when the family cannot be read', async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    vi.mocked(prisma.synthFamily.findFirst).mockRejectedValueOnce(new Error('no such table'));
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(detail?.synth.id).toBe('model-d');
+    expect(detail?.family).toBeNull();
+  });
+
   it('serves every sound, the lineage and the notes for a listed synth', async () => {
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
 

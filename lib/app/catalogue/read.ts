@@ -227,7 +227,14 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     }),
     summarisePublicLinks({ target: 'synth', id }),
     summariseSoundLinks(id),
-    getFamilyOf(id),
+    // A family only adds the version toggle: a failed read opens the synth without one rather than failing it.
+    getFamilyOf(id).catch((err: unknown) => {
+      logger.warn('catalogue: could not read the synth family, served without one', {
+        synthId: id,
+        err: String(err),
+      });
+      return null;
+    }),
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, bankInstruments, ...synthRow } = row;
