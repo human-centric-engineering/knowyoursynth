@@ -249,7 +249,12 @@ import {
   CarriedNote,
   type CarryNote,
 } from '@/components/app/synth/family-toggle';
-import { leaveCarry, takeCarry, type FamilyCarry } from '@/components/app/synth/family-carry';
+import {
+  leaveCarry,
+  releaseCarry,
+  takeCarry,
+  type FamilyCarry,
+} from '@/components/app/synth/family-carry';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { translate } from '@/lib/app/synths/families/translate';
 import { logger } from '@/lib/logging';
@@ -645,15 +650,11 @@ function Synth({
   // it has been looked for. It lands where the Default patch would, and the same way.
   const carried = useRef<FamilyCarry | null | undefined>(undefined);
   const [carryNote, setCarryNote] = useState<CarryNote | null>(null);
-  // The sound the carried panel landed as: another one opening over it once it has landed (a library sound, one of
-  // the user's own) ends what the note describes.
-  const carriedAs = useRef<{ key: string; landed: boolean } | null>(null);
   useEffect(() => {
     if (carried.current === undefined) carried.current = takeCarry(synthId);
     const carry = carried.current;
     if (carry) {
       setSess(() => carriedSession(synthDef, defaultSound, carry));
-      carriedAs.current = { key: `${defaultSound.id}|`, landed: false };
       arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
       setCarryNote({ fromName: carry.fromName, dropped: carry.dropped, changed: carry.changed });
     } else if (switchedTo.current) {
@@ -661,16 +662,6 @@ function Synth({
       arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
-  const openKey = `${stored.presetId ?? ''}|${stored.soundId ?? ''}`;
-  useEffect(() => {
-    const as = carriedAs.current;
-    if (!as) return;
-    if (openKey === as.key) as.landed = true;
-    else if (as.landed) {
-      carriedAs.current = null;
-      setCarryNote(null);
-    }
-  }, [openKey]);
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -695,9 +686,12 @@ function Synth({
   // Its panel, while it is what is on the panel: what "controls moved" counts from. Opening anything else clears it.
   const [sharedPanel, setSharedPanel] = useState<Pick<Session, 'values' | 'cables'> | null>(null);
   const [sharedNotice, setSharedNotice] = useState<string | null>(null);
+  // Anything else opening on the panel (a library sound, the Default patch, one of the user's own, a lesson step) ends
+  // a shared sound's being there, and what the version toggle's note says about the panel it carried in (t-320).
   const leaveShared = () => {
     setSharedPanel(null);
     setSharedNotice(null);
+    setCarryNote(null);
     writeStored(sharedFromKey(synthId), null);
   };
 
@@ -2845,6 +2839,7 @@ function Synth({
   useEffect(
     () => () => {
       switchSeq.current += 1;
+      releaseCarry();
     },
     []
   );

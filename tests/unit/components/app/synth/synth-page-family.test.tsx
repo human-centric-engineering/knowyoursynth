@@ -208,6 +208,18 @@ describe('the version toggle', () => {
     await waitFor(() => expect(screen.queryByText(/Panel carried over/)).toBeNull());
   });
 
+  it('leaves nothing for a later visit when the switch went somewhere else', async () => {
+    leaveTd3();
+    const first = page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'TB-303' }));
+    await waitFor(() => expect(router.push).toHaveBeenCalledOnce());
+    // The visitor follows a link away instead, and the TD-3's page goes with nothing to take the carry.
+    first.unmount();
+    await new Promise((r) => setTimeout(r));
+    page(1);
+    expect(screen.queryByText(/Panel carried over/)).toBeNull();
+  });
+
   it('opens a member reached any other way on its Default patch, with no note', () => {
     leaveTd3();
     page(1);

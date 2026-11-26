@@ -9,7 +9,8 @@
  * Module state rather than the URL or storage: a client navigation keeps the module, and what is carried is meant for
  * the one arrival it was made for. A full reload, or a page opened in a new tab, starts afresh as any arrival does.
  * Whatever is left behind (a navigation that never landed) is discarded: a carry is taken only by the member it was
- * made for, and only within `CARRY_TTL_MS` of being made. Taking it clears it, whoever takes it.
+ * made for, in the commit that leaves the page it was made on (`releaseCarry`), and never past `CARRY_TTL_MS`.
+ * Taking it clears it, whoever takes it.
  */
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import type { Changed, Dropped } from '@/lib/app/synths/families/translate';
@@ -39,6 +40,20 @@ let pending: FamilyCarry | null = null;
 /** Leave a carry for the member `carry.to`, replacing any other. */
 export function leaveCarry(carry: Omit<FamilyCarry, 'at'>): void {
   pending = { ...carry, at: Date.now() };
+}
+
+/**
+ * Let go of whatever carry is waiting, once the page it was made on has gone: called as that page unmounts. The member
+ * the toggle went to takes it in the same commit that unmounts the page it came from, before this runs; any other
+ * route (a link away, a navigation cut short) leaves it to be dropped here, so a later visit to the member does not
+ * find it. A carry left after this was called is not touched.
+ */
+export function releaseCarry(): void {
+  const left = pending;
+  if (!left) return;
+  setTimeout(() => {
+    if (pending === left) pending = null;
+  }, 0);
 }
 
 /**

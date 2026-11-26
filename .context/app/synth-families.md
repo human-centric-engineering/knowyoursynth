@@ -156,8 +156,10 @@ The page is keyed by synth, so the panel is carried across the navigation by han
    visitor made, so the account's older panel does not replace it.
 4. Its note, under the patch's name, names each reason something did not carry or changed, once each.
 
-A carry is taken only by the member it was made for, within 15 seconds, and taking it clears it, so a navigation that
-never lands leaves nothing for a later visit. A full reload, or the member opened in a new tab, opens as any arrival
+A carry is taken only by the member it was made for, and taking it clears it. The member takes it in the same commit
+that unmounts the page it came from; that page lets go of it as it unmounts (`releaseCarry`), on a timer that fires
+after the commit, so a link away or a navigation cut short leaves nothing for a later visit. `CARRY_TTL_MS` (60
+seconds) is the backstop. The note goes once anything else opens on the panel. A full reload, or the member opened in a new tab, opens as any arrival
 does. If the definition cannot be loaded, the switch goes ahead with nothing carried.
 
 A shared sound's or pattern's page passes no families, so its picker lists every synth alone; its toggle still shows.
