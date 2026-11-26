@@ -43,8 +43,13 @@ export const FamilyIdSchema = FamilySlugSchema;
 export const FamilyEditSchema = FamilyFileSchema.omit({ id: true }).extend({
   members: z.array(FamilyMemberSchema).max(24),
 });
-/** A new family: the seed file's shape, with its id. */
-export const FamilyCreateSchema = FamilyEditSchema.extend({ id: FamilySlugSchema });
+/**
+ * A new family: the seed file's shape, with its id. `/admin/synths/catalogue/families/new` is the form for a new
+ * family, so no family can be reached at the id `new`.
+ */
+export const FamilyCreateSchema = FamilyEditSchema.extend({
+  id: FamilySlugSchema.refine((id) => id !== 'new', 'The id new is kept for the admin pages'),
+});
 export type FamilyEdit = z.infer<typeof FamilyEditSchema>;
 
 /** A stored family as the admin sees it: the seed file's shape, and when an admin last saved it. */

@@ -326,6 +326,17 @@ describe('POST /families', () => {
     expect(writes()).toBe(0);
   });
 
+  it('refuses the id new, which the create page has', async () => {
+    const res = await postFamily(request('POST', 'families', { id: 'new', ...tb303() }));
+
+    expect(res.status).toBe(400);
+    const body = await json(res);
+    expect(body.error?.details?.errors).toEqual([
+      expect.objectContaining({ path: 'id', message: 'The id new is kept for the admin pages' }),
+    ]);
+    expect(writes()).toBe(0);
+  });
+
   it('refuses an id that is taken with 409', async () => {
     seeded();
     const res = await postFamily(request('POST', 'families', { id: 'tb-303', ...tb303() }));
