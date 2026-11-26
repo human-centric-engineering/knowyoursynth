@@ -174,7 +174,12 @@ describe('InstrumentPage', () => {
   });
 
   it('has no recreation lines when there are none', () => {
-    const original = must(detailFrom(bank, 'instruments', 'yamaha-cs-80'));
+    // Derived, not named: a seeded recreation of a named synth would quietly break this.
+    const recreated = new Set(bank.instruments.map((i) => i.recreationOf));
+    const plain = must(
+      bank.instruments.find((i) => !i.recreationOf && !recreated.has(i.id)) ?? null
+    );
+    const original = must(detailFrom(bank, 'instruments', plain.id));
     expect(original.recreations).toEqual([]);
     render(<InstrumentPage d={original} names={names} links={NO_LINKS} />);
     expect(screen.queryByText(/A recreation of the/)).toBeNull();
