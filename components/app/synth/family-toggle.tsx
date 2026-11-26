@@ -5,8 +5,10 @@
  * synth's family, the TD-3 and the TB-303 side by side. Choosing one asks the page to switch to it, which carries the
  * panel across (`family-carry.ts`). Once there, `CarriedNote` says what did not carry, and what carried but not as it was.
  *
- * Shown only on a synth with a family. Members nobody has modelled are left out until they have a blank panel of their
- * own (t-321). See `.context/app/synth-families.md`.
+ * Members nobody has modelled follow the modelled ones (t-321). Choosing one shows it as a blank panel on this page
+ * (`unmodelled-member.tsx`), which keeps the panel underneath for the way back.
+ *
+ * Shown only on a synth with a family. See `.context/app/synth-families.md`.
  */
 
 import { useEffect, useState } from 'react';
@@ -65,12 +67,27 @@ export interface FamilyToggleProps {
   /** The synth ids the catalogue serves: a member whose synth it does not is left out. */
   offered: ReadonlySet<string>;
   onSwitch: (synthId: string) => void;
+  /** The unmodelled member shown as a blank panel in the panel's place, by slug; null while the panel is showing. */
+  blank?: string | null;
+  /** Show an unmodelled member, by slug. */
+  onBlank?: (slug: string) => void;
   /** The box around the toggle: drawn only with the toggle, so nothing is left behind when there is none. */
   className?: string;
 }
 
-export function FamilyToggle({ family, synthId, offered, onSwitch, className }: FamilyToggleProps) {
-  const members = family.members.filter((m) => m.synthId && offered.has(m.synthId));
+export function FamilyToggle({
+  family,
+  synthId,
+  offered,
+  onSwitch,
+  blank = null,
+  onBlank,
+  className,
+}: FamilyToggleProps) {
+  const members = [
+    ...family.members.filter((m) => m.synthId && offered.has(m.synthId)),
+    ...(onBlank ? family.members.filter((m) => !m.synthId) : []),
+  ];
   if (members.length < 2) return null;
   return (
     <div className={className}>
@@ -80,15 +97,17 @@ export function FamilyToggle({ family, synthId, offered, onSwitch, className }: 
         className="inline-flex w-fit rounded-lg border border-(--kys-line) bg-(--kys-surface) p-0.5"
       >
         {members.map((m) => {
-          const on = m.synthId === synthId;
+          const on = m.synthId ? !blank && m.synthId === synthId : m.slug === blank;
           return (
             <button
               key={m.slug}
               type="button"
               aria-pressed={on}
-              title={`${m.instrument.maker} ${m.instrument.name}, ${m.instrument.year}`}
+              title={`${m.instrument.maker} ${m.instrument.name}, ${m.instrument.year}${m.synthId ? '' : ': not modelled yet'}`}
               onClick={() => {
-                if (!on && m.synthId) onSwitch(m.synthId);
+                if (on) return;
+                if (m.synthId) onSwitch(m.synthId);
+                else onBlank?.(m.slug);
               }}
               className={`rounded-md px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${on ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
             >

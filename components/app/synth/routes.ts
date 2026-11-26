@@ -40,6 +40,16 @@ export function synthHref(id: string, view: PanelView = DEFAULT_VIEW): string {
   return `/synths/${encodeURIComponent(id)}${q ? `?view=${q}` : ''}`;
 }
 
+/**
+ * A family member nobody has modelled, shown as a blank panel (`f-synth-families` t-321): it has no synth id of its own, so
+ * it is the page of a modelled member of its family with `?member=<slug>`. That page stays mounted under it, so its panel
+ * is there as it was on the way back.
+ */
+export function memberHref(id: string, member: string, view: PanelView = DEFAULT_VIEW): string {
+  const q = viewQuery(view);
+  return `/synths/${encodeURIComponent(id)}?member=${encodeURIComponent(member)}${q ? `&view=${q}` : ''}`;
+}
+
 /** A sound someone shared, by its public address (`f-sharing`): the synth's page with it loaded, and the view as above. */
 export function sharedSoundHref(id: string, slug: string, view: PanelView = DEFAULT_VIEW): string {
   const q = viewQuery(view);

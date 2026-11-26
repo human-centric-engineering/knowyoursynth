@@ -44,6 +44,67 @@ describe('FamilyToggle', () => {
     expect(onSwitch).toHaveBeenCalledExactlyOnceWith('tb-303');
   });
 
+  it('lists the unmodelled members after the modelled ones, and shows one when it is chosen (t-321)', () => {
+    const onBlank = vi.fn();
+    const onSwitch = vi.fn();
+    render(
+      <FamilyToggle
+        family={{
+          ...TB_303_FAMILY,
+          members: [TB_303_FAMILY.members[2], ...TB_303_FAMILY.members.slice(0, 2)],
+        }}
+        synthId="td-3"
+        offered={OFFERED}
+        onSwitch={onSwitch}
+        onBlank={onBlank}
+      />
+    );
+    const segments = within(screen.getByRole('group')).getAllByRole('button');
+    expect(segments.map((b) => b.textContent)).toEqual(['TD-3', 'TB-303', 'Unmodelled']);
+    expect(segments[2].title).toBe('Nobody Unmodelled, 1997: not modelled yet');
+    fireEvent.click(segments[2]);
+    expect(onBlank).toHaveBeenCalledExactlyOnceWith('rebirth');
+    expect(onSwitch).not.toHaveBeenCalled();
+  });
+
+  it('with a blank panel showing, presses its member and switches back to the page it is on', () => {
+    const onBlank = vi.fn();
+    const onSwitch = vi.fn();
+    render(
+      <FamilyToggle
+        family={TB_303_FAMILY}
+        synthId="td-3"
+        offered={OFFERED}
+        onSwitch={onSwitch}
+        blank="rebirth"
+        onBlank={onBlank}
+      />
+    );
+    const segments = within(screen.getByRole('group')).getAllByRole('button');
+    expect(segments.map((b) => b.getAttribute('aria-pressed'))).toEqual(['false', 'false', 'true']);
+    fireEvent.click(segments[2]);
+    expect(onBlank).not.toHaveBeenCalled();
+    fireEvent.click(segments[0]);
+    expect(onSwitch).toHaveBeenCalledExactlyOnceWith('td-3');
+  });
+
+  it('counts an unmodelled member as a second version', () => {
+    render(
+      <FamilyToggle
+        family={TB_303_FAMILY}
+        synthId="td-3"
+        offered={new Set(['td-3'])}
+        onSwitch={vi.fn()}
+        onBlank={vi.fn()}
+      />
+    );
+    expect(
+      within(screen.getByRole('group'))
+        .getAllByRole('button')
+        .map((b) => b.textContent)
+    ).toEqual(['TD-3', 'Unmodelled']);
+  });
+
   it('shows nothing when fewer than two members are offered', () => {
     const { container } = render(
       <FamilyToggle

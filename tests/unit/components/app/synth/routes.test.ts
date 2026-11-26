@@ -12,6 +12,7 @@ import {
   mySoundHref,
   DEFAULT_VIEW,
   hashRoute,
+  memberHref,
   parseView,
   synthHref,
   viewQuery,
@@ -54,6 +55,19 @@ describe('viewQuery', () => {
         const q = viewQuery({ outline, long });
         expect(parseView(q)).toEqual(q === null ? null : { outline, long });
       }
+  });
+});
+
+describe('memberHref', () => {
+  it("is the modelled member's page with the unmodelled member in the query, and the view after it", () => {
+    expect(memberHref('model-d', 'minimoog')).toBe('/synths/model-d?member=minimoog');
+    expect(memberHref('model-d', 'minimoog', { outline: true, long: false })).toBe(
+      '/synths/model-d?member=minimoog&view=outline'
+    );
+  });
+
+  it('encodes both, so neither can break out of its place', () => {
+    expect(memberHref('a/b', 'c&view=x')).toBe('/synths/a%2Fb?member=c%26view%3Dx');
   });
 });
 

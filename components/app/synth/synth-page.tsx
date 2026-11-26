@@ -204,6 +204,7 @@ import {
   sharedPatternHref,
   sharedSoundHref,
   synthHref,
+  memberHref,
 } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
 import {
@@ -249,6 +250,7 @@ import {
   CarriedNote,
   type CarryNote,
 } from '@/components/app/synth/family-toggle';
+import { UnmodelledMember } from '@/components/app/synth/unmodelled-member';
 import {
   leaveCarry,
   releaseCarry,
@@ -434,6 +436,11 @@ export interface SynthPageProps {
   soundParam?: string | null;
   /** The `mine` query: one of the signed-in user's own sounds to open with, as the dashboard links to it. */
   mineParam?: string | null;
+  /**
+   * The `member` query (`f-synth-families` t-321): an unmodelled member of this synth's family, shown as a blank panel
+   * in the panel's place. A slug the family has no unmodelled member by opens the synth itself.
+   */
+  memberParam?: string | null;
   /** On a shared sound's page: that sound, from `GET /api/v1/public/sounds/:slug`, on this synth. */
   shared?: PublicSound | null;
   /**
@@ -485,6 +492,7 @@ function Synth({
   viewParam,
   soundParam = null,
   mineParam = null,
+  memberParam = null,
   shared = null,
   sharedPattern = null,
 }: SynthPageProps & { baseDef: AppSynthDef }) {
@@ -522,14 +530,35 @@ function Synth({
   // The shared sound stopped being shared while the page was open (found by Save a copy): its address now 404s.
   const sharedGone = useRef(false);
   const patternSlug = sharedPattern?.slug ?? null;
+
+  // ── an unmodelled member of the family, shown as a blank panel in the panel's place (t-321) ──
+  // Chosen in the toggle it shows at once, and the address follows; one the address names is taken in on arrival, and
+  // as the browser's Back and Forward change it (below). The page under it stays as it is, so leaving it comes back to
+  // the panel as it was.
+  const [blank, setBlank] = useState(memberParam);
+  const [blankParam, setBlankParam] = useState(memberParam);
+  if (memberParam !== blankParam) {
+    setBlankParam(memberParam);
+    setBlank(memberParam);
+  }
+  const blankMember = detail.family?.members.find((m) => !m.synthId && m.slug === blank) ?? null;
+  const blankSlug = blankMember?.slug ?? null;
+  // Nothing plays while it shows: the keys, MIDI in and the scope's keyboard all go through `noteOn`.
+  const blankRef = useRef(false);
+  useEffect(() => {
+    blankRef.current = blankSlug !== null;
+  });
+
   const hereHref = useCallback(
     (v: PanelView) =>
       sharedSlug
         ? sharedSoundHref(synthId, sharedSlug, v)
         : patternSlug
           ? sharedPatternHref(synthId, patternSlug, v)
-          : synthHref(synthId, v),
-    [synthId, sharedSlug, patternSlug]
+          : blankSlug
+            ? memberHref(synthId, blankSlug, v)
+            : synthHref(synthId, v),
+    [synthId, sharedSlug, patternSlug, blankSlug]
   );
   // Which half of the Layout setting the synth shows besides its full faceplate, if any: Long / Full is kept per kind.
   const ownLayout = layoutKind(synthDef);
@@ -1284,8 +1313,9 @@ function Synth({
   const seqTook = useRef(new Map<number, number>());
   const noteOn = useCallback(
     (n: number, v = 0.85) => {
-      // Dropped, not queued, while a patch loads: from the keys, MIDI in and the scope's keyboard alike.
-      if (!engine || isLoading()) return;
+      // Dropped, not queued, while a patch loads: from the keys, MIDI in and the scope's keyboard alike. And while an
+      // unmodelled member's blank panel is in the panel's place, as there is nothing there to play.
+      if (!engine || isLoading() || blankRef.current) return;
       void ensureAudio();
       if (noteToSeq.current(n, v)) {
         seqTook.current.set(n, (seqTook.current.get(n) ?? 0) + 1);
@@ -2879,6 +2909,39 @@ function Synth({
     if (seq === switchSeq.current) switchSynth(toId);
   };
   const offered = useMemo(() => new Set(synths.map((s) => s.id)), [synths]);
+  // To an unmodelled member's blank panel (t-321), and back. What was playing stops and what was open over the panel
+  // closes, as none of it has anything under it. A shared sound's or pattern's page keeps its address: it is that
+  // sound's, and a member's address is this synth's own page.
+  const ownAddress = !sharedSlug && !patternSlug;
+  const showBlank = (slug: string) => {
+    switchSeq.current += 1;
+    stopRiff();
+    engine?.send({ type: 'panic' });
+    setSoundsOpen(false);
+    setCard(null);
+    setTutorOpen(false);
+    setTourOn(false);
+    setSheet(null);
+    setBlank(slug);
+    if (ownAddress) window.history.pushState(null, '', memberHref(synthId, slug, view));
+  };
+  const hideBlank = () => {
+    setBlank(null);
+    if (ownAddress) window.history.pushState(null, '', synthHref(synthId, view));
+  };
+  // The browser's Back and Forward between this page and a member's blank panel. The address is written by hand above,
+  // not through the router, which would render the page again from the server for what is only this page's own state.
+  useEffect(() => {
+    if (!ownAddress) return undefined;
+    const onPop = () => {
+      const url = new URL(window.location.href);
+      if (url.pathname === synthHref(synthId)) setBlank(url.searchParams.get('member'));
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [ownAddress, synthId]);
+  // What the blank panel hides rather than unmounts: the panel and the dock keep their measures and their state.
+  const away = blankMember ? { display: 'none' } : undefined;
 
   // Nothing to count from while the open sound's saved panel is still being fetched, or could not be. Counted from
   // where a glide is going, so Restore does not come and go as one runs.
@@ -3090,10 +3153,15 @@ function Synth({
                       family={detail.family}
                       synthId={synthId}
                       offered={offered}
-                      onSwitch={(to) => void switchMember(to)}
+                      onSwitch={(to) => (to === synthId ? hideBlank() : void switchMember(to))}
+                      blank={blankSlug}
+                      onBlank={showBlank}
                     />
                   )}
-                  <div className="kys-autohide flex max-w-[72ch] min-w-0 flex-col gap-0.5 pb-1 text-[13px] text-(--kys-muted) lg:pb-0">
+                  <div
+                    style={away}
+                    className="kys-autohide flex max-w-[72ch] min-w-0 flex-col gap-0.5 pb-1 text-[13px] text-(--kys-muted) lg:pb-0"
+                  >
                     <p className="leading-snug lg:line-clamp-2">{detail.synth.heritage}</p>
                     <p className="flex flex-wrap items-baseline gap-x-3 [&>button]:whitespace-nowrap">
                       <button type="button" onClick={() => setAboutOpen(true)} className={linkBtn}>
@@ -3115,7 +3183,7 @@ function Synth({
                   </div>
                 </div>
                 {/* The tutor at the far right, named and always on show. The layers are on the panel's top rail. */}
-                {!small && (
+                {!small && !blankMember && (
                   <div className="flex items-center lg:shrink-0">
                     <LayerToggle
                       ref={tutorBtnRef}
@@ -3144,7 +3212,14 @@ function Synth({
                 exit={{ 'synth-change': 'kys-panel-turn', default: 'none' }}
                 default="none"
               >
-                <div className="kys-instrument">
+                {blankMember && (
+                  <UnmodelledMember
+                    member={blankMember}
+                    backName={synthDef.name}
+                    onBack={hideBlank}
+                  />
+                )}
+                <div className="kys-instrument" style={away}>
                   {/* The panel's top rail: Signal (the diagram and the flow) and the layers over the panel at the left; at the right the
               history, the inspector, Explain sections, the tour and its help (t-276), on a strip of
               the faceplate along its head, as the rail at its foot carries how it is drawn. */}
@@ -3464,7 +3539,7 @@ function Synth({
               </ViewTransition>
               {/* Under the rail, on the stage with the panel: the sound's name and what you can do with it, and what the
               sound is under both. */}
-              <div className="px-3 pt-4 pb-3 sm:px-6">
+              <div className="px-3 pt-4 pb-3 sm:px-6" style={away}>
                 <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
                   <section
                     aria-label="The patch on the panel"
@@ -3562,7 +3637,7 @@ function Synth({
                   )}
                 </div>
               )}
-              {areasOn && (
+              {areasOn && !blankMember && (
                 <p className="px-4 pb-3 text-xs text-(--kys-accent) sm:px-6">
                   Explain sections is on: point at (or tap) a coloured section to read what it does.
                   Knobs and jacks are locked until you turn it off.
@@ -3573,7 +3648,7 @@ function Synth({
             {/* The sequencer from `lg` up (t-281): a rack module in the page directly under the panel, as if bolted
             into the same rack, rather than in the dock. Its power switch puts it away; so does the bar's Sequencer
             button, which brings it back. */}
-            {seqDocked && (
+            {seqDocked && !blankMember && (
               <SequencerRack ref={rackRef} running={transportPlaying} onPower={powerOff}>
                 <Sequencer {...seqProps} rack />
               </SequencerRack>
@@ -3583,7 +3658,7 @@ function Synth({
             screen, and what opens from it (the lesson card, the sounds, the tutor) floats over the panel, so it never
             changes height unless the piano is put away. With a pointer, the strip floats over the foot of the panel and
             shows only while the pointer is near the dock. */}
-            <div ref={dockRef} className="kys-dock">
+            <div ref={dockRef} className="kys-dock" style={away}>
               {/* The open sequencer takes the strip's place: what is being played is the pattern, not a lesson. */}
               {!seqDocked && (
                 <SoundDesign
@@ -3835,7 +3910,7 @@ function Synth({
             {/* Inside the player, so the cards and the tour still show with the player full screen. Explain sections
             is a layer of section cards, so they show with hover help off, without changing the setting. */}
             <Tooltip
-              enabled={tipsOn && !(small && coarse)}
+              enabled={tipsOn && !(small && coarse) && !blankMember}
               areas={areasOn && !(small && coarse)}
               def={def}
               values={sess.values}
@@ -3843,23 +3918,27 @@ function Synth({
               preset={shown ?? null}
               cables={sess.cables}
             />
-            {tourOn && (
+            {tourOn && !blankMember && (
               <Tour def={def} notes={detail.notes.unusual} routed={!!routing} onClose={closeTour} />
             )}
           </section>
-          {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). */}
-          <LinksSection
-            target="synth"
-            id={detail.synth.id}
-            summary={detail.links}
-            suggest={suggestForSynth}
-          />
+          {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). They are
+          this synth's, so not under another member's blank panel. */}
+          {!blankMember && (
+            <LinksSection
+              target="synth"
+              id={detail.synth.id}
+              summary={detail.links}
+              suggest={suggestForSynth}
+            />
+          )}
         </div>
       </div>
 
       {small ? (
         <>
           <nav
+            style={away}
             aria-label="Beside the panel"
             className="sticky bottom-0 z-40 -mx-4 grid grid-cols-4 gap-1 border-t border-(--kys-line) bg-(--kys-ground) px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] sm:-mx-6"
           >

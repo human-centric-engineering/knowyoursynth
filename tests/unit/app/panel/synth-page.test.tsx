@@ -114,6 +114,7 @@ describe('/synths/[id]', () => {
       viewParam: 'long,outline',
       soundParam: null,
       mineParam: null,
+      memberParam: null,
     });
     expect(el.key).toBe('model-d');
   });
@@ -160,6 +161,22 @@ describe('/synths/[id]', () => {
     expect((await mine('../admin')).mineParam).toBeNull();
     expect((await mine(['a', 'b'])).mineParam).toBeNull();
     expect((await mine('x'.repeat(41))).mineParam).toBeNull();
+  });
+
+  it('passes an unmodelled member (`?member=`) to open straight onto, and anything that cannot be a slug as null', async () => {
+    const member = async (q: unknown) => {
+      const el = await SynthRoute({
+        params: Promise.resolve({ id: 'model-d' }),
+        searchParams: Promise.resolve({ member: q as string }),
+      });
+      return { key: el.key, ...(el.props as { memberParam: string | null }) };
+    };
+    // Keyed by the synth, not the member: going to the blank panel and back keeps the page, and the panel on it.
+    expect(await member('minimoog')).toMatchObject({ key: 'model-d', memberParam: 'minimoog' });
+    expect((await member('Minimoog')).memberParam).toBeNull();
+    expect((await member('../admin')).memberParam).toBeNull();
+    expect((await member(['a', 'b'])).memberParam).toBeNull();
+    expect((await member('x'.repeat(65))).memberParam).toBeNull();
   });
 
   it('lets a failed read reach the error boundary', async () => {

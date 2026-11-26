@@ -22,6 +22,7 @@ The owner's rulings (2026-11-26) are in the feature's journal.
 | Picker entries, which opens     | `components/app/synth/family-entries.ts` (`pickerEntries`, `familyOpens`) |
 | The toggle and its note         | `components/app/synth/family-toggle.tsx`                                  |
 | The carry across the navigation | `components/app/synth/family-carry.ts`                                    |
+| An unmodelled member's panel    | `components/app/synth/unmodelled-member.tsx`, `memberHref` in `routes.ts` |
 
 ## The model
 
@@ -141,8 +142,8 @@ finds a synth by its name or maker, so a member is found as itself and opens as 
 only when none of its members match on their own.
 
 The **version toggle** sits by the caption on a synth with a family, one segment per modelled member the catalogue
-serves. Unmodelled members are left out until they have a blank panel (t-321). A switch navigates to `/synths/<member>`,
-so the URL, saved sounds, favourites, progress and `SynthPreference` stay each member's own.
+serves, then one per unmodelled member. A switch to a modelled member navigates to `/synths/<member>`, so the URL, saved
+sounds, favourites, progress and `SynthPreference` stay each member's own.
 
 The page is keyed by synth, so the panel is carried across the navigation by hand:
 
@@ -161,6 +162,30 @@ that unmounts the page it came from; that page lets go of it as it unmounts (`re
 after the commit, so a link away or a navigation cut short leaves nothing for a later visit. `CARRY_TTL_MS` (60
 seconds) is the backstop. The note goes once anything else opens on the panel. A full reload, or the member opened in a new tab, opens as any arrival
 does. If the definition cannot be loaded, the switch goes ahead with nothing carried.
+
+## An unmodelled member
+
+An unmodelled member has no synth id, so it has no page of its own. Its address is the page of the modelled member it was
+chosen from, with its slug in the query: `/synths/model-d?member=minimoog` (`memberHref`). Any modelled member of the
+family names it as well, so the address holds while that member is in the family. A slug that is not one of the family's
+unmodelled members opens the synth itself.
+
+Choosing it in the toggle shows a blank faceplate in the panel's place (`unmodelled-member.tsx`): its maker, name and
+year, its differences text a paragraph to each blank line, and a way back to the member whose page it is.
+
+- **The page stays mounted under it.** The address is written with `history.pushState`, not the router, so the server
+  does not render the page again for what is only its own state, and the panel, the dock and their state are hidden
+  rather than taken down. Going back, through the toggle, the faceplate's button or the browser's Back (`popstate`),
+  shows the panel as it was.
+- **Nothing plays.** Choosing it stops the riff or pattern and lets every note go. While it shows, `noteOn` drops every
+  note, from the keys, MIDI in and the scope's keyboard alike.
+- **What needs a definition is hidden, not shown dead:** the panel and its rails, the patch's name and Save, the dock
+  (lesson strip, bar, keyboard, sequencer), the sequencer rack, the tutor, the tips, the tour, the description's links
+  and the videos and links section. What was open over the panel (the library, the lesson card, the tutor, a phone's
+  sheet) closes.
+- **Switching on to another modelled member** carries the panel left underneath, as any switch does.
+- On a shared sound's or pattern's page the blank panel shows the same way, but the address stays the shared one, since
+  a member's address is a synth's own page.
 
 A shared sound's or pattern's page passes no families, so its picker lists every synth alone; its toggle still shows.
 
