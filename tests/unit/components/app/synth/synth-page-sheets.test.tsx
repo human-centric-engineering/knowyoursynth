@@ -181,6 +181,7 @@ const detail: SynthDetail = {
   links: { count: 0, kinds: [] },
   soundLinks: {},
   instruments: [],
+  family: null,
 };
 
 function page(over: Partial<SynthPageProps> = {}) {

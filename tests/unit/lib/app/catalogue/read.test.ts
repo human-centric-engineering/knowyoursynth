@@ -25,6 +25,8 @@ vi.mock('@/lib/db/client', () => ({
     synthNote: { findMany: vi.fn() },
     bankInstrument: { findMany: vi.fn() },
     bankSong: { findMany: vi.fn() },
+    // A synth's family (`f-synth-families`): none unless a case gives one.
+    synthFamily: { findFirst: vi.fn() },
   },
 }));
 // The links read layer has its own tests (`tests/unit/lib/app/links/read.test.ts`); here, only that it is asked.
@@ -113,6 +115,40 @@ describe('listSynths', () => {
 });
 
 describe('getSynthDetail', () => {
+  it('serves the family the synth is a member of, and null when it is in none', async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
+    expect((await getSynthDetail('model-d'))?.family).toBeNull();
+
+    const member = (slug: string, synthId: string | null) => ({
+      slug,
+      label: slug,
+      synthId,
+      differences: `What ${slug} changed.`,
+      instrument: { id: `i-${slug}`, name: slug, maker: 'Moog', year: '1970' },
+      synth: synthId ? { listed: true } : null,
+    });
+    vi.mocked(prisma.synthFamily.findFirst).mockResolvedValueOnce({
+      id: 'minimoog',
+      name: 'Minimoog',
+      defaultMember: 'model-d',
+      members: [member('model-d', 'model-d'), member('minimoog', null)],
+    } as never);
+
+    const detail = await getSynthDetail('model-d');
+
+    expect(prisma.synthFamily.findFirst).toHaveBeenLastCalledWith(
+      expect.objectContaining({ where: { members: { some: { synthId: 'model-d' } } } })
+    );
+    expect(detail?.family).toMatchObject({
+      id: 'minimoog',
+      defaultMember: 'model-d',
+      members: [
+        { slug: 'model-d', synthId: 'model-d' },
+        { slug: 'minimoog', synthId: null, differences: 'What minimoog changed.' },
+      ],
+    });
+  });
+
   it('serves every sound, the lineage and the notes for a listed synth', async () => {
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(stored() as never);
 

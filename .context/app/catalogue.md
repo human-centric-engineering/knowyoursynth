@@ -183,9 +183,11 @@ developer work. The rules, tested in `tests/unit/lib/app/catalogue/upload.test.t
   sound count.
 - `GET /api/v1/synths/:id`: one synth with its sounds, lineage and notes. The lineage carries the
   synth's "Heard on" list, joined from the databank (`getHeardOn`). A 404 for an id that is not a
-  listed synth the registry can play.
+  listed synth the registry can play. Its `family` is the family it is a member of, or null
+  ([`synth-families.md`](./synth-families.md)).
+- `GET /api/v1/synths/families`: every family with its members, modelled and unmodelled.
 
-Both are public, inherit the section rate limit, and carry an ETag.
+All three are public, inherit the section rate limit, and carry an ETag.
 
 **One read layer, two doors.** The routes are thin wrappers over `lib/app/catalogue/read.ts`.
 The app's own server pages call the same functions in-process; everything else (the browser,

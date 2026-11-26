@@ -190,6 +190,7 @@ const detail: SynthDetail = {
   links: { count: 0, kinds: [] },
   soundLinks: {},
   instruments: [],
+  family: null,
 };
 
 const SESSION_KEY = 'kys.session.model-d';
