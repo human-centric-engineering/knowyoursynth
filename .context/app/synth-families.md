@@ -23,6 +23,7 @@ The owner's rulings (2026-11-26) are in the feature's journal.
 | The toggle and its note         | `components/app/synth/family-toggle.tsx`                                  |
 | The carry across the navigation | `components/app/synth/family-carry.ts`                                    |
 | An unmodelled member's panel    | `components/app/synth/unmodelled-member.tsx`, `memberHref` in `routes.ts` |
+| Sibling sounds (t-322)          | `siblingSounds` in `lib/app/catalogue/read.ts`, `library.tsx`             |
 
 ## The model
 
@@ -203,8 +204,46 @@ year, its differences text a paragraph to each blank line, and a way back to the
 
 A shared sound's or pattern's page passes no families, so its picker lists every synth alone; its toggle still shows.
 
+## Sibling sounds
+
+A member's library also lists its siblings' sounds (owner ruling, t-322): someone with a TD-3 wants the
+TB-303's sounds too. `GET /api/v1/synths/:id` serves them as `siblingSounds`, already carried onto the
+member being read. Each one comes with `from` (the synth id and name of the member it was made on) and
+the `dropped` and `changed` lists that `translate()` returns.
+
+- **How a sound is read.** It is first read as its own synth serves it (`validSound`): a row made on an
+  old definition version, or one that fails validation there, is left out and logged, just as the
+  detail leaves out its own sounds. Then its whole panel (`presetState`) is translated onto the member,
+  and the result is checked against the member with `validatePreset`. A sound that fails that check is
+  left out and logged (`a sibling sound fails validation once carried`).
+- **The panel comes across, the lesson does not.** A lesson's steps name the controls of the member it
+  was written for, so the carried sound has **one step**. That step sets the translated values, takes
+  out the member's Default patch cables and puts in the carried ones, just as the toggle's carry does.
+  Its `context` and `tweaks` name the sibling's controls too, so they stay behind. Its riff
+  (`phrase`) comes with it. No default pattern comes with it, since a sound's patterns belong to its
+  member.
+- **It stays its member's.** Its `id` is still its slug on the sibling, so the page keys it as
+  `<from>/<slug>` and opens it under a page-only id (`sibling:<from>/<slug>`). It is never read as one
+  of the member's own library sounds: it records no lesson progress, takes no star, gets no videos
+  and links, and nothing credits it.
+- **The library** lists sibling sounds after the member's own, under **From other versions**, each
+  marked "Made on the TD-3". The search and the categories cover them. The count covers only the
+  member's own sounds.
+- **Loading one** opens it the way a tutor-designed sound opens (`sibling` state beside `designed` in
+  `synth-page.tsx`). Its one step is its lesson, the name row says "made on the TD-3", and Restore puts
+  it back. The toggle's note (`CarriedNote`, with `soundName`) says what did not come across.
+- **Saving one** is **Save a copy** (`copyOf` on `SoundActions`). It creates the user's own sound on the
+  open member, named after the sibling's sound, with the panel as it is now. It sends no `source`: a
+  library credit is keyed to the member's own library (`source.slug` is looked up on the synth being
+  saved to), so a cross-member credit would need the source member recorded on the user's sound.
+
+The payload grows with the family. Each of the System 15, 35 and 55 serves its two siblings' 300
+sounds beside its own 150. The detail carries an ETag, so a repeat visit revalidates instead of
+downloading it again.
+
 ## Not here
 
+- **A credit across members.** A copy of a sibling's sound credits nothing (see Sibling sounds).
 - **One model for several members.** Where a new member's definition would otherwise repeat an
   existing one's voice, follow `defs/syncussion-kit.ts`. The TB-303 and TD-3 were deliberately not
   moved onto a kit (journal, 2026-11-26).
