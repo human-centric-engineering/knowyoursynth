@@ -6,9 +6,19 @@
  * @see components/app/synth/family-toggle.tsx
  */
 import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, screen, within } from '@testing-library/react';
-import { CarriedNote, FamilyToggle } from '@/components/app/synth/family-toggle';
+import { fireEvent, render, renderHook, screen, waitFor, within } from '@testing-library/react';
+import {
+  CarriedNote,
+  FamilyToggle,
+  useOwnedInstruments,
+} from '@/components/app/synth/family-toggle';
 import { TB_303_FAMILY } from '@/tests/helpers/synth-family';
+
+const { api } = vi.hoisted(() => ({ api: { get: vi.fn() } }));
+vi.mock('@/lib/api/client', async (importOriginal) => {
+  const real = await importOriginal<typeof import('@/lib/api/client')>();
+  return { ...real, apiClient: api };
+});
 
 const OFFERED = new Set(['td-3', 'tb-303']);
 
@@ -88,5 +98,59 @@ describe('CarriedNote', () => {
     render(<CarriedNote note={{ fromName: 'TB-303', dropped: [], changed: [] }} />);
     expect(screen.getByRole('status').textContent).toContain('from the TB-303, all of it.');
     expect(screen.queryByRole('listitem')).toBeNull();
+  });
+});
+
+describe('useOwnedInstruments', () => {
+  const entry = (instrumentId: string, kind: 'owned' | 'wishlist') => ({
+    instrumentId,
+    kind,
+    name: instrumentId,
+    maker: 'Maker',
+    year: '1981',
+    addedAt: '2026-11-26T00:00:00.000Z',
+  });
+
+  it('asks nothing while signed out, and owns nothing', () => {
+    api.get.mockReset();
+    const { result } = renderHook(() => useOwnedInstruments(null));
+    expect(api.get).not.toHaveBeenCalled();
+    expect(result.current.size).toBe(0);
+  });
+
+  it("holds the user's owned instruments, not their wishlist", async () => {
+    api.get.mockReset().mockResolvedValue({
+      owned: [entry('roland-tb-303', 'owned')],
+      wishlist: [entry('behringer-td-3', 'wishlist')],
+    });
+    const { result } = renderHook(() => useOwnedInstruments('u-1'));
+    await waitFor(() => expect(result.current.has('roland-tb-303')).toBe(true));
+    expect(api.get).toHaveBeenCalledExactlyOnceWith('/api/v1/me/instruments');
+    expect(result.current.has('behringer-td-3')).toBe(false);
+  });
+
+  it("drops one user's instruments when another signs in", async () => {
+    api.get
+      .mockReset()
+      .mockResolvedValueOnce({ owned: [entry('roland-tb-303', 'owned')], wishlist: [] });
+    api.get.mockReturnValueOnce(new Promise(() => undefined));
+    const { result, rerender } = renderHook(({ id }) => useOwnedInstruments(id), {
+      initialProps: { id: 'u-1' },
+    });
+    await waitFor(() => expect(result.current.size).toBe(1));
+    rerender({ id: 'u-2' });
+    expect(result.current.size).toBe(0);
+  });
+
+  it('owns nothing when the answer is not the shape it should be, or the read fails', async () => {
+    api.get.mockReset().mockResolvedValue({ owned: 'nope' });
+    const bad = renderHook(() => useOwnedInstruments('u-1'));
+    await waitFor(() => expect(api.get).toHaveBeenCalledOnce());
+    expect(bad.result.current.size).toBe(0);
+
+    api.get.mockReset().mockRejectedValue(new Error('offline'));
+    const failed = renderHook(() => useOwnedInstruments('u-1'));
+    await waitFor(() => expect(api.get).toHaveBeenCalledOnce());
+    expect(failed.result.current.size).toBe(0);
   });
 });
