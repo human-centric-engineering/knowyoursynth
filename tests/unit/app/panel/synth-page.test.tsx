@@ -14,6 +14,8 @@ import { notFound } from 'next/navigation';
 
 import SynthRoute, { generateMetadata } from '@/app/(panel)/synths/[id]/page';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
+import { listFamilies } from '@/lib/app/families/read';
+import type { SynthFamily } from '@/lib/app/families/read';
 import type { CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 
 // The videos section's count is the links read layer's, tested there (`tests/unit/lib/app/links/read.test.ts`).
@@ -39,6 +41,10 @@ vi.mock('@/lib/app/catalogue/read', () => ({
   listSynths: vi.fn(),
 }));
 
+vi.mock('@/lib/app/families/read', () => ({
+  listFamilies: vi.fn(),
+}));
+
 const props = (id: string, view?: string | string[], sound?: string | string[]) => ({
   params: Promise.resolve({ id }),
   searchParams: Promise.resolve({
@@ -54,6 +60,7 @@ const DETAIL = {
   notes: {},
 } as unknown as SynthDetail;
 const LIST = [{ id: 'model-d' }, { id: 'minimoog' }] as unknown as CatalogueSynth[];
+const FAMILIES = [{ id: 'model-d', members: [] }] as unknown as SynthFamily[];
 
 const render = async (
   id: string,
@@ -69,6 +76,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(getSynthDetail).mockResolvedValue(DETAIL);
   vi.mocked(listSynths).mockResolvedValue(LIST);
+  vi.mocked(listFamilies).mockResolvedValue(FAMILIES);
 });
 
 describe('/synths/[id]', () => {
@@ -77,12 +85,14 @@ describe('/synths/[id]', () => {
     expect(notFound).toHaveBeenCalled();
     expect(getSynthDetail).not.toHaveBeenCalled();
     expect(listSynths).not.toHaveBeenCalled();
+    expect(listFamilies).not.toHaveBeenCalled();
   });
 
   it('reads the synth and the list through the catalogue read layer', async () => {
     await render('model-d');
     expect(getSynthDetail).toHaveBeenCalledWith('model-d');
     expect(listSynths).toHaveBeenCalledTimes(1);
+    expect(listFamilies).toHaveBeenCalledTimes(1);
   });
 
   it('404s when the catalogue does not serve it (not listed)', async () => {
@@ -95,6 +105,7 @@ describe('/synths/[id]', () => {
     expect(el.props).toEqual({
       detail: DETAIL,
       synths: LIST,
+      families: FAMILIES,
       viewParam: 'long,outline',
       soundParam: null,
       mineParam: null,

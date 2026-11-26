@@ -699,7 +699,8 @@ function Synth({
   // ── lesson progress and favourites (s4) ──
   const progress = useLessonProgress(synthId, userId);
   const favourites = useFavourites(userId);
-  const owned = useOwnedInstruments(userId);
+  // Read only where the picker has a family to open, so a page with none makes no request for it.
+  const owned = useOwnedInstruments(families.length ? userId : null);
   const openSound =
     signedIn && sess.soundId ? (mine.sounds?.find((s) => s.id === sess.soundId) ?? null) : null;
   // The lesson the sound on the panel was saved with (`f-tutor` t-55): one of the user's own, or a shared sound on its
