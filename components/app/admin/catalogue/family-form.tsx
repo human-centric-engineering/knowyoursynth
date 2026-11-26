@@ -131,6 +131,10 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
   /** The server's messages for one field, by its path (`members.0.label`). */
   const at = (path: string) =>
     (save.failure?.fields ?? []).filter((f) => f.field === path).map((f) => f.message);
+  /** The originals' messages: the list's own and each entry's (`originals.1`), which Zod files under its index. */
+  const originalsProblems = (save.failure?.fields ?? [])
+    .filter((f) => f.field === 'originals' || f.field.startsWith('originals.'))
+    .map((f) => f.message);
 
   const update = (change: (d: Draft) => Draft) => {
     setDraft(change);
@@ -280,10 +284,10 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
           name="originals"
           value={draft.originals}
           placeholder="None: one shared original"
-          aria-invalid={at('originals').length > 0}
+          aria-invalid={originalsProblems.length > 0}
           onChange={(e) => update((d) => ({ ...d, originals: e.target.value }))}
         />
-        <FieldProblems messages={at('originals')} />
+        <FieldProblems messages={originalsProblems} />
       </div>
 
       <fieldset className="space-y-2">

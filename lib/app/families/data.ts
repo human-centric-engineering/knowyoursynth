@@ -102,6 +102,8 @@ export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckC
 
     const slugs = new Set<string>();
     const roots = new Set<string>();
+    /** A member's original could not be found: its instrument is missing, or its chain is broken. */
+    let unresolved = false;
     for (const member of family.members) {
       const at = `${where}, member ${member.slug}`;
       if (slugs.has(member.slug)) problems.push(`${at}: the slug is used twice in the family`);
@@ -115,6 +117,7 @@ export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckC
       else if (!root)
         problems.push(`${at}: instrument ${member.instrument}'s recreation chain is broken`);
       else roots.add(root);
+      if (!root) unresolved = true;
 
       if (member.synth === undefined) continue;
       const synth = member.synth;
@@ -146,7 +149,9 @@ export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckC
           problems.push(
             `${where}: original ${id} is a recreation of ${instrument.recreationOf}, not an original`
           );
-        else if (!roots.has(id)) problems.push(`${where}: original ${id} is no member's original`);
+        // A member whose original could not be found is already reported; it may be the one this original is for.
+        else if (!roots.has(id) && !unresolved)
+          problems.push(`${where}: original ${id} is no member's original`);
       }
       const others = [...roots].filter((r) => !listed.has(r)).sort();
       if (others.length)

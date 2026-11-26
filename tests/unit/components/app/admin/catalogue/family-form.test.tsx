@@ -185,6 +185,25 @@ describe('FamilyForm', () => {
     expect(mockRefresh).not.toHaveBeenCalled();
   });
 
+  it("shows an original's own message under Originals, filed under its index (t-324)", async () => {
+    const user = userEvent.setup();
+    put.mockRejectedValue(
+      new APIClientError('Invalid request body', 'VALIDATION_ERROR', 400, {
+        errors: [{ path: 'originals.1', message: 'must be lowercase letters, digits and hyphens' }],
+      })
+    );
+    render(<FamilyForm family={FAMILY} options={OPTIONS} />);
+    const field = screen.getByLabelText(/Originals/, INPUT);
+    await user.type(field, 'roland-tb-303, Roland-TB-303');
+
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+
+    expect(
+      await screen.findByText('must be lowercase letters, digits and hyphens')
+    ).toBeInTheDocument();
+    expect(field).toHaveAttribute('aria-invalid', 'true');
+  });
+
   it('creates a new family, sending its id, and opens it', async () => {
     const user = userEvent.setup();
     post.mockResolvedValue(FAMILY);

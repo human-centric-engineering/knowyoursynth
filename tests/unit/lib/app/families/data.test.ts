@@ -224,6 +224,14 @@ describe('checkFamilies: a family that lists its originals (t-324)', () => {
     ]);
   });
 
+  it('names a member whose instrument is missing once, not again as an original no member has', () => {
+    const family = systems(['moog-modular', 'moog-system-55']);
+    family.members[1].instrument = 'moog-system-56';
+    expect(checkFamilies([family], ctx)).toEqual([
+      'family moog-modular-systems, member moog-system-55: the databank has no instrument moog-system-56',
+    ]);
+  });
+
   it('still checks a modelled member against its own original', () => {
     // the System 55 synth is linked to the Moog modular, not to Moog's own System 55
     const family = systems(['moog-modular', 'moog-system-55']);
