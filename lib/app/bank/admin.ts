@@ -10,6 +10,9 @@
  * - **Checked as the seed checks.** The change is put into the databank as it stands and `checkBank` run over it. Any
  *   problem the change would add refuses it, naming each one, and nothing is written. A problem already there is not
  *   the change's, so it does not block it.
+ * - **The synth families are checked too.** A change to an instrument is refused, naming each, when it would add a
+ *   problem to a stored family (`checkFamilies`): an instrument a member is cannot be removed, nor re-pointed so a
+ *   family's members stop tracing to one original.
  * - **A removal names what still points at the row** (the problems taking it out would add) and is refused until
  *   they are gone. Nothing cascades but the row's own joins.
  * - **An edit is the admin's.** Every save sets `editedAt`, and the seed never writes that row or its joins again. A
@@ -37,6 +40,7 @@ import {
 import { BANK_KINDS, loadBank, type BankKind } from '@/lib/app/bank/read';
 import { checkBank, rowsOf, type SynthSounds } from '@/lib/app/bank/seed';
 import { sameValue } from '@/lib/app/catalogue/seed';
+import { checkFamilies, type FamilyFile, type FamilyInstrument } from '@/lib/app/families/data';
 
 type Tx = Prisma.TransactionClient;
 
@@ -169,6 +173,59 @@ async function synthSounds(): Promise<SynthSounds> {
 function added(bank: Bank, next: Bank, synths: SynthSounds): string[] {
   const before = new Set(checkBank(bank, synths));
   return checkBank(next, synths).filter((p) => !before.has(p));
+}
+
+/** The stored synth families, in their files' shape, for the check. */
+async function storedFamilies(): Promise<FamilyFile[]> {
+  const rows = await prisma.synthFamily.findMany({
+    select: {
+      id: true,
+      name: true,
+      defaultMember: true,
+      members: {
+        orderBy: [{ order: 'asc' }, { slug: 'asc' }],
+        select: { slug: true, label: true, instrumentId: true, synthId: true, differences: true },
+      },
+    },
+  });
+  return rows.map((f) => ({
+    id: f.id,
+    name: f.name,
+    defaultMember: f.defaultMember,
+    members: f.members.map((m) => ({
+      slug: m.slug,
+      label: m.label,
+      instrument: m.instrumentId,
+      synth: m.synthId ?? undefined,
+      differences: m.differences,
+    })),
+  }));
+}
+
+/**
+ * The problems an instrument change adds to the stored families: none for any other kind, whose rows no family
+ * names.
+ */
+async function addedToFamilies(
+  kind: BankKind,
+  bank: Bank,
+  next: Bank,
+  synths: SynthSounds
+): Promise<string[]> {
+  if (kind !== 'instruments') return [];
+  const families = await storedFamilies();
+  if (!families.length) return [];
+  const ctx = (b: Bank) => ({
+    instruments: new Map<string, FamilyInstrument>(
+      b.instruments.map((i) => [
+        i.id,
+        { recreationOf: i.recreationOf ?? null, synths: i.app ?? [] },
+      ])
+    ),
+    synths: new Set(synths.keys()),
+  });
+  const before = new Set(checkFamilies(families, ctx(bank)));
+  return checkFamilies(families, ctx(next)).filter((p) => !before.has(p));
 }
 
 const rowsIn = (bank: Bank, kind: BankKind): BankRow[] => bank[kind];
@@ -305,13 +362,15 @@ export async function saveBankRow(
   // Validated as the kind's shape by the route; the id is the URL's.
   const row: BankRow = { ...input, id };
   const stored = findIn(bank, kind, id) ?? null;
+  const next = withRow(bank, kind, id, row);
   const problems = [
     ...repeated(planOne(kind, row)),
-    ...added(bank, withRow(bank, kind, id, row), synths),
+    ...added(bank, next, synths),
+    ...(await addedToFamilies(kind, bank, next, synths)),
   ];
   if (problems.length)
     refuse(
-      `The ${kind.slice(0, -1)} would break ${problems.length === 1 ? 'a reference' : `${problems.length} references`} in the databank`,
+      `The ${kind.slice(0, -1)} would break ${problems.length === 1 ? 'a reference' : `${problems.length} references`} in the databank${kind === 'instruments' ? ' or its synth families' : ''}`,
       problems
     );
 
@@ -398,7 +457,7 @@ async function writePlanned(
 /**
  * Remove a row and its own joins, and record the removal so the seed leaves it out. Refused with
  * {@link ConflictError}, naming each one, while anything else in the databank, or a synth family's member, points at
- * it.
+ * it. A family member made between the check and the delete is caught by its foreign key, as a conflict.
  */
 export async function removeBankRow(
   kind: BankKind,
@@ -407,24 +466,15 @@ export async function removeBankRow(
   if ((await storedEditedAt(prisma, kind, id)) === undefined)
     throw new NotFoundError('Databank row not found');
 
-  const [bank, synths, members] = await Promise.all([
-    currentBank(),
-    synthSounds(),
-    kind === 'instruments'
-      ? prisma.synthFamilyMember.findMany({
-          where: { instrumentId: id },
-          select: { familyId: true, slug: true },
-          orderBy: [{ familyId: 'asc' }, { slug: 'asc' }],
-        })
-      : [],
-  ]);
+  const [bank, synths] = await Promise.all([currentBank(), synthSounds()]);
+  const next = withRow(bank, kind, id, null);
   const problems = [
-    ...added(bank, withRow(bank, kind, id, null), synths),
-    ...members.map((m) => `family ${m.familyId}: member ${m.slug} is this instrument`),
+    ...added(bank, next, synths),
+    ...(await addedToFamilies(kind, bank, next, synths)),
   ];
   if (problems.length)
     throw new ConflictError(
-      `The ${kind.slice(0, -1)} cannot be removed while the databank still points at it`,
+      `The ${kind.slice(0, -1)} cannot be removed while the databank${kind === 'instruments' ? ' or a synth family' : ''} still points at it`,
       { errors: problems.map((p) => ({ path: '', message: p })) }
     );
 

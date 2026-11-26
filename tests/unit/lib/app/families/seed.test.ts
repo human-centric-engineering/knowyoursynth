@@ -58,6 +58,9 @@ function fakeDb() {
         const r = memberBy(where);
         return r ? { ...r } : null;
       }),
+      findMany: vi.fn(async () =>
+        members.filter((m) => m.editedAt === null && m.synthId !== null).map((m) => ({ ...m }))
+      ),
       aggregate: vi.fn(async ({ where }: { where: Row }) => {
         const orders = members
           .filter((m) => m.familyId === where.familyId)
@@ -241,6 +244,33 @@ describe('seedFamilies', () => {
       ['tb-303', 'td-3'],
     ]);
     expect(report.defaultWithoutSynth).toEqual([]);
+  });
+
+  it('moves a synth from a member the data dropped to the member it now names', async () => {
+    await seedFamilies(client(), [family()]);
+    const renamed = family();
+    renamed.members[0] = { ...renamed.members[0], slug: 'td3' };
+    renamed.defaultMember = 'td3';
+
+    const report = await seedFamilies(client(), [renamed]);
+
+    expect(report.synthTaken).toEqual([]);
+    expect(db.members.map((m) => [m.slug, m.synthId])).toEqual([
+      ['td-3', null],
+      ['tb-303', 'tb-303'],
+      ['td3', 'td-3'],
+    ]);
+  });
+
+  it('leaves the synth on a member the data dropped when the data gives it to no one', async () => {
+    await seedFamilies(client(), [family()]);
+    const fewer = family();
+    fewer.members = [fewer.members[1], { ...fewer.members[0], slug: 'td3', synth: undefined }];
+    fewer.defaultMember = 'tb-303';
+
+    await seedFamilies(client(), [fewer]);
+
+    expect(db.members.find((m) => m.slug === 'td-3')?.synthId).toBe('td-3');
   });
 
   it('reports a family whose default member is left without its synth', async () => {

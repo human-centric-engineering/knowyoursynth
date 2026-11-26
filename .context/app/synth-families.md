@@ -83,14 +83,17 @@ catalogue seed's rules:
   reorder stands.
 - **Never deletes.**
 - **A synth moves with the data.** Before writing any member, every unedited member the data no
-  longer gives its synth lets go of it, so a synth the data moves or swaps lands on its new member
-  whichever comes first.
+  longer gives its synth lets go of it, so a synth the data moves, swaps or re-slugs lands on its new
+  member whichever comes first. A member the data has dropped lets go only when the data gives its
+  synth to another member.
 - **A synth another member already has stays there.** The seeded member is written without it and
   reported (`synthTaken`), rather than the seed taking the synth back from where an admin put it.
 - **A family whose stored default member ends up without a synth is reported** (`defaultWithoutSynth`).
 
-A databank instrument a family member is cannot be removed: the admin removal is refused, naming the
-family and member, as it is for any other reference to the row.
+The databank admin checks the stored families too (`checkFamilies`). An instrument change that would
+add a family problem is refused, naming each one, as any other broken reference is. So an instrument a
+member is cannot be removed, and an instrument cannot be re-pointed so that a family's members stop
+tracing back to one original.
 
 The unit is on `APP_UNCHECKED_SEEDS` (`lib/app/capability-seed-pairs.ts`), because the capability
 parity test's mock client has no databank to check against.

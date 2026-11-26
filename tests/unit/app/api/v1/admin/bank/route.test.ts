@@ -110,6 +110,33 @@ async function songBody(id: string, change: (s: Row) => Row) {
   return change(song);
 }
 
+/** The tb-303 family as stored, for the family check on instrument changes. */
+const tb303Family = () => ({
+  id: 'tb-303',
+  name: 'TB-303',
+  defaultMember: 'td-3',
+  members: [
+    {
+      slug: 'td-3',
+      label: 'TD-3',
+      instrumentId: 'behringer-td-3',
+      synthId: 'td-3',
+      differences: 'A copy.',
+    },
+    {
+      slug: 'tb-303',
+      label: 'TB-303',
+      instrumentId: 'roland-tb-303',
+      synthId: 'tb-303',
+      differences: 'The original.',
+    },
+  ],
+});
+const storeFamilies = () =>
+  (mockPrisma.synthFamily as { findMany: ReturnType<typeof vi.fn> }).findMany.mockResolvedValue([
+    tb303Family(),
+  ]);
+
 beforeEach(() => {
   vi.clearAllMocks();
   store = bankStore();
@@ -119,7 +146,7 @@ beforeEach(() => {
       findUnique: vi.fn(async () => ({ role: 'OWNER', org: { status: 'ACTIVE' } })),
     },
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
-    synthFamilyMember: { findMany: vi.fn(async () => []) },
+    synthFamily: { findMany: vi.fn(async () => []) },
   });
   mockGetSession.mockResolvedValue(session('ADMIN'));
 });
@@ -207,6 +234,28 @@ describe('PUT: an edit', () => {
       }),
     ]);
     expect((await getBankDetail('artists', 'devo'))?.artist.story).toBe('A new story.');
+  });
+
+  it("is refused when an instrument change would split a family's originals, naming the family", async () => {
+    storeFamilies();
+    const { data } = await json(
+      await getRow(
+        request('GET', 'instruments/behringer-td-3'),
+        ctx({ kind: 'instruments', id: 'behringer-td-3' })
+      )
+    );
+    const { id: _id, recreationOf: _r, ...body } = data?.row as Row;
+
+    const res = await putRow(
+      request('PUT', 'instruments/behringer-td-3', body),
+      ctx({ kind: 'instruments', id: 'behringer-td-3' })
+    );
+
+    expect(res.status).toBe(400);
+    expect(await problems(res)).toContain(
+      'family tb-303: its members trace back to different originals (behringer-td-3, roland-tb-303)'
+    );
+    expect(store.writes).toEqual([]);
   });
 
   it('writes and audits nothing when nothing changed, so the row stays the seed’s', async () => {
@@ -470,21 +519,23 @@ describe('DELETE: a removal', () => {
   });
 
   it('is refused for an instrument a synth family member is, naming the family, and removes nothing', async () => {
-    const members = mockPrisma.synthFamilyMember as { findMany: ReturnType<typeof vi.fn> };
-    members.findMany.mockResolvedValueOnce([{ familyId: 'tb-303', slug: 'td-3' }]);
+    storeFamilies();
 
     const res = await deleteRow(
-      request('DELETE', 'instruments/rca-theremin'),
-      ctx({ kind: 'instruments', id: 'rca-theremin' })
+      request('DELETE', 'instruments/behringer-td-3'),
+      ctx({ kind: 'instruments', id: 'behringer-td-3' })
     );
 
     expect(res.status).toBe(409);
-    expect(await problems(res)).toEqual(['family tb-303: member td-3 is this instrument']);
-    expect(members.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { instrumentId: 'rca-theremin' } })
+    const { error } = await json(res);
+    expect(error?.message).toBe(
+      'The instrument cannot be removed while the databank or a synth family still points at it'
+    );
+    expect(error?.details?.errors?.map((e) => e.message)).toContain(
+      'family tb-303, member td-3: the databank has no instrument behringer-td-3'
     );
     expect(store.writes).toEqual([]);
-    expect(row('bankInstrument', 'rca-theremin')).toBeDefined();
+    expect(row('bankInstrument', 'behringer-td-3')).toBeDefined();
   });
 
   it('removes a song and its parts, records the removal and audits it', async () => {

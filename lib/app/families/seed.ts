@@ -12,8 +12,9 @@
  * - **Placement is set once.** A member's `order` is written when the row is created, after the family's last member,
  *   and never after: an admin's reorder stands.
  * - **Never deletes.** A family or member the data no longer has stays, so an empty source cannot empty a table.
- * - **A synth moves with the data.** Before any member is written, every member the data no longer gives its synth
- *   lets go of it, so a synth the data moves (or swaps) between members lands on its new member whatever their order.
+ * - **A synth moves with the data.** Before any member is written, every unedited member the data no longer gives
+ *   its synth lets go of it (a member the data has dropped, only when the data gives that synth to another member),
+ *   so a synth the data moves, swaps or re-slugs lands on its new member whatever their order.
  * - **A synth already in another member stays there.** An admin may have moved a synth to another family; the seed
  *   leaves that member's synth unset rather than take the synth back, and reports it, and reports a family whose
  *   stored default member is left without a synth (the read then opens on another).
@@ -99,25 +100,42 @@ export async function seedFamilies(
 const memberKey = (familyId: string, slug: string) => `${familyId}/${slug}`;
 
 /**
- * Clear the synth from every stored, unedited member the data now gives another synth or none, so the synth is free
- * for the member the data gives it to. Each is counted as updated here; returns their keys, so the write that follows
- * does not count them again.
+ * Clear the synth from every stored, unedited member that should let go of it, so the synth is free for the member
+ * the data gives it to: a member the data lists with another synth or none, and a member the data no longer lists
+ * whose synth the data gives to a member it does. Each is counted as updated here; returns their keys, so the write
+ * that follows does not count them again.
  */
 async function releaseSynths(
   prisma: TenancyClient,
   families: readonly FamilyFile[],
   tally: FamilySeedCounts
 ): Promise<Set<string>> {
-  const released = new Set<string>();
+  const listed = new Map<string, string | null>();
+  const given = new Set<string>();
   for (const family of families)
     for (const member of family.members) {
-      const key = { familyId_slug: { familyId: family.id, slug: member.slug } };
-      const row = await prisma.synthFamilyMember.findUnique({ where: key });
-      if (!row || row.editedAt || !row.synthId || row.synthId === (member.synth ?? null)) continue;
-      await prisma.synthFamilyMember.update({ where: key, data: { synthId: null } });
-      released.add(memberKey(family.id, member.slug));
-      tally.updated++;
+      listed.set(memberKey(family.id, member.slug), member.synth ?? null);
+      if (member.synth) given.add(member.synth);
     }
+
+  const holders = await prisma.synthFamilyMember.findMany({
+    where: { editedAt: null, synthId: { not: null } },
+    select: { familyId: true, slug: true, synthId: true },
+  });
+  const released = new Set<string>();
+  for (const row of holders) {
+    const at = memberKey(row.familyId, row.slug);
+    const wanted = listed.get(at);
+    const letsGo =
+      wanted === undefined ? !!row.synthId && given.has(row.synthId) : wanted !== row.synthId;
+    if (!letsGo) continue;
+    await prisma.synthFamilyMember.update({
+      where: { familyId_slug: { familyId: row.familyId, slug: row.slug } },
+      data: { synthId: null },
+    });
+    released.add(at);
+    tally.updated++;
+  }
   return released;
 }
 
