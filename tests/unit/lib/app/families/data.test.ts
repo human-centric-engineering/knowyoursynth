@@ -154,6 +154,81 @@ describe('checkFamilies', () => {
   });
 });
 
+describe('checkFamilies: a family that lists its originals (t-324)', () => {
+  /** Behringer's System 55, after the Moog modular, beside Moog's own System 55, an original of its own. */
+  const systems = (originals?: string[]): FamilyFile =>
+    FamilyFileSchema.parse({
+      id: 'moog-modular-systems',
+      name: 'System 55',
+      defaultMember: 'system-55',
+      ...(originals ? { originals } : {}),
+      members: [
+        {
+          slug: 'system-55',
+          label: 'System 55',
+          instrument: 'behringer-system-55',
+          synth: 'system-55',
+          differences: 'A copy.',
+        },
+        {
+          slug: 'moog-system-55',
+          label: 'Moog System 55',
+          instrument: 'moog-system-55',
+          differences: 'The original.',
+        },
+      ],
+    });
+
+  it('refuses members of two originals when the family lists none', () => {
+    expect(checkFamilies([systems()], ctx)).toEqual([
+      'family moog-modular-systems: its members trace back to different originals (moog-modular, moog-system-55)',
+    ]);
+  });
+
+  it('passes them when it lists both', () => {
+    expect(checkFamilies([systems(['moog-modular', 'moog-system-55'])], ctx)).toEqual([]);
+  });
+
+  it('refuses a member whose original it does not list', () => {
+    expect(checkFamilies([systems(['moog-modular'])], ctx)).toEqual([
+      "family moog-modular-systems: members trace back to moog-system-55, which the family's originals do not list",
+    ]);
+  });
+
+  it("refuses an original that is missing, a recreation, no member's, or listed twice", () => {
+    const problems = checkFamilies(
+      [
+        systems([
+          'moog-modular',
+          'moog-system-55',
+          'moog-system-55',
+          'no-such-synth',
+          'behringer-td-3',
+          'roland-tb-303',
+        ]),
+      ],
+      ctx
+    );
+    expect(problems).toEqual([
+      'family moog-modular-systems: an original is listed twice',
+      'family moog-modular-systems: the databank has no instrument no-such-synth for an original',
+      'family moog-modular-systems: original behringer-td-3 is a recreation of roland-tb-303, not an original',
+      "family moog-modular-systems: original roland-tb-303 is no member's original",
+    ]);
+  });
+
+  it('still checks a modelled member against its own original', () => {
+    // the System 55 synth is linked to the Moog modular, not to Moog's own System 55
+    const family = systems(['moog-modular', 'moog-system-55']);
+    family.members[1].synth = 'system-55';
+    family.members[0].synth = undefined;
+    family.defaultMember = 'moog-system-55';
+    expect(checkFamilies([family], ctx)).toEqual([
+      'family moog-modular-systems, member moog-system-55: synth system-55 is not linked in the databank to anything that traces back to moog-system-55',
+    ]);
+  });
+});
+
 describe('the committed family seed data', () => {
   const families = loadFamilyData();
 

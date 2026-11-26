@@ -182,6 +182,7 @@ async function storedFamilies(): Promise<FamilyFile[]> {
       id: true,
       name: true,
       defaultMember: true,
+      originals: true,
       members: {
         orderBy: [{ order: 'asc' }, { slug: 'asc' }],
         select: { slug: true, label: true, instrumentId: true, synthId: true, differences: true },
@@ -192,6 +193,7 @@ async function storedFamilies(): Promise<FamilyFile[]> {
     id: f.id,
     name: f.name,
     defaultMember: f.defaultMember,
+    ...(f.originals.length ? { originals: f.originals } : {}),
     members: f.members.map((m) => ({
       slug: m.slug,
       label: m.label,
