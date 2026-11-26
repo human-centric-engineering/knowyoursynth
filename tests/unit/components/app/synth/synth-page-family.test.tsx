@@ -293,16 +293,22 @@ describe('an unmodelled member (t-321)', () => {
 
   it('comes back to the panel that was open, from the toggle or the way back on the blank panel', async () => {
     leaveTd3();
+    window.history.replaceState(null, '', '/synths/td-3');
     page(0);
     await waitFor(() =>
       expect(readStored('kys.session.td-3')).toMatchObject({ values: { 'filter.res': 7 } })
     );
     const panel = instrument();
+    // The way back steps back to the entry the blank panel was pushed over, rather than pushing another.
+    const back = vi.spyOn(window.history, 'back').mockImplementation(() => undefined);
+    const push = vi.spyOn(window.history, 'pushState');
 
     fireEvent.click(screen.getByRole('button', { name: 'Unmodelled' }));
+    expect(push).toHaveBeenCalledOnce();
     fireEvent.click(screen.getByRole('button', { name: 'Back to the TD-3' }));
     expect(blankFace()).toBeNull();
-    expect(window.location.pathname + window.location.search).toBe('/synths/td-3');
+    expect(back).toHaveBeenCalledOnce();
+    expect(push).toHaveBeenCalledOnce();
     // The same panel, never taken down, and with what was on it.
     expect(instrument()).toBe(panel);
     expect(shown(panel)).toBe(true);
@@ -313,11 +319,32 @@ describe('an unmodelled member (t-321)', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Unmodelled' }));
     fireEvent.click(screen.getByRole('button', { name: 'TD-3' }));
+    expect(back).toHaveBeenCalledTimes(2);
     expect(blankFace()).toBeNull();
     expect(shown(instrument())).toBe(true);
     expect(instrument()).toBe(panel);
     fireEvent.keyDown(window, { key: 'a' });
     expect(noteOns()).toHaveLength(1);
+    back.mockRestore();
+    push.mockRestore();
+  });
+
+  it('leaves an address it arrived on in place on the way back, with no entry pushed', () => {
+    window.history.replaceState(null, '', '/synths/td-3?member=rebirth');
+    const back = vi.spyOn(window.history, 'back');
+    render(
+      <SynthPage
+        detail={detailOf(SYNTHS[0], TB_303_FAMILY)}
+        synths={SYNTHS}
+        families={[TB_303_FAMILY]}
+        viewParam={null}
+        memberParam="rebirth"
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the TD-3' }));
+    expect(back).not.toHaveBeenCalled();
+    expect(window.location.pathname + window.location.search).toBe('/synths/td-3');
+    back.mockRestore();
   });
 
   it("follows the browser's Back and Forward between the panel and the blank panel", () => {
@@ -333,11 +360,22 @@ describe('an unmodelled member (t-321)', () => {
     pop('/synths/td-3');
     expect(blankFace()).toBeNull();
     expect(shown(instrument())).toBe(true);
+    // Reached by Forward, the blank panel stops what was playing and lets every note go, as the toggle does.
+    engine.send.mockClear();
     pop('/synths/td-3?member=rebirth');
     expect(blankFace()).not.toBeNull();
+    expect(engine.send).toHaveBeenCalledWith({ type: 'panic' });
     // Another page's address is the router's to follow, not this page's.
     pop('/synths/tb-303');
     expect(blankFace()).not.toBeNull();
+  });
+
+  it('opens onto the member its address names when the router restores the page without it', () => {
+    // Back from another page: the page comes from the router's cache, rendered before the address named the member.
+    window.history.replaceState(null, '', '/synths/td-3?member=rebirth');
+    page(0);
+    expect(blankFace()).not.toBeNull();
+    expect(shown(instrument())).toBe(false);
   });
 
   it('opens straight onto the member its address names, and a slug it does not have opens the synth', () => {

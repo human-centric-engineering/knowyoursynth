@@ -35,8 +35,9 @@ export function UnmodelledMember({ member, backName, onBack }: UnmodelledMemberP
           Not modelled yet: nothing on this panel plays.
         </p>
         <div className="flex max-w-[68ch] flex-col gap-3 text-[15px] leading-relaxed text-(--kys-text)">
-          {paragraphs.map((p) => (
-            <p key={p}>{p}</p>
+          {paragraphs.map((p, i) => (
+            // A static list, and a paragraph may repeat: keyed by place.
+            <p key={i}>{p}</p>
           ))}
         </div>
         <p className="mt-auto pt-2">

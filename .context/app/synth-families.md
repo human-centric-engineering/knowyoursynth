@@ -177,7 +177,13 @@ year, its differences text a paragraph to each blank line, and a way back to the
   does not render the page again for what is only its own state, and the panel, the dock and their state are hidden
   rather than taken down. Going back, through the toggle, the faceplate's button or the browser's Back (`popstate`),
   shows the panel as it was.
-- **Nothing plays.** Choosing it stops the riff or pattern and lets every note go. While it shows, `noteOn` drops every
+- **One history entry.** Choosing a member pushes its address; choosing another member from its blank panel replaces
+  it. The way back steps back to the entry it was pushed over, so the browser's Back then leaves the page rather than
+  reopening the blank panel. Arrived on directly, the way back replaces the address instead.
+- **The address is read on mount as well as on `popstate`.** Back to a member's address from another page restores
+  this page from the router's cache, rendered before the address named the member, so the server's `memberParam`
+  alone would open the panel.
+- **Nothing plays.** However it is reached, it stops the riff or pattern and lets every note go. While it shows, `noteOn` drops every
   note, from the keys, MIDI in and the scope's keyboard alike.
 - **What needs a definition is hidden, not shown dead:** the panel and its rails, the patch's name and Save, the dock
   (lesson strip, bar, keyboard, sequencer), the sequencer rack, the tutor, the tips, the tour, the description's links

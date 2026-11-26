@@ -2913,34 +2913,64 @@ function Synth({
   // closes, as none of it has anything under it. A shared sound's or pattern's page keeps its address: it is that
   // sound's, and a member's address is this synth's own page.
   const ownAddress = !sharedSlug && !patternSlug;
-  const showBlank = (slug: string) => {
-    switchSeq.current += 1;
-    stopRiff();
-    engine?.send({ type: 'panic' });
-    setSoundsOpen(false);
-    setCard(null);
-    setTutorOpen(false);
-    setTourOn(false);
-    setSheet(null);
+  // Whether the address now on show was pushed by `showBlank`, so the way back can step back to the entry before it
+  // rather than push another one, which would bring the blank panel back on the browser's Back.
+  const pushedBlank = useRef(false);
+  // However the blank panel comes (the toggle, Back or Forward, an arrival on its address), the same things stop.
+  const enterBlank = (slug: string | null) => {
+    if (slug && detail.family?.members.some((m) => !m.synthId && m.slug === slug)) {
+      switchSeq.current += 1;
+      stopRiff();
+      engine?.send({ type: 'panic' });
+      setSoundsOpen(false);
+      setCard(null);
+      setTutorOpen(false);
+      setTourOn(false);
+      setSheet(null);
+    }
     setBlank(slug);
-    if (ownAddress) window.history.pushState(null, '', memberHref(synthId, slug, view));
+  };
+  const showBlank = (slug: string) => {
+    enterBlank(slug);
+    if (!ownAddress) return;
+    // From one blank panel to another, the entry is replaced: Back goes to the panel, not through each member seen.
+    if (blankSlug) window.history.replaceState(null, '', memberHref(synthId, slug, view));
+    else window.history.pushState(null, '', memberHref(synthId, slug, view));
+    pushedBlank.current = true;
   };
   const hideBlank = () => {
     setBlank(null);
-    if (ownAddress) window.history.pushState(null, '', synthHref(synthId, view));
+    if (!ownAddress) return;
+    if (pushedBlank.current) {
+      pushedBlank.current = false;
+      window.history.back();
+    } else window.history.replaceState(null, '', synthHref(synthId, view));
   };
   // The browser's Back and Forward between this page and a member's blank panel. The address is written by hand above,
   // not through the router, which would render the page again from the server for what is only this page's own state.
+  // Read on mount too: Back to a member's address from another page restores this page from the router's cache, as it
+  // was rendered before the address changed, so the server's `memberParam` cannot be relied on to name it.
+  const enterBlankRef = useRef(enterBlank);
+  useEffect(() => {
+    enterBlankRef.current = enterBlank;
+  });
   useEffect(() => {
     if (!ownAddress) return undefined;
-    const onPop = () => {
+    const read = () => {
       const url = new URL(window.location.href);
-      if (url.pathname === synthHref(synthId)) setBlank(url.searchParams.get('member'));
+      if (url.pathname === synthHref(synthId))
+        enterBlankRef.current(url.searchParams.get('member'));
     };
+    const onPop = () => {
+      pushedBlank.current = false;
+      read();
+    };
+    read();
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, [ownAddress, synthId]);
-  // What the blank panel hides rather than unmounts: the panel and the dock keep their measures and their state.
+  // What the blank panel hides rather than unmounts: the panel and the dock keep their state, and are measured afresh
+  // as they come back.
   const away = blankMember ? { display: 'none' } : undefined;
 
   // Nothing to count from while the open sound's saved panel is still being fetched, or could not be. Counted from
