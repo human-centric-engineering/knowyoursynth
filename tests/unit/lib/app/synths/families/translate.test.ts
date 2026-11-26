@@ -115,6 +115,12 @@ describe('translate', () => {
         to: { id: 'osc2.wave', value: 'saw' },
         reason: 'The Grandmother has no sub-oscillator',
       },
+      {
+        id: 'mix.3',
+        value: 6,
+        to: { id: 'mix.noise', value: 0 },
+        reason: "The Grandmother has no sub-oscillator: MIX 3 was the sub's level",
+      },
     ]);
     expect(t.dropped).toEqual([
       {
@@ -176,7 +182,7 @@ describe('translate', () => {
     const t = translate({ 'osc.old': 3 }, [], td3, tb303);
 
     expect(t.dropped).toEqual([
-      { kind: 'control', id: 'osc.old', value: 3, reason: 'The TB-303 has no osc.old' },
+      { kind: 'control', id: 'osc.old', value: 3, reason: 'The TD-3 has no osc.old' },
     ]);
   });
 
@@ -191,6 +197,14 @@ describe('translate', () => {
         reason: 'On the TB-303, CV (pitch) cannot be patched into HEADPHONE',
       },
     ]);
+  });
+
+  it('reads only a map entry of its own, never an inherited key', () => {
+    const t = translate({ 'arp.dir': 'constructor' }, [['toString', 'j.mix1']], m15, gm);
+
+    expect(t.values).toEqual({});
+    expect(t.dropped.map((d) => d.kind)).toEqual(['control', 'cable']);
+    expect(t.dropped[1].reason).toBe('The Model 15 has no toString');
   });
 
   it('returns a copy when the two members are the same synth', () => {

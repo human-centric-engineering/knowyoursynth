@@ -130,7 +130,8 @@ function lacksReason(link: FamilyLink, from: SynthDef, to: SynthDef, id: string)
   const j = jackMap(from)[id];
   return j
     ? `The ${to.name} has no ${cleanName(j.name ?? j.label)} jack`
-    : `The ${to.name} has no ${id}`;
+    : // a stale or misspelt id: the member it comes from has no such control or jack
+      `The ${from.name} has no ${id}`;
 }
 
 function optionLabel(c: Control, v: ControlValue): string {
@@ -139,10 +140,16 @@ function optionLabel(c: Control, v: ControlValue): string {
   return o?.label ? cleanName(o.label) : String(v);
 }
 
+/** `key` as an own property of a map's object literal, never one it inherits (`constructor`, `toString`). */
+const own = <T>(o: Record<string, T> | undefined, key: string): T | undefined =>
+  o && Object.hasOwn(o, key) ? o[key] : undefined;
+
 /**
- * Carry a panel's values and cables from one member of a family to another. `values` may be the whole panel or only
- * some of it (a sound's settings); only what is given is translated. With no map joining the two members, everything
- * carries under its own id where `to` has it and the value is legal there, and the rest is dropped.
+ * Carry a panel's values and cables from one member of a family to another. Pass the whole panel, as a switch has it
+ * on screen or `presetState()` builds a sound: some rules read one control to decide another (the Model 15's MIX 3 is
+ * the sub's level while OSC 2 is on SUB), and a part of a panel cannot tell them how the rest is set. Anything not
+ * given is read as the member's Default patch. With no map joining the two members, everything carries under its own
+ * id where `to` has it and the value is legal there, and the rest is dropped.
  */
 export function translate(
   values: ControlValues,
@@ -160,13 +167,12 @@ export function translate(
   const link: FamilyLink = findLink(from.id, to.id, maps) ?? { from: from.id, to: to.id };
   const fromControls = controlMap(from);
   const toControls = controlMap(to);
-  // A `dropWhen` reads the panel as it stands: what was given, over the member's Default patch, which is where a panel
-  // starts. A caller translating only part of a panel that is set elsewhere passes the whole panel, so it reads that.
+  // A `dropWhen` reads the panel given, over the member's Default patch for anything it leaves out.
   const panel: ControlValues = { ...from.init, ...from.defaultPatch?.values, ...values };
 
   for (const [id, value] of Object.entries(values)) {
     const source = fromControls[id];
-    const rule = link.controls?.[id];
+    const rule = own(link.controls, id);
     const toId = rule?.to ?? id;
     const target = toControls[toId];
     const drop = (reason: string): void => {
@@ -179,13 +185,15 @@ export function translate(
     if (rule?.dropWhen && holds(rule.dropWhen.when, panel)) {
       drop(rule.dropWhen.reason);
       const { set } = rule.dropWhen;
-      if (set !== undefined && !checkSettings(to, { [toId]: set }).problems.length)
+      if (set !== undefined && !checkSettings(to, { [toId]: set }).problems.length) {
         out.values[toId] = set;
+        out.changed.push({ id, value, to: { id: toId, value: set }, reason: rule.dropWhen.reason });
+      }
       continue;
     }
     let carried: ControlValue = value;
     let lost: string | null = null;
-    const mapped = rule?.options?.[String(value)];
+    const mapped = own(rule?.options, String(value));
     if (mapped !== undefined) {
       if (typeof mapped === 'object') {
         carried = mapped.to;
@@ -214,7 +222,7 @@ export function translate(
 
   const toJacks = jackMap(to);
   for (const [a, b] of cables) {
-    const ends = [a, b].map((j) => link.jacks?.[j] ?? j);
+    const ends = [a, b].map((j) => own(link.jacks, j) ?? j);
     const missing = [a, b].find((_, i) => !toJacks[ends[i]]);
     if (missing) {
       out.dropped.push({

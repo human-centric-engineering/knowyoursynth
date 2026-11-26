@@ -308,13 +308,15 @@ async function main(): Promise<void> {
     }
     // The family maps (t-319): every id a map names exists, a round trip keeps what carried, and each library sound
     // translated onto another member of its family validates there.
-    let familyProblems: string[];
+    let families: ReturnType<typeof loadFamilyData>;
     try {
-      familyProblems = checkFamilyMaps(FAMILY_MAPS, SYNTHS, loadFamilyData());
+      families = loadFamilyData();
     } catch (error) {
       // a family seed file that does not parse, as `loadFamilyData` reports it
-      familyProblems = [error instanceof Error ? error.message : String(error)];
+      console.log(`ERR family: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
     }
+    const familyProblems = checkFamilyMaps(FAMILY_MAPS, SYNTHS, families);
     if (familyProblems.length) {
       for (const problem of familyProblems) console.log(`ERR family: ${problem}`);
       console.log(`${familyProblems.length} family map errors`);

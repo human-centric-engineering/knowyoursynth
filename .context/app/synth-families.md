@@ -105,12 +105,13 @@ parity test's mock client has no databank to check against.
 `translate(values, cables, from, to)` (`lib/app/synths/families/translate.ts`) carries a panel from
 one member's definition to another's. It is pure, and returns:
 
-- `values` and `cables`: what carried, under the ids of the member it went to. Only what was given
-  is translated, so the caller lays the result over the other member's own panel.
+- `values` and `cables`: what carried, under the ids of the member it went to. The caller lays them
+  over the other member's own panel. Pass the whole panel: a rule can read one control to decide
+  another, and anything left out is read as the member's Default patch.
 - `dropped`: each control and cable that did not carry, in the order given, with the reason
   ("The TB-303 has no distortion"). A `ui` control, a panel mode that never changes the sound, is
   never listed.
-- `changed`: each value that carried, but not as it was. A number past the other member's range is
+- `changed`: each value that carried, but not as it was, or that a dropped control set (the Grandmother's NOISE to 0). A number past the other member's range is
   clamped (the TD-3's TUNE goes 12 semitones either way, the TB-303's TUNING 5), and an option can
   lose part of itself (the Model 15's `saw+sub` is a Grandmother's `saw`).
 
