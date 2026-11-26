@@ -81,6 +81,9 @@ export function initAppTenancyClassification(): void {
       'SynthLineage',
       'SynthNote',
       'CatalogueSeedRecord',
+      // Synth families (`f-synth-families`).
+      'SynthFamily',
+      'SynthFamilyMember',
       // The pattern library.
       'LibraryPattern',
       'SynthSoundPattern',

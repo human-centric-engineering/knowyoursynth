@@ -67,6 +67,9 @@ model Synth {
   bankInstruments BankInstrumentSynth[]
   bankParts       BankPartSynth[]
 
+  /// The family this synth is a member of, if any (`f-synth-families`).
+  familyMember SynthFamilyMember?
+
   @@index([listed, order])
   @@map("synth")
 }
@@ -182,6 +185,60 @@ model SynthNote {
 
   @@index([synthId, kind, order])
   @@map("synth_note")
+}
+
+// ─── Synth families (f-synth-families, .context/app/synth-families.md) ─────
+//
+// Catalogue content, under the catalogue's rules: product content every org
+// shares (globalConfig in lib/app/tenancy-classification.ts), no user foreign
+// key (excluded from the export manifest), seeded by `007-families.ts`, and an
+// admin's edit (`editedAt`) is never written again. Nothing is deleted.
+
+/// An original, its revisions and the instruments that copy it, shown as one
+/// entry with a version toggle between its members.
+model SynthFamily {
+  id            String    @id // e.g. "tb-303"
+  name          String
+  /// The member the family opens on: the one most people are likely to own (owner ruling, 2026-11-26). A modelled
+  /// member's slug; the read falls back to the first modelled member it serves when this one is not served.
+  defaultMember String
+  editedAt      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  members SynthFamilyMember[]
+
+  @@map("synth_family")
+}
+
+/// One member of a family. Modelled when it names an app synth, which then
+/// sits in no other family; unmodelled otherwise, shown as a blank panel with
+/// its differences. Either way it names the databank instrument it is, whose
+/// recreation chain must reach the same original as every other member's.
+model SynthFamilyMember {
+  id           String    @id @default(cuid())
+  familyId     String
+  /// Stable within the family (`td-3`, `mk-1`): what the toggle and its URL name.
+  slug         String
+  /// What the toggle shows: `TD-3`, `Mk I`.
+  label        String
+  instrumentId String
+  synthId      String?   @unique
+  /// What this member changed from the others: the differences and advancements it brought in.
+  differences  String    @db.Text
+  /// Position in the toggle, lowest first.
+  order        Int
+  editedAt     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  family     SynthFamily    @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  instrument BankInstrument @relation(fields: [instrumentId], references: [id], onDelete: Restrict)
+  synth      Synth?         @relation(fields: [synthId], references: [id], onDelete: Restrict)
+
+  @@unique([familyId, slug])
+  @@index([instrumentId])
+  @@map("synth_family_member")
 }
 
 // ─── Pattern library (f-pattern-library, .context/app/pattern-library.md) ──
@@ -436,15 +493,17 @@ model BankInstrument {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  recreationOf BankInstrument?        @relation("BankRecreation", fields: [recreationOfId], references: [id], onDelete: Restrict)
-  recreations  BankInstrument[]       @relation("BankRecreation")
-  people       BankInstrumentPerson[]
-  synths       BankInstrumentSynth[]
-  parts        BankPartInstrument[]
-  artists      BankArtistInstrument[]
-  owners       OwnedInstrument[]
+  recreationOf  BankInstrument?        @relation("BankRecreation", fields: [recreationOfId], references: [id], onDelete: Restrict)
+  recreations   BankInstrument[]       @relation("BankRecreation")
+  people        BankInstrumentPerson[]
+  synths        BankInstrumentSynth[]
+  parts         BankPartInstrument[]
+  artists       BankArtistInstrument[]
+  owners        OwnedInstrument[]
   /// Its videos and links (`f-videos-and-links`).
-  links        ExternalLink[]
+  links         ExternalLink[]
+  /// The family members that are this instrument (`f-synth-families`).
+  familyMembers SynthFamilyMember[]
 
   @@index([recreationOfId])
   @@map("bank_instrument")
