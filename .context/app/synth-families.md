@@ -81,11 +81,13 @@ catalogue seed's rules:
 - **An admin's edit stands.** A row with `editedAt` set is never written again.
 - **A member's place is set once.** A new member goes after the family's last one, and an admin's
   reorder stands.
-- **Never deletes.**
+- **Never deletes, but for a replaced member.** An unedited member the data has dropped, while
+  giving its synth to another member (a re-slug, or a synth moved), is deleted rather than left in the
+  toggle as a blank copy, and reported (`replaced`). An empty or partial source deletes nothing.
 - **A synth moves with the data.** Before writing any member, every unedited member the data no
   longer gives its synth lets go of it, so a synth the data moves, swaps or re-slugs lands on its new
-  member whichever comes first. A member the data has dropped lets go only when the data gives its
-  synth to another member.
+  member whichever comes first. A synth is never freed for a member an admin has edited, which the
+  seed does not write.
 - **A synth another member already has stays there.** The seeded member is written without it and
   reported (`synthTaken`), rather than the seed taking the synth back from where an admin put it.
 - **A family whose stored default member ends up without a synth is reported** (`defaultWithoutSynth`).

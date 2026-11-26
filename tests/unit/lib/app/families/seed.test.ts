@@ -58,9 +58,16 @@ function fakeDb() {
         const r = memberBy(where);
         return r ? { ...r } : null;
       }),
-      findMany: vi.fn(async () =>
-        members.filter((m) => m.editedAt === null && m.synthId !== null).map((m) => ({ ...m }))
+      findMany: vi.fn(async ({ where }: { where: Row }) =>
+        members
+          .filter((m) =>
+            where.editedAt === null ? m.editedAt === null && m.synthId !== null : m.editedAt != null
+          )
+          .map((m) => ({ ...m }))
       ),
+      delete: vi.fn(async ({ where }: { where: Row }) => {
+        members.splice(members.indexOf(memberBy(where) ?? {}), 1);
+      }),
       aggregate: vi.fn(async ({ where }: { where: Row }) => {
         const orders = members
           .filter((m) => m.familyId === where.familyId)
@@ -86,6 +93,7 @@ const writes = () =>
     db.synthFamily.update,
     db.synthFamilyMember.create,
     db.synthFamilyMember.update,
+    db.synthFamilyMember.delete,
   ].reduce((n, fn) => n + fn.mock.calls.length, 0);
 
 const family = (): FamilyFile =>
@@ -246,7 +254,7 @@ describe('seedFamilies', () => {
     expect(report.defaultWithoutSynth).toEqual([]);
   });
 
-  it('moves a synth from a member the data dropped to the member it now names', async () => {
+  it('replaces a member the data re-slugged: the synth moves and the old row goes', async () => {
     await seedFamilies(client(), [family()]);
     const renamed = family();
     renamed.members[0] = { ...renamed.members[0], slug: 'td3' };
@@ -255,11 +263,30 @@ describe('seedFamilies', () => {
     const report = await seedFamilies(client(), [renamed]);
 
     expect(report.synthTaken).toEqual([]);
+    expect(report.replaced).toEqual(['tb-303/td-3']);
     expect(db.members.map((m) => [m.slug, m.synthId])).toEqual([
-      ['td-3', null],
       ['tb-303', 'tb-303'],
       ['td3', 'td-3'],
     ]);
+  });
+
+  it('never frees a synth for a member an admin edited, which the seed does not write', async () => {
+    await seedFamilies(client(), [family()]);
+    db.members.push({
+      id: 'e',
+      familyId: 'tb-303',
+      slug: 'td3',
+      synthId: null,
+      editedAt: new Date(),
+    });
+    const moved = family();
+    moved.members[0] = { ...moved.members[0], slug: 'td3' };
+    moved.defaultMember = 'td3';
+
+    const report = await seedFamilies(client(), [moved]);
+
+    expect(report.replaced).toEqual([]);
+    expect(db.members.find((m) => m.slug === 'td-3')?.synthId).toBe('td-3');
   });
 
   it('leaves the synth on a member the data dropped when the data gives it to no one', async () => {

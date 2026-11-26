@@ -65,6 +65,7 @@ describe('the 007-families seed unit', () => {
     members: { created: 9, updated: 0, unchanged: 0, edited: 0 },
     synthTaken,
     defaultWithoutSynth,
+    replaced: [],
   });
 
   beforeEach(() => vi.clearAllMocks());

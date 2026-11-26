@@ -11,7 +11,7 @@ import {
 /**
  * Synth families (`f-synth-families`): every family in `./data/families/`, after `001-catalogue` and `002-bank`, which
  * write the synths and instruments a member names. The rules it keeps (checked first against the tables, idempotent,
- * never overwrites an admin's edit, never deletes) are `seedFamilies`'s, in `lib/app/families/seed.ts`.
+ * never overwrites an admin's edit, deletes only a member the data replaced) are `seedFamilies`'s, in `lib/app/families/seed.ts`.
  *
  * The runner re-runs a unit only when its hash changes, so the hash takes in the data files, the loader, and the
  * shapes, check and seed logic. A change to the databank or catalogue alone does not re-run it: their rows are only
@@ -34,7 +34,10 @@ const unit: SeedUnit = {
       ...report,
       synthTaken: report.synthTaken.length,
       defaultWithoutSynth: report.defaultWithoutSynth.length,
+      replaced: report.replaced.length,
     });
+    if (report.replaced.length)
+      logger.info('Family members the data replaced, deleted', { members: report.replaced });
     if (report.synthTaken.length)
       logger.warn('Family members written without their synth: another member has it', {
         members: report.synthTaken,
