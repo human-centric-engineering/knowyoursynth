@@ -100,11 +100,34 @@ tracing back to one original.
 The unit is on `APP_UNCHECKED_SEEDS` (`lib/app/capability-seed-pairs.ts`), because the capability
 parity test's mock client has no databank to check against.
 
+## Carrying a panel across
+
+`translate(values, cables, from, to)` (`lib/app/synths/families/translate.ts`) carries a panel from
+one member's definition to another's. It is pure, and returns:
+
+- `values` and `cables`: what carried, under the ids of the member it went to. Only what was given
+  is translated, so the caller lays the result over the other member's own panel.
+- `dropped`: each control and cable that did not carry, in the order given, with the reason
+  ("The TB-303 has no distortion"). A `ui` control, a panel mode that never changes the sound, is
+  never listed.
+- `changed`: each value that carried, but not as it was. A number past the other member's range is
+  clamped (the TD-3's TUNE goes 12 semitones either way, the TB-303's TUNING 5), and an option can
+  lose part of itself (the Model 15's `saw+sub` is a Grandmother's `saw`).
+
+A family's **map** (`FamilyMap`, one file per family beside `translate.ts`, listed in `maps.ts`) is
+one-way links between its members. A link is identity plus what it names: a control or jack renamed,
+an option renamed, a control dropped while the panel is set a certain way (the Model 15's MIX 3,
+which is the sub's level while OSC 2 is under its SUB bracket), and why something the other member
+lacks does not carry. A value that is not legal on the other member is dropped, never forced. The
+System 15, 35 and 55 map needs no renames: a module one size lacks drops with its knobs and its
+cables, named by its area ("The System 15 has no 921B Oscillator (5)").
+
+Ids are never renamed in a definition to make two members match. The map does that, and ids stay
+stable (`synths.md`). A family with no map still translates, under shared ids only, and
+`check:synths` fails until it has one. What it checks is in `.context/app/check/README.md`.
+
 ## Not here
 
-- **Carrying the panel across a switch**, and the dropped-settings list: t-319, in
-  `lib/app/synths/families/`. Ids are not renamed to make two members match. The map does that, and
-  ids stay stable (`synths.md`).
 - **One model for several members.** Where a new member's definition would otherwise repeat an
   existing one's voice, follow `defs/syncussion-kit.ts`. The TB-303 and TD-3 were deliberately not
   moved onto a kit (journal, 2026-11-26).

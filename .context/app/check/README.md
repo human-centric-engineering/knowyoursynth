@@ -63,6 +63,24 @@ definitions are ported (m1) it takes them from the prototype's source, bundled w
 It skips the limits (m2) and databank (b1) checks. A full `--compare` run: 1,086 sounds, every
 one identical, 260 s on eight processes.
 
+## Family maps
+
+Before it renders anything, `check:synths` checks the maps that carry a panel between the members
+of a synth family (`lib/app/synths/families/`, t-319), once, in the process that starts the
+others. It runs on a one-synth run too. A problem fails the run, printed as `ERR family: …`:
+
+- **Every id a map names exists on its side**: a control or jack it renames on the member it
+  comes from, what it renames it to on the member it goes to, every option it renames, and every
+  `lacks` pattern, which must name something the one member has and the other lacks.
+- **Every family the seed data holds has a link each way** between each pair of its modelled
+  members.
+- **A round trip keeps what carried.** Each control at its ends, its default and each option, the
+  member's init, its Default patch and every library sound go across and back. Each value that
+  carried unchanged (not dropped, not clamped, not a lossy option) must come back as it was, and
+  so must each cable.
+- **A library sound lands as a sound.** Each one, translated onto another member, passes
+  `validateSound` there.
+
 ## A synth with no prototype
 
 A synth written straight into the app (listed in `scripts/native-synths.ts`, the Donner B1
