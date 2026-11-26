@@ -54,6 +54,8 @@ export const GRANDMOTHER_FAMILY: FamilyMap = {
           dropWhen: {
             when: { id: 'osc2.wave', in: SUB_WAVES },
             reason: `${NO_SUB}: MIX 3 was the sub's level`,
+            // on SUB, the Model 15 has no noise in its mixer
+            set: 0,
           },
         },
         'arp.dir': { options: { bf: 'fb' } },

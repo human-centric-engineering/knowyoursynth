@@ -106,7 +106,8 @@ describe('translate', () => {
   it("drops the Model 15's sub level and keeps its wave without the sub on a Grandmother", () => {
     const t = translate({ 'osc2.wave': 'saw+sub', 'mix.3': 6 }, [], m15, gm);
 
-    expect(t.values).toEqual({ 'osc2.wave': 'saw' });
+    // on SUB the Model 15 has no noise, so the Grandmother's NOISE goes to 0 rather than keeping its own
+    expect(t.values).toEqual({ 'osc2.wave': 'saw', 'mix.noise': 0 });
     expect(t.changed).toEqual([
       {
         id: 'osc2.wave',
@@ -176,6 +177,19 @@ describe('translate', () => {
 
     expect(t.dropped).toEqual([
       { kind: 'control', id: 'osc.old', value: 3, reason: 'The TB-303 has no osc.old' },
+    ]);
+  });
+
+  it('names a cable the other member cannot patch in words, not jack ids', () => {
+    const t = translate({}, [['j.cvOut', 'j.phones']], td3, tb303);
+
+    expect(t.cables).toEqual([]);
+    expect(t.dropped).toEqual([
+      {
+        kind: 'cable',
+        cable: ['j.cvOut', 'j.phones'],
+        reason: 'On the TB-303, CV (pitch) cannot be patched into HEADPHONE',
+      },
     ]);
   });
 

@@ -134,7 +134,29 @@ describe('checkFamilyMaps', () => {
     }));
 
     expect(checkFamilyMaps(maps, SYNTH_DEFS, families)).toEqual([
-      'model-15 → grandmother: mix.3 drops on osc2.wave saw+subb, which is no option of it',
+      'model-15 → grandmother: mix.3 drops on osc2.wave saw+subb, which is no setting of it',
+    ]);
+  });
+
+  it('fails a jack rename the way back does not undo, though no sound patches it', () => {
+    const maps = withTdLink({ jacks: { 'j.cvOut': 'j.cv', 'j.gateOut': 'j.cv' } });
+    const problems = checkFamilyMaps(maps, SYNTH_DEFS, TB_FAMILY);
+
+    expect(problems).toContain('td-3 → tb-303: j.cvOut and j.gateOut both carry to jack j.cv');
+    const swapped: FamilyMap[] = [
+      {
+        family: 'tb-303',
+        links: TB_303_FAMILY.links.map((l) =>
+          l.from === 'tb-303' ? { ...l, jacks: { 'j.cv': 'j.gateOut', 'j.gate': 'j.cvOut' } } : l
+        ),
+      },
+    ];
+
+    expect(checkFamilyMaps(swapped, SYNTH_DEFS, TB_FAMILY)).toEqual([
+      'td-3 → tb-303 → td-3: jack j.cvOut goes across as j.cv and comes back as j.gateOut',
+      'td-3 → tb-303 → td-3: jack j.gateOut goes across as j.gate and comes back as j.cvOut',
+      'tb-303 → td-3 → tb-303: jack j.cv goes across as j.gateOut and comes back as j.gate',
+      'tb-303 → td-3 → tb-303: jack j.gate goes across as j.cvOut and comes back as j.cv',
     ]);
   });
 

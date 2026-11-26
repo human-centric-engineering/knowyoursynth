@@ -117,7 +117,8 @@ one member's definition to another's. It is pure, and returns:
 A family's **map** (`FamilyMap`, one file per family beside `translate.ts`, listed in `maps.ts`) is
 one-way links between its members. A link is identity plus what it names: a control or jack renamed,
 an option renamed, a control dropped while the panel is set a certain way (the Model 15's MIX 3,
-which is the sub's level while OSC 2 is under its SUB bracket), and why something the other member
+which is the sub's level while OSC 2 is under its SUB bracket; the Grandmother's NOISE then goes to 0,
+since the Model 15 has no noise there), and why something the other member
 lacks does not carry. A value that is not legal on the other member is dropped, never forced. The
 System 15, 35 and 55 map needs no renames: a module one size lacks drops with its knobs and its
 cables, named by its area ("The System 15 has no 921B Oscillator (5)").

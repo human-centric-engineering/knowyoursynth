@@ -40,8 +40,12 @@ export interface ControlRule {
   to?: string;
   /** Options renamed on the way, from → to. An option not named here carries as itself. */
   options?: Record<string, OptionValue | LossyOption>;
-  /** Drop the control, rather than carry it, while the panel it comes from is set so (the Model 15's MIX 3 on SUB). */
-  dropWhen?: { when: ShowCondition; reason: string };
+  /**
+   * Drop the control, rather than carry it, while the panel it comes from is set so (the Model 15's MIX 3 on SUB).
+   * With `set`, the control it would have carried to is set to that instead, where the member it comes from has nothing
+   * there while it is set so (a Model 15 on SUB has no noise, so the Grandmother's NOISE goes to 0).
+   */
+  dropWhen?: { when: ShowCondition; reason: string; set?: ControlValue };
 }
 
 /** One way between two members: from `from`'s panel onto `to`'s. */
@@ -55,8 +59,8 @@ export interface FamilyLink {
   jacks?: Record<string, string>;
   /**
    * Why a control or jack of `from` that `to` lacks does not carry, by id or by a `*` pattern (`dist.*`). Every
-   * pattern names something `from` has and `to` does not. Anything without one gets `lacksFallback`, then
-   * "The TB-303 has no DISTORTION".
+   * pattern names something `from` has and `to` does not. Anything without one gets `lacksFallback`, then "The
+   * TB-303 has no <the control's display name>" (or "… <the jack's name> jack").
    */
   lacks?: Record<string, string>;
   /** A reason worked out from the id, for a family too large to list (the System 55's modules a System 15 lacks). */
@@ -174,6 +178,9 @@ export function translate(
     }
     if (rule?.dropWhen && holds(rule.dropWhen.when, panel)) {
       drop(rule.dropWhen.reason);
+      const { set } = rule.dropWhen;
+      if (set !== undefined && !checkSettings(to, { [toId]: set }).problems.length)
+        out.values[toId] = set;
       continue;
     }
     let carried: ControlValue = value;
@@ -218,9 +225,13 @@ export function translate(
       continue;
     }
     const cable: CablePair = [ends[0], ends[1]];
-    const problems = checkCables(to, [cable]);
-    if (problems.length) {
-      out.dropped.push({ kind: 'cable', cable: [a, b], reason: problems[0].message });
+    if (checkCables(to, [cable]).length) {
+      const [x, y] = ends.map((j) => cleanName(toJacks[j]?.name ?? toJacks[j]?.label ?? j));
+      out.dropped.push({
+        kind: 'cable',
+        cable: [a, b],
+        reason: `On the ${to.name}, ${x} cannot be patched into ${y}`,
+      });
       continue;
     }
     if (!out.cables.some(([x, y]) => x === cable[0] && y === cable[1])) out.cables.push(cable);

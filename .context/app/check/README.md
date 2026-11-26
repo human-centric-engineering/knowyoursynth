@@ -77,7 +77,7 @@ others. It runs on a one-synth run too. A problem fails the run, printed as `ERR
 - **A round trip keeps what carried.** Each control at its ends, its default and each option, the
   member's init, its Default patch and every library sound go across and back. Each value that
   carried unchanged (not dropped, not clamped, not a lossy option) must come back as it was, and
-  so must each cable.
+  so must each cable. And every rename is undone the other way, whether or not a sound uses it.
 - **A library sound lands as a sound.** Each one, translated onto another member, passes
   `validateSound` there.
 

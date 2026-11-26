@@ -7,7 +7,7 @@ import type { ControlValue, ControlValues, CablePair, SynthDef } from '@/lib/app
 import type { FamilyFile } from '@/lib/app/families/data';
 import { patternTest } from '@/lib/app/synths/lib/checklist';
 import { controlMap, jackMap, presetState } from '@/lib/app/synths/lib/patch';
-import { validateSound } from '@/lib/app/synths/validate';
+import { checkSettings, validateSound } from '@/lib/app/synths/validate';
 import { translate, type FamilyLink, type FamilyMap } from '@/lib/app/synths/families/translate';
 
 /** A panel state to send across and back. */
@@ -76,12 +76,15 @@ function namingProblems(link: FamilyLink, from: SynthDef, to: SynthDef): string[
       const { when } = rule.dropWhen;
       const on = fc[when.id];
       if (!on) problems.push(`${at}: ${id} drops on ${when.id}, which the ${from.name} lacks`);
-      else if (on.kind === 'enum')
+      else
         for (const v of 'eq' in when ? [when.eq] : when.in)
-          if (!on.options.some((o) => o.v === v))
+          if (checkSettings(from, { [when.id]: v }).problems.length)
             problems.push(
-              `${at}: ${id} drops on ${when.id} ${String(v)}, which is no option of it`
+              `${at}: ${id} drops on ${when.id} ${String(v)}, which is no setting of it`
             );
+      const { set } = rule.dropWhen;
+      if (set !== undefined && checkSettings(to, { [toId]: set }).problems.length)
+        problems.push(`${at}: ${id} sets ${toId} to ${String(set)}, which is no setting of it`);
     }
   }
   // Two ids of `from` landing on one id of `to` would lose one of them without a word.
@@ -167,6 +170,44 @@ function roundTripProblems(
 }
 
 /**
+ * Every rename one way is undone the other way, whether or not a sound uses it: a control or jack renamed `x` → `y`
+ * comes back from `y` as `x`. A sound only patches some jacks, so the round trip alone would miss the rest.
+ */
+function renameProblems(
+  a: string,
+  b: string,
+  from: SynthDef,
+  to: SynthDef,
+  maps: readonly FamilyMap[]
+): string[] {
+  const all = maps.flatMap((m) => m.links);
+  const there = all.find((l) => l.from === a && l.to === b);
+  const back = all.find((l) => l.from === b && l.to === a);
+  const problems: string[] = [];
+  const tc = controlMap(to);
+  const tj = jackMap(to);
+  for (const c of from.controls) {
+    const y = there?.controls?.[c.id]?.to ?? c.id;
+    if (!tc[y]) continue;
+    const home = back?.controls?.[y]?.to ?? y;
+    if (home !== c.id)
+      problems.push(
+        `${a} → ${b} → ${a}: control ${c.id} goes across as ${y} and comes back as ${home}`
+      );
+  }
+  for (const j of from.jacks) {
+    const y = there?.jacks?.[j.id] ?? j.id;
+    if (!tj[y]) continue;
+    const home = back?.jacks?.[y] ?? y;
+    if (home !== j.id)
+      problems.push(
+        `${a} → ${b} → ${a}: jack ${j.id} goes across as ${y} and comes back as ${home}`
+      );
+  }
+  return problems;
+}
+
+/**
  * Check the family maps against the definitions they join (`defs`, with their library sounds as `presets`) and the
  * families the seed data holds. Every family with two modelled members needs a link each way between each pair.
  */
@@ -178,6 +219,8 @@ export function checkFamilyMaps(
   const byId = new Map(defs.map((d) => [d.id, d]));
   const problems: string[] = [];
   const seen = new Set<string>();
+  // A family whose map is wrong is not round-tripped: its other problems are noise until that is fixed.
+  const misnamed = new Set<string>();
   for (const map of maps) {
     const family = families.find((f) => f.id === map.family);
     if (!family) {
@@ -185,6 +228,7 @@ export function checkFamilyMaps(
       continue;
     }
     const members = new Set(family.members.flatMap((m) => (m.synth ? [m.synth] : [])));
+    const before = problems.length;
     for (const link of map.links) {
       const key = `${link.from} → ${link.to}`;
       if (seen.has(key)) problems.push(`${key}: linked twice`);
@@ -201,10 +245,11 @@ export function checkFamilyMaps(
       }
       problems.push(...namingProblems(link, from, to));
     }
+    if (problems.length > before) misnamed.add(map.family);
   }
-  if (problems.length) return problems;
 
   for (const family of families) {
+    if (misnamed.has(family.id)) continue;
     const synths = family.members.flatMap((m) => (m.synth ? [m.synth] : []));
     for (const a of synths)
       for (const b of synths) {
@@ -221,6 +266,7 @@ export function checkFamilyMaps(
         }
         for (const probe of [...valuesOf(from), ...soundsOf(from)])
           problems.push(...roundTripProblems(probe, from, to, maps));
+        problems.push(...renameProblems(a, b, from, to, maps));
         // A library sound translated onto another member must be a sound that member can hold.
         for (const probe of soundsOf(from)) {
           const t = translate(probe.values, probe.cables, from, to, maps);
