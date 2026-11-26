@@ -651,7 +651,9 @@ function Synth({
   const carried = useRef<FamilyCarry | null | undefined>(undefined);
   const [carryNote, setCarryNote] = useState<CarryNote | null>(null);
   useEffect(() => {
-    if (carried.current === undefined) carried.current = takeCarry(synthId);
+    // Only a plain arrival takes it: a shared sound's or pattern's page, or one naming its own sound, opens that.
+    const own = shared || sharedPattern || soundParam || mineParam;
+    if (carried.current === undefined) carried.current = own ? null : takeCarry(synthId);
     const carry = carried.current;
     if (carry) {
       setSess(() => carriedSession(synthDef, defaultSound, carry));

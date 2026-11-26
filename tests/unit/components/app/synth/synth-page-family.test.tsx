@@ -220,6 +220,27 @@ describe('the version toggle', () => {
     expect(screen.queryByText(/Panel carried over/)).toBeNull();
   });
 
+  it('leaves a carry alone on an arrival that opens its own sound', async () => {
+    leaveTd3();
+    const first = page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'TB-303' }));
+    await waitFor(() => expect(router.push).toHaveBeenCalledOnce());
+    first.unmount();
+    render(
+      <SynthPage
+        detail={detailOf(SYNTHS[1], TB_303_FAMILY)}
+        synths={SYNTHS}
+        families={[TB_303_FAMILY]}
+        viewParam={null}
+        soundParam="squelch"
+      />
+    );
+    await waitFor(() =>
+      expect(readStored('kys.session.tb-303')).toMatchObject({ presetId: 'squelch' })
+    );
+    expect(screen.queryByText(/Panel carried over/)).toBeNull();
+  });
+
   it('opens a member reached any other way on its Default patch, with no note', () => {
     leaveTd3();
     page(1);
