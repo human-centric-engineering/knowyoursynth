@@ -180,9 +180,12 @@ export async function saveFamily(
           `The family has ${problems.length === 1 ? 'a problem' : `${problems.length} problems`}`,
           problems
         );
-      if (before && sameValue(familyContent(before), family)) return { before, after: before };
+      // An unchanged save of the admin's own family writes nothing; one of the seed's is still stamped, so saving
+      // it claims it from the seed as the form says.
+      if (before?.editedAt && sameValue(familyContent(before), family))
+        return { before, after: before };
 
-      await writeFamily(tx, family, new Date());
+      await writeFamily(tx, family, new Date(), mode);
       const after = await tx.synthFamily.findUniqueOrThrow({ where: { id }, select: familySelect });
       return { before, after: adminFamilyOf(after) };
     });
@@ -194,15 +197,18 @@ export async function saveFamily(
 /**
  * Write the family and its members as given, every row stamped `editedAt`. Members left out go first, and every kept
  * member lets go of its synth before any is written, so a synth moved between two members in one save never meets
- * itself on the unique key.
+ * itself on the unique key. A create inserts, never upserts: the row lock cannot hold an id not yet stored, so two
+ * creates of one id meet on the primary key and the second is a 409 rather than a silent overwrite.
  */
-async function writeFamily(tx: Tx, family: FamilyFile, editedAt: Date): Promise<void> {
+async function writeFamily(
+  tx: Tx,
+  family: FamilyFile,
+  editedAt: Date,
+  mode: 'create' | 'update'
+): Promise<void> {
   const data = { name: family.name, defaultMember: family.defaultMember, editedAt };
-  await tx.synthFamily.upsert({
-    where: { id: family.id },
-    create: { id: family.id, ...data },
-    update: data,
-  });
+  if (mode === 'create') await tx.synthFamily.create({ data: { id: family.id, ...data } });
+  else await tx.synthFamily.update({ where: { id: family.id }, data });
   const slugs = family.members.map((m) => m.slug);
   await tx.synthFamilyMember.deleteMany({
     where: { familyId: family.id, slug: { notIn: slugs } },

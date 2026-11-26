@@ -71,6 +71,10 @@ function fakeDb() {
       delete: vi.fn(async ({ where }: { where: Row }) => {
         members.splice(members.indexOf(memberBy(where) ?? {}), 1);
       }),
+      count: vi.fn(
+        async ({ where }: { where: Row }) =>
+          members.filter((m) => m.familyId === where.familyId).length
+      ),
       aggregate: vi.fn(async ({ where }: { where: Row }) => {
         const orders = members
           .filter((m) => m.familyId === where.familyId)
@@ -205,7 +209,8 @@ describe('seedFamilies', () => {
 
     expect(writes()).toBe(before);
     expect(report.families.edited).toBe(1);
-    expect(report.members).toEqual({ created: 0, updated: 0, unchanged: 0, edited: 2 });
+    // Only the member the admin kept is counted: the one they removed is not a row left alone.
+    expect(report.members).toEqual({ created: 0, updated: 0, unchanged: 0, edited: 1 });
     expect(db.members.map((m) => [m.slug, m.synthId, m.differences])).toEqual([
       ['td-3', 'tb-303', 'A copy.'],
     ]);

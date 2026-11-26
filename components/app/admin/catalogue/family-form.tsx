@@ -78,6 +78,15 @@ function draftOf(family: AdminFamily | null): Draft {
   };
 }
 
+/**
+ * The draft with its default cleared once no modelled member has that slug, so the select and the state never
+ * disagree: the select lists only modelled members.
+ */
+const withDefaultModelled = (d: Draft): Draft =>
+  d.defaultMember === '' || d.members.some((m) => m.synth && m.slug.trim() === d.defaultMember)
+    ? d
+    : { ...d, defaultMember: '' };
+
 const bodyOf = (d: Draft) => ({
   name: d.name,
   defaultMember: d.defaultMember,
@@ -122,9 +131,14 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
   const setMember = (i: number, field: keyof Omit<MemberRow, 'key'>) => (value: string) =>
     update((d) => {
       const members = d.members.map((m, j) => (j === i ? { ...m, [field]: value } : m));
-      // A renamed slug takes the default with it.
-      const renamed = field === 'slug' && d.defaultMember === d.members[i].slug;
-      return { ...d, members, defaultMember: renamed ? value : d.defaultMember };
+      // A renamed slug takes the default with it; an empty default is no member's, so it follows none.
+      const renamed =
+        field === 'slug' && d.defaultMember !== '' && d.defaultMember === d.members[i].slug.trim();
+      return withDefaultModelled({
+        ...d,
+        members,
+        defaultMember: renamed ? value.trim() : d.defaultMember,
+      });
     });
 
   const onSubmit = async () => {
@@ -357,7 +371,9 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
                   size="sm"
                   variant="ghost"
                   onClick={() =>
-                    restructure((d) => ({ ...d, members: d.members.filter((_, j) => j !== i) }))
+                    restructure((d) =>
+                      withDefaultModelled({ ...d, members: d.members.filter((_, j) => j !== i) })
+                    )
                   }
                 >
                   Remove member

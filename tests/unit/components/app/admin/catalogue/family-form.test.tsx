@@ -178,6 +178,47 @@ describe('FamilyForm', () => {
     expect(mockPush).toHaveBeenCalledWith('/admin/synths/catalogue/families/tb-303');
   });
 
+  it("leaves a new family's default unchosen as its slugs are typed", async () => {
+    const user = userEvent.setup();
+    post.mockResolvedValue(FAMILY);
+    render(<FamilyForm family={null} options={OPTIONS} />);
+
+    const first = screen.getByText('Member 1').parentElement as HTMLElement;
+    await user.type(within(first).getByLabelText(/Slug/, INPUT), 'tb-303');
+    await user.click(screen.getByRole('button', { name: 'Create family' }));
+
+    expect(post.mock.calls[0][1]?.body).toMatchObject({ defaultMember: '' });
+  });
+
+  it('carries the default to its renamed slug, trimmed', async () => {
+    const user = userEvent.setup();
+    put.mockResolvedValue(FAMILY);
+    render(<FamilyForm family={FAMILY} options={OPTIONS} />);
+
+    const first = screen.getByText('Member 1').parentElement as HTMLElement;
+    await user.type(within(first).getByLabelText(/Slug/, INPUT), 'x ');
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+
+    expect(put.mock.calls[0][1]?.body).toMatchObject({ defaultMember: 'td-3x' });
+  });
+
+  it('clears the default when its member is removed or loses its synth', async () => {
+    const user = userEvent.setup();
+    put.mockResolvedValue(FAMILY);
+    const { unmount } = render(<FamilyForm family={FAMILY} options={OPTIONS} />);
+
+    await user.click(screen.getAllByRole('button', { name: 'Remove member' })[0]);
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+    expect(put.mock.calls[0][1]?.body).toMatchObject({ defaultMember: '' });
+    unmount();
+
+    render(<FamilyForm family={FAMILY} options={OPTIONS} />);
+    const first = screen.getByText('Member 1').parentElement as HTMLElement;
+    await user.selectOptions(within(first).getByLabelText(/Synth/, INPUT), '');
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+    expect(put.mock.calls[1][1]?.body).toMatchObject({ defaultMember: '' });
+  });
+
   it('deletes only once confirmed, then returns to the list', async () => {
     const user = userEvent.setup();
     del.mockResolvedValue({ id: 'tb-303', deleted: true });

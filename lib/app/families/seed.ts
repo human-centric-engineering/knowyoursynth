@@ -98,10 +98,14 @@ export async function seedFamilies(
   const released = await releaseSynths(prisma, families, report, editedFamilies);
   for (const family of families) {
     await writeFamily(prisma, family, report.families);
-    for (const member of family.members) {
-      if (editedFamilies.has(family.id)) report.members.edited++;
-      else await writeMember(prisma, family.id, member, report, released);
-    }
+    // An admin's family keeps the members they saved, whatever the data lists: those are the rows left alone.
+    if (editedFamilies.has(family.id))
+      report.members.edited += await prisma.synthFamilyMember.count({
+        where: { familyId: family.id },
+      });
+    else
+      for (const member of family.members)
+        await writeMember(prisma, family.id, member, report, released);
     const stored = await prisma.synthFamily.findUnique({ where: { id: family.id } });
     const opens =
       stored &&

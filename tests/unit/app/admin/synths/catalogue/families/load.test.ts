@@ -1,5 +1,5 @@
 /**
- * What the family admin pages load (`f-synth-families` t-323): the families, one family (`'missing'` for a 404), and
+ * What the family admin pages load (`f-synth-families` t-323): the families, one family (`'missing'` for a 404 or an id no family could have), and
  * the synths and instruments the form offers, each `null` when it could not be loaded.
  *
  * @see app/admin/synths/catalogue/families/load.ts
@@ -53,13 +53,19 @@ describe('getAdminFamilies', () => {
 });
 
 describe('getAdminFamily', () => {
-  it('asks for the id encoded, and returns the family', async () => {
+  it('asks for the id, and returns the family', async () => {
     const family = { id: 'tb-303' };
     fetchMock.mockResolvedValue(response(200));
     parseMock.mockResolvedValue({ success: true, data: family } as never);
 
-    await expect(getAdminFamily('a b')).resolves.toBe(family);
-    expect(fetchMock).toHaveBeenCalledWith('/api/v1/admin/synths/families/a%20b');
+    await expect(getAdminFamily('tb-303')).resolves.toBe(family);
+    expect(fetchMock).toHaveBeenCalledWith('/api/v1/admin/synths/families/tb-303');
+  });
+
+  it("says 'missing' for an id no family could have, without asking", async () => {
+    await expect(getAdminFamily('TB-303')).resolves.toBe('missing');
+    await expect(getAdminFamily('a b')).resolves.toBe('missing');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("says 'missing' for a 404, and null for a body that is not a success", async () => {

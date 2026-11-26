@@ -8,8 +8,9 @@
  * - input is validated, and a member whose instrument traces back to another original is refused, naming it, with
  *   nothing written;
  * - a create, a whole-family save (adding, reordering and removing members, moving the default) and a delete each
- *   write what they say, stamp `editedAt` on every row they write, and are audited; a save that changes nothing
- *   writes and audits nothing.
+ *   write what they say, stamp `editedAt` on every row they write, and are audited; an unchanged save of a seed
+ *   family claims it from the seed, and one of an edited family writes and audits nothing;
+ * - two creates of one id meet on the primary key, and the second is a 409.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import type { NextRequest } from 'next/server';
@@ -68,19 +69,22 @@ const mockPrisma = vi.hoisted(() => {
         if (!f) throw new Error('not found');
         return withMembers(f);
       }),
-      upsert: vi.fn(
+      create: vi.fn(async ({ data }: { data: Record<string, unknown> }) => {
+        if (families.some((r) => r.id === data.id))
+          throw Object.assign(new Error('Unique constraint failed'), { code: 'P2002' });
+        families.push({ ...data });
+      }),
+      update: vi.fn(
         async ({
           where,
-          create,
-          update,
+          data,
         }: {
           where: Record<string, unknown>;
-          create: Record<string, unknown>;
-          update: Record<string, unknown>;
+          data: Record<string, unknown>;
         }) => {
           const f = families.find((r) => r.id === where.id);
-          if (f) Object.assign(f, update);
-          else families.push({ ...create });
+          if (!f) throw Object.assign(new Error('Record not found'), { code: 'P2025' });
+          Object.assign(f, data);
         }
       ),
       delete: vi.fn(async ({ where }: { where: Record<string, unknown> }) => {
@@ -182,7 +186,8 @@ async function json(res: Response) {
 /** Writes to the family tables since the last reset. */
 const writes = () =>
   [
-    mockPrisma.synthFamily.upsert,
+    mockPrisma.synthFamily.create,
+    mockPrisma.synthFamily.update,
     mockPrisma.synthFamily.delete,
     mockPrisma.synthFamilyMember.deleteMany,
     mockPrisma.synthFamilyMember.updateMany,
@@ -328,6 +333,21 @@ describe('POST /families', () => {
     expect(writes()).toBe(0);
   });
 
+  it('answers 409, overwriting nothing, when another create takes the id first', async () => {
+    seeded();
+    // The other create commits after this one looked: the lookup misses it, the insert meets its key.
+    mockPrisma.synthFamily.findUnique.mockResolvedValueOnce(null);
+    const family = tb303();
+    family.name = 'Mine';
+
+    const res = await postFamily(request('POST', 'families', { id: 'tb-303', ...family }));
+
+    expect(res.status).toBe(409);
+    expect(tables.families[0].name).toBe('TB-303');
+    expect(mockPrisma.synthFamilyMember.deleteMany).not.toHaveBeenCalled();
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
   it('refuses a synth another family already has', async () => {
     seeded();
     const res = await postFamily(
@@ -409,14 +429,26 @@ describe('PUT /families/:id', () => {
     expect(tables.members.map((m) => m.slug).sort()).toEqual(['tb-303', 'td-3']);
   });
 
-  it('writes and audits nothing when nothing changed', async () => {
+  it('claims an unchanged seed family from the seed, without an audit row', async () => {
     seeded();
+    const res = await putFamily(request('PUT', 'families/tb-303', tb303()), ctx('tb-303'));
+
+    expect(res.status).toBe(200);
+    expect(tables.families[0].editedAt).toBeInstanceOf(Date);
+    expect(tables.members.every((m) => m.editedAt instanceof Date)).toBe(true);
+    expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('writes and audits nothing when an edited family is saved unchanged', async () => {
+    seeded();
+    await putFamily(request('PUT', 'families/tb-303', tb303()), ctx('tb-303'));
+    vi.clearAllMocks();
+
     const res = await putFamily(request('PUT', 'families/tb-303', tb303()), ctx('tb-303'));
 
     expect(res.status).toBe(200);
     expect(writes()).toBe(0);
     expect(mockLogAdminAction).not.toHaveBeenCalled();
-    expect(tables.families[0].editedAt).toBeNull();
   });
 
   it('refuses a default member that is not modelled', async () => {

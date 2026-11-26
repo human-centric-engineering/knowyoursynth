@@ -46,7 +46,7 @@ export default async function FamilyPage({ params }: Props) {
       ) : (
         <>
           <SharedSettingsSaveHint />
-          <FamilyForm key={family.editedAt ?? family.id} family={family} options={options} />
+          <FamilyForm key={family.id} family={family} options={options} />
         </>
       )}
     </div>
