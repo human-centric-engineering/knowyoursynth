@@ -6,6 +6,7 @@ import '@/components/app/synth/synth.css';
 
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
+import { listFamilies } from '@/lib/app/families/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { UserSoundIdSchema } from '@/lib/app/sounds/data';
 
@@ -21,7 +22,8 @@ import { UserSoundIdSchema } from '@/lib/app/sounds/data';
  *
  * A synth the registry does not have is a 404 before any read; one the catalogue does not serve (not listed) is a
  * 404 too. The page component is keyed by synth, so moving to another synth starts its panel afresh rather than
- * carrying the last one's state across.
+ * carrying the last one's state across. The version toggle is the one exception: it carries the panel between members
+ * of a synth family itself (`components/app/synth/family-carry.ts`), with nothing in the URL.
  */
 
 type Props = {
@@ -44,7 +46,11 @@ export default async function SynthRoute({ params, searchParams }: Props) {
   const { id } = await params;
   if (!getSynthDef(id)) notFound();
 
-  const [detail, synths] = await Promise.all([getSynthDetail(id), listSynths()]);
+  const [detail, synths, families] = await Promise.all([
+    getSynthDetail(id),
+    listSynths(),
+    listFamilies(),
+  ]);
   if (!detail) notFound();
 
   const query = await searchParams;
@@ -53,6 +59,7 @@ export default async function SynthRoute({ params, searchParams }: Props) {
       key={id}
       detail={detail}
       synths={synths}
+      families={families}
       viewParam={viewParam.parse(query.view) ?? null}
       soundParam={soundParam.parse(query.sound) ?? null}
       mineParam={mineParam.parse(query.mine) ?? null}

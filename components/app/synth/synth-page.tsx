@@ -243,6 +243,16 @@ import {
 } from '@/components/app/synth/stores';
 import type { FindTarget } from '@/components/app/synth/stores';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
+import {
+  FamilyToggle,
+  useOwnedInstruments,
+  CarriedNote,
+  type CarryNote,
+} from '@/components/app/synth/family-toggle';
+import { leaveCarry, takeCarry, type FamilyCarry } from '@/components/app/synth/family-carry';
+import type { SynthFamily } from '@/lib/app/families/read';
+import { translate } from '@/lib/app/synths/families/translate';
+import { logger } from '@/lib/logging';
 import { Tour } from '@/components/app/synth/tour';
 import type { TutorDesign } from '@/components/app/tutor/apply';
 import { TutorPanel } from '@/components/app/tutor/tutor-panel';
@@ -378,6 +388,25 @@ function freshSession(def: SynthDef, preset: CatalogueSound | undefined): Sessio
   return { presetId: preset?.id ?? null, step: null, soundId: null, ...presetState(def, preset) };
 }
 
+/**
+ * The panel the version toggle carried in from another family member (t-320): its values over this synth's Default
+ * patch, and its cables in place of the default's, since they are the whole of what was patched there.
+ */
+function carriedSession(def: SynthDef, preset: CatalogueSound, carry: FamilyCarry): Session {
+  const fresh = freshSession(def, preset);
+  return {
+    ...fresh,
+    values: { ...fresh.values, ...carry.values },
+    cables: carry.cables.map(([from, to], i) => ({
+      from,
+      to,
+      color: CABLE_COLORS[i % CABLE_COLORS.length],
+    })),
+  };
+}
+
+const NO_FAMILIES: SynthFamily[] = [];
+
 /** Jacks with a cable in, inputs and outputs alike, as `toEngine` wants them. */
 const patchedJacks = (cables: Session['cables']) =>
   Object.fromEntries(
@@ -392,6 +421,8 @@ export interface SynthPageProps {
   detail: SynthDetail;
   /** From `GET /api/v1/synths`: what the picker offers. */
   synths: CatalogueSynth[];
+  /** From `GET /api/v1/synths/families`: the picker lists each as one entry. None, and it lists every synth alone. */
+  families?: SynthFamily[];
   /** The `view` query, as the request had it. */
   viewParam: string | null;
   /** The `sound` query: a library sound to open with, as a databank record's link names it. */
@@ -445,6 +476,7 @@ function Synth({
   baseDef,
   detail,
   synths,
+  families = NO_FAMILIES,
   viewParam,
   soundParam = null,
   mineParam = null,
@@ -594,6 +626,11 @@ function Synth({
     loading,
     isLoading,
   } = usePanelHistory(stored, setSess, synthDef, takeOver, onLoad);
+  // The panel as it is now, for the version toggle, which reads it after loading the other member's definition.
+  const storedRef = useRef(stored);
+  useEffect(() => {
+    storedRef.current = stored;
+  });
   // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
@@ -604,8 +641,18 @@ function Synth({
   // a groove (t-303); a sound from `?sound=` with them on Match (`chosenSound`).
   // Its effects go with it (t-302): the default's, or the rack off.
   const arrivedOnPatch = useRef<ChosenPatch | null>(null);
+  // The panel the version toggle carried in from another member of the family (t-320), taken once: `undefined` until
+  // it has been looked for. It lands where the Default patch would, and the same way.
+  const carried = useRef<FamilyCarry | null | undefined>(undefined);
+  const [carryNote, setCarryNote] = useState<CarryNote | null>(null);
   useEffect(() => {
-    if (switchedTo.current) {
+    if (carried.current === undefined) carried.current = takeCarry(synthId);
+    const carry = carried.current;
+    if (carry) {
+      setSess(() => carriedSession(synthDef, defaultSound, carry));
+      arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
+      setCarryNote({ fromName: carry.fromName, dropped: carry.dropped, changed: carry.changed });
+    } else if (switchedTo.current) {
       setSess(() => freshSession(synthDef, defaultSound));
       arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
     }
@@ -652,6 +699,7 @@ function Synth({
   // ── lesson progress and favourites (s4) ──
   const progress = useLessonProgress(synthId, userId);
   const favourites = useFavourites(userId);
+  const owned = useOwnedInstruments(userId);
   const openSound =
     signedIn && sess.soundId ? (mine.sounds?.find((s) => s.id === sess.soundId) ?? null) : null;
   // The lesson the sound on the panel was saved with (`f-tutor` t-55): one of the user's own, or a shared sound on its
@@ -2780,6 +2828,33 @@ function Synth({
     if (id === synthId) return;
     router.push(synthHref(id, view), { transitionTypes: ['synth-change'] });
   };
+  // The version toggle (t-320): to another member of this synth's family, with the panel carried across. Translated
+  // here, where this member's definition is at hand, and left for the member's page to take on arrival. A definition
+  // that cannot be loaded leaves nothing to carry, and the member opens as a synth chosen in the picker does.
+  const switchMember = async (toId: string) => {
+    if (toId === synthId) return;
+    try {
+      const toDef = loadedSynthDef(toId) ?? (await loadSynthDef(toId));
+      if (toDef) {
+        const panel = storedRef.current;
+        const carry = translate(
+          panel.values,
+          panel.cables.map((c): [string, string] => [c.from, c.to]),
+          synthDef,
+          toDef
+        );
+        leaveCarry({ from: synthId, to: toId, fromName: synthDef.name, ...carry });
+      }
+    } catch (err) {
+      logger.warn('synth page: could not carry the panel to another family member', {
+        from: synthId,
+        to: toId,
+        err: String(err),
+      });
+    }
+    switchSynth(toId);
+  };
+  const offered = useMemo(() => new Set(synths.map((s) => s.id)), [synths]);
 
   // Nothing to count from while the open sound's saved panel is still being fetched, or could not be. Counted from
   // where a glide is going, so Restore does not come and go as one runs.
@@ -2977,12 +3052,24 @@ function Synth({
                     <SynthPicker
                       variant="caption"
                       synths={synths}
+                      families={families}
+                      owned={owned}
                       synthId={synthId}
                       onSelect={switchSynth}
                       isStarred={(id) => favourites.isOn({ kind: 'synth', synthId: id })}
                       onStar={(id) => favourites.toggle({ kind: 'synth', synthId: id })}
                     />
                   </div>
+                  {detail.family && (
+                    <div className="shrink-0 pb-1 lg:pb-0">
+                      <FamilyToggle
+                        family={detail.family}
+                        synthId={synthId}
+                        offered={offered}
+                        onSwitch={(to) => void switchMember(to)}
+                      />
+                    </div>
+                  )}
                   <div className="kys-autohide flex max-w-[72ch] min-w-0 flex-col gap-0.5 pb-1 text-[13px] text-(--kys-muted) lg:pb-0">
                     <p className="leading-snug lg:line-clamp-2">{detail.synth.heritage}</p>
                     <p className="flex flex-wrap items-baseline gap-x-3 [&>button]:whitespace-nowrap">
@@ -3409,7 +3496,7 @@ function Synth({
                   </section>
                 </div>
                 {/* What the sound is, under its name as a video's description is under its title. */}
-                {(described || mineNotice || sharedNotice) && (
+                {(described || mineNotice || sharedNotice || carryNote) && (
                   <div className="mt-3 min-w-0">
                     {described && (
                       <section
@@ -3424,6 +3511,11 @@ function Synth({
                       <p role="status" className="mt-1 max-w-[80ch] text-sm text-(--kys-warn)">
                         {mineNotice ?? sharedNotice}
                       </p>
+                    )}
+                    {carryNote && (
+                      <div className="mt-1">
+                        <CarriedNote note={carryNote} onDismiss={() => setCarryNote(null)} />
+                      </div>
                     )}
                   </div>
                 )}
