@@ -8,7 +8,8 @@
  *   and the seed throws with the whole list, having written nothing.
  * - **Idempotent.** A row whose columns already match is not written, so a re-run touches nothing.
  * - **Operator-owned once edited.** A family or member with `editedAt` set has been changed by an admin and is never
- *   written again.
+ *   written again. A family an admin has saved is theirs whole: none of its members is written, so a member the
+ *   admin removed is not put back, and none of the synths the data gives its members is freed for them.
  * - **Placement is set once.** A member's `order` is written when the row is created, after the family's last member,
  *   and never after: an admin's reorder stands.
  * - **Never deletes, but for a replaced member.** A family or member the data no longer has stays, so an empty source
@@ -86,11 +87,21 @@ export async function seedFamilies(
     defaultWithoutSynth: [],
     replaced: [],
   };
-  const released = await releaseSynths(prisma, families, report);
+  const editedFamilies = new Set(
+    (
+      await prisma.synthFamily.findMany({
+        where: { editedAt: { not: null } },
+        select: { id: true },
+      })
+    ).map((f) => f.id)
+  );
+  const released = await releaseSynths(prisma, families, report, editedFamilies);
   for (const family of families) {
     await writeFamily(prisma, family, report.families);
-    for (const member of family.members)
-      await writeMember(prisma, family.id, member, report, released);
+    for (const member of family.members) {
+      if (editedFamilies.has(family.id)) report.members.edited++;
+      else await writeMember(prisma, family.id, member, report, released);
+    }
     const stored = await prisma.synthFamily.findUnique({ where: { id: family.id } });
     const opens =
       stored &&
@@ -108,6 +119,7 @@ const memberKey = (familyId: string, slug: string) => `${familyId}/${slug}`;
  * Free each synth the data gives a member, before any member is written, so it lands there whatever the order.
  *
  * - A stored, unedited member the data lists with another synth, or none, has its synth cleared.
+ * - A member of a family an admin has saved is never written, so the synth the data gives it is not freed for it.
  * - A stored, unedited member the data no longer lists, whose synth the data gives to a member that will be written
  *   (one not edited), has been replaced (re-slugged, or its synth moved), so it is deleted rather than left behind
  *   as a blank copy in the toggle. This is the one delete: it takes a row only when the data names its successor,
@@ -119,7 +131,8 @@ const memberKey = (familyId: string, slug: string) => `${familyId}/${slug}`;
 async function releaseSynths(
   prisma: TenancyClient,
   families: readonly FamilyFile[],
-  report: FamilySeedReport
+  report: FamilySeedReport,
+  editedFamilies: ReadonlySet<string>
 ): Promise<Set<string>> {
   const edited = new Set(
     (
@@ -135,7 +148,8 @@ async function releaseSynths(
     for (const member of family.members) {
       const at = memberKey(family.id, member.slug);
       listed.set(at, member.synth ?? null);
-      if (member.synth && !edited.has(at)) given.add(member.synth);
+      if (member.synth && !edited.has(at) && !editedFamilies.has(family.id))
+        given.add(member.synth);
     }
 
   const holders = await prisma.synthFamilyMember.findMany({
