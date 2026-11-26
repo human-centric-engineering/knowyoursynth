@@ -143,7 +143,8 @@ describe('GET /api/v1/synths/:id', () => {
       members: [member('td-3'), member('tb-303')],
     } as never);
     vi.mocked(prisma.synthSound.findMany).mockResolvedValue(
-      tb303.stored.sounds.map(({ patterns: _p, ...s }) => ({ ...s, synthId: 'tb-303' })) as never
+      // with their pattern lists, as the sibling read selects them (t-326)
+      tb303.stored.sounds.map((s) => ({ ...s, synthId: 'tb-303' })) as never
     );
 
     const body = await parseJsonResponse(await call('td-3'));

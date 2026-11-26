@@ -115,6 +115,8 @@ const tb303Family = () => ({
   id: 'tb-303',
   name: 'TB-303',
   defaultMember: 'td-3',
+  // the column's default: its members share one original (t-324)
+  originals: [] as string[],
   members: [
     {
       slug: 'td-3',
