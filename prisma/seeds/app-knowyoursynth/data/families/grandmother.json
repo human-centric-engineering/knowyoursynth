@@ -1,0 +1,21 @@
+{
+  "id": "grandmother",
+  "name": "Grandmother",
+  "defaultMember": "model-15",
+  "members": [
+    {
+      "slug": "model-15",
+      "label": "Model 15",
+      "instrument": "behringer-model-15",
+      "synth": "model-15",
+      "differences": "Behringer's copy of the Grandmother in Eurorack form: the same two oscillators, filter, envelope, arpeggiator and sequencer, with an emulation in place of the spring reverb. There is no keyboard, and the patch points sit together on the right of the panel."
+    },
+    {
+      "slug": "grandmother",
+      "label": "Grandmother",
+      "instrument": "moog-grandmother",
+      "synth": "grandmother",
+      "differences": "The original, Moog's 2018 semi-modular: two oscillators, a ladder filter, an arpeggiator and sequencer, and a real spring reverb, played from a 32-note keyboard, with its patch points spread across the panel beside each section."
+    }
+  ]
+}

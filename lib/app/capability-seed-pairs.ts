@@ -83,4 +83,6 @@ export const APP_UNCHECKED_SEEDS: Readonly<Record<string, string>> = {
     'places new synths after the highest `order` with synth.aggregate, which the mock does not model; writes the catalogue, no capability',
   'app-knowyoursynth/002-bank.ts':
     'validates the databank against the catalogue it reads, which the mock leaves empty, so it throws; writes the databank, no capability',
+  'app-knowyoursynth/007-families.ts':
+    'checks every family against the databank and catalogue it reads, which the mock leaves empty, so it throws; writes the synth families, no capability',
 };

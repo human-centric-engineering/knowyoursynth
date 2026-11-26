@@ -1,0 +1,28 @@
+{
+  "id": "moog-modular-systems",
+  "name": "System 15 · 35 · 55",
+  "defaultMember": "system-15",
+  "members": [
+    {
+      "slug": "system-15",
+      "label": "System 15",
+      "instrument": "behringer-system-15",
+      "synth": "system-15",
+      "differences": "The smallest of Behringer's three Eurorack copies of Moog's 1973 modular systems, after the System 15: two rows of 900-series modules with nothing wired between them."
+    },
+    {
+      "slug": "system-35",
+      "label": "System 35",
+      "instrument": "behringer-system-35",
+      "synth": "system-35",
+      "differences": "The middle size, after Moog's System 35: the same 900-series filters as the System 15, with more oscillators, amplifiers and envelopes to patch together."
+    },
+    {
+      "slug": "system-55",
+      "label": "System 55",
+      "instrument": "behringer-system-55",
+      "synth": "system-55",
+      "differences": "The largest, after Moog's System 55: the most modules of the three, among them the 960 sequential controller and the 962 sequential switch."
+    }
+  ]
+}

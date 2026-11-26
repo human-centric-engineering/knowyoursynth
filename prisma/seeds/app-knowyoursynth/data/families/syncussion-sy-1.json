@@ -1,0 +1,21 @@
+{
+  "id": "syncussion-sy-1",
+  "name": "Syncussion SY-1",
+  "defaultMember": "behringer",
+  "members": [
+    {
+      "slug": "behringer",
+      "label": "Behringer SY-1",
+      "instrument": "behringer-syncussion-sy-1",
+      "synth": "behringer-syncussion",
+      "differences": "Behringer's copy of Pearl's two-channel drum synthesiser. It keeps the same two channels, each with eight faders, three switches and an OSC MODE knob, and adds a FINE tuning knob on each channel, TRIG buttons that fire a channel from the panel, and sockets on the top panel."
+    },
+    {
+      "slug": "pearl",
+      "label": "Pearl SY-1",
+      "instrument": "pearl-syncussion-sy-1",
+      "synth": "pearl-syncussion",
+      "differences": "The original, Pearl's 1979 two-channel drum synthesiser, played from drum pads. Each channel has eight faders, three switches and an OSC MODE knob. The panel has a lamp for each channel that lights as it fires, and a POWER switch."
+    }
+  ]
+}
