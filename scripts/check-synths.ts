@@ -19,6 +19,9 @@
  * - **The databank check** (`checkBank`, ported as `planBank` in `lib/app/bank/seed.ts`): every reference in the
  *   databank's seed data resolves, and every sound it names is in that synth's library. Run once, by the process that
  *   starts the others, as `check.mjs` did; a problem refuses the run.
+ * - **The family maps** (`checkFamilyMaps`, t-319): every control and jack a map names exists on its side, every value
+ *   that carries from one member of a family to another comes back unchanged, and every library sound translated onto
+ *   another member validates there. Run once, by the process that starts the others, after the databank check.
  * - **The Default patch** (`f-default-patch`), for a synth with one of its own: checked by `validateDefaultPatch` and
  *   rendered playing its scale, as `(default)`. A synth without one has `init` as its Default patch, rendered already,
  *   and so must not be one that is silent as initialised (`silentInit`).
@@ -76,6 +79,9 @@ import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import type { Bank } from '@/lib/app/bank/data';
 import { heardFor } from '@/lib/app/bank/joins';
 import { BankDataError, planBank } from '@/lib/app/bank/seed';
+import { loadFamilyData } from '@/prisma/seeds/app-knowyoursynth/family-data';
+import { checkFamilyMaps } from '@/lib/app/synths/families/check';
+import { FAMILY_MAPS } from '@/lib/app/synths/families/maps';
 import {
   isNativeSynth,
   NATIVE_SYNTHS,
@@ -298,6 +304,22 @@ async function main(): Promise<void> {
       if (!(error instanceof BankDataError)) throw error;
       for (const problem of error.problems) console.log(`ERR bank: ${problem}`);
       console.log(`${error.problems.length} databank errors`);
+      process.exit(1);
+    }
+    // The family maps (t-319): every id a map names exists, a round trip keeps what carried, and each library sound
+    // translated onto another member of its family validates there.
+    let families: ReturnType<typeof loadFamilyData>;
+    try {
+      families = loadFamilyData();
+    } catch (error) {
+      // a family seed file that does not parse, as `loadFamilyData` reports it
+      console.log(`ERR family: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
+    const familyProblems = checkFamilyMaps(FAMILY_MAPS, SYNTHS, families);
+    if (familyProblems.length) {
+      for (const problem of familyProblems) console.log(`ERR family: ${problem}`);
+      console.log(`${familyProblems.length} family map errors`);
       process.exit(1);
     }
   }
