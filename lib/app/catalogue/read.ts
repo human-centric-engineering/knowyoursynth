@@ -185,23 +185,25 @@ export async function listSoundNames(): Promise<Record<string, Record<string, st
   return names;
 }
 
-/** The columns a sound is played from, as `validatePreset` reads them. */
-type SoundRow = Pick<
-  Prisma.SynthSoundGetPayload<object>,
-  | 'slug'
-  | 'definitionVersion'
-  | 'name'
-  | 'ref'
-  | 'artist'
-  | 'tags'
-  | 'level'
-  | 'blurb'
-  | 'how'
-  | 'phrase'
-  | 'steps'
-  | 'context'
-  | 'tweaks'
->;
+/** The columns a sound is played from, as `validatePreset` reads them, and the synth it is on. */
+const SOUND_COLUMNS = {
+  synthId: true,
+  slug: true,
+  definitionVersion: true,
+  name: true,
+  ref: true,
+  artist: true,
+  tags: true,
+  level: true,
+  blurb: true,
+  how: true,
+  phrase: true,
+  steps: true,
+  context: true,
+  tweaks: true,
+} satisfies Prisma.SynthSoundSelect;
+
+type SoundRow = Omit<Prisma.SynthSoundGetPayload<{ select: typeof SOUND_COLUMNS }>, 'synthId'>;
 
 /**
  * A stored sound as its own synth plays it, or `null`, logged, when it is made on a definition version the registry
@@ -263,6 +265,7 @@ async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise
   const rows = await prisma.synthSound.findMany({
     where: { synthId: { in: siblings.map((d) => d.id) }, synth: { listed: true } },
     orderBy: [{ order: 'asc' }, { slug: 'asc' }],
+    select: SOUND_COLUMNS,
   });
   const out: SiblingSound[] = [];
   for (const from of siblings) {
@@ -288,7 +291,8 @@ function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): Sibli
   );
   // The carried panel replaces the member's Default patch, cables and all, as the version toggle's carry does. The step
   // names only what differs from it, so showing the step lights and turns what the sound changes, not every control.
-  const start = presetState(to);
+  // The baseline is the Default patch as this sound starts from it, its riff's tempo included where TEMPO follows it.
+  const start = presetState(to, { steps: [], phrase: source.phrase });
   const set = Object.fromEntries(
     Object.entries(carry.values).filter(([k, v]) => start.values[k] !== v)
   );

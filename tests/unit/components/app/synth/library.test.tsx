@@ -234,9 +234,27 @@ describe('Library: a family sibling’s sounds (t-322)', () => {
     expect(screen.queryByText(/No library patch matches/)).not.toBeInTheDocument();
   });
 
-  it('lists none where the page gives no way to load one', () => {
-    render(<Library presets={sounds} siblings={siblings()} currentId={null} onSelect={vi.fn()} />);
+  it('lists none, nor their categories, where the page gives no way to load one', () => {
+    const only = [{ ...siblings()[0], preset: { ...sounds[0], tags: ['Nowhere else'] } }];
+    render(<Library presets={sounds} siblings={only} currentId={null} onSelect={vi.fn()} />);
 
     expect(screen.queryByRole('heading', { name: 'From other versions' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Nowhere else' })).not.toBeInTheDocument();
+  });
+
+  it('offers a category only its siblings have, which shows them', () => {
+    const only = [{ ...siblings()[0], preset: { ...sounds[0], tags: ['Nowhere else'] } }];
+    render(
+      <Library
+        presets={sounds}
+        siblings={only}
+        onSelectSibling={vi.fn()}
+        currentId={null}
+        onSelect={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Nowhere else' }));
+    expect(within(siblingList()).getAllByRole('button')).toHaveLength(1);
   });
 });

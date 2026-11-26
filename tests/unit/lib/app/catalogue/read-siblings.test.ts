@@ -140,7 +140,8 @@ describe('getSynthDetail: sibling sounds', () => {
       sorted(carry.cables)
     );
     // The step names only what the sound changes from the Default patch, so showing it lights no more than that.
-    const start = presetState(td3Def).values;
+    // Its baseline is the Default patch with the riff's tempo, which TEMPO follows on the TD-3.
+    const start = presetState(td3Def, { steps: [], phrase: first.phrase }).values;
     const set = first.steps[0].set ?? {};
     expect(Object.keys(set).length).toBeGreaterThan(0);
     expect(Object.entries(set).filter(([k, v]) => start[k] === v)).toEqual([]);

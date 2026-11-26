@@ -2421,12 +2421,12 @@ function Synth({
     leaveShared();
     setDesigned(d);
     setSibling(null);
-    glide(() => ({
-      presetId: null,
-      step: null,
-      soundId: null,
-      ...presetState(synthDef, d.preset),
-    }));
+    // The session names no sound for a design, as for a sibling's sound or another design before it: the history is
+    // started afresh by hand.
+    glide(
+      () => ({ presetId: null, step: null, soundId: null, ...presetState(synthDef, d.preset) }),
+      { fresh: true }
+    );
     choosePatch();
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
@@ -2602,10 +2602,12 @@ function Synth({
     focusStore.set(null);
     setDesigned(null);
     setSibling(null);
+    setCarryNote(null);
     // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
     if (keep) patch((s) => s);
     else {
-      glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }));
+      // With no library sound to name, the session names nothing, as for a design or a sibling's sound before it.
+      glide(() => ({ presetId: lib, step: null, soundId: null, ...panel }), { fresh: !lib });
       choosePatch();
     }
     writeStored(sharedFromKey(synthId), shared.slug);

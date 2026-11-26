@@ -101,9 +101,15 @@ export function Library({
   const cats = useMemo(
     () => [
       'all',
-      ...Array.from(new Set([...presets, ...siblings.map((x) => x.preset)].map((p) => p.tags[0]))),
+      ...Array.from(
+        new Set(
+          [...presets, ...(onSelectSibling ? siblings.map((x) => x.preset) : [])].map(
+            (p) => p.tags[0]
+          )
+        )
+      ),
     ],
-    [presets, siblings]
+    [presets, siblings, onSelectSibling]
   );
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
   const matches = (p: Preset) => {
