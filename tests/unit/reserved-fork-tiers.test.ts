@@ -224,6 +224,8 @@ describe('reserved fork tiers', () => {
       'model SynthLineage {',
       'enum SynthNoteKind {',
       'model SynthNote {',
+      'model SynthFamily {',
+      'model SynthFamilyMember {',
       'enum PatternRole {',
       'enum PatternFidelity {',
       'enum PatternInspiration {',

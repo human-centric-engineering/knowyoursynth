@@ -34,6 +34,8 @@ vi.mock('@/lib/db/client', () => ({
     synthNote: { findMany: vi.fn() },
     bankInstrument: { findMany: vi.fn() },
     bankSong: { findMany: vi.fn() },
+    // A synth's family (`f-synth-families`): none.
+    synthFamily: { findFirst: vi.fn(async () => null) },
   },
 }));
 

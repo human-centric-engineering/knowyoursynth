@@ -540,6 +540,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'SynthLineage',
         'SynthNote',
         'CatalogueSeedRecord',
+        'SynthFamily',
+        'SynthFamilyMember',
         'SynthSoundPattern',
         'BankMaker',
         'BankInstrument',
@@ -625,6 +627,8 @@ const SEAM_DEFAULTS: SeamDefault[] = [
             'SynthLineage',
             'SynthNote',
             'CatalogueSeedRecord',
+            'SynthFamily',
+            'SynthFamilyMember',
             'LibraryPattern',
             'SynthSoundPattern',
             'LibraryPatternComment',
@@ -955,7 +959,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     seam: 'lib/app/capability-seed-pairs.ts',
     risk: 'a stray pair fails the capability parity test on every install (for a slug no seed writes it is a pair nothing wrote, for a slug core already pairs a duplicate), and a stray unchecked seed switches the parity checks off for that seed',
     assert: () => {
-      // FORK (Know Your Synth): pinned to the tutor's eight tools and our two content seeds (t-77) rather than
+      // FORK (Know Your Synth): pinned to the tutor's eight tools and our three content seeds (t-77, t-318) rather than
       // deleted, so a stray pair or unchecked seed still fails. Ledger: .context/app/platform-divergences.md.
       expect(APP_CAPABILITY_PAIRS.map((p) => p.slug)).toEqual([
         'get_panel',
@@ -970,6 +974,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       expect(Object.keys(APP_UNCHECKED_SEEDS)).toEqual([
         'app-knowyoursynth/001-catalogue.ts',
         'app-knowyoursynth/002-bank.ts',
+        'app-knowyoursynth/007-families.ts',
       ]);
     },
   },

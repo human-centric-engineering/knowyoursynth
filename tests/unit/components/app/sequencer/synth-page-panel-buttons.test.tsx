@@ -103,6 +103,7 @@ function page(id: (typeof IDS)[number], steps: CatalogueSound['steps'] = []) {
     links: { count: 0, kinds: [] },
     soundLinks: {},
     instruments: [],
+    family: null,
   };
   storeSound(def, riff);
   return render(<SynthPage detail={detail} synths={[synth]} viewParam={null} />);

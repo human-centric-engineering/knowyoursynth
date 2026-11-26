@@ -168,6 +168,7 @@ const detail: SynthDetail = {
   links: { count: 0, kinds: [] },
   soundLinks: {},
   instruments: [],
+  family: null,
 };
 
 /** A library pattern at 140 bpm, nothing like either sound's riff. */

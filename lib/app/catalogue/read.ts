@@ -17,6 +17,7 @@ import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
+import { getFamilyOf, type SynthFamily } from '@/lib/app/families/read';
 import { ENABLED, parsedHeadOf, playedDefault, PLACES } from '@/lib/app/patterns/library';
 import { styleWordsOf } from '@/lib/app/sequencer/drums';
 import type { PatternFx } from '@/lib/app/sequencer/pattern';
@@ -95,6 +96,11 @@ export interface SynthDetail {
    * are theirs (`f-link-suggestions` t-186). Every synth has at least one.
    */
   instruments: { id: string; name: string }[];
+  /**
+   * The family it is a member of, with every member served (`f-synth-families`): what the picker groups it under and
+   * the version toggle switches between. Null when it is in none.
+   */
+  family: SynthFamily | null;
 }
 
 const synthColumns = {
@@ -168,7 +174,7 @@ export async function listSoundNames(): Promise<Record<string, Record<string, st
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
   if (!def) return null;
-  const [row, noteRows, heardOn, links, soundLinks] = await Promise.all([
+  const [row, noteRows, heardOn, links, soundLinks, family] = await Promise.all([
     prisma.synth.findFirst({
       where: { id, listed: true },
       select: {
@@ -221,6 +227,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     }),
     summarisePublicLinks({ target: 'synth', id }),
     summariseSoundLinks(id),
+    getFamilyOf(id),
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, bankInstruments, ...synthRow } = row;
@@ -326,5 +333,5 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   }
 
   const instruments = bankInstruments.map((b) => b.instrument);
-  return { synth, sounds, lineage, notes, links, soundLinks, instruments };
+  return { synth, sounds, lineage, notes, links, soundLinks, instruments, family };
 }

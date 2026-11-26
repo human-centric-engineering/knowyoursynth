@@ -1,0 +1,21 @@
+{
+  "id": "tb-303",
+  "name": "TB-303",
+  "defaultMember": "td-3",
+  "members": [
+    {
+      "slug": "td-3",
+      "label": "TD-3",
+      "instrument": "behringer-td-3",
+      "synth": "td-3",
+      "differences": "Behringer's copy of the TB-303's circuit, in a smaller case with the same kind of step sequencer. It adds what the original never had: a distortion stage modelled on the Boss DS-1 guitar pedal (drive, tone and level), an input into the filter, a sync input, CV and gate outputs, and MIDI and USB."
+    },
+    {
+      "slug": "tb-303",
+      "label": "TB-303",
+      "instrument": "roland-tb-303",
+      "synth": "tb-303",
+      "differences": "The original, Roland's 1981 bass line: one oscillator switched between sawtooth and square, a resonant low-pass filter swept by one envelope, and the accent and slide of its own step sequencer. No distortion, no input into the filter and no MIDI."
+    }
+  ]
+}

@@ -261,6 +261,9 @@ export const CATALOGUE_MODELS = [
   'SynthLineage',
   'SynthNote',
   'CatalogueSeedRecord',
+  // Synth families (`f-synth-families`): which synths and instruments are one family, with what each changed.
+  'SynthFamily',
+  'SynthFamilyMember',
   // The pattern library (`f-pattern-library`): each sound's list of patterns. The patterns themselves record who made
   // them, and admins' comments who wrote them (t-156), so both are sources above.
   'SynthSoundPattern',

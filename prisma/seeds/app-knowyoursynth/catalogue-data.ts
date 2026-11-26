@@ -62,10 +62,10 @@ export function loadCatalogueData(dir = CATALOGUE_DATA_DIR): CatalogueSeedData {
 }
 
 /**
- * Every data file, relative to `dir`, for the seed unit's `hashInputs`. The databank's, the pattern library's and the
- * links' folders and the tutor's eval set are left out: they are other units' data (`bank-data.ts`, `pattern-data.ts`,
- * `link-data.ts`, `004-tutor-evals.ts`), and hashing them here would re-run the catalogue for their edits. So is
- * `pattern-defaults.json`, which is not catalogue content: `005-library-patterns.ts` reads it, and which riffs the
+ * Every data file, relative to `dir`, for the seed unit's `hashInputs`. The databank's, the pattern library's, the
+ * links' and the families' folders and the tutor's eval set are left out: they are other units' data (`bank-data.ts`,
+ * `pattern-data.ts`, `link-data.ts`, `family-data.ts`, `004-tutor-evals.ts`), and hashing them here would re-run the
+ * catalogue for their edits. So is `pattern-defaults.json`, which is not catalogue content: `005-library-patterns.ts` reads it, and which riffs the
  * catalogue writes only on create is read from the tables (`riffFollowers`), not from it.
  */
 export function catalogueDataFiles(dir = CATALOGUE_DATA_DIR): string[] {
@@ -76,7 +76,7 @@ export function catalogueDataFiles(dir = CATALOGUE_DATA_DIR): string[] {
           !(
             folder === dir &&
             (e.isDirectory()
-              ? ['bank', 'patterns', 'links'].includes(e.name)
+              ? ['bank', 'patterns', 'links', 'families'].includes(e.name)
               : ['tutor-evals.json', 'pattern-defaults.json'].includes(e.name))
           )
       )

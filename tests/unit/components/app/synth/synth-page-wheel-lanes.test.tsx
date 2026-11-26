@@ -168,6 +168,7 @@ const detail: SynthDetail = {
   links: { count: 0, kinds: [] },
   soundLinks: {},
   instruments: [],
+  family: null,
 };
 
 const page = (shown: ControlValues | null) => {

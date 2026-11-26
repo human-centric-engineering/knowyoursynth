@@ -152,6 +152,7 @@ const detail: SynthDetail = {
   links: { count: 0, kinds: [] },
   soundLinks: {},
   instruments: [],
+  family: null,
 };
 
 const ALLOWANCE = { limit: 30, used: 4, remaining: 26, resetsAt: '2026-10-19T00:00:00.000Z' };

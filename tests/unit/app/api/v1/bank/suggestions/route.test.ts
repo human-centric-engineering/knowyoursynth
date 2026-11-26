@@ -173,6 +173,7 @@ beforeEach(() => {
       findUnique: vi.fn(async () => ({ role: 'OWNER', org: { status: 'ACTIVE' } })),
     },
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
+    synthFamily: { findMany: vi.fn(async () => []) },
   });
   mockGetSession.mockResolvedValue(session('USER'));
 });
