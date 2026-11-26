@@ -177,18 +177,22 @@ year, its differences text a paragraph to each blank line, and a way back to the
   does not render the page again for what is only its own state, and the panel, the dock and their state are hidden
   rather than taken down. Going back, through the toggle, the faceplate's button or the browser's Back (`popstate`),
   shows the panel as it was.
-- **One history entry.** Choosing a member pushes its address; choosing another member from its blank panel replaces
-  it. The way back steps back to the entry it was pushed over, so the browser's Back then leaves the page rather than
-  reopening the blank panel. Arrived on directly, the way back replaces the address instead.
+- **One history entry.** Choosing a member pushes its address, marked in the entry's state; choosing another member
+  from its blank panel replaces it, keeping the mark. The way back steps back from a marked entry, so the browser's
+  Back then leaves the page rather than reopening the blank panel, and the mark holds across Back and Forward. On an
+  address arrived on directly there is no mark, and the way back replaces the address instead.
 - **The address is read on mount as well as on `popstate`.** Back to a member's address from another page restores
   this page from the router's cache, rendered before the address named the member, so the server's `memberParam`
   alone would open the panel.
-- **Nothing plays.** However it is reached, it stops the riff or pattern and lets every note go. While it shows, `noteOn` drops every
+- **Nothing plays.** However it is reached, it stops the riff or pattern and lets every note go, and a run that starts
+  while it shows (a MIDI clock's Start, a load ending with a pattern waiting) is stopped as it starts. While it shows, `noteOn` drops every
   note, from the keys, MIDI in and the scope's keyboard alike.
 - **What needs a definition is hidden, not shown dead:** the panel and its rails, the patch's name and Save, the dock
   (lesson strip, bar, keyboard, sequencer), the sequencer rack, the tutor, the tips, the tour, the description's links
-  and the videos and links section. What was open over the panel (the library, the lesson card, the tutor, a phone's
-  sheet) closes.
+  and the videos and links section. The panel, the dock, the sequencer rack and the videos and links are hidden with
+  `display: none` and kept mounted, so they come back as they were; what measures them (the panel's fit around the dock
+  and the rack) measures again as they show. What was open over the panel (the library, the lesson card, the tutor, a
+  phone's sheet) closes.
 - **Switching on to another modelled member** carries the panel left underneath, as any switch does.
 - On a shared sound's or pattern's page the blank panel shows the same way, but the address stays the shared one, since
   a member's address is a synth's own page.

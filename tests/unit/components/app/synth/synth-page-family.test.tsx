@@ -347,6 +347,54 @@ describe('an unmodelled member (t-321)', () => {
     back.mockRestore();
   });
 
+  it('stays on the page from a second blank panel chosen on an address it arrived on', () => {
+    const second = {
+      ...TB_303_FAMILY,
+      members: [
+        ...TB_303_FAMILY.members,
+        { ...TB_303_FAMILY.members[2], slug: 'other', label: 'Other' },
+      ],
+    };
+    window.history.replaceState(null, '', '/synths/td-3?member=rebirth');
+    const back = vi.spyOn(window.history, 'back');
+    render(
+      <SynthPage
+        detail={detailOf(SYNTHS[0], second)}
+        synths={SYNTHS}
+        families={[second]}
+        viewParam={null}
+        memberParam="rebirth"
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Other' }));
+    expect(window.location.search).toBe('?member=other');
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the TD-3' }));
+    expect(back).not.toHaveBeenCalled();
+    expect(window.location.pathname + window.location.search).toBe('/synths/td-3');
+    back.mockRestore();
+  });
+
+  it('steps back from an entry it pushed, after Back and Forward too', () => {
+    window.history.replaceState(null, '', '/synths/td-3');
+    page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'Unmodelled' }));
+    const marked: unknown = window.history.state;
+    // Back, then Forward onto the same entry, as the browser would make them.
+    act(() => {
+      window.history.replaceState(null, '', '/synths/td-3');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    act(() => {
+      window.history.replaceState(marked, '', '/synths/td-3?member=rebirth');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    });
+    expect(blankFace()).not.toBeNull();
+    const back = vi.spyOn(window.history, 'back').mockImplementation(() => undefined);
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the TD-3' }));
+    expect(back).toHaveBeenCalledOnce();
+    back.mockRestore();
+  });
+
   it("follows the browser's Back and Forward between the panel and the blank panel", () => {
     window.history.replaceState(null, '', '/synths/td-3');
     page(0);

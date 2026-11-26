@@ -414,6 +414,11 @@ function carriedSession(def: SynthDef, preset: CatalogueSound, carry: FamilyCarr
 
 const NO_FAMILIES: SynthFamily[] = [];
 
+/** The mark on a history entry the version toggle pushed for an unmodelled member's blank panel (t-321). */
+const BLANK_MARK = 'kysBlankPanel';
+const pushedBlank = (state: unknown): boolean =>
+  typeof state === 'object' && state !== null && BLANK_MARK in state;
+
 /** Jacks with a cable in, inputs and outputs alike, as `toEngine` wants them. */
 const patchedJacks = (cables: Session['cables']) =>
   Object.fromEntries(
@@ -2913,11 +2918,10 @@ function Synth({
   // closes, as none of it has anything under it. A shared sound's or pattern's page keeps its address: it is that
   // sound's, and a member's address is this synth's own page.
   const ownAddress = !sharedSlug && !patternSlug;
-  // Whether the address now on show was pushed by `showBlank`, so the way back can step back to the entry before it
-  // rather than push another one, which would bring the blank panel back on the browser's Back.
-  const pushedBlank = useRef(false);
-  // However the blank panel comes (the toggle, Back or Forward, an arrival on its address), the same things stop.
+  // However the blank panel comes (the toggle, Back or Forward, an arrival on its address), the same things stop. The
+  // member already showing is left be, so a `popstate` that does not change it (a hash link) stops nothing again.
   const enterBlank = (slug: string | null) => {
+    if (slug === blankSlug) return;
     if (slug && detail.family?.members.some((m) => !m.synthId && m.slug === slug)) {
       switchSeq.current += 1;
       stopRiff();
@@ -2933,18 +2937,20 @@ function Synth({
   const showBlank = (slug: string) => {
     enterBlank(slug);
     if (!ownAddress) return;
-    // From one blank panel to another, the entry is replaced: Back goes to the panel, not through each member seen.
-    if (blankSlug) window.history.replaceState(null, '', memberHref(synthId, slug, view));
-    else window.history.pushState(null, '', memberHref(synthId, slug, view));
-    pushedBlank.current = true;
+    // From one blank panel to another the entry is replaced, keeping its mark: Back goes to the panel, not through
+    // each member seen.
+    if (blankSlug)
+      window.history.replaceState(window.history.state, '', memberHref(synthId, slug, view));
+    else window.history.pushState({ [BLANK_MARK]: true }, '', memberHref(synthId, slug, view));
   };
   const hideBlank = () => {
     setBlank(null);
     if (!ownAddress) return;
-    if (pushedBlank.current) {
-      pushedBlank.current = false;
-      window.history.back();
-    } else window.history.replaceState(null, '', synthHref(synthId, view));
+    // An entry `showBlank` pushed is stepped back from, so the browser's Back then leaves the page rather than
+    // reopening the blank panel. Marked in the entry itself, so it holds across Back and Forward. One arrived on
+    // directly has nothing before it on this page: its address is replaced.
+    if (pushedBlank(window.history.state)) window.history.back();
+    else window.history.replaceState(window.history.state, '', synthHref(synthId, view));
   };
   // The browser's Back and Forward between this page and a member's blank panel. The address is written by hand above,
   // not through the router, which would render the page again from the server for what is only this page's own state.
@@ -2961,14 +2967,16 @@ function Synth({
       if (url.pathname === synthHref(synthId))
         enterBlankRef.current(url.searchParams.get('member'));
     };
-    const onPop = () => {
-      pushedBlank.current = false;
-      read();
-    };
     read();
-    window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
+    window.addEventListener('popstate', read);
+    return () => window.removeEventListener('popstate', read);
   }, [ownAddress, synthId]);
+  // A run that starts while the blank panel shows (a MIDI clock's Start, a load ending with a pattern waiting) is
+  // stopped as it starts: there is nothing on show to play it, or to stop it from.
+  const seqPlaying = seq.playing;
+  useEffect(() => {
+    if (blankSlug && seqPlaying) stopRiff();
+  }, [blankSlug, seqPlaying, stopRiff]);
   // What the blank panel hides rather than unmounts: the panel and the dock keep their state, and are measured afresh
   // as they come back.
   const away = blankMember ? { display: 'none' } : undefined;
@@ -3678,8 +3686,13 @@ function Synth({
             {/* The sequencer from `lg` up (t-281): a rack module in the page directly under the panel, as if bolted
             into the same rack, rather than in the dock. Its power switch puts it away; so does the bar's Sequencer
             button, which brings it back. */}
-            {seqDocked && !blankMember && (
-              <SequencerRack ref={rackRef} running={transportPlaying} onPower={powerOff}>
+            {seqDocked && (
+              <SequencerRack
+                ref={rackRef}
+                running={transportPlaying}
+                onPower={powerOff}
+                away={!!blankMember}
+              >
                 <Sequencer {...seqProps} rack />
               </SequencerRack>
             )}
@@ -3953,15 +3966,15 @@ function Synth({
             )}
           </section>
           {/* Under the player: its instruments' videos and links, closed until asked for (`f-videos-and-links`). They are
-          this synth's, so not under another member's blank panel. */}
-          {!blankMember && (
+          this synth's, so hidden under another member's blank panel, and kept as they were for the way back. */}
+          <div style={away}>
             <LinksSection
               target="synth"
               id={detail.synth.id}
               summary={detail.links}
               suggest={suggestForSynth}
             />
-          )}
+          </div>
         </div>
       </div>
 

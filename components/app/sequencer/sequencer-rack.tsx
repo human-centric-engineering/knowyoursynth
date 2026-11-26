@@ -30,6 +30,7 @@ export function SequencerRack({
   ref,
   running,
   onPower,
+  away = false,
   children,
 }: {
   ref?: Ref<HTMLDivElement>;
@@ -37,10 +38,17 @@ export function SequencerRack({
   running: boolean;
   /** The power switch: puts the module away. */
   onPower: () => void;
+  /** Hidden, with what is in it kept as it is: under an unmodelled family member's blank panel (t-321). */
+  away?: boolean;
   children: ReactNode;
 }) {
   return (
-    <div ref={ref} className="kys-rack" data-running={running || undefined}>
+    <div
+      ref={ref}
+      className="kys-rack"
+      data-running={running || undefined}
+      style={away ? { display: 'none' } : undefined}
+    >
       <Ear side="left" engraving="KYS" />
       <div className="kys-rack-face">
         <div className="kys-rack-plate">
