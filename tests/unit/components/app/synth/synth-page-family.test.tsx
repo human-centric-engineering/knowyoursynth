@@ -14,7 +14,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { readStored } from '@/components/app/synth/storage';
 import { takeCarry } from '@/components/app/synth/family-carry';
-import type { CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
+import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
@@ -86,9 +86,26 @@ const synth = (id: 'td-3' | 'tb-303', maker: string, year: number): CatalogueSyn
 };
 const SYNTHS = [synth('td-3', 'Behringer', 2019), synth('tb-303', 'Roland', 1981)];
 
+/** A library sound on the TB-303, to open over a carried panel. */
+const SQUELCH: CatalogueSound = {
+  id: 'squelch',
+  name: 'Squelch',
+  ref: 'A test sound',
+  artist: 'Nobody',
+  tags: ['bass'],
+  level: 1,
+  blurb: 'A test sound.',
+  how: 'Because.',
+  phrase: { bpm: 120, loop: false, steps: [[0, 36, 1]] },
+  steps: [{ title: 'Open the filter', module: 'filter', why: 'Bright.', set: { 'filter.res': 2 } }],
+  context: {},
+  tweaks: [],
+  version: tb303.version,
+};
+
 const detailOf = (s: CatalogueSynth, family: SynthFamily | null): SynthDetail => ({
   synth: s,
-  sounds: [],
+  sounds: s.id === 'tb-303' ? [SQUELCH] : [],
   lineage: null,
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
   links: { count: 0, kinds: [] },
@@ -171,6 +188,24 @@ describe('the version toggle', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
     expect(screen.queryByText(/Panel carried over/)).toBeNull();
+  });
+
+  it('lets the note go once another sound opens over the carried panel', async () => {
+    leaveTd3();
+    const first = page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'TB-303' }));
+    await waitFor(() => expect(router.push).toHaveBeenCalledOnce());
+    first.unmount();
+    page(1);
+    await screen.findByText(/Panel carried over from the TD-3/);
+
+    fireEvent.click(screen.getByRole('button', { name: /^Choose a patch/ }));
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Patches' }))
+        .getAllByRole('button')
+        .filter((b) => b.textContent?.includes('Squelch'))[0]
+    );
+    await waitFor(() => expect(screen.queryByText(/Panel carried over/)).toBeNull());
   });
 
   it('opens a member reached any other way on its Default patch, with no note', () => {

@@ -88,6 +88,11 @@ describe('/synths/[id]', () => {
     expect(listFamilies).not.toHaveBeenCalled();
   });
 
+  it('lists every synth alone when the families cannot be read, rather than failing the page', async () => {
+    vi.mocked(listFamilies).mockRejectedValue(new Error('no such table'));
+    expect((await render('model-d')).props).toMatchObject({ synths: LIST, families: [] });
+  });
+
   it('reads the synth and the list through the catalogue read layer', async () => {
     await render('model-d');
     expect(getSynthDetail).toHaveBeenCalledWith('model-d');

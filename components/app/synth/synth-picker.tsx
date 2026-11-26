@@ -58,6 +58,7 @@ export function SynthPicker({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const wrap = useRef<HTMLDivElement>(null);
+  const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
   const entries = useMemo(() => pickerEntries(synths, families, query), [synths, families, query]);
@@ -129,7 +130,7 @@ export function SynthPicker({
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       firstOption()?.focus();
-    } else if (e.key === 'Enter' && entries[0]) {
+    } else if (e.key === 'Enter' && query.trim() && entries[0]) {
       e.preventDefault();
       choose(entries[0]);
     }
@@ -142,6 +143,11 @@ export function SynthPicker({
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       step(e.currentTarget, -1);
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey && e.key !== ' ') {
+      // Typing on the list finds: the letter goes into the box, and the cursor with it.
+      e.preventDefault();
+      setQuery((q) => q + e.key);
+      search.current?.focus();
     }
   };
 
@@ -201,6 +207,7 @@ export function SynthPicker({
       {open && (
         <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(360px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
           <input
+            ref={search}
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

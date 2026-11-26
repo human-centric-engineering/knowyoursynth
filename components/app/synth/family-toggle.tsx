@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '@/lib/api/client';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { OwnedListsSchema } from '@/lib/app/profile/instruments-data';
+import { logger } from '@/lib/logging';
 import type { Changed, Dropped } from '@/lib/app/synths/families/translate';
 
 const NONE: ReadonlySet<string> = new Set();
@@ -30,10 +31,17 @@ export function useOwnedInstruments(userId: string | null): ReadonlySet<string> 
       .get<unknown>('/api/v1/me/instruments')
       .then((raw) => {
         const lists = OwnedListsSchema.safeParse(raw);
-        if (live && lists.success)
-          setOwned({ userId, ids: new Set(lists.data.owned.map((e) => e.instrumentId)) });
+        if (!lists.success) {
+          logger.warn('family picker: owned synths answer not understood', {
+            issues: lists.error.issues.length,
+          });
+          return;
+        }
+        if (live) setOwned({ userId, ids: new Set(lists.data.owned.map((e) => e.instrumentId)) });
       })
-      .catch(() => undefined);
+      .catch((err: unknown) =>
+        logger.warn('family picker: could not read owned synths', { err: String(err) })
+      );
     return () => {
       live = false;
     };
@@ -57,34 +65,38 @@ export interface FamilyToggleProps {
   /** The synth ids the catalogue serves: a member whose synth it does not is left out. */
   offered: ReadonlySet<string>;
   onSwitch: (synthId: string) => void;
+  /** The box around the toggle: drawn only with the toggle, so nothing is left behind when there is none. */
+  className?: string;
 }
 
-export function FamilyToggle({ family, synthId, offered, onSwitch }: FamilyToggleProps) {
+export function FamilyToggle({ family, synthId, offered, onSwitch, className }: FamilyToggleProps) {
   const members = family.members.filter((m) => m.synthId && offered.has(m.synthId));
   if (members.length < 2) return null;
   return (
-    <div
-      role="group"
-      aria-label={`${family.name} versions`}
-      className="inline-flex w-fit rounded-lg border border-(--kys-line) bg-(--kys-surface) p-0.5"
-    >
-      {members.map((m) => {
-        const on = m.synthId === synthId;
-        return (
-          <button
-            key={m.slug}
-            type="button"
-            aria-pressed={on}
-            title={`${m.instrument.maker} ${m.instrument.name}, ${m.instrument.year}`}
-            onClick={() => {
-              if (!on && m.synthId) onSwitch(m.synthId);
-            }}
-            className={`rounded-md px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${on ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
-          >
-            {m.label}
-          </button>
-        );
-      })}
+    <div className={className}>
+      <div
+        role="group"
+        aria-label={`${family.name} versions`}
+        className="inline-flex w-fit rounded-lg border border-(--kys-line) bg-(--kys-surface) p-0.5"
+      >
+        {members.map((m) => {
+          const on = m.synthId === synthId;
+          return (
+            <button
+              key={m.slug}
+              type="button"
+              aria-pressed={on}
+              title={`${m.instrument.maker} ${m.instrument.name}, ${m.instrument.year}`}
+              onClick={() => {
+                if (!on && m.synthId) onSwitch(m.synthId);
+              }}
+              className={`rounded-md px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${on ? 'bg-(--kys-accent) text-(--kys-accent-ink)' : 'text-(--kys-muted) hover:text-(--kys-text)'}`}
+            >
+              {m.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -121,7 +133,7 @@ export function CarriedNote({ note, onDismiss }: { note: CarryNote; onDismiss?: 
       </p>
       {reasons.length > OPEN_REASONS ? (
         <details>
-          <summary className="cursor-pointer">{reasons.length} settings</summary>
+          <summary className="cursor-pointer">{reasons.length} reasons</summary>
           {list}
         </details>
       ) : (

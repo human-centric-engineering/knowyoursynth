@@ -257,4 +257,20 @@ describe('SynthPicker families (f-synth-families t-320)', () => {
     fireEvent.click(trigger);
     expect(options()).toHaveLength(2);
   });
+
+  it('opens nothing on Enter in an empty box', () => {
+    const onSelect = open('model-d');
+    fireEvent.keyDown(screen.getByRole('searchbox', { name: 'Find a synth' }), { key: 'Enter' });
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(screen.getByRole('listbox')).toBeTruthy();
+  });
+
+  it('finds as you type on the list: the letter goes into the box, with the cursor', () => {
+    open('model-d');
+    fireEvent.keyDown(options()[0], { key: 'a' });
+    const search = screen.getByRole('searchbox', { name: 'Find a synth' });
+    expect(document.activeElement).toBe(search);
+    expect((search as HTMLInputElement).value).toBe('a');
+    expect(options().map((o) => o.textContent)).toEqual([expect.stringContaining('Roland')]);
+  });
 });

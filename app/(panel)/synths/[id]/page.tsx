@@ -7,6 +7,7 @@ import '@/components/app/synth/synth.css';
 import { SynthPage } from '@/components/app/synth/synth-page';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { listFamilies } from '@/lib/app/families/read';
+import { logger } from '@/lib/logging';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { UserSoundIdSchema } from '@/lib/app/sounds/data';
 
@@ -49,7 +50,11 @@ export default async function SynthRoute({ params, searchParams }: Props) {
   const [detail, synths, families] = await Promise.all([
     getSynthDetail(id),
     listSynths(),
-    listFamilies(),
+    // Families only group the picker: a failed read lists every synth alone rather than failing the page.
+    listFamilies().catch((err: unknown) => {
+      logger.warn('synth page: could not read synth families', { err: String(err) });
+      return [];
+    }),
   ]);
   if (!detail) notFound();
 

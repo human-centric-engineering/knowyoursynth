@@ -13,9 +13,13 @@
  */
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
 import type { Changed, Dropped } from '@/lib/app/synths/families/translate';
+import { logger } from '@/lib/logging';
 
-/** How long a carry waits for the page it was made for, in ms. Past it, it is stale. */
-export const CARRY_TTL_MS = 15_000;
+/**
+ * How long a carry waits for the page it was made for, in ms. Past it, it is stale. It counts the server render behind
+ * the navigation too, so it is generous: what it guards against is a navigation that never landed, not a slow one.
+ */
+export const CARRY_TTL_MS = 60_000;
 
 export interface FamilyCarry {
   /** The synth ids it was carried from and to. */
@@ -45,5 +49,12 @@ export function takeCarry(to: string): FamilyCarry | null {
   const carry = pending;
   pending = null;
   if (!carry || carry.to !== to) return null;
-  return Date.now() - carry.at <= CARRY_TTL_MS ? carry : null;
+  const age = Date.now() - carry.at;
+  if (age <= CARRY_TTL_MS) return carry;
+  logger.warn('synth page: a carried panel arrived too late and was dropped', {
+    from: carry.from,
+    to,
+    ageMs: age,
+  });
+  return null;
 }

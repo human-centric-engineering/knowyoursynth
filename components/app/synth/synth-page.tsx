@@ -645,11 +645,15 @@ function Synth({
   // it has been looked for. It lands where the Default patch would, and the same way.
   const carried = useRef<FamilyCarry | null | undefined>(undefined);
   const [carryNote, setCarryNote] = useState<CarryNote | null>(null);
+  // The sound the carried panel landed as: another one opening over it once it has landed (a library sound, one of
+  // the user's own) ends what the note describes.
+  const carriedAs = useRef<{ key: string; landed: boolean } | null>(null);
   useEffect(() => {
     if (carried.current === undefined) carried.current = takeCarry(synthId);
     const carry = carried.current;
     if (carry) {
       setSess(() => carriedSession(synthDef, defaultSound, carry));
+      carriedAs.current = { key: `${defaultSound.id}|`, landed: false };
       arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
       setCarryNote({ fromName: carry.fromName, dropped: carry.dropped, changed: carry.changed });
     } else if (switchedTo.current) {
@@ -657,6 +661,16 @@ function Synth({
       arrivedOnPatch.current = chosenSound(synthDef, defaultSound);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- once, on arrival
+  const openKey = `${stored.presetId ?? ''}|${stored.soundId ?? ''}`;
+  useEffect(() => {
+    const as = carriedAs.current;
+    if (!as) return;
+    if (openKey === as.key) as.landed = true;
+    else if (as.landed) {
+      carriedAs.current = null;
+      setCarryNote(null);
+    }
+  }, [openKey]);
   // `?sound=` loads that sound over whatever was stored, as a fresh panel, then drops out of the URL: a reload should
   // not throw away what was done on the panel since. Declared after the stored session, so it lands after the restore.
   // A sound the library does not have opens the synth as it would have opened anyway. Only `sound` is taken off: the
@@ -2825,7 +2839,17 @@ function Synth({
     : {};
 
   const closeTour = useCallback(() => setTourOn(false), []);
+  // Each switch takes a number; a toggle switch still loading its definition goes ahead only while it is the latest,
+  // so a synth chosen meanwhile, or the page left, is not overtaken by it.
+  const switchSeq = useRef(0);
+  useEffect(
+    () => () => {
+      switchSeq.current += 1;
+    },
+    []
+  );
   const switchSynth = (id: string) => {
+    switchSeq.current += 1;
     if (id === synthId) return;
     router.push(synthHref(id, view), { transitionTypes: ['synth-change'] });
   };
@@ -2834,8 +2858,10 @@ function Synth({
   // that cannot be loaded leaves nothing to carry, and the member opens as a synth chosen in the picker does.
   const switchMember = async (toId: string) => {
     if (toId === synthId) return;
+    const seq = ++switchSeq.current;
     try {
       const toDef = loadedSynthDef(toId) ?? (await loadSynthDef(toId));
+      if (seq !== switchSeq.current) return;
       if (toDef) {
         const panel = storedRef.current;
         const carry = translate(
@@ -2853,7 +2879,7 @@ function Synth({
         err: String(err),
       });
     }
-    switchSynth(toId);
+    if (seq === switchSeq.current) switchSynth(toId);
   };
   const offered = useMemo(() => new Set(synths.map((s) => s.id)), [synths]);
 
@@ -3062,14 +3088,13 @@ function Synth({
                     />
                   </div>
                   {detail.family && (
-                    <div className="shrink-0 pb-1 lg:pb-0">
-                      <FamilyToggle
-                        family={detail.family}
-                        synthId={synthId}
-                        offered={offered}
-                        onSwitch={(to) => void switchMember(to)}
-                      />
-                    </div>
+                    <FamilyToggle
+                      className="shrink-0 pb-1 lg:pb-0"
+                      family={detail.family}
+                      synthId={synthId}
+                      offered={offered}
+                      onSwitch={(to) => void switchMember(to)}
+                    />
                   )}
                   <div className="kys-autohide flex max-w-[72ch] min-w-0 flex-col gap-0.5 pb-1 text-[13px] text-(--kys-muted) lg:pb-0">
                     <p className="leading-snug lg:line-clamp-2">{detail.synth.heritage}</p>
