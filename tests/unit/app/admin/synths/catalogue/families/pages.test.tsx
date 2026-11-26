@@ -146,6 +146,17 @@ describe('FamilyPage', () => {
 
     render(await FamilyPage(props));
 
-    expect(screen.getByRole('alert')).toHaveTextContent('could not be loaded');
+    expect(screen.getByRole('alert')).toHaveTextContent('The family could not be loaded');
+  });
+
+  it('names the synths and instruments when they are what could not be loaded', async () => {
+    vi.mocked(getAdminFamily).mockResolvedValue(FAMILY);
+    vi.mocked(getFamilyFormOptions).mockResolvedValue(null);
+
+    render(await FamilyPage(props));
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'The synths and instruments could not be loaded'
+    );
   });
 });

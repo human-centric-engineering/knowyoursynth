@@ -202,6 +202,22 @@ describe('FamilyForm', () => {
     expect(put.mock.calls[0][1]?.body).toMatchObject({ defaultMember: 'td-3x' });
   });
 
+  it('leaves the default with another row that still has its slug', async () => {
+    const user = userEvent.setup();
+    put.mockResolvedValue(FAMILY);
+    render(<FamilyForm family={FAMILY} options={OPTIONS} />);
+
+    const second = screen.getByText('Member 2').parentElement as HTMLElement;
+    const slug = within(second).getByLabelText(/Slug/, INPUT);
+    await user.clear(slug);
+    await user.type(slug, 'td-3');
+    const first = screen.getByText('Member 1').parentElement as HTMLElement;
+    await user.type(within(first).getByLabelText(/Slug/, INPUT), 'a');
+    await user.click(screen.getByRole('button', { name: 'Save family' }));
+
+    expect(put.mock.calls[0][1]?.body).toMatchObject({ defaultMember: 'td-3' });
+  });
+
   it('clears the default when its member is removed or loses its synth', async () => {
     const user = userEvent.setup();
     put.mockResolvedValue(FAMILY);

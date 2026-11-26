@@ -41,7 +41,8 @@ export default async function FamilyPage({ params }: Props) {
 
       {family === null || options === null ? (
         <p role="alert" className="text-destructive text-sm">
-          The family could not be loaded. Reload the page to try again.
+          The {family === null ? 'family' : 'synths and instruments'} could not be loaded. Reload
+          the page to try again.
         </p>
       ) : (
         <>

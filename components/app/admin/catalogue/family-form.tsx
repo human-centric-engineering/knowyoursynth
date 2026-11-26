@@ -132,8 +132,11 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
     update((d) => {
       const members = d.members.map((m, j) => (j === i ? { ...m, [field]: value } : m));
       // A renamed slug takes the default with it; an empty default is no member's, so it follows none.
+      // A default another row still has stays with that row.
       const renamed =
-        field === 'slug' && d.defaultMember !== '' && d.defaultMember === d.members[i].slug.trim();
+        field === 'slug' &&
+        d.defaultMember !== '' &&
+        d.members.every((m, j) => (j === i) === (m.slug.trim() === d.defaultMember));
       return withDefaultModelled({
         ...d,
         members,

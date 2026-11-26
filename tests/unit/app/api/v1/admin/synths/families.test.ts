@@ -9,7 +9,7 @@
  *   nothing written;
  * - a create, a whole-family save (adding, reordering and removing members, moving the default) and a delete each
  *   write what they say, stamp `editedAt` on every row they write, and are audited; an unchanged save of a seed
- *   family claims it from the seed, and one of an edited family writes and audits nothing;
+ *   family claims it from the seed, audited, and one of an edited family writes and audits nothing;
  * - two creates of one id meet on the primary key, and the second is a 409.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -429,14 +429,18 @@ describe('PUT /families/:id', () => {
     expect(tables.members.map((m) => m.slug).sort()).toEqual(['tb-303', 'td-3']);
   });
 
-  it('claims an unchanged seed family from the seed, without an audit row', async () => {
+  it('claims an unchanged seed family from the seed, and audits the claim', async () => {
     seeded();
     const res = await putFamily(request('PUT', 'families/tb-303', tb303()), ctx('tb-303'));
 
     expect(res.status).toBe(200);
     expect(tables.families[0].editedAt).toBeInstanceOf(Date);
     expect(tables.members.every((m) => m.editedAt instanceof Date)).toBe(true);
-    expect(mockLogAdminAction).not.toHaveBeenCalled();
+    expect(mockLogAdminAction).toHaveBeenCalledOnce();
+    expect(mockLogAdminAction.mock.calls[0][0]).toMatchObject({
+      action: 'synth_family.update',
+      changes: { seedWrites: { from: true, to: false } },
+    });
   });
 
   it('writes and audits nothing when an edited family is saved unchanged', async () => {

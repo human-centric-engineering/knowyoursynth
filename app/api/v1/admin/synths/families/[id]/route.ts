@@ -4,7 +4,8 @@
  * GET    /api/v1/admin/synths/families/:id — the stored family, served or not.
  * PUT    /api/v1/admin/synths/families/:id — replace it whole: `{ name, defaultMember, members }`, its members in toggle
  *        order. A member left out is removed. Refused with every problem it would have (`checkFamilies`). Marks the
- *        family and every member it keeps edited, so the seed leaves them alone. Audited when anything changed.
+ *        family and every member it keeps edited, so the seed leaves them alone. Audited when anything changed,
+ *        claiming a seed family from the seed included.
  * DELETE /api/v1/admin/synths/families/:id — remove it and its members. Audited. The seed creates it again while its
  *        data still has it.
  *
@@ -47,8 +48,9 @@ export const PUT = withAdminAuth<{ id: string }>(
       entityType: 'synth_family',
       entityId: id,
       entityName: after.name,
-      before: before && { ...familyContent(before) },
-      after: { ...familyContent(after) },
+      // Whether the seed still writes it, so a save that only claims a seed family is audited too.
+      before: before && { ...familyContent(before), seedWrites: before.editedAt === null },
+      after: { ...familyContent(after), seedWrites: after.editedAt === null },
     });
 
     log.info('Synth family changed by admin', {

@@ -73,7 +73,11 @@ function fakeDb() {
       }),
       count: vi.fn(
         async ({ where }: { where: Row }) =>
-          members.filter((m) => m.familyId === where.familyId).length
+          members.filter(
+            (m) =>
+              m.familyId === where.familyId &&
+              (where.slug as { in: string[] }).in.includes(m.slug as string)
+          ).length
       ),
       aggregate: vi.fn(async ({ where }: { where: Row }) => {
         const orders = members

@@ -108,6 +108,9 @@ function refuse(message: string, problems: string[]): never {
   });
 }
 
+/** Room for a save that waits on another's row lock, then writes up to 24 members one by one. */
+const FAMILY_TX = { timeout: 15_000 };
+
 /** Hold every stored family's row until the transaction ends. */
 async function lockFamilies(tx: Tx): Promise<void> {
   await tx.$queryRaw`SELECT id FROM synth_family FOR UPDATE`;
@@ -188,7 +191,7 @@ export async function saveFamily(
       await writeFamily(tx, family, new Date(), mode);
       const after = await tx.synthFamily.findUniqueOrThrow({ where: { id }, select: familySelect });
       return { before, after: adminFamilyOf(after) };
-    });
+    }, FAMILY_TX);
   } catch (err) {
     return conflictOr(err);
   }
@@ -242,5 +245,5 @@ export async function deleteFamily(id: string): Promise<AdminFamily> {
     if (!row) throw new NotFoundError('Family not found');
     await tx.synthFamily.delete({ where: { id } });
     return adminFamilyOf(row);
-  });
+  }, FAMILY_TX);
 }
