@@ -204,6 +204,60 @@ describe('seedFamilies', () => {
     expect(db.members.find((m) => m.id === 'x')?.synthId).toBe('tb-303');
   });
 
+  it('moves a synth the data swaps between members, whichever member comes first', async () => {
+    await seedFamilies(client(), [family()]);
+    const swapped = family();
+    swapped.defaultMember = 'tb-303';
+    swapped.members = [
+      { ...swapped.members[1], synth: 'td-3' },
+      { ...swapped.members[0], synth: 'tb-303' },
+    ];
+
+    const report = await seedFamilies(client(), [swapped]);
+
+    expect(report.synthTaken).toEqual([]);
+    expect(report.members).toMatchObject({ updated: 2, unchanged: 0 });
+    expect(db.members.map((m) => [m.slug, m.synthId])).toEqual([
+      ['td-3', 'tb-303'],
+      ['tb-303', 'td-3'],
+    ]);
+  });
+
+  it('frees a synth the data takes from one member and gives to one listed before it', async () => {
+    await seedFamilies(client(), [family()]);
+    const moved = family();
+    moved.defaultMember = 'tb-303';
+    moved.members = [
+      { ...moved.members[1], synth: 'td-3' },
+      { ...moved.members[0], synth: undefined },
+    ];
+
+    const report = await seedFamilies(client(), [moved]);
+
+    expect(report.synthTaken).toEqual([]);
+    expect(report.members).toMatchObject({ updated: 2, unchanged: 0 });
+    expect(db.members.map((m) => [m.slug, m.synthId])).toEqual([
+      ['td-3', null],
+      ['tb-303', 'td-3'],
+    ]);
+    expect(report.defaultWithoutSynth).toEqual([]);
+  });
+
+  it('reports a family whose default member is left without its synth', async () => {
+    db.members.push({
+      id: 'x',
+      familyId: 'elsewhere',
+      slug: 'moved',
+      synthId: 'td-3',
+      editedAt: new Date(),
+    });
+
+    const report = await seedFamilies(client(), [family()]);
+
+    expect(report.synthTaken).toEqual(['tb-303/td-3']);
+    expect(report.defaultWithoutSynth).toEqual(['tb-303']);
+  });
+
   it('throws with every problem and writes nothing when a family does not fit the tables', async () => {
     const wrong = family();
     wrong.members.push({

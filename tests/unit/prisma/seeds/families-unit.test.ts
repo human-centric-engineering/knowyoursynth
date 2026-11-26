@@ -60,10 +60,11 @@ describe('loadFamilyData', () => {
 describe('the 007-families seed unit', () => {
   const logger = { info: vi.fn(), warn: vi.fn() };
   const prisma = {} as TenancyClient;
-  const report = (synthTaken: string[]) => ({
+  const report = (synthTaken: string[], defaultWithoutSynth: string[] = []) => ({
     families: { created: 4, updated: 0, unchanged: 0, edited: 0 },
     members: { created: 9, updated: 0, unchanged: 0, edited: 0 },
     synthTaken,
+    defaultWithoutSynth,
   });
 
   beforeEach(() => vi.clearAllMocks());
@@ -93,6 +94,18 @@ describe('the 007-families seed unit', () => {
     expect(logger.warn).toHaveBeenCalledWith(
       'Family members written without their synth: another member has it',
       { members: ['tb-303/tb-303'] }
+    );
+  });
+
+  it("warns, naming them, when a family's default member has no synth", async () => {
+    const { default: unit } = await import('@/prisma/seeds/app-knowyoursynth/007-families');
+    vi.mocked(seedFamilies).mockResolvedValue(report([], ['tb-303']));
+
+    await unit.run({ prisma, logger } as never);
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      'Families whose default member has no synth: the read opens on another',
+      { families: ['tb-303'] }
     );
   });
 });

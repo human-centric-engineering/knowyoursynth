@@ -397,7 +397,8 @@ async function writePlanned(
 
 /**
  * Remove a row and its own joins, and record the removal so the seed leaves it out. Refused with
- * {@link ConflictError}, naming each one, while anything else in the databank points at it.
+ * {@link ConflictError}, naming each one, while anything else in the databank, or a synth family's member, points at
+ * it.
  */
 export async function removeBankRow(
   kind: BankKind,
@@ -406,8 +407,21 @@ export async function removeBankRow(
   if ((await storedEditedAt(prisma, kind, id)) === undefined)
     throw new NotFoundError('Databank row not found');
 
-  const [bank, synths] = await Promise.all([currentBank(), synthSounds()]);
-  const problems = added(bank, withRow(bank, kind, id, null), synths);
+  const [bank, synths, members] = await Promise.all([
+    currentBank(),
+    synthSounds(),
+    kind === 'instruments'
+      ? prisma.synthFamilyMember.findMany({
+          where: { instrumentId: id },
+          select: { familyId: true, slug: true },
+          orderBy: [{ familyId: 'asc' }, { slug: 'asc' }],
+        })
+      : [],
+  ]);
+  const problems = [
+    ...added(bank, withRow(bank, kind, id, null), synths),
+    ...members.map((m) => `family ${m.familyId}: member ${m.slug} is this instrument`),
+  ];
   if (problems.length)
     throw new ConflictError(
       `The ${kind.slice(0, -1)} cannot be removed while the databank still points at it`,

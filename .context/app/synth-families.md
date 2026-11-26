@@ -63,7 +63,8 @@ The read follows the catalogue's rule for what a synth page can show:
 - A **family is served only while it has a modelled member and a second member beside it.** Otherwise
   there is nothing to toggle between.
 - If its default member is not served, the family opens on its **first modelled member that is**, and
-  logs a warning. The served `defaultMember` is therefore always a served, modelled member.
+  logs it at debug level (the seed reports a stored default without a synth once, as
+  `defaultWithoutSynth`). The served `defaultMember` is therefore always a served, modelled member.
 
 `GET /api/v1/synths/families` is its own route rather than a field on `GET /api/v1/synths`, because the
 latter's `data` is the list of synths itself and adding a field there would change its shape for
@@ -81,8 +82,15 @@ catalogue seed's rules:
 - **A member's place is set once.** A new member goes after the family's last one, and an admin's
   reorder stands.
 - **Never deletes.**
+- **A synth moves with the data.** Before writing any member, every unedited member the data no
+  longer gives its synth lets go of it, so a synth the data moves or swaps lands on its new member
+  whichever comes first.
 - **A synth another member already has stays there.** The seeded member is written without it and
   reported (`synthTaken`), rather than the seed taking the synth back from where an admin put it.
+- **A family whose stored default member ends up without a synth is reported** (`defaultWithoutSynth`).
+
+A databank instrument a family member is cannot be removed: the admin removal is refused, naming the
+family and member, as it is for any other reference to the row.
 
 The unit is on `APP_UNCHECKED_SEEDS` (`lib/app/capability-seed-pairs.ts`), because the capability
 parity test's mock client has no databank to check against.

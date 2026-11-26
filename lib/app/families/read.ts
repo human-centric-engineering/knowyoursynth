@@ -89,7 +89,7 @@ function toFamily(row: FamilyRow): SynthFamily | null {
   if (!modelled.length || members.length < 2) return null;
   const opens = modelled.find((m) => m.slug === row.defaultMember) ?? modelled[0];
   if (opens.slug !== row.defaultMember)
-    logger.warn('families: default member not served, opening on the first modelled member', {
+    logger.debug('families: default member not served, opening on the first modelled member', {
       familyId: row.id,
       defaultMember: row.defaultMember,
       opens: opens.slug,

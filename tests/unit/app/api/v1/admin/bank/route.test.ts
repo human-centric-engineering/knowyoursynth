@@ -119,6 +119,7 @@ beforeEach(() => {
       findUnique: vi.fn(async () => ({ role: 'OWNER', org: { status: 'ACTIVE' } })),
     },
     aiApiKey: { findFirst: vi.fn(async () => null), update: vi.fn() },
+    synthFamilyMember: { findMany: vi.fn(async () => []) },
   });
   mockGetSession.mockResolvedValue(session('ADMIN'));
 });
@@ -466,6 +467,24 @@ describe('DELETE: a removal', () => {
     );
     expect(res.status).toBe(409);
     expect(await problems(res)).toContain('artist depeche-mode: unknown members vince-clarke');
+  });
+
+  it('is refused for an instrument a synth family member is, naming the family, and removes nothing', async () => {
+    const members = mockPrisma.synthFamilyMember as { findMany: ReturnType<typeof vi.fn> };
+    members.findMany.mockResolvedValueOnce([{ familyId: 'tb-303', slug: 'td-3' }]);
+
+    const res = await deleteRow(
+      request('DELETE', 'instruments/rca-theremin'),
+      ctx({ kind: 'instruments', id: 'rca-theremin' })
+    );
+
+    expect(res.status).toBe(409);
+    expect(await problems(res)).toEqual(['family tb-303: member td-3 is this instrument']);
+    expect(members.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { instrumentId: 'rca-theremin' } })
+    );
+    expect(store.writes).toEqual([]);
+    expect(row('bankInstrument', 'rca-theremin')).toBeDefined();
   });
 
   it('removes a song and its parts, records the removal and audits it', async () => {

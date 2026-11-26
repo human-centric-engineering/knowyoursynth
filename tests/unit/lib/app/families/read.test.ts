@@ -12,7 +12,7 @@ vi.mock('@/lib/db/client', () => ({
   prisma: { synthFamily: { findMany: vi.fn(), findFirst: vi.fn() } },
 }));
 vi.mock('@/lib/logging', () => ({
-  logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn() },
+  logger: { warn: vi.fn(), error: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
 const { prisma } = await import('@/lib/db/client');
@@ -108,7 +108,7 @@ describe('listFamilies', () => {
     const [family] = await listFamilies();
 
     expect(family.defaultMember).toBe('tb-303');
-    expect(logger.warn).toHaveBeenCalledWith(
+    expect(logger.debug).toHaveBeenCalledWith(
       'families: default member not served, opening on the first modelled member',
       { familyId: 'tb-303', defaultMember: 'td-3', opens: 'tb-303' }
     );

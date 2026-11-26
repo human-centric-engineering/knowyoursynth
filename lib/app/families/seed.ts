@@ -12,8 +12,11 @@
  * - **Placement is set once.** A member's `order` is written when the row is created, after the family's last member,
  *   and never after: an admin's reorder stands.
  * - **Never deletes.** A family or member the data no longer has stays, so an empty source cannot empty a table.
+ * - **A synth moves with the data.** Before any member is written, every member the data no longer gives its synth
+ *   lets go of it, so a synth the data moves (or swaps) between members lands on its new member whatever their order.
  * - **A synth already in another member stays there.** An admin may have moved a synth to another family; the seed
- *   leaves that member's synth unset rather than take the synth back, and reports it.
+ *   leaves that member's synth unset rather than take the synth back, and reports it, and reports a family whose
+ *   stored default member is left without a synth (the read then opens on another).
  *
  * Without a transaction, as the catalogue seed: each row is matched on its natural key (`id`, `familyId` + `slug`),
  * so a run that fails part way is completed by the next.
@@ -42,6 +45,8 @@ export interface FamilySeedReport {
   members: FamilySeedCounts;
   /** Members whose synth another member already has (`<family>/<slug>`), written without it. */
   synthTaken: string[];
+  /** Families whose stored default member has no synth after the run. */
+  defaultWithoutSynth: string[];
 }
 
 const counts = (): FamilySeedCounts => ({ created: 0, updated: 0, unchanged: 0, edited: 0 });
@@ -69,12 +74,51 @@ export async function seedFamilies(
   });
   if (problems.length) throw new FamilyDataError(problems);
 
-  const report: FamilySeedReport = { families: counts(), members: counts(), synthTaken: [] };
+  const report: FamilySeedReport = {
+    families: counts(),
+    members: counts(),
+    synthTaken: [],
+    defaultWithoutSynth: [],
+  };
+  const released = await releaseSynths(prisma, families, report.members);
   for (const family of families) {
     await writeFamily(prisma, family, report.families);
-    for (const member of family.members) await writeMember(prisma, family.id, member, report);
+    for (const member of family.members)
+      await writeMember(prisma, family.id, member, report, released);
+    const stored = await prisma.synthFamily.findUnique({ where: { id: family.id } });
+    const opens =
+      stored &&
+      (await prisma.synthFamilyMember.findUnique({
+        where: { familyId_slug: { familyId: family.id, slug: stored.defaultMember } },
+      }));
+    if (!opens?.synthId) report.defaultWithoutSynth.push(family.id);
   }
   return report;
+}
+
+const memberKey = (familyId: string, slug: string) => `${familyId}/${slug}`;
+
+/**
+ * Clear the synth from every stored, unedited member the data now gives another synth or none, so the synth is free
+ * for the member the data gives it to. Each is counted as updated here; returns their keys, so the write that follows
+ * does not count them again.
+ */
+async function releaseSynths(
+  prisma: TenancyClient,
+  families: readonly FamilyFile[],
+  tally: FamilySeedCounts
+): Promise<Set<string>> {
+  const released = new Set<string>();
+  for (const family of families)
+    for (const member of family.members) {
+      const key = { familyId_slug: { familyId: family.id, slug: member.slug } };
+      const row = await prisma.synthFamilyMember.findUnique({ where: key });
+      if (!row || row.editedAt || !row.synthId || row.synthId === (member.synth ?? null)) continue;
+      await prisma.synthFamilyMember.update({ where: key, data: { synthId: null } });
+      released.add(memberKey(family.id, member.slug));
+      tally.updated++;
+    }
+  return released;
 }
 
 async function writeFamily(
@@ -99,9 +143,11 @@ async function writeMember(
   prisma: TenancyClient,
   familyId: string,
   member: FamilyFile['members'][number],
-  report: FamilySeedReport
+  report: FamilySeedReport,
+  released: ReadonlySet<string>
 ): Promise<void> {
   const tally = report.members;
+  const counted = released.has(memberKey(familyId, member.slug));
   const key = { familyId_slug: { familyId, slug: member.slug } };
   const row = await prisma.synthFamilyMember.findUnique({ where: key });
   if (row?.editedAt) {
@@ -113,7 +159,7 @@ async function writeMember(
   if (synthId) {
     const holder = await prisma.synthFamilyMember.findUnique({ where: { synthId } });
     if (holder && !(holder.familyId === familyId && holder.slug === member.slug)) {
-      report.synthTaken.push(`${familyId}/${member.slug}`);
+      report.synthTaken.push(memberKey(familyId, member.slug));
       synthId = null;
     }
   }
@@ -138,10 +184,10 @@ async function writeMember(
     row.instrumentId === data.instrumentId &&
     row.synthId === data.synthId &&
     row.differences === data.differences
-  )
-    tally.unchanged++;
-  else {
+  ) {
+    if (!counted) tally.unchanged++;
+  } else {
     await prisma.synthFamilyMember.update({ where: key, data });
-    tally.updated++;
+    if (!counted) tally.updated++;
   }
 }

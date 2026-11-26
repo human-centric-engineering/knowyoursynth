@@ -30,10 +30,18 @@ const unit: SeedUnit = {
   ],
   async run({ prisma, logger }) {
     const report = await seedFamilies(prisma, loadFamilyData());
-    logger.info('Families seeded', { ...report, synthTaken: report.synthTaken.length });
+    logger.info('Families seeded', {
+      ...report,
+      synthTaken: report.synthTaken.length,
+      defaultWithoutSynth: report.defaultWithoutSynth.length,
+    });
     if (report.synthTaken.length)
       logger.warn('Family members written without their synth: another member has it', {
         members: report.synthTaken,
+      });
+    if (report.defaultWithoutSynth.length)
+      logger.warn('Families whose default member has no synth: the read opens on another', {
+        families: report.defaultWithoutSynth,
       });
   },
 };
