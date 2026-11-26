@@ -12,9 +12,11 @@ import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
-import type { Lineage, Preset } from '@/lib/app/synths/contract';
+import type { CablePair, Lineage, Preset } from '@/lib/app/synths/contract';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
+import { presetState } from '@/lib/app/synths/lib/patch';
+import { translate, type Changed, type Dropped } from '@/lib/app/synths/families/translate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
 import { getFamilyOf, type SynthFamily } from '@/lib/app/families/read';
@@ -70,10 +72,23 @@ export type CatalogueSound = Preset & {
 
 export type Limit = z.infer<typeof LimitSchema>;
 
+/**
+ * A family sibling's library sound, carried onto the synth through the family's map (`f-synth-families` t-322), with
+ * the member it was made on and what did not come across as it was. It stays that member's: its `id` is its slug
+ * there, so it is told from this synth's own by `from` as well.
+ */
+export type SiblingSound = CatalogueSound & {
+  from: { synthId: string; name: string };
+  dropped: Dropped[];
+  changed: Changed[];
+};
+
 /** One synth with everything said about it. */
 export interface SynthDetail {
   synth: CatalogueSynth;
   sounds: CatalogueSound[];
+  /** Its family siblings' library sounds, already carried onto it, each with the member it was made on. */
+  siblingSounds: SiblingSound[];
   lineage: Lineage | null;
   notes: {
     /** Control, jack or area id → "Unusual on…" note. */
@@ -170,6 +185,145 @@ export async function listSoundNames(): Promise<Record<string, Record<string, st
   return names;
 }
 
+/** The columns a sound is played from, as `validatePreset` reads them. */
+type SoundRow = Pick<
+  Prisma.SynthSoundGetPayload<object>,
+  | 'slug'
+  | 'definitionVersion'
+  | 'name'
+  | 'ref'
+  | 'artist'
+  | 'tags'
+  | 'level'
+  | 'blurb'
+  | 'how'
+  | 'phrase'
+  | 'steps'
+  | 'context'
+  | 'tweaks'
+>;
+
+/**
+ * A stored sound as its own synth plays it, or `null`, logged, when it is made on a definition version the registry
+ * no longer has or fails validation on read.
+ */
+function validSound(def: AppSynthDef, s: SoundRow): Preset | null {
+  if (s.definitionVersion !== def.version) {
+    logger.error('catalogue: sound made on a definition version the registry does not have', {
+      synthId: def.id,
+      sound: s.slug,
+      version: s.definitionVersion,
+      current: def.version,
+    });
+    return null;
+  }
+  const result = validatePreset(def, {
+    id: s.slug,
+    name: s.name,
+    ref: s.ref,
+    artist: s.artist,
+    tags: s.tags,
+    level: s.level,
+    blurb: s.blurb,
+    how: s.how,
+    phrase: s.phrase,
+    steps: s.steps,
+    context: s.context,
+    tweaks: s.tweaks,
+  });
+  if (!result.ok) {
+    logger.error('catalogue: stored sound fails validation, not served', {
+      synthId: def.id,
+      sound: s.slug,
+      problems: result.problems,
+    });
+    return null;
+  }
+  return result.value;
+}
+
+/**
+ * Each sibling's library sounds, carried onto `def` through the family's map (`translate()`), in toggle order then
+ * library order (t-322). A sound is first read as its own synth serves it, then its whole panel is translated and the
+ * result checked against `def` as a stored sound is: one that fails is left out and logged.
+ *
+ * What is served is the sound's panel, not its lesson: a lesson's steps name the controls of the member it was written
+ * for, so the carried sound has one step, the panel as it came across. Its context and tweaks name those controls too,
+ * and stay behind with the lesson. Its riff comes with it.
+ */
+async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise<SiblingSound[]> {
+  const siblings = family.members.flatMap((m) => {
+    const sib = m.synthId && m.synthId !== def.id ? getSynthDef(m.synthId) : undefined;
+    return sib ? [sib] : [];
+  });
+  if (!siblings.length) return [];
+  const rows = await prisma.synthSound.findMany({
+    where: { synthId: { in: siblings.map((d) => d.id) }, synth: { listed: true } },
+    orderBy: [{ order: 'asc' }, { slug: 'asc' }],
+  });
+  const out: SiblingSound[] = [];
+  for (const from of siblings) {
+    for (const row of rows) {
+      if (row.synthId !== from.id) continue;
+      const source = validSound(from, row);
+      if (!source) continue;
+      const sibling = carriedSound(from, def, source);
+      if (sibling) out.push(sibling);
+    }
+  }
+  return out;
+}
+
+/** One sibling's sound carried onto `to`, or `null`, logged, when what came across fails validation there. */
+function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): SiblingSound | null {
+  const panel = presetState(from, source);
+  const carry = translate(
+    panel.values,
+    panel.cables.map((c): CablePair => [c.from, c.to]),
+    from,
+    to
+  );
+  // The carried panel replaces the member's Default patch, cables and all, as the version toggle's carry does.
+  const base = presetState(to).cables.map((c): CablePair => [c.from, c.to]);
+  const result = validatePreset(to, {
+    id: source.id,
+    name: source.name,
+    ref: source.ref,
+    artist: source.artist,
+    tags: source.tags,
+    level: source.level,
+    blurb: source.blurb,
+    how: source.how,
+    phrase: source.phrase,
+    steps: [
+      {
+        title: `Set the panel as it was on the ${from.name}`,
+        module: source.steps[0].module,
+        why: `This patch was made on the ${from.name}. Its lesson names the ${from.name}'s controls, so it stays there: here the whole panel is set at once, as it came across.`,
+        set: carry.values,
+        ...(base.length ? { unplug: base } : {}),
+        ...(carry.cables.length ? { cables: carry.cables } : {}),
+      },
+    ],
+  });
+  if (!result.ok) {
+    logger.error('catalogue: a sibling sound fails validation once carried, not served', {
+      synthId: to.id,
+      from: from.id,
+      sound: source.id,
+      problems: result.problems,
+    });
+    return null;
+  }
+  return {
+    ...result.value,
+    version: to.version,
+    from: { synthId: from.id, name: from.name },
+    dropped: carry.dropped,
+    changed: carry.changed,
+  };
+}
+
 /** One listed synth with its sounds, lineage and notes, or `null` when no listed, playable synth has that id. */
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
@@ -242,37 +396,8 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
 
   const sounds: CatalogueSound[] = [];
   for (const s of soundRows) {
-    if (s.definitionVersion !== def.version) {
-      logger.error('catalogue: sound made on a definition version the registry does not have', {
-        synthId: id,
-        sound: s.slug,
-        version: s.definitionVersion,
-        current: def.version,
-      });
-      continue;
-    }
-    const result = validatePreset(def, {
-      id: s.slug,
-      name: s.name,
-      ref: s.ref,
-      artist: s.artist,
-      tags: s.tags,
-      level: s.level,
-      blurb: s.blurb,
-      how: s.how,
-      phrase: s.phrase,
-      steps: s.steps,
-      context: s.context,
-      tweaks: s.tweaks,
-    });
-    if (!result.ok) {
-      logger.error('catalogue: stored sound fails validation, not served', {
-        synthId: id,
-        sound: s.slug,
-        problems: result.problems,
-      });
-      continue;
-    }
+    const preset = validSound(def, s);
+    if (!preset) continue;
     const parsedHead = parsedHeadOf(s.patterns);
     const head = parsedHead?.place ?? null;
     const style = head
@@ -282,7 +407,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     // The effects the default comes with (t-302): the rack is turned to them as the sound is chosen.
     const fx = parsedHead?.pattern.fx;
     sounds.push({
-      ...result.value,
+      ...preset,
       version: s.definitionVersion,
       ...(head
         ? {
@@ -297,6 +422,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         : {}),
     });
   }
+  const siblingSounds = family ? await readSiblingSounds(def, family) : [];
 
   let lineage: Lineage | null = null;
   if (lineageRow) {
@@ -340,5 +466,15 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   }
 
   const instruments = bankInstruments.map((b) => b.instrument);
-  return { synth, sounds, lineage, notes, links, soundLinks, instruments, family };
+  return {
+    synth,
+    sounds,
+    siblingSounds,
+    lineage,
+    notes,
+    links,
+    soundLinks,
+    instruments,
+    family,
+  };
 }
