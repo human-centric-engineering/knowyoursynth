@@ -472,4 +472,9 @@ describe('GET', () => {
     expect(list.data).toEqual([{ id: 'tb-303', ...tb303(), editedAt: null }]);
     expect(one.data).toEqual({ id: 'tb-303', ...tb303(), editedAt: null });
   });
+
+  it('is 404 for a family that is not stored', async () => {
+    const res = await getFamily(request('GET', 'families/nope'), ctx('nope'));
+    expect(res.status).toBe(404);
+  });
 });
