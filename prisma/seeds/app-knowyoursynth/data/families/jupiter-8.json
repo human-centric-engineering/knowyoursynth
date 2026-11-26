@@ -1,0 +1,20 @@
+{
+  "id": "jupiter-8",
+  "name": "Jupiter-8",
+  "defaultMember": "jupiter-8",
+  "members": [
+    {
+      "slug": "jupiter-8",
+      "label": "Jupiter-8",
+      "instrument": "roland-jupiter-8",
+      "synth": "jupiter-8",
+      "differences": "The original, Roland's 1981 flagship: eight voices of two oscillators each, cross modulation and sync, a 12/24 dB filter, split and dual keyboard modes and 64 memories."
+    },
+    {
+      "slug": "jp-08",
+      "label": "JP-08",
+      "instrument": "roland-jp-08",
+      "differences": "Roland's 2015 Boutique module, modelling the Jupiter-8's circuits with ACB: four voices, 36 of the original's knobs and sliders, extra LFOs and a wider oscillator range, two ribbon controllers and a step sequencer, in a case no bigger than a book. Two or more can be chained for more voices, and the optional K-25m adds a 25-note keyboard."
+    }
+  ]
+}

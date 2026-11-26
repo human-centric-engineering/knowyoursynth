@@ -18,6 +18,7 @@
 
 import { useMemo, useState } from 'react';
 import type { Preset } from '@/lib/app/synths/contract';
+import type { CatalogueSound } from '@/lib/app/catalogue/read';
 import { StarButton } from '@/components/app/synth/favourites';
 import type { LessonMark, LessonMarks } from '@/components/app/synth/progress';
 
@@ -45,7 +46,8 @@ export function LevelDots({ level }: { level: Preset['level'] }) {
 export interface SiblingEntry {
   /** Unique on the page: the member it was made on and its slug there. */
   key: string;
-  preset: Preset;
+  /** With its default pattern's effects and drum style (t-326), which choosing it turns the rack and the drums to. */
+  preset: CatalogueSound;
   /** The name of the member it was made on. */
   fromName: string;
 }

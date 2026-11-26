@@ -230,6 +230,8 @@ function seeded() {
     id: 'tb-303',
     name: f.name,
     defaultMember: f.defaultMember,
+    // the column's default: a family that shares one original lists none
+    originals: [],
     editedAt: null,
   });
   f.members.forEach((m, order) =>
@@ -312,6 +314,47 @@ describe('POST /families', () => {
     ]);
     expect(writes()).toBe(0);
     expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('saves a family whose members trace back to the originals it lists, and stores the list (t-324)', async () => {
+    const family = tb303();
+    family.members.push({
+      slug: 'ms-20',
+      label: 'MS-20',
+      instrument: 'korg-ms-20',
+      synth: 'k2',
+      differences: 'Another original, brought in by name.',
+    });
+
+    const res = await postFamily(
+      request('POST', 'families', {
+        id: 'tb-303',
+        ...family,
+        originals: ['roland-tb-303', 'korg-ms-20'],
+      })
+    );
+
+    expect(res.status).toBe(201);
+    expect(tables.families[0].originals).toEqual(['roland-tb-303', 'korg-ms-20']);
+    const body = await json(res);
+    expect(body.data).toMatchObject({ originals: ['roland-tb-303', 'korg-ms-20'] });
+  });
+
+  it('refuses a listed original no member traces back to, naming it, and writes nothing (t-324)', async () => {
+    const res = await postFamily(
+      request('POST', 'families', {
+        id: 'tb-303',
+        ...tb303(),
+        originals: ['roland-tb-303', 'korg-ms-20'],
+      })
+    );
+
+    expect(res.status).toBe(400);
+    const body = await json(res);
+    expect(body.error?.details?.errors?.map((e) => e.message)).toEqual([
+      "family tb-303: original korg-ms-20 is no member's original",
+    ]);
+    expect(writes()).toBe(0);
   });
 
   it('refuses input that fails the schema, naming the field', async () => {
@@ -464,6 +507,20 @@ describe('PUT /families/:id', () => {
     expect(res.status).toBe(200);
     expect(writes()).toBe(0);
     expect(mockLogAdminAction).not.toHaveBeenCalled();
+  });
+
+  it('writes nothing for an unchanged save that sends its originals as an empty list (t-324)', async () => {
+    seeded();
+    await putFamily(request('PUT', 'families/tb-303', tb303()), ctx('tb-303'));
+    vi.clearAllMocks();
+
+    const res = await putFamily(
+      request('PUT', 'families/tb-303', { ...tb303(), originals: [] }),
+      ctx('tb-303')
+    );
+
+    expect(res.status).toBe(200);
+    expect(writes()).toBe(0);
   });
 
   it('refuses a default member that is not modelled', async () => {

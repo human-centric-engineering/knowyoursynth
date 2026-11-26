@@ -33,6 +33,13 @@ export const FamilyFileSchema = z.object({
   name: text.max(80),
   /** The slug of the member the family opens on: the one most people are likely to own. */
   defaultMember: FamilySlugSchema,
+  /**
+   * The databank originals the family brings together (t-324), each an instrument that recreates nothing. Left out,
+   * the members must all trace back to one original, whichever it is. Given, each member traces back to one of these,
+   * and each is some member's original: so Moog's own System 15, 35 and 55, each an original of its own, can sit
+   * beside Behringer's copies, which trace back to the Moog modular as a whole.
+   */
+  originals: z.array(BankIdSchema).max(12).optional(),
   members: z.array(FamilyMemberSchema),
 });
 
@@ -77,9 +84,10 @@ export function rootOf(
  *
  * A family has two members or more, with distinct slugs. Its default member is one of them, and modelled: a family
  * never opens on a blank panel. Every member names an instrument the databank has, and every member's instrument
- * traces back to the same original. A modelled member's synth exists, sits in no other member of any family, and is
- * linked in the databank to an instrument with that same original, so the family and the databank agree on what the
- * synth models.
+ * traces back to the same original, or, where the family lists its `originals`, to one of those: each listed one an
+ * instrument the databank has that recreates nothing, and each the original of some member. A modelled member's
+ * synth exists, sits in no other member of any family, and is linked in the databank to an instrument with that
+ * same original as the member's, so the family and the databank agree on what the synth models.
  */
 export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckContext): string[] {
   const problems: string[] = [];
@@ -94,6 +102,8 @@ export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckC
 
     const slugs = new Set<string>();
     const roots = new Set<string>();
+    /** A member's original could not be found: its instrument is missing, or its chain is broken. */
+    let unresolved = false;
     for (const member of family.members) {
       const at = `${where}, member ${member.slug}`;
       if (slugs.has(member.slug)) problems.push(`${at}: the slug is used twice in the family`);
@@ -107,6 +117,7 @@ export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckC
       else if (!root)
         problems.push(`${at}: instrument ${member.instrument}'s recreation chain is broken`);
       else roots.add(root);
+      if (!root) unresolved = true;
 
       if (member.synth === undefined) continue;
       const synth = member.synth;
@@ -126,7 +137,28 @@ export function checkFamilies(families: readonly FamilyFile[], ctx: FamilyCheckC
           `${at}: synth ${synth} is not linked in the databank to anything that traces back to ${root}`
         );
     }
-    if (roots.size > 1)
+    if (family.originals?.length) {
+      const listed = new Set(family.originals);
+      if (listed.size !== family.originals.length)
+        problems.push(`${where}: an original is listed twice`);
+      for (const id of listed) {
+        const instrument = ctx.instruments.get(id);
+        if (!instrument)
+          problems.push(`${where}: the databank has no instrument ${id} for an original`);
+        else if (instrument.recreationOf)
+          problems.push(
+            `${where}: original ${id} is a recreation of ${instrument.recreationOf}, not an original`
+          );
+        // A member whose original could not be found is already reported; it may be the one this original is for.
+        else if (!roots.has(id) && !unresolved)
+          problems.push(`${where}: original ${id} is no member's original`);
+      }
+      const others = [...roots].filter((r) => !listed.has(r)).sort();
+      if (others.length)
+        problems.push(
+          `${where}: members trace back to ${others.join(', ')}, which the family's originals do not list`
+        );
+    } else if (roots.size > 1)
       problems.push(
         `${where}: its members trace back to different originals (${[...roots].sort().join(', ')})`
       );

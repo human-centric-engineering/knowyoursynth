@@ -263,7 +263,7 @@ import {
   type FamilyCarry,
 } from '@/components/app/synth/family-carry';
 import type { SynthFamily } from '@/lib/app/families/read';
-import { translate } from '@/lib/app/synths/families/translate';
+import { departures, translate } from '@/lib/app/synths/families/translate';
 import { logger } from '@/lib/logging';
 import { Tour } from '@/components/app/synth/tour';
 import type { TutorDesign } from '@/components/app/tutor/apply';
@@ -823,8 +823,11 @@ function Synth({
   const signInHref = `/login?callbackUrl=${encodeURIComponent(hereHref(view))}`;
 
   const libraryTarget = useMemo(
-    () => presetState(synthDef, designed?.preset ?? sibling?.preset ?? preset).values,
-    [synthDef, designed, sibling, preset]
+    // as `ownLesson` reads it: a sibling's sound is the panel only until one of the user's opens over it (t-326)
+    () =>
+      presetState(synthDef, designed?.preset ?? (openSound ? null : sibling?.preset) ?? preset)
+        .values,
+    [synthDef, designed, sibling, openSound, preset]
   );
   const target = savedOpen ? savedOpen.values : sharedPanel ? sharedPanel.values : libraryTarget;
   const targetRef = useRef(target);
@@ -1893,6 +1896,8 @@ function Synth({
           : preset
             ? preset.name
             : defaultPatchName(synthDef);
+  // A family sibling's sound, while it is what the panel shows.
+  const siblingOn = sibling && ownLesson === sibling.preset ? sibling.preset : null;
   // A library sound on the panel, as it came, whatever pattern a link has put in the sequencer.
   const libraryPreset =
     !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset ? preset : null;
@@ -1958,7 +1963,8 @@ function Synth({
   // What plays along with the pattern (t-266, t-267). The sound's own riff matches a drum beat by its default pattern's
   // style, as the catalogue sends it.
   const backing = useBacking(seq, useBackingPref(), {
-    fallbackInspiredBy: libraryPreset?.defaultPattern?.style ?? null,
+    // a sibling's sound on the panel brings its default's style too (t-326)
+    fallbackInspiredBy: (libraryPreset ?? siblingOn)?.defaultPattern?.style ?? null,
   });
   // A patch chosen (t-277, t-302): the drums to Match (or off), the Count-in on, and the rack to the effects the patch
   // comes with, or off. The rack is no standing setting (owner ruling, 2026-11-22), so its knobs stay where they were
@@ -2439,7 +2445,9 @@ function Synth({
         setSharedPanel(before.sharedPanel);
         writeStored(sharedFromKey(synthId), shared.slug);
       }
-      glide(() => before.sess);
+      // Afresh, whatever the panel goes back to: a sibling's sound names no sound, as the design did, so the history
+      // would otherwise run on and panel Undo put the design back under the sibling's name (t-326).
+      glide(() => before.sess, { fresh: true });
     };
   };
   // A family sibling's sound (t-322) opens as choosing a library sound does, its one step as its lesson, and says what of
@@ -2454,10 +2462,12 @@ function Synth({
     leaveShared();
     setDesigned(null);
     setSibling(entry);
-    // The session names no sound for it, as for the last sibling's: the history is started afresh by hand.
+    // The session names no sound for it, as for the last sibling's: the history is started afresh by hand, but only for
+    // another sound. The same one picked again is Restore, which keeps its history, as a library sound's does (t-326).
+    const another = key !== sibling?.key || !!sess.soundId || !!designed || !!sharedPanel;
     glide(
       () => ({ presetId: null, step: null, soundId: null, ...presetState(synthDef, entry.preset) }),
-      { fresh: true }
+      { fresh: another }
     );
     if (source)
       setCarryNote({
@@ -2466,8 +2476,7 @@ function Synth({
         dropped: source.dropped,
         changed: source.changed,
       });
-    if (key !== sibling?.key || sess.soundId || designed || sharedPanel)
-      choosePatch(chosenSound(synthDef, entry.preset));
+    if (another) choosePatch(chosenSound(synthDef, entry.preset));
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
   };
@@ -2976,7 +2985,14 @@ function Synth({
           synthDef,
           toDef
         );
-        leaveCarry({ from: synthId, to: toId, fromName: synthDef.name, ...carry });
+        // The note names only what the panel moved from this member's Default patch (t-326), as a sibling's sound does.
+        leaveCarry({
+          from: synthId,
+          to: toId,
+          fromName: synthDef.name,
+          ...carry,
+          ...departures(synthDef, carry),
+        });
       }
     } catch (err) {
       logger.warn('synth page: could not carry the panel to another family member', {

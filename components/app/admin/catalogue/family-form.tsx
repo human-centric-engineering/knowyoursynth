@@ -48,6 +48,8 @@ interface Draft {
   id: string;
   name: string;
   defaultMember: string;
+  /** The originals it brings together, as typed: instrument ids, separated by commas or spaces. */
+  originals: string;
   members: MemberRow[];
 }
 
@@ -62,11 +64,18 @@ const emptyMember = (): MemberRow => ({
 
 function draftOf(family: AdminFamily | null): Draft {
   if (!family)
-    return { id: '', name: '', defaultMember: '', members: [emptyMember(), emptyMember()] };
+    return {
+      id: '',
+      name: '',
+      defaultMember: '',
+      originals: '',
+      members: [emptyMember(), emptyMember()],
+    };
   return {
     id: family.id,
     name: family.name,
     defaultMember: family.defaultMember,
+    originals: (family.originals ?? []).join(', '),
     members: family.members.map((m) => ({
       key: nextRowKey(),
       slug: m.slug,
@@ -87,17 +96,24 @@ const withDefaultModelled = (d: Draft): Draft =>
     ? d
     : { ...d, defaultMember: '' };
 
-const bodyOf = (d: Draft) => ({
-  name: d.name,
-  defaultMember: d.defaultMember,
-  members: d.members.map((m) => ({
-    slug: m.slug.trim(),
-    label: m.label,
-    instrument: m.instrument.trim(),
-    ...(m.synth ? { synth: m.synth } : {}),
-    differences: m.differences,
-  })),
-});
+/** The originals as the save sends them: none when the field is empty, so the family keeps one shared original. */
+const originalsOf = (typed: string): string[] => typed.split(/[\s,]+/).filter(Boolean);
+
+const bodyOf = (d: Draft) => {
+  const originals = originalsOf(d.originals);
+  return {
+    name: d.name,
+    defaultMember: d.defaultMember,
+    ...(originals.length ? { originals } : {}),
+    members: d.members.map((m) => ({
+      slug: m.slug.trim(),
+      label: m.label,
+      instrument: m.instrument.trim(),
+      ...(m.synth ? { synth: m.synth } : {}),
+      differences: m.differences,
+    })),
+  };
+};
 
 export interface FamilyFormProps {
   /** The stored family, or `null` for a new one. */
@@ -118,6 +134,10 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
   /** The server's messages for one field, by its path (`members.0.label`). */
   const at = (path: string) =>
     (save.failure?.fields ?? []).filter((f) => f.field === path).map((f) => f.message);
+  /** The originals' messages: the list's own and each entry's (`originals.1`), which Zod files under its index. */
+  const originalsProblems = (save.failure?.fields ?? [])
+    .filter((f) => f.field === 'originals' || f.field.startsWith('originals.'))
+    .map((f) => f.message);
 
   const update = (change: (d: Draft) => Draft) => {
     setDraft(change);
@@ -245,6 +265,34 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
         <FieldProblems messages={at('name')} />
       </div>
 
+      <div className="grid gap-1">
+        <Label htmlFor="family-originals" className="text-xs">
+          Originals{' '}
+          <FieldHelp title="Originals" ariaLabel="About the originals">
+            <p>
+              Usually left empty: then every member must trace back to one original in the databank,
+              whichever it is.
+            </p>
+            <p>
+              Fill it in when a family brings together originals the databank keeps apart. List the
+              databank instrument ids, separated by commas. Each must recreate nothing, and each
+              must be some member&apos;s original. For example, Moog&apos;s own System 15, 35 and 55
+              sit beside Behringer&apos;s copies, which trace back to the Moog modular:{' '}
+              <code>moog-modular, moog-model-15, moog-system-35, moog-system-55</code>.
+            </p>
+          </FieldHelp>
+        </Label>
+        <Input
+          id="family-originals"
+          name="originals"
+          value={draft.originals}
+          placeholder="None: one shared original"
+          aria-invalid={originalsProblems.length > 0}
+          onChange={(e) => update((d) => ({ ...d, originals: e.target.value }))}
+        />
+        <FieldProblems messages={originalsProblems} />
+      </div>
+
       <fieldset className="space-y-2">
         <legend className="text-sm font-medium">
           Members{' '}
@@ -252,8 +300,8 @@ export function FamilyForm({ family, options }: FamilyFormProps) {
             <p>
               Two or more, in the order the version toggle shows them. Every member&apos;s
               instrument must trace back, through what it recreates in the databank, to the same
-              original. A member with a synth plays; one without is shown as a blank panel with its
-              differences.
+              original, or to one of the originals listed above. A member with a synth plays; one
+              without is shown as a blank panel with its differences.
             </p>
           </FieldHelp>
         </legend>

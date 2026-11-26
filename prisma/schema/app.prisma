@@ -202,6 +202,11 @@ model SynthFamily {
   /// The member the family opens on: the one most people are likely to own (owner ruling, 2026-11-26). A modelled
   /// member's slug; the read falls back to the first modelled member it serves when this one is not served.
   defaultMember String
+  /// The databank originals the family brings together (t-324): bank instrument ids, each one that recreates nothing.
+  /// Empty, its members must all trace back to one original, whichever it is. Given, each member traces back to one
+  /// of these, and each is the original of a member: how Moog's own System 15, 35 and 55 sit beside Behringer's
+  /// copies, which trace back to the Moog modular as a whole.
+  originals     String[]  @default([])
   editedAt      DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

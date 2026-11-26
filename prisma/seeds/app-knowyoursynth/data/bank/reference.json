@@ -7732,6 +7732,44 @@
       "kind": "semi-modular",
       "text": "The second SOLAR 42, with a new, stable filter circuit, sub-oscillators on its two VCOs and renumbered voices.",
       "source": "https://sonicstate.com/news/2024/07/31/elta-music-solar-42f"
+    },
+    {
+      "id": "behringer-polivoks",
+      "name": "Behringer Polivoks",
+      "maker": "Behringer",
+      "year": "2026",
+      "kind": "mono",
+      "recreationOf": "formanta-polivoks",
+      "text": "An announced Eurorack copy of the Formanta Polivoks made with its designer Vladimir Kuzmin, shown finished at Music China in October 2026 with two oscillators, a low-pass and band-pass filter, a mono or duophonic switch, MIDI In and CV and gate. Price and date not yet given.",
+      "source": "https://synthanatomy.com/2026/10/behringer-polivoks-new-duophonic-analog-synth-in-collaboration-with-vladimir-kuzmin.html"
+    },
+    {
+      "id": "behringer-ds-80",
+      "name": "Behringer DS-80",
+      "maker": "Behringer",
+      "year": "2020",
+      "kind": "poly",
+      "recreationOf": "yamaha-cs-80",
+      "text": "An announced copy of the Yamaha CS-80, first mentioned in July 2020; a 2022 prototype board held two voices and the digital control section. Not yet on sale.",
+      "source": "https://www.musicradar.com/music-tech/synths/were-here-to-break-the-barriers-and-put-powerful-instruments-into-the-hands-of-real-musicians-not-collectors-heres-the-2025-update-on-all-the-synths-and-drum-machines-that-behringer-has-announced-that-arent-in-the-shops-yet"
+    },
+    {
+      "id": "arp-odyssey-mk-ii",
+      "name": "ARP Odyssey Mk II",
+      "maker": "ARP Instruments",
+      "year": "1975",
+      "kind": "mono",
+      "text": "The second Odyssey, ARP's models 2810 to 2815, made from 1975 to 1978: black and gold, with CV and gate on every model and a four-pole low-pass filter close in design to Moog's.",
+      "source": "https://en.wikipedia.org/wiki/ARP_Odyssey"
+    },
+    {
+      "id": "arp-odyssey-mk-iii",
+      "name": "ARP Odyssey Mk III",
+      "maker": "ARP Instruments",
+      "year": "1978",
+      "kind": "mono",
+      "text": "The last Odyssey, ARP's models 2820 to 2823, from 1978 until ARP's bankruptcy in 1981: orange on black, with the four-pole 4075 filter, an XLR output and three pressure-sensitive pads for pitch bend and vibrato.",
+      "source": "https://en.wikipedia.org/wiki/ARP_Odyssey"
     }
   ]
 }

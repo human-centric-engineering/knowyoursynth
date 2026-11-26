@@ -15,10 +15,17 @@ import {
   type FamilyInstrument,
 } from '@/lib/app/families/data';
 import { SYNTH_DEFS } from '@/lib/app/synths/defs';
-import { loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { BankReferenceFileSchema } from '@/lib/app/bank/data';
+import { BANK_DATA_DIR, loadBankData } from '@/prisma/seeds/app-knowyoursynth/bank-data';
 import { loadFamilyData } from '@/prisma/seeds/app-knowyoursynth/family-data';
 
 const bank = loadBankData();
+/** The reference list (b4), where every entry says where its facts were checked. */
+const bankReference = BankReferenceFileSchema.parse(
+  JSON.parse(readFileSync(join(BANK_DATA_DIR, 'reference.json'), 'utf8'))
+).instruments;
 const ctx: FamilyCheckContext = {
   instruments: new Map<string, FamilyInstrument>(
     bank.instruments.map((i) => [
@@ -154,16 +161,150 @@ describe('checkFamilies', () => {
   });
 });
 
+describe('checkFamilies: a family that lists its originals (t-324)', () => {
+  /** Behringer's System 55, after the Moog modular, beside Moog's own System 55, an original of its own. */
+  const systems = (originals?: string[]): FamilyFile =>
+    FamilyFileSchema.parse({
+      id: 'moog-modular-systems',
+      name: 'System 55',
+      defaultMember: 'system-55',
+      ...(originals ? { originals } : {}),
+      members: [
+        {
+          slug: 'system-55',
+          label: 'System 55',
+          instrument: 'behringer-system-55',
+          synth: 'system-55',
+          differences: 'A copy.',
+        },
+        {
+          slug: 'moog-system-55',
+          label: 'Moog System 55',
+          instrument: 'moog-system-55',
+          differences: 'The original.',
+        },
+      ],
+    });
+
+  it('refuses members of two originals when the family lists none', () => {
+    expect(checkFamilies([systems()], ctx)).toEqual([
+      'family moog-modular-systems: its members trace back to different originals (moog-modular, moog-system-55)',
+    ]);
+  });
+
+  it('passes them when it lists both', () => {
+    expect(checkFamilies([systems(['moog-modular', 'moog-system-55'])], ctx)).toEqual([]);
+  });
+
+  it('refuses a member whose original it does not list', () => {
+    expect(checkFamilies([systems(['moog-modular'])], ctx)).toEqual([
+      "family moog-modular-systems: members trace back to moog-system-55, which the family's originals do not list",
+    ]);
+  });
+
+  it("refuses an original that is missing, a recreation, no member's, or listed twice", () => {
+    const problems = checkFamilies(
+      [
+        systems([
+          'moog-modular',
+          'moog-system-55',
+          'moog-system-55',
+          'no-such-synth',
+          'behringer-td-3',
+          'roland-tb-303',
+        ]),
+      ],
+      ctx
+    );
+    expect(problems).toEqual([
+      'family moog-modular-systems: an original is listed twice',
+      'family moog-modular-systems: the databank has no instrument no-such-synth for an original',
+      'family moog-modular-systems: original behringer-td-3 is a recreation of roland-tb-303, not an original',
+      "family moog-modular-systems: original roland-tb-303 is no member's original",
+    ]);
+  });
+
+  it('names a member whose instrument is missing once, not again as an original no member has', () => {
+    const family = systems(['moog-modular', 'moog-system-55']);
+    family.members[1].instrument = 'moog-system-56';
+    expect(checkFamilies([family], ctx)).toEqual([
+      'family moog-modular-systems, member moog-system-55: the databank has no instrument moog-system-56',
+    ]);
+  });
+
+  it('still checks a modelled member against its own original', () => {
+    // the System 55 synth is linked to the Moog modular, not to Moog's own System 55
+    const family = systems(['moog-modular', 'moog-system-55']);
+    family.members[1].synth = 'system-55';
+    family.members[0].synth = undefined;
+    family.defaultMember = 'moog-system-55';
+    expect(checkFamilies([family], ctx)).toEqual([
+      'family moog-modular-systems, member moog-system-55: synth system-55 is not linked in the databank to anything that traces back to moog-system-55',
+    ]);
+  });
+});
+
 describe('the committed family seed data', () => {
   const families = loadFamilyData();
 
-  it('holds the three in-app pairs and the System 15 / 35 / 55 sizes', () => {
-    expect(Object.fromEntries(families.map((f) => [f.id, f.members.map((m) => m.synth)]))).toEqual({
+  it('holds the three in-app pairs, the System 15 / 35 / 55 sizes and every researched family (t-324)', () => {
+    expect(
+      Object.fromEntries(families.map((f) => [f.id, f.members.map((m) => m.synth ?? null)]))
+    ).toEqual({
+      'arp-2600': ['b2600', null, null],
+      cat: ['cat', null],
+      'cs-80': ['cs-80', null],
       grandmother: ['model-15', 'grandmother'],
-      'moog-modular-systems': ['system-15', 'system-35', 'system-55'],
+      'jupiter-8': ['jupiter-8', null],
+      kobol: ['kobol', null],
+      minimoog: ['model-d', null, null],
+      'moog-modular-systems': ['system-15', 'system-35', 'system-55', null, null, null],
+      'ms-20': ['k2', null],
+      'music-easel': ['buchla-easel', null],
+      'ob-xa': ['ub-xa-d', null],
+      odyssey: ['behringer-odyssey', null, null, null],
+      polivoks: ['polivoks', null],
+      'pro-one': ['pro-1', null],
+      'prophet-600': ['pro-800', null],
       'syncussion-sy-1': ['behringer-syncussion', 'pearl-syncussion'],
-      'tb-303': ['td-3', 'tb-303'],
+      'tb-303': ['td-3', 'tb-303', null],
+      'two-voice': ['2-xm', null],
+      wasp: ['wasp-deluxe', null],
     });
+  });
+
+  it('lists its originals only where the members do not share one: the Moog systems and the Odyssey revisions (t-324)', () => {
+    expect(families.filter((f) => f.originals).map((f) => [f.id, f.originals])).toEqual([
+      [
+        'moog-modular-systems',
+        ['moog-modular', 'moog-model-15', 'moog-system-35', 'moog-system-55'],
+      ],
+      ['odyssey', ['arp-odyssey', 'arp-odyssey-mk-ii', 'arp-odyssey-mk-iii']],
+    ]);
+  });
+
+  it('gives every member a differences text, and a source for every reference-list instrument a member is (t-324)', () => {
+    const reference = new Set(bankReference.map((i) => i.id));
+    for (const family of families)
+      for (const member of family.members) {
+        expect(member.differences.length, `${family.id}/${member.slug}`).toBeGreaterThan(40);
+        if (reference.has(member.instrument))
+          expect(
+            bankReference.find((i) => i.id === member.instrument)?.source,
+            `${family.id}/${member.slug}`
+          ).toMatch(/^https:\/\//);
+      }
+  });
+
+  it('labels an announced member as announced, in its label and its differences (t-324)', () => {
+    const announced = families.flatMap((f) =>
+      f.members.filter((m) => /announced/i.test(m.label)).map((m) => `${f.id}/${m.slug}`)
+    );
+    expect(announced).toEqual(['cs-80/ds-80', 'polivoks/behringer-polivoks']);
+    for (const family of families)
+      for (const m of family.members)
+        if (/announced/i.test(m.label))
+          expect(m.differences).toMatch(/^Announced, not yet on sale\./);
   });
 
   it('passes the check against the committed databank and the definition registry', () => {
@@ -171,12 +312,28 @@ describe('the committed family seed data', () => {
     expect(checkFamilies(families, ctx)).toEqual([]);
   });
 
-  it('opens each family on the clone, the member most people are likely to own', () => {
+  it('opens each family on the member most people are likely to own: the clone where it is modelled', () => {
     expect(Object.fromEntries(families.map((f) => [f.id, f.defaultMember]))).toEqual({
+      'arp-2600': 'b2600',
+      cat: 'cat',
+      // the only modelled member: a family never opens on a blank panel
+      'cs-80': 'cs-80',
       grandmother: 'model-15',
+      'jupiter-8': 'jupiter-8',
+      kobol: 'kobol',
+      minimoog: 'model-d',
       'moog-modular-systems': 'system-15',
+      'ms-20': 'k2',
+      'music-easel': 'buchla-easel',
+      'ob-xa': 'ub-xa-d',
+      odyssey: 'behringer-odyssey',
+      polivoks: 'polivoks',
+      'pro-one': 'pro-1',
+      'prophet-600': 'pro-800',
       'syncussion-sy-1': 'behringer',
       'tb-303': 'td-3',
+      'two-voice': '2-xm',
+      wasp: 'wasp-deluxe',
     });
   });
 });

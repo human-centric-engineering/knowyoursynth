@@ -6,7 +6,12 @@
  */
 import { describe, expect, it } from 'vitest';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { translate, findLink, type FamilyMap } from '@/lib/app/synths/families/translate';
+import {
+  departures,
+  translate,
+  findLink,
+  type FamilyMap,
+} from '@/lib/app/synths/families/translate';
 import type { SynthDef } from '@/lib/app/synths/contract';
 
 const def = (id: string): SynthDef => {
@@ -120,6 +125,8 @@ describe('translate', () => {
         value: 6,
         to: { id: 'mix.noise', value: 0 },
         reason: "The Grandmother has no sub-oscillator: MIX 3 was the sub's level",
+        // what dropped it: how the rest of the panel is set (t-326)
+        cause: { id: 'osc2.wave', in: expect.arrayContaining(['saw+sub']) as unknown },
       },
     ]);
     expect(t.dropped).toEqual([
@@ -128,6 +135,7 @@ describe('translate', () => {
         id: 'mix.3',
         value: 6,
         reason: "The Grandmother has no sub-oscillator: MIX 3 was the sub's level",
+        cause: { id: 'osc2.wave', in: expect.arrayContaining(['saw+sub']) as unknown },
       },
     ]);
   });
@@ -223,5 +231,70 @@ describe('translate', () => {
   it('finds a link only where a map joins the two members', () => {
     expect(findLink('td-3', 'tb-303')?.to).toBe('tb-303');
     expect(findLink('td-3', 'model-15')).toBeNull();
+  });
+});
+
+describe('departures (t-326)', () => {
+  // The TD-3 with a Default patch cable, so a dropped cable can be one the Default patch puts in.
+  const withCable: SynthDef = {
+    ...td3,
+    defaultPatch: { values: td3.defaultPatch?.values ?? {}, cables: [['gate.out', 'cv.in']] },
+  };
+  const base = { ...td3.init, ...td3.defaultPatch?.values };
+
+  it("keeps only what the panel moved from the member's Default patch", () => {
+    const t = {
+      dropped: [
+        {
+          kind: 'control' as const,
+          id: 'dist.on',
+          value: base['dist.on'],
+          reason: 'left at default',
+        },
+        { kind: 'control' as const, id: 'dist.drive', value: 9, reason: 'moved' },
+        {
+          kind: 'cable' as const,
+          cable: ['gate.out', 'cv.in'] as [string, string],
+          reason: 'default cable',
+        },
+        {
+          kind: 'cable' as const,
+          cable: ['cv.out', 'ext.in'] as [string, string],
+          reason: 'patched',
+        },
+      ],
+      changed: [
+        {
+          id: 'osc.tune',
+          value: base['osc.tune'],
+          to: { id: 'osc.tuning', value: 0 },
+          reason: 'left',
+        },
+        { id: 'osc.tune', value: 10, to: { id: 'osc.tuning', value: 5 }, reason: 'clamped' },
+      ],
+    };
+
+    const out = departures(withCable, t);
+
+    expect(out.dropped.map((d) => d.reason)).toEqual(['moved', 'patched']);
+    expect(out.changed.map((c) => c.reason)).toEqual(['clamped']);
+  });
+
+  it('keeps a dropWhen loss the rest of the panel caused, with the dropped control at its default', () => {
+    // the Model 15 on SUB, with MIX 3 left as its Default patch has it: MIX 3 was the sub's level, and is dropped
+    const base15 = { ...m15.init, ...m15.defaultPatch?.values };
+    const t = translate({ ...base15, 'osc2.wave': 'saw+sub' }, [], m15, gm);
+    const kept = departures(m15, t);
+
+    expect(kept.dropped.map((d) => (d.kind === 'control' ? d.id : null))).toContain('mix.3');
+    expect(kept.changed.map((c) => c.id)).toContain('mix.3');
+    // off SUB, nothing drops it
+    expect(departures(m15, translate(base15, [], m15, gm)).dropped).toEqual([]);
+  });
+
+  it('narrows a real translation: a TD-3 panel with its distortion left off loses nothing of it', () => {
+    const t = translate({ ...base, 'filter.res': 7 }, [], td3, tb303);
+    expect(t.dropped.some((d) => d.reason === 'The TB-303 has no distortion')).toBe(true);
+    expect(departures(td3, t).dropped).toEqual([]);
   });
 });

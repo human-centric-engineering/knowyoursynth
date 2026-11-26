@@ -29,7 +29,8 @@ The owner's rulings (2026-11-26) are in the feature's journal.
 
 ## The model
 
-A **family** has an id (`tb-303`), a name (`TB-303`) and a **default member**, the one it opens on.
+A **family** has an id (`tb-303`), a name (`TB-303`), a **default member**, the one it opens on, and
+optionally the **originals** it brings together (below).
 A **member** has a slug that is stable within the family (`td-3`, `mk-1`), a label the toggle shows,
 the **databank instrument** it is, an optional **app synth** that models it, a **differences** text and
 an order.
@@ -49,16 +50,46 @@ the databank links the `td-3` synth to. That instrument is what the owned-synth 
 Every family passes `checkFamilies` before it is written, from the seed or from an admin's save (t-323):
 
 1. **Two members or more**, with distinct slugs.
-2. **One original.** Each member's instrument is traced through `recreationOf` to the original its
-   chain ends at, and all of them must reach the same one. The System 15, 35 and 55 all reach
-   `moog-modular`. A family of sizes is the same rule, not an exception.
+2. **One original, unless the family lists several.** Each member's instrument is traced through
+   `recreationOf` to the original its chain ends at, and all of them must reach the same one.
+   Behringer's System 15, 35 and 55 all reach `moog-modular`, so a family of sizes is the same rule.
+   A family may instead list its **originals** (`originals` in the seed file, `SynthFamily.originals`,
+   the admin form's Originals field; t-324). Then each member must reach one of them, and each listed
+   one must be an instrument the databank has, that recreates nothing, and that some member reaches.
+   That is how Moog's own 1973 systems, each an original of its own in the databank, sit beside
+   Behringer's copies: `moog-modular-systems` lists `moog-modular`, `moog-model-15`, `moog-system-35`
+   and `moog-system-55`. Marking the 1973 systems as recreations of `moog-modular` instead would make
+   their bank pages say something false (journal, 2026-11-26). Leave it empty for any family whose
+   members share one original.
 3. **The databank agrees.** A modelled member's synth must be linked in the databank (`app` on an
-   instrument, `BankInstrumentSynth`) to an instrument that reaches that same original. A family
-   cannot say the K-2 is a TB-303.
+   instrument, `BankInstrumentSynth`) to an instrument that reaches the same original as that
+   member's. A family cannot say the K-2 is a TB-303.
 4. **One family per synth.** A synth sits in at most one member of any family (`synthId` is unique).
 5. **The default member is modelled.** A family never opens on a blank panel. It is the member most
    people are likely to own (owner ruling), which is usually the clone because clones are cheaper and
    more widely owned. A signed-in user who owns a member opens on that one instead (t-320).
+
+## The seeded families
+
+`data/families/` holds the three in-app pairs (t-319), the System 15 / 35 / 55 sizes, and every family
+in the Hub research document `synth-families-originals-and-clones` (t-324): Minimoog, MS-20, Odyssey,
+2600, Pro-One, Prophet-600, OB-Xa, Two Voice, Cat, Wasp, Kobol Expander, Polivoks, CS-80, Jupiter-8
+and Music Easel, with the TB-03 in the TB-303's and Moog's own systems in the Moog one. Most add one
+modelled synth and its unmodelled original or clone.
+
+- **A revision is an original of its own.** The Odyssey's Mk I, Mk II and Mk III are each their own
+  databank instrument (`arp-odyssey`, `arp-odyssey-mk-ii`, `arp-odyssey-mk-iii`), so the picker and the
+  toggle show each one's year, and the family lists all three as its originals. A revision is not a
+  recreation, so it is not marked as one.
+- **Only what a source says.** Each differences text was checked against the research document's
+  cited pages (and Wikipedia where those said nothing of the original). Where no source supported a
+  member, it was left out: the MS-20's rev1 and rev2 filters are named in the K-2's text but are not
+  members, and the Cat is its SRM alone, the edition Behringer copied.
+- **Announced clones are labelled.** The Behringer Polivoks and DS-80 have "(announced)" in their
+  label, and their differences open "Announced, not yet on sale." Both were added to `reference.json`
+  with a source.
+- **The default** is the member most people are likely to own where it is modelled: the clone,
+  except where only the original is in the app (Polivoks, CS-80, Jupiter-8, Music Easel).
 
 ## What is served
 
@@ -150,6 +181,11 @@ one member's definition to another's. It is pure, and returns:
   clamped (the TD-3's TUNE goes 12 semitones either way, the TB-303's TUNING 5), and an option can
   lose part of itself (the Model 15's `saw+sub` is a Grandmother's `saw`).
 
+`dropped` and `changed` list everything. What the note shows is narrower: `departures(from, t)`
+keeps only what the panel moved from `from`'s Default patch (t-326). A control left at its default,
+or a cable the Default patch puts in, is no loss worth naming: "The TB-303 has no distortion" says
+nothing to someone whose DIST was off. The version toggle's carry and a sibling's sound both use it.
+
 A family's **map** (`FamilyMap`, one file per family beside `translate.ts`, listed in `maps.ts`) is
 one-way links between its members. A link is identity plus what it names: a control or jack renamed,
 an option renamed, a control dropped while the panel is set a certain way (the Model 15's MIX 3,
@@ -239,7 +275,8 @@ A shared sound's or pattern's page passes no families, so its picker lists every
 A member's library also lists its siblings' sounds (owner ruling, t-322): someone with a TD-3 wants the
 TB-303's sounds too. `GET /api/v1/synths/:id` serves them as `siblingSounds`, already carried onto the
 member being read. Each one comes with `from` (the synth id and name of the member it was made on) and
-the `dropped` and `changed` lists that `translate()` returns.
+the `dropped` and `changed` lists that `translate()` returns, narrowed by `departures()` to what the
+sound moved from its own member's Default patch.
 
 - **How a sound is read.** It is first read as its own synth serves it (`validSound`): a row made on an
   old definition version, or one that fails validation there, is left out. It is logged at debug
@@ -253,8 +290,10 @@ the `dropped` and `changed` lists that `translate()` returns.
   in place of the Default patch's. It names only what differs from the Default patch, so showing the
   step lights and turns only what the sound changes.
   Its `context` and `tweaks` name the sibling's controls too, so they stay behind. Its riff
-  (`phrase`) comes with it. No default pattern comes with it, since a sound's patterns belong to its
-  member.
+  (`phrase`) comes with it. So does its `defaultPattern`, for the effects (`fx`) and drum style it
+  carries (t-326): choosing the sound turns the rack and the drums' Match to them, as for one of the
+  member's own. Its `id` names a pattern of the sibling's, and nothing loads it here: the sequencer
+  offers no patterns for a sibling's sound, and `played` is never set on it.
 - **It stays its member's.** Its `id` is still its slug on the sibling, so the page keys it as
   `<from>/<slug>` and opens it under a page-only id (`sibling:<from>/<slug>`). It is never read as one
   of the member's own library sounds: it records no lesson progress, takes no star, gets no videos
@@ -266,7 +305,9 @@ the `dropped` and `changed` lists that `translate()` returns.
   `synth-page.tsx`). Its one step is its lesson, the name row says "made on the TD-3", and Restore puts
   it back. The session names no sound for it, so the page asks the panel history to start afresh
   (`glide`'s `fresh`). Otherwise Undo after loading a second sibling sound would put the first one's
-  panel back under the second one's name. The toggle's note (`CarriedNote`, with `soundName`) says what did not come across.
+  panel back under the second one's name. Picking the same sibling sound again is Restore and keeps
+  the history, as a library sound does. The tutor's Undo after a design opened over a sibling's sound
+  starts the history afresh too, or panel Undo would put the design back under the sibling's name. The toggle's note (`CarriedNote`, with `soundName`) says what did not come across.
 - **Saving one** is **Save a copy** (`copyOf` on `SoundActions`). It creates the user's own sound on the
   open member, named after the sibling's sound, with the panel as it is now. It sends no `source`: a
   library credit is keyed to the member's own library (`source.slug` is looked up on the synth being

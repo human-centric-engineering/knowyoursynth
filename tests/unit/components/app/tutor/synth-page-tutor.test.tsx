@@ -676,6 +676,40 @@ describe('a designed sound', () => {
     expect(within(tutor()).getByText(/Undone/)).toBeTruthy();
   });
 
+  it("goes back to a sibling's sound with a fresh history, so panel Undo never puts the design back under its name (t-326)", async () => {
+    // A family sibling's sound as the detail serves it: the session names no sound for it, nor for a design.
+    const SIBLING = {
+      ...sound({
+        id: 'sib-bass',
+        name: 'Sibling bass',
+        steps: [
+          { title: 'Set it', module: 'filter', why: 'As made.', set: { 'filter.cutoff': 3 } },
+        ],
+      }),
+      from: { synthId: 'grandmother', name: 'Grandmother' },
+      dropped: [],
+      changed: [],
+    };
+    designs();
+    page({ detail: { ...detail, siblingSounds: [SIBLING] } });
+    const list = within(library()).getByRole('list', { name: 'From other versions' });
+    fireEvent.click(within(list).getByRole('button', { name: /Sibling bass/ }));
+    await waitFor(() => expect(loadedName()).toBe('Sibling bass'));
+    expect(cutoff()).toBe('3');
+    await ask('Design a dark round bass');
+    await waitFor(() => expect(loadedName()).toBe('Dark round bass'));
+
+    fireEvent.click(within(tutor()).getByRole('button', { name: 'Undo' }));
+    expect(loadedName()).toBe('Sibling bass');
+    expect(cutoff()).toBe('3');
+    // The design's panel is not on the history under the sibling's name.
+    const panelUndo = within(screen.getByRole('group', { name: 'History' })).getByRole('button', {
+      name: 'Undo',
+    });
+    await waitFor(() => expect(panelUndo).toBeDisabled());
+    expect(loadedName()).toBe('Sibling bass');
+  });
+
   it('steps through its own lesson, and Restore builds it again', async () => {
     designs();
     page();

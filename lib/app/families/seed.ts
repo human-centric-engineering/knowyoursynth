@@ -178,18 +178,31 @@ async function releaseSynths(
   return released;
 }
 
+/** Two lists of originals, as the same list: a stored row read before the column existed has none. */
+const sameOriginals = (a: readonly string[] | null | undefined, b: readonly string[]): boolean =>
+  (a ?? []).length === b.length && (a ?? []).every((x, i) => x === b[i]);
+
 async function writeFamily(
   prisma: TenancyClient,
   family: FamilyFile,
   tally: FamilySeedCounts
 ): Promise<void> {
-  const data = { name: family.name, defaultMember: family.defaultMember };
+  const data = {
+    name: family.name,
+    defaultMember: family.defaultMember,
+    originals: family.originals ?? [],
+  };
   const row = await prisma.synthFamily.findUnique({ where: { id: family.id } });
   if (!row) {
     await prisma.synthFamily.create({ data: { id: family.id, ...data } });
     tally.created++;
   } else if (row.editedAt) tally.edited++;
-  else if (row.name === data.name && row.defaultMember === data.defaultMember) tally.unchanged++;
+  else if (
+    row.name === data.name &&
+    row.defaultMember === data.defaultMember &&
+    sameOriginals(row.originals, data.originals)
+  )
+    tally.unchanged++;
   else {
     await prisma.synthFamily.update({ where: { id: family.id }, data });
     tally.updated++;

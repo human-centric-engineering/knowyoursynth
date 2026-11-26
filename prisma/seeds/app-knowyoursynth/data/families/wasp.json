@@ -1,0 +1,20 @@
+{
+  "id": "wasp",
+  "name": "Wasp",
+  "defaultMember": "wasp-deluxe",
+  "members": [
+    {
+      "slug": "wasp-deluxe",
+      "label": "Wasp Deluxe",
+      "instrument": "behringer-wasp-deluxe",
+      "synth": "wasp-deluxe",
+      "differences": "Behringer's copy of the Wasp in a desktop and Eurorack case, without the touch keyboard or the speaker, and in stereo. Most of its controls are the original's. Its filter adds a notch mode to the Wasp's three, the filter envelope gains a delay, the VCA a hold switch and the sustain knob a repeat position, and both oscillators gain an Enhance waveform from EDP's Gnat. MIDI In and Thru replace the original's 7-pin link sockets, with USB, patch points and a 16-voice poly chain."
+    },
+    {
+      "slug": "wasp",
+      "label": "EDP Wasp",
+      "instrument": "edp-wasp",
+      "differences": "The original, EDP's 1978 monosynth: digital oscillators and a CMOS filter in a yellow and black plastic case, played from a flat touch keyboard through its own speaker, and linked to other units through two 7-pin sockets."
+    }
+  ]
+}

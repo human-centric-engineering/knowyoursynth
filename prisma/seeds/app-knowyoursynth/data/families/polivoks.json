@@ -1,0 +1,20 @@
+{
+  "id": "polivoks",
+  "name": "Polivoks",
+  "defaultMember": "polivoks",
+  "members": [
+    {
+      "slug": "polivoks",
+      "label": "Formanta",
+      "instrument": "formanta-polivoks",
+      "synth": "polivoks",
+      "differences": "The original, Formanta's 1982 Soviet synth, designed by Vladimir Kuzmin and sold only in the USSR: two generators with five waveforms and five ranges, Generator II able to frequency-modulate Generator I, noise, a low-pass or band-pass filter known for its harsh resonance, two envelopes that can repeat, and a 49-note keyboard that plays two notes at once."
+    },
+    {
+      "slug": "behringer-polivoks",
+      "label": "Behringer (announced)",
+      "instrument": "behringer-polivoks",
+      "differences": "Announced, not yet on sale. Behringer's copy, made with Vladimir Kuzmin, who designed the original and died in 2026. The finished unit shown at Music China in October 2026 is a slanted Eurorack case with two oscillators with detune and pulse-width modulation, a low-pass and band-pass filter, a switch between monophonic and duophonic play, MIDI In, and CV and gate. No price or date has been given."
+    }
+  ]
+}

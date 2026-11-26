@@ -75,9 +75,13 @@ export interface FamilyMap {
 
 // ─── Results ─────────────────────────────────────────────────────────────────
 
-/** Something on the panel that did not come across, and why. */
+/**
+ * Something on the panel that did not come across, and why. `cause` is the `dropWhen` condition that dropped a control
+ * the other member has (t-326): set, the loss comes from how the rest of the panel is set, not from the control's own
+ * value.
+ */
 export type Dropped =
-  | { kind: 'control'; id: string; value: ControlValue; reason: string }
+  | { kind: 'control'; id: string; value: ControlValue; reason: string; cause?: ShowCondition }
   | { kind: 'cable'; cable: CablePair; reason: string };
 
 /** A value that came across, but not as it was: clamped to a shorter range, or an option that lost part of itself. */
@@ -88,6 +92,8 @@ export interface Changed {
   /** Its id and value on the member it went to. */
   to: { id: string; value: ControlValue };
   reason: string;
+  /** The `dropWhen` condition that set it, as on `Dropped` (t-326). */
+  cause?: ShowCondition;
 }
 
 export interface Translation {
@@ -175,19 +181,27 @@ export function translate(
     const rule = own(link.controls, id);
     const toId = rule?.to ?? id;
     const target = toControls[toId];
-    const drop = (reason: string): void => {
-      if (!source?.ui) out.dropped.push({ kind: 'control', id, value, reason });
+    const drop = (reason: string, cause?: ShowCondition): void => {
+      if (!source?.ui)
+        out.dropped.push({ kind: 'control', id, value, reason, ...(cause ? { cause } : {}) });
     };
     if (!target) {
       drop(lacksReason(link, from, to, id));
       continue;
     }
     if (rule?.dropWhen && holds(rule.dropWhen.when, panel)) {
-      drop(rule.dropWhen.reason);
+      const cause = rule.dropWhen.when;
+      drop(rule.dropWhen.reason, cause);
       const { set } = rule.dropWhen;
       if (set !== undefined && !checkSettings(to, { [toId]: set }).problems.length) {
         out.values[toId] = set;
-        out.changed.push({ id, value, to: { id: toId, value: set }, reason: rule.dropWhen.reason });
+        out.changed.push({
+          id,
+          value,
+          to: { id: toId, value: set },
+          reason: rule.dropWhen.reason,
+          cause,
+        });
       }
       continue;
     }
@@ -245,4 +259,29 @@ export function translate(
     if (!out.cables.some(([x, y]) => x === cable[0] && y === cable[1])) out.cables.push(cable);
   }
   return out;
+}
+
+/**
+ * What of a translation's `dropped` and `changed` the panel actually moved from `from`'s Default patch (t-326): a
+ * control left as the Default patch has it, or a cable the Default patch puts in, is no loss worth naming. A control a
+ * `dropWhen` dropped is kept whenever the panel moved into its condition, at its default or not. "The TB-303
+ * has no distortion" says nothing to someone whose DIST was off. The carried values and cables are left as they are.
+ */
+export function departures(
+  from: SynthDef,
+  t: Pick<Translation, 'dropped' | 'changed'>
+): Pick<Translation, 'dropped' | 'changed'> {
+  const base: ControlValues = { ...from.init, ...from.defaultPatch?.values };
+  const baseCables = new Set((from.defaultPatch?.cables ?? []).map(([a, b]) => `${a}>${b}`));
+  // Moved: its own value is not the Default patch's, or the rest of the panel moved into the condition that dropped it.
+  const moved = (id: string, value: ControlValue, cause?: ShowCondition): boolean =>
+    !Object.is(base[id], value) || (cause !== undefined && !holds(cause, base));
+  return {
+    dropped: t.dropped.filter((d) =>
+      d.kind === 'control'
+        ? moved(d.id, d.value, d.cause)
+        : !baseCables.has(`${d.cable[0]}>${d.cable[1]}`)
+    ),
+    changed: t.changed.filter((c) => moved(c.id, c.value, c.cause)),
+  };
 }

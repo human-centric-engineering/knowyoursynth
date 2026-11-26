@@ -141,12 +141,33 @@ describe('seedFamilies', () => {
     expect(report.families).toEqual({ created: 1, updated: 0, unchanged: 0, edited: 0 });
     expect(report.members).toEqual({ created: 2, updated: 0, unchanged: 0, edited: 0 });
     expect(db.families).toEqual([
-      { id: 'tb-303', name: 'TB-303', defaultMember: 'td-3', editedAt: null },
+      { id: 'tb-303', name: 'TB-303', defaultMember: 'td-3', originals: [], editedAt: null },
     ]);
     expect(db.members.map((m) => [m.slug, m.synthId, m.instrumentId, m.order])).toEqual([
       ['td-3', 'td-3', 'behringer-td-3', 0],
       ['tb-303', 'tb-303', 'roland-tb-303', 1],
     ]);
+  });
+
+  it("writes a family's originals, and nothing on a second run over them (t-324)", async () => {
+    const listed = { ...family(), originals: ['roland-tb-303'] };
+    await seedFamilies(client(), [listed]);
+    expect(db.families[0]).toMatchObject({ originals: ['roland-tb-303'] });
+    const before = writes();
+
+    const report = await seedFamilies(client(), [listed]);
+
+    expect(writes()).toBe(before);
+    expect(report.families.unchanged).toBe(1);
+  });
+
+  it('updates the originals the data changes on a family no admin has saved (t-324)', async () => {
+    await seedFamilies(client(), [family()]);
+
+    const report = await seedFamilies(client(), [{ ...family(), originals: ['roland-tb-303'] }]);
+
+    expect(report.families.updated).toBe(1);
+    expect(db.families[0]).toMatchObject({ originals: ['roland-tb-303'] });
   });
 
   it('writes nothing on a second run over the same data', async () => {

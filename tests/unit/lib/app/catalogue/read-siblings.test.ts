@@ -12,7 +12,9 @@ import { logger } from '@/lib/logging';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { presetState } from '@/lib/app/synths/lib/patch';
 import type { CablePair } from '@/lib/app/synths/contract';
-import { translate } from '@/lib/app/synths/families/translate';
+import { departures, translate } from '@/lib/app/synths/families/translate';
+import { importPhrase } from '@/lib/app/sequencer/import';
+import type { Phrase } from '@/lib/app/synths/contract';
 import { synthRows } from '@/tests/helpers/synth-detail';
 import { bankDb } from '@/tests/helpers/bank-db';
 
@@ -52,9 +54,9 @@ const td3Def = getSynthDef('td-3');
 const tb303Def = getSynthDef('tb-303');
 if (!td3Def || !tb303Def) throw new Error('fixture: the registry has the TD-3 and the TB-303');
 
-/** A stored sound as `synthSound.findMany` returns it, with its synth's id. */
+/** A stored sound as `synthSound.findMany` returns it, with its synth's id and its pattern list (none, as seeded). */
 const soundRowsOf = (rows: ReturnType<typeof synthRows>, synthId: string) =>
-  rows.stored.sounds.map(({ patterns: _p, ...s }) => ({ ...s, synthId }));
+  rows.stored.sounds.map((s) => ({ ...s, synthId }));
 
 const member = (slug: string, listed = true) => ({
   slug,
@@ -129,8 +131,7 @@ describe('getSynthDetail: sibling sounds', () => {
       version: td3Def.version,
       context: {},
       tweaks: [],
-      dropped: carry.dropped,
-      changed: carry.changed,
+      ...departures(tb303Def, carry),
     });
     expect(first.steps).toHaveLength(1);
     const onTd3 = presetState(td3Def, first);
@@ -153,9 +154,72 @@ describe('getSynthDetail: sibling sounds', () => {
     const siblings = detail?.siblingSounds ?? [];
     expect(siblings).toHaveLength(td3.stored.sounds.length);
     expect(siblings[0].from).toEqual({ synthId: 'td-3', name: 'TD-3' });
-    // The TD-3 has a distortion the TB-303 lacks: it is named, not silently lost.
-    expect(siblings[0].dropped.length).toBeGreaterThan(0);
-    expect(siblings[0].dropped.every((d) => d.reason.length > 0)).toBe(true);
+    // The TD-3 has a distortion the TB-303 lacks: where a sound uses it, it is named, not silently lost.
+    const lossy = siblings.filter((x) => x.dropped.length > 0);
+    expect(lossy.length).toBeGreaterThan(0);
+    expect(lossy.every((x) => x.dropped.every((d) => d.reason.length > 0))).toBe(true);
+  });
+
+  it("names only what the sound moved from its own member's Default patch, not a control it left there (t-326)", async () => {
+    const detail = await getSynthDetail('tb-303');
+
+    const base = presetState(td3Def).values;
+    for (const sib of detail?.siblingSounds ?? []) {
+      for (const d of sib.dropped) if (d.kind === 'control') expect(d.value).not.toBe(base[d.id]);
+      for (const c of sib.changed) expect(c.value).not.toBe(base[c.id]);
+    }
+    // A TD-3 sound with DIST left off says nothing of the TB-303 lacking a distortion; one with it on does.
+    const rows = soundRowsOf(td3, 'td-3');
+    const panels = rows.map((r) =>
+      presetState(td3Def, { steps: r.steps as never, phrase: r.phrase as never })
+    );
+    const distId = 'dist.on';
+    expect(td3Def.controls.some((c) => c.id === distId)).toBe(true);
+    const off = panels.findIndex((p) => p.values[distId] === base[distId]);
+    const on = panels.findIndex((p) => p.values[distId] !== base[distId]);
+    expect(off).toBeGreaterThanOrEqual(0);
+    expect(on).toBeGreaterThanOrEqual(0);
+    const byId = new Map((detail?.siblingSounds ?? []).map((x) => [x.id, x]));
+    const names = (i: number) =>
+      (byId.get(rows[i].slug)?.dropped ?? []).flatMap((d) => (d.kind === 'control' ? [d.id] : []));
+    expect(names(off)).not.toContain(distId);
+    expect(names(on)).toContain(distId);
+  });
+
+  it("comes with its default pattern's effects and drum style, never marked played (t-326)", async () => {
+    const fx = { delay: { time: 0.4, feedback: 0.3, mix: 0.25 } };
+    const [first, ...rest] = soundRowsOf(tb303, 'tb-303');
+    const pattern = importPhrase(first.phrase as unknown as Phrase);
+    // a chained part B would make it played on its own member
+    pattern.parts.push(structuredClone(pattern.parts[0]));
+    pattern.chain = [0, 1];
+    vi.mocked(prisma.synthSound.findMany).mockResolvedValueOnce([
+      {
+        ...first,
+        patterns: [
+          {
+            patternId: 'acid',
+            pattern: {
+              status: 'enabled',
+              name: 'Acid line',
+              pattern: { ...pattern, fx },
+              inspiration: 'genre',
+              inspiredBy: 'Acid house',
+            },
+          },
+        ],
+      },
+      ...rest,
+    ] as never);
+
+    const detail = await getSynthDetail('td-3');
+
+    const sib = detail?.siblingSounds.find((x) => x.id === first.slug);
+    expect(sib?.defaultPattern).toEqual({ id: 'acid', name: 'Acid line', style: 'Acid house', fx });
+    // one with no default pattern brings none
+    expect(
+      detail?.siblingSounds.find((x) => x.id === rest[0].slug)?.defaultPattern
+    ).toBeUndefined();
   });
 
   it('leaves out, and logs, a sibling sound that fails validation once carried', async () => {

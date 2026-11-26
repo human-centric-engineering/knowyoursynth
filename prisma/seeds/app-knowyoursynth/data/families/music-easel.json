@@ -1,0 +1,20 @@
+{
+  "id": "music-easel",
+  "name": "Music Easel",
+  "defaultMember": "buchla-easel",
+  "members": [
+    {
+      "slug": "buchla-easel",
+      "label": "1973",
+      "instrument": "buchla-music-easel",
+      "synth": "buchla-easel",
+      "differences": "The original, Buchla's 1973 portable instrument: a complex oscillator, wavefolding and two lowpass gates, played from a touch-plate keyboard, all in one case."
+    },
+    {
+      "slug": "music-easel-2013",
+      "label": "2013",
+      "instrument": "buchla-music-easel-2013",
+      "differences": "The Music Easel as Buchla Electronic Musical Instruments brought it back in 2013, a year after taking over the Buchla company."
+    }
+  ]
+}

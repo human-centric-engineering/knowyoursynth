@@ -16,6 +16,12 @@
       "instrument": "roland-tb-303",
       "synth": "tb-303",
       "differences": "The original, Roland's 1981 bass line: one oscillator switched between sawtooth and square, a resonant low-pass filter swept by one envelope, and the accent and slide of its own step sequencer. No distortion, no input into the filter and no MIDI."
+    },
+    {
+      "slug": "tb-03",
+      "label": "TB-03",
+      "instrument": "roland-tb-03",
+      "differences": "Roland's own 2016 Boutique copy, modelling the TB-303's circuit with ACB: the saw and square waves and the tuning, cutoff, resonance, envelope mod, decay and accent knobs, with overdrive, delay and reverb, a four-digit display, and a step-entry mode beside the original's pitch and time writing. It runs on batteries or USB power, has a small speaker of its own, and adds a trigger input, MIDI, USB and CV and gate."
     }
   ]
 }

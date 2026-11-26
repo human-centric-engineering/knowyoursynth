@@ -5,8 +5,8 @@
  * The rules, each tested:
  *
  * - **Saved whole.** A save sends the family as its seed file holds it (`FamilyFileSchema`): its name, its default
- *   member and its members in toggle order. A member the save leaves out is removed, and the members' order is the
- *   order sent.
+ *   member, the originals it brings together (none: one shared original) and its members in toggle order. A member
+ *   the save leaves out is removed, and the members' order is the order sent.
  * - **Checked as the seed checks.** The family goes through `checkFamilies` against the databank and the catalogue as
  *   they stand, beside every other stored family, so a member whose instrument traces back to another original, or a
  *   synth already in another family, is refused, naming the problem. Another family's own problems never block it.
@@ -62,6 +62,7 @@ const familySelect = {
   id: true,
   name: true,
   defaultMember: true,
+  originals: true,
   editedAt: true,
   members: {
     orderBy: [{ order: 'asc' as const }, { slug: 'asc' as const }],
@@ -76,6 +77,7 @@ function adminFamilyOf(row: FamilyRow): AdminFamily {
     id: row.id,
     name: row.name,
     defaultMember: row.defaultMember,
+    ...(row.originals.length ? { originals: row.originals } : {}),
     members: row.members.map((m) => ({
       slug: m.slug,
       label: m.label,
@@ -173,7 +175,9 @@ export async function saveFamily(
   input: FamilyEdit,
   mode: 'create' | 'update'
 ): Promise<{ before: AdminFamily | null; after: AdminFamily }> {
-  const family: FamilyFile = { id, ...input };
+  // No originals sent as an empty list is the same family as none sent, so an unchanged save still writes nothing.
+  const { originals, ...rest } = input;
+  const family: FamilyFile = { id, ...rest, ...(originals?.length ? { originals } : {}) };
   try {
     return await prisma.$transaction(async (tx) => {
       await lockFamilies(tx);
@@ -214,7 +218,12 @@ async function writeFamily(
   editedAt: Date,
   mode: 'create' | 'update'
 ): Promise<void> {
-  const data = { name: family.name, defaultMember: family.defaultMember, editedAt };
+  const data = {
+    name: family.name,
+    defaultMember: family.defaultMember,
+    originals: family.originals ?? [],
+    editedAt,
+  };
   if (mode === 'create') await tx.synthFamily.create({ data: { id: family.id, ...data } });
   else await tx.synthFamily.update({ where: { id: family.id }, data });
   const slugs = family.members.map((m) => m.slug);

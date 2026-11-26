@@ -1,0 +1,20 @@
+{
+  "id": "ob-xa",
+  "name": "OB-Xa",
+  "defaultMember": "ub-xa-d",
+  "members": [
+    {
+      "slug": "ub-xa-d",
+      "label": "UB-Xa D",
+      "instrument": "behringer-ub-xa-d",
+      "synth": "ub-xa-d",
+      "differences": "Behringer's 16-voice desktop version of the UB-Xa, its copy of the OB-Xa, with no keyboard: it plays from MIDI and USB. Its oscillators and filters follow the 3340 and 3320 chip designs, its low-pass filter switches between 2-pole and 4-pole, and it holds 512 programs. Two patches split or double across the voices, and it adds a chord memory, an arpeggiator and a sequencer."
+    },
+    {
+      "slug": "ob-xa",
+      "label": "OB-Xa",
+      "instrument": "oberheim-ob-xa",
+      "differences": "The original, Oberheim's 1980 polysynth: eight voices with patch memory and a keyboard that splits or layers two sounds, known for its thick brass and the riff on Van Halen's “Jump”."
+    }
+  ]
+}

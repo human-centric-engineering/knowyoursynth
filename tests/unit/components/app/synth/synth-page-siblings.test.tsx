@@ -25,7 +25,7 @@ import type { UserSoundDetail } from '@/lib/app/sounds/data';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef } from '@/lib/app/synths/defs/load';
 import { presetState } from '@/lib/app/synths/lib/patch';
-import { translate } from '@/lib/app/synths/families/translate';
+import { departures, translate } from '@/lib/app/synths/families/translate';
 import { openSide, tallScreen } from '@/tests/helpers/synth-side';
 import { comeBackTo } from '@/tests/helpers/synth-session';
 import { TB_303_FAMILY } from '@/tests/helpers/synth-family';
@@ -155,12 +155,18 @@ const GRIT: CatalogueSound = {
   version: td3.version,
 };
 
-/** A second TD-3 sound, its resonance down, to load after `GRIT`. */
+/** A second TD-3 sound, its resonance down, to load after `GRIT`. Its default pattern comes with a delay (t-326). */
 const SOFT: CatalogueSound = {
   ...GRIT,
   id: 'td-soft',
   name: 'Soft Line',
   steps: [{ title: 'Close it', module: 'filter', why: 'Dark.', set: { 'filter.res': 1 } }],
+  defaultPattern: {
+    id: 'p-soft',
+    name: 'Soft line',
+    style: 'Acid house',
+    fx: { delay: { time: 0.4, feedback: 0.3, mix: 0.3 } },
+  },
 };
 
 /** `GRIT` as the detail serves it on the TB-303: carried as `carriedSound` in `lib/app/catalogue/read.ts` does. */
@@ -187,8 +193,7 @@ function carried(sound: CatalogueSound = GRIT): SiblingSound {
       },
     ],
     from: { synthId: 'td-3', name: 'TD-3' },
-    dropped: carry.dropped,
-    changed: carry.changed,
+    ...departures(td3, carry),
   };
 }
 
@@ -310,5 +315,39 @@ describe("a family sibling's sound", () => {
         values: { 'filter.res': 1 },
       })
     );
+  });
+
+  it("turns the rack to the effects its default pattern comes with, as one of the member's own does (t-326)", async () => {
+    page();
+    loadSibling(/Soft Line/);
+    await waitFor(() => expect(loadedName()).toBe('Soft Line'));
+    expect(readStored('kys.fx')).toMatchObject({
+      on: true,
+      delay: { on: true, time: 0.4, feedback: 0.3, mix: 0.3 },
+    });
+
+    // one that brings none turns it off
+    loadGrit();
+    await waitFor(() => expect(loadedName()).toBe('Gritty Acid'));
+    expect(readStored('kys.fx')).toMatchObject({ on: false });
+  });
+
+  it('keeps its undo history when the sound on the panel is picked again, as a library sound does (t-326)', async () => {
+    page();
+    loadGrit();
+    await waitFor(() => expect(loadedName()).toBe('Gritty Acid'));
+    const panelUndo = within(screen.getByRole('group', { name: 'History' })).getByRole('button', {
+      name: 'Undo',
+    });
+    expect(panelUndo).toBeDisabled();
+    // a turn of a knob, then the same sound picked again: Restore, not another patch
+    const res = screen.getAllByRole('slider', { name: /RESONANCE/ })[0];
+    fireEvent.keyDown(res, { key: 'ArrowLeft' });
+    await waitFor(() => expect(panelUndo).toBeEnabled());
+    loadGrit();
+    await waitFor(() =>
+      expect(readStored('kys.session.tb-303')).toMatchObject({ values: { 'filter.res': 8 } })
+    );
+    expect(panelUndo).toBeEnabled();
   });
 });
