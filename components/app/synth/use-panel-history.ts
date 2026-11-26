@@ -107,8 +107,12 @@ export function usePanelHistory<S extends Panelled>(
   /** The session as the panel shows it: during a glide, its controls and cables part of the way there. */
   sess: S;
   patch: (fn: (s: S) => S) => void;
-  /** As `patch`, the new patch shown being set (and a glide under way carried on to it, rather than finished). */
-  glide: (fn: (s: S) => S) => void;
+  /**
+   * As `patch`, the new patch shown being set (and a glide under way carried on to it, rather than finished). `fresh`
+   * starts the history afresh even where the session names the same sound and step as before: a patch the session does
+   * not name, such as a family sibling's sound (t-322), is told from the last only by the caller.
+   */
+  glide: (fn: (s: S) => S, opts?: { fresh?: boolean }) => void;
   /**
    * As `patch`, a lesson step's moves shown being made from `from`, the step before (`stepMoves`): each lit, then turned
    * into place, the engine hearing it. False when there is nothing to show (no moves, or reduced motion): the step is
@@ -137,6 +141,8 @@ export function usePanelHistory<S extends Panelled>(
   const prev = useRef<{ snap: PanelSnap; ident: string; sound: string | null } | null>(null);
   // Set by a change made through `patch` (recorded) or by Undo and Redo (not), read by the effect after it renders.
   const made = useRef<'change' | 'glide' | 'walk' | 'history' | null>(null);
+  // A glide that starts the history afresh whatever the session names (`glide`'s `fresh`), read as it lands.
+  const fresh = useRef(false);
   const onTakeOverRef = useRef(onTakeOver);
   const onLoadRef = useRef(onLoad);
   // The session as last rendered: a new patch that changes nothing is no load.
@@ -246,6 +252,8 @@ export function usePanelHistory<S extends Panelled>(
     prev.current = { snap, ident, sound };
     const by = made.current;
     made.current = null;
+    const afresh = fresh.current && by === 'glide';
+    if (by === 'glide') fresh.current = false;
     if (!p) return;
     const moved = p.snap.values !== snap.values || p.snap.cables !== snap.cables;
     if (moved && by === 'glide') {
@@ -267,7 +275,7 @@ export function usePanelHistory<S extends Panelled>(
     // Saved (the sound's id alone changing, through `patch`), the panel is the same one: only a different patch on it
     // starts the history afresh.
     const saved = p.ident === ident && !moved && (by === 'change' || by === 'walk');
-    if (p.ident !== ident || (p.sound !== sound && !saved)) {
+    if (afresh || p.ident !== ident || (p.sound !== sound && !saved)) {
       setHistory(emptyHistory());
       return;
     }
@@ -307,7 +315,7 @@ export function usePanelHistory<S extends Panelled>(
   );
 
   const glide = useCallback(
-    (fn: (s: S) => S) => {
+    (fn: (s: S) => S, opts?: { fresh?: boolean }) => {
       // An undo being shown is finished; a glide is taken over by the new patch's.
       if (!gliding.current) finishShowing();
       onTakeOverRef.current?.();
@@ -315,6 +323,7 @@ export function usePanelHistory<S extends Panelled>(
       // panel shows the Default patch in the same render as the session takes the new one. With reduced motion it
       // snaps straight to the new one.
       if (fn(sessRef.current) !== sessRef.current) {
+        fresh.current = !!opts?.fresh;
         setLoading(true);
         if (glideMotion()) {
           frameRef.current = fromDefault();

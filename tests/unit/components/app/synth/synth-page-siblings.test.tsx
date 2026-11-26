@@ -155,9 +155,17 @@ const GRIT: CatalogueSound = {
   version: td3.version,
 };
 
+/** A second TD-3 sound, its resonance down, to load after `GRIT`. */
+const SOFT: CatalogueSound = {
+  ...GRIT,
+  id: 'td-soft',
+  name: 'Soft Line',
+  steps: [{ title: 'Close it', module: 'filter', why: 'Dark.', set: { 'filter.res': 1 } }],
+};
+
 /** `GRIT` as the detail serves it on the TB-303: carried as `carriedSound` in `lib/app/catalogue/read.ts` does. */
-function carried(): SiblingSound {
-  const panel = presetState(td3, GRIT);
+function carried(sound: CatalogueSound = GRIT): SiblingSound {
+  const panel = presetState(td3, sound);
   const carry = translate(
     panel.values,
     panel.cables.map((c): CablePair => [c.from, c.to]),
@@ -166,7 +174,7 @@ function carried(): SiblingSound {
   );
   const base = presetState(tb303).cables.map((c): CablePair => [c.from, c.to]);
   return {
-    ...GRIT,
+    ...sound,
     version: tb303.version,
     steps: [
       {
@@ -187,7 +195,7 @@ function carried(): SiblingSound {
 const detail = (): SynthDetail => ({
   synth: TB303,
   sounds: [],
-  siblingSounds: [carried()],
+  siblingSounds: [carried(), carried(SOFT)],
   lineage: null,
   notes: { unusual: {}, limits: { intro: null, items: [], shared: [] } },
   links: { count: 0, kinds: [] },
@@ -201,12 +209,13 @@ const page = () =>
     <SynthPage detail={detail()} synths={[TB303]} families={[TB_303_FAMILY]} viewParam={null} />
   );
 
-const loadGrit = () => {
+const loadSibling = (name: RegExp) => {
   openSide('Sounds');
   const library = screen.getByRole('region', { name: 'Patch library' });
   const list = within(library).getByRole('list', { name: 'From other versions' });
-  fireEvent.click(within(list).getByRole('button', { name: /Gritty Acid/ }));
+  fireEvent.click(within(list).getByRole('button', { name }));
 };
+const loadGrit = () => loadSibling(/Gritty Acid/);
 const loadedName = () => screen.getByText('Patch:').nextElementSibling?.textContent;
 
 describe("a family sibling's sound", () => {
@@ -226,7 +235,7 @@ describe("a family sibling's sound", () => {
 
     await waitFor(() => expect(loadedName()).toBe('Gritty Acid'));
     expect(screen.getByText('made on the TD-3')).toBeTruthy();
-    const note = screen.getByText(/Gritty Acid was made on the TD-3, and carried over/);
+    const note = screen.getByText(/Gritty Acid was made on the TD-3\. What did not come across/);
     const reasons = within(note.closest('[role="status"]') as HTMLElement)
       .getAllByRole('listitem')
       .map((li) => li.textContent);
@@ -285,5 +294,21 @@ describe("a family sibling's sound", () => {
         },
       },
     });
+  });
+
+  it('starts the undo history afresh for each one loaded, as for any other patch', async () => {
+    page();
+    loadGrit();
+    await waitFor(() => expect(loadedName()).toBe('Gritty Acid'));
+    loadSibling(/Soft Line/);
+    await waitFor(() => expect(loadedName()).toBe('Soft Line'));
+
+    // Undo would put Gritty Acid's panel back under Soft Line's name.
+    expect(screen.getByRole('button', { name: 'Undo' })).toBeDisabled();
+    await waitFor(() =>
+      expect(readStored('kys.session.tb-303')).toMatchObject({
+        values: { 'filter.res': 1 },
+      })
+    );
   });
 });

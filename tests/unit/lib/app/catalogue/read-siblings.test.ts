@@ -135,7 +135,15 @@ describe('getSynthDetail: sibling sounds', () => {
     expect(first.steps).toHaveLength(1);
     const onTd3 = presetState(td3Def, first);
     expect(onTd3.values).toEqual({ ...presetState(td3Def).values, ...carry.values });
-    expect(onTd3.cables.map((c) => [c.from, c.to])).toEqual(carry.cables);
+    const sorted = (cs: CablePair[]) => cs.map(([a, b]) => `${a}>${b}`).sort();
+    expect(sorted(onTd3.cables.map((c): CablePair => [c.from, c.to]))).toEqual(
+      sorted(carry.cables)
+    );
+    // The step names only what the sound changes from the Default patch, so showing it lights no more than that.
+    const start = presetState(td3Def).values;
+    const set = first.steps[0].set ?? {};
+    expect(Object.keys(set).length).toBeGreaterThan(0);
+    expect(Object.entries(set).filter(([k, v]) => start[k] === v)).toEqual([]);
   });
 
   it('says what of a TD-3 sound does not come across to the TB-303', async () => {
@@ -180,10 +188,12 @@ describe('getSynthDetail: sibling sounds', () => {
 
     expect(detail?.siblingSounds.map((s) => s.id)).not.toContain(bad.slug);
     expect(detail?.siblingSounds).toHaveLength(rest.length);
-    expect(logger.error).toHaveBeenCalledWith(
+    // At debug level: the TB-303's own read reports it as an error, and each sibling's would report it again.
+    expect(logger.debug).toHaveBeenCalledWith(
       'catalogue: sound made on a definition version the registry does not have',
       expect.objectContaining({ synthId: 'tb-303', sound: bad.slug })
     );
+    expect(logger.error).not.toHaveBeenCalled();
   });
 
   it('serves none, and reads none, when the family has no other served member', async () => {
@@ -198,5 +208,18 @@ describe('getSynthDetail: sibling sounds', () => {
     expect(detail?.family?.members.map((m) => m.slug)).toEqual(['td-3', 'rebirth']);
     expect(detail?.siblingSounds).toEqual([]);
     expect(prisma.synthSound.findMany).not.toHaveBeenCalled();
+  });
+
+  it('serves the synth with its own sounds alone when the sibling sounds cannot be read', async () => {
+    vi.mocked(prisma.synthSound.findMany).mockRejectedValueOnce(new Error('connection lost'));
+
+    const detail = await getSynthDetail('td-3');
+
+    expect(detail?.sounds).toHaveLength(td3.stored.sounds.length);
+    expect(detail?.siblingSounds).toEqual([]);
+    expect(logger.warn).toHaveBeenCalledWith(
+      'catalogue: could not read the sibling sounds, served without them',
+      { synthId: 'td-3', err: 'Error: connection lost' }
+    );
   });
 });

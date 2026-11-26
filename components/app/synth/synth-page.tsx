@@ -795,7 +795,8 @@ function Synth({
         name: shared.name,
         fromTutor: shared.fromTutor,
       });
-    return designed?.preset ?? sibling?.preset ?? null;
+    // A sibling's sound is the panel only until one of the user's opens over it, however that one arrives.
+    return designed?.preset ?? (openSound ? null : sibling?.preset) ?? null;
   }, [openSound, sharedPanel, shared, designed, sibling]);
   // The sound the lesson, the riff, the sound map and the inspector read.
   const shown = ownLesson ?? preset;
@@ -2414,7 +2415,7 @@ function Synth({
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
   // tutor's Undo is handed what puts back everything that was on the panel before, its lesson and step included.
   const openDesign = (d: TutorDesign) => {
-    const before = { sess: stored, designed, sibling, sharedPanel };
+    const before = { sess: stored, designed, sibling, sharedPanel, carryNote };
     openSeq.current++;
     focusStore.set(null);
     leaveShared();
@@ -2433,6 +2434,7 @@ function Synth({
       openSeq.current++;
       setDesigned(before.designed);
       setSibling(before.sibling);
+      setCarryNote(before.carryNote);
       if (before.sharedPanel && shared) {
         setSharedPanel(before.sharedPanel);
         writeStored(sharedFromKey(synthId), shared.slug);
@@ -2452,12 +2454,11 @@ function Synth({
     leaveShared();
     setDesigned(null);
     setSibling(entry);
-    glide(() => ({
-      presetId: null,
-      step: null,
-      soundId: null,
-      ...presetState(synthDef, entry.preset),
-    }));
+    // The session names no sound for it, as for the last sibling's: the history is started afresh by hand.
+    glide(
+      () => ({ presetId: null, step: null, soundId: null, ...presetState(synthDef, entry.preset) }),
+      { fresh: true }
+    );
     if (source)
       setCarryNote({
         fromName: source.from.name,

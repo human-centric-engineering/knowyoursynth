@@ -122,6 +122,22 @@ describe('usePanelHistory', () => {
     expect(result.current.canUndo).toBe(false);
   });
 
+  it('starts afresh for a new patch the session does not name only when the load says so (t-322)', () => {
+    const { result, turn } = setup();
+    turn(1);
+    // A load naming no sound, over a panel naming none: the history goes on, as it does for Restore.
+    clock += 1000;
+    act(() => result.current.glide((s) => ({ ...s, values: at(2) })));
+    expect(result.current.canUndo).toBe(true);
+    // A sibling's sound loaded over another names none either, and is another patch all the same.
+    clock += 1000;
+    act(() => result.current.glide((s) => ({ ...s, values: at(3) }), { fresh: true }));
+    expect(result.current.canUndo).toBe(false);
+    // Only that load: a change made on it is recorded as ever.
+    turn(4);
+    expect(result.current.canUndo).toBe(true);
+  });
+
   it('starts afresh when a sound deleted takes its lesson step with it, though the panel stays', () => {
     const { result, turn } = setup();
     act(() => result.current.setStored((s) => ({ ...s, soundId: 'mine-1', step: 2 })));

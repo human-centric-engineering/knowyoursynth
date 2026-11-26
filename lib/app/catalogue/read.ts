@@ -205,11 +205,14 @@ type SoundRow = Pick<
 
 /**
  * A stored sound as its own synth plays it, or `null`, logged, when it is made on a definition version the registry
- * no longer has or fails validation on read.
+ * no longer has or fails validation on read. `quiet` logs it at debug level: a sibling's read finds the rows its own
+ * synth's read already reports as errors, and would otherwise report each one again on every member's page.
  */
-function validSound(def: AppSynthDef, s: SoundRow): Preset | null {
+function validSound(def: AppSynthDef, s: SoundRow, quiet = false): Preset | null {
+  const report = (message: string, meta: Record<string, unknown>): void =>
+    quiet ? logger.debug(message, meta) : logger.error(message, meta);
   if (s.definitionVersion !== def.version) {
-    logger.error('catalogue: sound made on a definition version the registry does not have', {
+    report('catalogue: sound made on a definition version the registry does not have', {
       synthId: def.id,
       sound: s.slug,
       version: s.definitionVersion,
@@ -232,7 +235,7 @@ function validSound(def: AppSynthDef, s: SoundRow): Preset | null {
     tweaks: s.tweaks,
   });
   if (!result.ok) {
-    logger.error('catalogue: stored sound fails validation, not served', {
+    report('catalogue: stored sound fails validation, not served', {
       synthId: def.id,
       sound: s.slug,
       problems: result.problems,
@@ -265,7 +268,7 @@ async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise
   for (const from of siblings) {
     for (const row of rows) {
       if (row.synthId !== from.id) continue;
-      const source = validSound(from, row);
+      const source = validSound(from, row, true);
       if (!source) continue;
       const sibling = carriedSound(from, def, source);
       if (sibling) out.push(sibling);
@@ -283,8 +286,18 @@ function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): Sibli
     from,
     to
   );
-  // The carried panel replaces the member's Default patch, cables and all, as the version toggle's carry does.
-  const base = presetState(to).cables.map((c): CablePair => [c.from, c.to]);
+  // The carried panel replaces the member's Default patch, cables and all, as the version toggle's carry does. The step
+  // names only what differs from it, so showing the step lights and turns what the sound changes, not every control.
+  const start = presetState(to);
+  const set = Object.fromEntries(
+    Object.entries(carry.values).filter(([k, v]) => start.values[k] !== v)
+  );
+  const key = ([a, b]: CablePair): string => `${a}>${b}`;
+  const carried = new Set(carry.cables.map(key));
+  const base = start.cables.map((c): CablePair => [c.from, c.to]);
+  const unplug = base.filter((c) => !carried.has(key(c)));
+  const kept = new Set(base.map(key));
+  const cables = carry.cables.filter((c) => !kept.has(key(c)));
   const result = validatePreset(to, {
     id: source.id,
     name: source.name,
@@ -300,9 +313,9 @@ function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): Sibli
         title: `Set the panel as it was on the ${from.name}`,
         module: source.steps[0].module,
         why: `This patch was made on the ${from.name}. Its lesson names the ${from.name}'s controls, so it stays there: here the whole panel is set at once, as it came across.`,
-        set: carry.values,
-        ...(base.length ? { unplug: base } : {}),
-        ...(carry.cables.length ? { cables: carry.cables } : {}),
+        set,
+        ...(unplug.length ? { unplug } : {}),
+        ...(cables.length ? { cables } : {}),
       },
     ],
   });
@@ -328,7 +341,7 @@ function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): Sibli
 export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   const def = getSynthDef(id);
   if (!def) return null;
-  const [row, noteRows, heardOn, links, soundLinks, family] = await Promise.all([
+  const [row, noteRows, heardOn, links, soundLinks, { family, siblingSounds }] = await Promise.all([
     prisma.synth.findFirst({
       where: { id, listed: true },
       select: {
@@ -382,13 +395,27 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
     summarisePublicLinks({ target: 'synth', id }),
     summariseSoundLinks(id),
     // A family only adds the version toggle: a failed read opens the synth without one rather than failing it.
-    getFamilyOf(id).catch((err: unknown) => {
-      logger.warn('catalogue: could not read the synth family, served without one', {
-        synthId: id,
-        err: String(err),
-      });
-      return null;
-    }),
+    getFamilyOf(id)
+      .catch((err: unknown) => {
+        logger.warn('catalogue: could not read the synth family, served without one', {
+          synthId: id,
+          err: String(err),
+        });
+        return null;
+      })
+      // Its siblings' sounds only add to the library: a failed read serves the synth with its own alone.
+      .then(async (family) => ({
+        family,
+        siblingSounds: family
+          ? await readSiblingSounds(def, family).catch((err: unknown) => {
+              logger.warn('catalogue: could not read the sibling sounds, served without them', {
+                synthId: id,
+                err: String(err),
+              });
+              return [];
+            })
+          : [],
+      })),
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, bankInstruments, ...synthRow } = row;
@@ -422,7 +449,6 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         : {}),
     });
   }
-  const siblingSounds = family ? await readSiblingSounds(def, family) : [];
 
   let lineage: Lineage | null = null;
   if (lineageRow) {
