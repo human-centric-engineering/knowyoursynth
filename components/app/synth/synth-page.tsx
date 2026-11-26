@@ -95,7 +95,12 @@ import { createMapper, probeNotes } from '@/lib/app/synths/lib/soundmap';
 import type { Mapper } from '@/lib/app/synths/lib/soundmap';
 import type { ControlValue, ControlValues, Phrase, SynthDef } from '@/lib/app/synths/contract';
 import type { SynthEvent } from '@/lib/app/synths/audio/dsp-core';
-import type { CatalogueSound, CatalogueSynth, SynthDetail } from '@/lib/app/catalogue/read';
+import type {
+  CatalogueSound,
+  CatalogueSynth,
+  SiblingSound,
+  SynthDetail,
+} from '@/lib/app/catalogue/read';
 import { HelpButton, MidiStatus, PanelSwitch } from '@/components/app/synth/bar-controls';
 import { usePanelHistory } from '@/components/app/synth/use-panel-history';
 import { stepFrom, stepMoves } from '@/lib/app/synths/lib/history';
@@ -150,7 +155,7 @@ import { FxRack } from '@/components/app/synth/fx-rack';
 import { Inspector, Tooltip } from '@/components/app/synth/inspector';
 import { Keyboard, OCTAVE_MAX, OCTAVE_MIN, QWERTY } from '@/components/app/synth/keyboard';
 import { Lesson, stepIds, type StepHow } from '@/components/app/synth/lesson';
-import { Library } from '@/components/app/synth/library';
+import { Library, type SiblingEntry } from '@/components/app/synth/library';
 import { Limits } from '@/components/app/synth/limits';
 import { About } from '@/components/app/synth/about';
 import {
@@ -414,6 +419,9 @@ function carriedSession(def: SynthDef, preset: CatalogueSound, carry: FamilyCarr
 
 const NO_FAMILIES: SynthFamily[] = [];
 
+/** A sibling's sound's key on the page: the member it was made on and its slug there. */
+const siblingKey = (x: SiblingSound): string => `${x.from.synthId}/${x.id}`;
+
 /** The mark on a history entry the version toggle pushed for an unmodelled member's blank panel (t-321). */
 const BLANK_MARK = 'kysBlankPanel';
 const pushedBlank = (state: unknown): boolean =>
@@ -522,6 +530,16 @@ function Synth({
   const libraryTags = useMemo(
     () => [...new Set(detail.sounds.flatMap((p) => p.tags))].sort(),
     [detail.sounds]
+  );
+  // Its family siblings' sounds, as the library lists them (t-322). Each is given an id of its own on this page, so it is
+  // never read as one of this synth's library sounds: not for progress, a star, a credit or its patterns.
+  const siblings = useMemo(
+    () =>
+      detail.siblingSounds.map((x): SiblingEntry => {
+        const key = siblingKey(x);
+        return { key, fromName: x.from.name, preset: { ...x, id: `sibling:${key}` } };
+      }),
+    [detail.siblingSounds]
   );
 
   // The definition with the catalogue's unusual notes on it. The sound map, when it comes, works from this, so it
@@ -746,6 +764,10 @@ function Synth({
   // A sound the tutor designed, open on the panel (`f-tutor` t-56): its lesson shows until something else opens. Held
   // for the visit only; saving it as one of the user's sounds is what keeps it.
   const [designed, setDesigned] = useState<TutorDesign | null>(null);
+  // A family sibling's sound, loaded from the library (t-322): its panel carried onto this synth, with the one step that
+  // sets it as its lesson, since its own names the sibling's controls. Held for the visit only, as a design is; saving it
+  // is what keeps it, as a sound of the user's on this synth.
+  const [sibling, setSibling] = useState<SiblingEntry | null>(null);
 
   // ── the user's own sounds ──
   // One of theirs is open when the session names it and their list has it: a sound deleted elsewhere, or a session
@@ -773,8 +795,8 @@ function Synth({
         name: shared.name,
         fromTutor: shared.fromTutor,
       });
-    return designed?.preset ?? null;
-  }, [openSound, sharedPanel, shared, designed]);
+    return designed?.preset ?? sibling?.preset ?? null;
+  }, [openSound, sharedPanel, shared, designed, sibling]);
   // The sound the lesson, the riff, the sound map and the inspector read.
   const shown = ownLesson ?? preset;
   // A stored step can outrun the sound it is read against (the stored sound was removed, or lost steps): the finished
@@ -800,8 +822,8 @@ function Synth({
   const signInHref = `/login?callbackUrl=${encodeURIComponent(hereHref(view))}`;
 
   const libraryTarget = useMemo(
-    () => presetState(synthDef, designed?.preset ?? preset).values,
-    [synthDef, designed, preset]
+    () => presetState(synthDef, designed?.preset ?? sibling?.preset ?? preset).values,
+    [synthDef, designed, sibling, preset]
   );
   const target = savedOpen ? savedOpen.values : sharedPanel ? sharedPanel.values : libraryTarget;
   const targetRef = useRef(target);
@@ -1865,9 +1887,11 @@ function Synth({
       ? shared.name
       : designed
         ? designed.name
-        : preset
-          ? preset.name
-          : defaultPatchName(synthDef);
+        : sibling
+          ? sibling.preset.name
+          : preset
+            ? preset.name
+            : defaultPatchName(synthDef);
   // A library sound on the panel, as it came, whatever pattern a link has put in the sequencer.
   const libraryPreset =
     !openSound && !ownSoundPending && !sharedPanel && !ownLesson && preset ? preset : null;
@@ -2378,9 +2402,10 @@ function Synth({
     focusStore.set(null);
     leaveShared();
     setDesigned(null);
+    setSibling(null);
     glide(() => ({ presetId: id, step: null, soundId: null, ...presetState(synthDef, p) }));
     // Restore, or the same sound picked again, is not another patch: the drums, Count-in and effects stay as set.
-    if (id !== sess.presetId || sess.soundId || designed || sharedPanel)
+    if (id !== sess.presetId || sess.soundId || designed || sibling || sharedPanel)
       choosePatch(chosenSound(synthDef, p));
     // Counted in as it starts again on the new patch (t-278).
     if (playing) void playRiff();
@@ -2389,11 +2414,12 @@ function Synth({
   // A sound the tutor designed opens as choosing a library sound does, with its own lesson in the Lesson panel. The
   // tutor's Undo is handed what puts back everything that was on the panel before, its lesson and step included.
   const openDesign = (d: TutorDesign) => {
-    const before = { sess: stored, designed, sharedPanel };
+    const before = { sess: stored, designed, sibling, sharedPanel };
     openSeq.current++;
     focusStore.set(null);
     leaveShared();
     setDesigned(d);
+    setSibling(null);
     glide(() => ({
       presetId: null,
       step: null,
@@ -2406,12 +2432,43 @@ function Synth({
     return () => {
       openSeq.current++;
       setDesigned(before.designed);
+      setSibling(before.sibling);
       if (before.sharedPanel && shared) {
         setSharedPanel(before.sharedPanel);
         writeStored(sharedFromKey(synthId), shared.slug);
       }
       glide(() => before.sess);
     };
+  };
+  // A family sibling's sound (t-322) opens as choosing a library sound does, its one step as its lesson, and says what of
+  // it did not come across as it was, as the version toggle's carry does. It is no library sound of this synth's, so
+  // nothing on the panel names one: Save keeps it as a new sound of the user's here.
+  const openSibling = (key: string) => {
+    const entry = siblings.find((x) => x.key === key);
+    if (!entry) return;
+    const source = detail.siblingSounds.find((x) => siblingKey(x) === key);
+    openSeq.current++;
+    focusStore.set(null);
+    leaveShared();
+    setDesigned(null);
+    setSibling(entry);
+    glide(() => ({
+      presetId: null,
+      step: null,
+      soundId: null,
+      ...presetState(synthDef, entry.preset),
+    }));
+    if (source)
+      setCarryNote({
+        fromName: source.from.name,
+        soundName: source.name,
+        dropped: source.dropped,
+        changed: source.changed,
+      });
+    if (key !== sibling?.key || sess.soundId || designed || sharedPanel)
+      choosePatch(chosenSound(synthDef, entry.preset));
+    // Counted in as it starts again on the new patch (t-278).
+    if (playing) void playRiff();
   };
   // A change the learner applied from the tutor lands as turning the controls would: the step and the sound stay.
   const setTutorPanel = useCallback(
@@ -2485,6 +2542,7 @@ function Synth({
     focusStore.set(null);
     leaveShared();
     setDesigned(null);
+    setSibling(null);
     glide(() => ({ presetId: lib, step: null, soundId: d.id, ...panel }));
     choosePatch();
     setSaved({ id: d.id, ...panel });
@@ -2542,6 +2600,7 @@ function Synth({
     openSeq.current++;
     focusStore.set(null);
     setDesigned(null);
+    setSibling(null);
     // Kept, it still counts as the visitor's change, so the account's last panel arriving later does not replace it.
     if (keep) patch((s) => s);
     else {
@@ -2595,6 +2654,7 @@ function Synth({
       leaveShared();
       // A designed sound saved is one of theirs now, with its lesson kept with it.
       setDesigned(null);
+      setSibling(null);
       patch((s) => ({ ...s, soundId: d.id }));
       // On a shared sound's page the new sound is what is open now, so the address becomes the synth's own and a reload
       // opens it rather than the shared sound (t-51).
@@ -3044,6 +3104,13 @@ function Synth({
       />
       <Library
         presets={detail.sounds}
+        siblings={siblings}
+        currentSibling={sibling && !openSound ? sibling.key : null}
+        onSelectSibling={(key) => {
+          if (small) openSheet(null);
+          else setSoundsOpen(false);
+          openSibling(key);
+        }}
         start={defaultSound}
         currentId={openSound || ownLesson ? null : (preset?.id ?? null)}
         onSelect={(id) => {
@@ -3137,9 +3204,11 @@ function Synth({
           ? 'saved'
           : designed && !openSound
             ? 'designed'
-            : !openSound && preset
-              ? 'library'
-              : null;
+            : sibling && !openSound
+              ? 'sibling'
+              : !openSound && preset
+                ? 'library'
+                : null;
   const restoreSound = () => {
     if (restoreFrom === 'shared' && sharedPanel)
       glide((s) => ({ ...s, step: null, ...sharedPanel }));
@@ -3147,6 +3216,8 @@ function Synth({
       glide((s) => ({ ...s, step: null, values: savedOpen.values, cables: savedOpen.cables }));
     else if (restoreFrom === 'designed' && designed)
       glide((s) => ({ ...s, step: null, ...presetState(synthDef, designed.preset) }));
+    else if (restoreFrom === 'sibling' && sibling)
+      glide((s) => ({ ...s, step: null, ...presetState(synthDef, sibling.preset) }));
     else if (restoreFrom === 'library' && preset) selectPreset(preset.id);
   };
 
@@ -3625,6 +3696,11 @@ function Synth({
                             from the tutor
                           </span>
                         )}
+                        {sibling && !openSound && (
+                          <span className="shrink-0 rounded border border-(--kys-line) px-1.5 py-0.5 font-mono text-xs text-(--kys-muted)">
+                            made on the {sibling.fromName}
+                          </span>
+                        )}
                         {changed > 0 && (
                           <span className="shrink-0 text-sm text-(--kys-accent)">
                             {changed} control{changed === 1 ? '' : 's'} moved
@@ -3645,6 +3721,11 @@ function Synth({
                             midLesson={ownLesson !== null && step != null}
                             credit={credit}
                             design={designed && !openSound ? designed : null}
+                            copyOf={
+                              sibling && !openSound
+                                ? { name: sibling.preset.name, fromName: sibling.fromName }
+                                : null
+                            }
                             panel={panelInput}
                             onSaved={onSaved}
                             onDeleted={onDeleted}

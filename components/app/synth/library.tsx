@@ -10,6 +10,10 @@
  *
  * The Default patch (`f-default-patch`) comes first, above the catalogue's sounds and outside their search, categories
  * and count: it is the synth's own starting point, not a sound in the library's order.
+ *
+ * A synth in a family lists its siblings' sounds after its own, under their own heading, each marked with the member
+ * it was made on (`f-synth-families` t-322). The search and the categories reach them too; the count is of the synth's
+ * own. They stay their member's: no lesson progress or star is kept for them here.
  */
 
 import { useMemo, useState } from 'react';
@@ -37,8 +41,22 @@ export function LevelDots({ level }: { level: Preset['level'] }) {
   );
 }
 
+/** A family sibling's sound, carried onto this synth (`SiblingSound`), as the library lists it. */
+export interface SiblingEntry {
+  /** Unique on the page: the member it was made on and its slug there. */
+  key: string;
+  preset: Preset;
+  /** The name of the member it was made on. */
+  fromName: string;
+}
+
 export interface LibraryProps {
   presets: Preset[];
+  /** Its family siblings' sounds, listed after its own under their own heading. */
+  siblings?: SiblingEntry[];
+  /** The sibling sound on the panel, by `key`, if any. */
+  currentSibling?: string | null;
+  onSelectSibling?: (key: string) => void;
   /** The Default patch, listed first whatever the search or category. */
   start?: Preset;
   /** The sound on the panel, if any. */
@@ -62,8 +80,13 @@ export function markText(mark: LessonMark, steps: number): string {
   return mark.completed ? 'Finished' : `Reached step ${reachedStep(mark, steps) + 1} of ${steps}`;
 }
 
+const NO_SIBLINGS: SiblingEntry[] = [];
+
 export function Library({
   presets,
+  siblings = NO_SIBLINGS,
+  currentSibling = null,
+  onSelectSibling,
   start,
   currentId,
   onSelect,
@@ -76,8 +99,11 @@ export function Library({
   const [cat, setCat] = useState('all');
   // The first tag is the category (contract `Preset.tags`).
   const cats = useMemo(
-    () => ['all', ...Array.from(new Set(presets.map((p) => p.tags[0])))],
-    [presets]
+    () => [
+      'all',
+      ...Array.from(new Set([...presets, ...siblings.map((x) => x.preset)].map((p) => p.tags[0]))),
+    ],
+    [presets, siblings]
   );
   const words = q.toLowerCase().split(/\s+/).filter(Boolean);
   const matches = (p: Preset) => {
@@ -85,9 +111,15 @@ export function Library({
     const hay = `${p.name} ${p.ref} ${p.artist} ${p.tags.join(' ')} ${p.blurb}`.toLowerCase();
     return words.every((w) => hay.includes(w));
   };
-  const shown = presets.filter((p) => (cat === 'all' || p.tags[0] === cat) && matches(p));
+  const inCat = (p: Preset) => cat === 'all' || p.tags[0] === cat;
+  const shown = presets.filter((p) => inCat(p) && matches(p));
+  const shownSiblings = onSelectSibling
+    ? siblings.filter((x) => inCat(x.preset) && matches(x.preset))
+    : NO_SIBLINGS;
   // Another category has what the search names: the way to it is there, not the tutor's.
-  const elsewhere = cat !== 'all' && presets.some(matches);
+  const elsewhere =
+    cat !== 'all' &&
+    (presets.some(matches) || (!!onSelectSibling && siblings.some((x) => matches(x.preset))));
   return (
     <section aria-labelledby="lib-h" className="flex min-h-0 flex-col gap-3">
       <div className="flex items-baseline justify-between">
@@ -185,7 +217,40 @@ export function Library({
             </li>
           );
         })}
-        {!shown.length && (
+        {shownSiblings.length > 0 && (
+          <li className="mt-2">
+            <h3 id="lib-siblings-h" className="kys-label px-1 text-(--kys-muted)">
+              From other versions
+            </h3>
+            <ul aria-labelledby="lib-siblings-h" className="mt-1.5 flex flex-col gap-1.5">
+              {shownSiblings.map(({ key, preset: p, fromName }) => {
+                const on = key === currentSibling;
+                return (
+                  <li key={key}>
+                    <button
+                      type="button"
+                      onClick={() => onSelectSibling?.(key)}
+                      aria-current={on}
+                      className={`w-full min-w-0 rounded-lg border px-3 py-2.5 text-left transition-colors ${on ? 'border-(--kys-accent) bg-(--kys-raised)' : 'border-transparent bg-(--kys-surface) hover:border-(--kys-line)'}`}
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="leading-tight font-semibold">{p.name}</span>
+                        <LevelDots level={p.level} />
+                      </span>
+                      <span className="mt-0.5 block text-[13px] leading-snug text-(--kys-muted)">
+                        {p.ref}
+                      </span>
+                      <span className="mt-1.5 block font-mono text-[11px] text-(--kys-faint)">
+                        Made on the {fromName}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </li>
+        )}
+        {!shown.length && !shownSiblings.length && (
           <li className="rounded-lg border border-dashed border-(--kys-line) p-4 text-sm text-(--kys-muted)">
             {onAskTutor && words.length ? (
               <>

@@ -244,6 +244,11 @@ export interface SoundActionsProps {
    * marked as the tutor's, as Save as… keeps both from a sound of the user's.
    */
   design?: { name: string; lesson: SoundLesson } | null;
+  /**
+   * A family sibling's sound, loaded from the library (`f-synth-families` t-322): a new sound saved from it is a copy of
+   * it on this synth, named for it. It credits nothing, since it is no library sound of this synth's.
+   */
+  copyOf?: { name: string; fromName: string } | null;
   /** The panel as it is now. */
   panel: () => PanelInput;
   /**
@@ -269,6 +274,7 @@ export function SoundActions({
   midLesson = false,
   credit,
   design = null,
+  copyOf = null,
   panel,
   onSaved,
   onDeleted,
@@ -291,12 +297,12 @@ export function SoundActions({
     setFailure(null);
   }, [openId]);
 
-  const newLabel = credit && !open ? 'Save a copy' : 'Save';
+  const copied = open ? null : (credit ?? copyOf);
+  const newLabel = copied ? 'Save a copy' : 'Save';
   // What the button is for, in its tooltip: a library sound is never changed, so keeping it means a copy of one's own.
-  const newHelp =
-    credit && !open
-      ? `Keep this patch, as the panel has it now, in My patches as your own: rename it, change it and come back to it. ${credit.name} in the library stays as it is.`
-      : 'Keep the panel as it is now as a new patch in My patches, to rename, change and come back to.';
+  const newHelp = copied
+    ? `Keep this patch, as the panel has it now, in My patches as your own: rename it, change it and come back to it. ${copied.name} in the library stays as it is.`
+    : 'Keep the panel as it is now as a new patch in My patches, to rename, change and come back to.';
 
   if (!signedIn)
     return (
@@ -483,6 +489,7 @@ export function SoundActions({
           open={open}
           credit={credit}
           design={design}
+          copyOf={open ? null : copyOf}
           busy={busy}
           onSubmit={(name, notes) => void submit(form, name, notes)}
           onCancel={() => setForm(null)}
@@ -534,6 +541,7 @@ interface SoundFormProps {
   open: UserSoundSummary | null;
   credit: { slug: string; name: string } | null;
   design: { name: string } | null;
+  copyOf: { name: string; fromName: string } | null;
   busy: boolean;
   onSubmit: (name: string, notes: string) => void;
   onCancel: () => void;
@@ -549,6 +557,7 @@ function SoundForm({
   open,
   credit,
   design,
+  copyOf,
   busy,
   onSubmit,
   onCancel,
@@ -559,7 +568,7 @@ function SoundForm({
       ? open.name
       : mode === 'saveAs' && open
         ? `${open.name} (copy)`
-        : (credit?.name ?? design?.name ?? '')
+        : (credit?.name ?? copyOf?.name ?? design?.name ?? '')
   );
   const [notes, setNotes] = useState(() => (mode === 'rename' && open?.notes) || '');
   const [problems, setProblems] = useState<{ name?: string; notes?: string }>({});
@@ -571,7 +580,9 @@ function SoundForm({
         ? 'Save as a new patch'
         : credit
           ? `Save a copy of ${credit.name}`
-          : 'Save this patch';
+          : copyOf
+            ? `Save a copy of ${copyOf.name}`
+            : 'Save this patch';
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -599,6 +610,12 @@ function SoundForm({
         <p className="text-sm text-(--kys-muted)">
           It goes into My patches with the panel as it is now, and keeps the credit to {credit.name}
           .
+        </p>
+      )}
+      {mode === 'new' && !credit && copyOf && (
+        <p className="text-sm text-(--kys-muted)">
+          It goes into My patches as a patch of your own on this synth, with the panel as it is now.{' '}
+          {copyOf.name} stays in the {copyOf.fromName}&apos;s library.
         </p>
       )}
       {mode === 'new' && !credit && design && (
