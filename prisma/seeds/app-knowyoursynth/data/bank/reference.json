@@ -7752,6 +7752,24 @@
       "recreationOf": "yamaha-cs-80",
       "text": "An announced copy of the Yamaha CS-80, first mentioned in July 2020; a 2022 prototype board held two voices and the digital control section. Not yet on sale.",
       "source": "https://www.musicradar.com/music-tech/synths/were-here-to-break-the-barriers-and-put-powerful-instruments-into-the-hands-of-real-musicians-not-collectors-heres-the-2025-update-on-all-the-synths-and-drum-machines-that-behringer-has-announced-that-arent-in-the-shops-yet"
+    },
+    {
+      "id": "arp-odyssey-mk-ii",
+      "name": "ARP Odyssey Mk II",
+      "maker": "ARP Instruments",
+      "year": "1975",
+      "kind": "mono",
+      "text": "The second Odyssey, ARP's models 2810 to 2815, made from 1975 to 1978: black and gold, with CV and gate on every model and a four-pole low-pass filter close in design to Moog's.",
+      "source": "https://en.wikipedia.org/wiki/ARP_Odyssey"
+    },
+    {
+      "id": "arp-odyssey-mk-iii",
+      "name": "ARP Odyssey Mk III",
+      "maker": "ARP Instruments",
+      "year": "1978",
+      "kind": "mono",
+      "text": "The last Odyssey, ARP's models 2820 to 2823, from 1978 until ARP's bankruptcy in 1981: orange on black, with the four-pole 4075 filter, an XLR output and three pressure-sensitive pads for pitch bend and vibrato.",
+      "source": "https://en.wikipedia.org/wiki/ARP_Odyssey"
     }
   ]
 }

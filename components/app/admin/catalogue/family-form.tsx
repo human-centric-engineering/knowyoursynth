@@ -99,18 +99,21 @@ const withDefaultModelled = (d: Draft): Draft =>
 /** The originals as the save sends them: none when the field is empty, so the family keeps one shared original. */
 const originalsOf = (typed: string): string[] => typed.split(/[\s,]+/).filter(Boolean);
 
-const bodyOf = (d: Draft) => ({
-  name: d.name,
-  defaultMember: d.defaultMember,
-  ...(originalsOf(d.originals).length ? { originals: originalsOf(d.originals) } : {}),
-  members: d.members.map((m) => ({
-    slug: m.slug.trim(),
-    label: m.label,
-    instrument: m.instrument.trim(),
-    ...(m.synth ? { synth: m.synth } : {}),
-    differences: m.differences,
-  })),
-});
+const bodyOf = (d: Draft) => {
+  const originals = originalsOf(d.originals);
+  return {
+    name: d.name,
+    defaultMember: d.defaultMember,
+    ...(originals.length ? { originals } : {}),
+    members: d.members.map((m) => ({
+      slug: m.slug.trim(),
+      label: m.label,
+      instrument: m.instrument.trim(),
+      ...(m.synth ? { synth: m.synth } : {}),
+      differences: m.differences,
+    })),
+  };
+};
 
 export interface FamilyFormProps {
   /** The stored family, or `null` for a new one. */

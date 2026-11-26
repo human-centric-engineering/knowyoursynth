@@ -77,9 +77,10 @@ in the Hub research document `synth-families-originals-and-clones` (t-324): Mini
 and Music Easel, with the TB-03 in the TB-303's and Moog's own systems in the Moog one. Most add one
 modelled synth and its unmodelled original or clone.
 
-- **A revision shares its instrument.** The Odyssey's Mk I, Mk II and Mk III are three members on
-  the one `arp-odyssey` instrument: the databank has one entry for the model, and a revision is not a
-  recreation. A member's instrument need not be unique.
+- **A revision is an original of its own.** The Odyssey's Mk I, Mk II and Mk III are each their own
+  databank instrument (`arp-odyssey`, `arp-odyssey-mk-ii`, `arp-odyssey-mk-iii`), so the picker and the
+  toggle show each one's year, and the family lists all three as its originals. A revision is not a
+  recreation, so it is not marked as one.
 - **Only what a source says.** Each differences text was checked against the research document's
   cited pages (and Wikipedia where those said nothing of the original). Where no source supported a
   member, it was left out: the MS-20's rev1 and rev2 filters are named in the K-2's text but are not

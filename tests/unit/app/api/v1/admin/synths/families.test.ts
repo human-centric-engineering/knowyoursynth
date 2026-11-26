@@ -509,6 +509,20 @@ describe('PUT /families/:id', () => {
     expect(mockLogAdminAction).not.toHaveBeenCalled();
   });
 
+  it('writes nothing for an unchanged save that sends its originals as an empty list (t-324)', async () => {
+    seeded();
+    await putFamily(request('PUT', 'families/tb-303', tb303()), ctx('tb-303'));
+    vi.clearAllMocks();
+
+    const res = await putFamily(
+      request('PUT', 'families/tb-303', { ...tb303(), originals: [] }),
+      ctx('tb-303')
+    );
+
+    expect(res.status).toBe(200);
+    expect(writes()).toBe(0);
+  });
+
   it('refuses a default member that is not modelled', async () => {
     seeded();
     const family = tb303();

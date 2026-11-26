@@ -175,7 +175,9 @@ export async function saveFamily(
   input: FamilyEdit,
   mode: 'create' | 'update'
 ): Promise<{ before: AdminFamily | null; after: AdminFamily }> {
-  const family: FamilyFile = { id, ...input };
+  // No originals sent as an empty list is the same family as none sent, so an unchanged save still writes nothing.
+  const { originals, ...rest } = input;
+  const family: FamilyFile = { id, ...rest, ...(originals?.length ? { originals } : {}) };
   try {
     return await prisma.$transaction(async (tx) => {
       await lockFamilies(tx);

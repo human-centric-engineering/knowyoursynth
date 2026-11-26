@@ -2,6 +2,7 @@
   "id": "odyssey",
   "name": "Odyssey",
   "defaultMember": "behringer-odyssey",
+  "originals": ["arp-odyssey", "arp-odyssey-mk-ii", "arp-odyssey-mk-iii"],
   "members": [
     {
       "slug": "behringer-odyssey",
@@ -19,13 +20,13 @@
     {
       "slug": "mk-2",
       "label": "Mk II",
-      "instrument": "arp-odyssey",
+      "instrument": "arp-odyssey-mk-ii",
       "differences": "ARP's models 2810 to 2815, made from 1975 to 1978: black and gold, with CV and gate on every model and a four-pole low-pass filter close in design to Moog's."
     },
     {
       "slug": "mk-3",
       "label": "Mk III",
-      "instrument": "arp-odyssey",
+      "instrument": "arp-odyssey-mk-iii",
       "differences": "ARP's models 2820 to 2823, from 1978 until ARP went bankrupt in 1981: orange on black in a redesigned case, with ARP's four-pole 4075 filter and an XLR output. Three pressure-sensitive pads (PPC) bend the pitch up and down and add vibrato, in place of the rotary pitch bend."
     }
   ]

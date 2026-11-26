@@ -273,12 +273,13 @@ describe('the committed family seed data', () => {
     });
   });
 
-  it('lists its originals only where the members do not share one: the Moog systems (t-324)', () => {
+  it('lists its originals only where the members do not share one: the Moog systems and the Odyssey revisions (t-324)', () => {
     expect(families.filter((f) => f.originals).map((f) => [f.id, f.originals])).toEqual([
       [
         'moog-modular-systems',
         ['moog-modular', 'moog-model-15', 'moog-system-35', 'moog-system-55'],
       ],
+      ['odyssey', ['arp-odyssey', 'arp-odyssey-mk-ii', 'arp-odyssey-mk-iii']],
     ]);
   });
 

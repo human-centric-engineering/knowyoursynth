@@ -125,6 +125,8 @@ describe('translate', () => {
         value: 6,
         to: { id: 'mix.noise', value: 0 },
         reason: "The Grandmother has no sub-oscillator: MIX 3 was the sub's level",
+        // what dropped it: how the rest of the panel is set (t-326)
+        cause: { id: 'osc2.wave', in: expect.arrayContaining(['saw+sub']) as unknown },
       },
     ]);
     expect(t.dropped).toEqual([
@@ -133,6 +135,7 @@ describe('translate', () => {
         id: 'mix.3',
         value: 6,
         reason: "The Grandmother has no sub-oscillator: MIX 3 was the sub's level",
+        cause: { id: 'osc2.wave', in: expect.arrayContaining(['saw+sub']) as unknown },
       },
     ]);
   });
@@ -275,6 +278,18 @@ describe('departures (t-326)', () => {
 
     expect(out.dropped.map((d) => d.reason)).toEqual(['moved', 'patched']);
     expect(out.changed.map((c) => c.reason)).toEqual(['clamped']);
+  });
+
+  it('keeps a dropWhen loss the rest of the panel caused, with the dropped control at its default', () => {
+    // the Model 15 on SUB, with MIX 3 left as its Default patch has it: MIX 3 was the sub's level, and is dropped
+    const base15 = { ...m15.init, ...m15.defaultPatch?.values };
+    const t = translate({ ...base15, 'osc2.wave': 'saw+sub' }, [], m15, gm);
+    const kept = departures(m15, t);
+
+    expect(kept.dropped.map((d) => (d.kind === 'control' ? d.id : null))).toContain('mix.3');
+    expect(kept.changed.map((c) => c.id)).toContain('mix.3');
+    // off SUB, nothing drops it
+    expect(departures(m15, translate(base15, [], m15, gm)).dropped).toEqual([]);
   });
 
   it('narrows a real translation: a TD-3 panel with its distortion left off loses nothing of it', () => {
