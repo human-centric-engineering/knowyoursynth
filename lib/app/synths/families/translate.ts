@@ -246,3 +246,23 @@ export function translate(
   }
   return out;
 }
+
+/**
+ * What of a translation's `dropped` and `changed` the panel actually moved from `from`'s Default patch (t-326): a
+ * control left as the Default patch has it, or a cable the Default patch puts in, is no loss worth naming. "The TB-303
+ * has no distortion" says nothing to someone whose DIST was off. The carried values and cables are left as they are.
+ */
+export function departures(
+  from: SynthDef,
+  t: Pick<Translation, 'dropped' | 'changed'>
+): Pick<Translation, 'dropped' | 'changed'> {
+  const base: ControlValues = { ...from.init, ...from.defaultPatch?.values };
+  const baseCables = new Set((from.defaultPatch?.cables ?? []).map(([a, b]) => `${a}>${b}`));
+  const moved = (id: string, value: ControlValue): boolean => !Object.is(base[id], value);
+  return {
+    dropped: t.dropped.filter((d) =>
+      d.kind === 'control' ? moved(d.id, d.value) : !baseCables.has(`${d.cable[0]}>${d.cable[1]}`)
+    ),
+    changed: t.changed.filter((c) => moved(c.id, c.value)),
+  };
+}

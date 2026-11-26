@@ -16,7 +16,12 @@ import type { CablePair, Lineage, Preset } from '@/lib/app/synths/contract';
 import { getSynthDef, type AppSynthDef } from '@/lib/app/synths/defs';
 import { validatePreset } from '@/lib/app/synths/validate';
 import { presetState } from '@/lib/app/synths/lib/patch';
-import { translate, type Changed, type Dropped } from '@/lib/app/synths/families/translate';
+import {
+  departures,
+  translate,
+  type Changed,
+  type Dropped,
+} from '@/lib/app/synths/families/translate';
 import { designFromDb, type SynthDesign } from '@/lib/app/catalogue/designs';
 import { getHeardOn } from '@/lib/app/bank/read';
 import { getFamilyOf, type SynthFamily } from '@/lib/app/families/read';
@@ -75,7 +80,8 @@ export type Limit = z.infer<typeof LimitSchema>;
 /**
  * A family sibling's library sound, carried onto the synth through the family's map (`f-synth-families` t-322), with
  * the member it was made on and what did not come across as it was. It stays that member's: its `id` is its slug
- * there, so it is told from this synth's own by `from` as well.
+ * there, so it is told from this synth's own by `from` as well. Its `defaultPattern` is its member's (t-326), for the
+ * effects and the drum style it comes with: its id names a pattern of that member's, and it is never `played` here.
  */
 export type SiblingSound = CatalogueSound & {
   from: { synthId: string; name: string };
@@ -205,6 +211,51 @@ const SOUND_COLUMNS = {
 
 type SoundRow = Omit<Prisma.SynthSoundGetPayload<{ select: typeof SOUND_COLUMNS }>, 'synthId'>;
 
+/** A sound's patterns as its default is read from them (t-224): a disabled pattern is never one, so it is not read. */
+const HEAD_PATTERNS = {
+  ...PLACES,
+  where: { pattern: ENABLED },
+  select: {
+    ...PLACES.select,
+    pattern: {
+      select: {
+        ...PLACES.select.pattern.select,
+        name: true,
+        inspiration: true,
+        inspiredBy: true,
+      },
+    },
+  },
+} satisfies Prisma.SynthSound$patternsArgs;
+
+type HeadRows = Prisma.SynthSoundGetPayload<{
+  select: { patterns: typeof HEAD_PATTERNS };
+}>['patterns'];
+
+/**
+ * The library pattern a sound's riff plays, as `CatalogueSound.defaultPattern` carries it, or none. `played` is left
+ * out where the pattern is not loaded on this synth (a sibling's, t-326): its chain and lanes are its own member's.
+ */
+function defaultPatternOf(
+  patterns: HeadRows,
+  withPlayed = true
+): CatalogueSound['defaultPattern'] | undefined {
+  const parsedHead = parsedHeadOf(patterns);
+  const head = parsedHead?.place ?? null;
+  if (!parsedHead || !head) return undefined;
+  const style = styleWordsOf({ kind: head.pattern.inspiration, label: head.pattern.inspiredBy });
+  const played = withPlayed && playedDefault(parsedHead.pattern);
+  // The effects the default comes with (t-302): the rack is turned to them as the sound is chosen.
+  const fx = parsedHead.pattern.fx;
+  return {
+    id: head.patternId,
+    name: head.pattern.name,
+    ...(style ? { style } : {}),
+    ...(played ? { played: true as const } : {}),
+    ...(fx ? { fx } : {}),
+  };
+}
+
 /**
  * A stored sound as its own synth plays it, or `null`, logged, when it is made on a definition version the registry
  * no longer has or fails validation on read. `quiet` logs it at debug level: a sibling's read finds the rows its own
@@ -254,7 +305,8 @@ function validSound(def: AppSynthDef, s: SoundRow, quiet = false): Preset | null
  *
  * What is served is the sound's panel, not its lesson: a lesson's steps name the controls of the member it was written
  * for, so the carried sound has one step, the panel as it came across. Its context and tweaks name those controls too,
- * and stay behind with the lesson. Its riff comes with it.
+ * and stay behind with the lesson. Its riff comes with it, and so do its default pattern's effects and drum style
+ * (t-326), which the rack and the drums' Match are turned to as it is chosen, as for one of this synth's own.
  */
 async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise<SiblingSound[]> {
   const siblings = family.members.flatMap((m) => {
@@ -265,7 +317,7 @@ async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise
   const rows = await prisma.synthSound.findMany({
     where: { synthId: { in: siblings.map((d) => d.id) }, synth: { listed: true } },
     orderBy: [{ order: 'asc' }, { slug: 'asc' }],
-    select: SOUND_COLUMNS,
+    select: { ...SOUND_COLUMNS, patterns: HEAD_PATTERNS },
   });
   const out: SiblingSound[] = [];
   for (const from of siblings) {
@@ -273,7 +325,7 @@ async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise
       if (row.synthId !== from.id) continue;
       const source = validSound(from, row, true);
       if (!source) continue;
-      const sibling = carriedSound(from, def, source);
+      const sibling = carriedSound(from, def, source, defaultPatternOf(row.patterns, false));
       if (sibling) out.push(sibling);
     }
   }
@@ -281,7 +333,12 @@ async function readSiblingSounds(def: AppSynthDef, family: SynthFamily): Promise
 }
 
 /** One sibling's sound carried onto `to`, or `null`, logged, when what came across fails validation there. */
-function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): SiblingSound | null {
+function carriedSound(
+  from: AppSynthDef,
+  to: AppSynthDef,
+  source: Preset,
+  defaultPattern: CatalogueSound['defaultPattern'] | undefined
+): SiblingSound | null {
   const panel = presetState(from, source);
   const carry = translate(
     panel.values,
@@ -335,9 +392,10 @@ function carriedSound(from: AppSynthDef, to: AppSynthDef, source: Preset): Sibli
   return {
     ...result.value,
     version: to.version,
+    ...(defaultPattern ? { defaultPattern } : {}),
     from: { synthId: from.id, name: from.name },
-    dropped: carry.dropped,
-    changed: carry.changed,
+    // what the note names: only what the sound moved from its member's Default patch (t-326)
+    ...departures(from, carry),
   };
 }
 
@@ -355,21 +413,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
           include: {
             // what its default is read from, as the sound's patterns read it, to name the riff it plays (t-224); a
             // disabled pattern is never one, so it is not read
-            patterns: {
-              ...PLACES,
-              where: { pattern: ENABLED },
-              select: {
-                ...PLACES.select,
-                pattern: {
-                  select: {
-                    ...PLACES.select.pattern.select,
-                    name: true,
-                    inspiration: true,
-                    inspiredBy: true,
-                  },
-                },
-              },
-            },
+            patterns: HEAD_PATTERNS,
           },
         },
         lineage: true,
@@ -429,28 +473,11 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   for (const s of soundRows) {
     const preset = validSound(def, s);
     if (!preset) continue;
-    const parsedHead = parsedHeadOf(s.patterns);
-    const head = parsedHead?.place ?? null;
-    const style = head
-      ? styleWordsOf({ kind: head.pattern.inspiration, label: head.pattern.inspiredBy })
-      : null;
-    const played = !!parsedHead && playedDefault(parsedHead.pattern);
-    // The effects the default comes with (t-302): the rack is turned to them as the sound is chosen.
-    const fx = parsedHead?.pattern.fx;
+    const defaultPattern = defaultPatternOf(s.patterns);
     sounds.push({
       ...preset,
       version: s.definitionVersion,
-      ...(head
-        ? {
-            defaultPattern: {
-              id: head.patternId,
-              name: head.pattern.name,
-              ...(style ? { style } : {}),
-              ...(played ? { played: true as const } : {}),
-              ...(fx ? { fx } : {}),
-            },
-          }
-        : {}),
+      ...(defaultPattern ? { defaultPattern } : {}),
     });
   }
 

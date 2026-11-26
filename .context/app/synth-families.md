@@ -150,6 +150,11 @@ one member's definition to another's. It is pure, and returns:
   clamped (the TD-3's TUNE goes 12 semitones either way, the TB-303's TUNING 5), and an option can
   lose part of itself (the Model 15's `saw+sub` is a Grandmother's `saw`).
 
+`dropped` and `changed` list everything. What the note shows is narrower: `departures(from, t)`
+keeps only what the panel moved from `from`'s Default patch (t-326). A control left at its default,
+or a cable the Default patch puts in, is no loss worth naming: "The TB-303 has no distortion" says
+nothing to someone whose DIST was off. The version toggle's carry and a sibling's sound both use it.
+
 A family's **map** (`FamilyMap`, one file per family beside `translate.ts`, listed in `maps.ts`) is
 one-way links between its members. A link is identity plus what it names: a control or jack renamed,
 an option renamed, a control dropped while the panel is set a certain way (the Model 15's MIX 3,
@@ -239,7 +244,8 @@ A shared sound's or pattern's page passes no families, so its picker lists every
 A member's library also lists its siblings' sounds (owner ruling, t-322): someone with a TD-3 wants the
 TB-303's sounds too. `GET /api/v1/synths/:id` serves them as `siblingSounds`, already carried onto the
 member being read. Each one comes with `from` (the synth id and name of the member it was made on) and
-the `dropped` and `changed` lists that `translate()` returns.
+the `dropped` and `changed` lists that `translate()` returns, narrowed by `departures()` to what the
+sound moved from its own member's Default patch.
 
 - **How a sound is read.** It is first read as its own synth serves it (`validSound`): a row made on an
   old definition version, or one that fails validation there, is left out. It is logged at debug
@@ -253,8 +259,10 @@ the `dropped` and `changed` lists that `translate()` returns.
   in place of the Default patch's. It names only what differs from the Default patch, so showing the
   step lights and turns only what the sound changes.
   Its `context` and `tweaks` name the sibling's controls too, so they stay behind. Its riff
-  (`phrase`) comes with it. No default pattern comes with it, since a sound's patterns belong to its
-  member.
+  (`phrase`) comes with it. So does its `defaultPattern`, for the effects (`fx`) and drum style it
+  carries (t-326): choosing the sound turns the rack and the drums' Match to them, as for one of the
+  member's own. Its `id` names a pattern of the sibling's, and nothing loads it here: the sequencer
+  offers no patterns for a sibling's sound, and `played` is never set on it.
 - **It stays its member's.** Its `id` is still its slug on the sibling, so the page keys it as
   `<from>/<slug>` and opens it under a page-only id (`sibling:<from>/<slug>`). It is never read as one
   of the member's own library sounds: it records no lesson progress, takes no star, gets no videos
@@ -266,7 +274,9 @@ the `dropped` and `changed` lists that `translate()` returns.
   `synth-page.tsx`). Its one step is its lesson, the name row says "made on the TD-3", and Restore puts
   it back. The session names no sound for it, so the page asks the panel history to start afresh
   (`glide`'s `fresh`). Otherwise Undo after loading a second sibling sound would put the first one's
-  panel back under the second one's name. The toggle's note (`CarriedNote`, with `soundName`) says what did not come across.
+  panel back under the second one's name. Picking the same sibling sound again is Restore and keeps
+  the history, as a library sound does. The tutor's Undo after a design opened over a sibling's sound
+  starts the history afresh too, or panel Undo would put the design back under the sibling's name. The toggle's note (`CarriedNote`, with `soundName`) says what did not come across.
 - **Saving one** is **Save a copy** (`copyOf` on `SoundActions`). It creates the user's own sound on the
   open member, named after the sibling's sound, with the panel as it is now. It sends no `source`: a
   library credit is keyed to the member's own library (`source.slug` is looked up on the synth being

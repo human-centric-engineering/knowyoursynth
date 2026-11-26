@@ -192,6 +192,33 @@ describe('the version toggle', () => {
     expect(screen.queryByText(/Panel carried over/)).toBeNull();
   });
 
+  it('names no control the panel left at its Default patch (t-326)', async () => {
+    // The distortion is left off, and its knobs where the Default patch has them: nothing of it is lost.
+    comeBackTo('td-3');
+    window.localStorage.setItem(
+      'kys.session.td-3',
+      JSON.stringify({
+        presetId: null,
+        step: null,
+        soundId: null,
+        ...defaultPatchState(td3),
+        values: { ...defaultPatchState(td3).values, 'filter.res': 7, 'osc.tune': 10 },
+      })
+    );
+    const first = page(0);
+    fireEvent.click(screen.getByRole('button', { name: 'TB-303' }));
+    await waitFor(() => expect(router.push).toHaveBeenCalledOnce());
+    first.unmount();
+
+    page(1);
+    const note = await screen.findByText(/Panel carried over from the TD-3/);
+    const items = within(note.closest('[role="status"]') as HTMLElement)
+      .queryAllByRole('listitem')
+      .map((li) => li.textContent);
+    expect(items.some((r) => r?.includes('became 5'))).toBe(true);
+    expect(items).not.toContain('The TB-303 has no distortion');
+  });
+
   it('lets the note go once another sound opens over the carried panel', async () => {
     leaveTd3();
     const first = page(0);

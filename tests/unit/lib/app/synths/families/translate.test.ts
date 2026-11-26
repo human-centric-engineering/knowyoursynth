@@ -6,7 +6,12 @@
  */
 import { describe, expect, it } from 'vitest';
 import { getSynthDef } from '@/lib/app/synths/defs';
-import { translate, findLink, type FamilyMap } from '@/lib/app/synths/families/translate';
+import {
+  departures,
+  translate,
+  findLink,
+  type FamilyMap,
+} from '@/lib/app/synths/families/translate';
 import type { SynthDef } from '@/lib/app/synths/contract';
 
 const def = (id: string): SynthDef => {
@@ -223,5 +228,58 @@ describe('translate', () => {
   it('finds a link only where a map joins the two members', () => {
     expect(findLink('td-3', 'tb-303')?.to).toBe('tb-303');
     expect(findLink('td-3', 'model-15')).toBeNull();
+  });
+});
+
+describe('departures (t-326)', () => {
+  // The TD-3 with a Default patch cable, so a dropped cable can be one the Default patch puts in.
+  const withCable: SynthDef = {
+    ...td3,
+    defaultPatch: { values: td3.defaultPatch?.values ?? {}, cables: [['gate.out', 'cv.in']] },
+  };
+  const base = { ...td3.init, ...td3.defaultPatch?.values };
+
+  it("keeps only what the panel moved from the member's Default patch", () => {
+    const t = {
+      dropped: [
+        {
+          kind: 'control' as const,
+          id: 'dist.on',
+          value: base['dist.on'],
+          reason: 'left at default',
+        },
+        { kind: 'control' as const, id: 'dist.drive', value: 9, reason: 'moved' },
+        {
+          kind: 'cable' as const,
+          cable: ['gate.out', 'cv.in'] as [string, string],
+          reason: 'default cable',
+        },
+        {
+          kind: 'cable' as const,
+          cable: ['cv.out', 'ext.in'] as [string, string],
+          reason: 'patched',
+        },
+      ],
+      changed: [
+        {
+          id: 'osc.tune',
+          value: base['osc.tune'],
+          to: { id: 'osc.tuning', value: 0 },
+          reason: 'left',
+        },
+        { id: 'osc.tune', value: 10, to: { id: 'osc.tuning', value: 5 }, reason: 'clamped' },
+      ],
+    };
+
+    const out = departures(withCable, t);
+
+    expect(out.dropped.map((d) => d.reason)).toEqual(['moved', 'patched']);
+    expect(out.changed.map((c) => c.reason)).toEqual(['clamped']);
+  });
+
+  it('narrows a real translation: a TD-3 panel with its distortion left off loses nothing of it', () => {
+    const t = translate({ ...base, 'filter.res': 7 }, [], td3, tb303);
+    expect(t.dropped.some((d) => d.reason === 'The TB-303 has no distortion')).toBe(true);
+    expect(departures(td3, t).dropped).toEqual([]);
   });
 });
