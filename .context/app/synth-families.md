@@ -24,6 +24,8 @@ The owner's rulings (2026-11-26) are in the feature's journal.
 | The carry across the navigation | `components/app/synth/family-carry.ts`                                    |
 | An unmodelled member's panel    | `components/app/synth/unmodelled-member.tsx`, `memberHref` in `routes.ts` |
 | Sibling sounds (t-322)          | `siblingSounds` in `lib/app/catalogue/read.ts`, `library.tsx`             |
+| Admin edits (t-323)             | `lib/app/families/edit.ts`, `/api/v1/admin/synths/families[/:id]`         |
+| Admin pages and form            | `/admin/synths/catalogue/families`, `components/app/admin/catalogue/`     |
 
 ## The model
 
@@ -96,6 +98,34 @@ catalogue seed's rules:
 - **A synth another member already has stays there.** The seeded member is written without it and
   reported (`synthTaken`), rather than the seed taking the synth back from where an admin put it.
 - **A family whose stored default member ends up without a synth is reported** (`defaultWithoutSynth`).
+
+## Editing in the admin
+
+Families are content, like lineage and notes (D13), so an admin corrects them without a deploy, from
+**Catalogue → Edit the synth families** (`/admin/synths/catalogue/families`). The routes, all under
+`withAdminAuth()`:
+
+| Route                                      | Does                                                  |
+| ------------------------------------------ | ----------------------------------------------------- |
+| `GET /api/v1/admin/synths/families`        | Every stored family, served or not, in the file shape |
+| `POST /api/v1/admin/synths/families`       | Create one, with its id (409 when the id is taken)    |
+| `GET /api/v1/admin/synths/families/:id`    | One stored family                                     |
+| `PUT /api/v1/admin/synths/families/:id`    | Replace it whole: name, default, members in order     |
+| `DELETE /api/v1/admin/synths/families/:id` | Remove it and its members                             |
+
+- **Saved whole.** A save sends the family in its seed file's shape. A member it leaves out is removed,
+  and the members' order is the order sent.
+- **Checked as the seed checks.** The family goes through `checkFamilies` beside every other stored
+  family, checked last, so a synth another family has is reported on it. Only its own problems refuse
+  it; another family's never do. A refusal is a 400 naming each problem, with nothing written.
+- **The admin's from then on.** A save stamps `editedAt` on the family and every member it keeps. The
+  seed writes none of an edited family's members, so it does not put back a member the admin removed,
+  and frees no synth for them.
+- **A delete is not remembered.** The seed creates the family again while its data file has it, so a
+  family that should go is taken out of the data as well.
+- Every write is audited as `synth_family` (`synth_family.create`, `.update`, `.delete`); a save that
+  changes nothing writes and audits nothing. Writes hold the stored families' rows for their
+  transaction, so two saves cannot both take one synth.
 
 The databank admin checks the stored families too (`checkFamilies`). An instrument change that would
 add a family problem is refused, naming each one, as any other broken reference is. So an instrument a

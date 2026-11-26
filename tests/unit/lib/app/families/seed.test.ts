@@ -42,6 +42,9 @@ function fakeDb() {
     },
     synth: { findMany: vi.fn(async () => [{ id: 'tb-303' }, { id: 'td-3' }, { id: 'k2' }]) },
     synthFamily: {
+      findMany: vi.fn(async () =>
+        families.filter((f) => f.editedAt != null).map((f) => ({ id: f.id }))
+      ),
       findUnique: vi.fn(async ({ where }: { where: Row }) => {
         const r = families.find((f) => f.id === where.id);
         return r ? { ...r } : null;
@@ -68,6 +71,14 @@ function fakeDb() {
       delete: vi.fn(async ({ where }: { where: Row }) => {
         members.splice(members.indexOf(memberBy(where) ?? {}), 1);
       }),
+      count: vi.fn(
+        async ({ where }: { where: Row }) =>
+          members.filter(
+            (m) =>
+              m.familyId === where.familyId &&
+              (where.slug as { in: string[] }).in.includes(m.slug as string)
+          ).length
+      ),
       aggregate: vi.fn(async ({ where }: { where: Row }) => {
         const orders = members
           .filter((m) => m.familyId === where.familyId)
@@ -185,6 +196,27 @@ describe('seedFamilies', () => {
       ['td-3', 5],
       ['tb-303', 1],
       ['tb-03', 6],
+    ]);
+  });
+
+  it('writes no member of a family an admin has saved, nor puts back one they removed', async () => {
+    await seedFamilies(client(), [family()]);
+    db.families[0].editedAt = new Date('2026-11-26');
+    db.members.forEach((m) => (m.editedAt = new Date('2026-11-26')));
+    db.members.splice(1, 1);
+    db.members[0].synthId = 'tb-303';
+    const before = writes();
+
+    const changed = family();
+    changed.members[0].differences = 'New seed words.';
+    const report = await seedFamilies(client(), [changed]);
+
+    expect(writes()).toBe(before);
+    expect(report.families.edited).toBe(1);
+    // Only the member the admin kept is counted: the one they removed is not a row left alone.
+    expect(report.members).toEqual({ created: 0, updated: 0, unchanged: 0, edited: 1 });
+    expect(db.members.map((m) => [m.slug, m.synthId, m.differences])).toEqual([
+      ['td-3', 'tb-303', 'A copy.'],
     ]);
   });
 

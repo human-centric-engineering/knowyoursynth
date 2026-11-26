@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import { SharedSettingsReadOnlyNotice } from '@/components/admin/shared-settings-access';
 import { CatalogueTable } from '@/components/app/admin/synths/catalogue-table';
@@ -51,7 +52,11 @@ export default async function SynthCataloguePage() {
           </FieldHelp>
         </h1>
         <p className="text-muted-foreground text-sm">
-          Order and list the synths, and edit what each one teaches.
+          Order and list the synths, and edit what each one teaches.{' '}
+          <Link href="/admin/synths/catalogue/families" className="underline">
+            Edit the synth families
+          </Link>
+          .
         </p>
       </header>
 

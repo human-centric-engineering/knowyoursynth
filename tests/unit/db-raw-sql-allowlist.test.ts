@@ -101,6 +101,11 @@ const ALLOWLIST: ReadonlyArray<{ file: string; calls: number; why: string }> = [
     why: 'SELECT … FOR UPDATE row lock on a synth while its sounds are added or reordered — the id a bound parameter, and synth is shared catalogue content (GLOBAL_CONFIG_MODELS), not tenant rows',
   },
   {
+    file: 'lib/app/families/edit.ts',
+    calls: 1,
+    why: 'SELECT … FOR UPDATE on every synth_family row while an admin save or delete runs, so two saves cannot both pass the family check on one synth — no parameters, and synth families are shared catalogue content (GLOBAL_CONFIG_MODELS), not tenant rows',
+  },
+  {
     file: 'lib/app/patterns/reports.ts',
     calls: 1,
     why: "SELECT … FOR UPDATE row lock on the shared pattern being reported (t-83), so one person's open-report check and its create cannot interleave — the id a bound parameter read from the pattern's row, and user_pattern is a system model, not tenant rows",
