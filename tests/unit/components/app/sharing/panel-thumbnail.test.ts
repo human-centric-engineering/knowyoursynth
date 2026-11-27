@@ -3,7 +3,7 @@
  *
  * - it is the panel as the page opens it (no values, no cables), in the design given, fitted to the thumbnail box;
  * - one is drawn once, and again only for a new definition or design; requests at the same moment share a drawing;
- * - a failed drawing is null, logged, and tried again next time;
+ * - a failed drawing is null, logged, and not tried again meanwhile (for `NOT_DRAWN_SECONDS`);
  * - thumbnails wait in the same queue as the share card: no more than two panels are drawn at once between them.
  *
  * Each test loads the modules afresh, so it starts with nothing kept and every drawing slot free.
@@ -65,7 +65,7 @@ describe('panelThumbnail', () => {
     expect(pngs.every((p) => p?.equals(Buffer.from('png')))).toBe(true);
   });
 
-  it('is null, and says why, when the panel cannot be drawn; and tries again next time', async () => {
+  it('is null, and says why, when the panel cannot be drawn; and is not tried again meanwhile', async () => {
     const failure = new Error('rasteriser fell over');
     panelPng.mockRejectedValueOnce(failure);
     expect(await thumbnail.panelThumbnail(modelD, 'neutral')).toBeNull();
@@ -74,8 +74,13 @@ describe('panelThumbnail', () => {
       failure,
       { synthId: 'model-d' }
     );
-    expect(await thumbnail.panelThumbnail(modelD, 'neutral')).toEqual(Buffer.from('png'));
-    expect(panelPng).toHaveBeenCalledTimes(2);
+    // Remembered (for `NOT_DRAWN_SECONDS`, the cache's own expiry): a picker opened meanwhile does not queue it again.
+    expect(await thumbnail.panelThumbnail(modelD, 'neutral')).toBeNull();
+    expect(panelPng).toHaveBeenCalledTimes(1);
+    // What it remembers is that drawing alone: another synth, or another design, is drawn as usual.
+    expect(await thumbnail.panelThumbnail(tb303, 'neutral')).toEqual(Buffer.from('png'));
+    expect(await thumbnail.panelThumbnail(modelD, 'faithful')).toEqual(Buffer.from('png'));
+    expect(panelPng).toHaveBeenCalledTimes(3);
   });
 
   it('waits its turn behind other drawings in the shared queue', async () => {

@@ -43,6 +43,12 @@ describe('nameWithoutMaker', () => {
     expect(nameWithoutMaker('Korg ARP 2600 FS', 'Korg')).toBe('ARP 2600 FS');
   });
 
+  it("drops the maker's initials from the front of the name", () => {
+    expect(nameWithoutMaker('EDP Wasp', 'Electronic Dream Plant')).toBe('Wasp');
+    // A one-word maker has no initials to drop.
+    expect(nameWithoutMaker('K Series', 'Korg')).toBe('K Series');
+  });
+
   it('leaves a name that does not start with its maker', () => {
     expect(nameWithoutMaker('Minimoog Model D', 'Moog Music')).toBe('Minimoog Model D');
   });

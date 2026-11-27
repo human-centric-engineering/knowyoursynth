@@ -1,10 +1,10 @@
 /**
  * A synth's panel thumbnail, for its row in the synth picker (`f-synth-picker` t-328). Pins:
  *
- * - a synth the catalogue serves gets its PNG in its design, with an ETag and an hour's caching;
+ * - a synth the catalogue serves gets its PNG in its design, with an ETag, revalidated on every use;
  * - a request carrying that ETag gets a 304 with the same headers, and nothing is drawn;
  * - a synth with no definition, or one the catalogue does not serve, is a 404 without a database read or a drawing;
- * - a panel that cannot be drawn is a 404, so the row shows no picture rather than a broken one.
+ * - a panel that cannot be drawn is a 404, cached for as long as the failure is remembered.
  *
  * @see app/(panel)/synths/[id]/thumbnail.png/route.ts
  */
@@ -22,7 +22,7 @@ vi.mock('@/components/app/sharing/panel-thumbnail', async (importOriginal) => ({
 }));
 
 import { GET } from '@/app/(panel)/synths/[id]/thumbnail.png/route';
-import { thumbnailKey } from '@/components/app/sharing/panel-thumbnail';
+import { NOT_DRAWN_SECONDS, thumbnailKey } from '@/components/app/sharing/panel-thumbnail';
 import { getSynthDef } from '@/lib/app/synths/defs';
 
 const modelD = getSynthDef('model-d')!;
@@ -40,14 +40,12 @@ beforeEach(() => {
 });
 
 describe('GET /synths/[id]/thumbnail.png', () => {
-  it("serves the synth's thumbnail in its design, with its ETag and an hour's caching", async () => {
+  it("serves the synth's thumbnail in its design, with its ETag, revalidated on every use", async () => {
     const res = await get('model-d');
     expect(res.status).toBe(200);
     expect(res.headers.get('Content-Type')).toBe('image/png');
     expect(res.headers.get('ETag')).toBe(thumbnailKey(modelD, 'faithful'));
-    expect(res.headers.get('Cache-Control')).toBe(
-      'public, max-age=3600, stale-while-revalidate=86400'
-    );
+    expect(res.headers.get('Cache-Control')).toBe('public, no-cache');
     expect(Buffer.from(await res.arrayBuffer())).toEqual(PNG);
     expect(getListedSynthDesign).toHaveBeenCalledWith('model-d');
     expect(panelThumbnail).toHaveBeenCalledWith(modelD, 'faithful');
@@ -58,9 +56,7 @@ describe('GET /synths/[id]/thumbnail.png', () => {
     const res = await get('model-d', { 'If-None-Match': etag });
     expect(res.status).toBe(304);
     expect(res.headers.get('ETag')).toBe(etag);
-    expect(res.headers.get('Cache-Control')).toBe(
-      'public, max-age=3600, stale-while-revalidate=86400'
-    );
+    expect(res.headers.get('Cache-Control')).toBe('public, no-cache');
     expect(panelThumbnail).not.toHaveBeenCalled();
   });
 
@@ -91,8 +87,10 @@ describe('GET /synths/[id]/thumbnail.png', () => {
     expect(panelThumbnail).not.toHaveBeenCalled();
   });
 
-  it('is a 404 when the panel cannot be drawn', async () => {
+  it('is a 404 when the panel cannot be drawn, cached while the failure is remembered', async () => {
     panelThumbnail.mockResolvedValue(null);
-    expect((await get('model-d')).status).toBe(404);
+    const res = await get('model-d');
+    expect(res.status).toBe(404);
+    expect(res.headers.get('Cache-Control')).toBe(`public, max-age=${NOT_DRAWN_SECONDS}`);
   });
 });

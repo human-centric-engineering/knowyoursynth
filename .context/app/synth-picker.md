@@ -57,10 +57,16 @@ patched) in its `Synth.design`, fitted to 240×100: twice the row's 92×38 slot.
 renderer (`panelPng`) and waits in the same queue as the card (`drawing.ts`: two drawings at once between them).
 
 It is a page route, beside the share card's `opengraph-image`, not an `/api/v1` one: the picker asks for every synth's
-at once, which the API's per-visitor limit is not sized for, and it is a picture of a page rather than data. Repeats
-are cheap: each picture is kept in memory under a hash of the synth, its definition version and its design, which is
-also its ETag; the response is cached for an hour, then revalidated, and a design change or a new definition is a new
-picture. A synth the catalogue does not serve, or a panel that will not draw, is a 404, and the row shows no picture.
+at once, which the API's per-visitor limit is not sized for, and it is a picture of a page rather than data; what it
+draws from is already served by `GET /api/v1/synths`. Repeats are cheap: each picture is kept in memory under a hash of
+the synth, its definition version, its design, the box and a drawing version (`THUMBNAIL_DRAWING`, bumped when the
+faceplate's drawing changes), which is also its ETag. A browser revalidates it on every use (`no-cache`), so the usual
+answer is an empty 304, and a design turned back to neutral (D11, the maker's approval withdrawn) takes the maker's
+marks off the picker at once.
+
+A synth the catalogue does not serve is a 404. A panel that will not draw is a 404 too, remembered for ten minutes
+(`NOT_DRAWN_SECONDS`) so a picker opened meanwhile does not queue it again ahead of the share card, and cached by the
+browser for as long. The row shows its empty box instead.
 
 ## Still to come
 

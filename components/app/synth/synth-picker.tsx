@@ -229,7 +229,7 @@ export function SynthPicker({
       )}
 
       {open && (
-        <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-32px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
+        <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
           <input
             ref={search}
             type="search"
@@ -244,7 +244,8 @@ export function SynthPicker({
             ref={list}
             role="listbox"
             aria-label="Choose a synth"
-            className="kys-scroll max-h-[min(70vh,520px)] overflow-y-auto"
+            // Scroll padding the height of a brand's sticky heading, so a row the arrow keys reach is not under it.
+            className="kys-scroll max-h-[min(70vh,520px)] scroll-pt-9 overflow-y-auto"
           >
             {groups.map((g) => (
               <div key={g.label} role="group" aria-label={g.label}>

@@ -13,7 +13,8 @@ import { logger } from '@/lib/logging';
  *
  * Kept in memory under a hash of what it is drawn from (`thumbnailKey`): the picker asks for every synth at once, so a
  * second visitor costs reads, and a new definition or a design change is a new picture. Requests for one synth that
- * arrive together share one drawing.
+ * arrive together share one drawing. One that would not draw is not tried again for `NOT_DRAWN_SECONDS`, so it does
+ * not hold up the share card's drawings behind it in the queue.
  */
 
 /** The box a thumbnail fits inside: twice the picker's 92×38 slot, for high-density screens. */
@@ -65,8 +66,17 @@ const kept = new LRUCache<string, Buffer, DrawInput>({
   ignoreFetchAbort: true,
 });
 
-/** The synth's thumbnail as PNG bytes, or null when it could not be drawn. */
+/** How long a thumbnail that would not draw is not tried again: a panel that fails once fails every time until a fix. */
+export const NOT_DRAWN_SECONDS = 600;
+
+/** The thumbnails that would not draw lately, so a picker opened meanwhile does not queue them again. */
+const notDrawn = new LRUCache<string, true>({ max: 256, ttl: NOT_DRAWN_SECONDS * 1000 });
+
+/** The synth's thumbnail as PNG bytes, or null when it could not be drawn (now, or in the last ten minutes). */
 export async function panelThumbnail(def: SynthDef, design: SynthDesign): Promise<Buffer | null> {
-  const png = await kept.fetch(thumbnailKey(def, design), { context: { def, design } });
+  const key = thumbnailKey(def, design);
+  if (notDrawn.has(key)) return null;
+  const png = await kept.fetch(key, { context: { def, design } });
+  if (!png) notDrawn.set(key, true);
   return png ?? null;
 }
