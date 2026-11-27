@@ -54,6 +54,26 @@ export const SitePickerSettingsSchema = PickerChoicesSchema.extend({
 }).strict();
 export type SitePickerSettings = z.infer<typeof SitePickerSettingsSchema>;
 
+/**
+ * Stored settings as they are read back: a kind no longer in the databank's list is dropped rather than refusing the
+ * whole value, since a kind can be retired in code while rows and browsers still hold it.
+ */
+function knownKindsOnly(raw: unknown): unknown {
+  if (typeof raw !== 'object' || raw === null || !('kinds' in raw) || !Array.isArray(raw.kinds))
+    return raw;
+  const known = new Set<unknown>(PICKER_KINDS);
+  return { ...raw, kinds: [...new Set(raw.kinds)].filter((k) => known.has(k)) };
+}
+
+/** A visitor's stored choices (the account's row, or the browser's), read leniently: see `knownKindsOnly`. */
+export const StoredPickerPrefsSchema = z.preprocess(knownKindsOnly, PickerPrefsSchema);
+
+/** The site's stored settings, read leniently: see `knownKindsOnly`. */
+export const StoredSitePickerSettingsSchema = z.preprocess(
+  knownKindsOnly,
+  SitePickerSettingsSchema
+);
+
 /** The site's settings until an admin saves any: grouped by maker, A to Z, every kind, with thumbnails. */
 export const FACTORY_PICKER: SitePickerSettings = {
   group: 'maker',
@@ -106,13 +126,13 @@ export function pickerChoices(site: SitePickerSettings, mine: PickerPrefs): Pick
   return site.visitorsMayChange ? { ...out, ...mine } : out;
 }
 
-/** How many of the visitor's choices differ from the site's: 0 when they follow it, or may not change it. */
+/**
+ * How many choices the visitor keeps as their own: 0 when they follow the site in everything, or may not change it.
+ * A kept choice counts even while it matches the site's, since it still holds when the site's changes.
+ */
 export function changedChoices(site: SitePickerSettings, mine: PickerPrefs): number {
   if (!site.visitorsMayChange) return 0;
-  return CHOICE_KEYS.filter((k) => {
-    const value = mine[k];
-    return value !== undefined && !sameChoice(k, value, site[k]);
-  }).length;
+  return CHOICE_KEYS.filter((k) => mine[k] !== undefined).length;
 }
 
 /**

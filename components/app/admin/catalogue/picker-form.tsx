@@ -26,6 +26,7 @@ import {
   type PickerGroupBy,
   type PickerKind,
   type PickerOrder,
+  SitePickerSettingsSchema,
   type SitePickerSettings,
 } from '@/lib/app/picker/settings';
 import { useSaveFailure } from '@/lib/hooks/use-save-failure';
@@ -89,16 +90,20 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
     save.clear();
     setDraft((d) => ({ ...d, [key]: value }));
   };
-  const flipKind = (k: PickerKind) => set('kinds', toggleKind(draft.kinds, k));
+  const flipKind = (k: PickerKind) => {
+    setSavedNote(null);
+    save.clear();
+    setDraft((d) => ({ ...d, kinds: toggleKind(d.kinds, k) }));
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
-      const after = await apiClient.put<SitePickerSettings>('/api/v1/admin/synths/picker', {
+      const answer = await apiClient.put<unknown>('/api/v1/admin/synths/picker', {
         body: draft,
       });
-      setDraft(after);
+      setDraft(SitePickerSettingsSchema.parse(answer));
       save.clear();
       setSavedNote('Saved. Visitors who have not changed theirs see this now.');
       router.refresh();

@@ -11,7 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { apiClient } from '@/lib/api/client';
 import { normalizeFx, type RackFx } from '@/lib/app/synths/audio/fx';
-import { PickerPrefsSchema, type PickerPrefs } from '@/lib/app/picker/settings';
+import { StoredPickerPrefsSchema, type PickerPrefs } from '@/lib/app/picker/settings';
 import {
   AccountSettingsSchema,
   SETTING_KEYS,
@@ -41,7 +41,7 @@ const SCHEMAS = {
   heat: BoolSchema,
   harm: BoolSchema,
   fx: FxSchema,
-  picker: PickerPrefsSchema,
+  picker: StoredPickerPrefsSchema,
 } satisfies Record<SettingKey, z.ZodType>;
 const SettingsBySchema = z.string().nullable();
 const SettingsAtSchema = z.number();

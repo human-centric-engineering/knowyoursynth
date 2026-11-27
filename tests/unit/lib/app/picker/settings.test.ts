@@ -12,6 +12,8 @@ import {
   PickerPrefsSchema,
   SitePickerSettingsSchema,
   sortKinds,
+  StoredPickerPrefsSchema,
+  StoredSitePickerSettingsSchema,
   toggleKind,
   withChoice,
   type SitePickerSettings,
@@ -85,13 +87,16 @@ describe('pickerChoices', () => {
 });
 
 describe('changedChoices', () => {
-  it('counts the visitor’s choices that differ from the site’s', () => {
+  it('counts the choices the visitor keeps as their own', () => {
     expect(changedChoices(SITE, {})).toBe(0);
     expect(changedChoices(SITE, { group: 'name', kinds: [] })).toBe(2);
   });
 
-  it('does not count a choice the same as the site’s, nor any while the site does not allow them', () => {
-    expect(changedChoices(SITE, { order: 'new', kinds: ['poly'] })).toBe(0);
+  it('counts a kept choice that now matches the site’s, since it still holds when the site’s changes', () => {
+    expect(changedChoices(SITE, { order: 'new' })).toBe(1);
+  });
+
+  it('counts none while the site does not allow them', () => {
     expect(changedChoices({ ...SITE, visitorsMayChange: false }, { group: 'name' })).toBe(0);
   });
 });
@@ -119,9 +124,27 @@ describe('kinds', () => {
     expect(toggleKind(['mono', 'poly'], 'mono')).toEqual(['poly']);
   });
 
-  it('compare as a set, so the same kinds in another order are not a change', () => {
+  it('compare as a set, so choosing the site’s kinds in another order keeps nothing', () => {
     const site: SitePickerSettings = { ...SITE, kinds: ['mono', 'poly'] };
-    expect(changedChoices(site, { kinds: ['poly', 'mono'] })).toBe(0);
     expect(withChoice(site, {}, 'kinds', ['poly', 'mono'])).toEqual({});
+  });
+});
+
+describe('stored settings', () => {
+  it('drop a kind the databank no longer lists, keeping the rest', () => {
+    expect(StoredPickerPrefsSchema.parse({ group: 'name', kinds: ['mono', 'theremin'] })).toEqual({
+      group: 'name',
+      kinds: ['mono'],
+    });
+    expect(
+      StoredSitePickerSettingsSchema.parse({
+        ...FACTORY_PICKER,
+        kinds: ['eurorack', 'poly', 'poly'],
+      })
+    ).toEqual({ ...FACTORY_PICKER, kinds: ['poly'] });
+  });
+
+  it('still refuse a choice that is not one', () => {
+    expect(StoredPickerPrefsSchema.safeParse({ group: 'year' }).success).toBe(false);
   });
 });

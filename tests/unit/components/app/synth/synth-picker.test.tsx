@@ -469,6 +469,17 @@ describe('SynthPicker Advanced search (f-synth-picker t-329)', () => {
     expect(screen.queryByRole('region', { name: 'Advanced search' })).toBeNull();
   });
 
+  it('counts a kept choice that matches the site’s, and lets it be reset', () => {
+    const { onPrefs } = open({ prefs: { group: 'maker' } });
+    expect(advancedButton().textContent).toContain('1');
+    fireEvent.click(advancedButton());
+    expect(window_().textContent).toContain('Kept as your settings');
+    fireEvent.click(
+      within(window_()).getByRole('button', { name: 'Reset to the site’s settings' })
+    );
+    expect(onPrefs).toHaveBeenLastCalledWith({});
+  });
+
   it('closes the window on Escape before the list, and gives focus back to its button', () => {
     open();
     fireEvent.click(advancedButton());

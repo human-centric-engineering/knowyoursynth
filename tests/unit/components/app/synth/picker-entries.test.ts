@@ -258,6 +258,21 @@ describe('pickerGroups with a row that has no year (t-329)', () => {
   const keys = (groups: ReturnType<typeof pickerGroups>) =>
     groups.flatMap((g) => g.rows.map((r) => r.key));
 
+  it('reads a databank year written with more than the year', () => {
+    const family = {
+      ...TB_303_FAMILY,
+      members: TB_303_FAMILY.members.map((m) =>
+        m.synthId ? m : { ...m, instrument: { ...m.instrument, year: 'c. 1975' } }
+      ),
+    };
+    // The unmodelled member, "c. 1975", sits between the 1981 TB-303 and nothing older: first, oldest first.
+    expect(
+      keys(
+        pickerGroups(FAMILY_SYNTHS, [family], '', { unmodelled: true, group: 'name', order: 'old' })
+      )
+    ).toEqual(['member:tb-303/rebirth', 'tb-303', 'model-d', 'td-3']);
+  });
+
   it('lists it after every dated row, newest or oldest first', () => {
     const synths = [...FAMILY_SYNTHS, undated];
     for (const order of ['new', 'old'] as const)

@@ -243,6 +243,21 @@ describe('settings', () => {
     expect(data).toMatchObject({ picker: null });
   });
 
+  it('read a stored picker setting without a kind the databank no longer lists (t-329)', async () => {
+    settings.rows.set('user-1', {
+      userId: 'user-1',
+      tips: null,
+      dim: null,
+      heat: null,
+      harm: null,
+      fx: null,
+      picker: { kinds: ['mono', 'theremin'] },
+      updatedAt: new Date('2026-11-27T08:00:00.000Z'),
+    });
+    const { data } = await json(await readSettings(request('GET', '/api/v1/me/settings')));
+    expect(data).toMatchObject({ picker: { kinds: ['mono'] } });
+  });
+
   it('read a stored rack field by field, so a bad stored value falls back to its default', async () => {
     settings.rows.set('user-1', {
       userId: 'user-1',

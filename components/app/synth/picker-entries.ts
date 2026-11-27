@@ -141,10 +141,11 @@ function matches(row: PickerRow, q: string): boolean {
   ].some((s) => s.toLowerCase().includes(q));
 }
 
-/** A row's year, or null when it has none the databank could say ("", or not a year). */
+/** A row's year, or null when the databank gives none ("", or no four-digit year in it). */
 const year = (row: PickerRow): number | null => {
-  const y = Number.parseInt(row.year, 10);
-  return Number.isFinite(y) && y > 0 ? y : null;
+  // The first four digits, so "c. 1975" and "1975–78" read as 1975.
+  const m = /\d{4}/.exec(row.year);
+  return m ? Number(m[0]) : null;
 };
 
 /** By year, oldest first (`dir` 1) or newest (-1); a row with no year after every dated one, either way. */

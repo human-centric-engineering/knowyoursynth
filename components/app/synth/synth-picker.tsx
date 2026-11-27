@@ -387,7 +387,8 @@ function PickerOption({
       aria-selected={on}
       onClick={onChoose}
       onKeyDown={onKeyDown}
-      className={`flex w-full items-start gap-2.5 rounded-lg py-2 pr-2.5 text-left ${row.depth ? 'pl-8' : 'pl-2.5'} ${on ? 'bg-(--kys-accent)/12' : 'hover:bg-(--kys-surface)'}`}
+      // An original listed only to show where its member sits (lineage) is muted: the box or a kind did not find it.
+      className={`flex w-full items-start gap-2.5 rounded-lg py-2 pr-2.5 text-left ${row.depth ? 'pl-8' : 'pl-2.5'} ${row.context ? 'opacity-60' : ''} ${on ? 'bg-(--kys-accent)/12' : 'hover:bg-(--kys-surface)'}`}
     >
       <span
         className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${on ? 'bg-(--kys-accent)' : 'bg-transparent'}`}

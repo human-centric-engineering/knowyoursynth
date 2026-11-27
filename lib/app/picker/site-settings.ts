@@ -13,8 +13,8 @@ import { prisma } from '@/lib/db/client';
 import { logger } from '@/lib/logging';
 import {
   FACTORY_PICKER,
-  SitePickerSettingsSchema,
   sortKinds,
+  StoredSitePickerSettingsSchema,
   type SitePickerSettings,
 } from '@/lib/app/picker/settings';
 
@@ -40,7 +40,7 @@ export async function getSitePickerSettings(): Promise<SitePickerSettings> {
 /** A row as settings: none is the defaults, and so is one the schema refuses (logged). */
 function asSettings(row: unknown): SitePickerSettings {
   if (!row) return FACTORY_PICKER;
-  const parsed = SitePickerSettingsSchema.safeParse(row);
+  const parsed = StoredSitePickerSettingsSchema.safeParse(row);
   if (parsed.success) return parsed.data;
   logger.error(
     'synth picker: the site settings row is not valid, serving the defaults',
