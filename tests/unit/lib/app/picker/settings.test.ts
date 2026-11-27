@@ -22,8 +22,9 @@ import {
 const SITE: SitePickerSettings = { ...FACTORY_PICKER, order: 'new', kinds: ['poly'] };
 
 describe('the defaults', () => {
-  it('group by maker, A to Z, every kind, with thumbnails, and let visitors change them', () => {
+  it('list the synths that play, by maker, A to Z, every kind, with thumbnails, and let visitors change them', () => {
     expect(FACTORY_PICKER).toEqual({
+      scope: 'play',
       group: 'maker',
       order: 'name',
       kinds: [],
@@ -64,6 +65,7 @@ describe('the schemas', () => {
 describe('pickerChoices', () => {
   it('is the site’s choices for a visitor who changed none', () => {
     expect(pickerChoices(SITE, {})).toEqual({
+      scope: 'play',
       group: 'maker',
       order: 'new',
       kinds: ['poly'],
@@ -73,11 +75,18 @@ describe('pickerChoices', () => {
 
   it('takes the visitor’s changes over the site’s, and the site’s for the rest', () => {
     expect(pickerChoices(SITE, { group: 'lineage', thumbs: false })).toEqual({
+      scope: 'play',
       group: 'lineage',
       order: 'new',
       kinds: ['poly'],
       thumbs: false,
     });
+  });
+
+  it('lists every synth ever made only while the site offers it', () => {
+    expect(pickerChoices(SITE, { scope: 'all' }).scope).toBe('all');
+    expect(pickerChoices({ ...SITE, offerAll: false }, { scope: 'all' }).scope).toBe('play');
+    expect(pickerChoices({ ...SITE, scope: 'all', offerAll: false }, {}).scope).toBe('play');
   });
 
   it('ignores the visitor’s changes while the site does not allow them', () => {

@@ -210,6 +210,7 @@ import {
   sharedSoundHref,
   synthHref,
   memberHref,
+  synthAboutHref,
 } from '@/components/app/synth/routes';
 import type { PanelView } from '@/components/app/synth/routes';
 import {
@@ -3322,6 +3323,9 @@ function Synth({
                       memberSlug={blankSlug}
                       onSelect={pickSynth}
                       onSelectMember={pickMember}
+                      onSelectInstrument={(id) =>
+                        router.push(synthAboutHref(id), { transitionTypes: ['synth-change'] })
+                      }
                       site={pickerSite}
                       prefs={settings.picker[0]}
                       onPrefs={settings.picker[1]}

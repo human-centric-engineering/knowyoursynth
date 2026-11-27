@@ -50,6 +50,14 @@ export function memberHref(id: string, member: string, view: PanelView = DEFAULT
   return `/synths/${encodeURIComponent(id)}?member=${encodeURIComponent(member)}${q ? `&view=${q}` : ''}`;
 }
 
+/**
+ * A databank instrument nobody has modelled, shown in the synth's place (`f-synth-picker` t-330): what the databank
+ * knows about it, with the picker in its caption. No synth id can be `about`.
+ */
+export function synthAboutHref(instrumentId: string): string {
+  return `/synths/about/${encodeURIComponent(instrumentId)}`;
+}
+
 /** A synth's panel as a small picture, for its row in the synth picker (`f-synth-picker` t-328). */
 export function synthThumbnailHref(id: string): string {
   return `/synths/${encodeURIComponent(id)}/thumbnail.png`;
