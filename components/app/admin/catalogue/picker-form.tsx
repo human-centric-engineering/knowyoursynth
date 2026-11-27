@@ -57,13 +57,12 @@ function Choice<V extends string>({
   onPick: (v: V) => void;
 }) {
   return (
-    <div role="radiogroup" aria-labelledby={id} className="flex flex-wrap gap-2">
+    <div role="group" aria-labelledby={id} className="flex flex-wrap gap-2">
       {options.map((o) => (
         <Button
           key={o}
           type="button"
-          role="radio"
-          aria-checked={value === o}
+          aria-pressed={value === o}
           size="sm"
           variant={value === o ? 'default' : 'outline'}
           disabled={disabled}
@@ -84,8 +83,10 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
   const [savedNote, setSavedNote] = useState<string | null>(null);
   const save = useSaveFailure({ fallback: 'Could not save the picker settings. Try again.' });
 
+  // A change makes the last save's note, or its failure, about a draft that is gone.
   const set = <K extends keyof SitePickerSettings>(key: K, value: SitePickerSettings[K]) => {
     setSavedNote(null);
+    save.clear();
     setDraft((d) => ({ ...d, [key]: value }));
   };
   const flipKind = (k: PickerKind) => set('kinds', toggleKind(draft.kinds, k));
@@ -243,11 +244,12 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
           variant="ghost"
           disabled={disabled}
           onClick={() => {
-            setSavedNote(null);
+            save.clear();
             setDraft(FACTORY_PICKER);
+            setSavedNote('The form shows the original settings. Press Save to use them.');
           }}
         >
-          Restore the original settings
+          Reset the form to the original settings
         </Button>
         {savedNote && (
           <p role="status" className="text-muted-foreground text-sm">

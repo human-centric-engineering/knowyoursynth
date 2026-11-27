@@ -49,7 +49,7 @@ describe('SynthPickerSettingsPage', () => {
     );
     render(await SynthPickerSettingsPage());
     expect(serverFetch).toHaveBeenCalledWith('/api/v1/admin/synths/picker');
-    expect(screen.getByRole('radio', { name: 'Name A–Z' }).getAttribute('aria-checked')).toBe(
+    expect(screen.getByRole('button', { name: 'Name A–Z' }).getAttribute('aria-pressed')).toBe(
       'true'
     );
     expect(screen.queryByRole('alert')).toBeNull();

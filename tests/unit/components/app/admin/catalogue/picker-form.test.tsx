@@ -53,13 +53,13 @@ beforeEach(() => {
   put.mockImplementation(async (_url, opts) => (opts as { body: SitePickerSettings }).body);
 });
 
-const radio = (name: string) => screen.getByRole('radio', { name });
+const option = (name: string) => screen.getByRole('button', { name });
 
 describe('PickerSettingsForm', () => {
   it('opens on the settings it is given', () => {
     render(<PickerSettingsForm initial={SAVED} />);
-    expect(radio('Lineage').getAttribute('aria-checked')).toBe('true');
-    expect(radio('Oldest first').getAttribute('aria-checked')).toBe('true');
+    expect(option('Lineage').getAttribute('aria-pressed')).toBe('true');
+    expect(option('Oldest first').getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByRole('button', { name: 'modular' }).getAttribute('aria-pressed')).toBe(
       'true'
     );
@@ -76,7 +76,7 @@ describe('PickerSettingsForm', () => {
   it('saves the settings whole, says so, and refreshes the page', async () => {
     const user = userEvent.setup();
     render(<PickerSettingsForm initial={FACTORY_PICKER} />);
-    await user.click(radio('Name A–Z'));
+    await user.click(option('Name A–Z'));
     await user.click(screen.getByRole('button', { name: 'poly' }));
     await user.click(screen.getByRole('checkbox', { name: /Let visitors change these/ }));
     await user.click(screen.getByRole('button', { name: 'Save' }));
@@ -91,7 +91,7 @@ describe('PickerSettingsForm', () => {
   it('saves the order and every switch as set', async () => {
     const user = userEvent.setup();
     render(<PickerSettingsForm initial={FACTORY_PICKER} />);
-    await user.click(radio('Oldest first'));
+    await user.click(option('Oldest first'));
     await user.click(screen.getByRole('checkbox', { name: /Show panel thumbnails/ }));
     await user.click(screen.getByRole('checkbox', { name: /Offer .All synths ever made./ }));
     await user.click(screen.getByRole('button', { name: 'Save' }));
@@ -119,18 +119,31 @@ describe('PickerSettingsForm', () => {
     expect(mockRefresh).not.toHaveBeenCalled();
   });
 
-  it('restores the original settings into the form, without saving them', async () => {
+  it('resets the form to the original settings, saying they are not saved yet', async () => {
     const user = userEvent.setup();
     render(<PickerSettingsForm initial={SAVED} />);
-    await user.click(screen.getByRole('button', { name: 'Restore the original settings' }));
-    expect(radio('Maker').getAttribute('aria-checked')).toBe('true');
+    await user.click(
+      screen.getByRole('button', { name: 'Reset the form to the original settings' })
+    );
+    expect(option('Maker').getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('status').textContent).toContain('Press Save');
     expect(put).not.toHaveBeenCalled();
+  });
+
+  it('clears a refused save once the form is changed', async () => {
+    const user = userEvent.setup();
+    put.mockRejectedValue(new APIClientError('Server error', 'INTERNAL_ERROR', 500));
+    render(<PickerSettingsForm initial={FACTORY_PICKER} />);
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    expect(await screen.findByRole('alert')).toBeTruthy();
+    await user.click(option('Lineage'));
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 
   it('cannot be changed or saved where shared settings are read-only', () => {
     readOnly.value = true;
     render(<PickerSettingsForm initial={SAVED} />);
     expect(screen.getByRole('button', { name: 'Save' })).toHaveProperty('disabled', true);
-    expect(radio('Maker')).toHaveProperty('disabled', true);
+    expect(option('Maker')).toHaveProperty('disabled', true);
   });
 });

@@ -58,7 +58,8 @@ export async function setSitePickerSettings(
 ): Promise<{ before: SitePickerSettings; after: SitePickerSettings }> {
   // Kinds in the databank's order, so a reorder is never a change, in the audit or for a visitor's comparison.
   const after = { ...next, kinds: sortKinds(next.kinds) };
-  // One transaction, so two saves at once each audit what they replaced.
+  // The read and the write in one transaction. It takes no lock, so two admins saving at the same moment can both
+  // audit the same "before"; the settings themselves are whole, so the last save wins either way.
   const before = await prisma.$transaction(async (tx) => {
     const row = await tx.synthPickerSettings.findUnique({ where: { id: SITE }, select: COLUMNS });
     await tx.synthPickerSettings.upsert({

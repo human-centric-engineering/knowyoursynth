@@ -156,10 +156,11 @@ const byYear =
     return dir * (x - y);
   };
 const oldestFirst = byYear(1);
+const newestFirst = byYear(-1);
 
 /** The order rows are listed in: by name, or by year (newest or oldest first) and then by name. */
 function sorter(order: PickerOrder): (a: PickerRow, b: PickerRow) => number {
-  if (order === 'new') return (a, b) => byYear(-1)(a, b) || byName(a, b);
+  if (order === 'new') return (a, b) => newestFirst(a, b) || byName(a, b);
   if (order === 'old') return (a, b) => oldestFirst(a, b) || byName(a, b);
   return byName;
 }
