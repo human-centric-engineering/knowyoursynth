@@ -121,6 +121,13 @@ describe('asking and withdrawing', () => {
     expect(await getModelRequest('bob', 'moog-minimoog')).toMatchObject({ asked: true });
   });
 
+  it('lets any other failure through as it is', async () => {
+    const { prisma } = await import('@/lib/db/client');
+    const failure = new Error('connection reset');
+    vi.mocked(prisma.modelRequest.upsert).mockRejectedValueOnce(failure);
+    await expect(askToModel('ann', 'moog-minimoog')).rejects.toBe(failure);
+  });
+
   it('is a 404 for an instrument the databank does not have, recording nothing', async () => {
     await expect(askToModel('ann', 'no-such-synth')).rejects.toBeInstanceOf(NotFoundError);
     expect(db.rows).toEqual([]);
@@ -161,6 +168,24 @@ describe('tallyModelRequests', () => {
     ]);
     expect(tally[0].instrument).toEqual(BANK[0]);
     expect(JSON.stringify(tally)).not.toMatch(/ann|bob|cat/);
+  });
+
+  it('leaves out an instrument the databank no longer has', async () => {
+    await askToModel('ann', 'moog-minimoog');
+    db.rows.push({ userId: 'bob', instrumentId: 'gone-synth', createdAt: new Date() });
+    expect((await tallyModelRequests()).map((t) => t.instrument.id)).toEqual(['moog-minimoog']);
+  });
+
+  it('breaks a tie of count and time by name', async () => {
+    const at = new Date(Date.UTC(2026, 10, 27));
+    db.rows.push(
+      { userId: 'ann', instrumentId: 'moog-minimoog', createdAt: at },
+      { userId: 'bob', instrumentId: 'arp-odyssey', createdAt: at }
+    );
+    expect((await tallyModelRequests()).map((t) => t.instrument.name)).toEqual([
+      'ARP Odyssey',
+      'Minimoog Model D',
+    ]);
   });
 
   it('breaks a tie by who was asked for most recently', async () => {
