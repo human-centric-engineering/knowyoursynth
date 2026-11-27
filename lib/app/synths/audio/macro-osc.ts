@@ -22,7 +22,10 @@
 // vowel formants (textbook averages: Peterson and Barney, 1952), the ranges and the mode ratios. `formant`, `speech` and
 // `modal` follow the ideas of the Mutable Instruments Plaits models the MicroFreak uses (MIT licence), not their code.
 //
-// One instance per oscillator; `step()` makes no allocations. The wavetables are built the first time a table is used.
+// One instance per oscillator; `step()` makes no allocations. The wavetables (about 1 MB, built by FFT) are built once
+// per audio thread, by the first `set()` that chooses `wavetable`: about 120 ms, measured on a laptop, so the first
+// wavetable patch loaded can drop a block of audio as it loads, and nothing after it does. WAVE and its modulation
+// never build anything while sound is being made.
 
 import type { MacroOscParams } from '@/lib/app/synths/contract';
 
@@ -45,9 +48,11 @@ function sinT(p: number): number {
 const WT_LEN = 256;
 const WT_FRAMES = 32;
 export const WT_TABLES = 16;
-/** Harmonics up to WT_LEN / 2; each mip level halves them, so a frame stays band-limited up the keyboard. */
-const WT_HARM = WT_LEN / 2;
-const WT_LEVELS = 7;
+/** Harmonics below WT_LEN / 2; each mip level halves them (127, 64, 32 … 1), so a frame stays band-limited up the keyboard. */
+const WT_HARM = WT_LEN / 2 - 1;
+const WT_LEVELS = 8;
+/** The cycle of a frame given in time is sampled this finely before its harmonics are taken. */
+const WT_SRC = WT_LEN * 4;
 
 /** A frame given by its harmonics: amplitude of harmonic `h` (1..WT_HARM) at position `x` (0..1). */
 type Spectral = (h: number, x: number) => number;
@@ -56,6 +61,8 @@ type Temporal = (t: number, x: number) => number;
 type TableDef = { s: Spectral } | { t: Temporal };
 
 const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
+/** A component at `f` cycles per sample: full level up to 0.35, fading to nothing at 0.45, so none cuts off on a sample. */
+const nyq = (f: number): number => clamp01((0.45 - f) / 0.1);
 /** A fixed pseudo-random level per harmonic and seed, 0..1. */
 const hash = (h: number, seed: number): number => {
   const v = Math.sin(h * 12.9898 + seed * 78.233) * 43758.5453;
@@ -111,81 +118,129 @@ const TABLES: TableDef[] = [
   { s: (h, x) => ((h & (h - 1)) === 0 ? Math.pow(0.5 + 0.45 * x, Math.log2(h)) : 0) },
 ];
 
-/** Built tables: per table, WT_LEVELS × WT_FRAMES frames of WT_LEN + 1 samples (the last repeats the first). */
-const built: (Float32Array | null)[] = Array.from({ length: WT_TABLES }, () => null);
+/**
+ * An in-place complex FFT of length `n` (a power of two): `sign` −1 forward, +1 inverse (unscaled). Used only to build
+ * the wavetables, so it is written for clarity over speed.
+ */
+function fft(re: Float64Array, im: Float64Array, n: number, sign: number): void {
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1;
+    for (; j & bit; bit >>= 1) j ^= bit;
+    j ^= bit;
+    if (i < j) {
+      let t = re[i];
+      re[i] = re[j];
+      re[j] = t;
+      t = im[i];
+      im[i] = im[j];
+      im[j] = t;
+    }
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = (sign * TWO_PI) / len;
+    const wr = Math.cos(ang),
+      wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) {
+      let cr = 1,
+        ci = 0;
+      for (let k = 0; k < len >> 1; k++) {
+        const a = i + k,
+          b = a + (len >> 1);
+        const tr = re[b] * cr - im[b] * ci;
+        const ti = re[b] * ci + im[b] * cr;
+        re[b] = re[a] - tr;
+        im[b] = im[a] - ti;
+        re[a] += tr;
+        im[a] += ti;
+        const nr = cr * wr - ci * wi;
+        ci = cr * wi + ci * wr;
+        cr = nr;
+      }
+    }
+  }
+}
 
-/** One table built: each frame's harmonics, then each mip level synthesised from them and scaled to a peak of 1. */
+/** Built tables: per table, WT_LEVELS × WT_FRAMES frames of WT_LEN + 1 samples (the last repeats the first). */
+const built: Float32Array[] = [];
+
+/**
+ * One table built: each frame's harmonics (given, or by an FFT of its cycle), then each mip level by an inverse FFT
+ * of the harmonics it keeps, every level of a frame at the gain that puts its full-band level at a peak of 1.
+ */
 function buildTable(ti: number): Float32Array {
   const def = TABLES[ti];
   const stride = WT_LEN + 1;
   const out = new Float32Array(WT_LEVELS * WT_FRAMES * stride);
-  const a = new Float64Array(WT_HARM + 1);
-  const b = new Float64Array(WT_HARM + 1);
-  const buf = new Float64Array(WT_LEN);
+  // each harmonic as cos and sin parts: the frame is Σ A·cos(2πht) + B·sin(2πht)
+  const A = new Float64Array(WT_HARM + 1);
+  const B = new Float64Array(WT_HARM + 1);
+  const sre = new Float64Array(WT_SRC),
+    sim = new Float64Array(WT_SRC);
+  const re = new Float64Array(WT_LEN),
+    im = new Float64Array(WT_LEN);
   for (let f = 0; f < WT_FRAMES; f++) {
     const x = f / (WT_FRAMES - 1);
     if ('s' in def) {
       for (let h = 1; h <= WT_HARM; h++) {
-        a[h] = def.s(h, x);
-        b[h] = 0;
+        A[h] = 0;
+        B[h] = def.s(h, x);
       }
     } else {
-      // the cycle sampled 4× finer than the frame, then its harmonics by a discrete Fourier transform
-      const n = WT_LEN * 4;
-      a.fill(0);
-      b.fill(0);
-      for (let i = 0; i < n; i++) {
-        const v = def.t(i / n, x);
-        for (let h = 1; h <= WT_HARM; h++) {
-          const ph = (h * i) / n;
-          a[h] += v * sinT(ph);
-          b[h] += v * sinT(ph + 0.25);
-        }
+      for (let i = 0; i < WT_SRC; i++) {
+        sre[i] = def.t(i / WT_SRC, x);
+        sim[i] = 0;
       }
+      fft(sre, sim, WT_SRC, -1);
       for (let h = 1; h <= WT_HARM; h++) {
-        a[h] *= 2 / n;
-        b[h] *= 2 / n;
+        A[h] = (2 * sre[h]) / WT_SRC;
+        B[h] = (-2 * sim[h]) / WT_SRC;
       }
     }
-    // one gain per frame, from its full-band level, so a frame keeps its level up the keyboard
     let gain = 0;
     for (let l = 0; l < WT_LEVELS; l++) {
-      const hMax = WT_HARM >> l;
-      buf.fill(0);
+      const hMax = l === 0 ? WT_HARM : WT_LEN >> (l + 1);
+      re.fill(0);
+      im.fill(0);
       for (let h = 1; h <= hMax; h++) {
-        if (a[h] === 0 && b[h] === 0) continue;
-        for (let i = 0; i < WT_LEN; i++) {
-          const p = (h * i) / WT_LEN;
-          buf[i] += a[h] * sinT(p) + b[h] * sinT(p + 0.25);
-        }
+        re[h] = A[h] / 2;
+        im[h] = -B[h] / 2;
+        re[WT_LEN - h] = A[h] / 2;
+        im[WT_LEN - h] = B[h] / 2;
       }
+      fft(re, im, WT_LEN, 1);
       if (l === 0) {
         let pk = 0;
-        for (let i = 0; i < WT_LEN; i++) pk = Math.max(pk, Math.abs(buf[i]));
+        for (let i = 0; i < WT_LEN; i++) pk = Math.max(pk, Math.abs(re[i]));
         gain = pk > 1e-9 ? 1 / pk : 0;
       }
       const o = (l * WT_FRAMES + f) * stride;
-      for (let i = 0; i < WT_LEN; i++) out[o + i] = buf[i] * gain;
+      for (let i = 0; i < WT_LEN; i++) out[o + i] = re[i] * gain;
       out[o + WT_LEN] = out[o];
     }
   }
   return out;
 }
 
-function table(ti: number): Float32Array {
-  return built[ti] || (built[ti] = buildTable(ti));
+/**
+ * Builds every table, once per audio thread. A definition's `set()` calls it the first time a `wavetable` model is
+ * chosen, outside the render loop, so WAVE and its modulation never build a table while sound is being made.
+ */
+export function buildWavetables(): void {
+  for (let i = built.length; i < WT_TABLES; i++) built.push(buildTable(i));
 }
 
-/** The mip level for a phase increment: the most harmonics that stay under Nyquist. */
-function mipLevel(inc: number): number {
-  const hMax = inc > 0 ? 0.5 / inc : WT_HARM;
-  let l = 0;
-  while (l < WT_LEVELS - 1 && WT_HARM >> l > hMax) l++;
-  return l;
+/**
+ * Where a phase increment falls between the mip levels, 0..WT_LEVELS − 1: level `l` keeps WT_LEN / 2^(l+1) harmonics,
+ * so at `inc` it is free of aliasing from log2(WT_LEN·inc) up. The two levels either side are crossfaded, the lower
+ * (brighter) one only while it is still under Nyquist, so a glide changes brightness smoothly.
+ */
+function mipPos(inc: number): number {
+  const lv = Math.log2(Math.max(1e-9, WT_LEN * inc));
+  return lv < 0 ? 0 : lv > WT_LEVELS - 1 ? WT_LEVELS - 1 : lv;
 }
 
 /** One sample of table `t` at level `l`, frame position `fpos` (0..WT_FRAMES − 1) and phase `ph` (0..1). */
-function readTable(t: Float32Array, l: number, fpos: number, ph: number): number {
+function readLevel(t: Float32Array, l: number, fpos: number, ph: number): number {
   const stride = WT_LEN + 1;
   const f0 = fpos | 0;
   const f1 = f0 < WT_FRAMES - 1 ? f0 + 1 : f0;
@@ -198,6 +253,18 @@ function readTable(t: Float32Array, l: number, fpos: number, ph: number): number
   const s0 = t[o0] + (t[o0 + 1] - t[o0]) * fr;
   const s1 = t[o1] + (t[o1 + 1] - t[o1]) * fr;
   return s0 + (s1 - s0) * ff;
+}
+
+/** One sample of table `t` at mip position `mp` (see `mipPos`), crossfading the level below it into the one above. */
+function readTable(t: Float32Array, mp: number, fpos: number, ph: number): number {
+  const l1 = Math.ceil(mp);
+  if (l1 === 0) return readLevel(t, 0, fpos, ph);
+  const l0 = l1 - 1;
+  const fr = mp - l0;
+  const a = readLevel(t, l1, fpos, ph);
+  if (fr >= 1) return a;
+  // `l0` aliases only once mp passes l0, so it fades out as mp rises from l0 to l1
+  return a + (readLevel(t, l0, fpos, ph) - a) * (1 - fr);
 }
 
 // ─── harmo ───────────────────────────────────────────────────────────────────
@@ -262,16 +329,28 @@ const VOWELS: number[][][] = [
 ];
 const F_GAIN = [1, 0.6, 0.35];
 const F_BW = [90, 110, 150];
+/** Samples between the formant filters' coefficient updates; each moves to the next update in steps meanwhile. */
+const SV_EVERY = 16;
 
 // ─── modal ───────────────────────────────────────────────────────────────────
 
+/** `pluck`'s output level: the hardest strike, bowed, at its longest ring, peaks under 1. */
+const KS_OUT = 0.6;
+
 const MODES = 8;
+/** The dust's strikes per second at TIMBRE 1. */
+const DUST_RATE = 400;
 
 // ─── the oscillator ──────────────────────────────────────────────────────────
 
 export interface MacroOsc {
-  /** The model and settings; a change of model clears what was ringing. */
+  /**
+   * The model and settings; a change of model clears what was ringing. The first `wavetable` builds the tables and
+   * the first `pluck` makes its delay line, here rather than in `step()`.
+   */
   set(q: MacroOscParams): void;
+  /** Clears what was ringing: the voice calls it when the oscillator's `mix.macro` goes to 0, so it starts from rest when it comes back. */
+  reset(): void;
   /**
    * One sample. `inc` and `phase` are the oscillator's own (cycles per sample, 0..1), so its tuning, sync and pitch
    * modulation carry over; `w`, `t` and `s` are WAVE, TIMBRE and SHAPE with their modulation, clamped here; `hit` is a
@@ -302,8 +381,13 @@ export function createMacroOsc(sr: number): MacroOsc {
     svA1 = new Float64Array(3),
     svA2 = new Float64Array(3),
     svA3 = new Float64Array(3),
-    svK = new Float64Array(3);
-  let svCount = 0;
+    svK = new Float64Array(3),
+    // the targets the coefficients move to, a step at a time, over each update's 16 samples
+    svT = new Float64Array(12),
+    svD = new Float64Array(12);
+  let svCount = 0,
+    svFirst = true;
+  const svCur = [svK, svA1, svA2, svA3];
   // modal: each mode's two past outputs and coefficients, the strike's filter and the inc they were worked out for
   const mY1 = new Float64Array(MODES),
     mY2 = new Float64Array(MODES),
@@ -314,7 +398,7 @@ export function createMacroOsc(sr: number): MacroOsc {
     mW = -1,
     mS = -1,
     mT = -1,
-    mExc = 0,
+    mT60 = 1,
     mExcLp = 0;
 
   function clear() {
@@ -324,26 +408,43 @@ export function createMacroOsc(sr: number): MacroOsc {
     svIc1.fill(0);
     svIc2.fill(0);
     svCount = 0;
+    svFirst = true;
     mY1.fill(0);
     mY2.fill(0);
     mInc = -1;
-    mExc = mExcLp = 0;
+    mExcLp = 0;
   }
 
   /** The chorus for `wavetable` and `harmo`: two copies about ±0.6 % (10 cents) out, mixed in by SHAPE. */
   const CH_DET = 0.006;
 
+  /**
+   * The chorus copies are added at SHAPE and the sum divided by 1 + 2·SHAPE, so all three in step still peak at 1.
+   *
+   * WAVE picks a table: each of the 16 holds the middle of its sixteenth of the knob, and the last fifth of the way to
+   * the next one is a crossfade into it, so sweeping WAVE never jumps between waveforms.
+   */
+  function wtAt(ta: Float32Array, tb: Float32Array, x: number, mp: number, fpos: number, ph: number) {
+    const a = readTable(ta, mp, fpos, ph);
+    return x > 0 ? a + (readTable(tb, mp, fpos, ph) - a) * x : a;
+  }
   function wavetable(inc: number, phase: number, w: number, t: number, s: number): number {
-    const tab = table(Math.min(WT_TABLES - 1, Math.floor(w * WT_TABLES)));
+    if (built.length < WT_TABLES) buildWavetables();
+    let tp = w * WT_TABLES - 0.5;
+    tp = tp < 0 ? 0 : tp > WT_TABLES - 1 ? WT_TABLES - 1 : tp;
+    const ti = Math.min(WT_TABLES - 2, Math.floor(tp));
+    const x = clamp01((tp - ti - 0.4) / 0.2);
+    const ta = built[ti],
+      tb = built[ti + 1];
     const fpos = t * (WT_FRAMES - 1);
-    const l = mipLevel(inc * (1 + CH_DET));
-    let y = readTable(tab, l, fpos, phase);
+    const mp = mipPos(inc * (1 + CH_DET));
+    let y = wtAt(ta, tb, x, mp, fpos, phase);
     if (s > 0) {
       chA += inc * (1 + CH_DET);
       chB += inc * (1 - CH_DET);
       chA -= Math.floor(chA);
       chB -= Math.floor(chB);
-      y = (y + s * (readTable(tab, l, fpos, chA) + readTable(tab, l, fpos, chB))) / (1 + 1.4 * s);
+      y = (y + s * (wtAt(ta, tb, x, mp, fpos, chA) + wtAt(ta, tb, x, mp, fpos, chB))) / (1 + 2 * s);
     }
     return y;
   }
@@ -369,18 +470,20 @@ export function createMacroOsc(sr: number): MacroOsc {
     const tilt = (1 - t) * 6;
     let sum = 0;
     for (let k = 0; k < H_PARTIALS; k++) {
-      // a partial over Nyquist is left out
-      if ((k + 1) * inc >= 0.5) {
+      // a partial fades out as it nears Nyquist
+      const nf = nyq((k + 1) * inc);
+      if (!nf) {
         hl[k] = 0;
         continue;
       }
-      let v = a[k] + (b[k] - a[k]) * fr;
+      let v = (a[k] + (b[k] - a[k]) * fr) * nf;
       if (k > 0) v *= Math.pow(k + 1, -tilt);
       else if (v < 0.25) v = 0.25;
       hl[k] = v;
       sum += Math.abs(v);
     }
-    hGain = sum > 0 ? 1 / Math.max(1, sum * 0.7) : 0;
+    // the partials can all peak together, so their summed level is held to 1
+    hGain = sum > 0 ? 1 / Math.max(1, sum) : 0;
     return hGain;
   }
   function harmoAt(ph: number, g: number): number {
@@ -396,14 +499,13 @@ export function createMacroOsc(sr: number): MacroOsc {
       chB += inc * (1 - CH_DET);
       chA -= Math.floor(chA);
       chB -= Math.floor(chB);
-      y = (y + s * (harmoAt(chA, g) + harmoAt(chB, g))) / (1 + 1.4 * s);
+      y = (y + s * (harmoAt(chA, g) + harmoAt(chB, g))) / (1 + 2 * s);
     }
     return y;
   }
 
   function pluck(inc: number, w: number, t: number, s: number, hit: boolean): number {
-    if (!ks) ks = new Float32Array(KS_N);
-    const buf = ks;
+      const buf = ks!;
     // the period in samples, held to the line's length (about 6 Hz at 48 kHz)
     let per = inc > 0 ? 1 / inc : KS_N - 2;
     if (per > KS_N - 2) per = KS_N - 2;
@@ -422,7 +524,7 @@ export function createMacroOsc(sr: number): MacroOsc {
     if (w > 0) {
       const n = Math.random() * 2 - 1;
       ksBowLp += (n - ksBowLp) * 0.05;
-      x += ksBowLp * w * 0.25;
+      x += ksBowLp * w * 0.6;
     }
     // the loop filter: the delayed sample averaged with the one before it, weighted `b` (0.5 is the classic string's
     // average; less is brighter, so a string that rings longer also stays brighter). It delays by `b` samples, so the
@@ -443,7 +545,8 @@ export function createMacroOsc(sr: number): MacroOsc {
     const y = lp * g + x;
     buf[ksW] = y > 1.5 ? 1.5 : y < -1.5 ? -1.5 : y;
     ksW = (ksW + 1) & (KS_N - 1);
-    return y;
+    // the strike and the string it starts can peak together, so the string comes out at a level that keeps it under 1
+    return y * KS_OUT;
   }
 
   function formant(
@@ -464,18 +567,19 @@ export function createMacroOsc(sr: number): MacroOsc {
       fp1 += inc * r1;
       fp2 += inc * r2;
     }
-    // each formant over Nyquist is left out
-    const a1 = inc * r1 < 0.45 ? 1 : 0;
-    const a2 = inc * r2 < 0.45 ? 0.6 : 0;
+    // each formant fades out as it nears Nyquist
+    const a1 = nyq(inc * r1);
+    const a2 = 0.6 * nyq(inc * r2);
     // SHAPE: the fade over each cycle, from steep (wide formants) to a slow one (narrow)
     const pw = 8 - 7.5 * s;
     const win = Math.pow(1 - phase, pw);
-    return win * (a1 * sinT(fp1) + a2 * sinT(fp2)) * 0.8;
+    // the two can peak together, so their sum is held to 1
+    return (win * (a1 * sinT(fp1) + a2 * sinT(fp2)) * 0.9) / Math.max(1, a1 + a2);
   }
 
   function speech(inc: number, phase: number, w: number, t: number, s: number): number {
     if (svCount <= 0) {
-      svCount = 16;
+      svCount = SV_EVERY;
       // WAVE: the voice, crossfaded; SHAPE: the vowel, crossfaded; TIMBRE: an octave down to an octave up
       const vp = w * (VOWELS.length - 1);
       const v0 = Math.floor(vp),
@@ -492,13 +596,27 @@ export function createMacroOsc(sr: number): MacroOsc {
         if (hz > sr * 0.45) hz = sr * 0.45;
         const g = Math.tan((Math.PI * hz) / sr);
         const k = Math.min(2, (F_BW[f] * shift) / hz);
-        svK[f] = k;
-        svA1[f] = 1 / (1 + g * (g + k));
-        svA2[f] = g * svA1[f];
-        svA3[f] = g * svA2[f];
+        const a1 = 1 / (1 + g * (g + k));
+        svT[f] = k;
+        svT[3 + f] = a1;
+        svT[6 + f] = g * a1;
+        svT[9 + f] = g * g * a1;
       }
+      const cur = svCur;
+      for (let j = 0; j < 12; j++) {
+        const c = cur[(j / 3) | 0];
+        if (svFirst) c[j % 3] = svT[j];
+        svD[j] = (svT[j] - c[j % 3]) / SV_EVERY;
+      }
+      svFirst = false;
     }
     svCount--;
+    for (let f = 0; f < 3; f++) {
+      svK[f] += svD[f];
+      svA1[f] += svD[3 + f];
+      svA2[f] += svD[6 + f];
+      svA3[f] += svD[9 + f];
+    }
     // the source: a buzz (a falling ramp, band-limited by a one-sample blep at its reset) and, for the whisper, noise
     let src = 1 - 2 * phase;
     if (phase < inc) {
@@ -532,30 +650,41 @@ export function createMacroOsc(sr: number): MacroOsc {
       mT = t;
       // SHAPE: the fundamental's time to fall 60 dB, 0.05 s to 10 s; the upper modes fall faster
       const t60 = 0.05 * Math.pow(200, s);
+      mT60 = t60;
+      // TIMBRE lifts the upper modes; the levels are shared out so their sum, all ringing in step, is 0.9
+      let norm = 0;
+      for (let k = 0; k < MODES; k++) norm += Math.pow(k + 1, -1.2 + 1.1 * t);
       for (let k = 0; k < MODES; k++) {
         const n = k + 1;
         // WAVE: harmonic at 0 (n), bending to a free bar's ratios at 1 (about n^1.6)
         const ratio = Math.pow(n, 1 + 0.6 * w);
         const f = inc * ratio;
-        if (f >= 0.45) {
-          mG[k] = 0;
-          mC[k] = 0;
-          mR2[k] = 0;
+        const nf = nyq(f);
+        if (!nf) {
+          // a mode over Nyquist is silent, and starts from rest if it comes back down
+          mG[k] = mC[k] = mR2[k] = mY1[k] = mY2[k] = 0;
           continue;
         }
         const r = Math.exp(-6.9078 / (sr * (t60 / (1 + 0.6 * k))));
         const wk = TWO_PI * f;
         mC[k] = 2 * r * Math.cos(wk);
         mR2[k] = r * r;
-        // input scaled by sin(ω) so each mode's ring starts at its level; TIMBRE lifts the upper modes
-        mG[k] = Math.sin(wk) * Math.pow(n, -1.2 + 1.1 * t) * 0.5;
+        // input scaled by sin(ω) so each mode's ring starts at its level
+        mG[k] = (Math.sin(wk) * Math.pow(n, -1.2 + 1.1 * t) * 0.9 * nf) / norm;
       }
     }
     // the strike: an impulse through a filter that opens with TIMBRE; past half way, random dust strikes as well
+    // The dust's strikes pile up in modes that ring long, as a random walk does, so each is scaled down by the square
+    // root of how many land within a ring time; it then rings at about the level of one note's strike.
     let imp = hit ? 1 : 0;
-    if (t > 0.5 && Math.random() < (t - 0.5) * 2 * (400 / sr)) imp += (Math.random() * 2 - 1) * 0.6;
+    if (t > 0.5) {
+      const rate = (t - 0.5) * 2 * DUST_RATE;
+      if (Math.random() < rate / sr)
+        imp += ((Math.random() * 2 - 1) * 0.6) / Math.sqrt(1 + (rate * mT60) / 6.9);
+    }
     mExcLp += (imp - mExcLp) * (0.05 + 0.9 * t);
-    mExc = mExcLp * (2 - t);
+    // the filter keeps the strike's area, not its height: a dark strike rings the low modes as loud as a bright one
+    const mExc = mExcLp;
     let y = 0;
     for (let k = 0; k < MODES; k++) {
       if (!mG[k]) continue;
@@ -572,7 +701,10 @@ export function createMacroOsc(sr: number): MacroOsc {
     set(q) {
       if (q.model !== model) clear();
       model = q.model;
+      if (model === 'wavetable') buildWavetables();
+      if (model === 'pluck' && !ks) ks = new Float32Array(KS_N);
     },
+    reset: clear,
     step(inc, phase, w, t, s, hit) {
       w = clamp01(w);
       t = clamp01(t);

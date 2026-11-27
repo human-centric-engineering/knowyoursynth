@@ -13,7 +13,8 @@
 
 import { describe, it, expect } from 'vitest';
 
-import type { EngineRoute, MacroOscParams, OscParams } from '@/lib/app/synths/contract';
+import type { EngineParams, EngineRoute, MacroOscParams, OscParams } from '@/lib/app/synths/contract';
+import { createMacroOsc } from '@/lib/app/synths/audio/macro-osc';
 import { allFinite, monoParams, render, rms } from '@/tests/unit/lib/app/synths/audio/render';
 
 const SR = 48000;
@@ -209,5 +210,93 @@ describe('modal', () => {
     const bar = play(at('modal', 1, 0.3, 0.9), [], NOTE, 48000);
     const second = (b: Float32Array) => power(b, 2 * F0, 0, 24000) / power(b, F0, 0, 24000);
     expect(second(harm)).toBeGreaterThan(second(bar) * 10);
+  });
+});
+
+/** The oscillator alone, `n` samples at `hz` from a note struck on the first, with settings `w`, `t`, `s`. */
+function raw(q: MacroOscParams, hz = F0, n = SR): Float32Array {
+  const o = createMacroOsc(SR);
+  o.set(q);
+  const out = new Float32Array(n);
+  const inc = hz / SR;
+  let ph = 0;
+  for (let i = 0; i < n; i++) {
+    out[i] = o.step(inc, ph, q.wave, q.timbre, q.shape, i === 0);
+    ph += inc;
+    if (ph >= 1) ph -= 1;
+  }
+  return out;
+}
+
+describe('the macro oscillator on its own', () => {
+  const GRID = [0, 0.5, 1];
+  it.each(MODELS)('%s stays under full scale at every corner of its settings', (model) => {
+    for (const w of GRID)
+      for (const t of GRID)
+        for (const s of GRID) {
+          const b = raw(at(model, w, t, s));
+          expect(allFinite(b)).toBe(true);
+          expect(peak(b), `${model} wave ${w} timbre ${t} shape ${s}`).toBeLessThan(1);
+        }
+  });
+
+  it('crossfades from one wavetable to the next rather than jumping', () => {
+    // at each boundary between sixteenths of WAVE, the sound just below and just above it is all but the same
+    for (let k = 1; k < 16; k++) {
+      const below = raw(at('wavetable', k / 16 - 1e-6, 0.3, 0), F0, 2400);
+      const above = raw(at('wavetable', k / 16 + 1e-6, 0.3, 0), F0, 2400);
+      expect(maxDiff(below, above)).toBeLessThan(1e-3);
+    }
+  });
+
+  it('brightens smoothly up a glide, with no step between mip levels', () => {
+    // two pitches a hair apart either side of where a level gives way to the next sound the same
+    const o = createMacroOsc(SR);
+    o.set(at('wavetable', 0, 0, 0));
+    for (const lvl of [1, 2, 3, 4]) {
+      const inc = 2 ** lvl / 256;
+      const a = o.step(inc * (1 - 1e-6), 0.3, 0, 0, 0, false);
+      const b = o.step(inc * (1 + 1e-6), 0.3, 0, 0, 0, false);
+      expect(Math.abs(a - b)).toBeLessThan(1e-3);
+    }
+  });
+
+  it.each(['pluck', 'modal', 'speech'] as const)('%s starts from rest after reset()', (model) => {
+    const o = createMacroOsc(SR);
+    // TIMBRE under half way, so the modal model has no dust striking on its own
+    o.set(at(model, 0, 0.4, 0.9));
+    for (let i = 0; i < 2400; i++) o.step(F0 / SR, (i * F0) / SR, 0, 0.4, 0.9, i === 0);
+    o.reset();
+    // no note: a string or mode left ringing would sound; speech's filters start empty
+    let pk = 0;
+    for (let i = 0; i < 2400; i++) {
+      const y = o.step(F0 / SR, 0, 0, 0.4, 0.9, false);
+      if (model !== 'speech') pk = Math.max(pk, Math.abs(y));
+    }
+    expect(pk).toBe(0);
+  });
+});
+
+describe('mix.macro switched off and on in the voice', () => {
+  it('does not bring back the string it was ringing', () => {
+    const on = monoParams({
+      osc: [osc(at('pluck', 0, 0.6, 1))],
+      filter: { type: 'svf', mode: 'lp', cutoff: 20000, res: 0, envAmt: 0, envSrc: 'env1', kbd: 0 },
+      vca: { envSrc: 'none', bias: 1 },
+    });
+    const off: EngineParams = { ...on, osc: [{ level: 0.4, mix: { saw: 0 }, semi: 0 }] };
+    const b = render(on, {
+      sr: SR,
+      len: 19200,
+      events: [
+        [0, { type: 'noteOn', n: NOTE, v: 0.9 }],
+        [4800, { type: 'params', p: off }],
+        [9600, { type: 'params', p: on }],
+      ],
+      seed: SEED,
+    }).out;
+    // ringing before, then off; switched on again with no new note, the long string does not come back
+    expect(rms(b, 0, 4800)).toBeGreaterThan(0.01);
+    expect(rms(b, 12000, 19200)).toBeLessThan(1e-4);
   });
 });

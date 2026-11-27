@@ -1092,6 +1092,10 @@ function createVoice(
       if (!q) {
         o.on = false;
         o.levelT = 0;
+        if (o.macro) {
+          o.macro = 0;
+          o.mac!.reset();
+        }
         continue;
       }
       const m: OscMix = q.mix || {};
@@ -1119,7 +1123,10 @@ function createVoice(
       o.vpDepT = q.vpm ? q.vpm.depth : 0;
       // MOD DECAY: falls to 1 % over `d` seconds
       o.vpDecC = q.vpm && q.vpm.eg ? Math.exp(Math.log(0.01) / Math.max(1, q.vpm.eg.d * sr)) : 0;
+      const macroWas = o.macro;
       o.macro = m.macro && q.macro ? m.macro : 0;
+      // switched off, it stops where it is; cleared now, it starts from rest when it is switched on again
+      if (macroWas && !o.macro) o.mac!.reset();
       if (o.macro) {
         if (!o.mac) o.mac = createMacroOsc(sr);
         o.mac.set(q.macro!);
