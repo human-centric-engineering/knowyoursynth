@@ -193,7 +193,8 @@ describe('paraphony with an amp envelope per note (oscAssign.env)', () => {
 
   it('does nothing with no envelope on the VCA', () => {
     const p = (env: boolean) => four(env, { vca: { envSrc: 'none', bias: 0.5 } });
-    const ev = [...chord, off(0.4, G3)];
+    // two let go, then a new key: the let-go notes are silenced by it, as without the setting
+    const ev = [...chord, off(0.3, G3), off(0.3, C4), on(0.4, A4)];
     const a = render(p(true), { events: ev, len: SR }).out;
     const b = render(p(false), { events: ev, len: SR }).out;
     expect(a).toEqual(b);

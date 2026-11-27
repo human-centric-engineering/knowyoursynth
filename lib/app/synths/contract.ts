@@ -2065,7 +2065,8 @@ export interface OscAssignParams {
    * stays one for the voice. With a velocity envelope (`env1v`, `env2v`) each note keeps its own velocity. A fifth key
    * takes a free oscillator first, then the oldest of the let-go notes, then the oldest held note. With `vca.envSrc`
    * `'none'` it does nothing. What is still one for the voice: every modulation source (envelopes, LFOs, the wheel,
-   * velocity and key on the routes), so a route moves every oscillator's setting alike.
+   * velocity and key on the routes), so a route moves every oscillator's setting alike, and an envelope's key follow
+   * sets every note's times from the last key struck.
    */
   env?: boolean;
 }
