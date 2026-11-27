@@ -91,6 +91,8 @@ describe('the sound kit', () => {
     // four steps a beat at 120 BPM is 8 Hz
     expect(tempoHzOf(tempo(120, 4))).toBeCloseTo(8, 1);
     expect(tempoHzOf(tempoHz(220))).toBeCloseTo(220, -1);
+    expect(() => tempo(300, 12)).toThrow(/does not reach/);
+    expect(() => tempoHz(0.5)).toThrow(/does not reach/);
   });
 
   it('gives decays, cutoffs and EG amounts back through the definition', () => {
@@ -100,6 +102,7 @@ describe('the sound kit', () => {
     expect(() => cutoff(5)).toThrow(/no cutoff/);
     expect(egSemi(egAmt(24))).toBeCloseTo(24, 0);
     expect(egSemi(egAmt(-12))).toBeCloseTo(-12, 0);
+    expect(() => egAmt(120)).toThrow(/does not reach/);
     expect(vcfEgOct(vcfEg(4))).toBeCloseTo(4, 1);
     expect(run()).toEqual({ 'seq.run': true });
   });
