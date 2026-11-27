@@ -14,7 +14,8 @@ export const DFAM_FAMILY: FamilyMap = {
       to: 'dfam',
       lacks: {
         'noise.color': 'The DFAM’s noise is white only',
-        'clock.*': 'The DFAM has no MIDI or USB clock: its TEMPO always runs it',
+        'clock.source': 'The DFAM has no MIDI or USB clock: its TEMPO always runs it',
+        'clock.scale': 'The DFAM has no MIDI or USB clock: its TEMPO always runs it',
         'j.phones':
           'The DFAM has no PHONES jack on its panel: its headphones go in the rear output',
         'j.midi_*': 'The DFAM has no MIDI',

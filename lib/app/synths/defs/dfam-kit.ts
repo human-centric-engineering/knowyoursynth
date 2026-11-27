@@ -773,7 +773,7 @@ export function dfamDefaultPatch(variant: Variant): DefaultPatch {
     {
       title: 'Set the sequencer’s steps flat and loud',
       module: 'mod',
-      why: 'Every PITCH at the centre and every VELOCITY fully up, so each step, and each key, hits at full strength. SEQ PITCH MOD OFF keeps the steps off the pitch, and the pitch envelope’s decay short.',
+      why: 'Every PITCH at the centre and every VELOCITY fully up, so each step hits at full strength (a key hits at its own velocity). SEQ PITCH MOD OFF keeps the steps off the pitch, and the pitch envelope’s decay short.',
       controls: ['seq.pitch*', 'seq.vel*', 'vco_eg.*'],
     },
     {

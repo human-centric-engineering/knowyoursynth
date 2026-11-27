@@ -13,6 +13,8 @@ import type { ControlValues } from '@/lib/app/synths/contract';
 import { CENTRE_NOTE, EG_SEMI, VCF_EG_OCT } from '@/lib/app/synths/defs/dfam-kit';
 
 const r2 = (v: number): number => Math.round(v * 100) / 100;
+/** Pitches to four places, so a semitone interval is in tune (two places is up to 6 cents off a knob). */
+const r4 = (v: number): number => Math.round(v * 10000) / 10000;
 const LN1000 = Math.log(1000);
 
 /** MIDI number for a note name (C4 = 60): `G2`, `Bb1`, `F#3`. */
@@ -27,11 +29,14 @@ export function midi(name: string): number {
 export function freq(name: string): number {
   const v = 5 + (midi(name) - CENTRE_NOTE) / 12;
   if (v < 0 || v > 10) throw new Error(`FREQUENCY does not reach ${name}`);
-  return r2(v);
+  return r4(v);
 }
 
 /** A PITCH step's position for an interval in semitones: a volt an octave, so 1.0 is an octave up. */
-export const step = (st: number): number => r2(st / 12);
+export function step(st: number): number {
+  if (Math.abs(st) > 60) throw new Error(`a PITCH step does not reach ${st} semitones`);
+  return r4(st / 12);
+}
 
 /** The eight PITCH knobs, as intervals in semitones from the oscillators' FREQUENCY. */
 export function pitches(row: number[]): ControlValues {
@@ -85,7 +90,10 @@ export function egAmt(st: number): number {
 }
 
 /** A VCF EG AMOUNT for a cutoff jump of `oct` octaves at full velocity (negative to close it). */
-export const vcfEg = (oct: number): number => r2((oct / VCF_EG_OCT) * 5);
+export function vcfEg(oct: number): number {
+  if (Math.abs(oct) > VCF_EG_OCT) throw new Error(`VCF EG AMOUNT does not reach ${oct} octaves`);
+  return r2((oct / VCF_EG_OCT) * 5);
+}
 
 /** RUN / STOP lit: on the app's clock, Play on the bar runs it. */
 export const run = (): ControlValues => ({ 'seq.run': true });

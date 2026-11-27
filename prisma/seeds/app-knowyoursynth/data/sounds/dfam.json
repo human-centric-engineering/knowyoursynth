@@ -78,8 +78,8 @@
             "seq.pitch3": 0.25,
             "seq.pitch4": 0,
             "seq.pitch5": 0,
-            "seq.pitch6": -0.17,
-            "seq.pitch7": 0.58,
+            "seq.pitch6": -0.1667,
+            "seq.pitch7": 0.5833,
             "seq.pitch8": 0,
             "seq.vel1": 10,
             "seq.vel2": 3,
@@ -131,10 +131,10 @@
         {
           "title": "Two high triangles",
           "module": "osc",
-          "why": "VCO 1 at C5 and a quieter VCO 2 at G5, both on their triangles: a bright, pure pair.\n- VCO 1 FREQUENCY 7 · C5 · 523 Hz\n- VCO 2 FREQUENCY 7.58 · G5 · 782 Hz\n- VCO 2 LEVEL 4\n- Listen for: with a key, two high, clear tones a fifth apart.",
+          "why": "VCO 1 at C5 and a quieter VCO 2 at G5, both on their triangles: a bright, pure pair.\n- VCO 1 FREQUENCY 7 · C5 · 523 Hz\n- VCO 2 FREQUENCY 7.58 · G5 · 784 Hz\n- VCO 2 LEVEL 4\n- Listen for: with a key, two high, clear tones a fifth apart.",
           "set": {
             "vco1.freq": 7,
-            "vco2.freq": 7.58,
+            "vco2.freq": 7.5833,
             "mix.vco2": 4
           }
         },
@@ -152,13 +152,13 @@
           "why": "The PITCH row as a melody in a major key, and a velocity row that lets some notes fall back.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.58 · +7 st (0.6 V)\n- PITCH 3 1 · +12 st (1.0 V)\n- PITCH 4 0.33 · +4 st (0.3 V)\n- PITCH 5 0.58 · +7 st (0.6 V)\n- PITCH 6 1.33 · +16 st (1.3 V)\n- PITCH 7 1 · +12 st (1.0 V)\n- PITCH 8 1.58 · +19 st (1.6 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 6 · 3.0 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 6 · 3.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 6 · 3.0 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 7 · 3.5 V\n- Listen for: nothing new until the cable and RUN.",
           "set": {
             "seq.pitch1": 0,
-            "seq.pitch2": 0.58,
+            "seq.pitch2": 0.5833,
             "seq.pitch3": 1,
-            "seq.pitch4": 0.33,
-            "seq.pitch5": 0.58,
-            "seq.pitch6": 1.33,
+            "seq.pitch4": 0.3333,
+            "seq.pitch5": 0.5833,
+            "seq.pitch6": 1.3333,
             "seq.pitch7": 1,
-            "seq.pitch8": 1.58,
+            "seq.pitch8": 1.5833,
             "seq.vel1": 10,
             "seq.vel2": 6,
             "seq.vel3": 8,
@@ -323,7 +323,7 @@
           "module": "osc",
           "why": "VCO 2 silent in the mix, at G3, and NOISE / VCF MOD fully up, ready for the cable.\n- VCO 2 FREQUENCY 5.58 · G3 · 196 Hz\n- VCO 2 WAVE Square\n- NOISE / VCF MOD 10\n- Listen for: with a key, a fizz on the tone: the noise moving the cutoff, until the cable replaces it.",
           "set": {
-            "vco2.freq": 5.58,
+            "vco2.freq": 5.5833,
             "vco2.wave": "square",
             "vcfmod.amt": 10
           }
@@ -341,13 +341,13 @@
           "set": {
             "seq.pitch_mod": "vco2",
             "seq.pitch1": 0,
-            "seq.pitch2": 0.42,
-            "seq.pitch3": -0.58,
+            "seq.pitch2": 0.4167,
+            "seq.pitch3": -0.5833,
             "seq.pitch4": 1,
             "seq.pitch5": 0.25,
             "seq.pitch6": -1,
-            "seq.pitch7": 0.58,
-            "seq.pitch8": 1.58,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 1.5833,
             "seq.vel1": 10,
             "seq.vel2": 0,
             "seq.vel3": 7,
@@ -444,8 +444,8 @@
             "seq.pitch4": 0,
             "seq.pitch5": 0.25,
             "seq.pitch6": 0,
-            "seq.pitch7": 0.58,
-            "seq.pitch8": 0.83,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0.8333,
             "seq.vel1": 10,
             "seq.vel2": 6,
             "seq.vel3": 8,
@@ -503,7 +503,7 @@
           "module": "osc",
           "why": "VCO 1 triangle at E2, with the pitch envelope throwing it up and back fast.\n- VCO 1 FREQUENCY 4.33 · E2 · 82 Hz\n- VCO 1 EG AMOUNT 2.8 · +30.1 st at full velocity\n- VCO DECAY 2.33 · 50 ms\n- Listen for: with a key, a short, punchy kick.",
           "set": {
-            "vco1.freq": 4.33,
+            "vco1.freq": 4.3333,
             "vco1.eg_amt": 2.8,
             "vco_eg.decay": 2.33
           }
@@ -511,9 +511,9 @@
         {
           "title": "FM on oscillator 2",
           "module": "osc",
-          "why": "VCO 2 square a tritone up, quiet, frequency-modulated by VCO 1: a metallic ring for the snare.\n- VCO 2 FREQUENCY 4.83 · A♯2 · 116 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 4\n- 1→2 FM AMOUNT 4\n- Listen for: with a key, a clang under the kick.",
+          "why": "VCO 2 square a tritone up, quiet, frequency-modulated by VCO 1: a metallic ring for the snare.\n- VCO 2 FREQUENCY 4.83 · A♯2 · 117 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 4\n- 1→2 FM AMOUNT 4\n- Listen for: with a key, a clang under the kick.",
           "set": {
-            "vco2.freq": 4.83,
+            "vco2.freq": 4.8333,
             "vco2.wave": "square",
             "mix.vco2": 4,
             "vco2.fm_amt": 4
@@ -534,13 +534,13 @@
           "why": "SEQ PITCH MOD on VCO 1&2. Steps 1, 4 and 7 turned down (kicks), 3 and 5 turned up (snares); the rest silent on the VELOCITY row.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 -0.42 · -5 st (-0.4 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 1.17 · +14 st (1.2 V)\n- PITCH 4 -0.42 · -5 st (-0.4 V)\n- PITCH 5 1.17 · +14 st (1.2 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 -0.42 · -5 st (-0.4 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 9 · 4.5 V\n- VELOCITY 4 8 · 4.0 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 9 · 4.5 V\n- VELOCITY 8 0 · 0.0 V\n- Listen for: nothing new until the cable and RUN.",
           "set": {
             "seq.pitch_mod": "vco12",
-            "seq.pitch1": -0.42,
+            "seq.pitch1": -0.4167,
             "seq.pitch2": 0,
-            "seq.pitch3": 1.17,
-            "seq.pitch4": -0.42,
-            "seq.pitch5": 1.17,
+            "seq.pitch3": 1.1667,
+            "seq.pitch4": -0.4167,
+            "seq.pitch5": 1.1667,
             "seq.pitch6": 0,
-            "seq.pitch7": -0.42,
+            "seq.pitch7": -0.4167,
             "seq.pitch8": 0,
             "seq.vel1": 10,
             "seq.vel2": 0,
@@ -625,12 +625,12 @@
           "set": {
             "seq.pitch1": 0,
             "seq.pitch2": 0.25,
-            "seq.pitch3": 0.58,
-            "seq.pitch4": 0.83,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 0.8333,
             "seq.pitch5": 1,
-            "seq.pitch6": 0.83,
-            "seq.pitch7": 0.58,
-            "seq.pitch8": 0.42,
+            "seq.pitch6": 0.8333,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0.4167,
             "seq.vel1": 10,
             "seq.vel2": 7,
             "seq.vel3": 8,
@@ -955,9 +955,9 @@
         {
           "title": "A drum",
           "module": "osc",
-          "why": "VCO 1 square at D2 with a pitch drop.\n- VCO 1 FREQUENCY 4.17 · D2 · 74 Hz\n- VCO 1 WAVE Square\n- VCO 1 EG AMOUNT 1.91 · +14 st at full velocity\n- VCO DECAY 3.92 · 150 ms\n- Listen for: with a key, a low drum with a bend.",
+          "why": "VCO 1 square at D2 with a pitch drop.\n- VCO 1 FREQUENCY 4.17 · D2 · 73 Hz\n- VCO 1 WAVE Square\n- VCO 1 EG AMOUNT 1.91 · +14 st at full velocity\n- VCO DECAY 3.92 · 150 ms\n- Listen for: with a key, a low drum with a bend.",
           "set": {
-            "vco1.freq": 4.17,
+            "vco1.freq": 4.1667,
             "vco1.wave": "square",
             "vco1.eg_amt": 1.91,
             "vco_eg.decay": 3.92
@@ -980,7 +980,7 @@
           "module": "patch",
           "why": "VCO 2 at D3, out of the mix, into VCF MOD, with NOISE / VCF MOD at 6.\n- VCO 2 FREQUENCY 5.17 · D3 · 147 Hz\n- NOISE / VCF MOD 6\n- Patch VCO 2 OUT to VCF MOD input\n- Listen for: with a key, a drum that says something like “wow”.",
           "set": {
-            "vco2.freq": 5.17,
+            "vco2.freq": 5.1667,
             "vcfmod.amt": 6
           },
           "cables": [["j.vco2_out", "j.vcf_mod"]]
@@ -993,11 +993,11 @@
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
             "seq.pitch2": 0,
-            "seq.pitch3": 0.42,
+            "seq.pitch3": 0.4167,
             "seq.pitch4": 0,
-            "seq.pitch5": 0.58,
+            "seq.pitch5": 0.5833,
             "seq.pitch6": 0,
-            "seq.pitch7": 0.42,
+            "seq.pitch7": 0.4167,
             "seq.pitch8": 0.25,
             "seq.vel1": 10,
             "seq.vel2": 0,
@@ -1126,7 +1126,7 @@
           "module": "osc",
           "why": "VCO 1 triangle at F1.\n- VCO 1 FREQUENCY 3.42 · F1 · 44 Hz\n- VCO 1 LEVEL 9\n- Listen for: with a key, a deep hum.",
           "set": {
-            "vco1.freq": 3.42,
+            "vco1.freq": 3.4167,
             "mix.vco1": 9
           }
         },
@@ -1484,11 +1484,11 @@
         {
           "title": "Two squares",
           "module": "osc",
-          "why": "VCO 1 square at C#5, VCO 2 square at G5, both in the mix.\n- VCO 1 FREQUENCY 7.08 · C♯5 · 553 Hz\n- VCO 1 WAVE Square\n- VCO 2 FREQUENCY 7.58 · G5 · 782 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 7\n- Listen for: with a key, a clashing, metallic pair.",
+          "why": "VCO 1 square at C#5, VCO 2 square at G5, both in the mix.\n- VCO 1 FREQUENCY 7.08 · C♯5 · 554 Hz\n- VCO 1 WAVE Square\n- VCO 2 FREQUENCY 7.58 · G5 · 784 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 7\n- Listen for: with a key, a clashing, metallic pair.",
           "set": {
-            "vco1.freq": 7.08,
+            "vco1.freq": 7.0833,
             "vco1.wave": "square",
-            "vco2.freq": 7.58,
+            "vco2.freq": 7.5833,
             "vco2.wave": "square",
             "mix.vco2": 7
           }
@@ -1557,7 +1557,7 @@
           "module": "osc",
           "why": "VCO 1 triangle at E2, a pitch drop of an octave over 120 ms.\n- VCO 1 FREQUENCY 4.33 · E2 · 82 Hz\n- VCO 1 EG AMOUNT 1.77 · +12 st at full velocity\n- VCO DECAY 3.6 · 120 ms\n- Listen for: with a key, a falling tom.",
           "set": {
-            "vco1.freq": 4.33,
+            "vco1.freq": 4.3333,
             "vco1.eg_amt": 1.77,
             "vco_eg.decay": 3.6
           }
@@ -1579,8 +1579,8 @@
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 1,
             "seq.pitch2": 1,
-            "seq.pitch3": 0.58,
-            "seq.pitch4": 0.58,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 0.5833,
             "seq.pitch5": 0.25,
             "seq.pitch6": 0.25,
             "seq.pitch7": 0,
@@ -1668,13 +1668,13 @@
           "set": {
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
-            "seq.pitch2": 0.58,
-            "seq.pitch3": -0.42,
+            "seq.pitch2": 0.5833,
+            "seq.pitch3": -0.4167,
             "seq.pitch4": 1,
             "seq.pitch5": 0,
             "seq.pitch6": -1,
-            "seq.pitch7": 0.42,
-            "seq.pitch8": 1.58,
+            "seq.pitch7": 0.4167,
+            "seq.pitch8": 1.5833,
             "seq.vel1": 10,
             "seq.vel2": 8,
             "seq.vel3": 0,
@@ -1746,7 +1746,7 @@
             "seq.pitch1": 0,
             "seq.pitch2": 0,
             "seq.pitch3": 0,
-            "seq.pitch4": 0.58,
+            "seq.pitch4": 0.5833,
             "seq.pitch5": 0,
             "seq.pitch6": 0,
             "seq.pitch7": 1,
@@ -1798,12 +1798,12 @@
         {
           "title": "The carrier",
           "module": "osc",
-          "why": "VCO 2 triangle at A3, alone in the mix; VCO 1 down in the mix but running at E4 as the modulator.\n- VCO 1 LEVEL 0\n- VCO 2 LEVEL 9\n- VCO 2 FREQUENCY 5.75 · A3 · 220 Hz\n- VCO 1 FREQUENCY 6.33 · E4 · 329 Hz\n- VCO 1 WAVE Square\n- Listen for: with a key, a soft tone.",
+          "why": "VCO 2 triangle at A3, alone in the mix; VCO 1 down in the mix but running at E4 as the modulator.\n- VCO 1 LEVEL 0\n- VCO 2 LEVEL 9\n- VCO 2 FREQUENCY 5.75 · A3 · 220 Hz\n- VCO 1 FREQUENCY 6.33 · E4 · 330 Hz\n- VCO 1 WAVE Square\n- Listen for: with a key, a soft tone.",
           "set": {
             "mix.vco1": 0,
             "mix.vco2": 9,
             "vco2.freq": 5.75,
-            "vco1.freq": 6.33,
+            "vco1.freq": 6.3333,
             "vco1.wave": "square"
           }
         },
@@ -1833,11 +1833,11 @@
             "seq.pitch_mod": "vco2",
             "seq.pitch1": 0,
             "seq.pitch2": 0.5,
-            "seq.pitch3": -0.42,
-            "seq.pitch4": 0.92,
+            "seq.pitch3": -0.4167,
+            "seq.pitch4": 0.9167,
             "seq.pitch5": 0,
-            "seq.pitch6": 1.08,
-            "seq.pitch7": -0.58,
+            "seq.pitch6": 1.0833,
+            "seq.pitch7": -0.5833,
             "seq.pitch8": 0.5,
             "seq.vel1": 10,
             "seq.vel2": 6,
@@ -1892,7 +1892,7 @@
             "mix.vco2": 8,
             "vco2.wave": "square",
             "vco2.sync": "on",
-            "vco2.freq": 5.58
+            "vco2.freq": 5.5833
           }
         },
         {
@@ -1924,9 +1924,9 @@
             "seq.pitch2": 0,
             "seq.pitch3": 0.25,
             "seq.pitch4": 0,
-            "seq.pitch5": 0.58,
+            "seq.pitch5": 0.5833,
             "seq.pitch6": 0,
-            "seq.pitch7": 0.83,
+            "seq.pitch7": 0.8333,
             "seq.pitch8": 1,
             "seq.vel1": 10,
             "seq.vel2": 5,
@@ -2117,7 +2117,7 @@
           "module": "osc",
           "why": "VCO 1 triangle at G1 with punch.\n- VCO 1 FREQUENCY 3.58 · G1 · 49 Hz\n- VCO 1 EG AMOUNT 2.5 · +24 st at full velocity\n- VCO DECAY 2.59 · 60 ms\n- VCA DECAY 4.92 · 300 ms\n- Listen for: with a key, a punchy low drum.",
           "set": {
-            "vco1.freq": 3.58,
+            "vco1.freq": 3.5833,
             "vco1.eg_amt": 2.5,
             "vco_eg.decay": 2.59,
             "vca_eg.decay": 4.92
@@ -2131,12 +2131,12 @@
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
             "seq.pitch2": 0,
-            "seq.pitch3": 1.58,
+            "seq.pitch3": 1.5833,
             "seq.pitch4": 0,
-            "seq.pitch5": 1.58,
+            "seq.pitch5": 1.5833,
             "seq.pitch6": 0,
             "seq.pitch7": 2,
-            "seq.pitch8": 1.58,
+            "seq.pitch8": 1.5833,
             "seq.vel1": 10,
             "seq.vel2": 0,
             "seq.vel3": 7,
@@ -2306,12 +2306,12 @@
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
             "seq.pitch2": 1,
-            "seq.pitch3": 0.58,
+            "seq.pitch3": 0.5833,
             "seq.pitch4": 0.25,
             "seq.pitch5": 0,
             "seq.pitch6": 1,
-            "seq.pitch7": 0.83,
-            "seq.pitch8": 0.58,
+            "seq.pitch7": 0.8333,
+            "seq.pitch8": 0.5833,
             "seq.vel1": 10,
             "seq.vel2": 8,
             "seq.vel3": 8,
@@ -2389,13 +2389,13 @@
           "set": {
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
-            "seq.pitch2": 0.33,
-            "seq.pitch3": 0.58,
+            "seq.pitch2": 0.3333,
+            "seq.pitch3": 0.5833,
             "seq.pitch4": 0.75,
             "seq.pitch5": 1,
             "seq.pitch6": 0.75,
-            "seq.pitch7": 0.58,
-            "seq.pitch8": 0.17,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0.1667,
             "seq.vel1": 10,
             "seq.vel2": 7,
             "seq.vel3": 8,
@@ -2474,12 +2474,12 @@
           "set": {
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
-            "seq.pitch2": 0.58,
+            "seq.pitch2": 0.5833,
             "seq.pitch3": 0.25,
-            "seq.pitch4": 0.83,
+            "seq.pitch4": 0.8333,
             "seq.pitch5": 1,
-            "seq.pitch6": 0.58,
-            "seq.pitch7": 0.42,
+            "seq.pitch6": 0.5833,
+            "seq.pitch7": 0.4167,
             "seq.pitch8": 0.25,
             "seq.vel1": 10,
             "seq.vel2": 3,
@@ -2552,7 +2552,7 @@
           "module": "osc",
           "why": "VCO 1 triangle at E2 with an octave’s pitch drop.\n- VCO 1 FREQUENCY 4.33 · E2 · 82 Hz\n- VCO 1 EG AMOUNT 1.77 · +12 st at full velocity\n- VCO DECAY 3.6 · 120 ms\n- Listen for: with a key, a falling tom.",
           "set": {
-            "vco1.freq": 4.33,
+            "vco1.freq": 4.3333,
             "vco1.eg_amt": 1.77,
             "vco_eg.decay": 3.6
           }

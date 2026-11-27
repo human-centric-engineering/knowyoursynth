@@ -77,6 +77,9 @@ describe('the sound kit', () => {
 
   it('sets the PITCH and VELOCITY rows, eight steps each', () => {
     expect(step(12)).toBe(1);
+    // to four places, so a fifth is in tune
+    expect(step(7) * 12).toBeCloseTo(7, 3);
+    expect(() => step(72)).toThrow(/does not reach/);
     expect(pitches([0, 12, 0, 0, 0, 0, 0, -12])).toMatchObject({
       'seq.pitch2': 1,
       'seq.pitch8': -1,
@@ -104,6 +107,7 @@ describe('the sound kit', () => {
     expect(egSemi(egAmt(-12))).toBeCloseTo(-12, 0);
     expect(() => egAmt(120)).toThrow(/does not reach/);
     expect(vcfEgOct(vcfEg(4))).toBeCloseTo(4, 1);
+    expect(() => vcfEg(9)).toThrow(/does not reach/);
     expect(run()).toEqual({ 'seq.run': true });
   });
 });

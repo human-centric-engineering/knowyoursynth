@@ -2673,8 +2673,8 @@ function createVoice(
           // its peak noise does through `inc`, not the bare key
           oscNote[k] = nn;
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
-          // linear FM (`fmLin`): the latest output of the oscillator it comes from (this sample's, if that one runs first)
-          // swings the frequency in hertz
+          // linear FM (`fmLin`): the oscillator it comes from swings the frequency in hertz, at its last sample's output
+          // (the outputs are written in the waveform loop below, after every frequency is set)
           if (o.fmFrom >= 0 && o.fmFrom < nOsc) {
             hz *= 1 + (o.fmDepth + ev(DI.fmLinAmt)) * S[OSC_SI[o.fmFrom]];
             if (hz < 0) hz = 0;

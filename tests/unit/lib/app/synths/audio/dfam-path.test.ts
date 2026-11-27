@@ -46,7 +46,11 @@ function dfam(over: Partial<DfamParams> = {}): DfamParams {
 }
 
 /** The core on its own, with its signals readable and its inputs settable. */
-function rig(p: DfamParams, follow = false) {
+/**
+ * `patch` is a cable from one of the core's own outputs back into it, as the voice's routing would read it: the
+ * dest it goes into, the signal it comes from and the cable's gain.
+ */
+function rig(p: DfamParams, follow = false, patch?: { dst: string; src: string; gain: number }) {
   // the voice's noise, which the NOISE / EXT channel reads, last
   const names = [...DFAM_SIGNALS, 'noise'];
   const SI = Object.fromEntries(names.map((n, i) => [n, i]));
@@ -54,7 +58,10 @@ function rig(p: DfamParams, follow = false) {
   const S = new Float64Array(names.length);
   const dv = new Float64Array(DFAM_DESTS.length);
   const cab = new Uint8Array(DFAM_DESTS.length);
-  const core = createDfam(SR, S, SI, DI, (d) => dv[d], cab);
+  const ev = (d: number): number =>
+    patch && d === DI[patch.dst] ? S[SI[patch.src]] * patch.gain : dv[d];
+  if (patch) cab[DI[patch.dst]] = 1;
+  const core = createDfam(SR, S, SI, DI, ev, cab);
   core.set(p, follow);
   /** Run `n` samples, recording the named signals; `key` strikes a key on the first sample at that velocity. */
   const run = (n: number, names: string[], key?: number) => {
@@ -462,7 +469,7 @@ describe('dfam core: following the app’s clock', () => {
     for (let k = 0; k < at.length; k++) expect(Math.abs(at[k] - k * 1000)).toBeLessThanOrEqual(1);
   });
 
-  it('a transport start puts it on step 1 with a cable in RUN / STOP too, and VELOCITY OUT on step 1’s', () => {
+  it('a transport start puts it on step 1 when it starts the sequencer, a cable in RUN / STOP too', () => {
     const vel = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
     const r = rig(dfam({ run: false, tempo: 2, vel }), true);
     for (let k = 0; k < 4; k++) {
@@ -471,11 +478,11 @@ describe('dfam core: following the app’s clock', () => {
     }
     r.run(10, [], 0.95);
     expect(r.S[r.SI.dfmVel]).toBeCloseTo(0.95, 6);
-    // RUN / STOP unlit: the start moves it to step 1 and shows step 1's velocity
+    // RUN / STOP unlit: the start leaves it on the step ADVANCE chose, the key's velocity still shown
     r.core.clock('start');
     r.run(1, []);
-    expect(r.core.stage()).toBe(0);
-    expect(r.S[r.SI.dfmVel]).toBe(0.1);
+    expect(r.core.stage()).toBe(4);
+    expect(r.S[r.SI.dfmVel]).toBeCloseTo(0.95, 6);
     r.core.clock('stop');
     r.run(1, []);
     // a gate held high in RUN / STOP, left on step 5: the run starts on step 1
@@ -489,6 +496,34 @@ describe('dfam core: following the app’s clock', () => {
     const at = clocked(r, 120, 1.5);
     expect(at).toEqual([0, 24000]);
     expect(r.core.stage()).toBe(1);
+  });
+
+  it('a step patched from PITCH OUT into TEMPO sets its own length, locked to the beat', () => {
+    // 2 Hz at 120 BPM: a beat a step. −1 V on PITCH halves TEMPO (1 V an octave); the jack out (×5 to volts) and in
+    // (×0.2 from volts) cancel, so the cable carries PITCH's full scale straight into TEMPO's
+    const pitch = [-1, 0, -1, 0, 0, 0, 0, 0].map((v) => v * 0.2);
+    const r = rig(dfam({ run: true, tempo: 2, pitch }), true, {
+      dst: 'dfmTempo',
+      src: 'dfmPitch',
+      gain: 1,
+    });
+    const at = clocked(r, 120, 6.5);
+    // step 1 at half the rate is two beats, step 2 one beat, step 3 two, step 4 one: 0, 2, 3, 5, 6 beats
+    expect(at.map((i) => Math.round(i / 24000))).toEqual([0, 2, 3, 5, 6]);
+  });
+
+  it('a step patched from VELOCITY OUT into VELOCITY hits at its own velocity', () => {
+    const vel = [1, 0, 1, 0, 1, 0, 1, 0];
+    const r = rig(dfam({ run: true, tempo: 100, vel }), false, {
+      dst: 'dfmVelIn',
+      src: 'dfmVel',
+      gain: 1,
+    });
+    const rec = r.run(480 * 4, ['dfmEgVca']);
+    // steps 1 and 3 ring; steps 2 and 4 (velocity 0) leave the envelope falling from step 1's and 3's hits
+    expect(max(rec.dfmEgVca.subarray(0, 100))).toBeCloseTo(1, 2);
+    expect(rec.dfmEgVca[480 + 100]).toBeLessThan(rec.dfmEgVca[480 - 1]);
+    expect(max(rec.dfmEgVca.subarray(960, 1060))).toBeCloseTo(1, 2);
   });
 
   it('runs free above 20 Hz, within the run', () => {
