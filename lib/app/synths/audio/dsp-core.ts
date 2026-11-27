@@ -47,6 +47,7 @@ import {
   type ClockAt,
 } from '@/lib/app/synths/audio/subharm-core';
 import { createDfam, DFAM_SIGNALS, DFAM_DESTS } from '@/lib/app/synths/audio/dfam-core';
+import { createMacroOsc, type MacroOsc } from '@/lib/app/synths/audio/macro-osc';
 import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
   withPatterns,
@@ -243,6 +244,15 @@ interface VoiceOsc {
   vpEg: number;
   vpEgSt: number;
   vpDecC: number;
+  /** `mix.macro`: its gain, its model (made the first time it is used) and its three settings with their targets, smoothed like `pw`. */
+  macro: number;
+  mac: MacroOsc | null;
+  macW: number;
+  macWT: number;
+  macT: number;
+  macTT: number;
+  macS: number;
+  macST: number;
 }
 
 /** One envelope's running state. The optional fields are set by setParams and the stage changes. */
@@ -531,6 +541,9 @@ export const DESTS: string[] = [
   ...SUBHARM_DESTS,
   ...DFAM_DESTS,
   'fmLinAmt',
+  'mWave',
+  'mTimbre',
+  'mShape',
 ];
 
 /** Audio path and gates the voice always has unless a SynthDef's `normals` or a cable overrides them. */
@@ -624,6 +637,8 @@ function createVoice(
   let mmOn = false;
   /** Whether anything reaches dest `ovtIn`, so a `mix.ovt` oscillator skips it otherwise. */
   let ovtInOn = false;
+  /** Whether anything reaches dests `mWave`, `mTimbre` or `mShape`, so a `mix.macro` oscillator skips them otherwise. */
+  let macOn = false;
   /** Whether anything reaches dest `env2Rate` / `env1DecRate`, so the envelopes skip them otherwise. */
   let env2RateOn = false,
     env1DecOn = false,
@@ -729,6 +744,14 @@ function createVoice(
     vpEg: 0,
     vpEgSt: 0,
     vpDecC: 0,
+    macro: 0,
+    mac: null,
+    macW: 0,
+    macWT: 0,
+    macT: 0,
+    macTT: 0,
+    macS: 0,
+    macST: 0,
   }));
   let nOsc = 0;
   const held: number[] = [];
@@ -1036,6 +1059,7 @@ function createVoice(
     mmOn = fed(DI.vcfBpIn) || fed(DI.vcfHpIn);
     if (!mmOn) fPrevBp = fPrevHp = 0;
     ovtInOn = fed(DI.ovtIn);
+    macOn = fed(DI.mWave) || fed(DI.mTimbre) || fed(DI.mShape);
     env2RateOn = fed(DI.env2Rate);
     env1DecOn = fed(DI.env1DecRate);
     env1RateOn = fed(DI.env1Rate);
@@ -1095,6 +1119,14 @@ function createVoice(
       o.vpDepT = q.vpm ? q.vpm.depth : 0;
       // MOD DECAY: falls to 1 % over `d` seconds
       o.vpDecC = q.vpm && q.vpm.eg ? Math.exp(Math.log(0.01) / Math.max(1, q.vpm.eg.d * sr)) : 0;
+      o.macro = m.macro && q.macro ? m.macro : 0;
+      if (o.macro) {
+        if (!o.mac) o.mac = createMacroOsc(sr);
+        o.mac.set(q.macro!);
+        o.macWT = q.macro!.wave;
+        o.macTT = q.macro!.timbre;
+        o.macST = q.macro!.shape;
+      }
       o.ssDetT = q.ssDetune || 0;
       o.ssMxT = q.ssMix || 0;
       o.fbHT = q.fbHarm || 0;
@@ -1111,6 +1143,9 @@ function createVoice(
         o.ovtA = o.ovtAT;
         o.mnSh = o.mnShT;
         o.vpDep = o.vpDepT;
+        o.macW = o.macWT;
+        o.macT = o.macTT;
+        o.macS = o.macST;
         o.nCut = o.nCutT;
         o.nRes = o.nResT;
       }
@@ -2803,6 +2838,20 @@ function createVoice(
             );
           if (o.mnoise || o.vpm)
             y += multiEngine(o, k === 2 && pwSplit ? DI.pw3 : DI.pw1 + (k > 1 ? 1 : k), oscNote[k]);
+          if (o.macro) {
+            o.macW += (o.macWT - o.macW) * sm;
+            o.macT += (o.macTT - o.macT) * sm;
+            o.macS += (o.macST - o.macS) * sm;
+            y +=
+              o.mac!.step(
+                o.inc,
+                o.phase,
+                o.macW + (macOn ? ev(DI.mWave) : 0),
+                o.macT + (macOn ? ev(DI.mTimbre) : 0),
+                o.macS + (macOn ? ev(DI.mShape) : 0),
+                noteHit
+              ) * o.macro;
+          }
           if (o.syncGate && o.syncTo >= 0 && o.syncTo < nOsc && osc[o.syncTo].phase >= 0.5) y = 0;
           if (outs && k < 3) {
             const w = OW[k];

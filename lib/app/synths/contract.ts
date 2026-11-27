@@ -1597,6 +1597,11 @@ export interface OscMix {
   mnoise?: number;
   /** minilogue xd MULTI ENGINE VPM: a two-operator phase-modulation voice set by `OscParams.vpm` ({@link VpmParams}); not with `morph`. */
   vpm?: number;
+  /**
+   * A macro oscillator model set by `OscParams.macro` ({@link MacroOscParams}): wavetable, harmonic, plucked string,
+   * formant, speech or modal resonator (the Arturia MicroFreak's). Not with `morph`.
+   */
+  macro?: number;
 }
 
 /** One oscillator (up to four; the fourth has signal `osc4`, dest `pitch4` and shares `pw2`). */
@@ -1657,6 +1662,34 @@ export interface OscParams {
   mnoise?: MultiNoiseParams;
   /** `mix.vpm`'s carrier, modulator and envelope (required with it). */
   vpm?: VpmParams;
+  /** `mix.macro`'s model and its three settings (required with it). */
+  macro?: MacroOscParams;
+}
+
+/**
+ * A macro oscillator (`mix.macro`, `lib/app/synths/audio/macro-osc.ts`): one of six models, each played by three
+ * settings 0..1. Dests `mWave`, `mTimbre` and `mShape` add to them (for every `mix.macro` oscillator of the voice), and
+ * the sum is held to 0..1. The models and what each setting does:
+ *
+ * - `wavetable`: `wave` picks one of 16 tables, `timbre` the position in its 32 frames, `shape` a chorus.
+ * - `harmo`: 16 sine partials; `wave` crossfades eight sets of partial levels, `timbre` sculpts them from a sine to the
+ *   whole set, `shape` a chorus.
+ * - `pluck`: a Karplus-Strong string struck by each note; `wave` bows it (noise fed in), `timbre` is the strike's
+ *   strength and brightness, `shape` how long it rings (0.05 to 12 s).
+ * - `formant`: two formants restarted on each cycle; `timbre` the first's frequency (the note up six octaves), `wave`
+ *   the second's against the first (0.5 to 4 times), `shape` their width.
+ * - `speech`: a buzz through three vowel formants; `wave` the voice (man, woman, child, whisper), `shape` the vowel
+ *   (a e i o u), `timbre` a formant shift of an octave down to an octave up.
+ * - `modal`: eight modes struck by each note; `wave` their inharmonicity, `timbre` the strike's brightness and (past
+ *   half way) a dust of random strikes, `shape` how long they ring (0.05 to 10 s).
+ *
+ * Every table, curve and range is reasoned, not measured: the MicroFreak manual describes each setting in a line.
+ */
+export interface MacroOscParams {
+  model: 'wavetable' | 'harmo' | 'pluck' | 'formant' | 'speech' | 'modal';
+  wave: number;
+  timbre: number;
+  shape: number;
 }
 
 /**
