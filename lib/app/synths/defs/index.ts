@@ -58,6 +58,8 @@ import teo5 from '@/lib/app/synths/defs/teo-5';
 import nymphes from '@/lib/app/synths/defs/nymphes';
 import behringerOdyssey from '@/lib/app/synths/defs/behringer-odyssey';
 import subharmonicon from '@/lib/app/synths/defs/subharmonicon';
+import dfam from '@/lib/app/synths/defs/dfam';
+import edge from '@/lib/app/synths/defs/edge';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -109,6 +111,8 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   nymphes,
   behringerOdyssey,
   subharmonicon,
+  dfam,
+  edge,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));

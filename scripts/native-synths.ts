@@ -30,6 +30,8 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'nymphes',
   'behringer-odyssey',
   'subharmonicon',
+  'dfam',
+  'edge',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);

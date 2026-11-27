@@ -1,0 +1,55 @@
+{
+  "synth": "dfam",
+  "title": "The DFAM: Moog’s drum machine with no drums in it",
+  "intro": "Moog Music released the DFAM, the Drummer From Another Mother, in 2017 as the second of its Mother-32 family of semi-modular desktop and Eurorack synths. Where a drum machine plays samples or fixed drum circuits, the DFAM is a whole analogue synth voice, two VCOs, noise, a Moog ladder filter and three decay envelopes, played by an 8-step sequencer with a pitch and a velocity knob per step. Its kicks, toms, snares and hats are all patches of one voice.",
+  "timeline": [
+    {
+      "year": "1964",
+      "name": "Moog modular",
+      "text": "Robert Moog’s voltage-controlled modules, the ladder filter among them: the DFAM’s filter is that design."
+    },
+    {
+      "year": "1960s",
+      "name": "Moog 960 Sequential Controller",
+      "text": "Moog’s modular step sequencer gave each step a knob of its own, the way the DFAM’s PITCH and VELOCITY rows work."
+    },
+    {
+      "year": "2015",
+      "name": "Moog Mother-32",
+      "text": "The first of the family: one VCO, a ladder filter and a 32-step sequencer, desktop or Eurorack, with a patchbay."
+    },
+    {
+      "year": "2017",
+      "name": "Moog DFAM",
+      "tag": "This synth",
+      "text": "Two VCOs with hard sync and linear FM, white noise, an LP or HP ladder filter, three decay envelopes with voltage-controlled decay, an 8-step pitch and velocity sequencer clocked from 10 to 10,000 BPM, and a 24-point patchbay."
+    },
+    {
+      "year": "2020",
+      "name": "Moog Subharmonicon",
+      "text": "The third of the family: subharmonic oscillators and polyrhythmic sequencers, made to clock and be clocked by the DFAM."
+    },
+    {
+      "year": "2021",
+      "name": "Behringer EDGE",
+      "text": "Behringer’s recreation of the DFAM, adding pink noise, MIDI and USB clock, MIDI notes and a poly chain."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Moog Mother-32",
+      "years": "2015",
+      "text": "The semi-modular it was made to sit beside: its assignable output, set to a clock, drives the DFAM’s ADV / CLOCK."
+    },
+    {
+      "name": "Moog Subharmonicon",
+      "years": "2020",
+      "text": "A later member of the family, also in the app; its CLOCK OUT or TRIGGER can clock the DFAM."
+    },
+    {
+      "name": "Behringer EDGE",
+      "years": "2021",
+      "text": "The recreation of the DFAM, also in the app."
+    }
+  ]
+}

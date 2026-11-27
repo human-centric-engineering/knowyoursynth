@@ -52,6 +52,8 @@ import { routing as behringerOdyssey } from '@/lib/app/synths/routing/behringer-
 import { routing as emsVcs3 } from '@/lib/app/synths/routing/ems-vcs3';
 import { routing as syntrxIi } from '@/lib/app/synths/routing/syntrx-ii';
 import { routing as subharmonicon } from '@/lib/app/synths/routing/subharmonicon';
+import { routing as dfam } from '@/lib/app/synths/routing/dfam';
+import { routing as edge } from '@/lib/app/synths/routing/edge';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -96,6 +98,8 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   emsVcs3,
   syntrxIi,
   subharmonicon,
+  dfam,
+  edge,
 ];
 
 /** The routings built from their definition, by synth id. */

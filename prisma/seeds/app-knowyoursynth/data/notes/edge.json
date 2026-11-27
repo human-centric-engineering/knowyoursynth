@@ -1,0 +1,58 @@
+{
+  "synth": "edge",
+  "unusual": [
+    {
+      "target": "noise.color",
+      "text": "The EDGE’s addition to the DFAM’s voice: pink noise, darker than the DFAM’s white, for brushes, toms and softer hats. It colours the noise into the filter’s modulation as well as the mixer."
+    },
+    {
+      "target": "clock.scale",
+      "text": "SCALE sets the step length against MIDI or USB clock, straight or triplet, so the sequencer locks to a DAW at a musical division, where the DFAM needs a clock at its ADV / CLOCK input."
+    },
+    {
+      "target": "vco1.eg_amt",
+      "text": "The pitch envelope is bipolar per oscillator: right of centre the pitch spikes up and falls back, the attack of a kick; left of centre it dips and rises back. With both ENVELOPE knobs at the centre, EG (VCO 1&2) DECAY seems to do nothing, despite the guide describing it as a depth."
+    },
+    {
+      "target": "seq.vel1",
+      "text": "The velocity row is the rhythm. Every clock plays a step, so a rest is a step turned fully down, and a step half way up is a softer, less punchy hit, not only a quieter one: velocity sets the peak of all three envelopes, pitch and filter as well as loudness, and lengthens their decays a little."
+    },
+    {
+      "target": "seq.pitch1",
+      "text": "Each PITCH knob spans about ten octaves (±5 V), so a small turn is a big interval. With SEQ PITCH MOD on OFF the row still reaches the PITCH output, a second voltage per step to patch anywhere."
+    },
+    {
+      "target": "vco2.fm_amt",
+      "text": "Its FM is linear: OSC 1 swings OSC 2’s frequency in hertz around its pitch, so the pitch holds while the sidebands grow, where most synths’ FM bends the pitch."
+    },
+    {
+      "target": "vcfmod.amt",
+      "text": "Noise is wired into the cutoff as well as into the mixer: this knob shakes the filter with it, for dirt and sizzle. A cable in VCF MOD replaces the noise, and is the only direct way into the cutoff."
+    },
+    {
+      "target": "clock.tempo",
+      "text": "The clock is an oscillator, 0.7 to 700 Hz, and its TEMPO input is 1 V an octave: a voltage there can stretch single steps (Swing Time) or push the sequencer into audio rate, where it becomes a waveform."
+    },
+    {
+      "target": "vca_eg.attack",
+      "text": "There is no attack knob anywhere: every envelope opens in 1 ms, and only the VCA EG has a second choice, 100 ms, which softens the hit and smooths a sequenced bass line like glide."
+    }
+  ],
+  "limits": {
+    "intro": "The whole panel is modelled as on the DFAM, whose voice the EDGE copies: both oscillators with their shapes, envelopes, hard sync and linear FM; the mixer with white or pink noise and EXT AUDIO; the ladder filter in LP and HP; the three decay envelopes and the VCA; the 8-step sequencer with TEMPO, CLOCK and SCALE, PLAY/STOP, ADVANCE and TRIGGER; and all 24 patch points with their normals, and PHONES.",
+    "items": [
+      {
+        "title": "Playing it from the keys",
+        "text": "The app’s keys are the EDGE’s MIDI notes: with the sequencer stopped a key strikes the envelopes at its velocity and its pitch, from C4, moves both oscillators; while the sequencer runs a key only transposes it. CLOCK on MIDI or USB takes the app’s clock, Play on the bar, divided by SCALE; on INT/EXT, TEMPO runs it, locked to the bar’s beat at the nearest whole number of steps (from about 20 steps a second it runs free, as an oscillator)."
+      },
+      {
+        "title": "What is not modelled",
+        "text": "The poly chain of up to 16 units, the MIDI channel DIP switches, the rear OUT/THRU switch and SynthTribe’s settings (pitch bend, key priority, multi trigger). Holding ADVANCE so each MIDI note steps the sequencer, which owners report. The power LED. The HP filter’s own resonance scaling, which on the DFAM only self-oscillates near 1 kHz: here HP and LP share one scale."
+      },
+      {
+        "title": "What the sources leave open",
+        "text": "Behringer’s quick start guide gives the controls in outline: how MIDI notes play the voice comes from owners’ reports, and which oscillators a note reaches is not stated (both here). Decay ranges are not published: here all three run from 10 ms to 10 s, the DFAM’s VCF range. How much velocity lengthens a decay is not given (15 % at full velocity here). The guide calls EG (VCO 1&2) DECAY a depth; it is modelled as the decay time it is on the DFAM. Its control numbers 23 to 25 are printed out of order, and it names the waves ‘pulse or triangle’ in one place and ‘square or triangle’ in another (square here, as the specifications say)."
+      }
+    ]
+  }
+}

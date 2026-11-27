@@ -70,6 +70,42 @@ the clock is an oscillator. Where a sound's riff is only a held note and its tem
 speed, set the riff's BPM so the sequencer lands on a whole division (the System 55's Berlin sequence: 83 BPM, four
 steps a beat), rather than letting the snap change how fast it plays.
 
+## The DFAM's sequencer (`audio/dfam-core.ts`)
+
+t-327, for the Moog DFAM and the Behringer EDGE, which recreates it. EngineParams `dfam` is the DFAM's control
+section: a clock VCO (TEMPO, 0.7 Hz into audio rate, its input at 1 V an octave), an 8-step sequencer with a PITCH and
+a VELOCITY knob a step, the trigger and velocity buses, and the VCO, VCF and VCA decay envelopes. Unlike the
+Subharmonicon's core it makes no sound itself: the fixed voice keeps its two oscillators, noise, mixer, ladder filter
+and VCA, and the definition routes the core's signals into them. Its NOISE / EXT channel (`dfmNz`) goes into the
+mixer's `extIn`, which sounds only with `ext.level` set, and the voice's own noise level is 0.
+
+| Signal                             | What it is (full scale is the hardware's voltage)                        | Routed to, usually                                           |
+| ---------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| `dfmPitch`                         | The step's PITCH, −1..1 for ±5 V                                         | `pitch1` / `pitch2` by SEQ PITCH MOD, at 60 semitones a unit |
+| `dfmVel`                           | The step's VELOCITY, 0..1 for 0..5 V (a key's, until the step moves)     | the VELOCITY jack                                            |
+| `dfmTrig`                          | TRIGGER OUT, a 1 ms pulse                                                | the TRIGGER jack                                             |
+| `dfmEgVco`, `dfmEgVcf`, `dfmEgVca` | The three envelopes, 0..1 for 0..8 V, each peaking at the bus's velocity | both pitches, `cutoff`, `amp` (the VCA's `envSrc` is `none`) |
+
+Its inputs are `dfmTempo`, `dfmRun`, `dfmAdv`, `dfmTrigIn`, `dfmVelIn`, the three decay CVs, `dfmExt` (EXT AUDIO, which replaces the noise once cabled) and `dfmNzLvl` (NOISE LEVEL, added to the knob). A cable in TRIGGER or
+VELOCITY breaks that bus's normal. ADV / CLOCK takes over from TEMPO. A cable in RUN / STOP takes over from the panel's
+RUN / STOP, which is the definition's `ownSequencer.run`. ADVANCE and TRIGGER are `press` buttons (`next`, `trigger`),
+and they act only while the sequencer is stopped, as on the hardware.
+
+- **Following the transport**, it runs only while the transport does and RUN / STOP is lit. It starts on step 1 at
+  the run's first beat, and its clock is beat-locked, as the 960's is. Above 20 Hz, or with ADV / CLOCK cabled, it
+  runs free inside the run.
+- **On the EDGE's MIDI or USB clock** (`perBeat`, from SCALE) each step is exactly that share of the beat, whatever
+  TEMPO says, and nothing runs without the transport.
+- **Keys** fire the bus at their velocity while the sequencer is stopped, and transpose it while it runs. That is the
+  EDGE's MIDI note input. The DFAM has no MIDI, so there it is the app's stand-in for its TRIGGER input.
+- **Linear FM.** The DFAM's 1→2 FM is linear, so the fixed voice has it too (`OscParams.fmLin`, dest `fmLinAmt` for
+  the 1→2 FM AMT jack). The frequency swings in hertz around the pitch rather than in semitones, so the pitch heard
+  stays put while the sidebands grow.
+
+The choices the spec leaves open are listed in the core's header: how much velocity lengthens a decay, which way a
+decay CV moves it, that ADV / CLOCK steps only a running sequencer, and that a retrigger rises from where the envelope
+is.
+
 ## Who plays a sound
 
 Every sound on such a synth is one of four, and its lesson says which. The riff is always a real riff, so the

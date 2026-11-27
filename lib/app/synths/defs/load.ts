@@ -68,6 +68,8 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   nymphes: () => import('@/lib/app/synths/defs/nymphes'),
   'behringer-odyssey': () => import('@/lib/app/synths/defs/behringer-odyssey'),
   subharmonicon: () => import('@/lib/app/synths/defs/subharmonicon'),
+  dfam: () => import('@/lib/app/synths/defs/dfam'),
+  edge: () => import('@/lib/app/synths/defs/edge'),
 };
 
 /** Every id a loader exists for. */

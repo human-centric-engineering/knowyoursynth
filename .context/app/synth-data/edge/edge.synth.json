@@ -1,0 +1,2060 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "behringer-edge",
+    "manufacturer": "Behringer (Music Tribe)",
+    "model": "EDGE",
+    "category": "semi-modular analogue percussion synthesizer with 8-step sequencer, MIDI/USB and 16-voice poly chain, desktop or Eurorack",
+    "based_on": "Recreation of the Moog DFAM (2017, modelled separately), which the guide does not name; same voice, sequencer and patchbay, with pink noise, MIDI/USB clock and poly chain added. Guide V1.0, November 2021.",
+    "sources": [
+      {
+        "id": "guide",
+        "title": "Behringer EDGE Quick Start Guide V1.0 (2021)",
+        "kind": "quick_start_guide",
+        "file": "Behringer_Edge_Manual.pdf",
+        "pages": 35,
+        "note": "Multilingual; English used. Hook-up diagrams (including poly chain), numbered controls 1-63, getting started, three patch ideas, default patch drawing, SynthTribe note and specifications."
+      },
+      {
+        "id": "behringer_product",
+        "title": "Behringer, EDGE product page",
+        "kind": "spec_sheet",
+        "url": "https://www.behringer.com/en/products/0718-ABM",
+        "note": "'MIDI plays the sounds, and MIDI, USB or an external clock can drive the sequencer'; 'dual 8-step sequencer' meaning the pitch and velocity rows."
+      },
+      {
+        "id": "modwiggler",
+        "title": "ModWiggler, 'Behringer EDGE' thread (owner reports)",
+        "kind": "other",
+        "url": "https://www.modwiggler.com/forum/viewtopic.php?t=254597&start=250",
+        "note": "MIDI notes play the voice; VELOCITY OUT follows MIDI note velocity as well as the velocity row; holding ADVANCE lets each MIDI note step the sequencer, with PITCH OUT following the pitch row; one owner hears less low-end roundness than the DFAM."
+      },
+      {
+        "id": "synthtribe",
+        "title": "Sweetwater, 'Getting Started with Behringer SYNTHTRIBE'",
+        "kind": "other",
+        "url": "https://www.sweetwater.com/sweetcare/articles/getting-started-with-behringer-synthtribe/",
+        "note": "Generic SynthTribe settings across Behringer synths: MIDI channel (overrides DIP switches), pitch bend, key priority, MIDI transpose, multi trigger; Poly Chain tab with device count, voice mode and Enable."
+      },
+      {
+        "id": "bh_edge",
+        "title": "B&H Photo, Behringer EDGE listing",
+        "kind": "other",
+        "url": "https://www.bhphotovideo.com/c/product/1816411-REG/behringer_edge_analog_percussion_synthesizer_with.html",
+        "note": "Describes a '15x10 I/O matrix' and '44 real-time controls'."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "signal_path": "analogue",
+    "voices": 1,
+    "polyphony_mode": "monophonic percussion voice; up to 16 voices by chaining units over MIDI THRU (poly chain)",
+    "poly_chain_max_units": 16,
+    "patch_memory": false,
+    "patch_memory_note": "No memory; the sequencer is analogue (knob per step). MIDI channel set by rear DIP switches or SynthTribe.",
+    "semi_modular": true,
+    "panel_counts": {
+      "knobs": 33,
+      "scale_selector": 1,
+      "switches": 9,
+      "buttons": 4,
+      "patch_points": 24,
+      "patch_inputs": 15,
+      "patch_outputs": 9,
+      "dip_switches": 4
+    },
+    "summary": "Two VCOs (10-octave range, triangle or square) with hard sync and VCO 1 -> VCO 2 linear FM; a pitch envelope shared by both VCOs at separate bipolar depths. VCO 1, VCO 2 and noise (or EXT AUDIO) are mixed into a 4-pole ladder filter, low- or high-pass, 20 Hz to 20 kHz, moved by its own envelope and by noise (or the VCF MOD input). The VCA envelope (1 ms or 100 ms attack) shapes the output. Every envelope is a decay with voltage-controlled time, its peak set by the step's VELOCITY. The 8-step sequencer has PITCH (±5 V) and VELOCITY (0-5 V) per step and a voltage-controlled clock VCO (10 to 10,000 BPM). The EDGE adds pink noise, MIDI or USB clock with a SCALE division, MIDI in and out/thru, USB MIDI and poly chaining."
+  },
+  "modules": [
+    {
+      "id": "clock",
+      "type": "gate_logic",
+      "name": "Sequencer clock VCO",
+      "panel_section": "SEQUENCER [TEMPO]",
+      "description": "Clock oscillator, 0.7 Hz to 700 Hz (about 10 to 10,000 BPM at 16ths); 1 V/oct TEMPO input reaches audio rate. CLOCK switch selects INT/EXT, MIDI or USB; MIDI/USB clock is divided by SCALE (10-300 BPM).",
+      "properties": {
+        "rate_hz": [0.7, 700],
+        "bpm": [10, 10000]
+      },
+      "inputs": ["clock.tempo_cv", "clock.run", "clock.midi_in"],
+      "outputs": ["clock.out"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "8-step sequencer",
+      "panel_section": "SEQUENCER",
+      "description": "Analogue 8-step sequencer: PITCH (±5 V, about 10 octaves) and VELOCITY (0-5 V) per step, step LEDs, RUN/STOP, ADVANCE, TRIGGER.",
+      "properties": {
+        "steps": 8,
+        "pitch_v": [-5, 5],
+        "velocity_v": [0, 5]
+      },
+      "inputs": ["seq.clock"],
+      "outputs": ["seq.pitch", "seq.velocity", "seq.trig"]
+    },
+    {
+      "id": "trig",
+      "type": "gate_logic",
+      "name": "Trigger bus",
+      "panel_section": "patchbay TRIGGER",
+      "description": "Sequencer triggers (normalled to the TRIGGER input) fire all three envelopes and the TRIGGER output (about 1 ms, +5 V).",
+      "inputs": ["trig.in"],
+      "outputs": ["trig.out"]
+    },
+    {
+      "id": "vel",
+      "type": "mult",
+      "name": "Velocity bus",
+      "panel_section": "patchbay VELOCITY",
+      "description": "Step velocity (normalled to the VELOCITY input) sets the peak, and slightly lengthens the decay, of all three envelopes.",
+      "inputs": ["vel.in"],
+      "outputs": ["vel.to_vco", "vel.to_vcf", "vel.to_vca"]
+    },
+    {
+      "id": "vco_eg",
+      "type": "envelope",
+      "name": "OSC EG",
+      "panel_section": "OSC DECAY",
+      "description": "Attack 1 ms; decay set by its knob plus a ±5 V CV; peak and decay scaled by velocity. Output 0 to +8 V.",
+      "properties": {
+        "stages": ["attack", "decay"],
+        "output_v": [0, 8]
+      },
+      "inputs": ["vco_eg.trig", "vco_eg.velocity", "vco_eg.decay_cv"],
+      "outputs": ["vco_eg.out"]
+    },
+    {
+      "id": "vcf_eg",
+      "type": "envelope",
+      "name": "VCF EG",
+      "panel_section": "VCF DECAY",
+      "description": "Attack 1 ms; decay set by its knob plus a ±5 V CV; peak and decay scaled by velocity. Output 0 to +8 V.",
+      "properties": {
+        "stages": ["attack", "decay"],
+        "output_v": [0, 8],
+        "decay_s": [0.01, 10]
+      },
+      "inputs": ["vcf_eg.trig", "vcf_eg.velocity", "vcf_eg.decay_cv"],
+      "outputs": ["vcf_eg.out"]
+    },
+    {
+      "id": "vca_eg",
+      "type": "envelope",
+      "name": "VCA EG",
+      "panel_section": "VCA DECAY",
+      "description": "Attack 1 ms or 100 ms (VCA EG switch); decay set by its knob plus a ±5 V CV; peak and decay scaled by velocity. Output 0 to +8 V.",
+      "properties": {
+        "stages": ["attack", "decay"],
+        "output_v": [0, 8]
+      },
+      "inputs": ["vca_eg.trig", "vca_eg.velocity", "vca_eg.decay_cv"],
+      "outputs": ["vca_eg.out"]
+    },
+    {
+      "id": "vco1",
+      "type": "oscillator",
+      "name": "OSC 1",
+      "panel_section": "OSC 1",
+      "description": "Analogue VCO, 10-octave range, triangle or square.",
+      "properties": {
+        "waveforms": ["triangle", "square"],
+        "range_octaves": 10
+      },
+      "inputs": ["vco1.pitch_cv"],
+      "outputs": ["vco1.out"]
+    },
+    {
+      "id": "vco2",
+      "type": "oscillator",
+      "name": "OSC 2",
+      "panel_section": "OSC 2",
+      "description": "Analogue VCO, 10-octave range, triangle or square. Hard sync to VCO 1 and linear FM from VCO 1.",
+      "properties": {
+        "waveforms": ["triangle", "square"],
+        "range_octaves": 10
+      },
+      "inputs": ["vco2.pitch_cv", "vco2.sync_in", "vco2.fm_in", "vco2.fm_amt_cv"],
+      "outputs": ["vco2.out"]
+    },
+    {
+      "id": "noise",
+      "type": "noise",
+      "name": "Noise generator",
+      "panel_section": "MIXER [NOISE / EXT]",
+      "description": "White noise, or pink with the NOISE COLOR switch; mixer source (unless EXT AUDIO is patched) and the default VCF modulation source.",
+      "properties": {
+        "colours": ["white", "pink"]
+      },
+      "inputs": [],
+      "outputs": ["noise.out"]
+    },
+    {
+      "id": "mixer",
+      "type": "mixer",
+      "name": "Mixer",
+      "panel_section": "MIXER",
+      "description": "VCO 1, noise/external and VCO 2 levels into the filter; high levels clip pleasantly. The noise/ext channel has a CV-controlled level (NOISE LEVEL input).",
+      "inputs": ["mixer.vco1", "mixer.noise", "mixer.vco2", "mixer.noise_cv"],
+      "outputs": ["mixer.out"]
+    },
+    {
+      "id": "vcfmod",
+      "type": "attenuator",
+      "name": "VCF modulation",
+      "panel_section": "VCF [NOISE / VCF MOD]",
+      "description": "Scales noise (or the VCF MOD input, which replaces it) into the cutoff; the only direct CV path to the cutoff.",
+      "inputs": ["vcfmod.in"],
+      "outputs": ["vcfmod.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "VCF (ladder)",
+      "panel_section": "VCF",
+      "description": "4-pole (-24 dB/octave) ladder filter, low-pass or high-pass, 20 Hz to 20 kHz; self-oscillates above about 3:00 resonance in LP (in HP only near 1 kHz).",
+      "properties": {
+        "modes": ["lp", "hp"],
+        "slope_db_per_octave": 24,
+        "cutoff_hz": [20, 20000],
+        "self_oscillates": "LP above 3:00 resonance; HP only around 1 kHz"
+      },
+      "inputs": ["vcf.in", "vcf.cutoff_cv"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "VCA",
+      "description": "Output VCA driven by the VCA EG, summed with the VCA CV input.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "VOLUME / PHONES",
+      "description": "VOLUME to the VCA patch output (Eurorack level) and a 3.5 mm stereo phones jack.",
+      "inputs": ["out.in"],
+      "outputs": ["out.modular", "out.phones"]
+    },
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI / USB",
+      "panel_section": "rear [MIDI IN, OUT/THRU, USB, MIDI CHANNEL]",
+      "description": "MIDI DIN in, DIN out or thru, and class-compliant USB MIDI: clock (with SCALE), note input, poly chaining.",
+      "inputs": ["midi.in", "midi.usb"],
+      "outputs": ["midi.clock", "midi.thru", "midi.note", "midi.gate", "midi.velocity"]
+    }
+  ],
+  "parameters": [
+    {
+      "id": "vco1.freq",
+      "module": "vco1",
+      "label": "OSC 1 FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Starting pitch over 10 octaves; centre matches the PITCH knobs' centre."
+    },
+    {
+      "id": "vco1.wave",
+      "module": "vco1",
+      "label": "OSC 1 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "vco1.eg_amt",
+      "module": "vco1",
+      "label": "OSC 1 ENVELOPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar pitch envelope depth: right for spikes, left for dips."
+    },
+    {
+      "id": "mix.vco1",
+      "module": "mixer",
+      "label": "OSC 1 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "OSC 1 level into the filter."
+    },
+    {
+      "id": "vco2.freq",
+      "module": "vco2",
+      "label": "OSC 2 FREQUENCY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Starting pitch over 10 octaves; centre matches the PITCH knobs' centre."
+    },
+    {
+      "id": "vco2.wave",
+      "module": "vco2",
+      "label": "OSC 2 SHAPE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "triangle"
+        },
+        {
+          "value": "square"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Waveform."
+    },
+    {
+      "id": "vco2.eg_amt",
+      "module": "vco2",
+      "label": "OSC 2 ENVELOPE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar pitch envelope depth: right for spikes, left for dips."
+    },
+    {
+      "id": "mix.vco2",
+      "module": "mixer",
+      "label": "OSC 2 LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "OSC 2 level into the filter."
+    },
+    {
+      "id": "vco_eg.decay",
+      "module": "vco_eg",
+      "label": "EG (VCO 1&2) DECAY",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Decay time of the pitch envelope (no audible effect with both EG amounts centred)."
+    },
+    {
+      "id": "seq.pitch_mod",
+      "module": "seq",
+      "label": "SEQ PITCH MOD",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "vco12",
+          "label": "OSC 1&2"
+        },
+        {
+          "value": "off"
+        },
+        {
+          "value": "vco2",
+          "label": "OSC 2"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Which VCOs the PITCH knobs move; OFF leaves them for the PITCH output."
+    },
+    {
+      "id": "vco2.sync",
+      "module": "vco2",
+      "label": "HARD SYNC",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Locks VCO 2's phase to VCO 1; below VCO 1's pitch VCO 2 may fall silent."
+    },
+    {
+      "id": "vco2.fm_amt",
+      "module": "vco2",
+      "label": "1→2 FM AMOUNT",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of linear FM of VCO 2 by VCO 1."
+    },
+    {
+      "id": "mix.noise",
+      "module": "mixer",
+      "label": "NOISE / EXT LEVEL",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Level of noise, or of EXT AUDIO when patched."
+    },
+    {
+      "id": "noise.color",
+      "module": "noise",
+      "label": "NOISE COLOR",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "white"
+        },
+        {
+          "value": "pink"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "White (bright) or pink (darker) noise."
+    },
+    {
+      "id": "vcf.mode",
+      "module": "vcf",
+      "label": "VCF SELECT",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "lp",
+          "label": "LP"
+        },
+        {
+          "value": "hp",
+          "label": "HP"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Low-pass or high-pass."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "CUTOFF",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "physical": {
+        "min": 20,
+        "max": 20000,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Cutoff, 20 Hz to 20 kHz."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "RESONANCE",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Resonant peak; self-oscillates above about 3:00 in LP."
+    },
+    {
+      "id": "vcf_eg.decay",
+      "module": "vcf_eg",
+      "label": "DECAY (FILTER)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "physical": {
+        "min": 0.01,
+        "max": 10,
+        "unit": "s"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Filter envelope decay, 10 ms to 10 s."
+    },
+    {
+      "id": "vcf_eg.amt",
+      "module": "vcf",
+      "label": "ENVELOPE (FILTER)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Bipolar filter envelope depth (raises or lowers cutoff in either mode)."
+    },
+    {
+      "id": "vcfmod.amt",
+      "module": "vcfmod",
+      "label": "NOISE / VCF MOD",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Depth of noise (or the VCF MOD input) on cutoff."
+    },
+    {
+      "id": "vca_eg.attack",
+      "module": "vca_eg",
+      "label": "VCA MODE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "fast",
+          "meaning": "1 ms"
+        },
+        {
+          "value": "slow",
+          "meaning": "100 ms"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Attack of the VCA envelope."
+    },
+    {
+      "id": "vca_eg.decay",
+      "module": "vca_eg",
+      "label": "DECAY (VCA)",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "VCA envelope decay."
+    },
+    {
+      "id": "out.volume",
+      "module": "out",
+      "label": "VOLUME",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Output level."
+    },
+    {
+      "id": "clock.tempo",
+      "module": "clock",
+      "label": "TEMPO",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "physical": {
+        "min": 0.7,
+        "max": 700,
+        "unit": "Hz"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Clock rate, 0.7 to 700 Hz (about 10 to 10,000 BPM); ignored when ADV/CLOCK is used. Internal only; MIDI/USB clock gives 10-300 BPM."
+    },
+    {
+      "id": "seq.pitch1",
+      "module": "seq",
+      "label": "PITCH 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel1",
+      "module": "seq",
+      "label": "VEL 1",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch2",
+      "module": "seq",
+      "label": "PITCH 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel2",
+      "module": "seq",
+      "label": "VEL 2",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch3",
+      "module": "seq",
+      "label": "PITCH 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel3",
+      "module": "seq",
+      "label": "VEL 3",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch4",
+      "module": "seq",
+      "label": "PITCH 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel4",
+      "module": "seq",
+      "label": "VEL 4",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch5",
+      "module": "seq",
+      "label": "PITCH 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel5",
+      "module": "seq",
+      "label": "VEL 5",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch6",
+      "module": "seq",
+      "label": "PITCH 6",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel6",
+      "module": "seq",
+      "label": "VEL 6",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch7",
+      "module": "seq",
+      "label": "PITCH 7",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel7",
+      "module": "seq",
+      "label": "VEL 7",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.pitch8",
+      "module": "seq",
+      "label": "PITCH 8",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": -5,
+        "max": 5,
+        "note": "bipolar; centre = no effect"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step pitch offset, ±5 V (about 10 octaves); centre none."
+    },
+    {
+      "id": "seq.vel8",
+      "module": "seq",
+      "label": "VEL 8",
+      "kind": "continuous",
+      "panel_scale": {
+        "min": 0,
+        "max": 10,
+        "note": "7:00 = 0, 12:00 = 5, 5:00 = 10"
+      },
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Step velocity 0-5 V: envelope peaks (louder, punchier) and slightly longer decays; zero is silent."
+    },
+    {
+      "id": "seq.run",
+      "module": "seq",
+      "label": "PLAY/STOP",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Starts or stops the sequencer from the current step."
+    },
+    {
+      "id": "seq.advance",
+      "module": "seq",
+      "label": "ADVANCE",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "With the sequencer stopped, steps forward without triggering."
+    },
+    {
+      "id": "seq.trigger",
+      "module": "seq",
+      "label": "TRIGGER",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "With the sequencer stopped, plays the current step without advancing."
+    },
+    {
+      "id": "clock.source",
+      "module": "clock",
+      "label": "CLOCK",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "int_ext",
+          "label": "INT/EXT"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "usb"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "Clock source: internal TEMPO (or ADV/CLOCK input), MIDI or USB."
+    },
+    {
+      "id": "clock.scale",
+      "module": "clock",
+      "label": "SCALE",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "1/4"
+        },
+        {
+          "value": "1/8"
+        },
+        {
+          "value": "1/16"
+        },
+        {
+          "value": "1/32"
+        },
+        {
+          "value": "1/4T"
+        },
+        {
+          "value": "1/8T"
+        },
+        {
+          "value": "1/16T"
+        },
+        {
+          "value": "1/32T"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "rotary_switch"
+        }
+      ],
+      "function": "Sequencer step length against incoming MIDI or USB clock."
+    },
+    {
+      "id": "midi.out_thru",
+      "module": "midi",
+      "label": "OUT/THRU",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "out"
+        },
+        {
+          "value": "thru"
+        }
+      ],
+      "access": [
+        {
+          "type": "panel",
+          "control": "toggle_switch"
+        }
+      ],
+      "function": "MIDI DIN acts as output or thru."
+    },
+    {
+      "id": "midi.channel",
+      "module": "midi",
+      "label": "MIDI CHANNEL SELECT",
+      "kind": "integer",
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "dip_switches_x4"
+        },
+        {
+          "type": "app",
+          "note": "SynthTribe"
+        }
+      ],
+      "function": "MIDI channel 1-16 on rear DIP switches; also settable in SynthTribe."
+    },
+    {
+      "id": "midi.poly_mode",
+      "module": "midi",
+      "label": "Poly Chain",
+      "kind": "boolean",
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe, Poly Chain tab"
+        }
+      ],
+      "function": "Chains units for up to 16 voices via MIDI THRU; the power LED turns red when active. Set the number of units and voice mode, then Enable, in SynthTribe's Poly Chain tab.",
+      "confidence": "inferred",
+      "note": "Procedure from Behringer's generic SynthTribe guidance (Sweetwater; 2-XM and PRO-1 guides); not confirmed for the EDGE specifically."
+    },
+    {
+      "id": "midi.key_priority",
+      "module": "midi",
+      "label": "Key Priority",
+      "kind": "enum",
+      "values": [
+        {
+          "value": "low"
+        },
+        {
+          "value": "high"
+        },
+        {
+          "value": "last"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "app",
+          "note": "SynthTribe, General tab"
+        }
+      ],
+      "function": "Which held MIDI note plays.",
+      "confidence": "inferred",
+      "note": "A standard SynthTribe General setting (Sweetwater); not confirmed for the EDGE."
+    },
+    {
+      "id": "out.power",
+      "module": "out",
+      "label": "ON/OFF",
+      "kind": "boolean",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Power switch."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.trigger_in",
+      "label": "TRIGGER",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "trig.in",
+      "function": "Fires all three envelopes at the current step's velocity without advancing; normalled to the sequencer clock. 0-5 V pulse or gate (10 V tolerant)."
+    },
+    {
+      "id": "jack.vca_cv",
+      "label": "VCA CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vca.cv",
+      "function": "Volume CV, 0 to +8 V, summed with the VCA EG (may clip)."
+    },
+    {
+      "id": "jack.vca_out",
+      "label": "VCA",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "out.modular",
+      "function": "Main audio output after VOLUME, Eurorack level (±5 V); max +14.5 dBu, unbalanced."
+    },
+    {
+      "id": "jack.velocity_in",
+      "label": "VELOCITY",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vel.in",
+      "function": "Envelope peak level, 0-5 V; normalled to the step VELOCITY knobs."
+    },
+    {
+      "id": "jack.vca_decay",
+      "label": "VCA DECAY",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vca_eg.decay_cv",
+      "function": "VCA decay CV, ±5 V, summed with the knob (centre it for full range)."
+    },
+    {
+      "id": "jack.vca_eg_out",
+      "label": "VCA EG",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vca_eg.out",
+      "function": "VCA envelope, 0 to +8 V."
+    },
+    {
+      "id": "jack.ext_audio",
+      "label": "EXT AUDIO",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "mixer.noise",
+      "function": "External audio replaces noise in the mixer at NOISE/EXT LEVEL; unity gain, expects 10 Vpp (TS cable)."
+    },
+    {
+      "id": "jack.vcf_decay",
+      "label": "VCF DECAY",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vcf_eg.decay_cv",
+      "function": "VCF decay CV, ±5 V."
+    },
+    {
+      "id": "jack.vcf_eg_out",
+      "label": "VCF EG",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vcf_eg.out",
+      "function": "VCF envelope, 0 to +8 V."
+    },
+    {
+      "id": "jack.noise_level",
+      "label": "NOISE LEVEL",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "mixer.noise_cv",
+      "function": "Adds to NOISE/EXT LEVEL, 0 to +8 V (may clip)."
+    },
+    {
+      "id": "jack.vco_decay",
+      "label": "OSC DECAY",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco_eg.decay_cv",
+      "function": "Pitch envelope decay CV, ±5 V."
+    },
+    {
+      "id": "jack.vco_eg_out",
+      "label": "OSC EG",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco_eg.out",
+      "function": "Pitch envelope, 0 to +8 V."
+    },
+    {
+      "id": "jack.vcf_mod",
+      "label": "VCF MOD",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vcfmod.in",
+      "function": "Replaces noise as the VCF modulation source, ±5 V, depth by NOISE/VCF MOD (full CW for full CV control)."
+    },
+    {
+      "id": "jack.vco1_cv",
+      "label": "OSC 1 CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco1.pitch_cv",
+      "function": "1 V/oct, ±5 V, summed with knob, EG and sequencer (for clean 1 V/oct: FREQ and EG centred, SEQ PITCH MOD off or VCO 2)."
+    },
+    {
+      "id": "jack.vco1_out",
+      "label": "OSC 1",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "vco1.out",
+      "function": "VCO 1, ±5 V."
+    },
+    {
+      "id": "jack.fm_amt",
+      "label": "1→2 FM AMT",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco2.fm_amt_cv",
+      "function": "Adds to the FM amount, 0 to +8 V."
+    },
+    {
+      "id": "jack.vco2_cv",
+      "label": "OSC 2 CV",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "vco2.pitch_cv",
+      "function": "1 V/oct, ±5 V, summed with knob, EG and sequencer."
+    },
+    {
+      "id": "jack.vco2_out",
+      "label": "OSC 2",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm jack",
+      "node": "vco2.out",
+      "function": "VCO 2, ±5 V."
+    },
+    {
+      "id": "jack.tempo",
+      "label": "TEMPO",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "clock.tempo_cv",
+      "function": "1 V/oct control of the clock VCO, ±5 V, summed with TEMPO; can reach audio rate."
+    },
+    {
+      "id": "jack.run_stop",
+      "label": "PLAY/STOP",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "clock.run",
+      "function": "High runs, low stops the sequencer at its current step (0-5 V, 10 V tolerant)."
+    },
+    {
+      "id": "jack.adv_clock",
+      "label": "ADV / CLOCK",
+      "location": "patch_in",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm jack",
+      "node": "seq.clock",
+      "function": "Each rising edge advances one step; TEMPO is then ignored. Slow edges may be missed."
+    },
+    {
+      "id": "jack.trigger_out",
+      "label": "TRIGGER",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm jack",
+      "node": "trig.out",
+      "function": "About 1 ms +5 V pulse per sequencer step."
+    },
+    {
+      "id": "jack.velocity_out",
+      "label": "VELOCITY",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "seq.velocity",
+      "function": "Current step velocity, 0-5 V."
+    },
+    {
+      "id": "jack.pitch_out",
+      "label": "PITCH",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm jack",
+      "node": "seq.pitch",
+      "function": "Current step pitch, ±5 V."
+    },
+    {
+      "id": "jack.phones",
+      "label": "PHONES",
+      "location": "patch_out",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.phones",
+      "function": "3.5 mm TRS headphones, 450 µW into 64 ohm, 470 ohm source impedance; follows VOLUME."
+    },
+    {
+      "id": "midi.in",
+      "label": "MIDI IN",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "midi.in",
+      "function": "Notes from an external MIDI device and MIDI clock."
+    },
+    {
+      "id": "midi.out",
+      "label": "MIDI OUT/THRU",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "5-pin DIN",
+      "node": "midi.thru",
+      "function": "Output or thru per the OUT/THRU switch; used to chain units."
+    },
+    {
+      "id": "usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": "midi.usb",
+      "function": "Class-compliant USB MIDI; SynthTribe settings and firmware."
+    },
+    {
+      "id": "power.dc",
+      "label": "DC INPUT",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel",
+      "node": null,
+      "function": "12 V DC 1,000 mA supplied adapter; 4 W max."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c01",
+      "from": "clock.out",
+      "to": "seq.clock",
+      "signal": "clock",
+      "kind": "normalled",
+      "broken_by": "jack.adv_clock",
+      "note": "ADV/CLOCK replaces the clock VCO; TEMPO is ignored."
+    },
+    {
+      "id": "c02",
+      "from": "midi.clock",
+      "to": "clock.midi_in",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "clock.source",
+            "equals": "midi"
+          },
+          {
+            "param": "clock.source",
+            "equals": "usb"
+          }
+        ]
+      },
+      "note": "Divided by SCALE."
+    },
+    {
+      "id": "c03",
+      "from": "midi.note",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "MIDI notes play the voice (Behringer; ModWiggler owners); which VCOs follow is not stated."
+    },
+    {
+      "id": "c04",
+      "from": "midi.note",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "confidence": "inferred"
+    },
+    {
+      "id": "c05",
+      "from": "midi.gate",
+      "to": "trig.in",
+      "signal": "gate",
+      "kind": "fixed",
+      "confidence": "inferred",
+      "note": "Notes fire the envelopes; with ADVANCE held they also step the sequencer (ModWiggler)."
+    },
+    {
+      "id": "c06",
+      "from": "midi.velocity",
+      "to": "vel.in",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "VELOCITY OUT follows MIDI note velocity as well as the velocity row (ModWiggler owner report)."
+    },
+    {
+      "id": "c07",
+      "from": "seq.trig",
+      "to": "trig.in",
+      "signal": "gate",
+      "kind": "normalled",
+      "broken_by": "jack.trigger_in"
+    },
+    {
+      "id": "c08",
+      "from": "trig.out",
+      "to": "vco_eg.trig",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c09",
+      "from": "trig.out",
+      "to": "vcf_eg.trig",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c10",
+      "from": "trig.out",
+      "to": "vca_eg.trig",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c11",
+      "from": "seq.velocity",
+      "to": "vel.in",
+      "signal": "cv",
+      "kind": "normalled",
+      "broken_by": "jack.velocity_in"
+    },
+    {
+      "id": "c12",
+      "from": "vel.to_vco",
+      "to": "vco_eg.velocity",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c13",
+      "from": "vel.to_vcf",
+      "to": "vcf_eg.velocity",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c14",
+      "from": "vel.to_vca",
+      "to": "vca_eg.velocity",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c15",
+      "from": "seq.pitch",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "seq.pitch_mod",
+        "equals": "vco12"
+      }
+    },
+    {
+      "id": "c16",
+      "from": "seq.pitch",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "seq.pitch_mod",
+            "equals": "vco12"
+          },
+          {
+            "param": "seq.pitch_mod",
+            "equals": "vco2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c17",
+      "from": "vco_eg.out",
+      "to": "vco1.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco1.eg_amt"
+    },
+    {
+      "id": "c18",
+      "from": "vco_eg.out",
+      "to": "vco2.pitch_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vco2.eg_amt"
+    },
+    {
+      "id": "c19",
+      "from": "vco1.out",
+      "to": "vco2.fm_in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "vco2.fm_amt",
+      "note": "Linear FM."
+    },
+    {
+      "id": "c20",
+      "from": "vco1.out",
+      "to": "vco2.sync_in",
+      "signal": "sync",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "vco2.sync",
+        "equals": "on"
+      }
+    },
+    {
+      "id": "c21",
+      "from": "vco1.out",
+      "to": "mixer.vco1",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.vco1"
+    },
+    {
+      "id": "c22",
+      "from": "vco2.out",
+      "to": "mixer.vco2",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "mix.vco2"
+    },
+    {
+      "id": "c23",
+      "from": "noise.out",
+      "to": "mixer.noise",
+      "signal": "audio",
+      "kind": "normalled",
+      "broken_by": "jack.ext_audio",
+      "amount": "mix.noise"
+    },
+    {
+      "id": "c24",
+      "from": "noise.out",
+      "to": "vcfmod.in",
+      "signal": "cv_or_audio",
+      "kind": "normalled",
+      "broken_by": "jack.vcf_mod"
+    },
+    {
+      "id": "c25",
+      "from": "vcfmod.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcfmod.amt"
+    },
+    {
+      "id": "c26",
+      "from": "mixer.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c27",
+      "from": "vcf_eg.out",
+      "to": "vcf.cutoff_cv",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "vcf_eg.amt"
+    },
+    {
+      "id": "c28",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c29",
+      "from": "vca_eg.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c30",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.volume"
+    }
+  ],
+  "indicators": [
+    {
+      "id": "step_leds",
+      "module": "seq",
+      "label": "step LEDs (8)",
+      "kind": "led",
+      "led_colour": "red",
+      "function": "Current step."
+    },
+    {
+      "id": "run_led",
+      "module": "seq",
+      "label": "RUN/STOP LED",
+      "kind": "led",
+      "led_colour": "red",
+      "function": "Lit while the sequencer runs."
+    },
+    {
+      "id": "power_led",
+      "module": "midi",
+      "label": "POWER LED",
+      "kind": "led",
+      "led_colour": "multi",
+      "function": "On with power; red when poly mode is active."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Signal path",
+      "applies_to": ["vco1", "vco2", "noise", "mixer", "vcf", "vca", "out"],
+      "rule": "VCO 1, noise/ext and VCO 2 are mixed into the LP/HP ladder filter, then the VCA (VCA EG), then VOLUME."
+    },
+    {
+      "id": "b02",
+      "name": "Velocity and envelopes",
+      "applies_to": ["vel", "vco_eg", "vcf_eg", "vca_eg"],
+      "rule": "Each step's VELOCITY sets the peak of all three decay envelopes (and slightly lengthens their decay), so it shapes loudness, punch and accent; zero velocity is silent."
+    },
+    {
+      "id": "b03",
+      "name": "Pitch envelope",
+      "applies_to": ["vco_eg", "vco1", "vco2"],
+      "rule": "One pitch envelope reaches both VCOs at separate bipolar depths; positive for spikes (kicks), negative for dips. With both depths centred its decay does nothing. Typical decay 9-10:00 for drum punch."
+    },
+    {
+      "id": "b04",
+      "name": "Sequencer pitch",
+      "applies_to": ["seq"],
+      "rule": "SEQ PITCH MOD sends the PITCH knobs to both VCOs, VCO 2 only, or neither (PITCH output only, e.g. to VCA DECAY for hi-hat variation)."
+    },
+    {
+      "id": "b05",
+      "name": "Oscillator interaction",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "HARD SYNC locks VCO 2 to VCO 1 (VCO 2 below VCO 1 may be near silent, especially square). 1→2 FM is linear, clearest with sync off."
+    },
+    {
+      "id": "b06",
+      "name": "Noise roles",
+      "applies_to": ["noise", "mixer", "vcfmod"],
+      "rule": "Noise is a sound source (snares, hats, attack) and the default cutoff modulator (dirt, sizzle). EXT AUDIO replaces it in the mixer; VCF MOD replaces it as modulator."
+    },
+    {
+      "id": "b07",
+      "name": "Filter",
+      "applies_to": ["vcf"],
+      "rule": "LP or HP, 20 Hz to 20 kHz; EG amount raises or lowers cutoff in either mode. Self-oscillation above about 3:00 resonance in LP; in HP only near 1 kHz."
+    },
+    {
+      "id": "b08",
+      "name": "VCA attack",
+      "applies_to": ["vca_eg"],
+      "rule": "FAST: 1 ms (as the other envelopes). SLOW: 100 ms, softer attacks and a glide-like effect on bass lines."
+    },
+    {
+      "id": "b09",
+      "name": "Clock and sync",
+      "applies_to": ["clock", "seq"],
+      "rule": "The clock is a VCO (TEMPO CV is 1 V/oct, to audio rate). ADV/CLOCK steps the sequencer per rising edge and overrides TEMPO; RUN/STOP input runs while high. Sync units by TRIGGER OUT into ADV/CLOCK (start the follower first)."
+    },
+    {
+      "id": "b10",
+      "name": "Stopped-sequencer editing",
+      "applies_to": ["seq"],
+      "rule": "With the sequencer stopped, ADVANCE steps without sounding and TRIGGER replays the current step."
+    },
+    {
+      "id": "b11",
+      "name": "Pitch safety",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "Several pitch sources sum, so VCOs can leave the audible range; recover by centring FREQ, then EG amounts, then SEQ PITCH MOD off."
+    },
+    {
+      "id": "b12",
+      "name": "MIDI and USB clock",
+      "applies_to": ["clock", "midi"],
+      "rule": "CLOCK selects INT/EXT (TEMPO or ADV/CLOCK), MIDI or USB; with external clock SCALE sets step length (1/4 to 1/32, straight or triplet) and the tempo range is 10-300 BPM."
+    },
+    {
+      "id": "b13",
+      "name": "Poly chain",
+      "applies_to": ["midi"],
+      "rule": "Up to 16 units chained by MIDI THRU act as a 16-voice instrument; the power LED turns red in poly mode. Generic SynthTribe procedure: set all units to one channel, chain THRU to IN, choose the unit count and voice mode in the Poly Chain tab, press Enable."
+    },
+    {
+      "id": "b14",
+      "name": "Playing from MIDI",
+      "applies_to": ["midi", "seq"],
+      "rule": "MIDI notes play the voice. Owners report the sequencer section then idles, but holding ADVANCE makes each note step the sequencer, so the PITCH row (via PITCH OUT) can modulate per note; VELOCITY OUT then follows note velocity rather than the velocity row."
+    },
+    {
+      "id": "b15",
+      "name": "Noise colour",
+      "applies_to": ["noise"],
+      "rule": "White noise is bright; pink is darker."
+    },
+    {
+      "id": "b16",
+      "name": "Warm-up",
+      "applies_to": ["vco1", "vco2"],
+      "rule": "Allow 15 minutes (longer from cold) for tuning to settle."
+    }
+  ],
+  "example_patches": [
+    {
+      "id": "osc_fm",
+      "name": "OSC 1 into OSC 2 CV",
+      "source": "guide p.38",
+      "cords": [["jack.vco1_out", "jack.vco2_cv"]],
+      "description": "Exponential cross-modulation.",
+      "confidence": "stated"
+    },
+    {
+      "id": "pitch_decay",
+      "name": "PITCH into VCA DECAY",
+      "source": "guide p.38",
+      "cords": [["jack.pitch_out", "jack.vca_decay"]],
+      "description": "Sequencer PITCH knobs vary each step's decay.",
+      "confidence": "stated"
+    },
+    {
+      "id": "vel_fm",
+      "name": "VELOCITY into 1-2 FM AMT",
+      "source": "guide p.38",
+      "cords": [["jack.velocity_out", "jack.fm_amt"]],
+      "description": "Velocity row varies the FM per step.",
+      "confidence": "stated"
+    },
+    {
+      "id": "first_sounds",
+      "name": "First sounds",
+      "source": "guide p.38",
+      "settings": {
+        "clock.source": "int_ext",
+        "seq.run": true
+      },
+      "description": "Volume up, CLOCK to INT, controls to the default patch drawing (not transcribed), PLAY/STOP.",
+      "confidence": "stated"
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on",
+        "note": "plays the voice and fires the envelopes; note velocity reaches the velocity bus (owner reports)"
+      },
+      {
+        "message": "pitch_bend",
+        "note": "SynthTribe pitch bend range (generic, unconfirmed)"
+      },
+      {
+        "message": "clock",
+        "note": "with CLOCK on MIDI or USB, divided by SCALE"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "thru",
+        "note": "OUT/THRU switch"
+      }
+    ],
+    "channel_note": "1-16 by rear DIP switches or SynthTribe.",
+    "note": "No CC or SysEx details in the guide."
+  },
+  "specifications": {
+    "voices": 1,
+    "oscillators": 2,
+    "filter": "HP/LP 4-pole (-24 dB/oct) ladder, 20 Hz to 20 kHz",
+    "envelopes": "1 per VCO (shared), 1 VCF, 1 VCA decay",
+    "noise": ["white", "pink"],
+    "sequencer": {
+      "steps": 8,
+      "pitch_v": [-5, 5],
+      "velocity_v": [0, 5],
+      "scale": ["1/4", "1/8", "1/16", "1/32", "1/4T", "1/8T", "1/16T", "1/32T"],
+      "clock": ["MIDI", "USB", "INT/EXT"]
+    },
+    "tempo_bpm": {
+      "internal": [10, 10000],
+      "midi_usb": [10, 300]
+    },
+    "inputs": {
+      "osc_cv_v": [-5, 5],
+      "osc_decay_v": [-5, 5],
+      "adv_clock": ">3.2 V (10 V max)",
+      "trigger": "0-5 V pulse or gate (10 V max)",
+      "velocity_v": [0, 5],
+      "noise_level_v": [0, 8],
+      "fm_amt_v": [0, 8],
+      "ext_audio": "10 V max",
+      "tempo_v": [-5, 5],
+      "play_stop": ">3.2 V (10 V max)",
+      "vcf_mod_v": [-5, 5],
+      "vcf_decay_v": [-5, 5],
+      "vca_cv_v": [0, 8],
+      "vca_decay_v": [-5, 5]
+    },
+    "outputs": {
+      "osc_v": [-5, 5],
+      "eg_v": [0, 8],
+      "trigger": "0-5 V pulse",
+      "velocity_v": [0, 5],
+      "pitch_v": [-5, 5],
+      "vca": "3.5 mm TS, max +14.5 dBu",
+      "phones": "3.5 mm TRS, 450 µW @ 64 ohm"
+    },
+    "connectivity": {
+      "midi": "5-pin DIN in, out/thru",
+      "usb": "USB 2.0 type B, class compliant (Windows 10+, macOS 10.14+)"
+    },
+    "power": {
+      "adapter": "12 V DC 1,000 mA",
+      "max_w": 4,
+      "switch": "push on/off"
+    },
+    "operating_temp_c": [5, 40],
+    "dimensions_mm": {
+      "height": 45,
+      "width": 321,
+      "depth": 164
+    },
+    "weight_kg": 1.4
+  },
+  "omitted_from_source": [
+    "non-English sections",
+    "the default patch drawing's knob positions",
+    "hook-up diagrams beyond the poly chain arrangement",
+    "safety and compliance text"
+  ],
+  "not_in_source": [
+    "which VCOs MIDI note pitch reaches (both inferred)",
+    "how notes are distributed across chained units",
+    "which SynthTribe General settings the EDGE actually offers",
+    "decay ranges (not found in research)",
+    "Eurorack mounting details",
+    "Research filled: MIDI notes play the voice and carry velocity; ADVANCE-hold stepping; generic SynthTribe poly chain procedure and settings; see sources."
+  ],
+  "source_inconsistencies": [
+    "EG (VCO 1&2) DECAY is described as modulating the pitch of both oscillators and increasing 'the amount of modulation', i.e. as a depth rather than a decay time (control 6).",
+    "The title promises a 'Dual 8-Step Sequencer'; there is one 8-step sequencer with pitch and velocity rows.",
+    "Getting Started calls the waveforms 'pulse or triangle'; the controls list and specifications say square or triangle.",
+    "Getting Started refers to an 'OSC 1&2 CV input'; the patchbay has separate OSC 1 CV and OSC 2 CV jacks.",
+    "Getting Started says NOISE/VCF MOD 'will add noise if no audio is present in the EXT AUDIO input', conflating the mixer's EXT AUDIO with the VCF MOD input.",
+    "The OSC EG output is labelled 'OSG EG' (control 52); 'OCILLATOR' heading typo.",
+    "Control numbers 23-25 are printed out of order against their descriptions, so ENVELOPE (FILTER), NOISE/VCF MOD and TEMPO cannot be matched to numbers with certainty.",
+    "Between sources: B&H describes a '15x10 I/O matrix'; the guide's patchbay has 15 inputs and 9 outputs plus PHONES."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "MIDI notes and poly chain",
+      "detail": "The guide gives only an outline; note pitch, gate and velocity paths come from owner reports and are marked inferred where unconfirmed. Poly chain and key priority settings follow Behringer's generic SynthTribe guidance."
+    },
+    {
+      "topic": "Shared structure",
+      "detail": "Built on the same module graph as the DFAM file; differences are additions (noise colour, clock source, SCALE, MIDI/USB, phones, power switch)."
+    }
+  ]
+}

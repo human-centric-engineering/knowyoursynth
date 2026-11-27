@@ -1,0 +1,864 @@
+{
+  "synth": "edge",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "edge-first-sounds",
+      "name": "First Sounds",
+      "ref": "The guide’s Getting Started: CLOCK set, PLAY/STOP pressed, the sequencer running",
+      "artist": "Behringer",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "The guide’s first steps: set the clock, press PLAY/STOP, and the EDGE plays a pattern.",
+      "how": "The guide starts with the volume up, CLOCK set, the controls as its default patch drawing and PLAY/STOP pressed. The drawing’s knob positions are not transcribed, so this is the plainest pattern from the Default patch: a short, round hit with a little punch on an accented row. CLOCK is on MIDI here, so the app’s clock runs it at SCALE 1/16; the guide uses INT.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A little punch",
+          "module": "osc",
+          "why": "OSC 1 at A1 with its ENVELOPE turned right: each hit starts with a pitch spike.\n- OSC 1 FREQUENCY 3.75 · A1 · 55 Hz\n- OSC 1 EG AMOUNT 2.5 · +24 st at full velocity\n- EG (OSC 1&2) DECAY 2.33 · 50 ms\n- Listen for: with a key, a short, round, punchy hit.",
+          "set": {
+            "vco1.freq": 3.75,
+            "vco1.eg_amt": 2.5,
+            "vco_eg.decay": 2.33
+          }
+        },
+        {
+          "title": "A pattern on VEL",
+          "module": "mod",
+          "why": "The VEL row as a rhythm with accents.\n- VEL 1 10 · 5.0 V\n- VEL 2 0 · 0.0 V\n- VEL 3 6 · 3.0 V\n- VEL 4 0 · 0.0 V\n- VEL 5 9 · 4.5 V\n- VEL 6 4 · 2.0 V\n- VEL 7 0 · 0.0 V\n- VEL 8 7 · 3.5 V\n- Listen for: nothing new until PLAY/STOP.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 6,
+            "seq.vel4": 0,
+            "seq.vel5": 9,
+            "seq.vel6": 4,
+            "seq.vel7": 0,
+            "seq.vel8": 7
+          }
+        },
+        {
+          "title": "Clock and play",
+          "module": "mod",
+          "why": "CLOCK on MIDI at SCALE 1/16, and PLAY/STOP lit: Play on the bar runs it.\n- CLOCK MIDI\n- SCALE 1/16\n- PLAY/STOP lit\n- Listen for: a punchy, accented drum pattern in sixteenths.",
+          "set": {
+            "clock.source": "midi",
+            "clock.scale": "1/16",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.source": "In this sound: MIDI, the app’s clock here, divided by SCALE."
+      },
+      "tweaks": [
+        {
+          "id": "clock.scale",
+          "try": "Set SCALE to 1/8",
+          "hear": "The same pattern at half speed."
+        },
+        {
+          "id": "vco1.eg_amt",
+          "try": "Turn ENVELOPE (OSC 1) to 4.5",
+          "hear": "A harder, zappier kick."
+        }
+      ]
+    },
+    {
+      "id": "edge-osc-fm",
+      "name": "Cross-Mod Toms",
+      "ref": "The guide’s first patch idea: OSC 1 into OSC 2 CV",
+      "artist": "Behringer",
+      "tags": ["perc", "patch"],
+      "level": 2,
+      "blurb": "Gnarly, growling toms: OSC 1 modulating OSC 2’s pitch through a cable.",
+      "how": "OSC 1 patched into OSC 2 CV is exponential FM, the guide’s first idea: unlike the 1-2 FM AMT knob’s linear FM it bends OSC 2’s pitch unevenly, rough and growling. OSC 2 is the only one in the mix. The guide names the cable and no knob positions, so the settings around it are this lesson’s.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "OSC 2 alone, a tom",
+          "module": "osc",
+          "why": "OSC 1 out of the mix at D2; OSC 2 triangle at A2 in the mix, with a pitch drop.\n- OSC 1 LEVEL 0\n- OSC 2 LEVEL 8\n- OSC 1 FREQUENCY 4.17 · D2 · 73 Hz\n- OSC 2 FREQUENCY 4.75 · A2 · 110 Hz\n- OSC 2 EG AMOUNT 1.77 · +12 st at full velocity\n- EG (OSC 1&2) DECAY 3.33 · 100 ms\n- DECAY (VCA) 4.92 · 300 ms\n- Listen for: with a key, a plain falling tom.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.vco2": 8,
+            "vco1.freq": 4.1667,
+            "vco2.freq": 4.75,
+            "vco2.eg_amt": 1.77,
+            "vco_eg.decay": 3.33,
+            "vca_eg.decay": 4.92
+          }
+        },
+        {
+          "title": "Patch OSC 1 into OSC 2",
+          "module": "patch",
+          "why": "OSC 1 OUT into OSC 2 CV.\n- Patch OSC 1 OUT to OSC 2 CV input\n- Listen for: with a key, a growling, gnarly tom.",
+          "cables": [["j.vco1_out", "j.vco2_cv"]]
+        },
+        {
+          "title": "Pattern",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on OSC 1&2, so both move and the growl holds its character; CLOCK on MIDI at 1/16, PLAY/STOP lit.\n- SEQ PITCH MOD OSC 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0.42 · +5 st (0.4 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0.58 · +7 st (0.6 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 0.25 · +3 st (0.3 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VEL 1 10 · 5.0 V\n- VEL 2 0 · 0.0 V\n- VEL 3 8 · 4.0 V\n- VEL 4 6 · 3.0 V\n- VEL 5 0 · 0.0 V\n- VEL 6 9 · 4.5 V\n- VEL 7 7 · 3.5 V\n- VEL 8 0 · 0.0 V\n- CLOCK MIDI\n- SCALE 1/16\n- PLAY/STOP lit\n- Listen for: a rumbling, growling tom pattern.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 0.4167,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0.5833,
+            "seq.pitch6": 0,
+            "seq.pitch7": 0.25,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 8,
+            "seq.vel4": 6,
+            "seq.vel5": 0,
+            "seq.vel6": 9,
+            "seq.vel7": 7,
+            "seq.vel8": 0,
+            "clock.source": "midi",
+            "clock.scale": "1/16",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: the speed of the growl."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.freq",
+          "try": "Turn FREQUENCY (OSC 1) to 6",
+          "hear": "A metallic ring in place of the growl."
+        },
+        {
+          "id": "mix.vco1",
+          "try": "Turn LEVEL (OSC 1) to 4",
+          "hear": "The modulator in the mix too: a thicker hit."
+        }
+      ]
+    },
+    {
+      "id": "edge-pitch-decay",
+      "name": "Hats by PITCH",
+      "ref": "The guide’s second patch idea: PITCH into VCA DECAY",
+      "artist": "Behringer",
+      "tags": ["perc", "drums", "patch"],
+      "level": 2,
+      "blurb": "Pink-noise hats, each step’s length set by its PITCH knob.",
+      "how": "PITCH into VCA DECAY makes the PITCH row a row of lengths: turned up for an open hat, centred for a closed one. Pink noise gives a softer, darker hat than the DFAM’s white. The guide names the cable and no knob positions, so the settings around it are this lesson’s.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Pink noise, high-passed",
+          "module": "filter",
+          "why": "OSC 1 down, NOISE/EXT up, COLOR on PINK, the filter on HP at 5 kHz.\n- OSC 1 LEVEL 0\n- NOISE / EXT LEVEL 10\n- NOISE COLOR Pink\n- VCF SELECT HP\n- CUTOFF 7.99 · 5.0 kHz\n- DECAY (VCA) 2.01 · 40 ms\n- Listen for: with a key, a soft, dark tick.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 10,
+            "noise.color": "pink",
+            "vcf.mode": "hp",
+            "vcf.cutoff": 7.99,
+            "vca_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Lengths",
+          "module": "mod",
+          "why": "Steps 3 and 7 turned up on the PITCH row; accents on VEL.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 2.5 · +30 st (2.5 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 0.5 · +6 st (0.5 V)\n- PITCH 7 2.5 · +30 st (2.5 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VEL 1 10 · 5.0 V\n- VEL 2 5 · 2.5 V\n- VEL 3 8 · 4.0 V\n- VEL 4 5 · 2.5 V\n- VEL 5 10 · 5.0 V\n- VEL 6 6 · 3.0 V\n- VEL 7 8 · 4.0 V\n- VEL 8 5 · 2.5 V\n- Listen for: nothing new until the cable.",
+          "set": {
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 2.5,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0,
+            "seq.pitch6": 0.5,
+            "seq.pitch7": 2.5,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 5,
+            "seq.vel3": 8,
+            "seq.vel4": 5,
+            "seq.vel5": 10,
+            "seq.vel6": 6,
+            "seq.vel7": 8,
+            "seq.vel8": 5
+          }
+        },
+        {
+          "title": "Patch PITCH into VCA DECAY",
+          "module": "patch",
+          "why": "PITCH OUT into VCA DECAY.\n- Patch PITCH OUT to VCA DECAY input\n- Listen for: nothing yet: the sequencer is stopped.",
+          "cables": [["j.pitch_out", "j.vca_decay"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "CLOCK on MIDI at 1/16, PLAY/STOP lit.\n- CLOCK MIDI\n- SCALE 1/16\n- PLAY/STOP lit\n- Listen for: soft closed hats with two open ones in each half bar.",
+          "set": {
+            "clock.source": "midi",
+            "clock.scale": "1/16",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "noise.color": "In this sound: pink, for a softer, darker hat."
+      },
+      "tweaks": [
+        {
+          "id": "noise.color",
+          "try": "Set COLOR to WHITE",
+          "hear": "Brighter, crisper hats: the DFAM’s."
+        },
+        {
+          "id": "seq.pitch5",
+          "try": "Turn PITCH 5 to 2.5",
+          "hear": "An open hat on the beat."
+        }
+      ]
+    },
+    {
+      "id": "edge-velocity-fm",
+      "name": "Velocity FM Bells",
+      "ref": "The guide’s third patch idea: VELOCITY into 1-2 FM AMT",
+      "artist": "Behringer",
+      "tags": ["pluck", "patch"],
+      "level": 2,
+      "blurb": "A bell pattern whose accents clang: the VEL row also sets the FM.",
+      "how": "VELOCITY into 1-2 FM AMT adds each step’s velocity to the FM depth, so the VEL row sets brightness as well as loudness. The guide names the cable and no knob positions, so the settings around it are this lesson’s.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A carrier and a modulator",
+          "module": "osc",
+          "why": "OSC 2 triangle at G3 alone in the mix; OSC 1 out of the mix at D5.\n- OSC 1 LEVEL 0\n- OSC 2 LEVEL 8\n- OSC 2 FREQUENCY 5.58 · G3 · 196 Hz\n- OSC 1 FREQUENCY 7.17 · D5 · 587 Hz\n- Listen for: with a key, a pure tone.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.vco2": 8,
+            "vco2.freq": 5.5833,
+            "vco1.freq": 7.1667
+          }
+        },
+        {
+          "title": "Bell envelope",
+          "module": "amp",
+          "why": "A 700 ms decay.\n- DECAY (VCA) 6.15 · 700 ms\n- Listen for: with a key, a soft, ringing tone.",
+          "set": {
+            "vca_eg.decay": 6.15
+          }
+        },
+        {
+          "title": "Melody and accents",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on OSC 1&2; a melody and strongly varied VEL row.\n- SEQ PITCH MOD OSC 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.42 · +5 st (0.4 V)\n- PITCH 3 0.58 · +7 st (0.6 V)\n- PITCH 4 1 · +12 st (1.0 V)\n- PITCH 5 0.83 · +10 st (0.8 V)\n- PITCH 6 0.58 · +7 st (0.6 V)\n- PITCH 7 0.42 · +5 st (0.4 V)\n- PITCH 8 0.17 · +2 st (0.2 V)\n- VEL 1 10 · 5.0 V\n- VEL 2 3 · 1.5 V\n- VEL 3 7 · 3.5 V\n- VEL 4 2 · 1.0 V\n- VEL 5 9 · 4.5 V\n- VEL 6 3 · 1.5 V\n- VEL 7 6 · 3.0 V\n- VEL 8 4 · 2.0 V\n- Listen for: nothing new until the cable.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.4167,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 1,
+            "seq.pitch5": 0.8333,
+            "seq.pitch6": 0.5833,
+            "seq.pitch7": 0.4167,
+            "seq.pitch8": 0.1667,
+            "seq.vel1": 10,
+            "seq.vel2": 3,
+            "seq.vel3": 7,
+            "seq.vel4": 2,
+            "seq.vel5": 9,
+            "seq.vel6": 3,
+            "seq.vel7": 6,
+            "seq.vel8": 4
+          }
+        },
+        {
+          "title": "Patch VELOCITY into 1-2 FM AMT",
+          "module": "patch",
+          "why": "VELOCITY OUT into 1-2 FM AMT.\n- Patch VELOCITY OUT to 1→2 FM AMT input\n- Listen for: nothing yet: the sequencer is stopped.",
+          "cables": [["j.velocity_out", "j.fm_amt"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "CLOCK on MIDI at 1/8, PLAY/STOP lit.\n- CLOCK MIDI\n- SCALE 1/8\n- PLAY/STOP lit\n- Listen for: bells whose accents clang and soft notes ring pure.",
+          "set": {
+            "clock.source": "midi",
+            "clock.scale": "1/8",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.vel1": "In this sound: loudness and FM brightness together."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.freq",
+          "try": "Turn FREQUENCY (OSC 1) to 7.33",
+          "hear": "An odd ratio: gongs."
+        },
+        {
+          "id": "vco2.fm_amt",
+          "try": "Turn 1-2 FM AMT to 3",
+          "hear": "Every note clangs."
+        }
+      ]
+    },
+    {
+      "id": "edge-triplet-hats",
+      "name": "Triplet Hats",
+      "ref": "Hi-hats in eighth-note triplets against a straight beat",
+      "artist": "Hip hop",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "Rolling triplet hats: SCALE on 1/8T.",
+      "how": "SCALE divides the MIDI clock into triplets as well as straight notes. On 1/8T, three steps a beat: the eight steps then cross the bar line and line up again every two bars, rolling against the drums.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [[0, 60, 8]]
+      },
+      "steps": [
+        {
+          "title": "A hat",
+          "module": "filter",
+          "why": "OSC 1 down, white noise up, HP at 8 kHz, a 40 ms decay.\n- OSC 1 LEVEL 0\n- NOISE / EXT LEVEL 10\n- VCF SELECT HP\n- CUTOFF 8.67 · 8.0 kHz\n- DECAY (VCA) 2.01 · 40 ms\n- Listen for: with a key, a tick.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 10,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 8.67,
+            "vca_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Accents",
+          "module": "mod",
+          "why": "The VEL row accents every third step.\n- VEL 1 10 · 5.0 V\n- VEL 2 5 · 2.5 V\n- VEL 3 6 · 3.0 V\n- VEL 4 10 · 5.0 V\n- VEL 5 5 · 2.5 V\n- VEL 6 6 · 3.0 V\n- VEL 7 10 · 5.0 V\n- VEL 8 6 · 3.0 V\n- Listen for: nothing new until PLAY/STOP.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 5,
+            "seq.vel3": 6,
+            "seq.vel4": 10,
+            "seq.vel5": 5,
+            "seq.vel6": 6,
+            "seq.vel7": 10,
+            "seq.vel8": 6
+          }
+        },
+        {
+          "title": "Triplets on the clock",
+          "module": "mod",
+          "why": "CLOCK on MIDI at SCALE 1/8T, PLAY/STOP lit.\n- CLOCK MIDI\n- SCALE 1/8T\n- PLAY/STOP lit\n- Listen for: rolling triplet hats.",
+          "set": {
+            "clock.source": "midi",
+            "clock.scale": "1/8T",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.scale": "In this sound: 1/8T, three steps a beat."
+      },
+      "tweaks": [
+        {
+          "id": "clock.scale",
+          "try": "Set SCALE to 1/16T",
+          "hear": "Six a beat: a fast, rolling trap hat."
+        },
+        {
+          "id": "clock.scale",
+          "try": "Set SCALE to 1/16",
+          "hear": "Straight sixteenths."
+        }
+      ]
+    },
+    {
+      "id": "edge-brushes",
+      "name": "Pink Brushes",
+      "ref": "A soft brush-on-snare swish in a slow swing, from pink noise",
+      "artist": "Jazz",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "Soft, swishing brush strokes from pink noise and a slow attack.",
+      "how": "Brushes are soft noise with a slow attack. Pink noise is darker than white, and VCA MODE on SLOW gives each stroke a 100 ms swell. The pattern is triplets, swung.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Pink noise",
+          "module": "mixer",
+          "why": "OSC 1 down, NOISE/EXT up, COLOR on PINK.\n- OSC 1 LEVEL 0\n- NOISE / EXT LEVEL 9\n- NOISE COLOR Pink\n- Listen for: with a key, a short burst of soft noise.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 9,
+            "noise.color": "pink"
+          }
+        },
+        {
+          "title": "Soft strokes",
+          "module": "amp",
+          "why": "VCA MODE on SLOW and a 250 ms decay; the filter on LP at 4 kHz.\n- VCA MODE Slow (100 ms)\n- DECAY (VCA) 4.66 · 250 ms\n- CUTOFF 7.67 · 4.0 kHz\n- Listen for: with a key, a swish.",
+          "set": {
+            "vca_eg.attack": "slow",
+            "vca_eg.decay": 4.66,
+            "vcf.cutoff": 7.67
+          }
+        },
+        {
+          "title": "Swing",
+          "module": "mod",
+          "why": "The VEL row in long-short pairs; CLOCK on MIDI at SCALE 1/8T, PLAY/STOP lit.\n- VEL 1 9 · 4.5 V\n- VEL 2 0 · 0.0 V\n- VEL 3 5 · 2.5 V\n- VEL 4 9 · 4.5 V\n- VEL 5 0 · 0.0 V\n- VEL 6 5 · 2.5 V\n- VEL 7 9 · 4.5 V\n- VEL 8 4 · 2.0 V\n- CLOCK MIDI\n- SCALE 1/8T\n- PLAY/STOP lit\n- Listen for: slow, swinging brush strokes.",
+          "set": {
+            "seq.vel1": 9,
+            "seq.vel2": 0,
+            "seq.vel3": 5,
+            "seq.vel4": 9,
+            "seq.vel5": 0,
+            "seq.vel6": 5,
+            "seq.vel7": 9,
+            "seq.vel8": 4,
+            "clock.source": "midi",
+            "clock.scale": "1/8T",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vca_eg.attack": "In this sound: SLOW, the swell of each stroke."
+      },
+      "tweaks": [
+        {
+          "id": "noise.color",
+          "try": "Set COLOR to WHITE",
+          "hear": "Brighter: a shaker."
+        },
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 5",
+          "hear": "Long sweeps."
+        }
+      ]
+    },
+    {
+      "id": "edge-pink-snare",
+      "name": "Pink Snare",
+      "ref": "A fat, dark snare of tone and pink noise",
+      "artist": "Hip hop",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "A darker, fatter snare than white noise gives.",
+      "how": "A snare is a tone for the head and noise for the wires. Pink noise keeps more of its energy low, so the wires sound fatter and darker.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "The head",
+          "module": "osc",
+          "why": "OSC 1 triangle at E3 with a small pitch drop.\n- OSC 1 FREQUENCY 5.33 · E3 · 165 Hz\n- OSC 1 EG AMOUNT 1.44 · +8 st at full velocity\n- EG (OSC 1&2) DECAY 2.01 · 40 ms\n- Listen for: with a key, a short tone.",
+          "set": {
+            "vco1.freq": 5.3333,
+            "vco1.eg_amt": 1.44,
+            "vco_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Pink wires",
+          "module": "mixer",
+          "why": "NOISE/EXT at 9, COLOR on PINK; a 200 ms decay.\n- NOISE / EXT LEVEL 9\n- NOISE COLOR Pink\n- DECAY (VCA) 4.34 · 200 ms\n- Listen for: with a key, a fat snare.",
+          "set": {
+            "mix.noise": 9,
+            "noise.color": "pink",
+            "vca_eg.decay": 4.34
+          }
+        },
+        {
+          "title": "Backbeat",
+          "module": "mod",
+          "why": "Step 5, with ghost notes; CLOCK on MIDI at 1/16, PLAY/STOP lit.\n- VEL 1 0 · 0.0 V\n- VEL 2 0 · 0.0 V\n- VEL 3 3 · 1.5 V\n- VEL 4 0 · 0.0 V\n- VEL 5 10 · 5.0 V\n- VEL 6 0 · 0.0 V\n- VEL 7 0 · 0.0 V\n- VEL 8 3 · 1.5 V\n- CLOCK MIDI\n- SCALE 1/16\n- PLAY/STOP lit\n- Listen for: a fat backbeat snare.",
+          "set": {
+            "seq.vel1": 0,
+            "seq.vel2": 0,
+            "seq.vel3": 3,
+            "seq.vel4": 0,
+            "seq.vel5": 10,
+            "seq.vel6": 0,
+            "seq.vel7": 0,
+            "seq.vel8": 3,
+            "clock.source": "midi",
+            "clock.scale": "1/16",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "noise.color": "In this sound: pink, for fat wires."
+      },
+      "tweaks": [
+        {
+          "id": "noise.color",
+          "try": "Set COLOR to WHITE",
+          "hear": "A crisper, thinner snare."
+        },
+        {
+          "id": "vcf_eg.amt",
+          "try": "Turn ENVELOPE (FILTER) to −3",
+          "hear": "A dull thud that blooms open."
+        }
+      ]
+    },
+    {
+      "id": "edge-rolls",
+      "name": "Thirty-Second Rolls",
+      "ref": "Snare rolls at thirty-second notes, building into the beat",
+      "artist": "Drum and bass",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "SCALE 1/32: a snare roll that crescendos into each beat.",
+      "how": "At SCALE 1/32 the eight steps are one beat. A rising VEL row makes each beat a crescendo: a roll.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A snare",
+          "module": "osc",
+          "why": "OSC 1 triangle at G3 with a little drop, white noise at 8, HP at 300 Hz, a 100 ms decay.\n- OSC 1 FREQUENCY 5.58 · G3 · 196 Hz\n- OSC 1 EG AMOUNT 1.25 · +6 st at full velocity\n- EG (OSC 1&2) DECAY 1.59 · 30 ms\n- NOISE / EXT LEVEL 8\n- VCF SELECT HP\n- CUTOFF 3.92 · 300 Hz\n- DECAY (VCA) 3.33 · 100 ms\n- Listen for: with a key, a snappy snare.",
+          "set": {
+            "vco1.freq": 5.5833,
+            "vco1.eg_amt": 1.25,
+            "vco_eg.decay": 1.59,
+            "mix.noise": 8,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 3.92,
+            "vca_eg.decay": 3.33
+          }
+        },
+        {
+          "title": "Crescendo",
+          "module": "mod",
+          "why": "The VEL row rising from soft to full; CLOCK on MIDI at 1/32, PLAY/STOP lit.\n- VEL 1 3 · 1.5 V\n- VEL 2 4 · 2.0 V\n- VEL 3 5 · 2.5 V\n- VEL 4 6 · 3.0 V\n- VEL 5 7 · 3.5 V\n- VEL 6 8 · 4.0 V\n- VEL 7 9 · 4.5 V\n- VEL 8 10 · 5.0 V\n- CLOCK MIDI\n- SCALE 1/32\n- PLAY/STOP lit\n- Listen for: a snare roll swelling into every beat.",
+          "set": {
+            "seq.vel1": 3,
+            "seq.vel2": 4,
+            "seq.vel3": 5,
+            "seq.vel4": 6,
+            "seq.vel5": 7,
+            "seq.vel6": 8,
+            "seq.vel7": 9,
+            "seq.vel8": 10,
+            "clock.source": "midi",
+            "clock.scale": "1/32",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.scale": "In this sound: 1/32, a whole cycle a beat."
+      },
+      "tweaks": [
+        {
+          "id": "clock.scale",
+          "try": "Set SCALE to 1/16",
+          "hear": "A slower, two-beat build."
+        },
+        {
+          "id": "seq.vel1",
+          "try": "Turn VEL 1 to 10",
+          "hear": "An accent on each beat before the roll."
+        }
+      ]
+    },
+    {
+      "id": "edge-kick",
+      "name": "Club Kick",
+      "ref": "A punchy four-on-the-floor kick locked to MIDI clock",
+      "artist": "Techno",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "A tight kick on every beat, from MIDI clock at 1/4.",
+      "how": "At SCALE 1/4 each step is a beat, so every step with velocity is a kick on the beat: with all eight steps up, a kick on every beat for two bars. A low triangle with a fast pitch drop.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [[0, 60, 8]]
+      },
+      "steps": [
+        {
+          "title": "The kick",
+          "module": "osc",
+          "why": "OSC 1 triangle at A1, three octaves of pitch drop in 40 ms.\n- OSC 1 FREQUENCY 3.75 · A1 · 55 Hz\n- OSC 1 LEVEL 8\n- OSC 1 EG AMOUNT 3.06 · +36 st at full velocity\n- EG (OSC 1&2) DECAY 2.01 · 40 ms\n- Listen for: with a key, a click and a thump.",
+          "set": {
+            "vco1.freq": 3.75,
+            "mix.vco1": 8,
+            "vco1.eg_amt": 3.06,
+            "vco_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Tone and length",
+          "module": "amp",
+          "why": "LP at 2 kHz, a 300 ms decay.\n- CUTOFF 6.67 · 2.0 kHz\n- DECAY (VCA) 4.92 · 300 ms\n- Listen for: with a key, a round kick.",
+          "set": {
+            "vcf.cutoff": 6.67,
+            "vca_eg.decay": 4.92
+          }
+        },
+        {
+          "title": "On every beat",
+          "module": "mod",
+          "why": "CLOCK on MIDI at SCALE 1/4, PLAY/STOP lit; a softer step 8 before the turnaround.\n- VEL 1 10 · 5.0 V\n- VEL 2 10 · 5.0 V\n- VEL 3 10 · 5.0 V\n- VEL 4 10 · 5.0 V\n- VEL 5 10 · 5.0 V\n- VEL 6 10 · 5.0 V\n- VEL 7 10 · 5.0 V\n- VEL 8 8 · 4.0 V\n- CLOCK MIDI\n- SCALE 1/4\n- PLAY/STOP lit\n- Listen for: four on the floor.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 10,
+            "seq.vel3": 10,
+            "seq.vel4": 10,
+            "seq.vel5": 10,
+            "seq.vel6": 10,
+            "seq.vel7": 10,
+            "seq.vel8": 8,
+            "clock.source": "midi",
+            "clock.scale": "1/4",
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.scale": "In this sound: 1/4, a step a beat."
+      },
+      "tweaks": [
+        {
+          "id": "clock.scale",
+          "try": "Set SCALE to 1/8",
+          "hear": "Eighths: a driving, double-time kick."
+        },
+        {
+          "id": "vco_eg.decay",
+          "try": "Turn EG (VCO 1&2) DECAY to 4",
+          "hear": "A deep, boomy kick."
+        }
+      ]
+    },
+    {
+      "id": "edge-midi-bass",
+      "name": "MIDI Bass",
+      "ref": "A plucky analogue bass played from MIDI notes",
+      "artist": "Synth-pop",
+      "tags": ["bass"],
+      "level": 1,
+      "blurb": "The EDGE played as a bass synth: MIDI notes, here the keys, with the sequencer stopped.",
+      "how": "MIDI notes play the EDGE’s voice: the note’s pitch moves both oscillators, and its velocity strikes the envelopes. With the sequencer stopped, it is a monosynth with three decay envelopes. A square and a triangle in unison, a resonant filter plucked by its envelope.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 48, 0.5, 1],
+          [0.75, 48, 0.25, 0.6],
+          [1, 51, 0.5, 0.8],
+          [1.5, 48, 0.5, 0.7],
+          [2, 55, 0.5, 1],
+          [2.75, 53, 0.25, 0.6],
+          [3, 51, 0.5, 0.8],
+          [3.5, 46, 0.5, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two oscillators in unison",
+          "module": "osc",
+          "why": "OSC 1 square and OSC 2 triangle at C2, a key’s C3 an octave up.\n- OSC 1 FREQUENCY 4 · C2 · 65 Hz\n- OSC 1 SHAPE Square\n- OSC 2 FREQUENCY 4 · C2 · 65 Hz\n- OSC 2 LEVEL 6\n- Listen for: with a key, a full, low tone.",
+          "set": {
+            "vco1.freq": 4,
+            "vco1.wave": "square",
+            "vco2.freq": 4,
+            "mix.vco2": 6
+          }
+        },
+        {
+          "title": "Pluck",
+          "module": "filter",
+          "why": "CUTOFF at 400 Hz, RESONANCE at 4, the filter envelope two and a half octaves, a 300 ms decay.\n- CUTOFF 4.34 · 401 Hz\n- RESONANCE 4\n- ENVELOPE (FILTER) 1.56 · +2.5 oct at full velocity\n- DECAY (FILTER) 3.92 · 150 ms\n- DECAY (VCA) 4.92 · 300 ms\n- Listen for: play a bass line: plucky, round notes, brighter the harder you press.",
+          "set": {
+            "vcf.cutoff": 4.34,
+            "vcf.resonance": 4,
+            "vcf_eg.amt": 1.56,
+            "vcf_eg.decay": 3.92,
+            "vca_eg.decay": 4.92
+          }
+        }
+      ],
+      "context": {
+        "vcf_eg.amt": "In this sound: the pluck; velocity sets how far it opens."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.attack",
+          "try": "Set VCA MODE to SLOW",
+          "hear": "Softer, gliding notes."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 7",
+          "hear": "A squelchy, acid bass."
+        }
+      ]
+    },
+    {
+      "id": "edge-midi-perc",
+      "name": "Played Percussion",
+      "ref": "A conga-like hand drum played from MIDI notes",
+      "artist": "Latin",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "A hand drum on the keys: each key a pitch, each hit as hard as you play it.",
+      "how": "From MIDI notes the EDGE is a drum module: the note sets the pitch, the velocity the strength of the hit. A triangle with a small pitch drop and a resonant filter makes a conga.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.25, 1],
+          [0.5, 60, 0.25, 0.5],
+          [0.75, 67, 0.25, 0.9],
+          [1.5, 67, 0.25, 0.7],
+          [2, 60, 0.25, 1],
+          [2.5, 65, 0.25, 0.6],
+          [3, 67, 0.25, 0.9],
+          [3.5, 60, 0.25, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "The drum",
+          "module": "osc",
+          "why": "OSC 1 triangle at A2, a small pitch drop.\n- OSC 1 FREQUENCY 4.75 · A2 · 110 Hz\n- OSC 1 EG AMOUNT 1.14 · +5 st at full velocity\n- EG (OSC 1&2) DECAY 2.01 · 40 ms\n- Listen for: with a key, a short, round drum.",
+          "set": {
+            "vco1.freq": 4.75,
+            "vco1.eg_amt": 1.14,
+            "vco_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Skin",
+          "module": "filter",
+          "why": "CUTOFF at 1.5 kHz with RESONANCE at 5 and a quick filter envelope; a 200 ms decay.\n- CUTOFF 6.25 · 1.5 kHz\n- RESONANCE 5\n- ENVELOPE (FILTER) 0.94 · +1.5 oct at full velocity\n- DECAY (FILTER) 2.33 · 50 ms\n- DECAY (VCA) 4.34 · 200 ms\n- Listen for: play a pattern: a conga, louder and brighter the harder you press.",
+          "set": {
+            "vcf.cutoff": 6.25,
+            "vcf.resonance": 5,
+            "vcf_eg.amt": 0.94,
+            "vcf_eg.decay": 2.33,
+            "vca_eg.decay": 4.34
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: the drum’s pitch at C4; the keys move it."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn DECAY (VCA) to 5.93",
+          "hear": "A ringing, tuned drum."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Turn NOISE/EXT to 2",
+          "hear": "A slap of skin on each hit."
+        }
+      ]
+    },
+    {
+      "id": "edge-int-clock",
+      "name": "Free-Running Clock",
+      "ref": "The internal clock run up to buzzing rolls",
+      "artist": "Experimental",
+      "tags": ["fx", "perc"],
+      "level": 2,
+      "blurb": "CLOCK on INT/EXT and TEMPO high: the steps run past the beat into a buzzing roll.",
+      "how": "On INT/EXT the TEMPO knob runs the clock, an oscillator from 0.7 to 700 Hz. Here it is locked to the bar while it is slow enough to be a tempo, but turned up past about twenty steps a second it runs free: the eight steps blur into a buzzing, pitched roll whose pitch is the clock’s rate.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A short click",
+          "module": "osc",
+          "why": "OSC 1 square at C4, a 20 ms decay.\n- OSC 1 FREQUENCY 6 · C4 · 262 Hz\n- OSC 1 SHAPE Square\n- DECAY (VCA) 1 · 20 ms\n- Listen for: with a key, a click.",
+          "set": {
+            "vco1.freq": 6,
+            "vco1.wave": "square",
+            "vca_eg.decay": 1
+          }
+        },
+        {
+          "title": "Velocities",
+          "module": "mod",
+          "why": "A falling VEL row.\n- VEL 1 10 · 5.0 V\n- VEL 2 9 · 4.5 V\n- VEL 3 8 · 4.0 V\n- VEL 4 7 · 3.5 V\n- VEL 5 6 · 3.0 V\n- VEL 6 5 · 2.5 V\n- VEL 7 4 · 2.0 V\n- VEL 8 3 · 1.5 V\n- Listen for: nothing new until PLAY/STOP.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 9,
+            "seq.vel3": 8,
+            "seq.vel4": 7,
+            "seq.vel5": 6,
+            "seq.vel6": 5,
+            "seq.vel7": 4,
+            "seq.vel8": 3
+          }
+        },
+        {
+          "title": "A fast clock",
+          "module": "mod",
+          "why": "CLOCK on INT/EXT and TEMPO at 6, about 45 steps a second, PLAY/STOP lit.\n- CLOCK INT/EXT\n- TEMPO 6 · 44 Hz · 663 BPM in 16ths\n- PLAY/STOP lit\n- Listen for: a buzzing roll with a falling, eight-step swell.",
+          "set": {
+            "clock.source": "int_ext",
+            "clock.tempo": 6,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.tempo": "In this sound: fast enough to run free of the beat."
+      },
+      "tweaks": [
+        {
+          "id": "clock.tempo",
+          "try": "Turn TEMPO to 7.5",
+          "hear": "A pitched buzz: the sequencer as an oscillator."
+        },
+        {
+          "id": "clock.tempo",
+          "try": "Turn TEMPO to 3.26",
+          "hear": "Locked to the beat again, in sixteenths."
+        }
+      ]
+    }
+  ]
+}

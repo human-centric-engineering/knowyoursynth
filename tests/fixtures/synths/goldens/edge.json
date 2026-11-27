@@ -1,0 +1,4155 @@
+{
+  "id": "edge",
+  "readouts": {
+    "vco1.freq": [
+      "C-2 · 4.09 Hz",
+      "C-1 · 8.18 Hz",
+      "C0 · 16 Hz",
+      "C1 · 33 Hz",
+      "C2 · 65 Hz",
+      "C3 · 131 Hz",
+      "C4 · 262 Hz",
+      "C5 · 523 Hz",
+      "C6 · 1.0 kHz",
+      "C7 · 2.1 kHz",
+      "C8 · 4.2 kHz"
+    ],
+    "vco1.eg_amt": [
+      "-96 st at full velocity",
+      "-61.4 st at full velocity",
+      "-34.6 st at full velocity",
+      "-15.4 st at full velocity",
+      "-3.8 st at full velocity",
+      "0 st at full velocity",
+      "+3.8 st at full velocity",
+      "+15.4 st at full velocity",
+      "+34.6 st at full velocity",
+      "+61.4 st at full velocity",
+      "+96 st at full velocity"
+    ],
+    "vco2.freq": [
+      "C-2 · 4.09 Hz",
+      "C-1 · 8.18 Hz",
+      "C0 · 16 Hz",
+      "C1 · 33 Hz",
+      "C2 · 65 Hz",
+      "C3 · 131 Hz",
+      "C4 · 262 Hz",
+      "C5 · 523 Hz",
+      "C6 · 1.0 kHz",
+      "C7 · 2.1 kHz",
+      "C8 · 4.2 kHz"
+    ],
+    "vco2.eg_amt": [
+      "-96 st at full velocity",
+      "-61.4 st at full velocity",
+      "-34.6 st at full velocity",
+      "-15.4 st at full velocity",
+      "-3.8 st at full velocity",
+      "0 st at full velocity",
+      "+3.8 st at full velocity",
+      "+15.4 st at full velocity",
+      "+34.6 st at full velocity",
+      "+61.4 st at full velocity",
+      "+96 st at full velocity"
+    ],
+    "vco_eg.decay": [
+      "10 ms",
+      "20 ms",
+      "40 ms",
+      "79 ms",
+      "160 ms",
+      "320 ms",
+      "630 ms",
+      "1.3 s",
+      "2.5 s",
+      "5.0 s",
+      "10 s"
+    ],
+    "vca_eg.decay": [
+      "10 ms",
+      "20 ms",
+      "40 ms",
+      "79 ms",
+      "160 ms",
+      "320 ms",
+      "630 ms",
+      "1.3 s",
+      "2.5 s",
+      "5.0 s",
+      "10 s"
+    ],
+    "vcf.cutoff": [
+      "20 Hz",
+      "40 Hz",
+      "80 Hz",
+      "159 Hz",
+      "317 Hz",
+      "632 Hz",
+      "1.3 kHz",
+      "2.5 kHz",
+      "5.0 kHz",
+      "10 kHz",
+      "20 kHz"
+    ],
+    "vcf_eg.decay": [
+      "10 ms",
+      "20 ms",
+      "40 ms",
+      "79 ms",
+      "160 ms",
+      "320 ms",
+      "630 ms",
+      "1.3 s",
+      "2.5 s",
+      "5.0 s",
+      "10 s"
+    ],
+    "vcf_eg.amt": [
+      "−8.0 oct at full velocity",
+      "−6.4 oct at full velocity",
+      "−4.8 oct at full velocity",
+      "−3.2 oct at full velocity",
+      "−1.6 oct at full velocity",
+      "+0.0 oct at full velocity",
+      "+1.6 oct at full velocity",
+      "+3.2 oct at full velocity",
+      "+4.8 oct at full velocity",
+      "+6.4 oct at full velocity",
+      "+8.0 oct at full velocity"
+    ],
+    "clock.tempo": [
+      "0.70 Hz · 11 BPM in 16ths",
+      "1.40 Hz · 21 BPM in 16ths",
+      "2.79 Hz · 42 BPM in 16ths",
+      "5.56 Hz · 83 BPM in 16ths",
+      "11 Hz · 166 BPM in 16ths",
+      "22 Hz · 332 BPM in 16ths",
+      "44 Hz · 663 BPM in 16ths",
+      "88 Hz · 1322 BPM in 16ths",
+      "176 Hz · 2637 BPM in 16ths",
+      "351 Hz · 5262 BPM in 16ths",
+      "700 Hz · 10500 BPM in 16ths"
+    ],
+    "seq.pitch1": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel1": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch2": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel2": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch3": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel3": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch4": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel4": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch5": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel5": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch6": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel6": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch7": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel7": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ],
+    "seq.pitch8": [
+      "-60 st (-5.0 V)",
+      "-48 st (-4.0 V)",
+      "-36 st (-3.0 V)",
+      "-24 st (-2.0 V)",
+      "-12 st (-1.0 V)",
+      "0 st (0.0 V)",
+      "+12 st (1.0 V)",
+      "+24 st (2.0 V)",
+      "+36 st (3.0 V)",
+      "+48 st (4.0 V)",
+      "+60 st (5.0 V)"
+    ],
+    "seq.vel8": [
+      "0.0 V",
+      "0.5 V",
+      "1.0 V",
+      "1.5 V",
+      "2.0 V",
+      "2.5 V",
+      "3.0 V",
+      "3.5 V",
+      "4.0 V",
+      "4.5 V",
+      "5.0 V"
+    ]
+  },
+  "engine": {
+    "init": {
+      "att": [1, 1],
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      },
+      "env1": { "a": 0.001, "d": 0.1, "r": 0.1, "s": 0 },
+      "env2": { "a": 0.001, "d": 0.1, "r": 0.1, "s": 0 },
+      "ext": { "level": 1 },
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      },
+      "follow": true,
+      "glide": { "legato": false, "time": 0 },
+      "lfo": { "keySync": false, "mix": {}, "rate": 1 },
+      "noise": { "color": "white", "level": 0 },
+      "normals": { "att2In": "noise" },
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ],
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ],
+      "trig": { "drone": false, "repeat": false, "retrig": true },
+      "tune": 0,
+      "vca": { "bias": 0, "envSrc": "none" },
+      "volume": 0.5453391388693143
+    },
+    "vco1.freq=0": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -72 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.freq=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -42 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.freq=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": 18 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.freq=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": 48 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.wave=\"square\"": {
+      "osc": [
+        { "level": 0.7, "mix": { "pulse": 1 }, "pw": 0.5, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco1.eg_amt=-5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": -96, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vco1.eg_amt=-2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": -24, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vco1.eg_amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 24, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vco1.eg_amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 96, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "mix.vco1=0": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=2.5": {
+      "osc": [
+        { "level": 0.25, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=5": {
+      "osc": [
+        { "level": 0.5, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=7.5": {
+      "osc": [
+        { "level": 0.75, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco1=10": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=0": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -72,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -42,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 18,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.freq=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 48,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.wave=\"square\"": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "pulse": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.eg_amt=-5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": -96, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vco2.eg_amt=-2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": -24, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vco2.eg_amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 24, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vco2.eg_amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 96, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "mix.vco2=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0.25,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0.5,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0.75,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "mix.vco2=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "seq.pitch_mod=\"vco12\"": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" },
+        { "amt": 60, "dst": "pitch1", "src": "dfmPitch" },
+        { "amt": 60, "dst": "pitch2", "src": "dfmPitch" }
+      ]
+    },
+    "seq.pitch_mod=\"vco2\"": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" },
+        { "amt": 60, "dst": "pitch2", "src": "dfmPitch" }
+      ]
+    },
+    "vco_eg.decay=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vco_eg.decay=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.25, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vco_eg.decay=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.5, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vco_eg.decay=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.75, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vco_eg.decay=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 1, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "noise.color=\"pink\"": { "noise": { "color": "pink", "level": 0 } },
+    "mix.noise=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0.25,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "mix.noise=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0.5,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "mix.noise=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0.75,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "mix.noise=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 1,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vca_eg.attack=\"slow\"": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.1, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vca_eg.decay=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vca_eg.decay=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.25, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vca_eg.decay=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.5, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vca_eg.decay=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.75, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vca_eg.decay=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 1, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "out.volume=0": { "volume": 0 },
+    "out.volume=2.5": { "volume": 0.09473228540689989 },
+    "out.volume=5": { "volume": 0.3077861033362291 },
+    "out.volume=7.5": { "volume": 0.61320282613276 },
+    "out.volume=10": { "volume": 1 },
+    "vco2.sync=\"on\"": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": 0
+        }
+      ]
+    },
+    "vco2.fm_amt=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0.5, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.fm_amt=5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 1, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.fm_amt=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 1.5, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vco2.fm_amt=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 2, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "vcf.mode=\"hp\"": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "hp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=0": {
+      "filter": {
+        "cutoff": 20,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 112.46826503806983,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=5": {
+      "filter": {
+        "cutoff": 632.4555320336758,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3556.5588200778457,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "vcf.resonance=2.5": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.3125,
+        "type": "ladder"
+      }
+    },
+    "vcf.resonance=5": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.625,
+        "type": "ladder"
+      }
+    },
+    "vcf.resonance=7.5": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.9375,
+        "type": "ladder"
+      }
+    },
+    "vcf.resonance=10": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.1,
+        "type": "ladder"
+      }
+    },
+    "vcf_eg.decay=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vcf_eg.decay=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.25, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vcf_eg.decay=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.5, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vcf_eg.decay=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.75, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vcf_eg.decay=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 1, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "vcf_eg.amt=-5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": -8, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcf_eg.amt=-2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": -4, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcf_eg.amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 4, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcf_eg.amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 8, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcfmod.amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 1.25, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcfmod.amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 2.5, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcfmod.amt=7.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 3.75, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "vcfmod.amt=10": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 5, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "clock.tempo=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 0.7,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "clock.tempo=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 3.9363892763324437,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "clock.tempo=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 124.4795587027246,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "clock.tempo=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 700,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "clock.source=\"midi\"": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "perBeat": 4,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "clock.source=\"usb\"": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "perBeat": 4,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "clock.scale=\"1/4\"": {},
+    "clock.scale=\"1/8\"": {},
+    "clock.scale=\"1/32\"": {},
+    "clock.scale=\"1/4T\"": {},
+    "clock.scale=\"1/8T\"": {},
+    "clock.scale=\"1/16T\"": {},
+    "clock.scale=\"1/32T\"": {},
+    "seq.trigger=true": {},
+    "seq.run=true": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": true,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.advance=true": {},
+    "seq.pitch1=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [-1, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch1=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [-0.5, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch1=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0.5, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch1=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [1, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel1=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel1=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0.25, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel1=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0.5, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel1=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0.75, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch2=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, -1, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch2=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, -0.5, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch2=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0.5, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch2=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 1, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel2=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel2=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0.25, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel2=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0.5, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel2=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0.75, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch3=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, -1, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch3=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, -0.5, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch3=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0.5, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch3=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 1, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel3=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel3=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0.25, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel3=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0.5, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel3=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0.75, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch4=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, -1, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch4=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, -0.5, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch4=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0.5, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch4=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 1, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel4=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel4=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0.25, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel4=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0.5, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel4=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0.75, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch5=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, -1, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch5=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, -0.5, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch5=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0.5, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch5=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 1, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel5=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0, 1, 1, 1]
+      }
+    },
+    "seq.vel5=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0.25, 1, 1, 1]
+      }
+    },
+    "seq.vel5=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0.5, 1, 1, 1]
+      }
+    },
+    "seq.vel5=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0.75, 1, 1, 1]
+      }
+    },
+    "seq.pitch6=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, -1, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch6=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, -0.5, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch6=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0.5, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch6=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 1, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel6=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0, 1, 1]
+      }
+    },
+    "seq.vel6=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0.25, 1, 1]
+      }
+    },
+    "seq.vel6=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0.5, 1, 1]
+      }
+    },
+    "seq.vel6=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0.75, 1, 1]
+      }
+    },
+    "seq.pitch7=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, -1, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch7=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, -0.5, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch7=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0.5, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch7=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 1, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel7=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0, 1]
+      }
+    },
+    "seq.vel7=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0.25, 1]
+      }
+    },
+    "seq.vel7=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0.5, 1]
+      }
+    },
+    "seq.vel7=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0.75, 1]
+      }
+    },
+    "seq.pitch8=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, -1],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch8=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, -0.5],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch8=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0.5],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.pitch8=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 1],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "seq.vel8=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0]
+      }
+    },
+    "seq.vel8=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0.25]
+      }
+    },
+    "seq.vel8=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0.5]
+      }
+    },
+    "seq.vel8=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0.75]
+      }
+    },
+    "wheel=1": {},
+    "patched:j.vco1_cv": {},
+    "patched:j.vco2_cv": {},
+    "patched:j.vco_decay": {},
+    "patched:j.adv_clock": {},
+    "patched:j.trigger_in": {},
+    "patched:j.velocity_in": {},
+    "patched:j.noise_level": {},
+    "patched:j.vco1_out": {},
+    "patched:j.vco2_out": {},
+    "patched:j.vco_eg_out": {},
+    "patched:j.trigger_out": {},
+    "patched:j.velocity_out": {},
+    "patched:j.fm_amt": {},
+    "patched:j.ext_audio": {},
+    "patched:j.tempo": {},
+    "patched:j.run_stop": {},
+    "patched:j.vcf_mod": {},
+    "patched:j.vcf_decay": {},
+    "patched:j.vca_cv": {},
+    "patched:j.vca_decay": {},
+    "patched:j.pitch_out": {},
+    "patched:j.vcf_eg_out": {},
+    "patched:j.vca_out": {},
+    "patched:j.vca_eg_out": {},
+    "patched:j.phones": {},
+    "patched:j.midi_in": {},
+    "patched:j.midi_out": {},
+    "patched:*": {},
+    "patched:* vco1.freq=0": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -72 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.freq=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -42 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.freq=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": 18 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.freq=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": 48 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.wave=\"square\"": {
+      "osc": [
+        { "level": 0.7, "mix": { "pulse": 1 }, "pw": 0.5, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco1.eg_amt=-5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": -96, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vco1.eg_amt=-2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": -24, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vco1.eg_amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 24, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vco1.eg_amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 96, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* mix.vco1=0": {
+      "osc": [
+        { "level": 0, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=2.5": {
+      "osc": [
+        { "level": 0.25, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=5": {
+      "osc": [
+        { "level": 0.5, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=7.5": {
+      "osc": [
+        { "level": 0.75, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco1=10": {
+      "osc": [
+        { "level": 1, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=0": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -72,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -42,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 18,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.freq=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": 48,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.wave=\"square\"": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "pulse": 1 },
+          "pw": 0.5,
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.eg_amt=-5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": -96, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vco2.eg_amt=-2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": -24, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vco2.eg_amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 24, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vco2.eg_amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 96, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* mix.vco2=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0.25,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0.5,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0.75,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* mix.vco2=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 1,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* seq.pitch_mod=\"vco12\"": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" },
+        { "amt": 60, "dst": "pitch1", "src": "dfmPitch" },
+        { "amt": 60, "dst": "pitch2", "src": "dfmPitch" }
+      ]
+    },
+    "patched:* seq.pitch_mod=\"vco2\"": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" },
+        { "amt": 60, "dst": "pitch2", "src": "dfmPitch" }
+      ]
+    },
+    "patched:* vco_eg.decay=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vco_eg.decay=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.25, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vco_eg.decay=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.5, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vco_eg.decay=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.75, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vco_eg.decay=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 1, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* noise.color=\"pink\"": { "noise": { "color": "pink", "level": 0 } },
+    "patched:* mix.noise=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0.25,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* mix.noise=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0.5,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* mix.noise=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0.75,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* mix.noise=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 1,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vca_eg.attack=\"slow\"": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.1, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vca_eg.decay=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vca_eg.decay=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.25, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vca_eg.decay=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.5, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vca_eg.decay=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.75, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vca_eg.decay=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 1, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* out.volume=0": { "volume": 0 },
+    "patched:* out.volume=2.5": { "volume": 0.09473228540689989 },
+    "patched:* out.volume=5": { "volume": 0.3077861033362291 },
+    "patched:* out.volume=7.5": { "volume": 0.61320282613276 },
+    "patched:* out.volume=10": { "volume": 1 },
+    "patched:* vco2.sync=\"on\"": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": 0
+        }
+      ]
+    },
+    "patched:* vco2.fm_amt=2.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 0.5, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.fm_amt=5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 1, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.fm_amt=7.5": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 1.5, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vco2.fm_amt=10": {
+      "osc": [
+        { "level": 0.7, "mix": { "tri": 1 }, "semi": -12 },
+        {
+          "fmLin": { "depth": 2, "from": 0 },
+          "level": 0,
+          "mix": { "tri": 1 },
+          "semi": -12,
+          "syncTo": -1
+        }
+      ]
+    },
+    "patched:* vcf.mode=\"hp\"": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "hp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=0": {
+      "filter": {
+        "cutoff": 20,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=2.5": {
+      "filter": {
+        "cutoff": 112.46826503806983,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=5": {
+      "filter": {
+        "cutoff": 632.4555320336758,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.cutoff=7.5": {
+      "filter": {
+        "cutoff": 3556.5588200778457,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.resonance=2.5": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.3125,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.resonance=5": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.625,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.resonance=7.5": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 0.9375,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf.resonance=10": {
+      "filter": {
+        "cutoff": 20000,
+        "envAmt": 0,
+        "envSrc": "env1",
+        "kbd": 0,
+        "mode": "lp",
+        "res": 1.1,
+        "type": "ladder"
+      }
+    },
+    "patched:* vcf_eg.decay=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vcf_eg.decay=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.25, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vcf_eg.decay=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.5, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vcf_eg.decay=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.75, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vcf_eg.decay=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 1, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* vcf_eg.amt=-5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": -8, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcf_eg.amt=-2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": -4, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcf_eg.amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 4, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcf_eg.amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 8, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 0, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcfmod.amt=2.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 1.25, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcfmod.amt=5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 2.5, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcfmod.amt=7.5": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 3.75, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* vcfmod.amt=10": {
+      "routes": [
+        { "amt": 1, "dst": "extIn", "src": "dfmNz" },
+        { "amt": 0, "dst": "pitch1", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "pitch2", "src": "dfmEgVco" },
+        { "amt": 0, "dst": "cutoff", "src": "dfmEgVcf" },
+        { "amt": 5, "dst": "cutoff", "src": "att2" },
+        { "amt": 1, "dst": "amp", "src": "dfmEgVca" }
+      ]
+    },
+    "patched:* clock.tempo=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 0.7,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* clock.tempo=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 3.9363892763324437,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* clock.tempo=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 124.4795587027246,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* clock.tempo=10": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 700,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* clock.source=\"midi\"": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "perBeat": 4,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* clock.source=\"usb\"": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "perBeat": 4,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* clock.scale=\"1/4\"": {},
+    "patched:* clock.scale=\"1/8\"": {},
+    "patched:* clock.scale=\"1/32\"": {},
+    "patched:* clock.scale=\"1/4T\"": {},
+    "patched:* clock.scale=\"1/8T\"": {},
+    "patched:* clock.scale=\"1/16T\"": {},
+    "patched:* clock.scale=\"1/32T\"": {},
+    "patched:* seq.trigger=true": {},
+    "patched:* seq.run=true": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": true,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.advance=true": {},
+    "patched:* seq.pitch1=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [-1, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch1=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [-0.5, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch1=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0.5, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch1=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [1, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel1=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel1=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0.25, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel1=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0.5, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel1=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [0.75, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch2=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, -1, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch2=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, -0.5, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch2=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0.5, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch2=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 1, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel2=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel2=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0.25, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel2=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0.5, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel2=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 0.75, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch3=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, -1, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch3=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, -0.5, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch3=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0.5, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch3=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 1, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel3=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel3=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0.25, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel3=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0.5, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel3=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 0.75, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch4=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, -1, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch4=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, -0.5, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch4=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0.5, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch4=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 1, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel4=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel4=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0.25, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel4=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0.5, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel4=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 0.75, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch5=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, -1, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch5=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, -0.5, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch5=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0.5, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch5=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 1, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel5=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel5=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0.25, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel5=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0.5, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel5=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 0.75, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch6=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, -1, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch6=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, -0.5, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch6=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0.5, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch6=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 1, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel6=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0, 1, 1]
+      }
+    },
+    "patched:* seq.vel6=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0.25, 1, 1]
+      }
+    },
+    "patched:* seq.vel6=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0.5, 1, 1]
+      }
+    },
+    "patched:* seq.vel6=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 0.75, 1, 1]
+      }
+    },
+    "patched:* seq.pitch7=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, -1, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch7=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, -0.5, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch7=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0.5, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch7=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 1, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel7=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0, 1]
+      }
+    },
+    "patched:* seq.vel7=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0.25, 1]
+      }
+    },
+    "patched:* seq.vel7=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0.5, 1]
+      }
+    },
+    "patched:* seq.vel7=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 0.75, 1]
+      }
+    },
+    "patched:* seq.pitch8=-5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, -1],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch8=-2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, -0.5],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch8=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0.5],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.pitch8=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 1],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 1]
+      }
+    },
+    "patched:* seq.vel8=0": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0]
+      }
+    },
+    "patched:* seq.vel8=2.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0.25]
+      }
+    },
+    "patched:* seq.vel8=5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0.5]
+      }
+    },
+    "patched:* seq.vel8=7.5": {
+      "dfam": {
+        "eg": [
+          { "attack": 0.001, "decay": 0.2, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 },
+          { "attack": 0.001, "decay": 0.3, "max": 10, "min": 0.01 }
+        ],
+        "noise": 0,
+        "pitch": [0, 0, 0, 0, 0, 0, 0, 0],
+        "run": false,
+        "tempo": 22.135943621178654,
+        "vel": [1, 1, 1, 1, 1, 1, 1, 0.75]
+      }
+    }
+  },
+  "checks": {},
+  "depths": {},
+  "hears": {}
+}
