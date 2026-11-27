@@ -613,6 +613,42 @@ describe('SynthPicker with every synth ever made (f-synth-picker t-330)', () => 
     expect(onSelectMember).toHaveBeenCalledExactlyOnceWith('td-3', 'rebirth');
   });
 
+  it('stays open on a press on the page behind until its click, so the click lands on nothing beneath', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    await screen.findByText('Minimoog Model D');
+    fireEvent.pointerDown(document.body);
+    expect(screen.getByRole('dialog')).toBeTruthy();
+  });
+
+  it('keeps Tab inside it, from its last control to its first and back', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    await screen.findByText('Minimoog Model D');
+    const dialog = screen.getByRole('dialog');
+    const options = within(dialog).getAllByRole('option');
+    const last = options[options.length - 1];
+    last.focus();
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(within(dialog).getByRole('searchbox'));
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(last);
+  });
+
+  it('moves focus to the instrument’s row once every synth has arrived', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open({
+      instrumentId: 'moog-minimoog',
+      caption: { name: 'Minimoog Model D', maker: 'Moog Music' },
+    });
+    await waitFor(() =>
+      expect((document.activeElement as HTMLElement | null)?.getAttribute('aria-selected')).toBe(
+        'true'
+      )
+    );
+    expect(document.activeElement?.textContent).toContain('Minimoog Model D');
+  });
+
   it('closes when the page behind it is clicked', async () => {
     vi.mocked(apiClient.get).mockResolvedValue(BANK);
     open();

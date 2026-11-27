@@ -112,6 +112,14 @@ describe('PickerSettingsForm', () => {
     });
   });
 
+  it('says when every synth is the default but is not offered', async () => {
+    const user = userEvent.setup();
+    render(<PickerSettingsForm initial={{ ...FACTORY_PICKER, offerAll: false }} />);
+    expect(screen.queryByText(/is not offered/)).toBeNull();
+    await user.click(option('All synths ever made'));
+    expect(screen.getByText(/is not offered/)).toBeTruthy();
+  });
+
   it('takes a kind back out of the list', async () => {
     const user = userEvent.setup();
     render(<PickerSettingsForm initial={SAVED} />);

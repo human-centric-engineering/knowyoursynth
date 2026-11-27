@@ -16,9 +16,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-const auth = vi.hoisted(() => ({ user: null as { id: string } | null }));
+const auth = vi.hoisted(() => ({ user: null as { id: string } | null, pending: false }));
 vi.mock('@/lib/auth/client', () => ({
-  useSession: () => ({ data: auth.user ? { user: auth.user } : null, isPending: false }),
+  useSession: () => ({ data: auth.user ? { user: auth.user } : null, isPending: auth.pending }),
 }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }) }));
 vi.mock('next/link', () => ({
@@ -116,6 +116,7 @@ const answer = (owned: string[], wishlist: string[], asked: boolean, count: numb
 beforeEach(() => {
   vi.clearAllMocks();
   auth.user = null;
+  auth.pending = false;
 });
 
 describe('InstrumentAbout', () => {
@@ -144,6 +145,13 @@ describe('InstrumentAbout', () => {
     );
     expect(screen.queryByRole('button', { name: /own this/ })).toBeNull();
     expect(apiClient.get).not.toHaveBeenCalled();
+  });
+
+  it('offers neither the actions nor signing in until the session is known', () => {
+    auth.pending = true;
+    page();
+    expect(screen.queryByRole('link', { name: /Sign in/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /own this/ })).toBeNull();
   });
 
   it('shows what the user did, and owns it, then takes it off again', async () => {

@@ -154,6 +154,9 @@ export function SynthPicker({
       const inside =
         e.target instanceof Node &&
         (wrap.current?.contains(e.target) || pop.current?.contains(e.target));
+      // The full-size browser closes from its scrim's own click instead: closed on the press, the scrim would be gone
+      // before the click, which would land on the page under it.
+      if (everything) return;
       if (wrap.current && e.target instanceof Node && !inside) {
         setOpen(false);
         setQuery('');
@@ -161,6 +164,24 @@ export function SynthPicker({
       }
     };
     const key = (e: globalThis.KeyboardEvent) => {
+      // A modal keeps Tab inside it: from its last control to its first, and back.
+      if (e.key === 'Tab' && everything && pop.current) {
+        const stops = [
+          ...pop.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+          ),
+        ];
+        const [first, last] = [stops[0], stops[stops.length - 1]];
+        const at = document.activeElement;
+        if (first && last && (e.shiftKey ? at === first : at === last)) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        } else if (first && !(at instanceof Node && pop.current.contains(at))) {
+          e.preventDefault();
+          first.focus();
+        }
+        return;
+      }
       if (e.key !== 'Escape') return;
       // The Advanced window first, then the list.
       if (advanced) {
@@ -179,7 +200,7 @@ export function SynthPicker({
       document.removeEventListener('pointerdown', away);
       document.removeEventListener('keydown', key);
     };
-  }, [open, advanced]);
+  }, [open, advanced, everything]);
 
   // The full-size browser is a modal over the page: the page behind it does not scroll while it is open.
   useEffect(() => {
@@ -191,14 +212,16 @@ export function SynthPicker({
     };
   }, [open, everything]);
 
-  // Open on the synth you are already using, so the arrow keys start from the right place.
+  // Open on the synth you are already using, so the arrow keys start from the right place. Again once every synth
+  // ever made has arrived, which holds the row of an instrument's page; and when the list moves to full size (it is
+  // drawn afresh there, and the control that moved it is gone).
   useEffect(() => {
     if (!open || !list.current) return;
     const sel =
       list.current.querySelector<HTMLElement>('[role="option"][aria-selected="true"]') ||
       list.current.querySelector<HTMLElement>('[role="option"]');
     if (sel) sel.focus();
-  }, [open]);
+  }, [open, bank.status, everything]);
 
   const step = (from: HTMLElement, dir: number) => {
     if (!list.current) return;

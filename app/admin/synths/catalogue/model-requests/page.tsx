@@ -83,7 +83,7 @@ export default async function ModelRequestsPage() {
               <th className="py-2 font-medium">Synth</th>
               <th className="py-2 font-medium">Kind</th>
               <th className="py-2 text-right font-medium">Asked</th>
-              <th className="py-2 text-right font-medium">Last asked</th>
+              <th className="py-2 text-right font-medium">Last asked (UTC)</th>
             </tr>
           </thead>
           <tbody>

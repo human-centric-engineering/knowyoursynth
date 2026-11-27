@@ -90,7 +90,7 @@ export function InstrumentAbout({
   playsAs,
 }: InstrumentAboutProps) {
   const router = useRouter();
-  const { data: auth } = useSession();
+  const { data: auth, isPending: authPending } = useSession();
   const userId = auth?.user.id ?? null;
   const settings = useSettings(userId);
   const owned = useOwnedInstruments(families.length ? userId : null);
@@ -280,7 +280,8 @@ export function InstrumentAbout({
               Play the nearest: {nearest.name}
             </Link>
           )}
-          {userId ? (
+          {/* Nothing until the session is known: a signed-in user is not first told to sign in. */}
+          {authPending ? null : userId ? (
             <>
               <button
                 type="button"

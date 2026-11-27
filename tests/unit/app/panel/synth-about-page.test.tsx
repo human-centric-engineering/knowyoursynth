@@ -54,7 +54,7 @@ const INSTRUMENTS = [
   { id: 'moog-model-d-2016', synths: ['unlisted-synth'] },
 ];
 const SYNTHS = [{ id: 'model-d' }, { id: 'td-3' }];
-const FAMILIES = [{ id: 'minimoog' }];
+const FAMILIES = [{ id: 'minimoog', defaultMember: 'model-d', members: [] }];
 
 const props = (instrument: string) => ({ params: Promise.resolve({ instrument }) });
 
@@ -103,6 +103,23 @@ describe('/synths/about/[instrument]', () => {
     read.detailFrom.mockReturnValue({ ...DETAIL, synths: ['unlisted-synth', 'model-d'] });
     await expect(InstrumentAboutRoute(props('behringer-model-d'))).rejects.toThrow(
       'NEXT_REDIRECT /synths/model-d'
+    );
+  });
+
+  it('sends a family member nobody has modelled to its blank panel, over the family’s default member', async () => {
+    vi.mocked(listFamilies).mockResolvedValue([
+      {
+        id: 'minimoog',
+        name: 'Minimoog',
+        defaultMember: 'model-d',
+        members: [
+          { slug: 'model-d', synthId: 'model-d', instrument: { id: 'behringer-model-d' } },
+          { slug: 'minimoog', synthId: null, instrument: { id: 'moog-minimoog' } },
+        ],
+      },
+    ] as never);
+    await expect(InstrumentAboutRoute(props('moog-minimoog'))).rejects.toThrow(
+      'NEXT_REDIRECT /synths/model-d?member=minimoog'
     );
   });
 

@@ -5,7 +5,7 @@ import { cache } from 'react';
 import '@/components/app/synth/synth.css';
 
 import { InstrumentAbout } from '@/components/app/synth/instrument-about';
-import { synthHref } from '@/components/app/synth/routes';
+import { memberHref, synthHref } from '@/components/app/synth/routes';
 import { detailFrom, listFrom, loadBank } from '@/lib/app/bank/read';
 import { listSynths } from '@/lib/app/catalogue/read';
 import { listFamilies } from '@/lib/app/families/read';
@@ -20,7 +20,8 @@ import { logger } from '@/lib/logging';
  *
  * Read in process, as the synth page is, from the same functions the databank API serves (`lib/app/bank/read.ts`): the
  * whole databank is read once, for the instrument and for which of its relatives play. An instrument a listed synth
- * models is that synth: its address goes there. One the databank does not have is a 404.
+ * models is that synth: its address goes there. A family member nobody has modelled goes to its blank panel, over the
+ * family's default member. One the databank does not have is a 404.
  */
 
 type Props = { params: Promise<{ instrument: string }> };
@@ -60,6 +61,14 @@ export default async function InstrumentAboutRoute({ params }: Props) {
   const listed = new Set(synths.map((s) => s.id));
   const plays = found.detail.synths.find((id) => listed.has(id));
   if (plays) redirect(synthHref(plays));
+  // A member of a synth family nobody has modelled has its blank panel, over the family's default member.
+  for (const family of families) {
+    const member = family.members.find(
+      (m) => !m.synthId && m.instrument.id === found.detail.instrument.id
+    );
+    const over = family.members.find((m) => m.slug === family.defaultMember)?.synthId;
+    if (member && over && listed.has(over)) redirect(memberHref(over, member.slug));
+  }
 
   // Which databank instruments play, and as which synth: what its relatives link to.
   const playsAs: Record<string, string> = {};

@@ -141,8 +141,9 @@ synth: its address redirects to the synth's page. In the panel's place:
 - **Ask for it to be modelled** (below), with how many have asked;
 - **Open in the databank** (its `/bank/instruments/<id>` page).
 
-Signed out, the two that need an account say to sign in. The picker sits in the caption, naming the instrument, with
-its row selected.
+Signed out, the two that need an account say to sign in. The picker sits in the caption, naming the instrument; its
+row is the selected one once every synth ever made is listed. A family member nobody has modelled is not shown here: its
+address goes to its blank panel, over the family's default member.
 
 ### Asking for one to be modelled
 

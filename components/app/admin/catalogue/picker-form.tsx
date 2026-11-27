@@ -148,6 +148,12 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
           disabled={disabled}
           onPick={(v) => set('scope', v)}
         />
+        {draft.scope === 'all' && !draft.offerAll && (
+          <p className="text-muted-foreground text-sm">
+            Every synth ever made is not offered (below), so visitors are shown the synths that play
+            until it is.
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
