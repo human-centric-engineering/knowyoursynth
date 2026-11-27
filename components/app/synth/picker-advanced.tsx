@@ -12,17 +12,24 @@ import {
   PICKER_GROUPS,
   PICKER_KINDS,
   PICKER_ORDERS,
+  PICKER_SCOPES,
   toggleKind,
   type PickerChoices,
   type PickerGroupBy,
   type PickerKind,
   type PickerOrder,
+  type PickerScope,
 } from '@/lib/app/picker/settings';
 
 const GROUP_LABELS: Record<PickerGroupBy, string> = {
   name: 'Name A–Z',
   maker: 'Maker',
   lineage: 'Lineage',
+};
+
+const SCOPE_LABELS: Record<PickerScope, string> = {
+  play: 'Synths that play',
+  all: 'All synths ever made',
 };
 
 const ORDER_LABELS: Record<PickerOrder, string> = {
@@ -33,6 +40,8 @@ const ORDER_LABELS: Record<PickerOrder, string> = {
 
 export interface PickerAdvancedProps {
   id: string;
+  /** Whether "All synths ever made" is offered: the site's switch, where the page can show one nobody has modelled. */
+  offerAll: boolean;
   choices: PickerChoices;
   /** How many choices differ from the site's: 0 is "the site's settings", and Reset has nothing to do. */
   changed: number;
@@ -74,7 +83,14 @@ function Segments<V extends string>({
   );
 }
 
-export function PickerAdvanced({ id, choices, changed, onChange, onReset }: PickerAdvancedProps) {
+export function PickerAdvanced({
+  id,
+  offerAll,
+  choices,
+  changed,
+  onChange,
+  onReset,
+}: PickerAdvancedProps) {
   const flipKind = (k: PickerKind) => onChange('kinds', toggleKind(choices.kinds, k));
   return (
     <section
@@ -82,6 +98,15 @@ export function PickerAdvanced({ id, choices, changed, onChange, onReset }: Pick
       aria-label="Advanced search"
       className="flex flex-col gap-3 rounded-lg border border-(--kys-line) bg-(--kys-surface) p-3"
     >
+      {offerAll && (
+        <Segments
+          label="Show"
+          options={PICKER_SCOPES}
+          labels={SCOPE_LABELS}
+          value={choices.scope}
+          onPick={(v) => onChange('scope', v)}
+        />
+      )}
       <Segments
         label="Group by"
         options={PICKER_GROUPS}

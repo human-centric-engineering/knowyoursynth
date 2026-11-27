@@ -82,6 +82,7 @@ export function initAppOwnerClassification(): void {
       UserPattern: own,
       SynthProfile: own,
       OwnedInstrument: own,
+      ModelRequest: own,
       SynthPreference: own,
       UserPreference: own,
       LessonProgress: own,

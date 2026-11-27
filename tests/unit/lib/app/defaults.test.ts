@@ -49,6 +49,7 @@ vi.mock('@/lib/db/client', () => ({
     favourite: { findMany: vi.fn() },
     synthProfile: { findMany: vi.fn() },
     ownedInstrument: { findMany: vi.fn() },
+    modelRequest: { findMany: vi.fn() },
     userPattern: { findMany: vi.fn() },
     patternReport: { findMany: vi.fn() },
     libraryPattern: { findMany: vi.fn() },
@@ -450,6 +451,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
       vi.mocked(prisma.favourite.findMany).mockResolvedValue([]);
       vi.mocked(prisma.synthProfile.findMany).mockResolvedValue([]);
       vi.mocked(prisma.ownedInstrument.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.modelRequest.findMany).mockResolvedValue([]);
       vi.mocked(prisma.userPattern.findMany).mockResolvedValue([]);
       vi.mocked(prisma.patternReport.findMany).mockResolvedValue([]);
       vi.mocked(prisma.libraryPattern.findMany).mockResolvedValue([]);
@@ -465,6 +467,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         favourites: [],
         synthProfile: [],
         ownedSynths: [],
+        modelRequests: [],
         patterns: [],
         patternReportsFiled: [],
         libraryPatternsMade: [],
@@ -533,6 +536,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         ['LibraryPattern', 'libraryPatternsMade', 'attribution'],
         ['LibraryPatternComment', 'libraryPatternComments', 'export'],
         ['OwnedInstrument', 'ownedSynths', 'export'],
+        ['ModelRequest', 'modelRequests', 'export'],
       ]);
       expect(getAppExcludedSubjectSources().map((e) => e.model)).toEqual([
         'Synth',
@@ -588,6 +592,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         UserPattern: own,
         SynthProfile: own,
         OwnedInstrument: own,
+        ModelRequest: own,
         SynthPreference: own,
         UserPreference: own,
         LessonProgress: own,
@@ -621,6 +626,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
             'Favourite',
             'SynthProfile',
             'OwnedInstrument',
+            'ModelRequest',
           ]),
           ...as('globalConfig', [
             'Synth',

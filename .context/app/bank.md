@@ -124,7 +124,9 @@ source.
   credit (`heardArtists`). The lineage dialog shows it, with "Load a sound in this style" and an
   "About <artist>" link to each artist's page.
 - `GET /api/v1/bank/:kind` (`artists`, `makers`, `instruments`, `songs`): every row, sorted as the
-  prototype's databank sorted them.
+  prototype's databank sorted them. Each instrument carries its
+  `text` and the app synths that model it (`synths`), so the synth picker's "All synths ever made" lists every
+  instrument from this one list ([`synth-picker.md`](./synth-picker.md)).
 - `GET /api/v1/bank/:kind/:id`: one row with what it joins to. An artist's records, members,
   groups and instruments; a maker's instruments; an instrument's people, synths, original,
   recreations, records and artists; a song's artists, players and instruments.

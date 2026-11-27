@@ -17,6 +17,10 @@ import { INSTRUMENT_KINDS } from '@/lib/app/bank/data';
 export const PICKER_GROUPS = ['name', 'maker', 'lineage'] as const;
 export type PickerGroupBy = (typeof PICKER_GROUPS)[number];
 
+/** What the picker lists: the synths that play, or every synth ever made, from the databank (t-330). */
+export const PICKER_SCOPES = ['play', 'all'] as const;
+export type PickerScope = (typeof PICKER_SCOPES)[number];
+
 /** How rows are ordered: A to Z, newest first, oldest first. */
 export const PICKER_ORDERS = ['name', 'new', 'old'] as const;
 export type PickerOrder = (typeof PICKER_ORDERS)[number];
@@ -33,6 +37,7 @@ const KindsSchema = z
 /** How the picker lists synths. `kinds` empty lists every kind. */
 export const PickerChoicesSchema = z
   .object({
+    scope: z.enum(PICKER_SCOPES),
     group: z.enum(PICKER_GROUPS),
     order: z.enum(PICKER_ORDERS),
     kinds: KindsSchema,
@@ -74,8 +79,9 @@ export const StoredSitePickerSettingsSchema = z.preprocess(
   SitePickerSettingsSchema
 );
 
-/** The site's settings until an admin saves any: grouped by maker, A to Z, every kind, with thumbnails. */
+/** The site's settings until an admin saves any: the synths that play, by maker, A to Z, every kind, with thumbnails. */
 export const FACTORY_PICKER: SitePickerSettings = {
+  scope: 'play',
   group: 'maker',
   order: 'name',
   kinds: [],
@@ -85,6 +91,7 @@ export const FACTORY_PICKER: SitePickerSettings = {
 };
 
 const CHOICE_KEYS = [
+  'scope',
   'group',
   'order',
   'kinds',
@@ -118,21 +125,32 @@ function sameChoice<K extends keyof PickerChoices>(
 /** The choices a visitor's picker lists by: the site's, with the visitor's own changes when the site allows them. */
 export function pickerChoices(site: SitePickerSettings, mine: PickerPrefs): PickerChoices {
   const out: PickerChoices = {
+    scope: site.scope,
     group: site.group,
     order: site.order,
     kinds: site.kinds,
     thumbs: site.thumbs,
   };
-  return site.visitorsMayChange ? { ...out, ...mine } : out;
+  const chosen = site.visitorsMayChange ? { ...out, ...mine } : out;
+  // Every synth ever made only while the site offers it: a visitor who chose it keeps the choice for when it is again.
+  return site.offerAll ? chosen : { ...chosen, scope: 'play' };
 }
 
 /**
  * How many choices the visitor keeps as their own: 0 when they follow the site in everything, or may not change it.
- * A kept choice counts even while it matches the site's, since it still holds when the site's changes.
+ * A kept choice counts even while it matches the site's, since it still holds when the site's changes. What to show
+ * counts only while every synth ever made is offered: otherwise it is kept, unused, with nothing to show it by.
  */
-export function changedChoices(site: SitePickerSettings, mine: PickerPrefs): number {
+export function changedChoices(
+  site: SitePickerSettings,
+  mine: PickerPrefs,
+  /** Whether the page can show every synth ever made: where it cannot, what to show is not one of its choices. */
+  canShowAll = true
+): number {
   if (!site.visitorsMayChange) return 0;
-  return CHOICE_KEYS.filter((k) => mine[k] !== undefined).length;
+  return CHOICE_KEYS.filter(
+    (k) => mine[k] !== undefined && (k !== 'scope' || (site.offerAll && canShowAll))
+  ).length;
 }
 
 /**

@@ -39,6 +39,7 @@ vi.mock('@/lib/api/client', () => ({
 const put = vi.mocked(apiClient.put);
 
 const SAVED: SitePickerSettings = {
+  scope: 'all',
   group: 'lineage',
   order: 'old',
   kinds: ['modular'],
@@ -98,6 +99,25 @@ describe('PickerSettingsForm', () => {
     expect(put).toHaveBeenCalledWith('/api/v1/admin/synths/picker', {
       body: { ...FACTORY_PICKER, order: 'old', thumbs: false, offerAll: false },
     });
+  });
+
+  it('saves what visitors are shown by default', async () => {
+    const user = userEvent.setup();
+    render(<PickerSettingsForm initial={FACTORY_PICKER} />);
+    expect(option('Synths that play').getAttribute('aria-pressed')).toBe('true');
+    await user.click(option('All synths ever made'));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    expect(put).toHaveBeenCalledWith('/api/v1/admin/synths/picker', {
+      body: { ...FACTORY_PICKER, scope: 'all' },
+    });
+  });
+
+  it('says when every synth is the default but is not offered', async () => {
+    const user = userEvent.setup();
+    render(<PickerSettingsForm initial={{ ...FACTORY_PICKER, offerAll: false }} />);
+    expect(screen.queryByText(/is not offered/)).toBeNull();
+    await user.click(option('All synths ever made'));
+    expect(screen.getByText(/is not offered/)).toBeTruthy();
   });
 
   it('takes a kind back out of the list', async () => {

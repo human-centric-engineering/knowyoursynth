@@ -7,11 +7,15 @@
  * @see components/app/synth/synth-picker.tsx
  */
 
-import { describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { FAMILY_SYNTHS, TB_303_FAMILY } from '@/tests/helpers/synth-family';
 import { FACTORY_PICKER } from '@/lib/app/picker/settings';
+import { __forgetBankInstruments } from '@/components/app/synth/bank-instruments';
+import { apiClient } from '@/lib/api/client';
+
+vi.mock('@/lib/api/client', () => ({ apiClient: { get: vi.fn() } }));
 
 const SYNTHS = [
   { id: 'model-d', name: 'Model D', maker: 'Moog', year: 1970, heritage: 'The original monosynth' },
@@ -512,5 +516,195 @@ describe('SynthPicker Advanced search (f-synth-picker t-329)', () => {
       .getAllByRole('option')
       .find((o) => [...o.querySelectorAll('span')].some((s) => s.textContent === 'TD-3'));
     expect(tdRow?.textContent).toContain('Recreation');
+  });
+});
+
+describe('SynthPicker with every synth ever made (f-synth-picker t-330)', () => {
+  const BANK = [
+    {
+      id: 'roland-tb-303',
+      name: 'Roland TB-303',
+      maker: 'Roland',
+      year: '1981',
+      kind: 'mono',
+      summary: 'Bass line',
+      synths: ['tb-303'],
+    },
+    {
+      id: 'moog-minimoog',
+      name: 'Minimoog Model D',
+      maker: 'Moog Music',
+      year: '1970',
+      kind: 'mono',
+      summary: 'The original',
+      synths: [],
+    },
+  ];
+  beforeEach(() => {
+    __forgetBankInstruments();
+    vi.mocked(apiClient.get).mockReset();
+  });
+  const open = (props: Partial<Parameters<typeof SynthPicker>[0]> = {}) => {
+    const onSelectInstrument = vi.fn();
+    render(
+      <SynthPicker
+        synths={FAMILY_SYNTHS}
+        families={[]}
+        synthId="model-d"
+        onSelect={vi.fn()}
+        onSelectMember={vi.fn()}
+        onSelectInstrument={onSelectInstrument}
+        site={FACTORY_PICKER}
+        prefs={{ scope: 'all' }}
+        onPrefs={vi.fn()}
+        {...props}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { expanded: false, name: /Model D/ }));
+    return { onSelectInstrument };
+  };
+
+  it('reads the databank once, saying so meanwhile, then lists every instrument, and opens one nobody models', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    const { onSelectInstrument } = open();
+    expect(screen.getByRole('status').textContent).toContain('Loading every synth ever made');
+    const row = await screen.findByText('Minimoog Model D');
+    expect(apiClient.get).toHaveBeenCalledExactlyOnceWith('/api/v1/bank/instruments');
+    // The TB-303 instrument is the TB-303 synth: listed once.
+    expect(screen.getAllByText('TB-303')).toHaveLength(1);
+    fireEvent.click(row.closest('[role="option"]')!);
+    expect(onSelectInstrument).toHaveBeenCalledExactlyOnceWith('moog-minimoog');
+  });
+
+  it('opens as a modal dialog over the page, the page still behind it, and a click inside keeps it open', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    const dialog = screen.getByRole('dialog', { name: 'Every synth ever made' });
+    expect(dialog.getAttribute('aria-modal')).toBe('true');
+    expect(document.body.style.overflow).toBe('hidden');
+    await screen.findByText('Minimoog Model D');
+    fireEvent.pointerDown(within(dialog).getByRole('searchbox'));
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('does not count what to show on the Advanced button where the page cannot show every synth', () => {
+    open({ onSelectInstrument: undefined, prefs: { scope: 'all' } });
+    expect(screen.getByRole('button', { name: /^Advanced/ }).textContent).toBe('Advanced');
+  });
+
+  it('opens a family member over the member the family opens on when no synth is open', () => {
+    const onSelectMember = vi.fn();
+    render(
+      <SynthPicker
+        synths={FAMILY_SYNTHS}
+        families={[TB_303_FAMILY]}
+        synthId=""
+        caption={{ name: 'Minimoog Model D', maker: 'Moog Music' }}
+        onSelect={vi.fn()}
+        onSelectMember={onSelectMember}
+      />
+    );
+    fireEvent.click(document.querySelector('[aria-haspopup="listbox"]')!);
+    const member = screen.getAllByRole('option').find((o) => o.textContent?.includes('Unmodelled'));
+    fireEvent.click(member!);
+    expect(onSelectMember).toHaveBeenCalledExactlyOnceWith('td-3', 'rebirth');
+  });
+
+  it('stays open on a press on the page behind until its click, so the click lands on nothing beneath', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    await screen.findByText('Minimoog Model D');
+    fireEvent.pointerDown(document.body);
+    expect(screen.getByRole('dialog')).toBeTruthy();
+  });
+
+  it('keeps Tab inside it, from its last control to its first and back', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    await screen.findByText('Minimoog Model D');
+    const dialog = screen.getByRole('dialog');
+    const options = within(dialog).getAllByRole('option');
+    const last = options[options.length - 1];
+    last.focus();
+    fireEvent.keyDown(document, { key: 'Tab' });
+    expect(document.activeElement).toBe(within(dialog).getByRole('searchbox'));
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
+    expect(document.activeElement).toBe(last);
+  });
+
+  it('moves focus to the instrument’s row once every synth has arrived', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open({
+      instrumentId: 'moog-minimoog',
+      caption: { name: 'Minimoog Model D', maker: 'Moog Music' },
+    });
+    await waitFor(() =>
+      expect((document.activeElement as HTMLElement | null)?.getAttribute('aria-selected')).toBe(
+        'true'
+      )
+    );
+    expect(document.activeElement?.textContent).toContain('Minimoog Model D');
+  });
+
+  it('closes when the page behind it is clicked', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    await screen.findByText('Minimoog Model D');
+    const scrim = document.querySelector('.fixed.inset-0');
+    if (!scrim) throw new Error('no scrim');
+    fireEvent.click(scrim);
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('lists the synths that play, and says so, when the databank cannot be read', async () => {
+    vi.mocked(apiClient.get).mockRejectedValue(new Error('offline'));
+    open();
+    expect((await screen.findByText(/could not be loaded/)).textContent).toContain(
+      'synths that play'
+    );
+    expect(screen.getAllByRole('option')).toHaveLength(3);
+  });
+
+  it('lists the synths that play while the site does not offer every synth', () => {
+    open({ site: { ...FACTORY_PICKER, offerAll: false } });
+    expect(apiClient.get).not.toHaveBeenCalled();
+    expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('lists the synths that play where the page cannot show an instrument nobody models', () => {
+    open({ onSelectInstrument: undefined });
+    expect(apiClient.get).not.toHaveBeenCalled();
+  });
+
+  it('offers the choice in Advanced only while the site does', () => {
+    open({ prefs: {} });
+    fireEvent.click(screen.getByRole('button', { name: /^Advanced/ }));
+    expect(screen.getByRole('group', { name: 'Show' })).toBeTruthy();
+  });
+
+  it('marks the instrument whose page is showing, and names it in the caption', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open({
+      instrumentId: 'moog-minimoog',
+      caption: { name: 'Minimoog Model D', maker: 'Moog Music' },
+    });
+    // The caption names it too: wait for its row in the list.
+    const row = await waitFor(() => {
+      const found = screen
+        .getAllByRole('option')
+        .find((o) => o.textContent?.includes('Minimoog Model D'));
+      if (!found) throw new Error('not listed yet');
+      return found;
+    });
+    expect(row.getAttribute('aria-selected')).toBe('true');
+    expect(document.querySelector('[aria-haspopup="listbox"]')?.textContent).toContain(
+      'Minimoog Model D'
+    );
+    expect(
+      screen.getAllByRole('option').filter((o) => o.getAttribute('aria-selected') === 'true')
+    ).toHaveLength(1);
   });
 });

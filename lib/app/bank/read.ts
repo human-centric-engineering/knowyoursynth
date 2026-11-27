@@ -85,10 +85,20 @@ export interface MakerListItem {
 
 export type SongListItem = Pick<BankSong, 'id' | 'title' | 'kind' | 'year'> & { who: string };
 
+/**
+ * An instrument as the list serves it: its reference, a summary (the first paragraph of its description, which its
+ * detail serves whole) and the app synths that model it, so the synth picker's "All synths ever made" can list every
+ * instrument from this list alone (`f-synth-picker` t-330).
+ */
+export type InstrumentListItem = InstrumentRef & { summary: string; synths: string[] };
+
+/** The first paragraph of a description: what a list shows of it. */
+const firstParagraph = (text: string) => text.split(/\n\s*\n/)[0]?.trim() ?? '';
+
 export interface BankLists {
   artists: ArtistListItem[];
   makers: MakerListItem[];
-  instruments: InstrumentRef[];
+  instruments: InstrumentListItem[];
   songs: SongListItem[];
 }
 
@@ -388,7 +398,10 @@ export function listFrom<K extends BankKind>(bank: Bank, kind: K): BankLists[K] 
         .map(({ id, name, born, died, country, summary }) =>
           present({ id, name, born, died, country, summary })
         ),
-    instruments: () => bank.instruments.map(instrumentRef).sort(byInstrumentYear),
+    instruments: () =>
+      bank.instruments
+        .map((i) => ({ ...instrumentRef(i), summary: firstParagraph(i.text), synths: i.app ?? [] }))
+        .sort(byInstrumentYear),
     songs: () =>
       [...bank.songs]
         .sort(byYear)

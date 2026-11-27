@@ -22,6 +22,7 @@ import {
 const SITE = 'site';
 
 const COLUMNS = {
+  scope: true,
   group: true,
   order: true,
   kinds: true,

@@ -205,6 +205,12 @@ export function initAppSubjectSources(): void {
         description:
           'The synths you listed as owned and as wanted, in the order you put them, and when you added each.',
       },
+      {
+        model: 'ModelRequest',
+        section: MODEL_REQUESTS_SECTION,
+        disposition: 'export',
+        description: 'The synths you asked to be modelled, and when you asked for each.',
+      },
     ],
     excluded: [
       ...CATALOGUE_MODELS.map((model) => ({ model, reason: CATALOGUE_REASON })),
@@ -308,6 +314,9 @@ const PROFILE_SECTION = 'synthProfile';
 /** The export section for the synths a user owns and wants (`f-profiles` r2). */
 const SYNTHS_SECTION = 'ownedSynths';
 
+/** The export section for the synths a user asked to be modelled (`f-synth-picker` t-330). */
+const MODEL_REQUESTS_SECTION = 'modelRequests';
+
 /** The export sections for library patterns a user made, and the comments they wrote on them (`f-pattern-library` t-156). */
 const LIBRARY_PATTERNS_SECTION = 'libraryPatternsMade';
 const LIBRARY_COMMENTS_SECTION = 'libraryPatternComments';
@@ -316,7 +325,8 @@ const LIBRARY_COMMENTS_SECTION = 'libraryPatternComments';
  * Collect this app's data about one subject: the synths they suggested (`f-databank` t-37), the videos and links they
  * suggested (`f-link-suggestions` t-185), the sounds they saved
  * (`f-my-sounds` s1), their last panels and settings (s3), their lesson progress and favourites (s4), their synth
- * profile (`f-profiles` r1), the synths they own and want (r2), the reports they filed about shared sounds
+ * profile (`f-profiles` r1), the synths they own and want (r2), the synths they asked to be modelled (`f-synth-picker`
+ * t-330), the reports they filed about shared sounds
  * (`f-sharing` h4), the patterns they saved (`f-step-sequencer` t-81) and the reports they filed about shared patterns
  * (t-83). Every declared section is returned, empty when they have none.
  */
@@ -336,6 +346,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     patternReports,
     libraryPatterns,
     libraryComments,
+    modelRequests,
   ] = await Promise.all([
     collectSuggestions(userId),
     collectLinkSuggestions(userId),
@@ -351,6 +362,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     collectPatternReportsFiled(userId),
     collectLibraryPatternsMade(userId),
     collectLibraryPatternComments(userId),
+    collectModelRequests(userId),
   ]);
   return {
     [SUGGESTIONS_SECTION]: suggestions,
@@ -363,6 +375,7 @@ export async function collectAppSubjectData({ userId }: AppSubjectQuery): Promis
     [FAVOURITES_SECTION]: favourites,
     [PROFILE_SECTION]: profile,
     [SYNTHS_SECTION]: synths,
+    [MODEL_REQUESTS_SECTION]: modelRequests,
     [PATTERNS_SECTION]: patterns,
     [PATTERN_REPORTS_SECTION]: patternReports,
     [LIBRARY_PATTERNS_SECTION]: libraryPatterns,
@@ -396,6 +409,21 @@ async function collectLibraryPatternComments(userId: string) {
     ...comment,
     patternId: pattern.id,
     patternName: pattern.name,
+  }));
+}
+
+/** The synths this subject asked to be modelled, oldest first, each named as the databank names it. */
+async function collectModelRequests(userId: string) {
+  const rows = await prisma.modelRequest.findMany({
+    where: { userId },
+    orderBy: [{ createdAt: 'asc' }, { instrumentId: 'asc' }],
+    select: { createdAt: true, instrument: { select: { id: true, name: true, maker: true } } },
+  });
+  return rows.map(({ instrument, createdAt }) => ({
+    instrumentId: instrument.id,
+    name: instrument.name,
+    maker: instrument.maker,
+    askedAt: createdAt,
   }));
 }
 

@@ -72,6 +72,8 @@ export function initAppTenancyClassification(): void {
       'Favourite',
       'SynthProfile',
       'OwnedInstrument',
+      // The synths a user asked to be modelled (`f-synth-picker` t-330).
+      'ModelRequest',
     ],
     // Product content every org shares (owner ruling on `f-model-d`, 2026-10-07).
     globalConfig: [

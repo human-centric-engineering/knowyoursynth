@@ -174,6 +174,22 @@ describe('listBank', () => {
   });
 });
 
+describe('the instruments list (f-synth-picker t-330)', () => {
+  it('carries a summary of each instrument and the app synths that model it', async () => {
+    const instruments = await listBank('instruments');
+    const tb303 = instruments.find((i) => i.id === 'roland-tb-303');
+    const source = data.instruments.find((i) => i.id === 'roland-tb-303');
+    // The first paragraph of its description: the detail serves it whole.
+    expect(tb303?.summary).toBe(source?.text.split(/\n\s*\n/)[0].trim());
+    expect(tb303?.summary).not.toMatch(/\n\s*\n/);
+    expect(tb303).not.toHaveProperty('text');
+    expect(tb303?.synths).toEqual(source?.app ?? []);
+    expect(tb303?.synths.length).toBeGreaterThan(0);
+    // One no synth models has an empty list, not none.
+    expect(instruments.some((i) => i.synths.length === 0)).toBe(true);
+  });
+});
+
 describe('getBankDetail', () => {
   it('joins an artist to their records and instruments, with their own list last', async () => {
     const detail = await getBankDetail('artists', 'aphex-twin');

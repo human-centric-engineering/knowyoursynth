@@ -15,7 +15,13 @@
 import type { CatalogueSynth } from '@/lib/app/catalogue/read';
 import { makerGroup, nameWithoutMaker } from '@/lib/app/catalogue/makers';
 import type { FamilyMember, SynthFamily } from '@/lib/app/families/read';
-import type { PickerGroupBy, PickerKind, PickerOrder } from '@/lib/app/picker/settings';
+import { z } from 'zod';
+import type {
+  PickerGroupBy,
+  PickerKind,
+  PickerOrder,
+  PickerScope,
+} from '@/lib/app/picker/settings';
 
 export type PickerSynth = Pick<CatalogueSynth, 'id' | 'name' | 'maker' | 'year' | 'heritage'> & {
   kind?: string | null;
@@ -27,8 +33,27 @@ export interface RowFamily {
   member: FamilyMember;
 }
 
+/** A databank instrument as the picker reads it from `GET /api/v1/bank/instruments` (t-330): outside data, so checked. */
+export const PickerInstrumentSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  maker: z.string(),
+  year: z.string(),
+  kind: z.string(),
+  /** The first paragraph of its description. */
+  summary: z.string(),
+  /** App synths that model it. */
+  synths: z.array(z.string()),
+  /** The instrument this one recreates. */
+  recreationOf: z.string().optional(),
+});
+export type PickerInstrument = z.infer<typeof PickerInstrumentSchema>;
+
 export interface PickerRow {
-  /** Unique in the list: the synth id, or `member:<family>/<slug>` for an unmodelled member. */
+  /**
+   * Unique in the list: the synth id, `member:<family>/<slug>` for an unmodelled family member, or `bank:<id>` for any
+   * other databank instrument (with every synth ever made).
+   */
   key: string;
   name: string;
   maker: string;
@@ -36,9 +61,15 @@ export interface PickerRow {
   kind: string | null;
   /** The one-line description: a synth's heritage, an unmodelled member's differences. */
   text: string;
-  /** The synth it plays as; null for a family member nobody has modelled. */
+  /** The synth it plays as; null for an instrument nobody has modelled. */
   synthId: string | null;
   family: RowFamily | null;
+  /** The databank instrument it is, when the picker knows it: what lineage follows, and what an unmodelled row opens. */
+  instrumentId: string | null;
+  /** The databank instrument it recreates, when the picker knows it. */
+  recreationOf: string | null;
+  /** Any other databank instruments a synth models: a recreation of one of them sits under it too, by lineage. */
+  alsoInstruments?: readonly string[];
 }
 
 /** A row as listed: in a lineage, how far in it sits under its original, and what it is to it. */
@@ -69,6 +100,13 @@ const byName = (a: PickerRow, b: PickerRow) =>
 export interface PickerOptions {
   /** Whether a family member nobody has modelled is listed: only where the page can show its blank panel. */
   unmodelled: boolean;
+  /**
+   * The databank's instruments, once read (t-330): every synth and member learns its instrument and what it recreates,
+   * for lineage, and with `scope` `all` each other instrument is a row of its own.
+   */
+  bank?: readonly PickerInstrument[];
+  /** The synths that play, or every synth ever made (with `bank`); the first when not said. */
+  scope?: PickerScope;
   /** How rows are grouped; by maker when not said. */
   group?: PickerGroupBy;
   /** How rows are ordered; A to Z when not said. */
@@ -84,26 +122,43 @@ export interface PickerOptions {
 export function pickerRows(
   synths: readonly PickerSynth[],
   families: readonly SynthFamily[],
-  { unmodelled }: PickerOptions = { unmodelled: true }
+  { unmodelled, bank = [], scope = 'play' }: PickerOptions = { unmodelled: true }
 ): PickerRow[] {
   const familyOf = new Map<string, RowFamily>();
   for (const family of families)
     for (const member of family.members)
       if (member.synthId) familyOf.set(member.synthId, { family, member });
+  const instrumentById = new Map(bank.map((i) => [i.id, i]));
+  // The first instrument (by the list's order) that a synth models: what its row stands for in a lineage.
+  const instrumentOfSynth = new Map<string, PickerInstrument>();
+  // And every instrument each synth models, after its first.
+  const moreOfSynth = new Map<string, string[]>();
+  for (const i of bank)
+    for (const id of i.synths) {
+      if (!instrumentOfSynth.has(id)) instrumentOfSynth.set(id, i);
+      else moreOfSynth.set(id, [...(moreOfSynth.get(id) ?? []), i.id]);
+    }
 
-  const rows: PickerRow[] = synths.map((s) => ({
-    key: s.id,
-    name: s.name,
-    maker: s.maker,
-    year: String(s.year),
-    kind: s.kind ?? null,
-    text: s.heritage,
-    synthId: s.id,
-    family: familyOf.get(s.id) ?? null,
-  }));
-  if (!unmodelled) return rows;
+  const rows: PickerRow[] = synths.map((s) => {
+    const instrument = instrumentOfSynth.get(s.id);
+    return {
+      key: s.id,
+      name: s.name,
+      maker: s.maker,
+      year: String(s.year),
+      kind: s.kind ?? null,
+      text: s.heritage,
+      synthId: s.id,
+      family: familyOf.get(s.id) ?? null,
+      instrumentId: instrument?.id ?? null,
+      recreationOf: instrument?.recreationOf ?? null,
+      ...(moreOfSynth.has(s.id) && { alsoInstruments: moreOfSynth.get(s.id) }),
+    };
+  });
   const offered = new Set(synths.map((s) => s.id));
-  for (const family of families) {
+  // A family's unmodelled members only where the page can show their blank panel; the databank's other instruments
+  // below are listed either way.
+  for (const family of unmodelled ? families : []) {
     // A family none of whose members the picker offers has nothing to open its blank panels over.
     if (!family.members.some((m) => m.synthId && offered.has(m.synthId))) continue;
     for (const member of family.members) {
@@ -118,8 +173,32 @@ export function pickerRows(
         text: member.differences,
         synthId: null,
         family: { family, member },
+        instrumentId: instrument.id,
+        recreationOf: instrumentById.get(instrument.id)?.recreationOf ?? null,
       });
     }
+  }
+  if (scope !== 'all') return rows;
+
+  // Every other instrument in the databank: one a listed synth models, or a family member already listed, is not
+  // listed twice.
+  const listed = new Set(
+    rows.flatMap((r) => [...(r.instrumentId ? [r.instrumentId] : []), ...(r.alsoInstruments ?? [])])
+  );
+  for (const i of bank) {
+    if (listed.has(i.id) || i.synths.some((id) => offered.has(id))) continue;
+    rows.push({
+      key: `bank:${i.id}`,
+      name: nameWithoutMaker(i.name, i.maker),
+      maker: i.maker,
+      year: i.year,
+      kind: i.kind,
+      text: i.summary,
+      synthId: null,
+      family: null,
+      instrumentId: i.id,
+      recreationOf: i.recreationOf ?? null,
+    });
   }
   return rows;
 }
@@ -184,36 +263,60 @@ function originals(rows: readonly PickerRow[]): Map<string, PickerRow> {
   return out;
 }
 
-/** Each original in `kept`, in the order chosen, with the rest of its family under it, oldest first. */
+/**
+ * Each original in `kept`, in the order chosen, with what descends from it under it, oldest first. A row's original is
+ * found by following what it recreates (the databank's `recreationOf`, once read) and then its family's original, up to
+ * the first row with neither, so the EDGE sits under the DFAM and the K-2 under the MS-20 whether or not a family says
+ * so. A row whose original the box or a kind did not find keeps it over it, as context.
+ */
 function lineage(
   all: readonly PickerRow[],
   kept: readonly PickerRow[],
   sort: (a: PickerRow, b: PickerRow) => number
 ): PickerListRow[] {
   const firsts = originals(all);
+  const byInstrument = new Map<string, PickerRow>();
+  for (const row of all)
+    for (const id of [row.instrumentId, ...(row.alsoInstruments ?? [])])
+      if (id && !byInstrument.has(id)) byInstrument.set(id, row);
+  const above = (row: PickerRow): PickerRow | undefined => {
+    const copied = row.recreationOf ? byInstrument.get(row.recreationOf) : undefined;
+    if (copied) return copied;
+    const first = row.family ? firsts.get(row.family.family.id) : undefined;
+    return first && first.key !== row.key ? first : undefined;
+  };
+  const rootOf = (row: PickerRow): PickerRow => {
+    const path = [row];
+    const seen = new Set([row.key]);
+    let at = row;
+    for (let next = above(at); next; next = above(at)) {
+      // Data that recreates itself in a loop: every row in or leading into it takes the same one, the least key in
+      // the loop itself, as its original, so none is listed twice and none outside the loop is taken for it.
+      if (seen.has(next.key)) {
+        const loop = path.slice(path.findIndex((r) => r.key === next.key));
+        return loop.reduce((a, b) => (b.key < a.key ? b : a));
+      }
+      seen.add(next.key);
+      path.push(next);
+      at = next;
+    }
+    return at;
+  };
+
   const keptKeys = new Set(kept.map((r) => r.key));
   const tops = new Map<string, PickerRow>();
   const under = new Map<string, PickerRow[]>();
   for (const row of kept) {
-    const id = row.family?.family.id;
-    const first = id ? firsts.get(id) : undefined;
-    if (!id || !first || first.key === row.key) {
-      tops.set(row.key, row);
-      continue;
-    }
-    // A member found by the box or a kind keeps its original over it, though that matched neither.
-    tops.set(first.key, first);
-    under.set(id, [...(under.get(id) ?? []), row]);
+    const root = rootOf(row);
+    tops.set(root.key, root);
+    if (root.key !== row.key) under.set(root.key, [...(under.get(root.key) ?? []), row]);
   }
   const out: PickerListRow[] = [];
   for (const top of [...tops.values()].sort(sort)) {
     out.push(keptKeys.has(top.key) ? listed(top) : { ...listed(top), context: true });
-    const id = top.family?.family.id;
     const brand = makerGroup(top.maker);
-    // Under its original, a family is always oldest first, whatever order the originals are in.
-    const rows = id
-      ? [...(under.get(id) ?? [])].sort((a, b) => oldestFirst(a, b) || byName(a, b))
-      : [];
+    // Under its original, what descends from it is always oldest first, whatever order the originals are in.
+    const rows = [...(under.get(top.key) ?? [])].sort((a, b) => oldestFirst(a, b) || byName(a, b));
     for (const row of rows)
       out.push({
         ...row,

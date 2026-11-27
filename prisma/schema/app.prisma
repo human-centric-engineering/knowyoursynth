@@ -509,6 +509,8 @@ model BankInstrument {
   links         ExternalLink[]
   /// The family members that are this instrument (`f-synth-families`).
   familyMembers SynthFamilyMember[]
+  /// Users who asked for it to be modelled (`f-synth-picker` t-330).
+  modelRequests ModelRequest[]
 
   @@index([recreationOfId])
   @@map("bank_instrument")
@@ -1342,6 +1344,8 @@ model LinkSuggestion {
 model SynthPickerSettings {
   /// Always "site": the one row.
   id                String   @id @default("site")
+  /// `play` | `all` (t-330): the synths that play, or every synth ever made.
+  scope             String   @default("play")
   /// `name` | `maker` | `lineage`.
   group             String
   /// `name` | `new` | `old`.
@@ -1351,9 +1355,32 @@ model SynthPickerSettings {
   thumbs            Boolean
   /// Whether a visitor may change these in the picker's Advanced search.
   visitorsMayChange Boolean
-  /// Whether "All synths ever made" is offered (t-330).
+  /// Whether "All synths ever made" is offered; off, every visitor lists the synths that play.
   offerAll          Boolean
   updatedAt         DateTime @updatedAt
 
   @@map("synth_picker_settings")
+}
+
+// ─── Asking for a synth to be modelled (f-synth-picker t-330) ────────────────
+//
+// A signed-in user asks for a databank instrument nobody has modelled to be made playable, from its page in the synth
+// picker's place. One row per user and instrument; admins see how many asked for each. About a person, so declared for
+// export (lib/app/data-export.ts) and owner classification, and erased with them: `userId` is a plain string with its
+// FK written by hand in the migration, `ON DELETE CASCADE`, pinned by a drift probe (lib/app/db-drift.ts), as
+// OwnedInstrument's is. The instrument is a real relation, `Cascade`: a request for one the databank removed means
+// nothing.
+
+/// One user's request for one databank instrument to be modelled.
+model ModelRequest {
+  /// FK to User.id, ON DELETE CASCADE (hand-written in the migration).
+  userId       String
+  instrumentId String
+  createdAt    DateTime @default(now())
+
+  instrument BankInstrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+
+  @@id([userId, instrumentId])
+  @@index([instrumentId])
+  @@map("model_request")
 }

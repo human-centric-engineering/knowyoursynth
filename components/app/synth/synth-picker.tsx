@@ -18,11 +18,13 @@
  */
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { KeyboardEvent } from 'react';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { StarButton, StarIcon } from '@/components/app/synth/favourites';
 import { synthThumbnailHref } from '@/components/app/synth/routes';
 import { PickerAdvanced } from '@/components/app/synth/picker-advanced';
+import { useBankInstruments } from '@/components/app/synth/bank-instruments';
 import {
   familyOpens,
   pickerGroups,
@@ -60,6 +62,15 @@ export interface SynthPickerProps {
    * its family's name.
    */
   onSelectMember?: (synthId: string, slug: string) => void;
+  /**
+   * Any other databank instrument chosen, with every synth ever made (t-330): show what the databank knows about it.
+   * Without it, those instruments are not listed.
+   */
+  onSelectInstrument?: (instrumentId: string) => void;
+  /** The databank instrument whose page is showing, if any (`/synths/about/<id>`): its row is the one selected. */
+  instrumentId?: string | null;
+  /** What the caption names in place of a synth, on a page that is about an instrument nobody has modelled. */
+  caption?: { name: string; maker: string };
   /** Whether a synth is starred; `null` when no star shows (signed out, or still loading). */
   isStarred?: (id: string) => boolean | null;
   onStar?: (id: string) => void;
@@ -81,6 +92,9 @@ export function SynthPicker({
   memberSlug = null,
   onSelect,
   onSelectMember,
+  onSelectInstrument,
+  instrumentId = null,
+  caption,
   isStarred,
   onStar,
   variant = 'button',
@@ -94,39 +108,80 @@ export function SynthPicker({
   const advancedId = useId();
   const advancedButton = useRef<HTMLButtonElement>(null);
   const choices = pickerChoices(site, prefs);
-  const changed = changedChoices(site, prefs);
+  const changed = changedChoices(site, prefs, !!onSelectInstrument);
   const mayChange = site.visitorsMayChange && !!onPrefs;
   const choose_ = <K extends keyof PickerChoices>(key: K, value: PickerChoices[K]) =>
     onPrefs?.(withChoice(site, prefs, key, value));
   const wrap = useRef<HTMLDivElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
+  const pop = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
   const listsMembers = !!onSelectMember;
+  // Every synth ever made, only where the page can show one nobody has modelled.
+  const everything = choices.scope === 'all' && !!onSelectInstrument;
+  const bank = useBankInstruments(open && everything);
   const groups = useMemo(
     () =>
       pickerGroups(synths, families, query, {
         unmodelled: listsMembers,
+        scope: everything ? 'all' : 'play',
+        bank: bank.instruments,
         group: choices.group,
         order: choices.order,
         kinds: choices.kinds,
       }),
     // Whether there is a handler, not which: the page passes a new one each render. `kinds` is the site's or the
     // visitor's own array, the same until one of them changes.
-    [synths, families, listsMembers, query, choices.group, choices.order, choices.kinds]
+    [
+      synths,
+      families,
+      listsMembers,
+      everything,
+      bank.instruments,
+      query,
+      choices.group,
+      choices.order,
+      choices.kinds,
+    ]
   );
   const rows = useMemo(() => groups.flatMap((g) => g.rows), [groups]);
 
   useEffect(() => {
     if (!open) return undefined;
     const away = (e: PointerEvent) => {
-      if (wrap.current && e.target instanceof Node && !wrap.current.contains(e.target)) {
+      // Inside the picker is its button or its list, which the full-size browser renders into the page's body.
+      const inside =
+        e.target instanceof Node &&
+        (wrap.current?.contains(e.target) || pop.current?.contains(e.target));
+      // The full-size browser closes from its scrim's own click instead: closed on the press, the scrim would be gone
+      // before the click, which would land on the page under it.
+      if (everything) return;
+      if (wrap.current && e.target instanceof Node && !inside) {
         setOpen(false);
         setQuery('');
         setAdvanced(false);
       }
     };
     const key = (e: globalThis.KeyboardEvent) => {
+      // A modal keeps Tab inside it: from its last control to its first, and back.
+      if (e.key === 'Tab' && everything && pop.current) {
+        const stops = [
+          ...pop.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+          ),
+        ];
+        const [first, last] = [stops[0], stops[stops.length - 1]];
+        const at = document.activeElement;
+        if (first && last && (e.shiftKey ? at === first : at === last)) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        } else if (first && !(at instanceof Node && pop.current.contains(at))) {
+          e.preventDefault();
+          first.focus();
+        }
+        return;
+      }
       if (e.key !== 'Escape') return;
       // The Advanced window first, then the list.
       if (advanced) {
@@ -145,16 +200,28 @@ export function SynthPicker({
       document.removeEventListener('pointerdown', away);
       document.removeEventListener('keydown', key);
     };
-  }, [open, advanced]);
+  }, [open, advanced, everything]);
 
-  // Open on the synth you are already using, so the arrow keys start from the right place.
+  // The full-size browser is a modal over the page: the page behind it does not scroll while it is open.
+  useEffect(() => {
+    if (!open || !everything) return undefined;
+    const before = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = before;
+    };
+  }, [open, everything]);
+
+  // Open on the synth you are already using, so the arrow keys start from the right place. Again once every synth
+  // ever made has arrived, which holds the row of an instrument's page; and when the list moves to full size (it is
+  // drawn afresh there, and the control that moved it is gone).
   useEffect(() => {
     if (!open || !list.current) return;
     const sel =
       list.current.querySelector<HTMLElement>('[role="option"][aria-selected="true"]') ||
       list.current.querySelector<HTMLElement>('[role="option"]');
     if (sel) sel.focus();
-  }, [open]);
+  }, [open, bank.status, everything]);
 
   const step = (from: HTMLElement, dir: number) => {
     if (!list.current) return;
@@ -179,7 +246,11 @@ export function SynthPicker({
     if (row.synthId) return pick(row.synthId);
     const rf = row.family;
     close();
-    if (!rf || !onSelectMember) return;
+    if (!rf) {
+      if (row.instrumentId) onSelectInstrument?.(row.instrumentId);
+      return;
+    }
+    if (!onSelectMember) return;
     const offered = rf.family.members.flatMap(
       (m) => (m.synthId && synths.find((s) => s.id === m.synthId)) || []
     );
@@ -188,12 +259,14 @@ export function SynthPicker({
       : familyOpens(rf.family, offered, owned);
     if (over) onSelectMember(over, rf.member.slug);
   };
-  const isOn = (row: PickerRow) =>
-    row.synthId
+  const isOn = (row: PickerRow) => {
+    if (instrumentId) return !row.synthId && row.instrumentId === instrumentId;
+    return row.synthId
       ? row.synthId === synthId && !memberSlug
       : !!memberSlug &&
-        row.family?.member.slug === memberSlug &&
-        row.family.family.members.some((m) => m.synthId === synthId);
+          row.family?.member.slug === memberSlug &&
+          row.family.family.members.some((m) => m.synthId === synthId);
+  };
   const firstOption = () => list.current?.querySelector<HTMLElement>('[role="option"]') ?? null;
 
   const onSearchKey = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -225,7 +298,106 @@ export function SynthPicker({
   };
 
   if (!current) return null;
-  const starred = isStarred?.(current.id) ?? null;
+  // The open list: a dropdown under the button, or the full-size browser (below).
+  const dropdown = (
+    <div
+      ref={pop}
+      {...(everything
+        ? { role: 'dialog', 'aria-modal': true, 'aria-label': 'Every synth ever made' }
+        : {})}
+      className={
+        everything
+          ? 'fixed inset-x-4 top-[max(24px,env(safe-area-inset-top))] bottom-6 z-50 mx-auto flex max-w-[1100px] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-2 shadow-2xl'
+          : 'absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl'
+      }
+    >
+      <div className="flex items-center gap-1">
+        <input
+          ref={search}
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={onSearchKey}
+          aria-label="Find a synth"
+          placeholder="Find a synth by name or maker"
+          className="min-w-0 flex-1 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
+        />
+        {mayChange && (
+          <button
+            ref={advancedButton}
+            type="button"
+            aria-expanded={advanced}
+            aria-controls={advancedId}
+            onClick={() => setAdvanced((a) => !a)}
+            className={`kys-label flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] ${advanced ? 'border-(--kys-text) bg-(--kys-text) text-(--kys-raised)' : 'border-(--kys-line) text-(--kys-muted) hover:border-(--kys-muted)'}`}
+          >
+            Advanced
+            {changed > 0 && (
+              <span className="rounded-full bg-(--kys-accent) px-1.5 text-(--kys-accent-ink)">
+                {changed}
+                <span className="sr-only"> changed</span>
+              </span>
+            )}
+          </button>
+        )}
+      </div>
+      {mayChange && advanced && (
+        <PickerAdvanced
+          id={advancedId}
+          offerAll={site.offerAll && !!onSelectInstrument}
+          choices={choices}
+          changed={changed}
+          onChange={choose_}
+          onReset={() => onPrefs?.({})}
+        />
+      )}
+      <div
+        ref={list}
+        role="listbox"
+        aria-label="Choose a synth"
+        // Scroll padding the height of a brand's sticky heading, so a row the arrow keys reach is not under it.
+        className={`kys-scroll scroll-pt-9 overflow-y-auto ${everything ? 'min-h-0 flex-1' : 'max-h-[min(70vh,520px)]'}`}
+      >
+        {groups.map((g) => (
+          // A list by name or lineage is one group with no heading; by maker, one per brand.
+          <div key={g.label} role="group" aria-label={g.label || 'Synths'}>
+            {g.label && (
+              <div
+                aria-hidden="true"
+                className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
+              >
+                {g.label}
+              </div>
+            )}
+            {g.rows.map((row) => (
+              <PickerOption
+                key={row.key}
+                row={row}
+                thumbs={choices.thumbs}
+                on={isOn(row)}
+                starred={!!row.synthId && !!isStarred?.(row.synthId)}
+                onChoose={() => choose(row)}
+                onKeyDown={onItemKey}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      {everything && bank.status !== 'ready' && (
+        <p role="status" className="px-2.5 py-2 text-[13px] text-(--kys-muted)">
+          {bank.status === 'failed'
+            ? 'Every synth ever made could not be loaded: these are the synths that play. Open the list again to try again.'
+            : 'Loading every synth ever made…'}
+        </p>
+      )}
+      {rows.length === 0 && (
+        <p className="px-2.5 py-2 text-[13px] text-(--kys-muted)">No synth matches that.</p>
+      )}
+    </div>
+  );
+  // On an instrument's page, the caption names it, and there is no synth to star.
+  const shown = caption ?? current;
+  const starred = caption ? null : (isStarred?.(current.id) ?? null);
   return (
     <div ref={wrap} className="relative flex items-center gap-1">
       <button
@@ -243,17 +415,17 @@ export function SynthPicker({
           <span className="flex flex-col">
             {/* The maker is the page heading's; the button keeps the name it has as a plain button. */}
             <span aria-hidden="true" className="kys-label text-(--kys-faint)">
-              {current.maker}
+              {shown.maker}
             </span>
             <span className="kys-display text-[clamp(20px,1.8vw,26px)] leading-[1.05] whitespace-nowrap text-(--kys-text) group-hover:text-(--kys-accent)">
-              <span className="sr-only">Synth </span>
-              {current.name}
+              <span className="sr-only">{caption ? 'Instrument ' : 'Synth '}</span>
+              {shown.name}
             </span>
           </span>
         ) : (
           <>
             <span className="kys-label text-(--kys-faint)">Synth</span>
-            <span className="text-sm font-semibold">{current.name}</span>
+            <span className="text-sm font-semibold">{shown.name}</span>
           </>
         )}
         <svg
@@ -277,84 +449,22 @@ export function SynthPicker({
         <StarButton on={starred} name={current.name} onToggle={() => onStar(current.id)} />
       )}
 
-      {open && (
-        <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
-          <div className="flex items-center gap-1">
-            <input
-              ref={search}
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={onSearchKey}
-              aria-label="Find a synth"
-              placeholder="Find a synth by name or maker"
-              className="min-w-0 flex-1 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
-            />
-            {mayChange && (
-              <button
-                ref={advancedButton}
-                type="button"
-                aria-expanded={advanced}
-                aria-controls={advancedId}
-                onClick={() => setAdvanced((a) => !a)}
-                className={`kys-label flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] ${advanced ? 'border-(--kys-text) bg-(--kys-text) text-(--kys-raised)' : 'border-(--kys-line) text-(--kys-muted) hover:border-(--kys-muted)'}`}
-              >
-                Advanced
-                {changed > 0 && (
-                  <span className="rounded-full bg-(--kys-accent) px-1.5 text-(--kys-accent-ink)">
-                    {changed}
-                    <span className="sr-only"> changed</span>
-                  </span>
-                )}
-              </button>
-            )}
-          </div>
-          {mayChange && advanced && (
-            <PickerAdvanced
-              id={advancedId}
-              choices={choices}
-              changed={changed}
-              onChange={choose_}
-              onReset={() => onPrefs?.({})}
-            />
-          )}
-          <div
-            ref={list}
-            role="listbox"
-            aria-label="Choose a synth"
-            // Scroll padding the height of a brand's sticky heading, so a row the arrow keys reach is not under it.
-            className="kys-scroll max-h-[min(70vh,520px)] scroll-pt-9 overflow-y-auto"
-          >
-            {groups.map((g) => (
-              // A list by name or lineage is one group with no heading; by maker, one per brand.
-              <div key={g.label} role="group" aria-label={g.label || 'Synths'}>
-                {g.label && (
-                  <div
-                    aria-hidden="true"
-                    className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
-                  >
-                    {g.label}
-                  </div>
-                )}
-                {g.rows.map((row) => (
-                  <PickerOption
-                    key={row.key}
-                    row={row}
-                    thumbs={choices.thumbs}
-                    on={isOn(row)}
-                    starred={!!row.synthId && !!isStarred?.(row.synthId)}
-                    onChoose={() => choose(row)}
-                    onKeyDown={onItemKey}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-          {rows.length === 0 && (
-            <p className="px-2.5 py-2 text-[13px] text-(--kys-muted)">No synth matches that.</p>
-          )}
-        </div>
-      )}
+      {open &&
+        (everything
+          ? // Every synth ever made is too many for a dropdown: it opens full size over the page, rendered into the
+            // page's body so nothing the synth page stacks (its dock) can sit over it.
+            createPortal(
+              <>
+                <div
+                  aria-hidden="true"
+                  className="fixed inset-0 z-40 bg-black/45"
+                  onClick={close}
+                />
+                {dropdown}
+              </>,
+              document.body
+            )
+          : dropdown)}
     </div>
   );
 }

@@ -315,3 +315,186 @@ describe('pickerGroups marks an original listed only for its member (t-329)', ()
     expect(all.rows.every((r) => !r.context)).toBe(true);
   });
 });
+
+describe('every synth ever made (t-330)', () => {
+  // The databank: the TB-303 (which the TB-303 synth models), the TD-3 (Behringer's copy, which the TD-3 models), the
+  // Model D's original Minimoog, and two nobody has modelled: a copy of the Minimoog and an unrelated one.
+  const BANK = [
+    {
+      id: 'roland-tb-303',
+      name: 'Roland TB-303',
+      maker: 'Roland',
+      year: '1981',
+      kind: 'mono',
+      summary: 'Bass line',
+      synths: ['tb-303'],
+    },
+    {
+      id: 'behringer-td-3',
+      name: 'Behringer TD-3',
+      maker: 'Behringer',
+      year: '2019',
+      kind: 'mono',
+      summary: 'A copy',
+      synths: ['td-3'],
+      recreationOf: 'roland-tb-303',
+    },
+    {
+      id: 'moog-minimoog',
+      name: 'Minimoog Model D',
+      maker: 'Moog Music',
+      year: '1970',
+      kind: 'mono',
+      summary: 'The original',
+      synths: [],
+    },
+    {
+      id: 'behringer-model-d',
+      name: 'Behringer Model D',
+      maker: 'Behringer',
+      year: '2018',
+      kind: 'mono',
+      summary: 'The copy',
+      synths: ['model-d'],
+      recreationOf: 'moog-minimoog',
+    },
+    {
+      id: 'studio-boomstar',
+      name: 'Studio Electronics Boomstar',
+      maker: 'Studio Electronics',
+      year: '2014',
+      kind: 'module',
+      summary: 'A desktop mono',
+      synths: [],
+      recreationOf: 'moog-minimoog',
+    },
+    {
+      id: 'unmodelled-303',
+      name: 'Unmodelled',
+      maker: 'Nobody',
+      year: '1997',
+      kind: 'mono',
+      summary: 'Not modelled',
+      synths: [],
+    },
+  ];
+  const keys = (groups: ReturnType<typeof pickerGroups>) =>
+    groups.flatMap((g) => g.rows.map((r) => r.key));
+
+  it('adds each instrument nobody models as a row of its own, never one already listed', () => {
+    const rows = pickerRows(FAMILY_SYNTHS, [TB_303_FAMILY], {
+      unmodelled: true,
+      bank: BANK,
+      scope: 'all',
+    });
+    expect(rows.map((r) => r.key).sort()).toEqual(
+      [
+        'bank:moog-minimoog',
+        'bank:studio-boomstar',
+        'member:tb-303/rebirth',
+        'model-d',
+        'tb-303',
+        'td-3',
+      ].sort()
+    );
+    expect(rows.find((r) => r.key === 'bank:studio-boomstar')).toMatchObject({
+      name: 'Boomstar',
+      maker: 'Studio Electronics',
+      kind: 'module',
+      text: 'A desktop mono',
+      synthId: null,
+      family: null,
+      instrumentId: 'studio-boomstar',
+      recreationOf: 'moog-minimoog',
+    });
+  });
+
+  it('puts a recreation of a synth’s second instrument under that synth, listing that instrument once', () => {
+    const second = { ...BANK[5], id: 'roland-tb-303-reissue', synths: ['tb-303'] };
+    const copy = { ...BANK[4], id: 'acid-box', recreationOf: 'roland-tb-303-reissue' };
+    const bank = [...BANK, second, copy];
+    const [list] = pickerGroups(FAMILY_SYNTHS, [], '', {
+      unmodelled: true,
+      bank,
+      scope: 'all',
+      group: 'lineage',
+    });
+    expect(list.rows.some((r) => r.key === 'bank:roland-tb-303-reissue')).toBe(false);
+    const top = list.rows.findIndex((r) => r.key === 'tb-303');
+    expect(list.rows[top].depth).toBe(0);
+    expect(list.rows.find((r) => r.key === 'bank:acid-box')).toMatchObject({ depth: 1 });
+    expect(list.rows.findIndex((r) => r.key === 'bank:acid-box')).toBeGreaterThan(top);
+  });
+
+  it('lists every other instrument even where no family member is listed', () => {
+    const rows = pickerRows(FAMILY_SYNTHS, [TB_303_FAMILY], {
+      unmodelled: false,
+      bank: BANK,
+      scope: 'all',
+    });
+    expect(rows.some((r) => r.key.startsWith('member:'))).toBe(false);
+    expect(rows.map((r) => r.key)).toContain('bank:studio-boomstar');
+  });
+
+  it('lists only the synths that play without it, though the databank is read', () => {
+    const rows = pickerRows(FAMILY_SYNTHS, [TB_303_FAMILY], { unmodelled: true, bank: BANK });
+    expect(rows.some((r) => r.key.startsWith('bank:'))).toBe(false);
+    // Each synth still learns its instrument, for lineage.
+    expect(rows.find((r) => r.key === 'model-d')).toMatchObject({
+      instrumentId: 'behringer-model-d',
+      recreationOf: 'moog-minimoog',
+    });
+  });
+
+  it('by lineage, puts what recreates an instrument under it, though no family says so', () => {
+    const [list] = pickerGroups(FAMILY_SYNTHS, [], '', {
+      unmodelled: true,
+      bank: BANK,
+      scope: 'all',
+      group: 'lineage',
+    });
+    const at = (key: string) => list.rows.find((r) => r.key === key);
+    expect(list.rows.findIndex((r) => r.key === 'bank:moog-minimoog')).toBeLessThan(
+      list.rows.findIndex((r) => r.key === 'model-d')
+    );
+    expect(at('model-d')).toMatchObject({ depth: 1, relation: 'Recreation' });
+    expect(at('bank:studio-boomstar')).toMatchObject({ depth: 1, relation: 'Recreation' });
+    expect(at('td-3')).toMatchObject({ depth: 1 });
+    expect(at('tb-303')).toMatchObject({ depth: 0 });
+  });
+
+  it('finds an instrument nobody models by name, maker or full databank name', () => {
+    const find = (q: string) =>
+      keys(pickerGroups(FAMILY_SYNTHS, [], q, { unmodelled: true, bank: BANK, scope: 'all' }));
+    expect(find('boomstar')).toEqual(['bank:studio-boomstar']);
+    expect(find('studio electronics')).toEqual(['bank:studio-boomstar']);
+  });
+
+  it('stops at an instrument that recreates itself in a loop rather than going round it', () => {
+    const looped = [{ ...BANK[2], recreationOf: 'studio-boomstar' }, BANK[4]];
+    const [list] = pickerGroups([], [], '', {
+      unmodelled: true,
+      bank: looped,
+      scope: 'all',
+      group: 'lineage',
+    });
+    expect(list.rows).toHaveLength(2);
+  });
+
+  it('puts a row that leads into a loop under the loop, not the loop under it', () => {
+    // "aaa" recreates the Minimoog, which loops with the Boomstar: "aaa" sorts first, but is not in the loop.
+    const lead = { ...BANK[5], id: 'aaa', recreationOf: 'moog-minimoog' };
+    const looped = [{ ...BANK[2], recreationOf: 'studio-boomstar' }, BANK[4], lead];
+    const [list] = pickerGroups([], [], '', {
+      unmodelled: true,
+      bank: looped,
+      scope: 'all',
+      group: 'lineage',
+    });
+    expect(list.rows.map((r) => [r.key, r.depth])).toEqual([
+      ['bank:moog-minimoog', 0],
+      ['bank:aaa', 1],
+      ['bank:studio-boomstar', 1],
+    ]);
+  });
+});
