@@ -621,7 +621,8 @@ export type ButtonControl = ControlCommon & {
    */
   note?: number;
   /**
-   * A momentary button (the Subharmonicon's RESET, NEXT and TRIGGER): each click tells the engine `press` once. It
+   * A momentary button (the Subharmonicon's RESET, NEXT and TRIGGER, the DFAM's ADVANCE as `next` and its TRIGGER):
+   * each click tells the engine `press` once. It
    * holds no value (give it `ui: true`), so loading a patch, undoing or a lane never presses it.
    */
   press?: SubharmPress;
@@ -1613,6 +1614,13 @@ export interface OscParams {
   fixedNote?: number;
   /** Index of the master oscillator for hard sync, or −1 (default). */
   syncTo?: number;
+  /**
+   * Linear FM (the DFAM's 1→2 FM AMOUNT): the oscillator's frequency is multiplied by 1 + `depth` × oscillator
+   * `from`'s output (−1..1), so at depth 1 it swings from nothing to twice its pitch. Dest `fmLinAmt` adds to the
+   * depth. Unlike a route into `pitch2`, the swing is the same in hertz above and below the pitch, so the pitch heard
+   * stays put while the sidebands grow. It never goes below 0 Hz.
+   */
+  fmLin?: { from: number; depth: number };
   /** One morphing waveform instead of `mix`: 0 triangle → 0.5 saw → 2/3 square → 1 narrow pulse (Kobol). */
   morph?: number;
   /** Silent for the second half of each master cycle as well as synced (CAT SYNC MODE A). */
@@ -2402,6 +2410,49 @@ export interface SubharmParams {
   fine?: number;
 }
 
+/** One of the DFAM's three decay envelopes (`DfamParams.eg`). */
+export interface DfamEnv {
+  /** The DECAY knob, 0..1 of its turn. The decay CV adds to it, ±5 V spanning the whole turn from the centre. */
+  decay: number;
+  /** Seconds at either end of the turn, exponential between them (the VCF's 10 ms to 10 s). */
+  min: number;
+  max: number;
+  /** Attack, seconds: 1 ms, or the VCA EG's 100 ms on SLOW. */
+  attack: number;
+}
+
+/**
+ * The Moog DFAM's control section, and so the Behringer EDGE's (see `audio/dfam-core.ts`): a clock VCO, an 8-step
+ * sequencer with a PITCH and a VELOCITY knob a step, the trigger and velocity buses, and the VCO, VCF and VCA decay
+ * envelopes. The fixed voice keeps its oscillators, noise, mixer, ladder filter and VCA; the core writes the step's
+ * pitch, its velocity, the trigger and the three envelopes as signals, and a definition routes them (`dfmPitch` to
+ * `pitch1` / `pitch2` by SEQ PITCH MOD, `dfmEgVco` to both, `dfmEgVcf` to `cutoff`, `dfmEgVca` to `amp`).
+ *
+ * Signals and destinations are full scale at the hardware's voltages: a step's pitch −1..1 is ±5 V, its velocity 0..1
+ * is 0..5 V, an envelope 0..1 is 0..8 V, a trigger 1 is +5 V, and a CV input's 1 is 5 V. So a cable at 1 between two
+ * of the DFAM's own jacks carries the voltage it does on the hardware.
+ */
+export interface DfamParams {
+  /** TEMPO, Hz (the spec: 0.7 to 700). The TEMPO input adds 1 V an octave. */
+  tempo: number;
+  /** PITCH 1–8, −1..1 (±5 V). */
+  pitch: number[];
+  /** VELOCITY 1–8, 0..1 (0..5 V). */
+  vel: number[];
+  /** RUN / STOP: the sequencer runs (lit). A cable in the RUN / STOP input takes over from it. */
+  run: boolean;
+  /** NOISE / EXT LEVEL, 0..1: the level of the noise, or of EXT AUDIO once cabled, into the mixer (signal `dfmNz`). */
+  noise: number;
+  /** The VCO, VCF and VCA EG. */
+  eg: [DfamEnv, DfamEnv, DfamEnv];
+  /**
+   * The EDGE's CLOCK on MIDI or USB: the steps a beat its SCALE takes from the incoming clock (1/16 is 4, 1/16T is 6),
+   * the app's transport here. Each step is exactly that share of the beat, whatever TEMPO says, and the sequencer
+   * stands still without the clock. Absent, the clock is TEMPO (INT/EXT, and the DFAM).
+   */
+  perBeat?: number;
+}
+
 /**
  * A synth whose sequencer is its own, in its engine (`SynthDef.ownSequencer`, `f-own-sequencer`): the app's transport is
  * its master clock, as a MIDI clock is to the hardware. See `.context/app/sequencer-synths.md`.
@@ -2589,6 +2640,11 @@ export interface EngineParams {
   solar?: SolarParams;
   /** The Subharmonicon's VCOs, subs, rhythm generators and sequencers, in place of `osc` (see `audio/subharm-core.ts`). */
   subharm?: SubharmParams;
+  /**
+   * The DFAM's sequencer, clock, trigger and velocity buses and three decay envelopes, beside the fixed voice's
+   * oscillators, filter and VCA (see `audio/dfam-core.ts`).
+   */
+  dfam?: DfamParams;
   /**
    * The synth's own sequencer runs only on the clock of whatever plays its riff or a pattern (the `clock` messages the
    * riff and pattern players send), and stands still otherwise: the app's transport is its master clock

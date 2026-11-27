@@ -46,6 +46,7 @@ import {
   SUBHARM_DESTS,
   type ClockAt,
 } from '@/lib/app/synths/audio/subharm-core';
+import { createDfam, DFAM_SIGNALS, DFAM_DESTS } from '@/lib/app/synths/audio/dfam-core';
 import { DEFAULT_VELOCITY, noteEvents } from '@/lib/app/synths/audio/note-events';
 import {
   withPatterns,
@@ -79,6 +80,9 @@ export type SynthMessage =
   | { type: 'phase'; lfo?: number; lfo2?: number; lfo3?: number }
   | PatternMessage;
 
+/** The engines with a sequencer of their own, which the app's clock goes to (`ownClock`). */
+type ClockTo = 'moog' | 'subharm' | 'dfam';
+
 /** A message to one voice: as {@link SynthMessage}, but its params may be a `dual` module's. */
 type VoiceMessage = Exclude<SynthMessage, { type: 'params' }> | { type: 'params'; p: VoiceParams };
 
@@ -111,7 +115,7 @@ export interface MeterEvent {
   oscLv?: number[];
   /** Bit k: voice k is sounding (poly and dual). */
   voices?: number;
-  /** The Easel's sequencer stage, or the 960's, or the Subharmonicon's Sequencer 1 (0-based). */
+  /** The Easel's sequencer stage, or the 960's, the DFAM's, or the Subharmonicon's Sequencer 1 (0-based). */
   seq?: number;
   /** The Subharmonicon's Sequencer 2 stage (0-based). */
   seq2?: number;
@@ -152,6 +156,9 @@ interface VoiceOsc {
   kbd: boolean;
   fixed: number;
   syncTo: number;
+  /** Linear FM (`OscParams.fmLin`): the oscillator it comes from, or −1, and its depth. */
+  fmFrom: number;
+  fmDepth: number;
   on: boolean;
   tri: number;
   shark: number;
@@ -429,6 +436,7 @@ export const SIGNALS: string[] = [
   ...MOOG_SIGNALS,
   ...SOLAR_SIGNALS,
   ...SUBHARM_SIGNALS,
+  ...DFAM_SIGNALS,
 ];
 export const DESTS: string[] = [
   'pitchAll',
@@ -521,6 +529,8 @@ export const DESTS: string[] = [
   ...MOOG_DESTS,
   ...SOLAR_DESTS,
   ...SUBHARM_DESTS,
+  ...DFAM_DESTS,
+  'fmLinAmt',
 ];
 
 /** Audio path and gates the voice always has unless a SynthDef's `normals` or a cable overrides them. */
@@ -648,6 +658,8 @@ function createVoice(
     kbd: true,
     fixed: 60,
     syncTo: -1,
+    fmFrom: -1,
+    fmDepth: 0,
     on: false,
     tri: 0,
     shark: 0,
@@ -961,6 +973,9 @@ function createVoice(
     // the attack as the envelope runs it: after key follow and the rate CV, with any delay before it
     (k) => env[k].dlyN / sr + env[k].a / (env[k].rA > 0 ? env[k].rA : 1)
   );
+  // Moog DFAM (EngineParams `dfam`): its clock, sequencer, trigger and velocity buses and three decay envelopes, beside
+  // the fixed voice's oscillators, filter and VCA, see dfam-core.ts.
+  const dfam = createDfam(sr, S, SI, DI, (d) => ev(d), cabled);
   // phrase player
   let phrase: VoicePhrase | null = null,
     phrasePos = 0,
@@ -1042,6 +1057,8 @@ function createVoice(
     if (p.solar) solar.set(p.solar);
     if (p.subharm) subharm.set(p.subharm, !!p.follow);
     else subharm.off();
+    if (p.dfam) dfam.set(p.dfam, !!p.follow);
+    else dfam.off();
     nOsc = Math.min(4, p.osc.length);
     for (let i = 0; i < 4; i++) {
       const o = osc[i];
@@ -1107,6 +1124,8 @@ function createVoice(
       o.kbd = q.kbd !== false;
       o.fixed = q.fixedNote == null ? 60 : q.fixedNote;
       o.syncTo = q.syncTo == null ? -1 : q.syncTo;
+      o.fmFrom = q.fmLin && q.fmLin.from !== i ? q.fmLin.from : -1;
+      o.fmDepth = q.fmLin ? q.fmLin.depth : 0;
       // `syncGate` (CAT SYNC MODE A): as well as the hard sync, the oscillator is silent for the second half of each master cycle
       o.syncGate = !!q.syncGate;
       // `skew` 0..1 (VCS3 SHAPE): the triangle output rises for that share of the cycle, so it leans into a ramp either
@@ -1370,14 +1389,15 @@ function createVoice(
    * clocks from its start), so neither is left running or waiting on a start that never comes.
    */
   let clockRun = false,
-    clockTo: 'moog' | 'subharm' | null = null,
+    clockTo: ClockTo | null = null,
     clockPulse = 0;
-  function sendClock(to: 'moog' | 'subharm', at: ClockAt, from?: number) {
+  function sendClock(to: ClockTo, at: ClockAt, from?: number) {
     if (to === 'moog') moog.clock(at, from);
+    else if (to === 'dfam') dfam.clock(at, from);
     else subharm.clock(at);
   }
   function ownClock(at: ClockAt, from?: number) {
-    const to = P && P.moog ? 'moog' : 'subharm';
+    const to: ClockTo = P && P.moog ? 'moog' : P && P.dfam ? 'dfam' : 'subharm';
     if (at === 'start') {
       // a start to the other engine stops the one the last run went to
       if (clockTo && clockTo !== to) sendClock(clockTo, 'stop');
@@ -1397,7 +1417,7 @@ function createVoice(
     if (clockTo !== to) {
       if (clockTo) sendClock(clockTo, 'stop');
       clockTo = null;
-      if (to === 'moog' || clockPulse % (CLOCK_PPQ / SUBHARM_PPQ) === 0) {
+      if (to !== 'subharm' || clockPulse % (CLOCK_PPQ / SUBHARM_PPQ) === 0) {
         clockTo = to;
         sendClock(to, 'start', clockPulse);
       }
@@ -1439,7 +1459,8 @@ function createVoice(
         panic();
         break;
       case 'press':
-        subharm.press(m.name);
+        if (P && P.dfam) dfam.press(m.name);
+        else subharm.press(m.name);
         break;
       case 'clock':
         ownClock(m.at, m.from);
@@ -2296,7 +2317,7 @@ function createVoice(
         // The riff is the master clock of a synth's own sequencer, as the pattern player is (`f-own-sequencer`): the
         // Subharmonicon's, or a 960 that follows the clock. A start, then pulses at CLOCK_PPQ a beat, each sent before
         // the riff's notes on its sample so a key there finds the sequencers running.
-        if (p.subharm || (mg && p.follow)) {
+        if (p.subharm || ((mg || p.dfam) && p.follow)) {
           if (!phrase.clocked) {
             phrase.clocked = true;
             // back on the synth part-way through the riff, its clock starts again on the riff's next sixteenth
@@ -2617,6 +2638,8 @@ function createVoice(
           solar.step();
           break core;
         }
+        // the DFAM's clock, sequencer and envelopes come first, so the oscillators hear this sample's step
+        if (p.dfam) dfam.step(hitKey, vel);
         // ── oscillators ──
         const pmAll = ev(DI.pitchAll);
         if (dAmt > 0) {
@@ -2639,6 +2662,11 @@ function createVoice(
           // its peak noise does through `inc`, not the bare key
           oscNote[k] = nn;
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
+          // linear FM (`fmLin`): the last sample of the oscillator it comes from swings the frequency in hertz
+          if (o.fmFrom >= 0) {
+            hz *= 1 + (o.fmDepth + ev(DI.fmLinAmt)) * S[OSC_SI[o.fmFrom]];
+            if (hz < 0) hz = 0;
+          }
           if (hz > sr * 0.45) hz = sr * 0.45;
           o.inc = hz / sr;
           o.phase += o.inc;
@@ -3116,6 +3144,7 @@ function createVoice(
           ...(P.moog ? { moog: moog.meters() } : null),
           ...(P.solar ? { seq: solar.seqStage(), eyes: solar.eyes() } : null),
           ...(P.subharm ? (([seq, seq2]) => ({ seq, seq2 }))(subharm.stages()) : null),
+          ...(P.dfam ? { seq: dfam.stage() } : null),
         });
       overloadPeak = 0;
     }
@@ -3165,6 +3194,8 @@ function createVoice(
       !P.vca.bias &&
       // a running Subharmonicon clock opens its own gates, so its voice must keep stepping
       !(P.subharm && subharm.running()) &&
+      // nor does the DFAM's, and its own envelopes ring on after the keys
+      !(P.dfam && dfam.busy()) &&
       env[vcaEnvIdx()].stage === 0 &&
       vcaGain < 1e-6);
   /** Copy the signals this voice's cross-module cables read from the other voice (`peer` = its signal array). */
