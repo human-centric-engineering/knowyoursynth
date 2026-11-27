@@ -11,7 +11,15 @@ const { findUnique, upsert, logger } = vi.hoisted(() => ({
   upsert: vi.fn(),
   logger: { error: vi.fn(), warn: vi.fn() },
 }));
-vi.mock('@/lib/db/client', () => ({ prisma: { synthPickerSettings: { findUnique, upsert } } }));
+vi.mock('@/lib/db/client', () => {
+  const synthPickerSettings = { findUnique, upsert };
+  return {
+    prisma: {
+      synthPickerSettings,
+      $transaction: vi.fn(async (fn: (tx: unknown) => unknown) => fn({ synthPickerSettings })),
+    },
+  };
+});
 vi.mock('@/lib/logging', () => ({ logger }));
 
 import {
@@ -55,6 +63,16 @@ describe('getSitePickerSettings', () => {
 });
 
 describe('setSitePickerSettings', () => {
+  it('keeps the kinds in the databank’s order, so a reorder is never a change', async () => {
+    findUnique.mockResolvedValue({ ...SAVED, kinds: ['poly', 'mono'] });
+    const { before, after } = await setSitePickerSettings({ ...SAVED, kinds: ['poly', 'mono'] });
+    expect(after.kinds).toEqual(['mono', 'poly']);
+    expect(upsert).toHaveBeenCalledWith(
+      expect.objectContaining({ update: expect.objectContaining({ kinds: ['mono', 'poly'] }) })
+    );
+    expect(before.kinds).toEqual(['poly', 'mono']);
+  });
+
   it('writes the one row, and returns the settings before and after', async () => {
     const result = await setSitePickerSettings(SAVED);
     expect(upsert).toHaveBeenCalledWith({

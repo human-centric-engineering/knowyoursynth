@@ -451,11 +451,30 @@ describe('SynthPicker Advanced search (f-synth-picker t-329)', () => {
     expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['poly'] });
   });
 
-  it('closes the window on Escape before the list', () => {
+  it('opens on Enter the row the box found by lineage, not the original over it', () => {
+    const onSelect = vi.fn();
+    open({ prefs: { group: 'lineage' }, onSelect });
+    const search = screen.getByRole('searchbox', { name: 'Find a synth' });
+    fireEvent.change(search, { target: { value: 'td-3' } });
+    fireEvent.keyDown(search, { key: 'Enter' });
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('td-3');
+  });
+
+  it('is closed again the next time the list opens after a click away', () => {
+    open();
+    fireEvent.click(advancedButton());
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('listbox')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { expanded: false, name: /Model D/ }));
+    expect(screen.queryByRole('region', { name: 'Advanced search' })).toBeNull();
+  });
+
+  it('closes the window on Escape before the list, and gives focus back to its button', () => {
     open();
     fireEvent.click(advancedButton());
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(screen.queryByRole('region', { name: 'Advanced search' })).toBeNull();
+    expect(document.activeElement).toBe(advancedButton());
     expect(screen.getByRole('listbox')).toBeTruthy();
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(screen.queryByRole('listbox')).toBeNull();

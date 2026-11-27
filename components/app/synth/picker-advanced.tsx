@@ -12,8 +12,10 @@ import {
   PICKER_GROUPS,
   PICKER_KINDS,
   PICKER_ORDERS,
+  toggleKind,
   type PickerChoices,
   type PickerGroupBy,
+  type PickerKind,
   type PickerOrder,
 } from '@/lib/app/picker/settings';
 
@@ -73,11 +75,7 @@ function Segments<V extends string>({
 }
 
 export function PickerAdvanced({ id, choices, changed, onChange, onReset }: PickerAdvancedProps) {
-  const toggleKind = (k: (typeof PICKER_KINDS)[number]) =>
-    onChange(
-      'kinds',
-      choices.kinds.includes(k) ? choices.kinds.filter((x) => x !== k) : [...choices.kinds, k]
-    );
+  const flipKind = (k: PickerKind) => onChange('kinds', toggleKind(choices.kinds, k));
   return (
     <section
       id={id}
@@ -106,7 +104,7 @@ export function PickerAdvanced({ id, choices, changed, onChange, onReset }: Pick
               key={k}
               type="button"
               aria-pressed={choices.kinds.includes(k)}
-              onClick={() => toggleKind(k)}
+              onClick={() => flipKind(k)}
               className={`kys-label rounded-full border px-2 py-0.5 text-[11px] ${choices.kinds.includes(k) ? 'border-(--kys-text) bg-(--kys-text) text-(--kys-raised)' : 'border-(--kys-line) text-(--kys-muted) hover:border-(--kys-muted)'}`}
             >
               {k}

@@ -47,6 +47,11 @@ export interface PickerListRow extends PickerRow {
   depth: 0 | 1;
   /** What it is to the original it sits under: a `Revision` by the same brand, or a `Recreation` by another. */
   relation: 'Revision' | 'Recreation' | null;
+  /**
+   * Listed only to show where a match sits: a lineage's original that the box or a kind did not find itself. Enter in
+   * the box passes over it to the first row that did match.
+   */
+  context?: true;
 }
 
 export interface PickerGroup {
@@ -136,20 +141,35 @@ function matches(row: PickerRow, q: string): boolean {
   ].some((s) => s.toLowerCase().includes(q));
 }
 
-const year = (row: PickerRow) => Number.parseInt(row.year, 10) || 0;
+/** A row's year, or null when it has none the databank could say ("", or not a year). */
+const year = (row: PickerRow): number | null => {
+  const y = Number.parseInt(row.year, 10);
+  return Number.isFinite(y) && y > 0 ? y : null;
+};
+
+/** By year, oldest first (`dir` 1) or newest (-1); a row with no year after every dated one, either way. */
+const byYear =
+  (dir: 1 | -1) =>
+  (a: PickerRow, b: PickerRow): number => {
+    const [x, y] = [year(a), year(b)];
+    if (x === null || y === null) return x === y ? 0 : x === null ? 1 : -1;
+    return dir * (x - y);
+  };
+const oldestFirst = byYear(1);
 
 /** The order rows are listed in: by name, or by year (newest or oldest first) and then by name. */
 function sorter(order: PickerOrder): (a: PickerRow, b: PickerRow) => number {
-  if (order === 'new') return (a, b) => year(b) - year(a) || byName(a, b);
-  if (order === 'old') return (a, b) => year(a) - year(b) || byName(a, b);
+  if (order === 'new') return (a, b) => byYear(-1)(a, b) || byName(a, b);
+  if (order === 'old') return (a, b) => oldestFirst(a, b) || byName(a, b);
   return byName;
 }
 
 const listed = (row: PickerRow): PickerListRow => ({ ...row, depth: 0, relation: null });
 
 /**
- * Each family's original among `rows`: its earliest member, by year then name. Read from every row the picker could
- * list, so a member found by the box still shows under its original.
+ * Each family's original among `rows`: its earliest dated member, then by name; a member with no year is the original
+ * only when none has one. Read from every row the picker could list, so a member found by the box still shows under
+ * its original.
  */
 function originals(rows: readonly PickerRow[]): Map<string, PickerRow> {
   const out = new Map<string, PickerRow>();
@@ -157,8 +177,7 @@ function originals(rows: readonly PickerRow[]): Map<string, PickerRow> {
     const id = row.family?.family.id;
     if (!id) continue;
     const held = out.get(id);
-    if (!held || year(row) < year(held) || (year(row) === year(held) && byName(row, held) < 0))
-      out.set(id, row);
+    if (!held || (oldestFirst(row, held) || byName(row, held)) < 0) out.set(id, row);
   }
   return out;
 }
@@ -170,6 +189,7 @@ function lineage(
   sort: (a: PickerRow, b: PickerRow) => number
 ): PickerListRow[] {
   const firsts = originals(all);
+  const keptKeys = new Set(kept.map((r) => r.key));
   const tops = new Map<string, PickerRow>();
   const under = new Map<string, PickerRow[]>();
   for (const row of kept) {
@@ -185,12 +205,12 @@ function lineage(
   }
   const out: PickerListRow[] = [];
   for (const top of [...tops.values()].sort(sort)) {
-    out.push(listed(top));
+    out.push(keptKeys.has(top.key) ? listed(top) : { ...listed(top), context: true });
     const id = top.family?.family.id;
     const brand = makerGroup(top.maker);
     // Under its original, a family is always oldest first, whatever order the originals are in.
     const rows = id
-      ? [...(under.get(id) ?? [])].sort((a, b) => year(a) - year(b) || byName(a, b))
+      ? [...(under.get(id) ?? [])].sort((a, b) => oldestFirst(a, b) || byName(a, b))
       : [];
     for (const row of rows)
       out.push({

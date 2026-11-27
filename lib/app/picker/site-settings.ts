@@ -14,6 +14,7 @@ import { logger } from '@/lib/logging';
 import {
   FACTORY_PICKER,
   SitePickerSettingsSchema,
+  sortKinds,
   type SitePickerSettings,
 } from '@/lib/app/picker/settings';
 
@@ -31,7 +32,13 @@ const COLUMNS = {
 
 /** The site's settings: the row's, or the defaults when there is none (or it cannot be read as settings). */
 export async function getSitePickerSettings(): Promise<SitePickerSettings> {
-  const row = await prisma.synthPickerSettings.findUnique({ where: { id: SITE }, select: COLUMNS });
+  return asSettings(
+    await prisma.synthPickerSettings.findUnique({ where: { id: SITE }, select: COLUMNS })
+  );
+}
+
+/** A row as settings: none is the defaults, and so is one the schema refuses (logged). */
+function asSettings(row: unknown): SitePickerSettings {
   if (!row) return FACTORY_PICKER;
   const parsed = SitePickerSettingsSchema.safeParse(row);
   if (parsed.success) return parsed.data;
@@ -49,13 +56,19 @@ export async function getSitePickerSettings(): Promise<SitePickerSettings> {
 export async function setSitePickerSettings(
   next: SitePickerSettings
 ): Promise<{ before: SitePickerSettings; after: SitePickerSettings }> {
-  const before = await getSitePickerSettings();
-  await prisma.synthPickerSettings.upsert({
-    where: { id: SITE },
-    create: { id: SITE, ...next },
-    update: next,
+  // Kinds in the databank's order, so a reorder is never a change, in the audit or for a visitor's comparison.
+  const after = { ...next, kinds: sortKinds(next.kinds) };
+  // One transaction, so two saves at once each audit what they replaced.
+  const before = await prisma.$transaction(async (tx) => {
+    const row = await tx.synthPickerSettings.findUnique({ where: { id: SITE }, select: COLUMNS });
+    await tx.synthPickerSettings.upsert({
+      where: { id: SITE },
+      create: { id: SITE, ...after },
+      update: after,
+    });
+    return asSettings(row);
   });
-  return { before, after: next };
+  return { before, after };
 }
 
 /**

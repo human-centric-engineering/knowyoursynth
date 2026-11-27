@@ -252,3 +252,51 @@ describe('pickerGroups, as the visitor chooses (t-329)', () => {
     ]);
   });
 });
+
+describe('pickerGroups with a row that has no year (t-329)', () => {
+  const undated = { id: 'x', name: 'Undated', maker: 'Roland', year: 0, heritage: '' };
+  const keys = (groups: ReturnType<typeof pickerGroups>) =>
+    groups.flatMap((g) => g.rows.map((r) => r.key));
+
+  it('lists it after every dated row, newest or oldest first', () => {
+    const synths = [...FAMILY_SYNTHS, undated];
+    for (const order of ['new', 'old'] as const)
+      expect(
+        keys(pickerGroups(synths, [], '', { unmodelled: true, group: 'name', order })).at(-1)
+      ).toBe('x');
+  });
+
+  it('does not make it a family’s original', () => {
+    const family = {
+      ...TB_303_FAMILY,
+      members: TB_303_FAMILY.members.map((m) =>
+        m.synthId ? m : { ...m, instrument: { ...m.instrument, year: '' } }
+      ),
+    };
+    const [list] = pickerGroups(FAMILY_SYNTHS, [family], '', {
+      unmodelled: true,
+      group: 'lineage',
+    });
+    const first = list.rows.find((r) => r.family);
+    expect(first?.key).toBe('tb-303');
+    expect(list.rows.find((r) => r.key === 'member:tb-303/rebirth')?.depth).toBe(1);
+  });
+});
+
+describe('pickerGroups marks an original listed only for its member (t-329)', () => {
+  it('as context, and a matching one not', () => {
+    const [found] = pickerGroups(FAMILY_SYNTHS, [TB_303_FAMILY], 'td-3', {
+      unmodelled: true,
+      group: 'lineage',
+    });
+    expect(found.rows.map((r) => [r.key, r.context ?? false])).toEqual([
+      ['tb-303', true],
+      ['td-3', false],
+    ]);
+    const [all] = pickerGroups(FAMILY_SYNTHS, [TB_303_FAMILY], '', {
+      unmodelled: true,
+      group: 'lineage',
+    });
+    expect(all.rows.every((r) => !r.context)).toBe(true);
+  });
+});

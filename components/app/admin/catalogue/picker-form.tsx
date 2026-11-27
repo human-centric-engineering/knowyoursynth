@@ -22,7 +22,9 @@ import {
   PICKER_GROUPS,
   PICKER_KINDS,
   PICKER_ORDERS,
+  toggleKind,
   type PickerGroupBy,
+  type PickerKind,
   type PickerOrder,
   type SitePickerSettings,
 } from '@/lib/app/picker/settings';
@@ -86,11 +88,7 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
     setSavedNote(null);
     setDraft((d) => ({ ...d, [key]: value }));
   };
-  const toggleKind = (k: (typeof PICKER_KINDS)[number]) =>
-    set(
-      'kinds',
-      draft.kinds.includes(k) ? draft.kinds.filter((x) => x !== k) : [...draft.kinds, k]
-    );
+  const flipKind = (k: PickerKind) => set('kinds', toggleKind(draft.kinds, k));
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,7 +176,7 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
               aria-pressed={draft.kinds.includes(k)}
               variant={draft.kinds.includes(k) ? 'default' : 'outline'}
               disabled={disabled}
-              onClick={() => toggleKind(k)}
+              onClick={() => flipKind(k)}
             >
               {k}
             </Button>

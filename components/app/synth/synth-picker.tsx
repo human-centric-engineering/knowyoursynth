@@ -92,6 +92,7 @@ export function SynthPicker({
   const [query, setQuery] = useState('');
   const [advanced, setAdvanced] = useState(false);
   const advancedId = useId();
+  const advancedButton = useRef<HTMLButtonElement>(null);
   const choices = pickerChoices(site, prefs);
   const changed = changedChoices(site, prefs);
   const mayChange = site.visitorsMayChange && !!onPrefs;
@@ -122,6 +123,7 @@ export function SynthPicker({
       if (wrap.current && e.target instanceof Node && !wrap.current.contains(e.target)) {
         setOpen(false);
         setQuery('');
+        setAdvanced(false);
       }
     };
     const key = (e: globalThis.KeyboardEvent) => {
@@ -129,6 +131,8 @@ export function SynthPicker({
       // The Advanced window first, then the list.
       if (advanced) {
         setAdvanced(false);
+        // Its controls go with it: focus goes back to the button that opened it.
+        advancedButton.current?.focus();
         return;
       }
       setOpen(false);
@@ -196,9 +200,12 @@ export function SynthPicker({
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       firstOption()?.focus();
-    } else if (e.key === 'Enter' && query.trim() && rows[0]) {
+    } else if (e.key === 'Enter' && query.trim()) {
+      // The first row the box found, past an original listed only to show where it sits.
+      const first = rows.find((r) => !r.context);
+      if (!first) return;
       e.preventDefault();
-      choose(rows[0]);
+      choose(first);
     }
   };
 
@@ -285,6 +292,7 @@ export function SynthPicker({
             />
             {mayChange && (
               <button
+                ref={advancedButton}
                 type="button"
                 aria-expanded={advanced}
                 aria-controls={advancedId}

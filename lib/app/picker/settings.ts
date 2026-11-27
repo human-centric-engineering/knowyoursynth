@@ -11,6 +11,7 @@
  * See `.context/app/synth-picker.md`.
  */
 import { z } from 'zod';
+import { INSTRUMENT_KINDS } from '@/lib/app/bank/data';
 
 /** How rows are grouped: A to Z by name, under each maker's brand, or each original with its copies under it. */
 export const PICKER_GROUPS = ['name', 'maker', 'lineage'] as const;
@@ -20,16 +21,8 @@ export type PickerGroupBy = (typeof PICKER_GROUPS)[number];
 export const PICKER_ORDERS = ['name', 'new', 'old'] as const;
 export type PickerOrder = (typeof PICKER_ORDERS)[number];
 
-/** The kinds of instrument the databank records (`BankInstrument.kind`). */
-export const PICKER_KINDS = [
-  'mono',
-  'paraphonic',
-  'poly',
-  'semi-modular',
-  'modular',
-  'module',
-  'sequencer',
-] as const;
+/** The kinds of instrument the databank records (`BankInstrument.kind`): its own list, so a new kind is one here too. */
+export const PICKER_KINDS = INSTRUMENT_KINDS;
 export type PickerKind = (typeof PICKER_KINDS)[number];
 
 const KindsSchema = z
@@ -78,7 +71,29 @@ const CHOICE_KEYS = [
   'thumbs',
 ] as const satisfies readonly (keyof PickerChoices)[];
 
-const sameChoice = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+/**
+ * `kinds` in the databank's order, each once: how a list of kinds is kept, so a kind turned off and on again is the
+ * same choice as before, and two lists of the same kinds compare equal.
+ */
+export function sortKinds(kinds: readonly PickerKind[]): PickerKind[] {
+  return PICKER_KINDS.filter((k) => kinds.includes(k));
+}
+
+/** `kinds` with `kind` turned on or off, in the databank's order. */
+export function toggleKind(kinds: readonly PickerKind[], kind: PickerKind): PickerKind[] {
+  return sortKinds(kinds.includes(kind) ? kinds.filter((k) => k !== kind) : [...kinds, kind]);
+}
+
+/** Whether two values of one choice are the same: kinds as a set, the rest as values. */
+function sameChoice<K extends keyof PickerChoices>(
+  key: K,
+  a: PickerChoices[K],
+  b: PickerChoices[K]
+): boolean {
+  if (key !== 'kinds') return a === b;
+  const [x, y] = [a, b].map((v) => (Array.isArray(v) ? sortKinds(v).join() : ''));
+  return x === y;
+}
 
 /** The choices a visitor's picker lists by: the site's, with the visitor's own changes when the site allows them. */
 export function pickerChoices(site: SitePickerSettings, mine: PickerPrefs): PickerChoices {
@@ -94,7 +109,10 @@ export function pickerChoices(site: SitePickerSettings, mine: PickerPrefs): Pick
 /** How many of the visitor's choices differ from the site's: 0 when they follow it, or may not change it. */
 export function changedChoices(site: SitePickerSettings, mine: PickerPrefs): number {
   if (!site.visitorsMayChange) return 0;
-  return CHOICE_KEYS.filter((k) => mine[k] !== undefined && !sameChoice(mine[k], site[k])).length;
+  return CHOICE_KEYS.filter((k) => {
+    const value = mine[k];
+    return value !== undefined && !sameChoice(k, value, site[k]);
+  }).length;
 }
 
 /**
@@ -109,5 +127,5 @@ export function withChoice<K extends keyof PickerChoices>(
 ): PickerPrefs {
   const rest: PickerPrefs = { ...mine };
   delete rest[key];
-  return sameChoice(value, site[key]) ? rest : { ...rest, [key]: value };
+  return sameChoice(key, value, site[key]) ? rest : { ...rest, [key]: value };
 }

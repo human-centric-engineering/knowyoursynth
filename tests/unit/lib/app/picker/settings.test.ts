@@ -11,6 +11,8 @@ import {
   pickerChoices,
   PickerPrefsSchema,
   SitePickerSettingsSchema,
+  sortKinds,
+  toggleKind,
   withChoice,
   type SitePickerSettings,
 } from '@/lib/app/picker/settings';
@@ -107,5 +109,19 @@ describe('withChoice', () => {
       thumbs: false,
     });
     expect(withChoice(SITE, { kinds: [] }, 'kinds', ['poly'])).toEqual({});
+  });
+});
+
+describe('kinds', () => {
+  it('are kept in the databank’s order, each once', () => {
+    expect(sortKinds(['sequencer', 'mono', 'poly'])).toEqual(['mono', 'poly', 'sequencer']);
+    expect(toggleKind(['poly'], 'mono')).toEqual(['mono', 'poly']);
+    expect(toggleKind(['mono', 'poly'], 'mono')).toEqual(['poly']);
+  });
+
+  it('compare as a set, so the same kinds in another order are not a change', () => {
+    const site: SitePickerSettings = { ...SITE, kinds: ['mono', 'poly'] };
+    expect(changedChoices(site, { kinds: ['poly', 'mono'] })).toBe(0);
+    expect(withChoice(site, {}, 'kinds', ['poly', 'mono'])).toEqual({});
   });
 });

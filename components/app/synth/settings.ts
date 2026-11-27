@@ -2,9 +2,9 @@
 
 /**
  * The synth page's settings (`f-my-sounds` s3): hover help (`kys.tips`), the sound map's two toggles (`dim`, `heat`),
- * the harmonics strip (`harm`), the effects rack (`fx`) and how the synth picker lists synths (`picker`, t-329). From browser storage, as always, and signed in, from the
- * account as well (`/api/v1/me/settings`). How the two agree, and how often the account is written, is in
- * `account-storage.ts`.
+ * the harmonics strip (`harm`), the effects rack (`fx`) and how the synth picker lists synths (`picker`, t-329).
+ * From browser storage, as always, and signed in, from the account as well (`/api/v1/me/settings`). How the two
+ * agree, and how often the account is written, is in `account-storage.ts`.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';

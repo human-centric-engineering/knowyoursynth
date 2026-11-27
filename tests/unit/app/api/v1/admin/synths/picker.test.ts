@@ -22,6 +22,7 @@ vi.mock('next/headers', () => ({ headers: vi.fn(() => Promise.resolve(new Header
 const table = vi.hoisted(() => ({ row: null as Record<string, unknown> | null }));
 const mockPrisma = vi.hoisted(() => ({
   $queryRaw: vi.fn(async () => []),
+  $transaction: vi.fn(),
   synthPickerSettings: {
     // As Prisma does, only the columns selected.
     findUnique: vi.fn(async ({ select }: { select: Record<string, boolean> }) => {
@@ -42,6 +43,7 @@ const mockPrisma = vi.hoisted(() => ({
     ),
   },
 }));
+mockPrisma.$transaction.mockImplementation(async (fn: (tx: unknown) => unknown) => fn(mockPrisma));
 vi.mock('@/lib/db/client', () => ({ prisma: mockPrisma }));
 
 const mockLogAdminAction = vi.hoisted(() => vi.fn());
