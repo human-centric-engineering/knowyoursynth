@@ -427,7 +427,14 @@ export function createMacroOsc(sr: number): MacroOsc {
    * WAVE picks a table: each of the 16 holds the middle of its sixteenth of the knob, and the middle fifth of the way
    * from one table's centre to the next is a crossfade between them, so sweeping WAVE never jumps between waveforms.
    */
-  function wtAt(ta: Float32Array, tb: Float32Array, x: number, mp: number, fpos: number, ph: number) {
+  function wtAt(
+    ta: Float32Array,
+    tb: Float32Array,
+    x: number,
+    mp: number,
+    fpos: number,
+    ph: number
+  ) {
     const a = readTable(ta, mp, fpos, ph);
     return x > 0 ? a + (readTable(tb, mp, fpos, ph) - a) * x : a;
   }
@@ -512,7 +519,7 @@ export function createMacroOsc(sr: number): MacroOsc {
   }
 
   function pluck(inc: number, w: number, t: number, s: number, hit: boolean): number {
-      const buf = ks!;
+    const buf = ks!;
     // the period in samples, held to the line's length (about 6 Hz at 48 kHz)
     let per = inc > 0 ? 1 / inc : KS_N - 2;
     if (per > KS_N - 2) per = KS_N - 2;

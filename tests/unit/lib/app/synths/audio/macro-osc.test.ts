@@ -13,7 +13,12 @@
 
 import { describe, it, expect } from 'vitest';
 
-import type { EngineParams, EngineRoute, MacroOscParams, OscParams } from '@/lib/app/synths/contract';
+import type {
+  EngineParams,
+  EngineRoute,
+  MacroOscParams,
+  OscParams,
+} from '@/lib/app/synths/contract';
 import { createMacroOsc } from '@/lib/app/synths/audio/macro-osc';
 import { allFinite, monoParams, render, rms } from '@/tests/unit/lib/app/synths/audio/render';
 
@@ -262,7 +267,8 @@ describe('the macro oscillator on its own', () => {
   );
 
   it('keeps the formant model sounding at TIMBRE 1 on high notes', () => {
-    for (const hz of [440, 2000]) expect(rms(raw(at('formant', 1, 1, 0.5), hz))).toBeGreaterThan(0.01);
+    for (const hz of [440, 2000])
+      expect(rms(raw(at('formant', 1, 1, 0.5), hz))).toBeGreaterThan(0.01);
   });
 
   it('crossfades from one wavetable to the next rather than jumping', () => {
