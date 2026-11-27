@@ -202,6 +202,19 @@ describe('dfam core: the sequencer', () => {
     expect(edges(rec.dfmTrig)).toHaveLength(0);
     expect(r.core.stage()).toBe(st);
   });
+
+  it('unplugging RUN / STOP with the panel lit starts it again on the step it is on, at once', () => {
+    const pitch = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
+    const r = rig(dfam({ run: true, tempo: 10, pitch }));
+    // a low cable stops it on step 1, after the one trigger it played on the first sample
+    r.input('dfmRun', 0);
+    r.run(2000, []);
+    const st = r.core.stage();
+    r.input('dfmRun', 0, false);
+    const rec = r.run(100, ['dfmTrig', 'dfmPitch']);
+    expect(edges(rec.dfmTrig)).toEqual([0]);
+    expect(rec.dfmPitch[0]).toBe(pitch[st]);
+  });
 });
 
 describe('dfam core: the buses and envelopes', () => {
@@ -297,6 +310,28 @@ describe('dfam core: the buses and envelopes', () => {
     rec = run.run(500, ['dfmTrig'], 0.6);
     expect(edges(rec.dfmTrig)).toHaveLength(0);
   });
+
+  it('VELOCITY OUT goes back to the step’s once anything but a key fires the bus', () => {
+    const r = rig(dfam({ vel: Array(8).fill(0.2) }));
+    r.run(10, [], 0.9);
+    r.core.press('trigger');
+    const rec = r.run(10, ['dfmVel', 'dfmEgVca']);
+    expect(rec.dfmVel[0]).toBe(0.2);
+    // and RUN / STOP lit plays the step it is on at the step's velocity, shown as the step's
+    const k = rig(dfam({ vel: Array(8).fill(0.2) }));
+    k.run(10, [], 0.9);
+    k.core.set(dfam({ vel: Array(8).fill(0.2), run: true }));
+    expect(k.run(10, ['dfmVel']).dfmVel[0]).toBe(0.2);
+  });
+
+  it('a decay range with no bottom (min 0) still decays, and stays finite', () => {
+    const z = { decay: 0.5, min: 0, max: 10, attack: 0.001 };
+    const r = rig(dfam({ eg: [z, z, z] }));
+    r.core.press('trigger');
+    const rec = r.run(SR, ['dfmEgVca']);
+    expect(rec.dfmEgVca.every(Number.isFinite)).toBe(true);
+    expect(max(rec.dfmEgVca)).toBeGreaterThan(0.9);
+  });
 });
 
 describe('dfam core: the NOISE / EXT channel', () => {
@@ -367,6 +402,30 @@ describe('dfam core: following the app’s clock', () => {
     // and without the clock it stands still
     const still = rig(dfam({ run: true, tempo: 100, perBeat: 6 }));
     expect(edges(still.run(SR, ['dfmTrig']).dfmTrig)).toHaveLength(0);
+  });
+
+  it('a lit RUN / STOP follows a change of clock source: waits for the transport on it, runs free off it', () => {
+    const r = rig(dfam({ run: true, tempo: 10 }));
+    expect(edges(r.run(SR / 2, ['dfmTrig']).dfmTrig).length).toBeGreaterThan(3);
+    // following, with no transport running, it stops and waits
+    r.core.set(dfam({ run: true, tempo: 10 }), true);
+    r.run(100, []);
+    expect(edges(r.run(SR / 2, ['dfmTrig']).dfmTrig)).toHaveLength(0);
+    // and back to free, it starts again at once
+    r.core.set(dfam({ run: true, tempo: 10 }), false);
+    expect(edges(r.run(100, ['dfmTrig']).dfmTrig)).toEqual([0]);
+  });
+
+  it('hears the transport stop while the voice is another synth’s, so on its return it is not stuck running', () => {
+    const r = rig(dfam({ run: true, tempo: 7.3 }), true);
+    clocked(r, 120, 1);
+    r.core.off();
+    r.core.clock('stop');
+    r.core.set(dfam({ run: true, tempo: 7.3 }), true);
+    r.run(100, []);
+    expect(r.core.busy()).toBe(false);
+    // stopped, a key fires the bus
+    expect(edges(r.run(100, ['dfmTrig'], 0.8).dfmTrig)).toEqual([0]);
   });
 
   it('runs free above 20 Hz, within the run', () => {
@@ -493,5 +552,32 @@ describe('linear FM (fmLin)', () => {
     expect(some).toBeLessThan(0.4);
     expect(more).toBeGreaterThan(0.7);
     expect(allFinite(fm(2))).toBe(true);
+  });
+
+  it('ignores a source oscillator the voice does not have', () => {
+    const out = (from: number) =>
+      render(
+        monoParams({
+          osc: [
+            { level: 0, mix: { tri: 1 }, semi: 0, kbd: false, fixedNote: 45 },
+            {
+              level: 0.8,
+              mix: { tri: 1 },
+              semi: 0,
+              kbd: false,
+              fixedNote: 57,
+              fmLin: { from, depth: 1 },
+            },
+          ],
+          vca: { envSrc: 'none', bias: 1 },
+        }),
+        { len: SR / 10, events: [] }
+      ).out;
+    const plain = out(1);
+    for (const from of [2, 4, -1]) {
+      const x = out(from);
+      expect(allFinite(x)).toBe(true);
+      expect(Array.from(x)).toEqual(Array.from(plain));
+    }
   });
 });

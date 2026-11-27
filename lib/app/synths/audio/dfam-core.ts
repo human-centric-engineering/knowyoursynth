@@ -18,7 +18,7 @@
 //   −60 dB at its decay time. The decay CV adds to the knob, ±5 V spanning the knob's whole turn from the centre (the
 //   manual: centre the knob for the widest range), read every sample, so a CV moving mid-decay moves it.
 // - The mixer's NOISE / EXT channel is the voice's noise, or EXT AUDIO once that is cabled, at NOISE / EXT LEVEL plus
-//   the NOISE LEVEL input. A definition routes it into the mixer (`extIn`) with the voice's own noise level at 0.
+//   the NOISE LEVEL input. A definition routes it into the mixer (`extIn`), with `ext.level` set and the voice's own noise level at 0.
 // - With the sequencer stopped, ADVANCE (`press('next')`) moves it on a step without triggering, and TRIGGER
 //   (`press('trigger')`) fires the bus on the step it is on.
 // - A key is the EDGE's MIDI note: it fires the bus at the key's velocity, and its pitch is the oscillators' (the
@@ -41,7 +41,7 @@ import type { ClockAt } from '@/lib/app/synths/audio/subharm-core';
 
 /**
  * Signals (outputs): PITCH, VELOCITY and TRIGGER OUT, the VCO, VCF and VCA EG, and the mixer's NOISE / EXT channel
- * (`dfmNz`, the noise or EXT AUDIO at its level, which a definition routes into the mixer's `extIn`).
+ * (`dfmNz`, the noise or EXT AUDIO at its level, which a definition routes into the mixer's `extIn`, with `ext.level` set).
  */
 export const DFAM_SIGNALS: string[] = [
   'dfmPitch',
@@ -154,11 +154,14 @@ export function createDfam(
 
   function set(p: DfamParams, follows = false) {
     const first = !P;
+    const followChanged = follows !== follow;
     follow = follows;
-    if ((first || p.run !== P!.run) && !runCab) {
+    // a change of RUN / STOP, or of whether it waits for the transport, sets the sequencer going or stops it
+    if ((first || followChanged || p.run !== P!.run) && !runCab) {
+      const was = running;
       // following the app's clock, a lit RUN / STOP waits for its run; otherwise it starts on this sample
       running = p.run && (!follow || lock.running());
-      if (running) {
+      if (running && (first || !was)) {
         armed = true;
         ph = 1;
         gridLen = 0;
@@ -226,7 +229,10 @@ export function createDfam(
         armed = true;
         gridLen = 0;
         running = p.run;
-        if (running) ph = 1;
+        if (running) {
+          ph = 1;
+          keyVelOut = -1;
+        }
       } else if (le === 'stop') running = false;
     }
 
@@ -236,7 +242,15 @@ export function createDfam(
       runCab = rc;
       // a fresh cable takes over from where the sequencer is; an unplugged one hands it back to the panel
       runPrev = running;
-      if (!rc) running = p.run && (!follow || lock.running());
+      if (!rc) {
+        running = p.run && (!follow || lock.running());
+        // handed back running, it starts again on the step it is on, as any start does
+        if (running && !runPrev) {
+          armed = true;
+          ph = 1;
+          gridLen = 0;
+        }
+      }
     }
     if (rc) {
       const g = ev(DI.dfmRun) > HIGH && (!follow || lock.running());
@@ -310,7 +324,9 @@ export function createDfam(
     const tIn = ev(DI.dfmTrigIn) > HIGH;
     const bus = (tc ? tIn && !trigPrev : seqFire) || btnFire || keyFire;
     trigPrev = tIn;
+    // VELOCITY OUT shows a key's velocity after the key fires the bus, and the step's after anything else does
     if (keyFire) keyVelOut = clamp(keyVel, 0, 1);
+    else if (bus) keyVelOut = -1;
     if (bus) fire(cabled[DI.dfmVelIn] ? ev(DI.dfmVelIn) : keyFire ? keyVel : stepVel(p));
     S[SI.dfmTrig] = trigOut > 0 ? 1 : 0;
     if (trigOut > 0) trigOut--;
@@ -327,7 +343,9 @@ export function createDfam(
         }
       } else if (lvl[k] > 0) {
         const pos = clamp(e.decay + 0.5 * ev(EG_CV[k]), 0, 1);
-        const t = e.min * Math.pow(e.max / e.min, pos) * velMul[k];
+        const lo = Math.max(e.min, 1e-4),
+          hi = Math.max(e.max, lo);
+        const t = lo * Math.pow(hi / lo, pos) * velMul[k];
         lvl[k] *= Math.exp(-LN_1000 / (t * sr));
         if (lvl[k] < 1e-6) lvl[k] = 0;
       }
@@ -350,8 +368,9 @@ export function createDfam(
     else if (name === 'trigger') pTrig = true;
   }
 
+  // the lock hears the transport even while the voice is another synth's, so it knows whether a run is going on its return
   function clock(at: ClockAt, from?: number) {
-    if (P) lock.clock(at, from);
+    lock.clock(at, from);
   }
 
   return {

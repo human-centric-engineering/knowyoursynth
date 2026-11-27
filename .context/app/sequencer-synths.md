@@ -76,7 +76,8 @@ t-327, for the Moog DFAM and the Behringer EDGE, which recreates it. EngineParam
 section: a clock VCO (TEMPO, 0.7 Hz into audio rate, its input at 1 V an octave), an 8-step sequencer with a PITCH and
 a VELOCITY knob a step, the trigger and velocity buses, and the VCO, VCF and VCA decay envelopes. Unlike the
 Subharmonicon's core it makes no sound itself: the fixed voice keeps its two oscillators, noise, mixer, ladder filter
-and VCA, and the definition routes the core's signals into them.
+and VCA, and the definition routes the core's signals into them. Its NOISE / EXT channel (`dfmNz`) goes into the
+mixer's `extIn`, which sounds only with `ext.level` set, and the voice's own noise level is 0.
 
 | Signal                             | What it is (full scale is the hardware's voltage)                        | Routed to, usually                                           |
 | ---------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------ |

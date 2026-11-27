@@ -1124,7 +1124,10 @@ function createVoice(
       o.kbd = q.kbd !== false;
       o.fixed = q.fixedNote == null ? 60 : q.fixedNote;
       o.syncTo = q.syncTo == null ? -1 : q.syncTo;
-      o.fmFrom = q.fmLin && q.fmLin.from !== i ? q.fmLin.from : -1;
+      o.fmFrom =
+        q.fmLin && q.fmLin.from !== i && q.fmLin.from >= 0 && q.fmLin.from < OSC_SI.length
+          ? q.fmLin.from
+          : -1;
       o.fmDepth = q.fmLin ? q.fmLin.depth : 0;
       // `syncGate` (CAT SYNC MODE A): as well as the hard sync, the oscillator is silent for the second half of each master cycle
       o.syncGate = !!q.syncGate;
@@ -2663,7 +2666,7 @@ function createVoice(
           oscNote[k] = nn;
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
           // linear FM (`fmLin`): the last sample of the oscillator it comes from swings the frequency in hertz
-          if (o.fmFrom >= 0) {
+          if (o.fmFrom >= 0 && o.fmFrom < nOsc) {
             hz *= 1 + (o.fmDepth + ev(DI.fmLinAmt)) * S[OSC_SI[o.fmFrom]];
             if (hz < 0) hz = 0;
           }
