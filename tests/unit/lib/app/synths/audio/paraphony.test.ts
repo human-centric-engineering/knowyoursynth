@@ -191,6 +191,22 @@ describe('paraphony with an amp envelope per note (oscAssign.env)', () => {
     expect(level(after, midiHz(C6), a, b) / level(alone, midiHz(C6), a, b)).toBeCloseTo(1, 1);
   });
 
+  it('does nothing in unison, which deals the keys out again as they come and go', () => {
+    const p = (env: boolean) => ({ ...four(env), oscAssign: { mode: 'unison' as const, env } });
+    const ev = [...chord, off(0.3, G3)];
+    expect(render(p(true), { events: ev, len: SR / 2 }).out).toEqual(
+      render(p(false), { events: ev, len: SR / 2 }).out
+    );
+  });
+
+  it('does not swell the noise when the last key is let go after a louder one', () => {
+    // A held at velocity 0.3, B tapped at 1 and let go, then A let go: the VCA follows A's own envelope down
+    const p = four(true, { vca: { envSrc: 'env2v', bias: 0 }, noise: { level: 0.5 } });
+    const ev = [on(0, C3, 0.3), on(0.1, C4, 1), off(0.2, C4), off(1, C3)];
+    const { out } = render(p, { events: ev, len: Math.round(1.2 * SR) });
+    expect(rms(out, ...at(1))).toBeLessThan(rms(out, ...at(0.88)) * 1.05);
+  });
+
   it('does nothing with no envelope on the VCA', () => {
     const p = (env: boolean) => four(env, { vca: { envSrc: 'none', bias: 0.5 } });
     // two let go, then a new key: the let-go notes are silenced by it, as without the setting

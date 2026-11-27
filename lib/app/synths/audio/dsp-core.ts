@@ -821,8 +821,13 @@ function createVoice(
     slotVelT = new Float64Array(4).fill(0.8),
     slotLv = new Float64Array(4),
     slotR = new Float64Array(4);
+  // slotNew: the oscillator was given a note since the last sample, so its envelope starts again (or, with the gate low
+  // between a trigger source's pulses, releases until the next one). pnFree: the VCA's envelope was opened with no key
+  // down (a drone, a trigger source or a cable), so the VCA follows it until a key comes.
+  const slotNew = new Uint8Array(4);
   let slotMax = 0,
-    vcaRest = 0;
+    vcaRest = 0,
+    pnFree = false;
   let lfoHzNow = 0,
     lfo2HzNow = 0;
   let lfoPhase = 0,
@@ -1322,7 +1327,7 @@ function createVoice(
     }
     // with a note per oscillator, filter tracking follows the note Oscillator 1 is playing
     // (with a note's own envelope, only while that key is held: a let-go note keeps its key as it fades, and the
-    // filter follows the key pressed last instead)
+    // filter follows the key the voice's note priority picks instead)
     if (P!.oscAssign && slotKey[0] >= 0 && (!perNote() || slotHeld[0])) noteT = slotKey[0];
     const glides = P!.glide.time > 0.001 && (!P!.glide.legato || legato);
     if (!glides) {
@@ -1346,7 +1351,7 @@ function createVoice(
     slotGT[k] = 1;
     // with a note's own envelope, a new note on the oscillator starts it again from where it is (no click)
     slotVelT[k] = v;
-    slotEnv[k].prevGate = false;
+    slotNew[k] = 1;
   }
   /**
    * `oscAssign.mode` 'poly': each new key takes the next free oscillator in rotation, starting after the one that took the
@@ -1441,8 +1446,10 @@ function createVoice(
       e.prevGate = false;
     }
     slotLv.fill(0);
+    slotNew.fill(0);
     slotMax = 0;
     vcaRest = 0;
+    pnFree = false;
     if (onEvent) onEvent({ type: 'allOff' });
   }
   // A step may carry a velocity as its fourth item (the 303's accented steps). Times are kept in beats too, so a
@@ -2688,13 +2695,18 @@ function createVoice(
         // a note's envelope opens and closes with its own key only (another key struck does not restart it), on the
         // VCA's envelope gate, so a trigger source or repeat still pulses it
         const gv = pnEnv === env[0] ? g1 : g2;
-        // with no key down the VCA follows the shared envelope as before (a drone, a trigger source or a gate cable
-        // opening it for the noise and the oscillators off the keyboard), and as all the notes fade it follows that
-        // envelope's release too, so a let-go note is never louder than its own envelope
-        slotMax = held.length ? 0 : S[vcaSrcIdx];
+        // the VCA follows the loudest note; opened with no key down (a drone, a trigger source or a gate cable, for the
+        // noise and the oscillators off the keyboard) it follows the shared envelope as before, until a key comes
+        if (held.length) pnFree = false;
+        else if (gv) pnFree = true;
+        slotMax = pnFree ? S[vcaSrcIdx] : 0;
         for (let k = 0; k < 4; k++) {
           const e = slotEnv[k];
           followEnv(e, pnEnv);
+          if (slotNew[k]) {
+            slotNew[k] = 0;
+            e.prevGate = !gv;
+          }
           slotVel[k] += (slotVelT[k] - slotVel[k]) * sm;
           slotLv[k] =
             runEnv(e, gv && slotHeld[k] > 0 && slotKey[k] >= 0) * (pnVel ? slotVel[k] : 1);
@@ -3329,6 +3341,7 @@ function createVoice(
   const oscLvOut: number[] = [];
   function oscMeters(): Pick<MeterEvent, 'oscV' | 'oscHz' | 'oscLv'> {
     oscVOut.length = oscHzOut.length = oscLvOut.length = nOsc;
+    const pn = perNote();
     for (let k = 0; k < nOsc; k++) {
       const o = osc[k];
       oscVOut[k] = S[OSC_SI[k]];
@@ -3336,9 +3349,7 @@ function createVoice(
       // The level the mixer hears, as the mix does: the knob, a cable into the first two's level inputs, and with
       // `oscAssign` whether the oscillator has been given a note.
       const knob = k < 2 ? Math.max(0, o.level + ev(DI.lvl1 + k)) : o.level;
-      oscLvOut[k] = o.on
-        ? knob * (P?.oscAssign && o.kbd ? slotG[k] * (perNote() ? slotR[k] : 1) : 1)
-        : 0;
+      oscLvOut[k] = o.on ? knob * (P?.oscAssign && o.kbd ? slotG[k] * (pn ? slotR[k] : 1) : 1) : 0;
     }
     return { oscV: oscVOut, oscHz: oscHzOut, oscLv: oscLvOut };
   }
@@ -3346,11 +3357,12 @@ function createVoice(
   function oscMask() {
     if (!P) return 0;
     const sounding = gate || env[vcaEnvIdx()].stage !== 0;
+    const pn = perNote();
     let m = 0;
     for (let k = 0; k < nOsc; k++)
       if (
         osc[k].on &&
-        (perNote() && osc[k].kbd
+        (pn && osc[k].kbd
           ? slotGT[k] > 0 && (slotHeld[k] > 0 || slotEnv[k].stage !== 0)
           : sounding && (!P.oscAssign || !osc[k].kbd || slotGT[k] > 0))
       )
@@ -3362,7 +3374,7 @@ function createVoice(
    * voice runs (not the trapezoid in Envelope 1's place, nor a missing Envelope 3) and an oscillator follows the keyboard.
    */
   function perNote() {
-    if (!P || !P.oscAssign || !P.oscAssign.env) return false;
+    if (!P || !P.oscAssign || !P.oscAssign.env || P.oscAssign.mode !== 'poly') return false;
     const src = P.vca.envSrc;
     if (!src || src === 'none' || SI[src] == null) return false;
     const i = vcaEnvIdx();
