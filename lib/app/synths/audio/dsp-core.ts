@@ -815,10 +815,16 @@ function createVoice(
   // slotVel = the velocity its note was struck with, slotLv its loudness this sample, slotR that over slotMax (the
   // loudest note, which the VCA follows), so an oscillator scaled by slotR sounds at its own note's level.
   const slotEnv = [mkEnv(), mkEnv(), mkEnv(), mkEnv()];
+  // slotVelT is the velocity a note was given; slotVel follows it smoothly, so taking over a ringing note does not click.
+  // vcaRest = last sample's VCA control less its envelope (bias, cables, accent), which each note's level is set against.
+  // pnLive: the per-note envelopes are in force (worked out once a block, in process).
   const slotVel = new Float64Array(4).fill(0.8),
+    slotVelT = new Float64Array(4).fill(0.8),
     slotLv = new Float64Array(4),
     slotR = new Float64Array(4);
-  let slotMax = 0;
+  let slotMax = 0,
+    vcaRest = 0,
+    pnLive = false;
   let lfoHzNow = 0,
     lfo2HzNow = 0;
   let lfoPhase = 0,
@@ -1279,7 +1285,7 @@ function createVoice(
       vel = v == null ? 0.8 : v;
       if (P.acid) accOn = vel >= (P.acid.thresh || 0.9) || !!P.acid.force;
     }
-    if (P.oscAssign) assignOscs(n);
+    if (P.oscAssign) assignOscs(n, v == null ? 0.8 : v);
     assignNotes(wasHeld);
     if (!wasHeld || (P.trig.retrig && !under)) retrigFlag = true;
     // the key timing pulse comes from every key, legato or not, as does the DFAM's bus
@@ -1317,7 +1323,9 @@ function createVoice(
       note2T = P!.paraphonic ? second : top;
     }
     // with a note per oscillator, filter tracking follows the note Oscillator 1 is playing
-    if (P!.oscAssign && slotKey[0] >= 0) noteT = slotKey[0];
+    // (with a note's own envelope, only while that key is held: a let-go note keeps its key as it fades, and the
+    // filter follows the key pressed last instead)
+    if (P!.oscAssign && slotKey[0] >= 0 && (!pnLive || slotHeld[0])) noteT = slotKey[0];
     const glides = P!.glide.time > 0.001 && (!P!.glide.legato || legato);
     if (!glides) {
       note = noteT;
@@ -1332,14 +1340,14 @@ function createVoice(
     for (let k = 0; k < nOsc; k++) if (osc[k].on && osc[k].kbd) ks.push(k);
     return ks;
   }
-  function giveSlot(k: number, n: number) {
+  function giveSlot(k: number, n: number, v = vel) {
     slotKey[k] = n;
     slotHeld[k] = 1;
     slotT[k] = ++slotClock;
     slotNT[k] = n;
     slotGT[k] = 1;
     // with a note's own envelope, a new note on the oscillator starts it again from where it is (no click)
-    slotVel[k] = vel;
+    slotVelT[k] = v;
     slotEnv[k].prevGate = false;
   }
   /**
@@ -1348,7 +1356,7 @@ function createVoice(
    * note is taken over. 'unison': the keys held (the newest four) are dealt out round the oscillators, so one key gets
    * all of them, two keys two each, four keys one each.
    */
-  function assignOscs(n: number) {
+  function assignOscs(n: number, v: number) {
     const ks = assignable();
     if (!ks.length) return;
     if (P!.oscAssign!.mode === 'unison') {
@@ -1370,7 +1378,8 @@ function createVoice(
         if (own == null) own = oldest(ks)!;
       }
       slotLast = own;
-      giveSlot(own, n);
+      // the key's own velocity: with top-note priority a key under the sounding one leaves `vel` as it was
+      giveSlot(own, n, v);
       return;
     }
     let pick = ks.find((k) => slotKey[k] === n && slotHeld[k]);
@@ -1435,6 +1444,7 @@ function createVoice(
     }
     slotLv.fill(0);
     slotMax = 0;
+    vcaRest = 0;
     if (onEvent) onEvent({ type: 'allOff' });
   }
   // A step may carry a velocity as its fourth item (the 303's accented steps). Times are kept in beats too, so a
@@ -2409,8 +2419,21 @@ function createVoice(
     const assign = !!p.oscAssign;
     // `oscAssign.env`: each oscillator's note runs its own copy of the VCA's envelope (`vcaEnvIdx`), struck at its velocity
     // when the VCA reads a velocity envelope
-    const pn = assign && !!p.oscAssign!.env && vcaSrcIdx >= 0;
-    const pnEnv = env[vcaEnvIdx()];
+    // when the envelope the VCA reads is one this voice runs (not the trapezoid in Envelope 1's place, nor a missing
+    // Envelope 3) and an oscillator follows the keyboard
+    const pnIdx = vcaEnvIdx();
+    let pn =
+      assign &&
+      !!p.oscAssign!.env &&
+      vcaSrcIdx >= 0 &&
+      !(pnIdx === 0 && p.trap) &&
+      !(pnIdx === 2 && !p.env3);
+    if (pn) {
+      pn = false;
+      for (let k = 0; k < nOsc; k++) if (osc[k].on && osc[k].kbd) pn = true;
+    }
+    pnLive = pn;
+    const pnEnv = env[pnIdx];
     const pnVel = p.vca.envSrc === 'env1v' || p.vca.envSrc === 'env2v';
     const ez = p.easel || null;
     const mg = !!p.moog;
@@ -2680,15 +2703,23 @@ function createVoice(
         // a note's envelope opens and closes with its own key only (another key struck does not restart it), on the
         // VCA's envelope gate, so a trigger source or repeat still pulses it
         const gv = pnEnv === env[0] ? g1 : g2;
-        slotMax = 0;
+        // with no key down the VCA follows the shared envelope as before (a drone, a trigger source or a gate cable
+        // opening it for the noise and the oscillators off the keyboard), and as all the notes fade it follows that
+        // envelope's release too, so a let-go note is never louder than its own envelope
+        slotMax = held.length ? 0 : S[vcaSrcIdx];
         for (let k = 0; k < 4; k++) {
           const e = slotEnv[k];
           followEnv(e, pnEnv);
+          slotVel[k] += (slotVelT[k] - slotVel[k]) * sm;
           slotLv[k] =
             runEnv(e, gv && slotHeld[k] > 0 && slotKey[k] >= 0) * (pnVel ? slotVel[k] : 1);
           if (slotLv[k] > slotMax && k < nOsc && osc[k].on && osc[k].kbd) slotMax = slotLv[k];
         }
-        for (let k = 0; k < 4; k++) slotR[k] = slotMax > 1e-9 ? slotLv[k] / slotMax : 0;
+        // each note at the VCA's level for its own envelope (with the bias and the rest as they were last sample),
+        // over the level the VCA is at for the loudest
+        const top = Math.min(1.6, Math.max(0, vcaRest + slotMax));
+        for (let k = 0; k < 4; k++)
+          slotR[k] = top > 1e-9 ? Math.min(1.6, Math.max(0, vcaRest + slotLv[k])) / top : 0;
       }
       let accCut = 0,
         accAmp = 0;
@@ -3157,12 +3188,15 @@ function createVoice(
         // ── VCA ──
         // `ampExp` is an exponential control input: small voltages barely open the VCA, the top of the range opens it fast
         const ex = ev(DI.ampExp);
+        const envTerm = vcaSrcIdx >= 0 ? (pn ? slotMax : S[vcaSrcIdx]) : 0;
         let ga =
           p.vca.bias +
-          (vcaSrcIdx >= 0 ? (pn ? slotMax : S[vcaSrcIdx]) : 0) +
+          envTerm +
           ev(DI.amp) +
           accAmp +
           (ex > 0 ? (Math.exp(2 * ex) - 1) / 6.389 : 0);
+        // with a note's own envelope, the rest of the VCA's control (bias, cables, accent) for next sample's note levels
+        if (pn) vcaRest = ga - envTerm;
         ga = ga < 0 ? 0 : ga > 1.6 ? 1.6 : ga;
         vcaGain += (ga - vcaGain) * vcaC;
         let y = ev(DI.vcaIn) * vcaGain * vg;
@@ -3335,9 +3369,8 @@ function createVoice(
         m |= 1 << k;
     return m;
   }
-  /** `oscAssign.env` is in force: the VCA reads an envelope, so each note runs its own copy of it. */
-  const perNote = () =>
-    !!P && !!P.oscAssign && !!P.oscAssign.env && !!P.vca.envSrc && P.vca.envSrc !== 'none';
+  /** `oscAssign.env` is in force (as `process` last worked it out), so each note runs its own copy of the VCA's envelope. */
+  const perNote = () => pnLive;
   const vcaEnvIdx = () =>
     P && (P.vca.envSrc === 'env1' || P.vca.envSrc === 'env1v')
       ? 0

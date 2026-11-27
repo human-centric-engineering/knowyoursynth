@@ -140,6 +140,57 @@ describe('paraphony with an amp envelope per note (oscAssign.env)', () => {
     expect(rms(out, ...at(0.8))).toBeLessThan(0.001);
   });
 
+  it('holds a let-go note at the bias, as the VCA would with its envelope shut', () => {
+    const p = four(true, { vca: { envSrc: 'env2', bias: 0.3 } });
+    const { out } = render(p, { events: [...chord, off(0.3, G3)], len: SR });
+    const [a, b] = at(0.85);
+    // G3 at the bias alone (0.3), C4 at the bias and its sustain (1.3)
+    expect(level(out, midiHz(G3), a, b) / level(out, midiHz(C4), a, b)).toBeCloseTo(0.3 / 1.3, 1);
+  });
+
+  it('plays as before with no oscillator on the keyboard', () => {
+    const p = (env: boolean) =>
+      four(env, { osc: [{ level: LV, mix: { sine: 1 }, semi: 0, kbd: false }] });
+    const a = render(p(true), { events: chord, len: SR / 2 }).out;
+    const b = render(p(false), { events: chord, len: SR / 2 }).out;
+    expect(a).toEqual(b);
+  });
+
+  it('opens the VCA on its own envelope with no key down (a drone)', () => {
+    const p = four(true, {
+      noise: { level: 0.5 },
+      trig: { retrig: true, drone: true, repeat: false },
+    });
+    expect(rms(render(p, { events: [], len: SR / 2 }).out, ...at(0.3))).toBeGreaterThan(0.01);
+  });
+
+  it('strikes a key under the top note at its own velocity with top-note priority', () => {
+    const p = four(true, { vca: { envSrc: 'env2v', bias: 0 }, keyPriority: 'high' });
+    const { out } = render(p, { events: [on(0, A4, 1), on(0.05, C3, 0.25)], len: SR });
+    const [a, b] = at(0.4);
+    expect(level(out, midiHz(C3), a, b) / level(out, midiHz(A4), a, b)).toBeCloseTo(0.25, 1);
+  });
+
+  it('tracks the filter on a new note, not on a let-go one that has died away', () => {
+    // a low cutoff that follows the key: C6 is muffled if the filter still follows C3
+    const p = four(true, {
+      filter: {
+        type: 'ladder',
+        mode: 'lp',
+        cutoff: 300,
+        res: 0,
+        envAmt: 0,
+        envSrc: 'env1',
+        kbd: 1,
+      },
+    });
+    const C6 = 84;
+    const after = render(p, { events: [on(0, C3), off(0.1, C3), on(0.6, C6)], len: SR }).out;
+    const alone = render(p, { events: [on(0.6, C6)], len: SR }).out;
+    const [a, b] = at(0.8);
+    expect(level(after, midiHz(C6), a, b) / level(alone, midiHz(C6), a, b)).toBeCloseTo(1, 1);
+  });
+
   it('does nothing with no envelope on the VCA', () => {
     const p = (env: boolean) => four(env, { vca: { envSrc: 'none', bias: 0.5 } });
     const ev = [...chord, off(0.4, G3)];
