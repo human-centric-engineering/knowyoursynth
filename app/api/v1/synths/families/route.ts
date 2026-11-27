@@ -5,8 +5,8 @@
  *
  * Public: no session needed. The section rate limit applies (`proxy.ts`), and this read is cheap enough to need no
  * sub-cap. Its own route rather than a field on `GET /api/v1/synths`, whose data is the list of synths itself: the
- * picker reads both to group a family's members into one entry. Read from the tables only (D13); see
- * `lib/app/families/read.ts` and `.context/app/synth-families.md`.
+ * picker reads both, to list a family's unmodelled members and find a synth by its family's name. Read from the tables
+ * only (D13); see `lib/app/families/read.ts` and `.context/app/synth-families.md`.
  */
 import { NextRequest } from 'next/server';
 import { getRouteLogger } from '@/lib/api/context';
