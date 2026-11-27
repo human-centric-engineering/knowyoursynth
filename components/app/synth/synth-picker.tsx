@@ -17,20 +17,32 @@
  * as its family's blank panel (`onSelectMember`). The box finds a synth by name, maker, brand or family.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { StarButton, StarIcon } from '@/components/app/synth/favourites';
 import { synthThumbnailHref } from '@/components/app/synth/routes';
+import { PickerAdvanced } from '@/components/app/synth/picker-advanced';
 import {
   familyOpens,
   pickerGroups,
+  type PickerListRow,
   type PickerRow,
   type PickerSynth,
 } from '@/components/app/synth/picker-entries';
+import {
+  changedChoices,
+  FACTORY_PICKER,
+  pickerChoices,
+  withChoice,
+  type PickerChoices,
+  type PickerPrefs,
+  type SitePickerSettings,
+} from '@/lib/app/picker/settings';
 
 const NO_FAMILIES: readonly SynthFamily[] = [];
 const NONE_OWNED: ReadonlySet<string> = new Set();
+const NO_PREFS: PickerPrefs = {};
 
 export interface SynthPickerProps {
   synths: readonly PickerSynth[];
@@ -53,6 +65,12 @@ export interface SynthPickerProps {
   onStar?: (id: string) => void;
   /** `caption`: the player's caption, where the synth's name is the title over the panel and opens the list. */
   variant?: 'button' | 'caption';
+  /** The site's settings (`GET /api/v1/synths/picker-settings`, t-329); the defaults when not given. */
+  site?: SitePickerSettings;
+  /** The visitor's own changes to them (`picker` of `/api/v1/me/settings`, or the browser's). */
+  prefs?: PickerPrefs;
+  /** Keep the visitor's changes. Without it, or while the site does not allow them, there is no Advanced search. */
+  onPrefs?: (prefs: PickerPrefs) => void;
 }
 
 export function SynthPicker({
@@ -66,18 +84,35 @@ export function SynthPicker({
   isStarred,
   onStar,
   variant = 'button',
+  site = FACTORY_PICKER,
+  prefs = NO_PREFS,
+  onPrefs,
 }: SynthPickerProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [advanced, setAdvanced] = useState(false);
+  const advancedId = useId();
+  const choices = pickerChoices(site, prefs);
+  const changed = changedChoices(site, prefs);
+  const mayChange = site.visitorsMayChange && !!onPrefs;
+  const choose_ = <K extends keyof PickerChoices>(key: K, value: PickerChoices[K]) =>
+    onPrefs?.(withChoice(site, prefs, key, value));
   const wrap = useRef<HTMLDivElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
   const listsMembers = !!onSelectMember;
   const groups = useMemo(
-    () => pickerGroups(synths, families, query, { unmodelled: listsMembers }),
-    // Whether there is a handler, not which: the page passes a new one each render.
-    [synths, families, listsMembers, query]
+    () =>
+      pickerGroups(synths, families, query, {
+        unmodelled: listsMembers,
+        group: choices.group,
+        order: choices.order,
+        kinds: choices.kinds,
+      }),
+    // Whether there is a handler, not which: the page passes a new one each render. `kinds` is the site's or the
+    // visitor's own array, the same until one of them changes.
+    [synths, families, listsMembers, query, choices.group, choices.order, choices.kinds]
   );
   const rows = useMemo(() => groups.flatMap((g) => g.rows), [groups]);
 
@@ -90,11 +125,15 @@ export function SynthPicker({
       }
     };
     const key = (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setOpen(false);
-        setQuery('');
-        wrap.current?.querySelector('button')?.focus();
+      if (e.key !== 'Escape') return;
+      // The Advanced window first, then the list.
+      if (advanced) {
+        setAdvanced(false);
+        return;
       }
+      setOpen(false);
+      setQuery('');
+      wrap.current?.querySelector('button')?.focus();
     };
     document.addEventListener('pointerdown', away);
     document.addEventListener('keydown', key);
@@ -102,7 +141,7 @@ export function SynthPicker({
       document.removeEventListener('pointerdown', away);
       document.removeEventListener('keydown', key);
     };
-  }, [open]);
+  }, [open, advanced]);
 
   // Open on the synth you are already using, so the arrow keys start from the right place.
   useEffect(() => {
@@ -124,6 +163,7 @@ export function SynthPicker({
   const close = () => {
     setOpen(false);
     setQuery('');
+    setAdvanced(false);
   };
   const pick = (id: string) => {
     close();
@@ -232,16 +272,44 @@ export function SynthPicker({
 
       {open && (
         <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
-          <input
-            ref={search}
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={onSearchKey}
-            aria-label="Find a synth"
-            placeholder="Find a synth by name or maker"
-            className="w-full rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
-          />
+          <div className="flex items-center gap-1">
+            <input
+              ref={search}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={onSearchKey}
+              aria-label="Find a synth"
+              placeholder="Find a synth by name or maker"
+              className="min-w-0 flex-1 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
+            />
+            {mayChange && (
+              <button
+                type="button"
+                aria-expanded={advanced}
+                aria-controls={advancedId}
+                onClick={() => setAdvanced((a) => !a)}
+                className={`kys-label flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] ${advanced ? 'border-(--kys-text) bg-(--kys-text) text-(--kys-raised)' : 'border-(--kys-line) text-(--kys-muted) hover:border-(--kys-muted)'}`}
+              >
+                Advanced
+                {changed > 0 && (
+                  <span className="rounded-full bg-(--kys-accent) px-1.5 text-(--kys-accent-ink)">
+                    {changed}
+                    <span className="sr-only"> changed</span>
+                  </span>
+                )}
+              </button>
+            )}
+          </div>
+          {mayChange && advanced && (
+            <PickerAdvanced
+              id={advancedId}
+              choices={choices}
+              changed={changed}
+              onChange={choose_}
+              onReset={() => onPrefs?.({})}
+            />
+          )}
           <div
             ref={list}
             role="listbox"
@@ -250,17 +318,21 @@ export function SynthPicker({
             className="kys-scroll max-h-[min(70vh,520px)] scroll-pt-9 overflow-y-auto"
           >
             {groups.map((g) => (
-              <div key={g.label} role="group" aria-label={g.label}>
-                <div
-                  aria-hidden="true"
-                  className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
-                >
-                  {g.label}
-                </div>
+              // A list by name or lineage is one group with no heading; by maker, one per brand.
+              <div key={g.label} role="group" aria-label={g.label || 'Synths'}>
+                {g.label && (
+                  <div
+                    aria-hidden="true"
+                    className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
+                  >
+                    {g.label}
+                  </div>
+                )}
                 {g.rows.map((row) => (
                   <PickerOption
                     key={row.key}
                     row={row}
+                    thumbs={choices.thumbs}
                     on={isOn(row)}
                     starred={!!row.synthId && !!isStarred?.(row.synthId)}
                     onChoose={() => choose(row)}
@@ -281,12 +353,15 @@ export function SynthPicker({
 
 function PickerOption({
   row,
+  thumbs,
   on,
   starred,
   onChoose,
   onKeyDown,
 }: {
-  row: PickerRow;
+  row: PickerListRow;
+  /** Whether rows show a thumbnail of the panel (the visitor's choice, t-329). */
+  thumbs: boolean;
   on: boolean;
   starred: boolean;
   onChoose: () => void;
@@ -304,12 +379,12 @@ function PickerOption({
       aria-selected={on}
       onClick={onChoose}
       onKeyDown={onKeyDown}
-      className={`flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left ${on ? 'bg-(--kys-accent)/12' : 'hover:bg-(--kys-surface)'}`}
+      className={`flex w-full items-start gap-2.5 rounded-lg py-2 pr-2.5 text-left ${row.depth ? 'pl-8' : 'pl-2.5'} ${on ? 'bg-(--kys-accent)/12' : 'hover:bg-(--kys-surface)'}`}
     >
       <span
         className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${on ? 'bg-(--kys-accent)' : 'bg-transparent'}`}
       />
-      {synthId !== null && !noPicture ? (
+      {!thumbs ? null : synthId !== null && !noPicture ? (
         // A picture of a page, from the app's own route: next/image would only re-encode it.
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -332,6 +407,9 @@ function PickerOption({
       )}
       <span className="flex min-w-0 flex-col gap-0.5">
         <span className="flex flex-wrap items-baseline gap-x-2">
+          {row.relation && (
+            <span className="kys-label text-[10px] text-(--kys-faint)">{row.relation}</span>
+          )}
           <span className={`text-sm font-semibold ${plays ? '' : 'text-(--kys-muted)'}`}>
             {row.name}
           </span>

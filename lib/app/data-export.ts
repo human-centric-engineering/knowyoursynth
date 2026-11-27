@@ -162,7 +162,7 @@ export function initAppSubjectSources(): void {
         section: SETTINGS_SECTION,
         disposition: 'export',
         description:
-          'Your synth page settings: hover help, the sound map toggles, the harmonics strip and the effects rack.',
+          'Your synth page settings: hover help, the sound map toggles, the harmonics strip, the effects rack and how the synth picker lists synths.',
       },
       {
         model: 'LessonProgress',
@@ -501,7 +501,15 @@ function collectPanels(userId: string) {
 function collectSettings(userId: string) {
   return prisma.userPreference.findMany({
     where: { userId },
-    select: { tips: true, dim: true, heat: true, harm: true, fx: true, updatedAt: true },
+    select: {
+      tips: true,
+      dim: true,
+      heat: true,
+      harm: true,
+      fx: true,
+      picker: true,
+      updatedAt: true,
+    },
   });
 }
 

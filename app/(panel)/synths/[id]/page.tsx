@@ -5,6 +5,7 @@ import { z } from 'zod';
 import '@/components/app/synth/synth.css';
 
 import { SynthPage } from '@/components/app/synth/synth-page';
+import { sitePickerForPage } from '@/lib/app/picker/site-settings';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { FamilySlugSchema } from '@/lib/app/families/data';
 import { listFamilies } from '@/lib/app/families/read';
@@ -52,7 +53,7 @@ export default async function SynthRoute({ params, searchParams }: Props) {
   const { id } = await params;
   if (!getSynthDef(id)) notFound();
 
-  const [detail, synths, families] = await Promise.all([
+  const [detail, synths, families, pickerSite] = await Promise.all([
     getSynthDetail(id),
     listSynths(),
     // Families only group the picker: a failed read lists every synth alone rather than failing the page.
@@ -60,6 +61,7 @@ export default async function SynthRoute({ params, searchParams }: Props) {
       logger.warn('synth page: could not read synth families', { err: String(err) });
       return [];
     }),
+    sitePickerForPage(),
   ]);
   if (!detail) notFound();
 
@@ -70,6 +72,7 @@ export default async function SynthRoute({ params, searchParams }: Props) {
       detail={detail}
       synths={synths}
       families={families}
+      pickerSite={pickerSite}
       viewParam={viewParam.parse(query.view) ?? null}
       soundParam={soundParam.parse(query.sound) ?? null}
       mineParam={mineParam.parse(query.mine) ?? null}

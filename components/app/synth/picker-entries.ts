@@ -4,8 +4,10 @@
  *
  * - **Name and maker lead.** A row is the synth's name and maker, then its year, kind, whether it plays and its
  *   description, so a synth is found by its own name: the EDGE as the EDGE, not inside a "DFAM" entry.
- * - **Grouped by brand**, brands A to Z and rows A to Z within each (`makerGroup`, which joins the spellings of one
- *   brand, such as Moog and Moog Music).
+ * - **Grouped and ordered as the visitor chooses** (t-329, `PickerChoices`): under each maker's brand, brands A to Z
+ *   (`makerGroup`, which joins the spellings of one brand, such as Moog and Moog Music); one list by name; or by
+ *   lineage, each family's original with its revisions and recreations under it. Rows A to Z, newest or oldest first.
+ *   Only the kinds chosen, when any are.
  * - **A family member nobody has modelled** is listed too, and opens as its family's blank panel (`familyOpens`).
  *
  * See `.context/app/synth-picker.md`.
@@ -13,6 +15,7 @@
 import type { CatalogueSynth } from '@/lib/app/catalogue/read';
 import { makerGroup, nameWithoutMaker } from '@/lib/app/catalogue/makers';
 import type { FamilyMember, SynthFamily } from '@/lib/app/families/read';
+import type { PickerGroupBy, PickerKind, PickerOrder } from '@/lib/app/picker/settings';
 
 export type PickerSynth = Pick<CatalogueSynth, 'id' | 'name' | 'maker' | 'year' | 'heritage'> & {
   kind?: string | null;
@@ -38,10 +41,18 @@ export interface PickerRow {
   family: RowFamily | null;
 }
 
+/** A row as listed: in a lineage, how far in it sits under its original, and what it is to it. */
+export interface PickerListRow extends PickerRow {
+  /** 0 for a row at the top level; 1 for one under its family's original (lineage only). */
+  depth: 0 | 1;
+  /** What it is to the original it sits under: a `Revision` by the same brand, or a `Recreation` by another. */
+  relation: 'Revision' | 'Recreation' | null;
+}
+
 export interface PickerGroup {
-  /** The brand, as `makerGroup` names it. */
+  /** The brand, as `makerGroup` names it; empty for a list with no headings (by name, or by lineage). */
   label: string;
-  rows: PickerRow[];
+  rows: PickerListRow[];
 }
 
 const byName = (a: PickerRow, b: PickerRow) =>
@@ -49,10 +60,16 @@ const byName = (a: PickerRow, b: PickerRow) =>
   a.maker.localeCompare(b.maker, 'en', { sensitivity: 'base' }) ||
   a.key.localeCompare(b.key);
 
-/** Which rows the picker lists. */
+/** Which rows the picker lists, and how. */
 export interface PickerOptions {
   /** Whether a family member nobody has modelled is listed: only where the page can show its blank panel. */
   unmodelled: boolean;
+  /** How rows are grouped; by maker when not said. */
+  group?: PickerGroupBy;
+  /** How rows are ordered; A to Z when not said. */
+  order?: PickerOrder;
+  /** Only these kinds; every kind when empty or not said. A row with no kind is listed only then. */
+  kinds?: readonly PickerKind[];
 }
 
 /**
@@ -119,25 +136,108 @@ function matches(row: PickerRow, q: string): boolean {
   ].some((s) => s.toLowerCase().includes(q));
 }
 
-/** The picker's list: the rows matching `query`, grouped by brand, brands and rows A to Z. */
+const year = (row: PickerRow) => Number.parseInt(row.year, 10) || 0;
+
+/** The order rows are listed in: by name, or by year (newest or oldest first) and then by name. */
+function sorter(order: PickerOrder): (a: PickerRow, b: PickerRow) => number {
+  if (order === 'new') return (a, b) => year(b) - year(a) || byName(a, b);
+  if (order === 'old') return (a, b) => year(a) - year(b) || byName(a, b);
+  return byName;
+}
+
+const listed = (row: PickerRow): PickerListRow => ({ ...row, depth: 0, relation: null });
+
+/**
+ * Each family's original among `rows`: its earliest member, by year then name. Read from every row the picker could
+ * list, so a member found by the box still shows under its original.
+ */
+function originals(rows: readonly PickerRow[]): Map<string, PickerRow> {
+  const out = new Map<string, PickerRow>();
+  for (const row of rows) {
+    const id = row.family?.family.id;
+    if (!id) continue;
+    const held = out.get(id);
+    if (!held || year(row) < year(held) || (year(row) === year(held) && byName(row, held) < 0))
+      out.set(id, row);
+  }
+  return out;
+}
+
+/** Each original in `kept`, in the order chosen, with the rest of its family under it, oldest first. */
+function lineage(
+  all: readonly PickerRow[],
+  kept: readonly PickerRow[],
+  sort: (a: PickerRow, b: PickerRow) => number
+): PickerListRow[] {
+  const firsts = originals(all);
+  const tops = new Map<string, PickerRow>();
+  const under = new Map<string, PickerRow[]>();
+  for (const row of kept) {
+    const id = row.family?.family.id;
+    const first = id ? firsts.get(id) : undefined;
+    if (!id || !first || first.key === row.key) {
+      tops.set(row.key, row);
+      continue;
+    }
+    // A member found by the box or a kind keeps its original over it, though that matched neither.
+    tops.set(first.key, first);
+    under.set(id, [...(under.get(id) ?? []), row]);
+  }
+  const out: PickerListRow[] = [];
+  for (const top of [...tops.values()].sort(sort)) {
+    out.push(listed(top));
+    const id = top.family?.family.id;
+    const brand = makerGroup(top.maker);
+    // Under its original, a family is always oldest first, whatever order the originals are in.
+    const rows = id
+      ? [...(under.get(id) ?? [])].sort((a, b) => year(a) - year(b) || byName(a, b))
+      : [];
+    for (const row of rows)
+      out.push({
+        ...row,
+        depth: 1,
+        relation: makerGroup(row.maker) === brand ? 'Revision' : 'Recreation',
+      });
+  }
+  return out;
+}
+
+/**
+ * The picker's list: the rows matching `query` and the kinds chosen, grouped and ordered as chosen. By maker, brands
+ * A to Z with a heading each; by name or by lineage, one list with no heading.
+ */
 export function pickerGroups(
   synths: readonly PickerSynth[],
   families: readonly SynthFamily[],
   query = '',
   options: PickerOptions = { unmodelled: true }
 ): PickerGroup[] {
+  const { group = 'maker', order = 'name', kinds = [] } = options;
   const q = query.trim().toLowerCase();
+  const all = pickerRows(synths, families, options);
+  const kept = all.filter(
+    (row) =>
+      (!q || matches(row, q)) &&
+      (kinds.length === 0 || (row.kind !== null && (kinds as readonly string[]).includes(row.kind)))
+  );
+  const sort = sorter(order);
+  if (group === 'lineage') {
+    const rows = lineage(all, kept, sort);
+    return rows.length ? [{ label: '', rows }] : [];
+  }
+  if (group === 'name')
+    return kept.length ? [{ label: '', rows: [...kept].sort(sort).map(listed) }] : [];
+
   const groups = new Map<string, PickerRow[]>();
-  for (const row of pickerRows(synths, families, options)) {
-    if (q && !matches(row, q)) continue;
+  for (const row of kept) {
     const label = makerGroup(row.maker);
-    const group = groups.get(label);
-    if (group) group.push(row);
+    const held = groups.get(label);
+    if (held) held.push(row);
     else groups.set(label, [row]);
   }
   return [...groups.entries()]
     .sort(([a], [b]) => a.localeCompare(b, 'en', { sensitivity: 'base' }))
-    .map(([label, rows]) => ({ label, rows: rows.sort(byName) }));
+    .map(([label, rows]) => ({ label, rows: rows.sort(sort).map(listed) }));
 }
 
 /**

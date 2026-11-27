@@ -6,6 +6,7 @@ import { z } from 'zod';
 import '@/components/app/synth/synth.css';
 
 import { SynthPage } from '@/components/app/synth/synth-page';
+import { sitePickerForPage } from '@/lib/app/picker/site-settings';
 import { sharedSoundHref } from '@/components/app/synth/routes';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -58,7 +59,11 @@ export default async function SharedSoundRoute({ params, searchParams }: Props) 
   const sound = await readShared(id, slug);
   if (!sound) notFound();
 
-  const [detail, synths] = await Promise.all([getSynthDetail(id), listSynths()]);
+  const [detail, synths, pickerSite] = await Promise.all([
+    getSynthDetail(id),
+    listSynths(),
+    sitePickerForPage(),
+  ]);
   if (!detail) notFound();
 
   const query = await searchParams;
@@ -67,6 +72,7 @@ export default async function SharedSoundRoute({ params, searchParams }: Props) 
       key={`${id}/${slug}`}
       detail={detail}
       synths={synths}
+      pickerSite={pickerSite}
       viewParam={viewParam.parse(query.view) ?? null}
       shared={sound}
     />

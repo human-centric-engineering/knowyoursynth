@@ -2,7 +2,7 @@
 
 /**
  * The synth page's settings (`f-my-sounds` s3): hover help (`kys.tips`), the sound map's two toggles (`dim`, `heat`),
- * the harmonics strip (`harm`) and the effects rack (`fx`). From browser storage, as always, and signed in, from the
+ * the harmonics strip (`harm`), the effects rack (`fx`) and how the synth picker lists synths (`picker`, t-329). From browser storage, as always, and signed in, from the
  * account as well (`/api/v1/me/settings`). How the two agree, and how often the account is written, is in
  * `account-storage.ts`.
  */
@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 import { apiClient } from '@/lib/api/client';
 import { normalizeFx, type RackFx } from '@/lib/app/synths/audio/fx';
+import { PickerPrefsSchema, type PickerPrefs } from '@/lib/app/picker/settings';
 import {
   AccountSettingsSchema,
   SETTING_KEYS,
@@ -40,6 +41,7 @@ const SCHEMAS = {
   heat: BoolSchema,
   harm: BoolSchema,
   fx: FxSchema,
+  picker: PickerPrefsSchema,
 } satisfies Record<SettingKey, z.ZodType>;
 const SettingsBySchema = z.string().nullable();
 const SettingsAtSchema = z.number();
@@ -61,10 +63,12 @@ const DEFAULTS: { [K in SettingKey]: SettingValue<K> } = {
   heat: false,
   harm: false,
   fx: normalizeFx(null),
+  // The site's choices, untouched.
+  picker: {},
 };
 
 /** A setting the browser has stored, or `undefined` when it has none (a default is not a value to fill with). */
-function storedSetting(key: SettingKey): boolean | RackFx | undefined {
+function storedSetting(key: SettingKey): boolean | RackFx | PickerPrefs | undefined {
   const raw = readStored(STORAGE_KEYS[key]);
   if (raw === null) return undefined;
   const parsed = SCHEMAS[key].safeParse(raw);
@@ -91,6 +95,7 @@ export function useSettings(userId: string | null): PageSettings {
     heat: useStoredPref(STORAGE_KEYS.heat, SCHEMAS.heat, DEFAULTS.heat),
     harm: useStoredPref(STORAGE_KEYS.harm, SCHEMAS.harm, DEFAULTS.harm),
     fx: useStoredPref<RackFx>(STORAGE_KEYS.fx, SCHEMAS.fx, DEFAULTS.fx),
+    picker: useStoredPref<PickerPrefs>(STORAGE_KEYS.picker, SCHEMAS.picker, DEFAULTS.picker),
   };
   // The browser's stored settings are read in an effect after mount (declared above this one, so read before it runs).
   const [hydrated, setHydrated] = useState(false);
@@ -212,6 +217,7 @@ export function useSettings(userId: string | null): PageSettings {
       heat: (v) => change('heat', v),
       harm: (v) => change('harm', v),
       fx: (v) => change('fx', v),
+      picker: (v) => change('picker', v),
     }),
     [change]
   );
@@ -228,6 +234,7 @@ export function useSettings(userId: string | null): PageSettings {
     heat: setting('heat'),
     harm: setting('harm'),
     fx: setting('fx'),
+    picker: setting('picker'),
     settled: hydrated && (!signedIn || readFor === userId),
   };
 }
