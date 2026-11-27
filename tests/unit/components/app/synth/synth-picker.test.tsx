@@ -287,6 +287,20 @@ describe('SynthPicker rows for a family (f-synth-picker t-328)', () => {
     fireEvent.click(screen.getByRole('button', { expanded: false }));
     expect(options()).toHaveLength(3);
     expect(screen.queryByText('Unmodelled')).toBeNull();
+    // Still found by the family's name.
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Find a synth' }), {
+      target: { value: 'tb-303' },
+    });
+    expect(options()).toHaveLength(2);
+  });
+
+  it('shows the empty box in place of a thumbnail that will not load', () => {
+    open('model-d');
+    const img = row('TD-3').querySelector('img');
+    if (!img) throw new Error('no thumbnail');
+    fireEvent.error(img);
+    expect(row('TD-3').querySelector('img')).toBeNull();
+    expect(row('TD-3').textContent).toContain('No panel');
   });
 
   it('finds a member by its maker, and opens that member', () => {

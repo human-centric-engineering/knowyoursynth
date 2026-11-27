@@ -44,7 +44,8 @@ export interface SynthPickerProps {
   onSelect: (id: string) => void;
   /**
    * An unmodelled family member chosen: show its blank panel over `synthId`, the family's synth it opens on (this one
-   * when the member is in this synth's family). Without it, those members are not listed.
+   * when the member is in this synth's family). Without it, those members are not listed; a synth is still found by
+   * its family's name.
    */
   onSelectMember?: (synthId: string, slug: string) => void;
   /** Whether a synth is starred; `null` when no star shows (signed out, or still loading). */
@@ -73,7 +74,7 @@ export function SynthPicker({
   const list = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
   const groups = useMemo(
-    () => pickerGroups(synths, onSelectMember ? families : NO_FAMILIES, query),
+    () => pickerGroups(synths, families, query, { unmodelled: !!onSelectMember }),
     [synths, families, onSelectMember, query]
   );
   const rows = useMemo(() => groups.flatMap((g) => g.rows), [groups]);
@@ -290,6 +291,8 @@ function PickerOption({
 }) {
   const { synthId } = row;
   const plays = synthId !== null;
+  // A thumbnail that will not load (the route's 404 when a panel will not draw) gives way to the empty box.
+  const [noPicture, setNoPicture] = useState(false);
   const made = [row.year, row.kind].filter(Boolean).join(' · ');
   return (
     <button
@@ -303,7 +306,7 @@ function PickerOption({
       <span
         className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${on ? 'bg-(--kys-accent)' : 'bg-transparent'}`}
       />
-      {synthId !== null ? (
+      {synthId !== null && !noPicture ? (
         // A picture of a page, from the app's own route: next/image would only re-encode it.
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -313,6 +316,7 @@ function PickerOption({
           height={38}
           loading="lazy"
           decoding="async"
+          onError={() => setNoPicture(true)}
           className="mt-0.5 h-[38px] w-[92px] shrink-0 rounded bg-(--kys-desk) object-contain object-left"
         />
       ) : (

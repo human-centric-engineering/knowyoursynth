@@ -19,9 +19,21 @@ import { logger } from '@/lib/logging';
 /** The box a thumbnail fits inside: twice the picker's 92×38 slot, for high-density screens. */
 export const THUMBNAIL_BOX = { width: 240, height: 100 } as const;
 
+/**
+ * Bumped when the way thumbnails are drawn changes without a synth's definition changing (the faceplate's drawing, or
+ * what a thumbnail shows), so a browser holding the old picture is sent the new one rather than a 304.
+ */
+const THUMBNAIL_DRAWING = 1;
+
 /** What a thumbnail is drawn from, hashed: its ETag, and its key in memory. */
 export function thumbnailKey(def: SynthDef, design: SynthDesign): string {
-  return computeETag({ thumbnail: def.id, version: def.version, design });
+  return computeETag({
+    thumbnail: def.id,
+    version: def.version,
+    design,
+    box: THUMBNAIL_BOX,
+    drawing: THUMBNAIL_DRAWING,
+  });
 }
 
 interface DrawInput {

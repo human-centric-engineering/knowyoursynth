@@ -64,6 +64,13 @@ describe('GET /synths/[id]/thumbnail.png', () => {
     expect(panelThumbnail).not.toHaveBeenCalled();
   });
 
+  it('answers a 304 when its ETag is among several a cache sends, or for any', async () => {
+    const etag = thumbnailKey(modelD, 'faithful');
+    expect((await get('model-d', { 'If-None-Match': `W/"old", ${etag}` })).status).toBe(304);
+    expect((await get('model-d', { 'If-None-Match': '*' })).status).toBe(304);
+    expect(panelThumbnail).not.toHaveBeenCalled();
+  });
+
   it('draws again for an ETag from before a design change', async () => {
     const res = await get('model-d', { 'If-None-Match': thumbnailKey(modelD, 'neutral') });
     expect(res.status).toBe(200);

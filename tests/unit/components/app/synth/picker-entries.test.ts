@@ -111,6 +111,12 @@ describe('pickerRows', () => {
     });
   });
 
+  it("leaves out every unmodelled member when asked to, still knowing each synth's family", () => {
+    const rows = pickerRows(FAMILY_SYNTHS, [TB_303_FAMILY], { unmodelled: false });
+    expect(rows.map((r) => r.key)).toEqual(['model-d', 'td-3', 'tb-303']);
+    expect(rows.find((r) => r.key === 'td-3')?.family?.family.id).toBe('tb-303');
+  });
+
   it('leaves out the unmodelled members of a family whose modelled members the picker does not offer', () => {
     const onlyModelD = FAMILY_SYNTHS.filter((s) => s.id === 'model-d');
     expect(pickerRows(onlyModelD, [TB_303_FAMILY]).map((r) => r.key)).toEqual(['model-d']);

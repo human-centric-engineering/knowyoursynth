@@ -49,10 +49,20 @@ const byName = (a: PickerRow, b: PickerRow) =>
   a.maker.localeCompare(b.maker, 'en', { sensitivity: 'base' }) ||
   a.key.localeCompare(b.key);
 
-/** Every row the picker can list: each synth offered, then each unmodelled member of a served family. */
+/** Which rows the picker lists. */
+export interface PickerOptions {
+  /** Whether a family member nobody has modelled is listed: only where the page can show its blank panel. */
+  unmodelled: boolean;
+}
+
+/**
+ * Every row the picker can list: each synth offered, then (with `unmodelled`) each unmodelled member of a served
+ * family. Families are read either way, so a synth is found by its family's name.
+ */
 export function pickerRows(
   synths: readonly PickerSynth[],
-  families: readonly SynthFamily[]
+  families: readonly SynthFamily[],
+  { unmodelled }: PickerOptions = { unmodelled: true }
 ): PickerRow[] {
   const familyOf = new Map<string, RowFamily>();
   for (const family of families)
@@ -69,6 +79,7 @@ export function pickerRows(
     synthId: s.id,
     family: familyOf.get(s.id) ?? null,
   }));
+  if (!unmodelled) return rows;
   const offered = new Set(synths.map((s) => s.id));
   for (const family of families) {
     // A family none of whose members the picker offers has nothing to open its blank panels over.
@@ -102,14 +113,17 @@ function matches(row: PickerRow, q: string): boolean {
 export function pickerGroups(
   synths: readonly PickerSynth[],
   families: readonly SynthFamily[],
-  query = ''
+  query = '',
+  options: PickerOptions = { unmodelled: true }
 ): PickerGroup[] {
   const q = query.trim().toLowerCase();
   const groups = new Map<string, PickerRow[]>();
-  for (const row of pickerRows(synths, families)) {
+  for (const row of pickerRows(synths, families, options)) {
     if (q && !matches(row, q)) continue;
     const label = makerGroup(row.maker);
-    groups.set(label, [...(groups.get(label) ?? []), row]);
+    const group = groups.get(label);
+    if (group) group.push(row);
+    else groups.set(label, [row]);
   }
   return [...groups.entries()]
     .sort(([a], [b]) => a.localeCompare(b, 'en', { sensitivity: 'base' }))

@@ -27,8 +27,10 @@ export async function GET(
 
   const etag = thumbnailKey(def, design);
   const headers = { ETag: etag, 'Cache-Control': CACHE_CONTROL };
-  // Its own 304 rather than `checkConditional`'s, whose directive is the API's: this one keeps the picture's.
-  if (request.headers.get('If-None-Match') === etag)
+  // Its own 304 rather than `checkConditional`'s, whose directive is the API's: this one keeps the picture's. A cache
+  // may send several tags, or `*`.
+  const held = (request.headers.get('If-None-Match') ?? '').split(',').map((t) => t.trim());
+  if (held.includes(etag) || held.includes('*'))
     return new Response(null, { status: 304, headers });
 
   const png = await panelThumbnail(def, design);

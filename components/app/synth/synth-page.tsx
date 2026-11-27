@@ -3063,6 +3063,8 @@ function Synth({
   // An unmodelled family member chosen in the picker: its blank panel over this page when it is in this synth's family,
   // else over the page of the family's synth the picker chose.
   const pickMember = (over: string, slug: string) => {
+    // A switch to a sibling still loading its definition is overtaken, as `switchSynth` overtakes one.
+    switchSeq.current += 1;
     if (over === synthId) showBlank(slug);
     else router.push(memberHref(over, slug, view), { transitionTypes: ['synth-change'] });
   };
