@@ -623,7 +623,7 @@ phone. `f-phone-and-tablet` t-65 made the panel and keyboard work on touch:
 ## Browser storage
 
 Keys are the prototype's. Every value is checked when read; a bad one falls back to its default.
-Signed in, `kys.session.<id>`, `kys.tips`, `kys.fx`, `kys.dim`, `kys.heat` and `kys.harm` are kept
+Signed in, `kys.session.<id>`, `kys.tips`, `kys.fx`, `kys.dim`, `kys.heat`, `kys.harm` and `kys.picker` are kept
 in the account as well. The newer copy wins ([`sounds.md`](./sounds.md)). A synth's stored panel is restored only
 when the page comes back to the synth in `kys.synth`; one chosen over another opens on its Default patch, with
 `kys.dim` and `kys.heat` off.
@@ -640,6 +640,7 @@ when the page comes back to the synth in `kys.synth`; one chosen over another op
 | `kys.dim`, `kys.heat`  | Dim unused (the sound map's "Dim unused parts") and "Show sensitive controls"                                                                                                                                                                                      |
 | `kys.live`             | Live signal is on (`true`; a `"flow"` kept before t-279 reads as on too) (`f-live-panel`). In this browser only, never kept in the account                                                                                                                         |
 | `kys.harm`             | The harmonics strip under the panel                                                                                                                                                                                                                                |
+| `kys.picker`           | How the synth picker lists synths: only the choices changed from the site's (`PickerPrefs`, [`synth-picker.md`](./synth-picker.md))                                                                                                                                |
 | `kys.english`          | A panel printed in another language (the Polivoks) is shown in English: the foot rail's Labels. In this browser only, never kept in the account                                                                                                                    |
 | `kys.rotateSeen`       | The small-screen note above the panel has been put away                                                                                                                                                                                                            |
 | `kys.deck`             | The Piano button's choice: out, put away, or `null` for the screen's default                                                                                                                                                                                       |

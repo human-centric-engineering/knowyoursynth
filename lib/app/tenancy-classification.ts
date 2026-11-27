@@ -105,6 +105,8 @@ export function initAppTenancyClassification(): void {
       // Videos and links, with the seed's record of the links it has applied.
       'ExternalLink',
       'LinkSeedRecord',
+      // How the synth picker lists synths for every visitor (`f-synth-picker` t-329).
+      'SynthPickerSettings',
     ],
     // Inbound queues decided from one place, like core's `ContactSubmission`: synth and link suggestions, which feed
     // the shared databank and links, and reports about shared sounds and patterns. And the usernames held after a

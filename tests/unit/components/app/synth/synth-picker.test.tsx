@@ -11,6 +11,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { FAMILY_SYNTHS, TB_303_FAMILY } from '@/tests/helpers/synth-family';
+import { FACTORY_PICKER } from '@/lib/app/picker/settings';
 
 const SYNTHS = [
   { id: 'model-d', name: 'Model D', maker: 'Moog', year: 1970, heritage: 'The original monosynth' },
@@ -366,5 +367,150 @@ describe('SynthPicker rows for a family (f-synth-picker t-328)', () => {
     expect(document.activeElement).toBe(search);
     expect((search as HTMLInputElement).value).toBe('a');
     expect(options().map((o) => o.textContent)).toEqual([expect.stringContaining('Roland')]);
+  });
+});
+
+describe('SynthPicker Advanced search (f-synth-picker t-329)', () => {
+  const SITE = { ...FACTORY_PICKER };
+  const open = (props: Partial<Parameters<typeof SynthPicker>[0]> = {}) => {
+    const onPrefs = vi.fn();
+    const utils = render(
+      <SynthPicker
+        synths={FAMILY_SYNTHS}
+        families={[TB_303_FAMILY]}
+        synthId="model-d"
+        onSelect={vi.fn()}
+        onSelectMember={vi.fn()}
+        site={SITE}
+        prefs={{}}
+        onPrefs={onPrefs}
+        {...props}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { expanded: false, name: /Model D/ }));
+    return { ...utils, onPrefs };
+  };
+  const advancedButton = () => screen.getByRole('button', { name: /^Advanced/ });
+  const window_ = () => screen.getByRole('region', { name: 'Advanced search' });
+
+  it('opens a window that says the site’s settings are in use, with nothing to reset', () => {
+    open();
+    expect(screen.queryByRole('region', { name: 'Advanced search' })).toBeNull();
+    fireEvent.click(advancedButton());
+    expect(advancedButton().getAttribute('aria-expanded')).toBe('true');
+    expect(window_().textContent).toContain('Using the site’s settings');
+    expect(
+      within(window_()).getByRole('button', { name: 'Reset to the site’s settings' })
+    ).toHaveProperty('disabled', true);
+    expect(
+      within(within(window_()).getByRole('group', { name: 'Group by' }))
+        .getByRole('button', { name: 'Maker' })
+        .getAttribute('aria-pressed')
+    ).toBe('true');
+  });
+
+  it('keeps a change as the visitor’s own, only what differs from the site’s', () => {
+    const { onPrefs } = open({ prefs: { thumbs: false } });
+    fireEvent.click(advancedButton());
+    fireEvent.click(
+      within(within(window_()).getByRole('group', { name: 'Group by' })).getByRole('button', {
+        name: 'Lineage',
+      })
+    );
+    expect(onPrefs).toHaveBeenLastCalledWith({ thumbs: false, group: 'lineage' });
+    fireEvent.click(within(window_()).getByRole('button', { name: 'modular' }));
+    expect(onPrefs).toHaveBeenLastCalledWith({ thumbs: false, kinds: ['modular'] });
+  });
+
+  it('lists by the visitor’s choices, counts them on the button, and resets to the site’s', () => {
+    const { onPrefs } = open({ prefs: { group: 'name', thumbs: false } });
+    expect(advancedButton().textContent).toContain('2');
+    // One list with no heading, and no thumbnails.
+    expect(within(screen.getByRole('listbox')).getAllByRole('group')).toHaveLength(1);
+    expect(screen.getByRole('listbox').querySelector('img')).toBeNull();
+    fireEvent.click(advancedButton());
+    expect(window_().textContent).toContain('Kept as your settings');
+    fireEvent.click(
+      within(window_()).getByRole('button', { name: 'Reset to the site’s settings' })
+    );
+    expect(onPrefs).toHaveBeenLastCalledWith({});
+  });
+
+  it('changes the order and the thumbnails, and takes a kind back out', () => {
+    const { onPrefs } = open({ prefs: { kinds: ['mono', 'poly'] } });
+    fireEvent.click(advancedButton());
+    fireEvent.click(
+      within(within(window_()).getByRole('group', { name: 'Order' })).getByRole('button', {
+        name: 'Newest',
+      })
+    );
+    expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['mono', 'poly'], order: 'new' });
+    fireEvent.click(within(window_()).getByRole('checkbox', { name: 'Panel thumbnails' }));
+    expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['mono', 'poly'], thumbs: false });
+    fireEvent.click(within(window_()).getByRole('button', { name: 'mono' }));
+    expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['poly'] });
+  });
+
+  it('opens on Enter the row the box found by lineage, not the original over it', () => {
+    const onSelect = vi.fn();
+    open({ prefs: { group: 'lineage' }, onSelect });
+    const search = screen.getByRole('searchbox', { name: 'Find a synth' });
+    fireEvent.change(search, { target: { value: 'td-3' } });
+    fireEvent.keyDown(search, { key: 'Enter' });
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith('td-3');
+  });
+
+  it('is closed again the next time the list opens after a click away', () => {
+    open();
+    fireEvent.click(advancedButton());
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('listbox')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { expanded: false, name: /Model D/ }));
+    expect(screen.queryByRole('region', { name: 'Advanced search' })).toBeNull();
+  });
+
+  it('counts a kept choice that matches the site’s, and lets it be reset', () => {
+    const { onPrefs } = open({ prefs: { group: 'maker' } });
+    expect(advancedButton().textContent).toContain('1');
+    fireEvent.click(advancedButton());
+    expect(window_().textContent).toContain('Kept as your settings');
+    fireEvent.click(
+      within(window_()).getByRole('button', { name: 'Reset to the site’s settings' })
+    );
+    expect(onPrefs).toHaveBeenLastCalledWith({});
+  });
+
+  it('closes the window on Escape before the list, and gives focus back to its button', () => {
+    open();
+    fireEvent.click(advancedButton());
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('region', { name: 'Advanced search' })).toBeNull();
+    expect(document.activeElement).toBe(advancedButton());
+    expect(screen.getByRole('listbox')).toBeTruthy();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
+
+  it('has no Advanced search while the site does not allow it, and lists by the site’s settings', () => {
+    open({
+      site: { ...SITE, group: 'name', visitorsMayChange: false },
+      prefs: { group: 'lineage', thumbs: false },
+    });
+    expect(screen.queryByRole('button', { name: /^Advanced/ })).toBeNull();
+    expect(within(screen.getByRole('listbox')).getAllByRole('group')).toHaveLength(1);
+    expect(screen.getByRole('listbox').querySelector('img')).not.toBeNull();
+  });
+
+  it('has no Advanced search where the page cannot keep the visitor’s choices', () => {
+    open({ onPrefs: undefined });
+    expect(screen.queryByRole('button', { name: /^Advanced/ })).toBeNull();
+  });
+
+  it('marks a member under its original by lineage', () => {
+    open({ prefs: { group: 'lineage' } });
+    const tdRow = within(screen.getByRole('listbox'))
+      .getAllByRole('option')
+      .find((o) => [...o.querySelectorAll('span')].some((s) => s.textContent === 'TD-3'));
+    expect(tdRow?.textContent).toContain('Recreation');
   });
 });

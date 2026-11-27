@@ -44,6 +44,8 @@ export const STORAGE_KEYS = {
   heat: 'kys.heat',
   /** The harmonics strip under the panel. */
   harm: 'kys.harm',
+  /** How the synth picker lists synths: only the choices changed from the site's (`PickerPrefs`, t-329). */
+  picker: 'kys.picker',
   /** Who was signed in when the settings above were last changed: no one's (`null`) or a user id. */
   settingsBy: 'kys.settingsBy',
   /** When the settings above were last changed (ms since the epoch), to weigh against the account's copy. */

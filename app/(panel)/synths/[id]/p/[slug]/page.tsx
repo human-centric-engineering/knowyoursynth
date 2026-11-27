@@ -6,6 +6,7 @@ import { z } from 'zod';
 import '@/components/app/synth/synth.css';
 
 import { SynthPage } from '@/components/app/synth/synth-page';
+import { sitePickerForPage } from '@/lib/app/picker/site-settings';
 import { sharedPatternHref } from '@/components/app/synth/routes';
 import { getSynthDetail, listSynths } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -61,7 +62,7 @@ export default async function SharedPatternRoute({ params, searchParams }: Props
   const shared = await readShared(id, slug);
   if (!shared) notFound();
 
-  const detail = await getSynthDetail(id);
+  const [detail, pickerSite] = await Promise.all([getSynthDetail(id), sitePickerForPage()]);
   if (!detail) notFound();
 
   const query = await searchParams;
@@ -70,6 +71,7 @@ export default async function SharedPatternRoute({ params, searchParams }: Props
       key={`${id}/p/${slug}`}
       detail={detail}
       synths={shared.synths}
+      pickerSite={pickerSite}
       viewParam={viewParam.parse(query.view) ?? null}
       sharedPattern={shared.pattern}
     />

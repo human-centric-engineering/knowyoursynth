@@ -1042,6 +1042,9 @@ model UserPreference {
   harm      Boolean?
   /// `kys.fx`: the effects rack's settings (`RackFx`).
   fx        Json?
+  /// `kys.picker`: how the synth picker lists synths, only the choices this user changed (`PickerPrefs`,
+  /// `lib/app/picker/settings.ts`). `{}` or null follows the site's (`SynthPickerSettings`).
+  picker    Json?
   updatedAt DateTime @updatedAt
 
   @@map("user_preference")
@@ -1328,4 +1331,29 @@ model LinkSuggestion {
   @@index([status, createdAt])
   @@index([userId])
   @@map("link_suggestion")
+}
+
+// ─── Synth picker settings (f-synth-picker t-329) ────────────────────────────
+//
+// How the synth picker lists synths for every visitor who has not changed it: admin config, one row, shared by every
+// org (GLOBAL_CONFIG_MODELS). No row means the code's defaults (`FACTORY_PICKER`). Checked on read and write with
+// `SitePickerSettingsSchema` (`lib/app/picker/settings.ts`); no user is recorded on it (the audit log says who).
+
+model SynthPickerSettings {
+  /// Always "site": the one row.
+  id                String   @id @default("site")
+  /// `name` | `maker` | `lineage`.
+  group             String
+  /// `name` | `new` | `old`.
+  order             String
+  /// The kinds listed; empty lists every kind.
+  kinds             String[]
+  thumbs            Boolean
+  /// Whether a visitor may change these in the picker's Advanced search.
+  visitorsMayChange Boolean
+  /// Whether "All synths ever made" is offered (t-330).
+  offerAll          Boolean
+  updatedAt         DateTime @updatedAt
+
+  @@map("synth_picker_settings")
 }

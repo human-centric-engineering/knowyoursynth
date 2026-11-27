@@ -263,6 +263,7 @@ import {
   type FamilyCarry,
 } from '@/components/app/synth/family-carry';
 import type { SynthFamily } from '@/lib/app/families/read';
+import { FACTORY_PICKER, type SitePickerSettings } from '@/lib/app/picker/settings';
 import { departures, translate } from '@/lib/app/synths/families/translate';
 import { logger } from '@/lib/logging';
 import { Tour } from '@/components/app/synth/tour';
@@ -452,8 +453,13 @@ export interface SynthPageProps {
   detail: SynthDetail;
   /** From `GET /api/v1/synths`: what the picker offers. */
   synths: CatalogueSynth[];
-  /** From `GET /api/v1/synths/families`: the picker lists each as one entry. None, and it lists every synth alone. */
+  /**
+   * From `GET /api/v1/synths/families`: the picker lists each unmodelled member, and finds a synth by its family's name.
+   * None, and it lists the synths alone.
+   */
   families?: SynthFamily[];
+  /** From `GET /api/v1/synths/picker-settings` (t-329): how the picker lists synths; the defaults when not given. */
+  pickerSite?: SitePickerSettings;
   /** The `view` query, as the request had it. */
   viewParam: string | null;
   /** The `sound` query: a library sound to open with, as a databank record's link names it. */
@@ -513,6 +519,7 @@ function Synth({
   detail,
   synths,
   families = NO_FAMILIES,
+  pickerSite = FACTORY_PICKER,
   viewParam,
   soundParam = null,
   mineParam = null,
@@ -3315,6 +3322,9 @@ function Synth({
                       memberSlug={blankSlug}
                       onSelect={pickSynth}
                       onSelectMember={pickMember}
+                      site={pickerSite}
+                      prefs={settings.picker[0]}
+                      onPrefs={settings.picker[1]}
                       isStarred={(id) => favourites.isOn({ kind: 'synth', synthId: id })}
                       onStar={(id) => favourites.toggle({ kind: 'synth', synthId: id })}
                     />

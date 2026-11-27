@@ -137,6 +137,7 @@ const NO_SETTINGS: KeptSettings = {
   heat: null,
   harm: null,
   fx: null,
+  picker: null,
   updatedAt: null,
 };
 const KEPT_AT = '2026-10-16T08:00:00.000Z';
@@ -570,6 +571,7 @@ describe('signed in, writing to the account', () => {
       heat: false,
       harm: false,
       fx: null,
+      picker: null,
       updatedAt: KEPT_AT,
     };
     vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
