@@ -409,6 +409,23 @@ describe('every synth ever made (t-330)', () => {
     });
   });
 
+  it('puts a recreation of a synth’s second instrument under that synth, listing that instrument once', () => {
+    const second = { ...BANK[5], id: 'roland-tb-303-reissue', synths: ['tb-303'] };
+    const copy = { ...BANK[4], id: 'acid-box', recreationOf: 'roland-tb-303-reissue' };
+    const bank = [...BANK, second, copy];
+    const [list] = pickerGroups(FAMILY_SYNTHS, [], '', {
+      unmodelled: true,
+      bank,
+      scope: 'all',
+      group: 'lineage',
+    });
+    expect(list.rows.some((r) => r.key === 'bank:roland-tb-303-reissue')).toBe(false);
+    const top = list.rows.findIndex((r) => r.key === 'tb-303');
+    expect(list.rows[top].depth).toBe(0);
+    expect(list.rows.find((r) => r.key === 'bank:acid-box')).toMatchObject({ depth: 1 });
+    expect(list.rows.findIndex((r) => r.key === 'bank:acid-box')).toBeGreaterThan(top);
+  });
+
   it('lists every other instrument even where no family member is listed', () => {
     const rows = pickerRows(FAMILY_SYNTHS, [TB_303_FAMILY], {
       unmodelled: false,

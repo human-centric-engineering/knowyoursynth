@@ -68,6 +68,8 @@ export interface PickerRow {
   instrumentId: string | null;
   /** The databank instrument it recreates, when the picker knows it. */
   recreationOf: string | null;
+  /** Any other databank instruments a synth models: a recreation of one of them sits under it too, by lineage. */
+  alsoInstruments?: readonly string[];
 }
 
 /** A row as listed: in a lineage, how far in it sits under its original, and what it is to it. */
@@ -129,8 +131,13 @@ export function pickerRows(
   const instrumentById = new Map(bank.map((i) => [i.id, i]));
   // The first instrument (by the list's order) that a synth models: what its row stands for in a lineage.
   const instrumentOfSynth = new Map<string, PickerInstrument>();
+  // And every instrument each synth models, after its first.
+  const moreOfSynth = new Map<string, string[]>();
   for (const i of bank)
-    for (const id of i.synths) if (!instrumentOfSynth.has(id)) instrumentOfSynth.set(id, i);
+    for (const id of i.synths) {
+      if (!instrumentOfSynth.has(id)) instrumentOfSynth.set(id, i);
+      else moreOfSynth.set(id, [...(moreOfSynth.get(id) ?? []), i.id]);
+    }
 
   const rows: PickerRow[] = synths.map((s) => {
     const instrument = instrumentOfSynth.get(s.id);
@@ -145,6 +152,7 @@ export function pickerRows(
       family: familyOf.get(s.id) ?? null,
       instrumentId: instrument?.id ?? null,
       recreationOf: instrument?.recreationOf ?? null,
+      ...(moreOfSynth.has(s.id) && { alsoInstruments: moreOfSynth.get(s.id) }),
     };
   });
   const offered = new Set(synths.map((s) => s.id));
@@ -174,7 +182,9 @@ export function pickerRows(
 
   // Every other instrument in the databank: one a listed synth models, or a family member already listed, is not
   // listed twice.
-  const listed = new Set(rows.flatMap((r) => (r.instrumentId ? [r.instrumentId] : [])));
+  const listed = new Set(
+    rows.flatMap((r) => [...(r.instrumentId ? [r.instrumentId] : []), ...(r.alsoInstruments ?? [])])
+  );
   for (const i of bank) {
     if (listed.has(i.id) || i.synths.some((id) => offered.has(id))) continue;
     rows.push({
@@ -267,8 +277,8 @@ function lineage(
   const firsts = originals(all);
   const byInstrument = new Map<string, PickerRow>();
   for (const row of all)
-    if (row.instrumentId && !byInstrument.has(row.instrumentId))
-      byInstrument.set(row.instrumentId, row);
+    for (const id of [row.instrumentId, ...(row.alsoInstruments ?? [])])
+      if (id && !byInstrument.has(id)) byInstrument.set(id, row);
   const above = (row: PickerRow): PickerRow | undefined => {
     const copied = row.recreationOf ? byInstrument.get(row.recreationOf) : undefined;
     if (copied) return copied;

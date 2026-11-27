@@ -27,6 +27,7 @@ import { SynthPicker } from '@/components/app/synth/synth-picker';
 import { apiClient } from '@/lib/api/client';
 import { useSession } from '@/lib/auth/client';
 import type { InstrumentDetail, InstrumentRef } from '@/lib/app/bank/read';
+import { OwnedListsSchema } from '@/lib/app/profile/instruments-data';
 import type { CatalogueSynth } from '@/lib/app/catalogue/read';
 import type { SynthFamily } from '@/lib/app/families/read';
 import type { SitePickerSettings } from '@/lib/app/picker/settings';
@@ -41,10 +42,6 @@ export interface InstrumentAboutProps {
   playsAs: Record<string, string>;
 }
 
-const OwnedListsSchema = z.object({
-  owned: z.array(z.object({ instrumentId: z.string() })),
-  wishlist: z.array(z.object({ instrumentId: z.string() })),
-});
 const RequestSchema = z.object({ asked: z.boolean(), count: z.number().int().nonnegative() });
 
 type OwnState = 'owned' | 'wishlist' | 'none';
@@ -205,7 +202,8 @@ export function InstrumentAbout({
           synths={synths}
           families={families}
           owned={owned}
-          synthId={synths[0]?.id ?? ''}
+          // No synth is open here: a family member chosen opens over the one the user owns, or its default.
+          synthId=""
           caption={{ name: instrument.name, maker: instrument.maker }}
           instrumentId={id}
           onSelect={(synth) => router.push(synthHref(synth))}

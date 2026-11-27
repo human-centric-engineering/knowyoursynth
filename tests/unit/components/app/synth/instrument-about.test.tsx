@@ -93,9 +93,18 @@ const page = () =>
     />
   );
 
+// As `GET /api/v1/me/instruments` answers: each entry whole.
+const entry = (instrumentId: string, kind: 'owned' | 'wishlist') => ({
+  instrumentId,
+  kind,
+  name: 'Minimoog Model D',
+  maker: 'Moog Music',
+  year: '1970',
+  addedAt: '2026-11-27T00:00:00.000Z',
+});
 const lists = (owned: string[], wishlist: string[] = []) => ({
-  owned: owned.map((instrumentId) => ({ instrumentId })),
-  wishlist: wishlist.map((instrumentId) => ({ instrumentId })),
+  owned: owned.map((id) => entry(id, 'owned')),
+  wishlist: wishlist.map((id) => entry(id, 'wishlist')),
 });
 const answer = (owned: string[], wishlist: string[], asked: boolean, count: number) =>
   vi

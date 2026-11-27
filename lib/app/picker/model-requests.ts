@@ -73,7 +73,8 @@ export async function askToModel(userId: string, instrumentId: string): Promise<
     });
   } catch (err) {
     if (hasPrismaCode(err, 'P2003')) throw unknownInstrument(instrumentId);
-    throw err;
+    // Two asks at once (two tabs): the other made the row, which is what this one wanted.
+    if (!hasPrismaCode(err, 'P2002')) throw err;
   }
   return { instrumentId, asked: true, count: await countFor(instrumentId) };
 }

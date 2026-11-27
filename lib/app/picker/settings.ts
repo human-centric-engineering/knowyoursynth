@@ -141,10 +141,16 @@ export function pickerChoices(site: SitePickerSettings, mine: PickerPrefs): Pick
  * A kept choice counts even while it matches the site's, since it still holds when the site's changes. What to show
  * counts only while every synth ever made is offered: otherwise it is kept, unused, with nothing to show it by.
  */
-export function changedChoices(site: SitePickerSettings, mine: PickerPrefs): number {
+export function changedChoices(
+  site: SitePickerSettings,
+  mine: PickerPrefs,
+  /** Whether the page can show every synth ever made: where it cannot, what to show is not one of its choices. */
+  canShowAll = true
+): number {
   if (!site.visitorsMayChange) return 0;
-  return CHOICE_KEYS.filter((k) => mine[k] !== undefined && (k !== 'scope' || site.offerAll))
-    .length;
+  return CHOICE_KEYS.filter(
+    (k) => mine[k] !== undefined && (k !== 'scope' || (site.offerAll && canShowAll))
+  ).length;
 }
 
 /**

@@ -121,6 +121,19 @@ describe('asking and withdrawing', () => {
     expect(await getModelRequest('bob', 'moog-minimoog')).toMatchObject({ asked: true });
   });
 
+  it('takes a second ask racing the first as asked, not as a failure', async () => {
+    const { prisma } = await import('@/lib/db/client');
+    await askToModel('ann', 'moog-minimoog');
+    vi.mocked(prisma.modelRequest.upsert).mockRejectedValueOnce(
+      Object.assign(new Error('Unique constraint failed'), { code: 'P2002' })
+    );
+    expect(await askToModel('ann', 'moog-minimoog')).toEqual({
+      instrumentId: 'moog-minimoog',
+      asked: true,
+      count: 1,
+    });
+  });
+
   it('lets any other failure through as it is', async () => {
     const { prisma } = await import('@/lib/db/client');
     const failure = new Error('connection reset');

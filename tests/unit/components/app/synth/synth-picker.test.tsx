@@ -576,6 +576,43 @@ describe('SynthPicker with every synth ever made (f-synth-picker t-330)', () => 
     expect(onSelectInstrument).toHaveBeenCalledExactlyOnceWith('moog-minimoog');
   });
 
+  it('opens as a modal dialog over the page, the page still behind it, and a click inside keeps it open', async () => {
+    vi.mocked(apiClient.get).mockResolvedValue(BANK);
+    open();
+    const dialog = screen.getByRole('dialog', { name: 'Every synth ever made' });
+    expect(dialog.getAttribute('aria-modal')).toBe('true');
+    expect(document.body.style.overflow).toBe('hidden');
+    await screen.findByText('Minimoog Model D');
+    fireEvent.pointerDown(within(dialog).getByRole('searchbox'));
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('does not count what to show on the Advanced button where the page cannot show every synth', () => {
+    open({ onSelectInstrument: undefined, prefs: { scope: 'all' } });
+    expect(screen.getByRole('button', { name: /^Advanced/ }).textContent).toBe('Advanced');
+  });
+
+  it('opens a family member over the member the family opens on when no synth is open', () => {
+    const onSelectMember = vi.fn();
+    render(
+      <SynthPicker
+        synths={FAMILY_SYNTHS}
+        families={[TB_303_FAMILY]}
+        synthId=""
+        caption={{ name: 'Minimoog Model D', maker: 'Moog Music' }}
+        onSelect={vi.fn()}
+        onSelectMember={onSelectMember}
+      />
+    );
+    fireEvent.click(document.querySelector('[aria-haspopup="listbox"]')!);
+    const member = screen.getAllByRole('option').find((o) => o.textContent?.includes('Unmodelled'));
+    fireEvent.click(member!);
+    expect(onSelectMember).toHaveBeenCalledExactlyOnceWith('td-3', 'rebirth');
+  });
+
   it('closes when the page behind it is clicked', async () => {
     vi.mocked(apiClient.get).mockResolvedValue(BANK);
     open();

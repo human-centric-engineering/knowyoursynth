@@ -18,6 +18,7 @@
  */
 
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { KeyboardEvent } from 'react';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { StarButton, StarIcon } from '@/components/app/synth/favourites';
@@ -107,13 +108,14 @@ export function SynthPicker({
   const advancedId = useId();
   const advancedButton = useRef<HTMLButtonElement>(null);
   const choices = pickerChoices(site, prefs);
-  const changed = changedChoices(site, prefs);
+  const changed = changedChoices(site, prefs, !!onSelectInstrument);
   const mayChange = site.visitorsMayChange && !!onPrefs;
   const choose_ = <K extends keyof PickerChoices>(key: K, value: PickerChoices[K]) =>
     onPrefs?.(withChoice(site, prefs, key, value));
   const wrap = useRef<HTMLDivElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
+  const pop = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
   const listsMembers = !!onSelectMember;
   // Every synth ever made, only where the page can show one nobody has modelled.
@@ -148,7 +150,11 @@ export function SynthPicker({
   useEffect(() => {
     if (!open) return undefined;
     const away = (e: PointerEvent) => {
-      if (wrap.current && e.target instanceof Node && !wrap.current.contains(e.target)) {
+      // Inside the picker is its button or its list, which the full-size browser renders into the page's body.
+      const inside =
+        e.target instanceof Node &&
+        (wrap.current?.contains(e.target) || pop.current?.contains(e.target));
+      if (wrap.current && e.target instanceof Node && !inside) {
         setOpen(false);
         setQuery('');
         setAdvanced(false);
@@ -174,6 +180,16 @@ export function SynthPicker({
       document.removeEventListener('keydown', key);
     };
   }, [open, advanced]);
+
+  // The full-size browser is a modal over the page: the page behind it does not scroll while it is open.
+  useEffect(() => {
+    if (!open || !everything) return undefined;
+    const before = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = before;
+    };
+  }, [open, everything]);
 
   // Open on the synth you are already using, so the arrow keys start from the right place.
   useEffect(() => {
@@ -259,6 +275,103 @@ export function SynthPicker({
   };
 
   if (!current) return null;
+  // The open list: a dropdown under the button, or the full-size browser (below).
+  const dropdown = (
+    <div
+      ref={pop}
+      {...(everything
+        ? { role: 'dialog', 'aria-modal': true, 'aria-label': 'Every synth ever made' }
+        : {})}
+      className={
+        everything
+          ? 'fixed inset-x-4 top-[max(24px,env(safe-area-inset-top))] bottom-6 z-50 mx-auto flex max-w-[1100px] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-2 shadow-2xl'
+          : 'absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl'
+      }
+    >
+      <div className="flex items-center gap-1">
+        <input
+          ref={search}
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={onSearchKey}
+          aria-label="Find a synth"
+          placeholder="Find a synth by name or maker"
+          className="min-w-0 flex-1 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
+        />
+        {mayChange && (
+          <button
+            ref={advancedButton}
+            type="button"
+            aria-expanded={advanced}
+            aria-controls={advancedId}
+            onClick={() => setAdvanced((a) => !a)}
+            className={`kys-label flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] ${advanced ? 'border-(--kys-text) bg-(--kys-text) text-(--kys-raised)' : 'border-(--kys-line) text-(--kys-muted) hover:border-(--kys-muted)'}`}
+          >
+            Advanced
+            {changed > 0 && (
+              <span className="rounded-full bg-(--kys-accent) px-1.5 text-(--kys-accent-ink)">
+                {changed}
+                <span className="sr-only"> changed</span>
+              </span>
+            )}
+          </button>
+        )}
+      </div>
+      {mayChange && advanced && (
+        <PickerAdvanced
+          id={advancedId}
+          offerAll={site.offerAll && !!onSelectInstrument}
+          choices={choices}
+          changed={changed}
+          onChange={choose_}
+          onReset={() => onPrefs?.({})}
+        />
+      )}
+      <div
+        ref={list}
+        role="listbox"
+        aria-label="Choose a synth"
+        // Scroll padding the height of a brand's sticky heading, so a row the arrow keys reach is not under it.
+        className={`kys-scroll scroll-pt-9 overflow-y-auto ${everything ? 'min-h-0 flex-1' : 'max-h-[min(70vh,520px)]'}`}
+      >
+        {groups.map((g) => (
+          // A list by name or lineage is one group with no heading; by maker, one per brand.
+          <div key={g.label} role="group" aria-label={g.label || 'Synths'}>
+            {g.label && (
+              <div
+                aria-hidden="true"
+                className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
+              >
+                {g.label}
+              </div>
+            )}
+            {g.rows.map((row) => (
+              <PickerOption
+                key={row.key}
+                row={row}
+                thumbs={choices.thumbs}
+                on={isOn(row)}
+                starred={!!row.synthId && !!isStarred?.(row.synthId)}
+                onChoose={() => choose(row)}
+                onKeyDown={onItemKey}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      {everything && bank.status !== 'ready' && (
+        <p role="status" className="px-2.5 py-2 text-[13px] text-(--kys-muted)">
+          {bank.status === 'failed'
+            ? 'Every synth ever made could not be loaded: these are the synths that play. Open the list again to try again.'
+            : 'Loading every synth ever made…'}
+        </p>
+      )}
+      {rows.length === 0 && (
+        <p className="px-2.5 py-2 text-[13px] text-(--kys-muted)">No synth matches that.</p>
+      )}
+    </div>
+  );
   // On an instrument's page, the caption names it, and there is no synth to star.
   const shown = caption ?? current;
   const starred = caption ? null : (isStarred?.(current.id) ?? null);
@@ -313,104 +426,22 @@ export function SynthPicker({
         <StarButton on={starred} name={current.name} onToggle={() => onStar(current.id)} />
       )}
 
-      {open && (
-        <>
-          {everything && (
-            // Every synth ever made is too many for a dropdown: it opens full size over the page.
-            <div aria-hidden="true" className="fixed inset-0 z-40 bg-black/45" onClick={close} />
-          )}
-          <div
-            className={
-              everything
-                ? 'fixed inset-x-4 top-[max(24px,env(safe-area-inset-top))] bottom-6 z-50 mx-auto flex max-w-[1100px] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-2 shadow-2xl'
-                : 'absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl'
-            }
-          >
-            <div className="flex items-center gap-1">
-              <input
-                ref={search}
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={onSearchKey}
-                aria-label="Find a synth"
-                placeholder="Find a synth by name or maker"
-                className="min-w-0 flex-1 rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
-              />
-              {mayChange && (
-                <button
-                  ref={advancedButton}
-                  type="button"
-                  aria-expanded={advanced}
-                  aria-controls={advancedId}
-                  onClick={() => setAdvanced((a) => !a)}
-                  className={`kys-label flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] ${advanced ? 'border-(--kys-text) bg-(--kys-text) text-(--kys-raised)' : 'border-(--kys-line) text-(--kys-muted) hover:border-(--kys-muted)'}`}
-                >
-                  Advanced
-                  {changed > 0 && (
-                    <span className="rounded-full bg-(--kys-accent) px-1.5 text-(--kys-accent-ink)">
-                      {changed}
-                      <span className="sr-only"> changed</span>
-                    </span>
-                  )}
-                </button>
-              )}
-            </div>
-            {mayChange && advanced && (
-              <PickerAdvanced
-                id={advancedId}
-                offerAll={site.offerAll && !!onSelectInstrument}
-                choices={choices}
-                changed={changed}
-                onChange={choose_}
-                onReset={() => onPrefs?.({})}
-              />
-            )}
-            <div
-              ref={list}
-              role="listbox"
-              aria-label="Choose a synth"
-              // Scroll padding the height of a brand's sticky heading, so a row the arrow keys reach is not under it.
-              className={`kys-scroll scroll-pt-9 overflow-y-auto ${everything ? 'min-h-0 flex-1' : 'max-h-[min(70vh,520px)]'}`}
-            >
-              {groups.map((g) => (
-                // A list by name or lineage is one group with no heading; by maker, one per brand.
-                <div key={g.label} role="group" aria-label={g.label || 'Synths'}>
-                  {g.label && (
-                    <div
-                      aria-hidden="true"
-                      className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
-                    >
-                      {g.label}
-                    </div>
-                  )}
-                  {g.rows.map((row) => (
-                    <PickerOption
-                      key={row.key}
-                      row={row}
-                      thumbs={choices.thumbs}
-                      on={isOn(row)}
-                      starred={!!row.synthId && !!isStarred?.(row.synthId)}
-                      onChoose={() => choose(row)}
-                      onKeyDown={onItemKey}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-            {everything && bank.status !== 'ready' && (
-              <p role="status" className="px-2.5 py-2 text-[13px] text-(--kys-muted)">
-                {bank.status === 'failed'
-                  ? 'Every synth ever made could not be loaded: these are the synths that play. Open the list again to try again.'
-                  : 'Loading every synth ever made…'}
-              </p>
-            )}
-            {rows.length === 0 && (
-              <p className="px-2.5 py-2 text-[13px] text-(--kys-muted)">No synth matches that.</p>
-            )}
-          </div>
-        </>
-      )}
+      {open &&
+        (everything
+          ? // Every synth ever made is too many for a dropdown: it opens full size over the page, rendered into the
+            // page's body so nothing the synth page stacks (its dock) can sit over it.
+            createPortal(
+              <>
+                <div
+                  aria-hidden="true"
+                  className="fixed inset-0 z-40 bg-black/45"
+                  onClick={close}
+                />
+                {dropdown}
+              </>,
+              document.body
+            )
+          : dropdown)}
     </div>
   );
 }
