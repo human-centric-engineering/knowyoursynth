@@ -18,6 +18,8 @@ export interface FamilyInstrumentRef {
   name: string;
   maker: string;
   year: string;
+  /** What sort of instrument it is (`mono`, `poly`, `module`…), as the databank has it. */
+  kind: string;
 }
 
 /** One member of a family, as the toggle shows it. */
@@ -52,7 +54,7 @@ const familySelect = {
       label: true,
       synthId: true,
       differences: true,
-      instrument: { select: { id: true, name: true, maker: true, year: true } },
+      instrument: { select: { id: true, name: true, maker: true, year: true, kind: true } },
       synth: { select: { listed: true } },
     },
   },

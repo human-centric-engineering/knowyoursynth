@@ -5,7 +5,12 @@
  * `planCatalogue` (`synthRows()`), so the read is tested against the real shape and the real Model D content.
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { getSynthDetail, listSoundNames, listSynths } from '@/lib/app/catalogue/read';
+import {
+  getListedSynthDesign,
+  getSynthDetail,
+  listSoundNames,
+  listSynths,
+} from '@/lib/app/catalogue/read';
 import { logger } from '@/lib/logging';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 import { synthRows } from '@/tests/helpers/synth-detail';
@@ -49,7 +54,9 @@ const stored = (overrides: Record<string, unknown> = {}) => ({
   ...synthRow,
   sounds: storedSounds,
   lineage: storedLineage,
-  bankInstruments: [{ instrument: { id: 'moog-minimoog', name: 'Minimoog Model D' } }],
+  bankInstruments: [
+    { instrument: { id: 'moog-minimoog', name: 'Minimoog Model D', kind: 'mono' } },
+  ],
   ...overrides,
 });
 const firstModelDSound = () => {
@@ -73,7 +80,7 @@ beforeEach(() => {
 describe('listSynths', () => {
   it('lists the listed synths in catalogue order, with their design, the registry’s version and a sound count', async () => {
     vi.mocked(prisma.synth.findMany).mockResolvedValue([
-      { ...synthRow, design: 'FAITHFUL' },
+      { ...synthRow, design: 'FAITHFUL', bankInstruments: [{ instrument: { kind: 'mono' } }] },
     ] as never);
 
     const list = await listSynths();
@@ -86,6 +93,7 @@ describe('listSynths', () => {
         year: 2018,
         heritage: synthRow.heritage,
         summary: synthRow.summary,
+        kind: 'mono',
         design: 'faithful',
         definitionVersion: 1,
         soundCount: 240,
@@ -95,6 +103,27 @@ describe('listSynths', () => {
       expect.objectContaining({
         where: { listed: true },
         orderBy: [{ order: 'asc' }, { id: 'asc' }],
+      })
+    );
+  });
+
+  it('gives each synth the kind of the first databank instrument it models, or none (t-328)', async () => {
+    vi.mocked(prisma.synth.findMany).mockResolvedValue([
+      { ...synthRow, bankInstruments: [] },
+    ] as never);
+
+    const [synth] = await listSynths();
+
+    expect(synth.kind).toBeNull();
+    expect(prisma.synth.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        select: expect.objectContaining({
+          bankInstruments: {
+            orderBy: { instrumentId: 'asc' },
+            take: 1,
+            select: { instrument: { select: { kind: true } } },
+          },
+        }),
       })
     );
   });
@@ -215,8 +244,8 @@ describe('getSynthDetail', () => {
     vi.mocked(prisma.synth.findFirst).mockResolvedValue(
       stored({
         bankInstruments: [
-          { instrument: { id: 'arp-odyssey', name: 'ARP Odyssey' } },
-          { instrument: { id: 'moog-minimoog', name: 'Minimoog Model D' } },
+          { instrument: { id: 'arp-odyssey', name: 'ARP Odyssey', kind: 'mono' } },
+          { instrument: { id: 'moog-minimoog', name: 'Minimoog Model D', kind: 'mono' } },
         ],
       }) as never
     );
@@ -227,7 +256,7 @@ describe('getSynthDetail', () => {
       expect.objectContaining({
         select: expect.objectContaining({
           bankInstruments: {
-            select: { instrument: { select: { id: true, name: true } } },
+            select: { instrument: { select: { id: true, name: true, kind: true } } },
             orderBy: { instrumentId: 'asc' },
           },
         }),
@@ -237,6 +266,7 @@ describe('getSynthDetail', () => {
       { id: 'arp-odyssey', name: 'ARP Odyssey' },
       { id: 'moog-minimoog', name: 'Minimoog Model D' },
     ]);
+    expect(detail?.synth.kind).toBe('mono');
   });
 
   it('is null for an id no listed synth has', async () => {
@@ -485,5 +515,27 @@ describe('listSoundNames', () => {
       { synthId: 'no-such-synth', slug: 'x', name: 'X', definitionVersion: 1 },
     ] as never);
     expect(await listSoundNames()).toEqual({});
+  });
+});
+
+describe('getListedSynthDesign (t-328)', () => {
+  it("reads a listed synth's design alone", async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue({ design: 'FAITHFUL' } as never);
+
+    expect(await getListedSynthDesign('model-d')).toBe('faithful');
+    expect(prisma.synth.findFirst).toHaveBeenCalledWith({
+      where: { id: 'model-d', listed: true },
+      select: { design: true },
+    });
+  });
+
+  it('is null for a synth the catalogue does not list', async () => {
+    vi.mocked(prisma.synth.findFirst).mockResolvedValue(null);
+    expect(await getListedSynthDesign('model-d')).toBeNull();
+  });
+
+  it('is null, without a read, for a synth with no definition', async () => {
+    expect(await getListedSynthDesign('not-a-synth')).toBeNull();
+    expect(prisma.synth.findFirst).not.toHaveBeenCalled();
   });
 });

@@ -1,0 +1,52 @@
+/**
+ * The brand a maker is grouped under in the synth picker (`f-synth-picker` t-328).
+ *
+ * The catalogue and the databank name makers as each instrument was sold, so one brand arrives under several names:
+ * the catalogue's "Moog" beside the databank's "Moog Music" and "R. A. Moog Co.", "Sequential" beside "Sequential
+ * Circuits". Grouped as written, the picker would show Moog twice. This joins those spellings under the name people
+ * look for; every row still prints its own maker.
+ *
+ * Only spellings that would otherwise split a brand are listed. A maker not here is its own group, so a new one
+ * needs no entry until a second spelling of it arrives. Pure: the picker and its tests share it.
+ */
+
+/** Each listed maker spelling, lower-cased, and the brand it is grouped under. */
+const BRANDS: Record<string, string> = {
+  moog: 'Moog',
+  'moog music': 'Moog',
+  'r. a. moog co.': 'Moog',
+  oberheim: 'Oberheim',
+  'oberheim electronics': 'Oberheim',
+  sequential: 'Sequential',
+  'sequential circuits': 'Sequential',
+  buchla: 'Buchla',
+  'buchla & associates': 'Buchla',
+  'buchla electronic musical instruments': 'Buchla',
+  ems: 'EMS',
+  'electronic music studios': 'EMS',
+};
+
+/** The brand `maker` is grouped under: its listed brand, else the maker as written. */
+export function makerGroup(maker: string): string {
+  const name = maker.trim();
+  return BRANDS[name.toLowerCase()] ?? name;
+}
+
+/**
+ * A databank instrument's name without the maker it starts with, as the catalogue names synths: "ARP Odyssey Mk II"
+ * by ARP Instruments is "Odyssey Mk II", "Sequential Circuits Pro-One" is "Pro-One". The maker's first word is enough
+ * ("ARP" of "ARP Instruments"), and so are its initials ("EDP Wasp" by Electronic Dream Plant is "Wasp"). A name
+ * that is only its maker, or would be left without a letter ("ARP 2600"), is left whole.
+ */
+export function nameWithoutMaker(name: string, maker: string): string {
+  const lower = name.toLowerCase();
+  const words = maker.trim().split(/\s+/);
+  const initials = words.length > 1 ? words.map((w) => w[0]).join('') : '';
+  for (const prefix of [maker, words[0], initials]) {
+    const p = prefix.trim().toLowerCase();
+    const rest = lower.startsWith(`${p} `) ? name.slice(p.length + 1).trim() : '';
+    // A name that would be left without a letter ("ARP 2600" as "2600") keeps its maker: the model is the whole name.
+    if (p && /\p{L}/u.test(rest)) return rest;
+  }
+  return name;
+}

@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
 
 /**
- * The synth chooser: a dropdown listing each synth's name, maker, year and heritage.
+ * The synth chooser: a dropdown listing each synth by name and maker, grouped by maker, with its year, kind, whether
+ * it plays, its heritage and a thumbnail of its panel (`f-synth-picker` t-328).
  *
  * @see components/app/synth/synth-picker.tsx
  */
@@ -41,16 +42,22 @@ describe('SynthPicker', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('lists every synth with maker, year and heritage, and marks the current one selected', () => {
+  it('lists every synth under its maker with name, maker, year and heritage, and marks the current one selected', () => {
     const { trigger } = setup('ob-x');
     fireEvent.click(trigger);
 
-    const options = within(screen.getByRole('listbox', { name: 'Choose a synth' })).getAllByRole(
-      'option'
-    );
+    const listbox = screen.getByRole('listbox', { name: 'Choose a synth' });
+    expect(
+      within(listbox)
+        .getAllByRole('group')
+        .map((g) => g.getAttribute('aria-label'))
+    ).toEqual(['Moog', 'Oberheim', 'Yamaha']);
+    const options = within(listbox).getAllByRole('option');
     expect(options).toHaveLength(3);
     expect(options[1].textContent).toContain('OB-X');
-    expect(options[1].textContent).toContain('Oberheim · 1979');
+    expect(options[1].textContent).toContain('Oberheim');
+    expect(options[1].textContent).toContain('1979');
+    expect(options[1].textContent).toContain('Plays');
     expect(options[1].textContent).toContain('Polyphonic and bold');
     expect(options.map((o) => o.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
@@ -177,73 +184,160 @@ describe('SynthPicker stars (f-my-sounds s4)', () => {
   });
 });
 
-describe('SynthPicker families (f-synth-families t-320)', () => {
-  const open = (synthId: string, owned?: ReadonlySet<string>) => {
+describe('SynthPicker rows for a family (f-synth-picker t-328)', () => {
+  const open = (synthId: string, owned?: ReadonlySet<string>, memberSlug: string | null = null) => {
     const onSelect = vi.fn();
+    const onSelectMember = vi.fn();
     render(
       <SynthPicker
         synths={FAMILY_SYNTHS}
         families={[TB_303_FAMILY]}
         owned={owned}
         synthId={synthId}
+        memberSlug={memberSlug}
         onSelect={onSelect}
+        onSelectMember={onSelectMember}
       />
     );
     fireEvent.click(screen.getByRole('button', { expanded: false }));
-    return onSelect;
+    return { onSelect, onSelectMember };
   };
   const options = () => within(screen.getByRole('listbox')).getAllByRole('option');
+  // By the name it leads with, not anywhere in it: TD-3's description is "A TB-303 copy".
+  const row = (name: string) => {
+    const o = options().find((x) =>
+      [...x.querySelectorAll('span')].some((span) => span.textContent === name)
+    );
+    if (!o) throw new Error(`no row for ${name}`);
+    return o;
+  };
 
-  it("lists a family as one entry with its members' makers and years", () => {
+  it('lists each member as a row of its own, under its own maker', () => {
     open('model-d');
-    expect(options()).toHaveLength(2);
-    const family = options()[1];
-    expect(family.textContent).toContain('TB-303');
-    expect(family.textContent).toContain('Behringer 2019 · Roland 1981 · Nobody 1997');
+    expect(options().map((o) => o.textContent)).toEqual([
+      expect.stringContaining('Model D'),
+      expect.stringContaining('TD-3'),
+      expect.stringContaining('Unmodelled'),
+      expect.stringContaining('TB-303'),
+    ]);
+    expect(row('Unmodelled').textContent).toContain('Not modelled');
+    expect(row('Unmodelled').textContent).toContain('1997 · mono');
   });
 
-  it('marks the family selected while one of its members is open', () => {
+  it("shows a playable row's panel thumbnail, and a blank in its place for an unmodelled one", () => {
+    open('model-d');
+    expect(row('TD-3').querySelector('img')?.getAttribute('src')).toBe(
+      '/synths/td-3/thumbnail.png'
+    );
+    expect(row('Unmodelled').querySelector('img')).toBeNull();
+    expect(row('Unmodelled').textContent).toContain('No panel');
+  });
+
+  it('marks only the member open as selected', () => {
     open('tb-303');
-    expect(options().map((o) => o.getAttribute('aria-selected'))).toEqual(['false', 'true']);
+    expect(options().map((o) => o.getAttribute('aria-selected'))).toEqual([
+      'false',
+      'false',
+      'false',
+      'true',
+    ]);
   });
 
-  it('opens the member the user owns', () => {
-    const onSelect = open('model-d', new Set(['roland-tb-303']));
-    fireEvent.click(options()[1]);
+  it('marks an unmodelled member selected while its blank panel shows, not the synth under it', () => {
+    open('tb-303', undefined, 'rebirth');
+    expect(row('Unmodelled').getAttribute('aria-selected')).toBe('true');
+    expect(row('TB-303').getAttribute('aria-selected')).toBe('false');
+  });
+
+  it('opens a modelled member as itself', () => {
+    const { onSelect } = open('model-d');
+    fireEvent.click(row('TB-303'));
     expect(onSelect).toHaveBeenCalledExactlyOnceWith('tb-303');
   });
 
-  it("opens the family's default member for a user who owns none of them", () => {
-    const onSelect = open('model-d', new Set(['moog-model-d']));
-    fireEvent.click(options()[1]);
-    expect(onSelect).toHaveBeenCalledExactlyOnceWith('td-3');
-  });
-
-  it('stays on the member open when its own family is chosen', () => {
-    const onSelect = open('tb-303');
-    fireEvent.click(options()[1]);
+  it("opens an unmodelled member over this synth when it is in this synth's family", () => {
+    const { onSelect, onSelectMember } = open('tb-303');
+    fireEvent.click(row('Unmodelled'));
+    expect(onSelectMember).toHaveBeenCalledExactlyOnceWith('tb-303', 'rebirth');
     expect(onSelect).not.toHaveBeenCalled();
     expect(screen.queryByRole('listbox')).toBeNull();
   });
 
-  it("finds a member by its own name, and opens that member, not the family's default", () => {
-    const onSelect = open('model-d');
+  it('opens an unmodelled member over the member the user owns, else the default', () => {
+    const owner = open('model-d', new Set(['roland-tb-303']));
+    fireEvent.click(row('Unmodelled'));
+    expect(owner.onSelectMember).toHaveBeenCalledExactlyOnceWith('tb-303', 'rebirth');
+  });
+
+  it("opens an unmodelled member over the family's default for a user who owns none of them", () => {
+    const { onSelectMember } = open('model-d', new Set(['moog-model-d']));
+    fireEvent.click(row('Unmodelled'));
+    expect(onSelectMember).toHaveBeenCalledExactlyOnceWith('td-3', 'rebirth');
+  });
+
+  it('leaves unmodelled members out when the page cannot show them', () => {
+    render(
+      <SynthPicker
+        synths={FAMILY_SYNTHS}
+        families={[TB_303_FAMILY]}
+        synthId="model-d"
+        onSelect={vi.fn()}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { expanded: false }));
+    expect(options()).toHaveLength(3);
+    expect(screen.queryByText('Unmodelled')).toBeNull();
+    // Still found by the family's name.
     fireEvent.change(screen.getByRole('searchbox', { name: 'Find a synth' }), {
-      target: { value: 'TB-303' },
+      target: { value: 'tb-303' },
     });
-    expect(options().map((o) => o.textContent)).toEqual([expect.stringContaining('Roland · 1981')]);
+    expect(options()).toHaveLength(2);
+  });
+
+  it('shows the empty box in place of a thumbnail that will not load', () => {
+    open('model-d');
+    const img = row('TD-3').querySelector('img');
+    if (!img) throw new Error('no thumbnail');
+    fireEvent.error(img);
+    expect(row('TD-3').querySelector('img')).toBeNull();
+    expect(row('TD-3').textContent).toContain('No panel');
+  });
+
+  it('finds a member by its maker, and opens that member', () => {
+    const { onSelect } = open('model-d');
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Find a synth' }), {
+      target: { value: 'roland' },
+    });
+    expect(options().map((o) => o.textContent)).toEqual([expect.stringContaining('TB-303')]);
     fireEvent.click(options()[0]);
     expect(onSelect).toHaveBeenCalledExactlyOnceWith('tb-303');
   });
 
+  it('finds every member of a family by the family name', () => {
+    open('model-d');
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Find a synth' }), {
+      target: { value: 'tb-303' },
+    });
+    expect(options()).toHaveLength(3);
+  });
+
   it('opens the first match on Enter, and moves into the list on the down arrow', () => {
-    const onSelect = open('model-d');
+    const { onSelect } = open('model-d');
     const search = screen.getByRole('searchbox', { name: 'Find a synth' });
     fireEvent.change(search, { target: { value: 'td' } });
     fireEvent.keyDown(search, { key: 'ArrowDown' });
     expect(document.activeElement).toBe(options()[0]);
     fireEvent.keyDown(search, { key: 'Enter' });
     expect(onSelect).toHaveBeenCalledExactlyOnceWith('td-3');
+  });
+
+  it('moves through the rows of every group with the arrow keys', () => {
+    open('model-d');
+    const all = options();
+    fireEvent.keyDown(all[1], { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(all[2]);
+    fireEvent.keyDown(all[2], { key: 'ArrowDown' });
+    expect(document.activeElement).toBe(all[3]);
   });
 
   it('says so when nothing matches, and starts afresh when opened again', () => {
@@ -255,11 +349,11 @@ describe('SynthPicker families (f-synth-families t-320)', () => {
     const trigger = screen.getByRole('button', { expanded: true });
     fireEvent.click(trigger);
     fireEvent.click(trigger);
-    expect(options()).toHaveLength(2);
+    expect(options()).toHaveLength(4);
   });
 
   it('opens nothing on Enter in an empty box', () => {
-    const onSelect = open('model-d');
+    const { onSelect } = open('model-d');
     fireEvent.keyDown(screen.getByRole('searchbox', { name: 'Find a synth' }), { key: 'Enter' });
     expect(onSelect).not.toHaveBeenCalled();
     expect(screen.getByRole('listbox')).toBeTruthy();

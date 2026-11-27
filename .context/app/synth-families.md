@@ -2,7 +2,7 @@
 
 An original, its revisions and the instruments that copy it are one **family** (`f-synth-families`).
 The TD-3 and the TB-303 are one, as are the Model 15 and the Grandmother, and the System 15, 35 and 55
-as sizes of one system. The synth picker shows a family as one entry. A version toggle on the player
+as sizes of one system. The synth picker lists each member as a row of its own. A version toggle on the player
 switches between its members. A member nobody has modelled yet still appears, as a blank panel saying
 what that member changed.
 
@@ -19,7 +19,7 @@ The owner's rulings (2026-11-26) are in the feature's journal.
 | Read                            | `lib/app/families/read.ts` (`listFamilies`, `getFamilyOf`)                |
 | Public API                      | `GET /api/v1/synths/families`, and `family` on `GET /api/v1/synths/:id`   |
 | Carrying a panel across (t-319) | `lib/app/synths/families/`                                                |
-| Picker entries, which opens     | `components/app/synth/family-entries.ts` (`pickerEntries`, `familyOpens`) |
+| Picker rows, which opens        | `components/app/synth/picker-entries.ts` (`pickerGroups`, `familyOpens`)  |
 | The toggle and its note         | `components/app/synth/family-toggle.tsx`                                  |
 | The carry across the navigation | `components/app/synth/family-carry.ts`                                    |
 | An unmodelled member's panel    | `components/app/synth/unmodelled-member.tsx`, `memberHref` in `routes.ts` |
@@ -201,12 +201,11 @@ stable (`synths.md`). A family with no map still translates, under shared ids on
 
 ## The picker and the toggle
 
-The picker (`synth-picker.tsx`) lists a family as one entry, where its first member is in the catalogue's order, with
-each member's maker and year. Choosing it opens the first member, in toggle order, that the signed-in user owns
-(`GET /api/v1/me/instruments`, matched on each member's instrument), else the family's default. Choosing the family
-you are already on keeps the member you have open: the toggle is what moves between them. The box over the list
-finds a synth by its name or maker, so a member is found as itself and opens as itself. A family is found by its name
-only when none of its members match on their own.
+The picker (`synth-picker.tsx`, `.context/app/synth-picker.md`) lists each member of a family as a row of its own,
+under its maker, so a member is found and opened as itself. An unmodelled member's row opens its blank panel: over the
+synth you are on when it is in that synth's family, else over the first member, in toggle order, that the signed-in
+user owns (`GET /api/v1/me/instruments`, matched on each member's instrument), else the family's default. The box
+finds every member of a family by the family's name.
 
 The **version toggle** sits by the caption on a synth with a family, one segment per modelled member the catalogue
 serves, then one per unmodelled member. A switch to a modelled member navigates to `/synths/<member>`, so the URL, saved

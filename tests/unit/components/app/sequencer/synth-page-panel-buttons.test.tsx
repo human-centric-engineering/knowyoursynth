@@ -71,6 +71,7 @@ function page(id: (typeof IDS)[number], steps: CatalogueSound['steps'] = []) {
     summary: 'A test synth.',
     design: 'neutral',
     definitionVersion: def.version,
+    kind: null,
     soundCount: 1,
   };
   const riff: CatalogueSound = {

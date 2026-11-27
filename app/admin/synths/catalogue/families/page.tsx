@@ -34,8 +34,8 @@ export default async function SynthFamiliesPage() {
           Families{' '}
           <FieldHelp title="Synth families">
             <p>
-              An original, its revisions and the instruments that copy it. The synth picker shows a
-              family as one entry, and the version toggle switches between its members.
+              An original, its revisions and the instruments that copy it. The synth picker lists
+              each member as a row of its own, and the version toggle switches between them.
             </p>
             <p className="mt-2">
               Saving a family makes it an admin&apos;s: the seed never overwrites it again. Every

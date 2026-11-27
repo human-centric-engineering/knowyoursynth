@@ -11,21 +11,23 @@
  * marks the ones they have starred. The star is not inside the list: its entries are listbox options, which cannot hold
  * a button of their own.
  *
- * A synth family (`f-synth-families` t-320) is one entry, with its members' makers and years. Choosing it opens the
- * member the user owns, else the family's default; the version toggle by the caption moves between members. The box
- * over the list finds a member by its own name, and that member opens as itself.
+ * The list (`f-synth-picker` t-328, `.context/app/synth-picker.md`): grouped under each maker's brand, every row
+ * leading with the synth's name and maker, then its year, kind, whether it plays and its description, with a thumbnail
+ * of the panel for a synth that plays. Each member of a synth family is a row of its own; one nobody has modelled opens
+ * as its family's blank panel (`onSelectMember`). The box finds a synth by name, maker, brand or family.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { SynthFamily } from '@/lib/app/families/read';
 import { StarButton, StarIcon } from '@/components/app/synth/favourites';
+import { synthThumbnailHref } from '@/components/app/synth/routes';
 import {
   familyOpens,
-  pickerEntries,
-  type PickerEntry,
+  pickerGroups,
+  type PickerRow,
   type PickerSynth,
-} from '@/components/app/synth/family-entries';
+} from '@/components/app/synth/picker-entries';
 
 const NO_FAMILIES: readonly SynthFamily[] = [];
 const NONE_OWNED: ReadonlySet<string> = new Set();
@@ -37,7 +39,15 @@ export interface SynthPickerProps {
   /** The databank instruments the signed-in user owns, by id: a family opens on the member they own. */
   owned?: ReadonlySet<string>;
   synthId: string;
+  /** The unmodelled family member whose blank panel is showing, by slug, if any: its row is the one selected. */
+  memberSlug?: string | null;
   onSelect: (id: string) => void;
+  /**
+   * An unmodelled family member chosen: show its blank panel over `synthId`, the family's synth it opens on (this one
+   * when the member is in this synth's family). Without it, those members are not listed; a synth is still found by
+   * its family's name.
+   */
+  onSelectMember?: (synthId: string, slug: string) => void;
   /** Whether a synth is starred; `null` when no star shows (signed out, or still loading). */
   isStarred?: (id: string) => boolean | null;
   onStar?: (id: string) => void;
@@ -50,7 +60,9 @@ export function SynthPicker({
   families = NO_FAMILIES,
   owned = NONE_OWNED,
   synthId,
+  memberSlug = null,
   onSelect,
+  onSelectMember,
   isStarred,
   onStar,
   variant = 'button',
@@ -61,7 +73,13 @@ export function SynthPicker({
   const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
-  const entries = useMemo(() => pickerEntries(synths, families, query), [synths, families, query]);
+  const listsMembers = !!onSelectMember;
+  const groups = useMemo(
+    () => pickerGroups(synths, families, query, { unmodelled: listsMembers }),
+    // Whether there is a handler, not which: the page passes a new one each render.
+    [synths, families, listsMembers, query]
+  );
+  const rows = useMemo(() => groups.flatMap((g) => g.rows), [groups]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -90,19 +108,17 @@ export function SynthPicker({
   useEffect(() => {
     if (!open || !list.current) return;
     const sel =
-      list.current.querySelector<HTMLElement>('[aria-selected="true"]') ||
-      (list.current.firstElementChild instanceof HTMLElement
-        ? list.current.firstElementChild
-        : null);
+      list.current.querySelector<HTMLElement>('[role="option"][aria-selected="true"]') ||
+      list.current.querySelector<HTMLElement>('[role="option"]');
     if (sel) sel.focus();
   }, [open]);
 
   const step = (from: HTMLElement, dir: number) => {
     if (!list.current) return;
-    const items = [...list.current.children];
+    const items = [...list.current.querySelectorAll<HTMLElement>('[role="option"]')];
     const i = items.indexOf(from);
     const next = items[(i + dir + items.length) % items.length];
-    if (next instanceof HTMLElement) next.focus();
+    next?.focus();
   };
 
   const close = () => {
@@ -113,26 +129,36 @@ export function SynthPicker({
     close();
     onSelect(id);
   };
-  // A family you are already on stays on the member you have open: the toggle is what moves between them.
-  const choose = (e: PickerEntry) => {
-    if (e.kind === 'synth') return pick(e.synth.id);
-    if (e.synths.some((s) => s.id === synthId)) return close();
-    const opens = familyOpens(e.family, e.synths, owned);
-    if (opens) pick(opens);
-    else close();
+  // An unmodelled member opens over this synth when it is in this synth's family, else over the family's synth the
+  // user owns, or its default.
+  const choose = (row: PickerRow) => {
+    if (row.synthId) return pick(row.synthId);
+    const rf = row.family;
+    close();
+    if (!rf || !onSelectMember) return;
+    const offered = rf.family.members.flatMap(
+      (m) => (m.synthId && synths.find((s) => s.id === m.synthId)) || []
+    );
+    const over = offered.some((s) => s.id === synthId)
+      ? synthId
+      : familyOpens(rf.family, offered, owned);
+    if (over) onSelectMember(over, rf.member.slug);
   };
-  const isOn = (e: PickerEntry) =>
-    e.kind === 'synth' ? e.synth.id === synthId : e.synths.some((s) => s.id === synthId);
-  const firstOption = () =>
-    list.current?.firstElementChild instanceof HTMLElement ? list.current.firstElementChild : null;
+  const isOn = (row: PickerRow) =>
+    row.synthId
+      ? row.synthId === synthId && !memberSlug
+      : !!memberSlug &&
+        row.family?.member.slug === memberSlug &&
+        row.family.family.members.some((m) => m.synthId === synthId);
+  const firstOption = () => list.current?.querySelector<HTMLElement>('[role="option"]') ?? null;
 
   const onSearchKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       firstOption()?.focus();
-    } else if (e.key === 'Enter' && query.trim() && entries[0]) {
+    } else if (e.key === 'Enter' && query.trim() && rows[0]) {
       e.preventDefault();
-      choose(entries[0]);
+      choose(rows[0]);
     }
   };
 
@@ -205,7 +231,7 @@ export function SynthPicker({
       )}
 
       {open && (
-        <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(360px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
+        <div className="absolute top-[calc(100%+6px)] left-0 z-40 flex w-[min(460px,calc(100vw-64px))] flex-col gap-1 rounded-xl border border-(--kys-line) bg-(--kys-raised) p-1 shadow-2xl">
           <input
             ref={search}
             type="search"
@@ -213,31 +239,38 @@ export function SynthPicker({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onSearchKey}
             aria-label="Find a synth"
-            placeholder="Find a synth"
+            placeholder="Find a synth by name or maker"
             className="w-full rounded-lg border border-(--kys-line) bg-(--kys-surface) px-2.5 py-1.5 text-sm"
           />
           <div
             ref={list}
             role="listbox"
             aria-label="Choose a synth"
-            className="kys-scroll max-h-[min(70vh,480px)] overflow-y-auto"
+            // Scroll padding the height of a brand's sticky heading, so a row the arrow keys reach is not under it.
+            className="kys-scroll max-h-[min(70vh,520px)] scroll-pt-9 overflow-y-auto"
           >
-            {entries.map((e) => (
-              <PickerOption
-                key={e.kind === 'synth' ? e.synth.id : `family:${e.family.id}`}
-                entry={e}
-                on={isOn(e)}
-                starred={
-                  e.kind === 'synth'
-                    ? !!isStarred?.(e.synth.id)
-                    : e.synths.some((s) => isStarred?.(s.id))
-                }
-                onChoose={() => choose(e)}
-                onKeyDown={onItemKey}
-              />
+            {groups.map((g) => (
+              <div key={g.label} role="group" aria-label={g.label}>
+                <div
+                  aria-hidden="true"
+                  className="kys-label sticky top-0 z-10 bg-(--kys-raised) px-2.5 pt-2.5 pb-1 text-(--kys-accent)"
+                >
+                  {g.label}
+                </div>
+                {g.rows.map((row) => (
+                  <PickerOption
+                    key={row.key}
+                    row={row}
+                    on={isOn(row)}
+                    starred={!!row.synthId && !!isStarred?.(row.synthId)}
+                    onChoose={() => choose(row)}
+                    onKeyDown={onItemKey}
+                  />
+                ))}
+              </div>
             ))}
           </div>
-          {entries.length === 0 && (
+          {rows.length === 0 && (
             <p className="px-2.5 py-2 text-[13px] text-(--kys-muted)">No synth matches that.</p>
           )}
         </div>
@@ -247,28 +280,23 @@ export function SynthPicker({
 }
 
 function PickerOption({
-  entry,
+  row,
   on,
   starred,
   onChoose,
   onKeyDown,
 }: {
-  entry: PickerEntry;
+  row: PickerRow;
   on: boolean;
   starred: boolean;
   onChoose: () => void;
   onKeyDown: (e: KeyboardEvent<HTMLButtonElement>) => void;
 }) {
-  const name = entry.kind === 'synth' ? entry.synth.name : entry.family.name;
-  // A family names each of its members' makers and years: the original's and every copy's.
-  const made =
-    entry.kind === 'synth'
-      ? `${entry.synth.maker} · ${entry.synth.year}`
-      : entry.family.members.map((m) => `${m.instrument.maker} ${m.instrument.year}`).join(' · ');
-  const heritage =
-    entry.kind === 'synth'
-      ? entry.synth.heritage
-      : entry.family.members.map((m) => m.label).join(', ');
+  const { synthId } = row;
+  const plays = synthId !== null;
+  // A thumbnail that will not load (the route's 404 when a panel will not draw) gives way to the empty box.
+  const [noPicture, setNoPicture] = useState(false);
+  const made = [row.year, row.kind].filter(Boolean).join(' · ');
   return (
     <button
       type="button"
@@ -279,23 +307,51 @@ function PickerOption({
       className={`flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left ${on ? 'bg-(--kys-accent)/12' : 'hover:bg-(--kys-surface)'}`}
     >
       <span
-        className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${on ? 'bg-(--kys-accent)' : 'bg-transparent'}`}
+        className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${on ? 'bg-(--kys-accent)' : 'bg-transparent'}`}
       />
-      <span className="min-w-0">
+      {synthId !== null && !noPicture ? (
+        // A picture of a page, from the app's own route: next/image would only re-encode it.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={synthThumbnailHref(synthId)}
+          alt=""
+          width={92}
+          height={38}
+          loading="lazy"
+          decoding="async"
+          onError={() => setNoPicture(true)}
+          className="mt-0.5 h-[38px] w-[92px] shrink-0 rounded bg-(--kys-desk) object-contain object-left"
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className="kys-label mt-0.5 grid h-[38px] w-[92px] shrink-0 place-items-center rounded border border-dashed border-(--kys-line) text-[9px] text-(--kys-faint)"
+        >
+          No panel
+        </span>
+      )}
+      <span className="flex min-w-0 flex-col gap-0.5">
         <span className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-sm font-semibold">{name}</span>
+          <span className={`text-sm font-semibold ${plays ? '' : 'text-(--kys-muted)'}`}>
+            {row.name}
+          </span>
+          <span className="text-sm text-(--kys-muted)">{row.maker}</span>
           {starred && (
             <span className="self-center text-(--kys-accent)" title="In your favourites">
               <StarIcon filled />
               <span className="sr-only">(in your favourites)</span>
             </span>
           )}
-          <span className="kys-label text-(--kys-faint)">{made}</span>
         </span>
-        <span className="mt-0.5 block text-[13px] leading-snug text-(--kys-muted)">
-          {entry.kind === 'family' && <span className="sr-only">Family: </span>}
-          {heritage}
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+          {made && <span className="kys-label text-(--kys-faint)">{made}</span>}
+          <span
+            className={`kys-label rounded px-1.5 text-[11px] ${plays ? 'border border-(--kys-good)/55 text-(--kys-good)' : 'border border-dashed border-(--kys-line) text-(--kys-faint)'}`}
+          >
+            {plays ? 'Plays' : 'Not modelled'}
+          </span>
         </span>
+        <span className="line-clamp-2 text-[13px] leading-snug text-(--kys-muted)">{row.text}</span>
       </span>
     </button>
   );

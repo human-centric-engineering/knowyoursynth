@@ -1,6 +1,7 @@
 import { LRUCache } from 'lru-cache';
 import { ImageResponse } from 'next/og';
 
+import { drawSlot, loadDrawingCode } from '@/components/app/sharing/drawing';
 import type { PanelImageInput } from '@/components/app/sharing/panel-image';
 import {
   SOCIAL_CARD_PANEL_BOX,
@@ -26,40 +27,10 @@ import { logger } from '@/lib/logging';
  *
  * - drawn panels are kept in memory (`kept`), under a hash of everything they are drawn from: a crawler's repeat visit
  *   costs a read, an edit is a new picture, and the unfurlers that fetch one link at the same moment share one drawing;
- * - at most `DRAWING_AT_ONCE` are drawn at a time (`drawSlot`). The rasteriser runs on Node's thread pool, four threads
- *   by default, which the rest of the app's file, DNS and crypto work shares;
+ * - they wait their turn in the queue every server-drawn panel shares (`drawSlot`, `drawing.ts`);
  * - the drawing code, native rasteriser included, is loaded on first use, inside the fallback: a server where it
  *   cannot load serves text cards rather than errors.
  */
-
-/** At most this many panels are drawn at once; the rest wait their turn. */
-const DRAWING_AT_ONCE = 2;
-let drawing = 0;
-const waiting: (() => void)[] = [];
-
-/** `draw`, once a drawing slot is free. A finished drawing hands its slot straight to the next in line. */
-async function drawSlot<T>(draw: () => Promise<T>): Promise<T> {
-  if (drawing < DRAWING_AT_ONCE) drawing++;
-  else await new Promise<void>((resolve) => waiting.push(resolve));
-  try {
-    return await draw();
-  } finally {
-    const next = waiting.shift();
-    if (next) next();
-    else drawing--;
-  }
-}
-
-let drawingCode: Promise<typeof import('@/components/app/sharing/panel-image')> | undefined;
-
-/** The drawing code, loaded once and shared by every drawing; a failed load is tried again next time. */
-function loadDrawingCode(): Promise<typeof import('@/components/app/sharing/panel-image')> {
-  drawingCode ??= import('@/components/app/sharing/panel-image').catch((err: unknown) => {
-    drawingCode = undefined;
-    throw err;
-  });
-  return drawingCode;
-}
 
 /** A panel, drawn for the card; undefined when it could not be (logged), which is never kept. */
 async function draw(input: PanelImageInput): Promise<SocialCardPanel | undefined> {

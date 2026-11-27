@@ -26,6 +26,7 @@ const synth = (over: Partial<CatalogueSynth>): CatalogueSynth => ({
   year: 2018,
   heritage: 'Modelled on the 1970 Minimoog Model D',
   summary: '',
+  kind: null,
   design: 'neutral',
   definitionVersion: 1,
   soundCount: 3,

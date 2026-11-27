@@ -3050,6 +3050,24 @@ function Synth({
     if (pushedBlank(window.history.state)) window.history.back();
     else window.history.replaceState(null, '', synthHref(synthId, view));
   };
+  // A synth chosen in the picker (`f-synth-picker` t-328). This one again leaves a blank panel for its own; another
+  // member of its family is reached as the version toggle reaches it, with the panel carried across.
+  const pickSynth = (id: string) => {
+    if (id === synthId) {
+      if (blankSlug) hideBlank();
+      return;
+    }
+    if (detail.family?.members.some((m) => m.synthId === id)) void switchMember(id);
+    else switchSynth(id);
+  };
+  // An unmodelled family member chosen in the picker: its blank panel over this page when it is in this synth's family,
+  // else over the page of the family's synth the picker chose.
+  const pickMember = (over: string, slug: string) => {
+    // A switch to a sibling still loading its definition is overtaken, as `switchSynth` overtakes one.
+    switchSeq.current += 1;
+    if (over === synthId) showBlank(slug);
+    else router.push(memberHref(over, slug, view), { transitionTypes: ['synth-change'] });
+  };
   // The browser's Back and Forward between this page and a member's blank panel. The address is written by hand above,
   // not through the router, which would render the page again from the server for what is only this page's own state.
   // Read on mount too: Back to a member's address from another page restores this page from the router's cache, as it
@@ -3294,7 +3312,9 @@ function Synth({
                       families={families}
                       owned={owned}
                       synthId={synthId}
-                      onSelect={switchSynth}
+                      memberSlug={blankSlug}
+                      onSelect={pickSynth}
+                      onSelectMember={pickMember}
                       isStarred={(id) => favourites.isOn({ kind: 'synth', synthId: id })}
                       onStar={(id) => favourites.toggle({ kind: 'synth', synthId: id })}
                     />

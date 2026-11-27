@@ -108,6 +108,7 @@ const MODEL_D_SYNTH: CatalogueSynth = {
   summary: 'Three oscillators.',
   design: 'neutral',
   definitionVersion: def.version,
+  kind: null,
   soundCount: 1,
 };
 

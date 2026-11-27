@@ -278,6 +278,7 @@ beforeEach(() => {
         summary: '',
         design: 'NEUTRAL',
         _count: { sounds: 0 },
+        bankInstruments: [],
       },
     ]),
   };
