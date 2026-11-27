@@ -158,7 +158,7 @@ export function publicProfileDelegates(db: PublicProfileDb) {
       findMany: vi.fn(async (args: { where: { listed: boolean } }) =>
         db.synths
           .filter((r) => r.listed === args.where.listed)
-          .map((r) => ({ ...r, _count: { sounds: 0 } }))
+          .map((r) => ({ ...r, _count: { sounds: 0 }, bankInstruments: [] }))
       ),
     },
     userSound: {

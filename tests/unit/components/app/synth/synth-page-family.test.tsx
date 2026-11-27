@@ -510,3 +510,71 @@ describe('an unmodelled member (t-321)', () => {
     }
   });
 });
+
+describe('the synth picker on a family member (f-synth-picker t-328)', () => {
+  const openPicker = () => {
+    const trigger = document.querySelector<HTMLElement>('[aria-haspopup="listbox"]');
+    if (!trigger) throw new Error('no picker on the page');
+    fireEvent.click(trigger);
+    return within(screen.getByRole('listbox', { name: 'Choose a synth' }));
+  };
+  const pickRow = (name: string) => {
+    const row = openPicker()
+      .getAllByRole('option')
+      .find((o) => [...o.querySelectorAll('span')].some((s) => s.textContent === name));
+    if (!row) throw new Error(`no row for ${name}`);
+    fireEvent.click(row);
+  };
+
+  it("shows a member nobody has modelled as this page's blank panel, without a navigation", () => {
+    page(0);
+    pickRow('Unmodelled');
+    expect(blankFace()).not.toBeNull();
+    expect(window.location.pathname + window.location.search).toBe('/synths/td-3?member=rebirth');
+    expect(router.push).not.toHaveBeenCalled();
+  });
+
+  it('reaches a sibling as the toggle does, with the panel carried across', async () => {
+    leaveTd3();
+    const first = page(0);
+    pickRow('TB-303');
+    await waitFor(() => expect(router.push).toHaveBeenCalledOnce());
+    expect(router.push.mock.calls[0][0]).toMatch(/^\/synths\/tb-303(\?|$)/);
+    first.unmount();
+    page(1);
+    expect(await screen.findByText(/Panel carried over from the TD-3/)).toBeTruthy();
+  });
+
+  it('leaves the blank panel for the synth under it when that synth is chosen', () => {
+    vi.spyOn(window.history, 'back').mockImplementation(() => undefined);
+    page(0);
+    pickRow('Unmodelled');
+    expect(blankFace()).not.toBeNull();
+    pickRow('TD-3');
+    expect(blankFace()).toBeNull();
+    expect(shown(instrument())).toBe(true);
+    expect(router.push).not.toHaveBeenCalled();
+    vi.mocked(window.history.back).mockRestore();
+  });
+
+  it("opens a member of another family over that family's synth, by navigation", () => {
+    const tb303Only: SynthFamily = {
+      ...TB_303_FAMILY,
+      id: 'other',
+      defaultMember: 'tb-303',
+      members: TB_303_FAMILY.members.filter((m) => m.synthId !== 'td-3'),
+    };
+    render(
+      <SynthPage
+        detail={detailOf(SYNTHS[0], null)}
+        synths={SYNTHS}
+        families={[tb303Only]}
+        viewParam={null}
+      />
+    );
+    pickRow('Unmodelled');
+    expect(router.push).toHaveBeenCalledOnce();
+    expect(router.push.mock.calls[0][0]).toBe('/synths/tb-303?member=rebirth');
+    expect(blankFace()).toBeNull();
+  });
+});
