@@ -83,7 +83,7 @@ export const VEL_DECAY = 0.3;
 const LN_1000 = Math.log(1000);
 /** The clock's top, as a share of the sample rate. */
 const CLOCK_MAX = 0.2;
-/** The NOISE / EXT channel's level with its CV added: past the knob's full turn it clips (the manual: it may clip). */
+/** The NOISE / EXT channel's top level with its CV added, past the knob's full turn (the manual: there it may clip). */
 const NOISE_MAX = 1.6;
 /** A gate or edge input is high above this (full scale; 2.5 V). */
 const HIGH = 0.5;
@@ -125,7 +125,10 @@ export function createDfam(
   const lock = createBeatLock(sr);
 
   let P: DfamParams | null = null;
-  let follow = false;
+  // whether it runs to the app's clock (`follow`), and whether a lit RUN / STOP waits for that clock's run: following,
+  // or on the EDGE's MIDI or USB clock (`perBeat`), which nothing but the transport moves
+  let follow = false,
+    waits = false;
   // the sequencer: its step, whether the next clock plays the step it is on (just started), its clock's phase
   let st = 0,
     armed = true,
@@ -134,7 +137,8 @@ export function createDfam(
   // the beat lock's grid: where the current step began, in beats, and how long it is (0 = to be measured)
   let gridAt = 0,
     gridLen = 0,
-    locked = false;
+    locked = false,
+    free = false;
   // edges: ADV / CLOCK, TRIGGER and RUN / STOP last sample, and whether RUN / STOP was cabled
   let advPrev = false,
     trigPrev = false,
@@ -154,13 +158,15 @@ export function createDfam(
 
   function set(p: DfamParams, follows = false) {
     const first = !P;
-    const followChanged = follows !== follow;
+    const w = follows || (p.perBeat || 0) > 0;
+    const waitsChanged = w !== waits;
     follow = follows;
+    waits = w;
     // a change of RUN / STOP, or of whether it waits for the transport, sets the sequencer going or stops it
-    if ((first || followChanged || p.run !== P!.run) && !runCab) {
+    if ((first || waitsChanged || p.run !== P!.run) && !runCab) {
       const was = running;
-      // following the app's clock, a lit RUN / STOP waits for its run; otherwise it starts on this sample
-      running = p.run && (!follow || lock.running());
+      // waiting on the app's clock, a lit RUN / STOP waits for its run; otherwise it starts on this sample
+      running = p.run && (!waits || lock.running());
       if (running && (first || !was)) {
         armed = true;
         ph = 1;
@@ -177,7 +183,7 @@ export function createDfam(
     running = false;
     ph = 0;
     gridAt = gridLen = 0;
-    locked = false;
+    locked = free = false;
     advPrev = trigPrev = runPrev = runCab = false;
     pNext = pTrig = false;
     trigOut = 0;
@@ -222,7 +228,7 @@ export function createDfam(
 
     // ── the app's master clock ──
     const le = lock.step();
-    if (follow && !runCab) {
+    if (waits && !runCab) {
       if (le === 'start') {
         // a run starts on step 1 at its first beat, which plays first
         st = 0;
@@ -243,7 +249,7 @@ export function createDfam(
       // a fresh cable takes over from where the sequencer is; an unplugged one hands it back to the panel
       runPrev = running;
       if (!rc) {
-        running = p.run && (!follow || lock.running());
+        running = p.run && (!waits || lock.running());
         // handed back running, it starts again on the step it is on, as any start does
         if (running && !runPrev) {
           armed = true;
@@ -253,7 +259,7 @@ export function createDfam(
       }
     }
     if (rc) {
-      const g = ev(DI.dfmRun) > HIGH && (!follow || lock.running());
+      const g = ev(DI.dfmRun) > HIGH && (!waits || lock.running());
       if (g && !runPrev) {
         running = true;
         armed = true;
@@ -272,6 +278,15 @@ export function createDfam(
     const per = p.perBeat && p.perBeat > 0 ? p.perBeat : 0;
     const len = (bps: number): number => (per ? 1 / per : snapStep(hz, bps));
     const nowLocked = !advCab && (per > 0 || (follow && hz <= LOCK_MAX_HZ));
+    const nowFree = !advCab && !nowLocked;
+    // handed to TEMPO mid-run (TEMPO up past 20 Hz, ADV / CLOCK unplugged), the clock carries on from where the step
+    // is rather than ticking at once; a start still plays at once
+    if (nowFree && !free && !armed)
+      ph =
+        locked && gridLen > 0 && lock.running()
+          ? clamp((lock.beat() - gridAt) / gridLen, 0, 0.999)
+          : 0;
+    free = nowFree;
     if (advCab) {
       // ADV / CLOCK takes over from TEMPO; it moves the sequencer only while it runs
       if (running && adv && !advPrev) seqFire = tick();
@@ -368,7 +383,7 @@ export function createDfam(
     else if (name === 'trigger') pTrig = true;
   }
 
-  // the lock hears the transport even while the voice is another synth's, so it knows whether a run is going on its return
+  // taken even with the voice on another synth, so the stop the engine sends as the voice leaves a run is not lost
   function clock(at: ClockAt, from?: number) {
     lock.clock(at, from);
   }

@@ -71,7 +71,7 @@ export type SynthMessage =
   /**
    * The app's master clock, to a synth with a sequencer of its own (`f-own-sequencer`): a run starts, a pulse at
    * {@link CLOCK_PPQ} a beat, the run stops. The pattern player sends it while the synth's settings `follow`; the voice's
-   * own riff player makes it for the Subharmonicon.
+   * own riff player makes it for the Subharmonicon, and for a 960 or a DFAM that follows.
    */
   /** The app's clock; a start's `from` is its first pulse, counted from the run's first beat (`beat-lock.ts`). */
   | { type: 'clock'; at: ClockAt; from?: number }
@@ -745,6 +745,8 @@ function createVoice(
   let velp = 0,
     velpFire = false;
   let retrigFlag = false;
+  /** A key was struck since the DFAM's core last ran, legato or not: the EDGE's MIDI note fires its bus every time. */
+  let keyStrike = false;
   /** A note started on this sample (the envelopes' retrigger), kept for `mix.vpm`'s internal envelope. */
   let noteHit = false;
   // EngineParams `acid` (TB-303): whether the note playing is accented, and the accent sweep circuit's capacitor
@@ -1230,8 +1232,9 @@ function createVoice(
     if (P.oscAssign) assignOscs(n);
     assignNotes(wasHeld);
     if (!wasHeld || (P.trig.retrig && !under)) retrigFlag = true;
-    // the key timing pulse comes from every key, legato or not
+    // the key timing pulse comes from every key, legato or not, as does the DFAM's bus
     velpFire = true;
+    keyStrike = true;
     gate = 1;
     if (P.solar) solar.key(n, true);
     if (!part && onEvent) onEvent({ type: 'note', n, on: true });
@@ -1386,7 +1389,7 @@ function createVoice(
     if (old) phrasePos = Math.min(Math.round((phrasePos * phrase!.len) / old), phrase!.len - 1);
   }
   /**
-   * The app's clock to the synth's own sequencer: the Subharmonicon's, or the Moog 960 (`f-own-sequencer`). A run's
+   * The app's clock to the synth's own sequencer: the Subharmonicon's, the Moog 960's or the DFAM's (`f-own-sequencer`). A run's
    * messages go to the engine that took its start; if the voice's settings move to the other engine mid-run, the first
    * engine is stopped and the other started where the run is (the Subharmonicon only on a sixteenth, as it counts its
    * clocks from its start), so neither is left running or waiting on a start that never comes.
@@ -2318,7 +2321,7 @@ function createVoice(
       // ── phrase player ──
       if (phrase) {
         // The riff is the master clock of a synth's own sequencer, as the pattern player is (`f-own-sequencer`): the
-        // Subharmonicon's, or a 960 that follows the clock. A start, then pulses at CLOCK_PPQ a beat, each sent before
+        // Subharmonicon's, or a 960 or a DFAM that follows the clock. A start, then pulses at CLOCK_PPQ a beat, each sent before
         // the riff's notes on its sample so a key there finds the sequencers running.
         if (p.subharm || ((mg || p.dfam) && p.follow)) {
           if (!phrase.clocked) {
@@ -2333,7 +2336,7 @@ function createVoice(
             ownClock('pulse');
           }
         } else if (phrase.clocked) {
-          // the voice no longer follows (it has left the Subharmonicon, or the 960 is at FREE): its run ends, and a start
+          // the voice no longer follows (it has left the Subharmonicon, or the 960 or DFAM is at FREE): its run ends, and a start
           // is owed if it comes back
           phrase.clocked = false;
           ownClock('stop');
@@ -2642,7 +2645,8 @@ function createVoice(
           break core;
         }
         // the DFAM's clock, sequencer and envelopes come first, so the oscillators hear this sample's step
-        if (p.dfam) dfam.step(hitKey, vel);
+        if (p.dfam) dfam.step(keyStrike, vel);
+        keyStrike = false;
         // ── oscillators ──
         const pmAll = ev(DI.pitchAll);
         if (dAmt > 0) {

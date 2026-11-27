@@ -428,6 +428,26 @@ describe('dfam core: following the app’s clock', () => {
     expect(edges(r.run(100, ['dfmTrig'], 0.8).dfmTrig)).toEqual([0]);
   });
 
+  it('handed from the lock to TEMPO mid-run, it carries on from where the step is rather than ticking at once', () => {
+    // 2 Hz at 120 BPM: a step a beat, locked; then TEMPO up to 100 Hz, free
+    const r = rig(dfam({ run: true, tempo: 2 }), true);
+    // a quarter of the way into the second step
+    clocked(r, 120, 1.25);
+    r.core.set(dfam({ run: true, tempo: 100 }), true);
+    const at = edges(r.run(2000, ['dfmTrig']).dfmTrig);
+    // the rest of the step at 100 Hz: three quarters of 480 samples, not on the first sample
+    expect(at[0]).toBeGreaterThan(300);
+    expect(at[0]).toBeLessThan(420);
+  });
+
+  it('on perBeat without following, a lit RUN / STOP waits, so the voice can go idle', () => {
+    const r = rig(dfam({ run: true, tempo: 10, perBeat: 4 }));
+    expect(edges(r.run(SR / 2, ['dfmTrig']).dfmTrig)).toHaveLength(0);
+    expect(r.core.busy()).toBe(false);
+    // and a key still fires the bus
+    expect(edges(r.run(100, ['dfmTrig'], 0.8).dfmTrig)).toEqual([0]);
+  });
+
   it('runs free above 20 Hz, within the run', () => {
     const r = rig(dfam({ run: true, tempo: 100 }), true);
     const at = clocked(r, 120, 1);
@@ -478,6 +498,27 @@ describe('dfam in the voice', () => {
       events.flatMap((e) => (e.type === 'meter' && e.seq != null ? [e.seq] : []))
     );
     expect(seqs.size).toBeGreaterThanOrEqual(3);
+  });
+
+  it('every key fires the bus while stopped, a legato one too', () => {
+    const short = { decay: 0, min: 0.005, max: 10, attack: 0.001 };
+    const p = voice(
+      { run: false, eg: [short, short, short] },
+      {
+        trig: { retrig: false, drone: false, repeat: false },
+      }
+    );
+    const { out } = render(p, {
+      len: 9600,
+      events: [
+        [0, { type: 'noteOn', n: 60, v: 0.9 }],
+        [4864, { type: 'noteOn', n: 64, v: 0.9 }],
+      ],
+    });
+    expect(rms(out, 0, 1000)).toBeGreaterThan(0.01);
+    // the first hit has died away by the second key, which strikes it again
+    expect(rms(out, 4000, 4864)).toBeLessThan(1e-4);
+    expect(rms(out, 4864, 6000)).toBeGreaterThan(0.01);
   });
 
   it('ADVANCE and TRIGGER reach the core through press messages', () => {
