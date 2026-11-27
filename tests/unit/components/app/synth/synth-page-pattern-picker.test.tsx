@@ -158,6 +158,7 @@ const MODEL_D: CatalogueSynth = {
   summary: 'A test synth.',
   design: 'neutral',
   definitionVersion: def.version,
+  kind: null,
   soundCount: 2,
 };
 const detail: SynthDetail = {

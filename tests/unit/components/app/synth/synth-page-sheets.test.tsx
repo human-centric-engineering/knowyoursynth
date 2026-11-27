@@ -155,6 +155,7 @@ const OTHER_SYNTH: CatalogueSynth = {
   summary: 'Six voices.',
   design: 'neutral',
   definitionVersion: 1,
+  kind: null,
   soundCount: 0,
 };
 const MODEL_D_SYNTH: CatalogueSynth = {
@@ -166,6 +167,7 @@ const MODEL_D_SYNTH: CatalogueSynth = {
   summary: 'Three oscillators and noise feed a mixer, then a ladder filter.',
   design: 'neutral',
   definitionVersion: def.version,
+  kind: null,
   soundCount: 2,
 };
 

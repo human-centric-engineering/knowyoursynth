@@ -28,6 +28,7 @@ const synth = (id: string, maker: string, name: string): CatalogueSynth => ({
   summary: '',
   design: 'neutral',
   definitionVersion: 1,
+  kind: null,
   soundCount: 0,
 });
 

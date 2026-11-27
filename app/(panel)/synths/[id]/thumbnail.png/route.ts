@@ -1,0 +1,40 @@
+import { panelThumbnail, thumbnailKey } from '@/components/app/sharing/panel-thumbnail';
+import { getListedSynthDesign } from '@/lib/app/catalogue/read';
+import { getSynthDef } from '@/lib/app/synths/defs';
+
+/**
+ * A synth's panel as a small picture, for its row in the synth picker (`f-synth-picker` t-328): `panelThumbnail`, as
+ * the page opens the panel, in the synth's design. Only a synth the catalogue serves has one; any other id is a 404.
+ *
+ * A page route, beside the share card's `opengraph-image`, rather than one under `/api/v1`: the picker asks for every
+ * synth's at once, which the API's per-visitor limit is not sized for, and like that card it is a picture of a page,
+ * not data. It is cheap to repeat: the picture is kept in memory, the response is cached for an hour and revalidated
+ * by its ETag, which changes with the synth's definition and design.
+ */
+
+const CACHE_CONTROL = 'public, max-age=3600, stale-while-revalidate=86400';
+
+const notFound = () => new Response(null, { status: 404 });
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+): Promise<Response> {
+  const { id } = await params;
+  const def = getSynthDef(id);
+  const design = def ? await getListedSynthDesign(id) : null;
+  if (!def || !design) return notFound();
+
+  const etag = thumbnailKey(def, design);
+  const headers = { ETag: etag, 'Cache-Control': CACHE_CONTROL };
+  // Its own 304 rather than `checkConditional`'s, whose directive is the API's: this one keeps the picture's.
+  if (request.headers.get('If-None-Match') === etag)
+    return new Response(null, { status: 304, headers });
+
+  const png = await panelThumbnail(def, design);
+  // A panel that will not draw has no picture; the picker shows the row without one.
+  if (!png) return notFound();
+  return new Response(new Uint8Array(png), {
+    headers: { ...headers, 'Content-Type': 'image/png' },
+  });
+}

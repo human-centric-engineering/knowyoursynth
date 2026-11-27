@@ -82,6 +82,7 @@ const synth = (id: 'td-3' | 'tb-303', maker: string, year: number): CatalogueSyn
     summary: 'A bass line.',
     design: 'neutral',
     definitionVersion: def.version,
+    kind: null,
     soundCount: 0,
   };
 };

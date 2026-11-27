@@ -50,6 +50,11 @@ export function memberHref(id: string, member: string, view: PanelView = DEFAULT
   return `/synths/${encodeURIComponent(id)}?member=${encodeURIComponent(member)}${q ? `&view=${q}` : ''}`;
 }
 
+/** A synth's panel as a small picture, for its row in the synth picker (`f-synth-picker` t-328). */
+export function synthThumbnailHref(id: string): string {
+  return `/synths/${encodeURIComponent(id)}/thumbnail.png`;
+}
+
 /** A sound someone shared, by its public address (`f-sharing`): the synth's page with it loaded, and the view as above. */
 export function sharedSoundHref(id: string, slug: string, view: PanelView = DEFAULT_VIEW): string {
   const q = viewQuery(view);

@@ -14,7 +14,13 @@ const MINIMOOG: FamilyMember = {
   slug: 'minimoog',
   label: 'Minimoog',
   synthId: null,
-  instrument: { id: 'moog-minimoog', name: 'Minimoog Model D', maker: 'Moog', year: '1970' },
+  instrument: {
+    id: 'moog-minimoog',
+    name: 'Minimoog Model D',
+    maker: 'Moog',
+    year: '1970',
+    kind: 'mono',
+  },
   differences: 'The original, with a wooden case.\n\nIts oscillators drift as it warms up.',
 };
 

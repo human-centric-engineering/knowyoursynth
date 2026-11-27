@@ -128,6 +128,7 @@ const TB303: CatalogueSynth = {
   summary: 'A bass line.',
   design: 'neutral',
   definitionVersion: tb303.version,
+  kind: null,
   soundCount: 0,
 };
 

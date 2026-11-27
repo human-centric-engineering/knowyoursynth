@@ -49,6 +49,11 @@ export interface CatalogueSynth {
   year: number;
   heritage: string;
   summary: string;
+  /**
+   * What sort of instrument it is (`mono`, `poly`, `module`…), from the databank instrument it models; null when it
+   * models none. The picker prints it beside the year (`f-synth-picker` t-328).
+   */
+  kind: string | null;
   /** Which design the panel draws (D11): `faithful` shows the maker's marks, `neutral` leaves them out. */
   design: SynthDesign;
   /** The definition's current version; a sound saved now records it. */
@@ -133,6 +138,12 @@ const synthColumns = {
   summary: true,
   design: true,
   _count: { select: { sounds: true } },
+  // The first by id, so a synth that models two databank instruments always reads the same kind.
+  bankInstruments: {
+    orderBy: { instrumentId: 'asc' },
+    take: 1,
+    select: { instrument: { select: { kind: true } } },
+  },
 } satisfies Prisma.SynthSelect;
 
 type SynthRow = Prisma.SynthGetPayload<{ select: typeof synthColumns }>;
@@ -146,6 +157,7 @@ function toCatalogueSynth(row: SynthRow, def: AppSynthDef): CatalogueSynth {
     year,
     heritage,
     summary,
+    kind: row.bankInstruments[0]?.instrument.kind ?? null,
     design: designFromDb(row.design),
     definitionVersion: def.version,
     soundCount: row._count.sounds,
@@ -165,6 +177,19 @@ export async function listSynths(): Promise<CatalogueSynth[]> {
     logger.warn('catalogue: listed synth has no definition, not served', { synthId: row.id });
     return [];
   });
+}
+
+/**
+ * The design a listed synth's panel draws in, or null when the catalogue does not serve it (not listed, or no
+ * definition): what a picker thumbnail is drawn in, read without the rest of the catalogue.
+ */
+export async function getListedSynthDesign(id: string): Promise<SynthDesign | null> {
+  if (!getSynthDef(id)) return null;
+  const row = await prisma.synth.findFirst({
+    where: { id, listed: true },
+    select: { design: true },
+  });
+  return row ? designFromDb(row.design) : null;
 }
 
 const LineageColumnsSchema = z.object({
@@ -418,7 +443,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
         },
         lineage: true,
         bankInstruments: {
-          select: { instrument: { select: { id: true, name: true } } },
+          select: { instrument: { select: { id: true, name: true, kind: true } } },
           orderBy: { instrumentId: 'asc' },
         },
       },
@@ -467,7 +492,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
   ]);
   if (!row) return null;
   const { sounds: soundRows, lineage: lineageRow, bankInstruments, ...synthRow } = row;
-  const synth = toCatalogueSynth(synthRow, def);
+  const synth = toCatalogueSynth({ ...synthRow, bankInstruments }, def);
 
   const sounds: CatalogueSound[] = [];
   for (const s of soundRows) {
@@ -522,7 +547,7 @@ export async function getSynthDetail(id: string): Promise<SynthDetail | null> {
       (n.synthId ? notes.limits.items : notes.limits.shared).push({ title: n.title, text: n.text });
   }
 
-  const instruments = bankInstruments.map((b) => b.instrument);
+  const instruments = bankInstruments.map(({ instrument: { id, name } }) => ({ id, name }));
   return {
     synth,
     sounds,
