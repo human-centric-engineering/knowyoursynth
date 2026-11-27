@@ -207,7 +207,7 @@ describe('settings', () => {
       { fx: { ...FX_DEFAULT, flanger: { on: true } } },
       { picker: { group: 'year' } },
       { picker: { kinds: ['mono', 'mono'] } },
-      { picker: { scope: 'all' } },
+      { picker: { scope: 'everything' } },
     ];
     for (const body of bad) {
       const res = await changeSettings(request('PATCH', '/api/v1/me/settings', body));

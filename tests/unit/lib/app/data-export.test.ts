@@ -28,6 +28,7 @@ vi.mock('@/lib/db/client', () => ({
     patternReport: { findMany: vi.fn(async () => []) },
     libraryPattern: { findMany: vi.fn(async () => []) },
     libraryPatternComment: { findMany: vi.fn(async () => []) },
+    modelRequest: { findMany: vi.fn(async () => []) },
   },
 }));
 
@@ -257,5 +258,23 @@ describe('collectAppSubjectData, the pattern library (f-pattern-library t-156)',
       (vi.mocked(prisma.libraryPatternComment.findMany).mock.lastCall![0] as { where: unknown })
         .where
     ).toEqual({ authorId: 'user-1' });
+  });
+});
+
+describe('collectAppSubjectData, synths asked to be modelled (f-synth-picker t-330)', () => {
+  it('names each synth the subject asked for by the databank, with when they asked', async () => {
+    const asked = new Date('2026-11-27T09:00:00Z');
+    vi.mocked(prisma.modelRequest.findMany).mockResolvedValueOnce([
+      { createdAt: asked, instrument: { id: 'roland-sh-101', name: 'SH-101', maker: 'Roland' } },
+    ] as never);
+
+    const data = await collectAppSubjectData({ userId: 'user-1', email: 'user@example.com' });
+
+    expect(data.modelRequests).toEqual([
+      { instrumentId: 'roland-sh-101', name: 'SH-101', maker: 'Roland', askedAt: asked },
+    ]);
+    expect(
+      (vi.mocked(prisma.modelRequest.findMany).mock.lastCall![0] as { where: unknown }).where
+    ).toEqual({ userId: 'user-1' });
   });
 });
