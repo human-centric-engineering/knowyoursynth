@@ -127,6 +127,21 @@ describe('wavetable', () => {
     expect(power(sq, 3 * F0)).toBeGreaterThan(power(sq, F0) * 0.05);
   });
 
+  it.each(Array.from({ length: 16 }, (_, i) => i))(
+    'table %i sounds under full scale, and its first and last frames differ',
+    (i) => {
+      const wave = (i + 0.5) / 16;
+      const first = play(at('wavetable', wave, 0, 0), [], NOTE, 4800);
+      const last = play(at('wavetable', wave, 1, 0), [], NOTE, 4800);
+      for (const b of [first, last]) {
+        expect(allFinite(b)).toBe(true);
+        expect(rms(b)).toBeGreaterThan(0.01);
+        expect(peak(b)).toBeLessThan(1);
+      }
+      expect(maxDiff(first, last)).toBeGreaterThan(0.05);
+    }
+  );
+
   it('stays band-limited high up the keyboard', () => {
     // C8 (4186 Hz): a saw's harmonics past Nyquist would fold back below the fundamental
     const b = play(at('wavetable', 0, 0, 0), [], 108);
