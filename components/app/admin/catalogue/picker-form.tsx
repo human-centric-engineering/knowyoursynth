@@ -112,7 +112,12 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
 
   const disabled = readOnly || saving;
   return (
-    <form method="post" onSubmit={(e) => void onSubmit(e)} className="max-w-2xl space-y-6">
+    <form
+      method="post"
+      noValidate
+      onSubmit={(e) => void onSubmit(e)}
+      className="max-w-2xl space-y-6"
+    >
       <div className="space-y-2">
         <Label id="picker-group">
           Group by{' '}
