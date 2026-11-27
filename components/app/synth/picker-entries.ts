@@ -274,10 +274,15 @@ function lineage(
     return first && first.key !== row.key ? first : undefined;
   };
   const rootOf = (row: PickerRow): PickerRow => {
+    const path = [row];
     const seen = new Set([row.key]);
     let at = row;
-    for (let next = above(at); next && !seen.has(next.key); next = above(at)) {
+    for (let next = above(at); next; next = above(at)) {
+      // Data that recreates itself in a loop: every row in it takes the same one (the least key) as its original,
+      // so none is listed twice.
+      if (seen.has(next.key)) return path.reduce((a, b) => (b.key < a.key ? b : a));
       seen.add(next.key);
+      path.push(next);
       at = next;
     }
     return at;

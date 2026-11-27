@@ -101,6 +101,17 @@ describe('PickerSettingsForm', () => {
     });
   });
 
+  it('saves what visitors are shown by default', async () => {
+    const user = userEvent.setup();
+    render(<PickerSettingsForm initial={FACTORY_PICKER} />);
+    expect(option('Synths that play').getAttribute('aria-pressed')).toBe('true');
+    await user.click(option('All synths ever made'));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    expect(put).toHaveBeenCalledWith('/api/v1/admin/synths/picker', {
+      body: { ...FACTORY_PICKER, scope: 'all' },
+    });
+  });
+
   it('takes a kind back out of the list', async () => {
     const user = userEvent.setup();
     render(<PickerSettingsForm initial={SAVED} />);
