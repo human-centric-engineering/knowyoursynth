@@ -70,9 +70,46 @@ A synth the catalogue does not serve is a 404. A panel that will not draw is a 4
 (`NOT_DRAWN_SECONDS`) so a picker opened meanwhile does not queue it again ahead of the share card, and cached by the
 browser for as long. The row shows its empty box instead.
 
+## How it lists, and who chooses (t-329)
+
+How the list is grouped and ordered, which kinds it lists and whether rows show a thumbnail are **choices**
+(`PickerChoices`, `lib/app/picker/settings.ts`):
+
+- **Group by**: under each maker's brand (the default), one list by name, or by **lineage**: each family's original
+  (its earliest member) with the rest under it, oldest first, each marked a **Revision** (same brand) or a
+  **Recreation** (another brand). A synth in no family stands alone. A member the box or a kind finds keeps its
+  original over it. Lineage reads the families only; the databank's `recreationOf` links join it with t-330, when the
+  list holds every instrument.
+- **Order**: A to Z, newest first or oldest first. By maker the brands stay A to Z.
+- **Kinds**: only the kinds chosen; none chosen lists every kind, and a synth with no kind is listed only then.
+- **Thumbnails** on or off.
+
+Three layers decide them:
+
+| Layer                | Where                                                                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| The defaults in code | `FACTORY_PICKER`: by maker, A to Z, every kind, thumbnails, visitors may change them                             |
+| The site's settings  | `SynthPickerSettings`, one row (`site`), admin config; no row is the defaults                                    |
+| A visitor's changes  | `picker` on `/api/v1/me/settings` and `kys.picker`: only the choices that differ from the site's (`PickerPrefs`) |
+
+A visitor's settings hold only what they changed, so one who changed the grouping still follows the admin's order. A
+choice changed back to the site's is dropped rather than kept (`withChoice`), so it follows the site again. **Advanced
+search** in the picker (`picker-advanced.tsx`) changes them, says whether the site's settings are in use, counts the
+visitor's changes on its button, and resets to the site's (`{}`). They sync between the browser and the account as
+every synth page setting does (`components/app/synth/settings.ts`, [`sounds.md`](./sounds.md)).
+
+The site's settings also say whether **visitors may change** them: off, the picker has no Advanced search and lists by
+the site's settings for everyone; a visitor's own are kept, unused. And whether **All synths ever made** is offered,
+which t-330 brings.
+
+- `GET /api/v1/synths/picker-settings`: the site's settings, public, with an ETag. The synth pages read them in process
+  (`sitePickerForPage`), which serves the defaults if the read fails.
+- `GET`/`PUT /api/v1/admin/synths/picker`: admin only. `PUT` takes the whole settings (`SitePickerSettingsSchema`),
+  writes the one row (`writesSharedSettings`: product config every org shares) and audits the change
+  (`synth_picker.update`).
+- The admin page is `/admin/synths/catalogue/picker`, linked from the catalogue page.
+
 ## Still to come
 
-The owner's design has more than this first task (`f-synth-picker` t-329, t-330): an **Advanced search** window where a
-visitor chooses grouping (name, maker, lineage), order, kinds and thumbnails, kept with their account, from defaults an
-admin sets; and **All synths ever made**, the whole databank as a full-size browser, where a synth nobody has modelled
-shows what the databank knows in the panel's place.
+**All synths ever made** (`f-synth-picker` t-330): the whole databank as a full-size browser, where a synth nobody has
+modelled shows what the databank knows in the panel's place.

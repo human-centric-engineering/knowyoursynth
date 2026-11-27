@@ -171,3 +171,84 @@ describe('familyOpens', () => {
     expect(familyOpens(TB_303_FAMILY, onlyTb303, new Set())).toBe('tb-303');
   });
 });
+
+describe('pickerGroups, as the visitor chooses (t-329)', () => {
+  const SYNTHS = [
+    { ...FAMILY_SYNTHS[0], kind: 'mono' }, // Model D, Behringer 2018
+    { ...FAMILY_SYNTHS[1], kind: 'mono' }, // TD-3, Behringer 2019
+    { ...FAMILY_SYNTHS[2], kind: 'mono' }, // TB-303, Roland 1981
+    { id: 'jp-8080', name: 'JP-8080', maker: 'Roland', year: 1998, heritage: '', kind: 'module' },
+  ];
+  const keys = (groups: ReturnType<typeof pickerGroups>) =>
+    groups.map((g) => `${g.label}: ${g.rows.map((r) => r.key).join(', ')}`);
+
+  it('lists one list with no heading by name, A to Z', () => {
+    expect(keys(pickerGroups(SYNTHS, [], '', { unmodelled: true, group: 'name' }))).toEqual([
+      ': jp-8080, model-d, tb-303, td-3',
+    ]);
+  });
+
+  it('orders newest or oldest first, by name within a year', () => {
+    const by = (order: 'new' | 'old') =>
+      keys(pickerGroups(SYNTHS, [], '', { unmodelled: true, group: 'name', order }));
+    expect(by('new')).toEqual([': td-3, model-d, jp-8080, tb-303']);
+    expect(by('old')).toEqual([': tb-303, jp-8080, model-d, td-3']);
+  });
+
+  it('orders the rows within each maker as chosen, the makers still A to Z', () => {
+    expect(keys(pickerGroups(SYNTHS, [], '', { unmodelled: true, order: 'old' }))).toEqual([
+      'Behringer: model-d, td-3',
+      'Roland: tb-303, jp-8080',
+    ]);
+  });
+
+  it('lists only the kinds chosen, and a row with no kind only when none are', () => {
+    expect(keys(pickerGroups(SYNTHS, [], '', { unmodelled: true, kinds: ['module'] }))).toEqual([
+      'Roland: jp-8080',
+    ]);
+    const noKind = [...SYNTHS, { id: 'x', name: 'X', maker: 'Nobody', year: 1, heritage: '' }];
+    expect(
+      pickerGroups(noKind, [], '', { unmodelled: true, kinds: ['mono', 'module'] }).flatMap((g) =>
+        g.rows.map((r) => r.key)
+      )
+    ).not.toContain('x');
+  });
+
+  it('by lineage, puts each family under its earliest member, the same brand a revision and another a recreation', () => {
+    const [list] = pickerGroups(SYNTHS, [TB_303_FAMILY], '', {
+      unmodelled: true,
+      group: 'lineage',
+    });
+    expect(list.label).toBe('');
+    expect(list.rows.map((r) => [r.key, r.depth, r.relation])).toEqual([
+      ['jp-8080', 0, null],
+      ['model-d', 0, null],
+      ['tb-303', 0, null],
+      ['member:tb-303/rebirth', 1, 'Recreation'],
+      ['td-3', 1, 'Recreation'],
+    ]);
+  });
+
+  it('by lineage, keeps the original over a member the box finds, though the original does not match', () => {
+    const [list] = pickerGroups(SYNTHS, [TB_303_FAMILY], 'td-3', {
+      unmodelled: true,
+      group: 'lineage',
+    });
+    expect(list.rows.map((r) => [r.key, r.depth])).toEqual([
+      ['tb-303', 0],
+      ['td-3', 1],
+    ]);
+  });
+
+  it('by lineage, calls a later member by the same brand a revision', () => {
+    const roland = { ...SYNTHS[1], maker: 'Roland' };
+    const [list] = pickerGroups([SYNTHS[2], roland], [TB_303_FAMILY], '', {
+      unmodelled: false,
+      group: 'lineage',
+    });
+    expect(list.rows.map((r) => [r.key, r.relation])).toEqual([
+      ['tb-303', null],
+      ['td-3', 'Revision'],
+    ]);
+  });
+});
