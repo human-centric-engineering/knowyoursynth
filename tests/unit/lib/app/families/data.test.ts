@@ -254,6 +254,7 @@ describe('the committed family seed data', () => {
       'arp-2600': ['b2600', null, null],
       cat: ['cat', null],
       'cs-80': ['cs-80', null],
+      dfam: ['edge', 'dfam'],
       grandmother: ['model-15', 'grandmother'],
       'jupiter-8': ['jupiter-8', null],
       kobol: ['kobol', null],
@@ -318,6 +319,7 @@ describe('the committed family seed data', () => {
       cat: 'cat',
       // the only modelled member: a family never opens on a blank panel
       'cs-80': 'cs-80',
+      dfam: 'edge',
       grandmother: 'model-15',
       'jupiter-8': 'jupiter-8',
       kobol: 'kobol',

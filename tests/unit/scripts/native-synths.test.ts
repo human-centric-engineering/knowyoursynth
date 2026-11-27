@@ -54,6 +54,8 @@ describe('nativeSynthProblems', () => {
       'native synth nymphes is not registered',
       'native synth behringer-odyssey is not registered',
       'native synth subharmonicon is not registered',
+      'native synth dfam is not registered',
+      'native synth edge is not registered',
     ]);
   });
 

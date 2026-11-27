@@ -365,7 +365,7 @@ describe('the research batches', () => {
         'Robin S',
         'Second Phase',
       ],
-      166,
+      174,
     ],
     [
       't-166',

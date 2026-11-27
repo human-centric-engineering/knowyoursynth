@@ -1,0 +1,21 @@
+{
+  "id": "dfam",
+  "name": "DFAM",
+  "defaultMember": "edge",
+  "members": [
+    {
+      "slug": "edge",
+      "label": "EDGE",
+      "instrument": "behringer-edge",
+      "synth": "edge",
+      "differences": "Behringer's copy of the DFAM's circuit: the same two oscillators, noise, ladder filter, three decay envelopes, 8-step sequencer and 24-jack patchbay, laid out with the patchbay along the top. It adds a choice of white or pink noise, a CLOCK switch that takes MIDI or USB clock divided by SCALE, MIDI notes that play the voice, a poly chain of up to 16 units, and a headphone jack on the panel."
+    },
+    {
+      "slug": "dfam",
+      "label": "DFAM",
+      "instrument": "moog-dfam",
+      "synth": "dfam",
+      "differences": "The original, Moog's 2017 Drummer From Another Mother, made to sit beside the Mother-32. White noise only, its own clock or a clock into ADV / CLOCK, and no MIDI; its headphones and line output share the rear jack."
+    }
+  ]
+}

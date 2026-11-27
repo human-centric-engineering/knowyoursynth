@@ -1,0 +1,2652 @@
+{
+  "synth": "dfam",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "dfam-exploring",
+      "name": "Exploring the DFAM",
+      "ref": "The manual’s guided tour, “Exploring the DFAM”: the sound its steps end on",
+      "artist": "Moog Music",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "The manual’s tour in one patch: a punchy, synced, noisy bass drum with a soft attack.",
+      "how": "The manual tours the panel from the Default settings and ends here. The settings are its clock positions, converted; the tempo and the velocity row are this lesson’s, since the tour has you set them by ear.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A deep bass note with punch",
+          "module": "osc",
+          "why": "VCO 1 on its square, between 10 and 11 o’clock, with VCO 1 EG AMOUNT at 3 o’clock and VCO DECAY at 9 o’clock: the pitch spikes and falls back on each hit.\n- VCO 1 FREQUENCY 3.5 · F♯1 · 46 Hz\n- VCO 1 WAVE Square\n- VCO 1 EG AMOUNT 3 · +34.6 st at full velocity\n- VCO DECAY 2 · 40 ms\n- Listen for: with a key, a deep note with a hard, rubbery attack.",
+          "set": {
+            "vco1.freq": 3.5,
+            "vco1.wave": "square",
+            "vco1.eg_amt": 3,
+            "vco_eg.decay": 2
+          }
+        },
+        {
+          "title": "Harmony, then hard sync and FM",
+          "module": "osc",
+          "why": "VCO 2 fully up and tuned to VCO 1, HARD SYNC on, and 1→2 FM AMOUNT at 12 o’clock: VCO 2 locks to VCO 1 and is shaken by it.\n- VCO 2 LEVEL 10\n- VCO 2 FREQUENCY 3.5 · F♯1 · 46 Hz\n- HARD SYNC On\n- 1→2 FM AMOUNT 5\n- Listen for: with a key, a thicker, metallic edge on the note.",
+          "set": {
+            "mix.vco2": 10,
+            "vco2.freq": 3.5,
+            "vco2.sync": "on",
+            "vco2.fm_amt": 5
+          }
+        },
+        {
+          "title": "Shape it with the filter",
+          "module": "filter",
+          "why": "CUTOFF at 11 o’clock darkens it; VCF EG AMOUNT at 3 o’clock and VCF DECAY at 10 o’clock open it on each hit and let it close.\n- CUTOFF 4 · 317 Hz\n- VCF EG AMOUNT 3 · +4.8 oct at full velocity\n- VCF DECAY 3 · 79 ms\n- Listen for: with a key, a slap on the attack that closes into a dark note.",
+          "set": {
+            "vcf.cutoff": 4,
+            "vcf_eg.amt": 3,
+            "vcf_eg.decay": 3
+          }
+        },
+        {
+          "title": "Noise as a source and a modulator",
+          "module": "mixer",
+          "why": "NOISE / EXT LEVEL at 1 o’clock adds a natural attack; NOISE / VCF MOD at 9 o’clock lets the noise roughen the filter a little.\n- NOISE / EXT LEVEL 6\n- NOISE / VCF MOD 2\n- Listen for: with a key, a hiss on the attack and a grittier body.",
+          "set": {
+            "mix.noise": 6,
+            "vcfmod.amt": 2
+          }
+        },
+        {
+          "title": "Soften the attack",
+          "module": "amp",
+          "why": "The VCA EG on SLOW with VCA DECAY between 9 and 10 o’clock: the 100 ms attack takes the click off.\n- VCA EG Slow (100 ms)\n- VCA DECAY 2.5 · 56 ms\n- Listen for: with a key, a softer, rounder thud.",
+          "set": {
+            "vca_eg.attack": "slow",
+            "vca_eg.decay": 2.5
+          }
+        },
+        {
+          "title": "Sequence it",
+          "module": "mod",
+          "why": "Every step’s pitch to both VCOs, with small offsets, and a velocity row with accents. RUN / STOP lit: Play on the bar runs it, in sixteenths.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0.25 · +3 st (0.3 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 -0.17 · -2 st (-0.2 V)\n- PITCH 7 0.58 · +7 st (0.6 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 3 · 1.5 V\n- VELOCITY 3 6 · 3.0 V\n- VELOCITY 4 4 · 2.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 3 · 1.5 V\n- VELOCITY 7 7 · 3.5 V\n- VELOCITY 8 5 · 2.5 V\n- TEMPO 3.43 · 7.48 Hz · 112 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a pattern of soft and hard hits, the pitch leaning on a few of them.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 0.25,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0,
+            "seq.pitch6": -0.1667,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 3,
+            "seq.vel3": 6,
+            "seq.vel4": 4,
+            "seq.vel5": 9,
+            "seq.vel6": 3,
+            "seq.vel7": 7,
+            "seq.vel8": 5,
+            "clock.tempo": 3.43,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco1.eg_amt": "In this sound: the punch of each hit.",
+        "vco2.fm_amt": "In this sound: the metallic grit on top.",
+        "vca_eg.attack": "In this sound: the soft attack the tour ends on.",
+        "seq.vel1": "In this sound: the accents that make the rhythm."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.attack",
+          "try": "Set VCA EG to FAST",
+          "hear": "A sharp click on every hit."
+        },
+        {
+          "id": "vco1.eg_amt",
+          "try": "Turn VCO 1 EG AMOUNT to 0",
+          "hear": "The punch goes: a plain, steady note."
+        }
+      ]
+    },
+    {
+      "id": "dfam-music-box",
+      "name": "Music Box",
+      "ref": "The manual’s Music Box patch sheet: the PITCH output played into VCO 1",
+      "artist": "Moog Music",
+      "tags": ["seq", "melodic", "patch"],
+      "level": 2,
+      "blurb": "A tinkling eight-note tune, the PITCH row playing VCO 1 through a cable.",
+      "how": "The PITCH output patched into VCO 1 CV plays the steps on VCO 1 alone, as the sheet notes: small turns of the PITCH knobs change the tune a lot. A quiet VCO 2 a fifth above holds still, so turning its FREQUENCY changes the harmony under the tune. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two high triangles",
+          "module": "osc",
+          "why": "VCO 1 at C5 and a quieter VCO 2 at G5, both on their triangles: a bright, pure pair.\n- VCO 1 FREQUENCY 7 · C5 · 523 Hz\n- VCO 2 FREQUENCY 7.58 · G5 · 784 Hz\n- VCO 2 LEVEL 4\n- Listen for: with a key, two high, clear tones a fifth apart.",
+          "set": {
+            "vco1.freq": 7,
+            "vco2.freq": 7.5833,
+            "mix.vco2": 4
+          }
+        },
+        {
+          "title": "Short and bright",
+          "module": "amp",
+          "why": "A short VCA decay, the filter open: each note a tinkle.\n- VCA DECAY 4.66 · 250 ms\n- Listen for: with a key, a short, bell-like ping.",
+          "set": {
+            "vca_eg.decay": 4.66
+          }
+        },
+        {
+          "title": "The tune",
+          "module": "mod",
+          "why": "The PITCH row as a melody in a major key, and a velocity row that lets some notes fall back.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.58 · +7 st (0.6 V)\n- PITCH 3 1 · +12 st (1.0 V)\n- PITCH 4 0.33 · +4 st (0.3 V)\n- PITCH 5 0.58 · +7 st (0.6 V)\n- PITCH 6 1.33 · +16 st (1.3 V)\n- PITCH 7 1 · +12 st (1.0 V)\n- PITCH 8 1.58 · +19 st (1.6 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 6 · 3.0 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 6 · 3.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 6 · 3.0 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 7 · 3.5 V\n- Listen for: nothing new until the cable and RUN.",
+          "set": {
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.5833,
+            "seq.pitch3": 1,
+            "seq.pitch4": 0.3333,
+            "seq.pitch5": 0.5833,
+            "seq.pitch6": 1.3333,
+            "seq.pitch7": 1,
+            "seq.pitch8": 1.5833,
+            "seq.vel1": 10,
+            "seq.vel2": 6,
+            "seq.vel3": 8,
+            "seq.vel4": 6,
+            "seq.vel5": 9,
+            "seq.vel6": 6,
+            "seq.vel7": 8,
+            "seq.vel8": 7
+          }
+        },
+        {
+          "title": "Patch the tune into VCO 1",
+          "module": "patch",
+          "why": "PITCH OUT into VCO 1 CV: the steps play VCO 1, one volt an octave.\n- Patch PITCH OUT to VCO 1 CV input\n- Listen for: nothing yet: the sequencer is stopped on step 1.",
+          "cables": [["j.pitch_out", "j.vco1_cv"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, two steps a beat.\n- TEMPO 2.2 · 3.20 Hz · 48 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a music-box tune looping over a held fifth.",
+          "set": {
+            "clock.tempo": 2.2,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.pitch6": "In this sound: the tune’s high point.",
+        "vco2.freq": "In this sound: the note held under the tune."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQUENCY to 6.4",
+          "hear": "The harmony underneath turns sour and bell-like."
+        },
+        {
+          "id": "seq.pitch3",
+          "try": "Turn PITCH 3 to 0.92",
+          "hear": "One note changes, and the tune changes key around it."
+        }
+      ]
+    },
+    {
+      "id": "dfam-quick-hats",
+      "name": "Quick Hats",
+      "ref": "The manual’s Quick Hats patch sheet: the PITCH row setting each hi-hat’s length",
+      "artist": "Moog Music",
+      "tags": ["perc", "drums", "patch"],
+      "level": 2,
+      "blurb": "Sixteenth-note hi-hats, open or closed step by step from the PITCH row.",
+      "how": "Noise through the filter on HP makes a hi-hat. The PITCH output patched into VCA DECAY makes each step’s PITCH knob its length: centre for a closed hat, turned up for an open one. SEQ PITCH MOD is OFF, so the steps move nothing else. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 124,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Noise only, high-passed",
+          "module": "filter",
+          "why": "The oscillators down, the noise fully up, the filter on HP at about 7 kHz with a little resonance.\n- VCO 1 LEVEL 0\n- NOISE / EXT LEVEL 10\n- VCF (LP / HP) HP\n- CUTOFF 8.48 · 7.0 kHz\n- RESONANCE 3\n- Listen for: with a key, a burst of thin, bright hiss.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 10,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 8.48,
+            "vcf.resonance": 3
+          }
+        },
+        {
+          "title": "A short hat",
+          "module": "amp",
+          "why": "A very short VCA DECAY: closed.\n- VCA DECAY 2.01 · 40 ms\n- Listen for: with a key, a tight tick.",
+          "set": {
+            "vca_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Lengths and accents",
+          "module": "mod",
+          "why": "Most PITCH knobs at the centre; two turned up to open those hats. The velocity row accents the beat.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 2 · +24 st (2.0 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 2.5 · +30 st (2.5 V)\n- PITCH 8 0.5 · +6 st (0.5 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 5 · 2.5 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 5 · 2.5 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 5 · 2.5 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 6 · 3.0 V\n- Listen for: nothing new until the cable and RUN.",
+          "set": {
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 2,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0,
+            "seq.pitch6": 0,
+            "seq.pitch7": 2.5,
+            "seq.pitch8": 0.5,
+            "seq.vel1": 10,
+            "seq.vel2": 5,
+            "seq.vel3": 8,
+            "seq.vel4": 5,
+            "seq.vel5": 10,
+            "seq.vel6": 5,
+            "seq.vel7": 8,
+            "seq.vel8": 6
+          }
+        },
+        {
+          "title": "Patch PITCH into VCA DECAY",
+          "module": "patch",
+          "why": "PITCH OUT into VCA DECAY: each step’s voltage lengthens its hat.\n- Patch PITCH OUT to VCA DECAY input\n- Listen for: nothing yet: the sequencer is stopped.",
+          "cables": [["j.pitch_out", "j.vca_decay"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in sixteenths.\n- TEMPO 3.57 · 8.24 Hz · 124 BPM in 16ths\n- RUN / STOP lit\n- Listen for: busy closed hats with two open ones in each half bar.",
+          "set": {
+            "clock.tempo": 3.57,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.pitch3": "In this sound: an open hat.",
+        "vca_eg.decay": "In this sound: the closed hats’ length, before the cable lengthens some."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 5",
+          "hear": "Darker, trashier hats."
+        },
+        {
+          "id": "seq.pitch5",
+          "try": "Turn PITCH 5 to 2.5",
+          "hear": "An open hat on the beat as well."
+        }
+      ]
+    },
+    {
+      "id": "dfam-fm-toys",
+      "name": "FM Toys",
+      "ref": "The manual’s FM Toys patch sheet: VCO 2 modulating the filter cutoff",
+      "artist": "Moog Music",
+      "tags": ["fx", "patch"],
+      "level": 2,
+      "blurb": "Squelchy, toy-like blips: VCO 2 shakes the filter at audio rate, a new note each step.",
+      "how": "VCO 2 patched into VCF MOD, with NOISE / VCF MOD fully up, moves the cutoff at VCO 2’s pitch: audio-rate filter FM, a growl or a chirp depending on the two pitches. SEQ PITCH MOD on VCO 2 changes that pitch every step, so every hit is a new toy. Try it in LP and HP, as the sheet says. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "VCO 1 into a resonant filter",
+          "module": "filter",
+          "why": "VCO 1 square at C3 into the filter at about 600 Hz with some resonance.\n- VCO 1 WAVE Square\n- CUTOFF 4.92 · 598 Hz\n- RESONANCE 6\n- Listen for: with a key, a nasal, ringing square.",
+          "set": {
+            "vco1.wave": "square",
+            "vcf.cutoff": 4.92,
+            "vcf.resonance": 6
+          }
+        },
+        {
+          "title": "The modulator",
+          "module": "osc",
+          "why": "VCO 2 silent in the mix, at G3, and NOISE / VCF MOD fully up, ready for the cable.\n- VCO 2 FREQUENCY 5.58 · G3 · 196 Hz\n- VCO 2 WAVE Square\n- NOISE / VCF MOD 10\n- Listen for: with a key, a fizz on the tone: the noise moving the cutoff, until the cable replaces it.",
+          "set": {
+            "vco2.freq": 5.5833,
+            "vco2.wave": "square",
+            "vcfmod.amt": 10
+          }
+        },
+        {
+          "title": "Patch VCO 2 into the filter",
+          "module": "patch",
+          "why": "VCO 2 OUT into VCF MOD replaces the noise: the cutoff now swings at VCO 2’s pitch.\n- Patch VCO 2 OUT to VCF MOD input\n- Listen for: with a key, a metallic, buzzing growl.",
+          "cables": [["j.vco2_out", "j.vcf_mod"]]
+        },
+        {
+          "title": "A new modulator every step",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 2, so the PITCH row retunes the modulator; a short, bouncy velocity row.\n- SEQ PITCH MOD VCO 2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.42 · +5 st (0.4 V)\n- PITCH 3 -0.58 · -7 st (-0.6 V)\n- PITCH 4 1 · +12 st (1.0 V)\n- PITCH 5 0.25 · +3 st (0.3 V)\n- PITCH 6 -1 · -12 st (-1.0 V)\n- PITCH 7 0.58 · +7 st (0.6 V)\n- PITCH 8 1.58 · +19 st (1.6 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 7 · 3.5 V\n- VELOCITY 4 9 · 4.5 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 8 · 4.0 V\n- VELOCITY 7 6 · 3.0 V\n- VELOCITY 8 10 · 5.0 V\n- VCA DECAY 3.6 · 120 ms\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco2",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.4167,
+            "seq.pitch3": -0.5833,
+            "seq.pitch4": 1,
+            "seq.pitch5": 0.25,
+            "seq.pitch6": -1,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 1.5833,
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 7,
+            "seq.vel4": 9,
+            "seq.vel5": 0,
+            "seq.vel6": 8,
+            "seq.vel7": 6,
+            "seq.vel8": 10,
+            "vca_eg.decay": 3.6
+          }
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in sixteenths.\n- TEMPO 3.37 · 7.18 Hz · 108 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a bouncy line of chirps, squelches and clangs.",
+          "set": {
+            "clock.tempo": 3.37,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the speed of the filter’s swing, and so the timbre.",
+        "vcf.mode": "Try HP: the toys turn thin and fizzy."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.mode",
+          "try": "Set VCF to HP",
+          "hear": "Thin, fizzy blips in place of squelches."
+        },
+        {
+          "id": "vcfmod.amt",
+          "try": "Turn NOISE / VCF MOD to 4",
+          "hear": "A gentler, vocal wobble."
+        }
+      ]
+    },
+    {
+      "id": "dfam-sequenced-bass",
+      "name": "Sequenced Bass",
+      "ref": "The manual’s Sequenced Bass patch sheet: both VCOs in tune, the VCA EG on SLOW",
+      "artist": "Moog Music",
+      "tags": ["bass", "seq"],
+      "level": 1,
+      "blurb": "A round, gliding bass line: both VCOs in unison, softened by the slow VCA attack.",
+      "how": "The sheet tunes both VCOs exactly together and lets the PITCH row play them both. The VCA EG on SLOW takes 100 ms to open, which smooths the line almost like glide, as the manual’s tip says. The sheet draws SEQ PITCH MOD without naming its position; both VCOs, as its notes imply. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two VCOs in unison",
+          "module": "osc",
+          "why": "VCO 1 square and VCO 2 triangle, both at A1, both up in the mix.\n- VCO 1 FREQUENCY 3.75 · A1 · 55 Hz\n- VCO 1 WAVE Square\n- VCO 2 FREQUENCY 3.75 · A1 · 55 Hz\n- VCO 2 LEVEL 7\n- Listen for: with a key, a fat, low hum.",
+          "set": {
+            "vco1.freq": 3.75,
+            "vco1.wave": "square",
+            "vco2.freq": 3.75,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "A dark filter that opens on each note",
+          "module": "filter",
+          "why": "CUTOFF about 300 Hz, a little resonance, and the VCF EG opening it by two octaves.\n- CUTOFF 3.92 · 300 Hz\n- RESONANCE 3\n- VCF EG AMOUNT 1.25 · +2.0 oct at full velocity\n- VCF DECAY 4.34 · 200 ms\n- Listen for: with a key, a warm bass note with a soft bite.",
+          "set": {
+            "vcf.cutoff": 3.92,
+            "vcf.resonance": 3,
+            "vcf_eg.amt": 1.25,
+            "vcf_eg.decay": 4.34
+          }
+        },
+        {
+          "title": "Slow attack, longer notes",
+          "module": "amp",
+          "why": "VCA EG on SLOW and a medium decay: each note swells in and joins the next.\n- VCA EG Slow (100 ms)\n- VCA DECAY 5.34 · 400 ms\n- Listen for: with a key, a note that swells in rather than strikes.",
+          "set": {
+            "vca_eg.attack": "slow",
+            "vca_eg.decay": 5.34
+          }
+        },
+        {
+          "title": "The line",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2, so the PITCH row plays both; small moves make a line in A minor.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 1 · +12 st (1.0 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0.25 · +3 st (0.3 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 0.58 · +7 st (0.6 V)\n- PITCH 8 0.83 · +10 st (0.8 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 6 · 3.0 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 6 · 3.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 6 · 3.0 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 7 · 3.5 V\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 1,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0.25,
+            "seq.pitch6": 0,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0.8333,
+            "seq.vel1": 10,
+            "seq.vel2": 6,
+            "seq.vel3": 8,
+            "seq.vel4": 6,
+            "seq.vel5": 9,
+            "seq.vel6": 6,
+            "seq.vel7": 8,
+            "seq.vel8": 7
+          }
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in eighths.\n- TEMPO 2.42 · 3.72 Hz · 56 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a smooth, round bass line in eighths.",
+          "set": {
+            "clock.tempo": 2.42,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vca_eg.attack": "In this sound: the glide-like smoothness.",
+        "vco2.freq": "In this sound: tuned exactly to VCO 1."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.attack",
+          "try": "Set VCA EG to FAST",
+          "hear": "Plucked, punchier notes."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQUENCY to 3.8",
+          "hear": "A slow beating between the two: a wider, wobbling bass."
+        }
+      ]
+    },
+    {
+      "id": "dfam-kick-snare",
+      "name": "Kick, Snare and FM",
+      "ref": "The manual’s Kick / Snare / FM Osc 2 patch sheet: the PITCH row voicing each step and setting the snare",
+      "artist": "Moog Music",
+      "tags": ["perc", "drums", "patch"],
+      "level": 3,
+      "blurb": "A kick and a snare from one voice: each step’s PITCH knob chooses which.",
+      "how": "One voice plays two drums. The PITCH row reaches both VCOs (SEQ PITCH MOD on VCO 1&2) and, through a cable into NOISE LEVEL, the noise: a step turned down is a low kick with no noise, a step turned up a higher, noisy snare. VCO 2 is frequency-modulated for the snare’s ring. The VELOCITY row sets the pattern. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A kick body",
+          "module": "osc",
+          "why": "VCO 1 triangle at E2, with the pitch envelope throwing it up and back fast.\n- VCO 1 FREQUENCY 4.33 · E2 · 82 Hz\n- VCO 1 EG AMOUNT 2.8 · +30.1 st at full velocity\n- VCO DECAY 2.33 · 50 ms\n- Listen for: with a key, a short, punchy kick.",
+          "set": {
+            "vco1.freq": 4.3333,
+            "vco1.eg_amt": 2.8,
+            "vco_eg.decay": 2.33
+          }
+        },
+        {
+          "title": "FM on oscillator 2",
+          "module": "osc",
+          "why": "VCO 2 square a tritone up, quiet, frequency-modulated by VCO 1: a metallic ring for the snare.\n- VCO 2 FREQUENCY 4.83 · A♯2 · 117 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 4\n- 1→2 FM AMOUNT 4\n- Listen for: with a key, a clang under the kick.",
+          "set": {
+            "vco2.freq": 4.8333,
+            "vco2.wave": "square",
+            "mix.vco2": 4,
+            "vco2.fm_amt": 4
+          }
+        },
+        {
+          "title": "Shape",
+          "module": "amp",
+          "why": "The filter at 3 kHz, a short decay.\n- CUTOFF 7.25 · 3.0 kHz\n- VCA DECAY 4.18 · 180 ms\n- Listen for: with a key, a tighter, darker hit.",
+          "set": {
+            "vcf.cutoff": 7.25,
+            "vca_eg.decay": 4.18
+          }
+        },
+        {
+          "title": "Kicks low, snares high",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2. Steps 1, 4 and 7 turned down (kicks), 3 and 5 turned up (snares); the rest silent on the VELOCITY row.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 -0.42 · -5 st (-0.4 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 1.17 · +14 st (1.2 V)\n- PITCH 4 -0.42 · -5 st (-0.4 V)\n- PITCH 5 1.17 · +14 st (1.2 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 -0.42 · -5 st (-0.4 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 9 · 4.5 V\n- VELOCITY 4 8 · 4.0 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 9 · 4.5 V\n- VELOCITY 8 0 · 0.0 V\n- Listen for: nothing new until the cable and RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": -0.4167,
+            "seq.pitch2": 0,
+            "seq.pitch3": 1.1667,
+            "seq.pitch4": -0.4167,
+            "seq.pitch5": 1.1667,
+            "seq.pitch6": 0,
+            "seq.pitch7": -0.4167,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 9,
+            "seq.vel4": 8,
+            "seq.vel5": 10,
+            "seq.vel6": 0,
+            "seq.vel7": 9,
+            "seq.vel8": 0
+          }
+        },
+        {
+          "title": "Patch PITCH into NOISE LEVEL",
+          "module": "patch",
+          "why": "PITCH OUT into NOISE LEVEL: the turned-up steps bring the noise in, the turned-down ones keep it out.\n- Patch PITCH OUT to NOISE LEVEL input\n- Listen for: nothing yet: the sequencer is stopped on a kick step.",
+          "cables": [["j.pitch_out", "j.noise_level"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in sixteenths.\n- TEMPO 3.26 · 6.65 Hz · 100 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a kick and snare groove from one voice.",
+          "set": {
+            "clock.tempo": 3.26,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.pitch3": "In this sound: a snare step, high and noisy.",
+        "seq.pitch1": "In this sound: a kick step, low with no noise.",
+        "vco2.fm_amt": "In this sound: the snare’s metallic ring."
+      },
+      "tweaks": [
+        {
+          "id": "seq.vel4",
+          "try": "Turn VELOCITY 4 to 0",
+          "hear": "One kick fewer: a sparser groove."
+        },
+        {
+          "id": "vco2.fm_amt",
+          "try": "Turn 1→2 FM AMOUNT to 8",
+          "hear": "A harsher, more industrial snare."
+        }
+      ]
+    },
+    {
+      "id": "dfam-filter-osc",
+      "name": "Filter as an Oscillator",
+      "ref": "The manual’s Filter as an Oscillator patch sheet: the PITCH row playing the self-oscillating filter",
+      "artist": "Moog Music",
+      "tags": ["seq", "melodic", "patch"],
+      "level": 3,
+      "blurb": "A pure, whistling melody from the filter alone, ringing at full resonance.",
+      "how": "With RESONANCE near full the ladder filter sings a sine of its own at its cutoff. The PITCH output into VCF MOD, with NOISE / VCF MOD fully up (a volt an octave), plays that sine from the PITCH row; the oscillators are down, so the filter is the only source. As the sheet says, a little VCO 2 adds a watery wobble and a little noise a ghostly tone. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Silence the sources",
+          "module": "mixer",
+          "why": "VCO 1 down in the mix: nothing goes into the filter.\n- VCO 1 LEVEL 0\n- Listen for: with a key, nothing.",
+          "set": {
+            "mix.vco1": 0
+          }
+        },
+        {
+          "title": "Let the filter sing",
+          "module": "filter",
+          "why": "RESONANCE near full, the cutoff at C4: the filter rings a sine on its own.\n- RESONANCE 9\n- CUTOFF 3.72 · 261 Hz\n- Listen for: with a key, a pure whistle at C4.",
+          "set": {
+            "vcf.resonance": 9,
+            "vcf.cutoff": 3.72
+          }
+        },
+        {
+          "title": "The melody",
+          "module": "mod",
+          "why": "The PITCH row as a melody, NOISE / VCF MOD fully up so a volt is an octave, and a gentle VCA decay.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.25 · +3 st (0.3 V)\n- PITCH 3 0.58 · +7 st (0.6 V)\n- PITCH 4 0.83 · +10 st (0.8 V)\n- PITCH 5 1 · +12 st (1.0 V)\n- PITCH 6 0.83 · +10 st (0.8 V)\n- PITCH 7 0.58 · +7 st (0.6 V)\n- PITCH 8 0.42 · +5 st (0.4 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 7 · 3.5 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 7 · 3.5 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 7 · 3.5 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 6 · 3.0 V\n- NOISE / VCF MOD 10\n- VCA DECAY 5.66 · 500 ms\n- Listen for: with a key, a rough, noisy whistle: the noise is moving the cutoff until the cable replaces it.",
+          "set": {
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.25,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 0.8333,
+            "seq.pitch5": 1,
+            "seq.pitch6": 0.8333,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0.4167,
+            "seq.vel1": 10,
+            "seq.vel2": 7,
+            "seq.vel3": 8,
+            "seq.vel4": 7,
+            "seq.vel5": 10,
+            "seq.vel6": 7,
+            "seq.vel7": 8,
+            "seq.vel8": 6,
+            "vcfmod.amt": 10,
+            "vca_eg.decay": 5.66
+          }
+        },
+        {
+          "title": "Patch PITCH into VCF MOD",
+          "module": "patch",
+          "why": "PITCH OUT into VCF MOD replaces the noise: the steps play the filter.\n- Patch PITCH OUT to VCF MOD input\n- Listen for: with a key, a clean whistle again.",
+          "cables": [["j.pitch_out", "j.vcf_mod"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in eighths.\n- TEMPO 2.11 · 3.01 Hz · 45 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a pure, flute-like melody in C minor.",
+          "set": {
+            "clock.tempo": 2.11,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "In this sound: high enough for the filter to sing on its own.",
+        "vcfmod.amt": "In this sound: fully up, so the PITCH row plays the filter a volt an octave."
+      },
+      "tweaks": [
+        {
+          "id": "mix.vco2",
+          "try": "Turn VCO 2 LEVEL to 3",
+          "hear": "A watery wobble under the whistle."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Turn NOISE / EXT LEVEL to 3",
+          "hear": "A breathy, ghostly tone."
+        }
+      ]
+    },
+    {
+      "id": "dfam-insane-toms",
+      "name": "Insane Toms",
+      "ref": "The manual’s Insane Toms patch sheet: VCO 2 adding triggers of its own",
+      "artist": "Moog Music",
+      "tags": ["perc", "drums", "patch"],
+      "level": 3,
+      "blurb": "Tumbling toms fired by a slow VCO 2 rather than the sequencer: a rhythm that never quite repeats.",
+      "how": "VCO 2, turned right down to a few hertz, is a clock of its own: patched into TRIGGER it replaces the sequencer’s triggers, so the toms fire at VCO 2’s rate while the sequencer moves on at its own, choosing each hit’s velocity and, through VCA DECAY, how it rings. VCO 2 EG AMOUNT makes its rate stretch and rush after every hit. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A tom",
+          "module": "osc",
+          "why": "VCO 1 triangle at A2, with a pitch envelope that drops it as it rings.\n- VCO 1 FREQUENCY 4.75 · A2 · 110 Hz\n- VCO 1 EG AMOUNT 1.77 · +12 st at full velocity\n- VCO DECAY 3.6 · 120 ms\n- VCA DECAY 4.34 · 200 ms\n- Listen for: with a key, a round tom with a short fall.",
+          "set": {
+            "vco1.freq": 4.75,
+            "vco1.eg_amt": 1.77,
+            "vco_eg.decay": 3.6,
+            "vca_eg.decay": 4.34
+          }
+        },
+        {
+          "title": "A slow VCO 2 as a clock",
+          "module": "osc",
+          "why": "VCO 2 down at its lowest, a few hertz, on its square, and kept out of the mix; its EG AMOUNT makes its rate surge after each hit.\n- VCO 2 FREQUENCY 0 · C-2 · 4.09 Hz\n- VCO 2 WAVE Square\n- VCO 2 EG AMOUNT 1.61 · +10 st at full velocity\n- Listen for: with a key, the same tom: VCO 2 is silent.",
+          "set": {
+            "vco2.freq": 0,
+            "vco2.wave": "square",
+            "vco2.eg_amt": 1.61
+          }
+        },
+        {
+          "title": "Rings and velocities",
+          "module": "mod",
+          "why": "The PITCH row sets each step’s ring through the cable to come; the VELOCITY row their strength.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 1 · +12 st (1.0 V)\n- PITCH 3 -0.5 · -6 st (-0.5 V)\n- PITCH 4 2 · +24 st (2.0 V)\n- PITCH 5 0.5 · +6 st (0.5 V)\n- PITCH 6 -1 · -12 st (-1.0 V)\n- PITCH 7 1.5 · +18 st (1.5 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 7 · 3.5 V\n- VELOCITY 3 9 · 4.5 V\n- VELOCITY 4 6 · 3.0 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 8 · 4.0 V\n- VELOCITY 7 7 · 3.5 V\n- VELOCITY 8 9 · 4.5 V\n- Listen for: nothing new until the cables and RUN.",
+          "set": {
+            "seq.pitch1": 0,
+            "seq.pitch2": 1,
+            "seq.pitch3": -0.5,
+            "seq.pitch4": 2,
+            "seq.pitch5": 0.5,
+            "seq.pitch6": -1,
+            "seq.pitch7": 1.5,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 7,
+            "seq.vel3": 9,
+            "seq.vel4": 6,
+            "seq.vel5": 10,
+            "seq.vel6": 8,
+            "seq.vel7": 7,
+            "seq.vel8": 9
+          }
+        },
+        {
+          "title": "Patch the triggers and the rings",
+          "module": "patch",
+          "why": "VCO 2 OUT into TRIGGER, which breaks the sequencer’s own triggers; PITCH OUT into VCA DECAY.\n- Patch VCO 2 OUT to TRIGGER input\n- Patch PITCH OUT to VCA DECAY input\n- Listen for: toms firing on their own at VCO 2’s rate.",
+          "cables": [
+            ["j.vco2_out", "j.trigger_in"],
+            ["j.pitch_out", "j.vca_decay"]
+          ]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit: the sequencer moves in sixteenths, choosing each hit’s strength and ring.\n- TEMPO 3.4 · 7.33 Hz · 110 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a lurching, never-quite-repeating tom pattern.",
+          "set": {
+            "clock.tempo": 3.4,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the rate of the toms, not a pitch.",
+        "vco2.eg_amt": "In this sound: how much each hit speeds VCO 2 up."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.eg_amt",
+          "try": "Turn VCO 2 EG AMOUNT to −2",
+          "hear": "Each hit slows the next: stuttering, falling rolls."
+        },
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQUENCY to 0.4",
+          "hear": "Faster toms: a roll."
+        }
+      ]
+    },
+    {
+      "id": "dfam-swing-time",
+      "name": "Swing Time",
+      "ref": "The manual’s Swing Time patch sheet: the PITCH row setting each step’s length",
+      "artist": "Moog Music",
+      "tags": ["perc", "drums", "patch"],
+      "level": 3,
+      "blurb": "A clave-like pattern whose steps are long and short: PITCH into TEMPO.",
+      "how": "The PITCH output into TEMPO adds each step’s voltage to the clock, a volt an octave: a step turned up is short, one turned down long. Here the app locks the clock to the bar’s beat, so each step snaps to the nearest whole division of it: the steps alternate between eighths and sixteenths, a swing in whole numbers. SEQ PITCH MOD is OFF, so the pitch stays put. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A wooden click",
+          "module": "osc",
+          "why": "VCO 1 triangle high, at A5, a tiny pitch drop and a very short decay: a clave.\n- VCO 1 FREQUENCY 7.75 · A5 · 880 Hz\n- VCO 1 EG AMOUNT 1.14 · +5 st at full velocity\n- VCO DECAY 1 · 20 ms\n- VCA DECAY 2.82 · 70 ms\n- Listen for: with a key, a short, woody click.",
+          "set": {
+            "vco1.freq": 7.75,
+            "vco1.eg_amt": 1.14,
+            "vco_eg.decay": 1,
+            "vca_eg.decay": 2.82
+          }
+        },
+        {
+          "title": "Long and short steps",
+          "module": "mod",
+          "why": "The PITCH row alternates a step turned down a volt (long) and one at the centre (short).\n- PITCH 1 -1 · -12 st (-1.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 -1 · -12 st (-1.0 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 -1 · -12 st (-1.0 V)\n- PITCH 7 0 · 0 st (0.0 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 6 · 3.0 V\n- VELOCITY 3 9 · 4.5 V\n- VELOCITY 4 6 · 3.0 V\n- VELOCITY 5 8 · 4.0 V\n- VELOCITY 6 10 · 5.0 V\n- VELOCITY 7 6 · 3.0 V\n- VELOCITY 8 7 · 3.5 V\n- Listen for: nothing new until the cable and RUN.",
+          "set": {
+            "seq.pitch1": -1,
+            "seq.pitch2": 0,
+            "seq.pitch3": -1,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0,
+            "seq.pitch6": -1,
+            "seq.pitch7": 0,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 6,
+            "seq.vel3": 9,
+            "seq.vel4": 6,
+            "seq.vel5": 8,
+            "seq.vel6": 10,
+            "seq.vel7": 6,
+            "seq.vel8": 7
+          }
+        },
+        {
+          "title": "Patch PITCH into TEMPO",
+          "module": "patch",
+          "why": "PITCH OUT into TEMPO: each step’s voltage sets its own length.\n- Patch PITCH OUT to TEMPO input\n- Listen for: nothing yet: the sequencer is stopped.",
+          "cables": [["j.pitch_out", "j.tempo"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, sixteenths at the centre of the PITCH knobs.\n- TEMPO 3.26 · 6.65 Hz · 100 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a lopsided, swinging clave pattern.",
+          "set": {
+            "clock.tempo": 3.26,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.pitch1": "In this sound: a long step, an eighth.",
+        "seq.pitch2": "In this sound: a short step, a sixteenth."
+      },
+      "tweaks": [
+        {
+          "id": "seq.pitch4",
+          "try": "Turn PITCH 4 to −1",
+          "hear": "Another long step: the pattern stretches."
+        },
+        {
+          "id": "seq.pitch8",
+          "try": "Turn PITCH 8 to 1",
+          "hear": "A thirty-second note: a flam at the end of the cycle."
+        }
+      ]
+    },
+    {
+      "id": "dfam-seq-osc",
+      "name": "Sequencer as an Oscillator",
+      "ref": "The manual’s Sequencer as an Oscillator patch sheet: VCO 1 clocking the sequencer at audio rate",
+      "artist": "Moog Music",
+      "tags": ["drone", "patch"],
+      "level": 3,
+      "blurb": "A buzzing tone whose waveform is drawn by the eight PITCH knobs.",
+      "how": "VCO 1 patched into ADV / CLOCK steps the sequencer hundreds of times a second, so the PITCH row becomes a waveform of eight steps, an eighth of VCO 1’s pitch; PITCH OUT into EXT AUDIO puts it in the mixer in place of the noise. VCO 1’s FREQUENCY sets the rate and so the pitch, and every PITCH knob reshapes the wave. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "VCO 1 as the clock",
+          "module": "osc",
+          "why": "VCO 1 out of the mix, at C5: fast enough to step the sequencer at audio rate.\n- VCO 1 LEVEL 0\n- VCO 1 FREQUENCY 7 · C5 · 523 Hz\n- VCO 1 WAVE Square\n- Listen for: with a key, nothing: VCO 1 is not in the mix.",
+          "set": {
+            "mix.vco1": 0,
+            "vco1.freq": 7,
+            "vco1.wave": "square"
+          }
+        },
+        {
+          "title": "Draw the wave",
+          "module": "mod",
+          "why": "The PITCH row as one cycle of a rounded wave, every VELOCITY up so the envelopes hold open.\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 3.5 · +42 st (3.5 V)\n- PITCH 3 5 · +60 st (5.0 V)\n- PITCH 4 3.5 · +42 st (3.5 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 -3.5 · -42 st (-3.5 V)\n- PITCH 7 -5 · -60 st (-5.0 V)\n- PITCH 8 -3.5 · -42 st (-3.5 V)\n- Listen for: nothing new until the cables.",
+          "set": {
+            "seq.pitch1": 0,
+            "seq.pitch2": 3.5,
+            "seq.pitch3": 5,
+            "seq.pitch4": 3.5,
+            "seq.pitch5": 0,
+            "seq.pitch6": -3.5,
+            "seq.pitch7": -5,
+            "seq.pitch8": -3.5
+          }
+        },
+        {
+          "title": "The wave into the mixer",
+          "module": "mixer",
+          "why": "NOISE / EXT LEVEL up and a long VCA decay.\n- NOISE / EXT LEVEL 7\n- VCA DECAY 6.67 · 1.0 s\n- Listen for: with a key, the noise, until the cable replaces it.",
+          "set": {
+            "mix.noise": 7,
+            "vca_eg.decay": 6.67
+          }
+        },
+        {
+          "title": "Patch it",
+          "module": "patch",
+          "why": "VCO 1 OUT into ADV / CLOCK clocks the sequencer; PITCH OUT into EXT AUDIO plays the steps.\n- Patch VCO 1 OUT to ADV / CLOCK input\n- Patch PITCH OUT to EXT AUDIO input\n- Listen for: nothing yet: ADV / CLOCK moves only a running sequencer.",
+          "cables": [
+            ["j.vco1_out", "j.adv_clock"],
+            ["j.pitch_out", "j.ext_audio"]
+          ]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit: VCO 1 now steps the sequencer, eight steps a cycle, so the tone is three octaves under VCO 1, at C2.\n- RUN / STOP lit\n- Listen for: a reedy, buzzing drone at C2.",
+          "set": {
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: the pitch of the drone, three octaves above it.",
+        "seq.pitch2": "In this sound: one eighth of the waveform."
+      },
+      "tweaks": [
+        {
+          "id": "seq.pitch3",
+          "try": "Turn PITCH 3 to −5",
+          "hear": "The wave folds: a brighter, nasal buzz."
+        },
+        {
+          "id": "mix.vco2",
+          "try": "Turn VCO 2 LEVEL to 4",
+          "hear": "Wild beating against the drone, as the sheet says."
+        }
+      ]
+    },
+    {
+      "id": "dfam-talking-drum",
+      "name": "Talking Drum",
+      "ref": "The manual’s Talking Drum patch sheet: VCO 2 modulating the cutoff for a vocal tone",
+      "artist": "Moog Music",
+      "tags": ["perc", "drums", "patch"],
+      "level": 2,
+      "blurb": "A drum whose tone talks: VCO 2 swinging the filter gives each hit a vowel.",
+      "how": "VCO 2 into VCF MOD swings the cutoff at audio rate, which turns a filtered drum vocal; NOISE / VCF MOD sets how much it talks, and the pitch drop bends the vowel. Less resonance gives more thump, as the sheet says. The cables are the sheet’s; the manual draws its knobs without numbers, so their settings here are this lesson’s.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A drum",
+          "module": "osc",
+          "why": "VCO 1 square at D2 with a pitch drop.\n- VCO 1 FREQUENCY 4.17 · D2 · 73 Hz\n- VCO 1 WAVE Square\n- VCO 1 EG AMOUNT 1.91 · +14 st at full velocity\n- VCO DECAY 3.92 · 150 ms\n- Listen for: with a key, a low drum with a bend.",
+          "set": {
+            "vco1.freq": 4.1667,
+            "vco1.wave": "square",
+            "vco1.eg_amt": 1.91,
+            "vco_eg.decay": 3.92
+          }
+        },
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "CUTOFF near 500 Hz, resonance up, the VCF EG opening it a little.\n- CUTOFF 4.66 · 500 Hz\n- RESONANCE 7\n- VCF EG AMOUNT 0.94 · +1.5 oct at full velocity\n- VCF DECAY 4.66 · 250 ms\n- VCA DECAY 4.92 · 300 ms\n- Listen for: with a key, a ringing, nasal drum.",
+          "set": {
+            "vcf.cutoff": 4.66,
+            "vcf.resonance": 7,
+            "vcf_eg.amt": 0.94,
+            "vcf_eg.decay": 4.66,
+            "vca_eg.decay": 4.92
+          }
+        },
+        {
+          "title": "VCO 2 makes it talk",
+          "module": "patch",
+          "why": "VCO 2 at D3, out of the mix, into VCF MOD, with NOISE / VCF MOD at 6.\n- VCO 2 FREQUENCY 5.17 · D3 · 147 Hz\n- NOISE / VCF MOD 6\n- Patch VCO 2 OUT to VCF MOD input\n- Listen for: with a key, a drum that says something like “wow”.",
+          "set": {
+            "vco2.freq": 5.1667,
+            "vcfmod.amt": 6
+          },
+          "cables": [["j.vco2_out", "j.vcf_mod"]]
+        },
+        {
+          "title": "Pattern and run",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2 with a few pitches, a talking-drum rhythm on the VELOCITY row, RUN / STOP lit in sixteenths.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0.42 · +5 st (0.4 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0.58 · +7 st (0.6 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 0.42 · +5 st (0.4 V)\n- PITCH 8 0.25 · +3 st (0.3 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 7 · 3.5 V\n- VELOCITY 4 8 · 4.0 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 9 · 4.5 V\n- VELOCITY 7 6 · 3.0 V\n- VELOCITY 8 0 · 0.0 V\n- TEMPO 3.32 · 6.94 Hz · 104 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a chattering, vocal drum pattern.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 0.4167,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0.5833,
+            "seq.pitch6": 0,
+            "seq.pitch7": 0.4167,
+            "seq.pitch8": 0.25,
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 7,
+            "seq.vel4": 8,
+            "seq.vel5": 0,
+            "seq.vel6": 9,
+            "seq.vel7": 6,
+            "seq.vel8": 0,
+            "clock.tempo": 3.32,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vcfmod.amt": "In this sound: how much the drum talks.",
+        "vcf.resonance": "In this sound: turn it down for more thump."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Turn RESONANCE to 3",
+          "hear": "Less talk, more thump."
+        },
+        {
+          "id": "vcfmod.amt",
+          "try": "Turn NOISE / VCF MOD to 10",
+          "hear": "A harsh, barking drum."
+        }
+      ]
+    },
+    {
+      "id": "dfam-techno-kick",
+      "name": "Techno Kick",
+      "ref": "A tight four-on-the-floor kick, its pitch thrown up and dropped in a few milliseconds",
+      "artist": "Techno",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "A four-on-the-floor kick: a low triangle with a fast pitch drop.",
+      "how": "A synthesised kick is a low, plain wave whose pitch falls fast at the start. On the DFAM that is VCO 1’s triangle with VCO 1 EG AMOUNT turned right and a short VCO DECAY. The velocity row puts it on every beat: steps 1 and 5 of eight sixteenths.",
+      "phrase": {
+        "bpm": 128,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A low triangle",
+          "module": "osc",
+          "why": "VCO 1 triangle at A1, the kick’s body.\n- VCO 1 FREQUENCY 3.75 · A1 · 55 Hz\n- VCO 1 LEVEL 8\n- Listen for: with a key, a soft, low thud.",
+          "set": {
+            "vco1.freq": 3.75,
+            "mix.vco1": 8
+          }
+        },
+        {
+          "title": "The punch",
+          "module": "osc",
+          "why": "VCO 1 EG AMOUNT throws the pitch up three octaves on each hit; a short VCO DECAY drops it back in about 40 ms.\n- VCO 1 EG AMOUNT 3.06 · +36 st at full velocity\n- VCO DECAY 2.01 · 40 ms\n- Listen for: with a key, a click and a thump: a kick.",
+          "set": {
+            "vco1.eg_amt": 3.06,
+            "vco_eg.decay": 2.01
+          }
+        },
+        {
+          "title": "Length and tone",
+          "module": "amp",
+          "why": "The filter at 2 kHz to round the click, and a 300 ms VCA decay.\n- CUTOFF 6.67 · 2.0 kHz\n- VCA DECAY 4.92 · 300 ms\n- Listen for: with a key, a full, round kick.",
+          "set": {
+            "vcf.cutoff": 6.67,
+            "vca_eg.decay": 4.92
+          }
+        },
+        {
+          "title": "Four on the floor",
+          "module": "mod",
+          "why": "The velocity row: steps 1 and 5 up, the rest silent. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 0 · 0.0 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 0 · 0.0 V\n- VELOCITY 8 0 · 0.0 V\n- TEMPO 3.62 · 8.53 Hz · 128 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a kick on every beat.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 0,
+            "seq.vel5": 10,
+            "seq.vel6": 0,
+            "seq.vel7": 0,
+            "seq.vel8": 0,
+            "clock.tempo": 3.62,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco1.eg_amt": "In this sound: how hard the kick punches.",
+        "vco_eg.decay": "In this sound: how fast the pitch drops; longer is a laser."
+      },
+      "tweaks": [
+        {
+          "id": "vco_eg.decay",
+          "try": "Turn VCO DECAY to 4",
+          "hear": "A slower drop: a deep, boomy kick."
+        },
+        {
+          "id": "seq.vel8",
+          "try": "Turn VELOCITY 8 to 6",
+          "hear": "A softer kick before every second beat."
+        }
+      ]
+    },
+    {
+      "id": "dfam-boom-kick",
+      "name": "Boom Kick",
+      "ref": "A long, booming kick sagging into a sub, the drum-machine bass drum of hip hop and trap",
+      "artist": "Hip hop",
+      "tags": ["perc", "drums", "bass"],
+      "level": 1,
+      "blurb": "A long kick whose pitch sags slowly into a sub-bass, on a syncopated pattern.",
+      "how": "The same kick with a slower pitch fall and a long VCA decay: the drop becomes a sag, and the tail is a bass note. A low filter keeps it round.",
+      "phrase": {
+        "bpm": 84,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A sub",
+          "module": "osc",
+          "why": "VCO 1 triangle at F1.\n- VCO 1 FREQUENCY 3.42 · F1 · 44 Hz\n- VCO 1 LEVEL 9\n- Listen for: with a key, a deep hum.",
+          "set": {
+            "vco1.freq": 3.4167,
+            "mix.vco1": 9
+          }
+        },
+        {
+          "title": "The sag",
+          "module": "osc",
+          "why": "A pitch jump of an octave and a half, falling over 150 ms.\n- VCO 1 EG AMOUNT 2.17 · +18.1 st at full velocity\n- VCO DECAY 3.92 · 150 ms\n- Listen for: with a key, a boom that sinks.",
+          "set": {
+            "vco1.eg_amt": 2.17,
+            "vco_eg.decay": 3.92
+          }
+        },
+        {
+          "title": "A long tail",
+          "module": "amp",
+          "why": "The filter at 500 Hz and a VCA decay of nearly a second.\n- CUTOFF 4.66 · 500 Hz\n- VCA DECAY 6.51 · 900 ms\n- Listen for: with a key, a boom with a long, low tail.",
+          "set": {
+            "vcf.cutoff": 4.66,
+            "vca_eg.decay": 6.51
+          }
+        },
+        {
+          "title": "The pattern",
+          "module": "mod",
+          "why": "Steps 1, 4 and 7, a softer one on 8. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 8 · 4.0 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 9 · 4.5 V\n- VELOCITY 8 4 · 2.0 V\n- TEMPO 3.01 · 5.60 Hz · 84 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a slow, syncopated, booming kick.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 8,
+            "seq.vel5": 0,
+            "seq.vel6": 0,
+            "seq.vel7": 9,
+            "seq.vel8": 4,
+            "clock.tempo": 3.01,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vca_eg.decay": "In this sound: the length of the sub tail.",
+        "vco_eg.decay": "In this sound: how slowly the boom sinks."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.eg_amt",
+          "try": "Turn VCO 1 EG AMOUNT to 0",
+          "hear": "A plain sub note with no attack."
+        },
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 6",
+          "hear": "A harder, clickier front."
+        }
+      ]
+    },
+    {
+      "id": "dfam-snare",
+      "name": "Analogue Snare",
+      "ref": "A backbeat snare of tone and noise, the analogue drum machine’s snare",
+      "artist": "Electro",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "A backbeat snare: a short tone for the drum, noise for the wires.",
+      "how": "An analogue snare is a short pitched tone for the drumhead and a burst of noise for the snares. VCO 1 high with a small pitch drop is the head; NOISE / EXT LEVEL up is the wires. The velocity row puts it on beat 2 of each half bar, with a ghost note before.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "The head",
+          "module": "osc",
+          "why": "VCO 1 triangle at F#3, a small pitch drop.\n- VCO 1 FREQUENCY 5.5 · F♯3 · 185 Hz\n- VCO 1 EG AMOUNT 1.35 · +7 st at full velocity\n- VCO DECAY 1.59 · 30 ms\n- Listen for: with a key, a short, tight tone.",
+          "set": {
+            "vco1.freq": 5.5,
+            "vco1.eg_amt": 1.35,
+            "vco_eg.decay": 1.59
+          }
+        },
+        {
+          "title": "The wires",
+          "module": "mixer",
+          "why": "NOISE / EXT LEVEL up to 8.\n- NOISE / EXT LEVEL 8\n- Listen for: with a key, a snare: tone and hiss together.",
+          "set": {
+            "mix.noise": 8
+          }
+        },
+        {
+          "title": "Snap",
+          "module": "filter",
+          "why": "The filter on HP at 250 Hz, cutting the boom, and a short VCA decay.\n- VCF (LP / HP) HP\n- CUTOFF 3.66 · 251 Hz\n- VCA DECAY 3.92 · 150 ms\n- Listen for: with a key, a crisp, snappy snare.",
+          "set": {
+            "vcf.mode": "hp",
+            "vcf.cutoff": 3.66,
+            "vca_eg.decay": 3.92
+          }
+        },
+        {
+          "title": "Backbeat",
+          "module": "mod",
+          "why": "Step 5 (beat 2) up, a ghost note on step 4 and one on 8. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 0 · 0.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 3 · 1.5 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 0 · 0.0 V\n- VELOCITY 8 3 · 1.5 V\n- TEMPO 3.26 · 6.65 Hz · 100 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a snare on every second beat, with ghost notes.",
+          "set": {
+            "seq.vel1": 0,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 3,
+            "seq.vel5": 10,
+            "seq.vel6": 0,
+            "seq.vel7": 0,
+            "seq.vel8": 3,
+            "clock.tempo": 3.26,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "mix.noise": "In this sound: the snare wires.",
+        "vcf.mode": "In this sound: HP takes the boom out of the head."
+      },
+      "tweaks": [
+        {
+          "id": "mix.noise",
+          "try": "Turn NOISE / EXT LEVEL to 3",
+          "hear": "More tone: a tom-like snare."
+        },
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 5",
+          "hear": "A long, washy snare."
+        }
+      ]
+    },
+    {
+      "id": "dfam-closed-hats",
+      "name": "Sixteenth Hats",
+      "ref": "Driving closed hi-hats in sixteenths, accented on the beat",
+      "artist": "House",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "Closed hi-hats on every sixteenth, the velocity row giving them their groove.",
+      "how": "Noise through the filter on HP, and a very short VCA decay, is a closed hat. Every step plays; the velocity row makes the groove, loud on the beat, softer between.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Noise, high-passed",
+          "module": "filter",
+          "why": "VCO 1 down, noise fully up, HP at 8 kHz.\n- VCO 1 LEVEL 0\n- NOISE / EXT LEVEL 10\n- VCF (LP / HP) HP\n- CUTOFF 8.67 · 8.0 kHz\n- Listen for: with a key, a burst of thin hiss.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 10,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 8.67
+          }
+        },
+        {
+          "title": "Closed",
+          "module": "amp",
+          "why": "A 30 ms VCA decay.\n- VCA DECAY 1.59 · 30 ms\n- Listen for: with a key, a tick.",
+          "set": {
+            "vca_eg.decay": 1.59
+          }
+        },
+        {
+          "title": "The groove",
+          "module": "mod",
+          "why": "Every step plays, accented on the beats. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 4 · 2.0 V\n- VELOCITY 3 7 · 3.5 V\n- VELOCITY 4 4 · 2.0 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 4 · 2.0 V\n- VELOCITY 7 7 · 3.5 V\n- VELOCITY 8 5 · 2.5 V\n- TEMPO 3.55 · 8.13 Hz · 122 BPM in 16ths\n- RUN / STOP lit\n- Listen for: driving closed hats.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 4,
+            "seq.vel3": 7,
+            "seq.vel4": 4,
+            "seq.vel5": 10,
+            "seq.vel6": 4,
+            "seq.vel7": 7,
+            "seq.vel8": 5,
+            "clock.tempo": 3.55,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.vel2": "In this sound: a soft hat between the beats."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 6",
+          "hear": "Darker, dustier hats."
+        },
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 2.5",
+          "hear": "Half-open hats."
+        }
+      ]
+    },
+    {
+      "id": "dfam-open-hat",
+      "name": "Offbeat Open Hat",
+      "ref": "An open hi-hat on every offbeat, the disco and house pulse",
+      "artist": "Disco",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "An open hat between the beats: noise with a long, sizzling decay.",
+      "how": "The closed hat with its decay lengthened is open, and noise moving the cutoff adds a sizzle. On steps 3 and 7 it falls between the beats.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Noise, high-passed",
+          "module": "filter",
+          "why": "VCO 1 down, noise up, HP at 7 kHz with a little resonance.\n- VCO 1 LEVEL 0\n- NOISE / EXT LEVEL 9\n- VCF (LP / HP) HP\n- CUTOFF 8.48 · 7.0 kHz\n- RESONANCE 2\n- Listen for: with a key, hiss.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 9,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 8.48,
+            "vcf.resonance": 2
+          }
+        },
+        {
+          "title": "Open, with sizzle",
+          "module": "amp",
+          "why": "A 300 ms decay; NOISE / VCF MOD shakes the cutoff with the noise.\n- VCA DECAY 4.92 · 300 ms\n- NOISE / VCF MOD 3\n- Listen for: with a key, an open, sizzling hat.",
+          "set": {
+            "vca_eg.decay": 4.92,
+            "vcfmod.amt": 3
+          }
+        },
+        {
+          "title": "Offbeats",
+          "module": "mod",
+          "why": "Steps 3 and 7. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 0 · 0.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 10 · 5.0 V\n- VELOCITY 4 0 · 0.0 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 10 · 5.0 V\n- VELOCITY 8 0 · 0.0 V\n- TEMPO 3.53 · 8.02 Hz · 120 BPM in 16ths\n- RUN / STOP lit\n- Listen for: an open hat between every beat.",
+          "set": {
+            "seq.vel1": 0,
+            "seq.vel2": 0,
+            "seq.vel3": 10,
+            "seq.vel4": 0,
+            "seq.vel5": 0,
+            "seq.vel6": 0,
+            "seq.vel7": 10,
+            "seq.vel8": 0,
+            "clock.tempo": 3.53,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vcfmod.amt": "In this sound: the sizzle."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 6",
+          "hear": "A long, crash-like wash."
+        },
+        {
+          "id": "vcfmod.amt",
+          "try": "Turn NOISE / VCF MOD to 8",
+          "hear": "A trashy, distorted hat."
+        }
+      ]
+    },
+    {
+      "id": "dfam-clave",
+      "name": "Tresillo Clave",
+      "ref": "A woody clave on the three-three-two tresillo rhythm",
+      "artist": "Latin",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "A high, woody click in three-three-two.",
+      "how": "A drum machine’s clave is a high, short tone. Here VCO 1’s triangle high up with a very short decay, and the velocity row in three-three-two: steps 1, 4 and 7.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A high click",
+          "module": "osc",
+          "why": "VCO 1 triangle at D#7, near 2.5 kHz, with a whisper of pitch drop.\n- VCO 1 FREQUENCY 9.25 · D♯7 · 2.5 kHz\n- VCO 1 EG AMOUNT 0.88 · +3 st at full velocity\n- VCO DECAY 0 · 10 ms\n- Listen for: with a key, a high ping.",
+          "set": {
+            "vco1.freq": 9.25,
+            "vco1.eg_amt": 0.88,
+            "vco_eg.decay": 0
+          }
+        },
+        {
+          "title": "Short",
+          "module": "amp",
+          "why": "A 50 ms decay: wood, not a bell.\n- VCA DECAY 2.33 · 50 ms\n- Listen for: with a key, a woody click.",
+          "set": {
+            "vca_eg.decay": 2.33
+          }
+        },
+        {
+          "title": "Three-three-two",
+          "module": "mod",
+          "why": "Steps 1, 4 and 7. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 9 · 4.5 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 9 · 4.5 V\n- VELOCITY 8 0 · 0.0 V\n- TEMPO 3.32 · 6.94 Hz · 104 BPM in 16ths\n- RUN / STOP lit\n- Listen for: the tresillo: three, three, two.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 9,
+            "seq.vel5": 0,
+            "seq.vel6": 0,
+            "seq.vel7": 9,
+            "seq.vel8": 0,
+            "clock.tempo": 3.32,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: the clave’s pitch."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.freq",
+          "try": "Turn VCO 1 FREQUENCY to 8.2",
+          "hear": "A lower, rimshot-like knock."
+        },
+        {
+          "id": "seq.vel3",
+          "try": "Turn VELOCITY 3 to 5",
+          "hear": "A ghost note fills the gap."
+        }
+      ]
+    },
+    {
+      "id": "dfam-cowbell",
+      "name": "Electro Cowbell",
+      "ref": "Two square waves a sixth apart, the drum-machine cowbell of electro and Miami bass",
+      "artist": "Electro",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "The clanking analogue cowbell: two squares, filtered, short.",
+      "how": "The drum-machine cowbell is two square waves at an odd interval through a band of the filter. Here VCO 1 and VCO 2 squares at about 540 and 800 Hz, the filter resonant around them.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two squares",
+          "module": "osc",
+          "why": "VCO 1 square at C#5, VCO 2 square at G5, both in the mix.\n- VCO 1 FREQUENCY 7.08 · C♯5 · 554 Hz\n- VCO 1 WAVE Square\n- VCO 2 FREQUENCY 7.58 · G5 · 784 Hz\n- VCO 2 WAVE Square\n- VCO 2 LEVEL 7\n- Listen for: with a key, a clashing, metallic pair.",
+          "set": {
+            "vco1.freq": 7.0833,
+            "vco1.wave": "square",
+            "vco2.freq": 7.5833,
+            "vco2.wave": "square",
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "Band it",
+          "module": "filter",
+          "why": "LP at 2.5 kHz with resonance; a short decay.\n- CUTOFF 6.99 · 2.5 kHz\n- RESONANCE 5\n- VCA DECAY 3.92 · 150 ms\n- Listen for: with a key, a cowbell.",
+          "set": {
+            "vcf.cutoff": 6.99,
+            "vcf.resonance": 5,
+            "vca_eg.decay": 3.92
+          }
+        },
+        {
+          "title": "The pattern",
+          "module": "mod",
+          "why": "An electro cowbell figure on the velocity row. RUN / STOP lit, in sixteenths.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 7 · 3.5 V\n- VELOCITY 4 0 · 0.0 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 0 · 0.0 V\n- VELOCITY 8 7 · 3.5 V\n- TEMPO 3.43 · 7.48 Hz · 112 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a bouncing cowbell line.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 7,
+            "seq.vel4": 0,
+            "seq.vel5": 10,
+            "seq.vel6": 0,
+            "seq.vel7": 0,
+            "seq.vel8": 7,
+            "clock.tempo": 3.43,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: the second tone, a sixth above."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fm_amt",
+          "try": "Turn 1→2 FM AMOUNT to 3",
+          "hear": "A rougher, gong-like cowbell."
+        },
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 4.5",
+          "hear": "A ringing agogo."
+        }
+      ]
+    },
+    {
+      "id": "dfam-electro-toms",
+      "name": "Falling Toms",
+      "ref": "Tuned toms rolling down the kit, each with a falling pitch",
+      "artist": "Electro",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "A tom fill down four pitches, each tom’s pitch falling as it rings.",
+      "how": "Synth toms are triangles whose pitch drops as they decay. SEQ PITCH MOD on VCO 1&2 lets the PITCH row tune four toms, two steps each, down the kit.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A tom",
+          "module": "osc",
+          "why": "VCO 1 triangle at E2, a pitch drop of an octave over 120 ms.\n- VCO 1 FREQUENCY 4.33 · E2 · 82 Hz\n- VCO 1 EG AMOUNT 1.77 · +12 st at full velocity\n- VCO DECAY 3.6 · 120 ms\n- Listen for: with a key, a falling tom.",
+          "set": {
+            "vco1.freq": 4.3333,
+            "vco1.eg_amt": 1.77,
+            "vco_eg.decay": 3.6
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A 250 ms decay, the filter a little closed.\n- VCA DECAY 4.66 · 250 ms\n- CUTOFF 7.25 · 3.0 kHz\n- Listen for: with a key, a full tom.",
+          "set": {
+            "vca_eg.decay": 4.66,
+            "vcf.cutoff": 7.25
+          }
+        },
+        {
+          "title": "Four toms",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2, the PITCH row two steps on each of four pitches, high to low.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 1 · +12 st (1.0 V)\n- PITCH 2 1 · +12 st (1.0 V)\n- PITCH 3 0.58 · +7 st (0.6 V)\n- PITCH 4 0.58 · +7 st (0.6 V)\n- PITCH 5 0.25 · +3 st (0.3 V)\n- PITCH 6 0.25 · +3 st (0.3 V)\n- PITCH 7 0 · 0 st (0.0 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 7 · 3.5 V\n- VELOCITY 3 10 · 5.0 V\n- VELOCITY 4 7 · 3.5 V\n- VELOCITY 5 10 · 5.0 V\n- VELOCITY 6 7 · 3.5 V\n- VELOCITY 7 10 · 5.0 V\n- VELOCITY 8 8 · 4.0 V\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 1,
+            "seq.pitch2": 1,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 0.5833,
+            "seq.pitch5": 0.25,
+            "seq.pitch6": 0.25,
+            "seq.pitch7": 0,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 7,
+            "seq.vel3": 10,
+            "seq.vel4": 7,
+            "seq.vel5": 10,
+            "seq.vel6": 7,
+            "seq.vel7": 10,
+            "seq.vel8": 8
+          }
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in sixteenths.\n- TEMPO 3.43 · 7.48 Hz · 112 BPM in 16ths\n- RUN / STOP lit\n- Listen for: toms rolling down the kit.",
+          "set": {
+            "clock.tempo": 3.43,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "seq.pitch1": "In this sound: the high tom."
+      },
+      "tweaks": [
+        {
+          "id": "vco_eg.decay",
+          "try": "Turn VCO DECAY to 6.34",
+          "hear": "Long, falling disco toms."
+        },
+        {
+          "id": "seq.pitch_mod",
+          "try": "Set SEQ PITCH MOD to OFF",
+          "hear": "One tom, at one pitch."
+        }
+      ]
+    },
+    {
+      "id": "dfam-laser",
+      "name": "Laser Zaps",
+      "ref": "Falling laser zaps, the pew-pew of sci-fi and electro",
+      "artist": "Electro",
+      "tags": ["fx", "perc"],
+      "level": 1,
+      "blurb": "Zaps that fall from very high, each at a different pitch.",
+      "how": "A laser is a kick’s pitch drop made huge and slow: VCO 1 EG AMOUNT far right and VCO DECAY long. Square waves give it bite, and the PITCH row starts each zap somewhere else.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A square",
+          "module": "osc",
+          "why": "VCO 1 square at C3.\n- VCO 1 WAVE Square\n- Listen for: with a key, a buzzy tone.",
+          "set": {
+            "vco1.wave": "square"
+          }
+        },
+        {
+          "title": "The zap",
+          "module": "osc",
+          "why": "Five octaves of pitch envelope, falling over 300 ms.\n- VCO 1 EG AMOUNT 3.95 · +59.9 st at full velocity\n- VCO DECAY 4.92 · 300 ms\n- Listen for: with a key, pew.",
+          "set": {
+            "vco1.eg_amt": 3.95,
+            "vco_eg.decay": 4.92
+          }
+        },
+        {
+          "title": "Length",
+          "module": "amp",
+          "why": "A 400 ms decay.\n- VCA DECAY 5.34 · 400 ms\n- Listen for: with a key, a full zap.",
+          "set": {
+            "vca_eg.decay": 5.34
+          }
+        },
+        {
+          "title": "A volley",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2 with a different pitch each step, and gaps. RUN / STOP lit, in eighths.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.58 · +7 st (0.6 V)\n- PITCH 3 -0.42 · -5 st (-0.4 V)\n- PITCH 4 1 · +12 st (1.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 -1 · -12 st (-1.0 V)\n- PITCH 7 0.42 · +5 st (0.4 V)\n- PITCH 8 1.58 · +19 st (1.6 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 8 · 4.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 10 · 5.0 V\n- VELOCITY 5 7 · 3.5 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 9 · 4.5 V\n- VELOCITY 8 6 · 3.0 V\n- TEMPO 2.26 · 3.34 Hz · 50 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a volley of laser zaps.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.5833,
+            "seq.pitch3": -0.4167,
+            "seq.pitch4": 1,
+            "seq.pitch5": 0,
+            "seq.pitch6": -1,
+            "seq.pitch7": 0.4167,
+            "seq.pitch8": 1.5833,
+            "seq.vel1": 10,
+            "seq.vel2": 8,
+            "seq.vel3": 0,
+            "seq.vel4": 10,
+            "seq.vel5": 7,
+            "seq.vel6": 0,
+            "seq.vel7": 9,
+            "seq.vel8": 6,
+            "clock.tempo": 2.26,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco_eg.decay": "In this sound: how long each zap falls."
+      },
+      "tweaks": [
+        {
+          "id": "vco1.eg_amt",
+          "try": "Turn VCO 1 EG AMOUNT to −4",
+          "hear": "Rising zaps: power-ups."
+        },
+        {
+          "id": "vco_eg.decay",
+          "try": "Turn VCO DECAY to 2",
+          "hear": "Short blips."
+        }
+      ]
+    },
+    {
+      "id": "dfam-boing",
+      "name": "Boing",
+      "ref": "A rubbery boing whose pitch dips and springs back, the cartoon spring",
+      "artist": "Sound effect",
+      "tags": ["fx", "perc"],
+      "level": 1,
+      "blurb": "Rubbery boings: the pitch envelope turned the other way.",
+      "how": "VCO 1 EG AMOUNT left of centre dips the pitch on each hit and lets it rise back: a boing rather than a punch. The manual calls it video-game-esque.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A triangle",
+          "module": "osc",
+          "why": "VCO 1 triangle at C4.\n- VCO 1 FREQUENCY 6 · C4 · 262 Hz\n- Listen for: with a key, a pure tone.",
+          "set": {
+            "vco1.freq": 6
+          }
+        },
+        {
+          "title": "The dip",
+          "module": "osc",
+          "why": "VCO 1 EG AMOUNT left: two octaves down, rising back over 200 ms.\n- VCO 1 EG AMOUNT -2.5 · -24 st at full velocity\n- VCO DECAY 4.34 · 200 ms\n- Listen for: with a key, boing.",
+          "set": {
+            "vco1.eg_amt": -2.5,
+            "vco_eg.decay": 4.34
+          }
+        },
+        {
+          "title": "Bounce",
+          "module": "mod",
+          "why": "A 300 ms decay; a bouncing rhythm on the velocity row with a pitch or two. RUN / STOP lit, in sixteenths.\n- VCA DECAY 4.92 · 300 ms\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0 · 0 st (0.0 V)\n- PITCH 4 0.58 · +7 st (0.6 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 1 · +12 st (1.0 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 8 · 4.0 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 9 · 4.5 V\n- VELOCITY 8 0 · 0.0 V\n- TEMPO 3.2 · 6.38 Hz · 96 BPM in 16ths\n- RUN / STOP lit\n- Listen for: boings bouncing along.",
+          "set": {
+            "vca_eg.decay": 4.92,
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 0,
+            "seq.pitch4": 0.5833,
+            "seq.pitch5": 0,
+            "seq.pitch6": 0,
+            "seq.pitch7": 1,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 8,
+            "seq.vel5": 0,
+            "seq.vel6": 0,
+            "seq.vel7": 9,
+            "seq.vel8": 0,
+            "clock.tempo": 3.2,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco1.eg_amt": "In this sound: left of centre, so the pitch dips."
+      },
+      "tweaks": [
+        {
+          "id": "vco_eg.decay",
+          "try": "Turn VCO DECAY to 5",
+          "hear": "A slow, drunken wobble up."
+        },
+        {
+          "id": "vco1.freq",
+          "try": "Turn VCO 1 FREQUENCY to 7",
+          "hear": "Higher, sproingier boings."
+        }
+      ]
+    },
+    {
+      "id": "dfam-metal",
+      "name": "Factory Clank",
+      "ref": "Clanking, inharmonic metal hits of industrial music",
+      "artist": "Industrial",
+      "tags": ["perc", "fx"],
+      "level": 2,
+      "blurb": "Inharmonic, metallic clanks from linear FM between the two VCOs.",
+      "how": "Linear FM between two oscillators at an awkward ratio makes sidebands that belong to no note: metal. VCO 1 modulates VCO 2 at 1→2 FM AMOUNT; SEQ PITCH MOD on VCO 2 changes the ratio every step, so every hit is a different piece of metal.",
+      "phrase": {
+        "bpm": 116,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "The carrier",
+          "module": "osc",
+          "why": "VCO 2 triangle at A3, alone in the mix; VCO 1 down in the mix but running at E4 as the modulator.\n- VCO 1 LEVEL 0\n- VCO 2 LEVEL 9\n- VCO 2 FREQUENCY 5.75 · A3 · 220 Hz\n- VCO 1 FREQUENCY 6.33 · E4 · 330 Hz\n- VCO 1 WAVE Square\n- Listen for: with a key, a soft tone.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.vco2": 9,
+            "vco2.freq": 5.75,
+            "vco1.freq": 6.3333,
+            "vco1.wave": "square"
+          }
+        },
+        {
+          "title": "Linear FM",
+          "module": "osc",
+          "why": "1→2 FM AMOUNT at 7.\n- 1→2 FM AMOUNT 7\n- Listen for: with a key, a harsh, metallic clang.",
+          "set": {
+            "vco2.fm_amt": 7
+          }
+        },
+        {
+          "title": "Hit",
+          "module": "amp",
+          "why": "HP at 300 Hz and a short decay.\n- VCF (LP / HP) HP\n- CUTOFF 3.92 · 300 Hz\n- VCA DECAY 3.6 · 120 ms\n- Listen for: with a key, a struck piece of metal.",
+          "set": {
+            "vcf.mode": "hp",
+            "vcf.cutoff": 3.92,
+            "vca_eg.decay": 3.6
+          }
+        },
+        {
+          "title": "A different metal each step",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 2, odd intervals on the PITCH row. RUN / STOP lit, in sixteenths.\n- SEQ PITCH MOD VCO 2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.5 · +6 st (0.5 V)\n- PITCH 3 -0.42 · -5 st (-0.4 V)\n- PITCH 4 0.92 · +11 st (0.9 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 1.08 · +13 st (1.1 V)\n- PITCH 7 -0.58 · -7 st (-0.6 V)\n- PITCH 8 0.5 · +6 st (0.5 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 6 · 3.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 9 · 4.5 V\n- VELOCITY 5 7 · 3.5 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 10 · 5.0 V\n- VELOCITY 8 5 · 2.5 V\n- TEMPO 3.48 · 7.75 Hz · 116 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a clanking factory rhythm.",
+          "set": {
+            "seq.pitch_mod": "vco2",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.5,
+            "seq.pitch3": -0.4167,
+            "seq.pitch4": 0.9167,
+            "seq.pitch5": 0,
+            "seq.pitch6": 1.0833,
+            "seq.pitch7": -0.5833,
+            "seq.pitch8": 0.5,
+            "seq.vel1": 10,
+            "seq.vel2": 6,
+            "seq.vel3": 0,
+            "seq.vel4": 9,
+            "seq.vel5": 7,
+            "seq.vel6": 0,
+            "seq.vel7": 10,
+            "seq.vel8": 5,
+            "clock.tempo": 3.48,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.fm_amt": "In this sound: the metal."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fm_amt",
+          "try": "Turn 1→2 FM AMOUNT to 3",
+          "hear": "A bell, not a clank."
+        },
+        {
+          "id": "vco2.sync",
+          "try": "Set HARD SYNC to ON",
+          "hear": "Tighter, more pitched metal."
+        }
+      ]
+    },
+    {
+      "id": "dfam-sync-chirps",
+      "name": "Sync Chirps",
+      "ref": "Sweeping hard-sync chirps over a held pitch",
+      "artist": "Electro",
+      "tags": ["fx", "seq"],
+      "level": 2,
+      "blurb": "Tearing, vocal chirps: VCO 2 synced to VCO 1 and swept by the pitch envelope.",
+      "how": "With HARD SYNC on, VCO 2 keeps VCO 1’s pitch while its own pitch changes its tone. Sweep VCO 2’s pitch with VCO 2 EG AMOUNT and the tone tears down on each hit while the note stays put: the sync sweep.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "VCO 2 synced to VCO 1",
+          "module": "osc",
+          "why": "VCO 2 square alone in the mix, HARD SYNC on, VCO 1 at C3 as the master.\n- VCO 1 LEVEL 0\n- VCO 2 LEVEL 8\n- VCO 2 WAVE Square\n- HARD SYNC On\n- VCO 2 FREQUENCY 5.58 · G3 · 196 Hz\n- Listen for: with a key, a hollow, nasal C.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.vco2": 8,
+            "vco2.wave": "square",
+            "vco2.sync": "on",
+            "vco2.freq": 5.5833
+          }
+        },
+        {
+          "title": "The sweep",
+          "module": "osc",
+          "why": "VCO 2 EG AMOUNT up two octaves, falling over 150 ms.\n- VCO 2 EG AMOUNT 2.5 · +24 st at full velocity\n- VCO DECAY 3.92 · 150 ms\n- Listen for: with a key, a tearing chirp.",
+          "set": {
+            "vco2.eg_amt": 2.5,
+            "vco_eg.decay": 3.92
+          }
+        },
+        {
+          "title": "Shape",
+          "module": "filter",
+          "why": "LP at 4 kHz with resonance, a 200 ms decay.\n- CUTOFF 7.67 · 4.0 kHz\n- RESONANCE 4\n- VCA DECAY 4.34 · 200 ms\n- Listen for: with a key, a rounder chirp.",
+          "set": {
+            "vcf.cutoff": 7.67,
+            "vcf.resonance": 4,
+            "vca_eg.decay": 4.34
+          }
+        },
+        {
+          "title": "A line",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2: a line in C minor on the PITCH row. RUN / STOP lit, in sixteenths.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0.25 · +3 st (0.3 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0.58 · +7 st (0.6 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 0.83 · +10 st (0.8 V)\n- PITCH 8 1 · +12 st (1.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 5 · 2.5 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 5 · 2.5 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 5 · 2.5 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 10 · 5.0 V\n- TEMPO 3.53 · 8.02 Hz · 120 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a chirping, tearing sequence.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 0.25,
+            "seq.pitch4": 0,
+            "seq.pitch5": 0.5833,
+            "seq.pitch6": 0,
+            "seq.pitch7": 0.8333,
+            "seq.pitch8": 1,
+            "seq.vel1": 10,
+            "seq.vel2": 5,
+            "seq.vel3": 8,
+            "seq.vel4": 5,
+            "seq.vel5": 9,
+            "seq.vel6": 5,
+            "seq.vel7": 8,
+            "seq.vel8": 10,
+            "clock.tempo": 3.53,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.eg_amt": "In this sound: the sweep of the sync."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.freq",
+          "try": "Turn VCO 2 FREQUENCY to 6",
+          "hear": "A brighter, screaming tone."
+        },
+        {
+          "id": "vco2.sync",
+          "try": "Set HARD SYNC to OFF",
+          "hear": "The chirp becomes a falling pitch."
+        }
+      ]
+    },
+    {
+      "id": "dfam-sizzle",
+      "name": "Noise Crash",
+      "ref": "A crash of filtered noise once a bar, the drum machine’s noise cymbal",
+      "artist": "Electro",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "A long, sizzling crash on the first beat of each bar.",
+      "how": "A synth crash is noise with a long decay, high-passed, with the noise also shaking the filter for a metallic sizzle. In eighths, the first step of eight is the bar’s downbeat.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Noise",
+          "module": "filter",
+          "why": "VCO 1 down, noise up, HP at 5 kHz with resonance.\n- VCO 1 LEVEL 0\n- NOISE / EXT LEVEL 10\n- VCF (LP / HP) HP\n- CUTOFF 7.99 · 5.0 kHz\n- RESONANCE 4\n- Listen for: with a key, hiss.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 10,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 7.99,
+            "vcf.resonance": 4
+          }
+        },
+        {
+          "title": "Sizzle",
+          "module": "filter",
+          "why": "NOISE / VCF MOD at 6, and the VCF EG opening it on the hit.\n- NOISE / VCF MOD 6\n- VCF EG AMOUNT 1.25 · +2.0 oct at full velocity\n- VCF DECAY 5.93 · 600 ms\n- Listen for: with a key, a metallic, fizzing burst.",
+          "set": {
+            "vcfmod.amt": 6,
+            "vcf_eg.amt": 1.25,
+            "vcf_eg.decay": 5.93
+          }
+        },
+        {
+          "title": "Long",
+          "module": "amp",
+          "why": "A decay of a second and a half.\n- VCA DECAY 7.25 · 1.5 s\n- Listen for: with a key, a crash.",
+          "set": {
+            "vca_eg.decay": 7.25
+          }
+        },
+        {
+          "title": "Once a bar",
+          "module": "mod",
+          "why": "Step 1 only. RUN / STOP lit, in eighths: eight steps, a bar.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 0 · 0.0 V\n- VELOCITY 5 0 · 0.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 0 · 0.0 V\n- VELOCITY 8 0 · 0.0 V\n- TEMPO 2.52 · 3.99 Hz · 60 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a crash on each downbeat.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 0,
+            "seq.vel5": 0,
+            "seq.vel6": 0,
+            "seq.vel7": 0,
+            "seq.vel8": 0,
+            "clock.tempo": 2.52,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vcfmod.amt": "In this sound: the metallic sizzle."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 9",
+          "hear": "A ride that never stops."
+        },
+        {
+          "id": "seq.vel5",
+          "try": "Turn VELOCITY 5 to 5",
+          "hear": "A softer crash on beat three."
+        }
+      ]
+    },
+    {
+      "id": "dfam-ratchets",
+      "name": "Ratchet Hats",
+      "ref": "Hats in thirty-second notes with rolls and gaps, the ratchets of modern trap",
+      "artist": "Trap",
+      "tags": ["perc", "drums"],
+      "level": 2,
+      "blurb": "Fast hat rolls: TEMPO at thirty-seconds, the velocity row carving rolls out of them.",
+      "how": "Turn TEMPO up to eight steps a beat and the eight steps are one beat of thirty-seconds. Turning some steps off leaves eighths; leaving runs of them on makes rolls.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A hat",
+          "module": "filter",
+          "why": "VCO 1 down, noise up, HP at 9 kHz, a 25 ms decay.\n- VCO 1 LEVEL 0\n- NOISE / EXT LEVEL 10\n- VCF (LP / HP) HP\n- CUTOFF 8.84 · 9.0 kHz\n- VCA DECAY 1.33 · 25 ms\n- Listen for: with a key, a tick.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.noise": 10,
+            "vcf.mode": "hp",
+            "vcf.cutoff": 8.84,
+            "vca_eg.decay": 1.33
+          }
+        },
+        {
+          "title": "Rolls",
+          "module": "mod",
+          "why": "Steps 1 and 5 loud (eighths), a roll building over 6, 7 and 8. RUN / STOP lit, at eight steps a beat.\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 0 · 0.0 V\n- VELOCITY 4 0 · 0.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 4 · 2.0 V\n- VELOCITY 7 6 · 3.0 V\n- VELOCITY 8 8 · 4.0 V\n- TEMPO 4.75 · 19 Hz · 279 BPM in 16ths\n- RUN / STOP lit\n- Listen for: eighth-note hats with a roll into every beat.",
+          "set": {
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 0,
+            "seq.vel4": 0,
+            "seq.vel5": 9,
+            "seq.vel6": 4,
+            "seq.vel7": 6,
+            "seq.vel8": 8,
+            "clock.tempo": 4.75,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.tempo": "In this sound: eight steps a beat, thirty-second notes."
+      },
+      "tweaks": [
+        {
+          "id": "seq.vel3",
+          "try": "Turn VELOCITY 3 to 5",
+          "hear": "A second roll."
+        },
+        {
+          "id": "clock.tempo",
+          "try": "Turn TEMPO to 3.75",
+          "hear": "Half the speed: sixteenths."
+        }
+      ]
+    },
+    {
+      "id": "dfam-triplet-shuffle",
+      "name": "Triplet Shuffle",
+      "ref": "Kick and tom in triplets, an eight-step loop turning against the bar",
+      "artist": "Polymeter",
+      "tags": ["perc", "drums"],
+      "level": 3,
+      "blurb": "Three steps a beat: an eight-step pattern that lands differently every bar.",
+      "how": "At three steps a beat the eight steps take two and two-thirds beats, so the pattern drifts across the bar and comes back after three of its loops, two bars. The PITCH row switches between a kick and a tom.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [[0, 60, 8]]
+      },
+      "steps": [
+        {
+          "title": "Kick and tom in one",
+          "module": "osc",
+          "why": "VCO 1 triangle at G1 with punch.\n- VCO 1 FREQUENCY 3.58 · G1 · 49 Hz\n- VCO 1 EG AMOUNT 2.5 · +24 st at full velocity\n- VCO DECAY 2.59 · 60 ms\n- VCA DECAY 4.92 · 300 ms\n- Listen for: with a key, a punchy low drum.",
+          "set": {
+            "vco1.freq": 3.5833,
+            "vco1.eg_amt": 2.5,
+            "vco_eg.decay": 2.59,
+            "vca_eg.decay": 4.92
+          }
+        },
+        {
+          "title": "Two drums from the PITCH row",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2: steps up an octave and a fifth are toms, the rest kicks.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 1.58 · +19 st (1.6 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 1.58 · +19 st (1.6 V)\n- PITCH 6 0 · 0 st (0.0 V)\n- PITCH 7 2 · +24 st (2.0 V)\n- PITCH 8 1.58 · +19 st (1.6 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 0 · 0.0 V\n- VELOCITY 3 7 · 3.5 V\n- VELOCITY 4 9 · 4.5 V\n- VELOCITY 5 6 · 3.0 V\n- VELOCITY 6 0 · 0.0 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 5 · 2.5 V\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0,
+            "seq.pitch3": 1.5833,
+            "seq.pitch4": 0,
+            "seq.pitch5": 1.5833,
+            "seq.pitch6": 0,
+            "seq.pitch7": 2,
+            "seq.pitch8": 1.5833,
+            "seq.vel1": 10,
+            "seq.vel2": 0,
+            "seq.vel3": 7,
+            "seq.vel4": 9,
+            "seq.vel5": 6,
+            "seq.vel6": 0,
+            "seq.vel7": 8,
+            "seq.vel8": 5
+          }
+        },
+        {
+          "title": "Run in triplets",
+          "module": "mod",
+          "why": "RUN / STOP lit, at three steps a beat.\n- TEMPO 2.79 · 4.81 Hz · 72 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a rolling triplet groove that comes round every two bars.",
+          "set": {
+            "clock.tempo": 2.79,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "clock.tempo": "In this sound: three steps a beat, so eight steps cross the bar line."
+      },
+      "tweaks": [
+        {
+          "id": "clock.tempo",
+          "try": "Turn TEMPO to 3.2",
+          "hear": "Sixteenths: the pattern lines up with the bar."
+        },
+        {
+          "id": "seq.pitch7",
+          "try": "Turn PITCH 7 to 3",
+          "hear": "A high bongo on step 7."
+        }
+      ]
+    },
+    {
+      "id": "dfam-acid",
+      "name": "Squelch Line",
+      "ref": "A resonant, squelching sixteenth-note bass line of acid house",
+      "artist": "Acid house",
+      "tags": ["bass", "seq"],
+      "level": 2,
+      "blurb": "A rubbery, resonant bass line with accents from the velocity row.",
+      "how": "A resonant low-pass on a square, opened by the VCF EG on every note, squelches. The velocity row is the accent: a hard step opens the filter further, as well as being louder.",
+      "phrase": {
+        "bpm": 126,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A square bass",
+          "module": "osc",
+          "why": "VCO 1 square at C2.\n- VCO 1 FREQUENCY 4 · C2 · 65 Hz\n- VCO 1 WAVE Square\n- Listen for: with a key, a buzzy low note.",
+          "set": {
+            "vco1.freq": 4,
+            "vco1.wave": "square"
+          }
+        },
+        {
+          "title": "Squelch",
+          "module": "filter",
+          "why": "CUTOFF at 250 Hz, RESONANCE at 7, the VCF EG three octaves up with a 150 ms decay.\n- CUTOFF 3.66 · 251 Hz\n- RESONANCE 7\n- VCF EG AMOUNT 1.88 · +3.0 oct at full velocity\n- VCF DECAY 3.92 · 150 ms\n- VCA DECAY 4.66 · 250 ms\n- Listen for: with a key, a squelchy, vocal bass note.",
+          "set": {
+            "vcf.cutoff": 3.66,
+            "vcf.resonance": 7,
+            "vcf_eg.amt": 1.88,
+            "vcf_eg.decay": 3.92,
+            "vca_eg.decay": 4.66
+          }
+        },
+        {
+          "title": "The line",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2; octaves and a minor third on the PITCH row, accents on the velocity row.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 1 · +12 st (1.0 V)\n- PITCH 3 0 · 0 st (0.0 V)\n- PITCH 4 0.25 · +3 st (0.3 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 1 · +12 st (1.0 V)\n- PITCH 7 1.25 · +15 st (1.3 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 5 · 2.5 V\n- VELOCITY 3 6 · 3.0 V\n- VELOCITY 4 9 · 4.5 V\n- VELOCITY 5 5 · 2.5 V\n- VELOCITY 6 10 · 5.0 V\n- VELOCITY 7 6 · 3.0 V\n- VELOCITY 8 7 · 3.5 V\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 1,
+            "seq.pitch3": 0,
+            "seq.pitch4": 0.25,
+            "seq.pitch5": 0,
+            "seq.pitch6": 1,
+            "seq.pitch7": 1.25,
+            "seq.pitch8": 0,
+            "seq.vel1": 10,
+            "seq.vel2": 5,
+            "seq.vel3": 6,
+            "seq.vel4": 9,
+            "seq.vel5": 5,
+            "seq.vel6": 10,
+            "seq.vel7": 6,
+            "seq.vel8": 7
+          }
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in sixteenths.\n- TEMPO 3.6 · 8.42 Hz · 126 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a bouncing, squelching acid line.",
+          "set": {
+            "clock.tempo": 3.6,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "In this sound: the squelch.",
+        "seq.vel4": "In this sound: an accent."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.cutoff",
+          "try": "Turn CUTOFF to 5.34",
+          "hear": "Brighter, more aggressive."
+        },
+        {
+          "id": "vcf_eg.decay",
+          "try": "Turn VCF DECAY to 4.5",
+          "hear": "Longer, wah-like notes."
+        }
+      ]
+    },
+    {
+      "id": "dfam-berlin",
+      "name": "Berlin Sequence",
+      "ref": "An eight-note arpeggio of two detuned oscillators, the sequencer music of 1970s Berlin",
+      "artist": "Berlin School",
+      "tags": ["seq", "bass"],
+      "level": 2,
+      "blurb": "A pulsing, detuned eight-note sequence through a moving filter.",
+      "how": "Two oscillators a hair apart, an arpeggio on the PITCH row and a filter envelope on every note: the analogue step sequence of 1970s electronic music. The velocity row is nearly flat, so it pulses rather than grooves.",
+      "phrase": {
+        "bpm": 118,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "Two detuned oscillators",
+          "module": "osc",
+          "why": "VCO 1 square and VCO 2 triangle at C2, VCO 2 a few cents sharp.\n- VCO 1 FREQUENCY 4 · C2 · 65 Hz\n- VCO 1 WAVE Square\n- VCO 2 FREQUENCY 3.02 · C1 · 33 Hz\n- VCO 2 LEVEL 7\n- Listen for: with a key, a slowly beating low tone.",
+          "set": {
+            "vco1.freq": 4,
+            "vco1.wave": "square",
+            "vco2.freq": 3.02,
+            "mix.vco2": 7
+          }
+        },
+        {
+          "title": "The filter",
+          "module": "filter",
+          "why": "CUTOFF at 600 Hz with some resonance, the VCF EG two octaves, a 350 ms decay.\n- CUTOFF 4.92 · 598 Hz\n- RESONANCE 4\n- VCF EG AMOUNT 1.25 · +2.0 oct at full velocity\n- VCF DECAY 4.34 · 200 ms\n- VCA DECAY 5.15 · 350 ms\n- Listen for: with a key, a plucked analogue bass.",
+          "set": {
+            "vcf.cutoff": 4.92,
+            "vcf.resonance": 4,
+            "vcf_eg.amt": 1.25,
+            "vcf_eg.decay": 4.34,
+            "vca_eg.decay": 5.15
+          }
+        },
+        {
+          "title": "The arpeggio",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2; root, octave, fifth and minor third.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 1 · +12 st (1.0 V)\n- PITCH 3 0.58 · +7 st (0.6 V)\n- PITCH 4 0.25 · +3 st (0.3 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 1 · +12 st (1.0 V)\n- PITCH 7 0.83 · +10 st (0.8 V)\n- PITCH 8 0.58 · +7 st (0.6 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 8 · 4.0 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 8 · 4.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 8 · 4.0 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 8 · 4.0 V\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 1,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 0.25,
+            "seq.pitch5": 0,
+            "seq.pitch6": 1,
+            "seq.pitch7": 0.8333,
+            "seq.pitch8": 0.5833,
+            "seq.vel1": 10,
+            "seq.vel2": 8,
+            "seq.vel3": 8,
+            "seq.vel4": 8,
+            "seq.vel5": 9,
+            "seq.vel6": 8,
+            "seq.vel7": 8,
+            "seq.vel8": 8
+          }
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in sixteenths.\n- TEMPO 3.5 · 7.85 Hz · 118 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a hypnotic, pulsing sequence.",
+          "set": {
+            "clock.tempo": 3.5,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.freq": "In this sound: a hair sharp of VCO 1, for the beating."
+      },
+      "tweaks": [
+        {
+          "id": "vcf_eg.amt",
+          "try": "Turn VCF EG AMOUNT to 3.5",
+          "hear": "Brighter, snappier notes."
+        },
+        {
+          "id": "vca_eg.attack",
+          "try": "Set VCA EG to SLOW",
+          "hear": "A softer, bowed sequence."
+        }
+      ]
+    },
+    {
+      "id": "dfam-marimba",
+      "name": "Analogue Marimba",
+      "ref": "A soft, wooden mallet tone playing a pentatonic figure",
+      "artist": "Minimalism",
+      "tags": ["pluck", "melodic"],
+      "level": 1,
+      "blurb": "A mellow mallet tone playing a pentatonic figure.",
+      "how": "A marimba is a pure tone with a soft attack and a short ring: the triangle, a short decay, and VCO 2 two octaves up for the bar’s bright overtone. The PITCH row plays a pentatonic figure.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A mallet tone",
+          "module": "osc",
+          "why": "VCO 1 triangle at C4, VCO 2 triangle two octaves up, quiet.\n- VCO 1 FREQUENCY 6 · C4 · 262 Hz\n- VCO 2 FREQUENCY 8 · C6 · 1.0 kHz\n- VCO 2 LEVEL 2\n- Listen for: with a key, a soft, pure tone with a sparkle.",
+          "set": {
+            "vco1.freq": 6,
+            "vco2.freq": 8,
+            "mix.vco2": 2
+          }
+        },
+        {
+          "title": "Short ring",
+          "module": "amp",
+          "why": "A 250 ms decay; the filter at 3 kHz.\n- VCA DECAY 4.66 · 250 ms\n- CUTOFF 7.25 · 3.0 kHz\n- Listen for: with a key, a wooden mallet note.",
+          "set": {
+            "vca_eg.decay": 4.66,
+            "vcf.cutoff": 7.25
+          }
+        },
+        {
+          "title": "The figure",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2: C, D, E, G and A on the PITCH row.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.33 · +4 st (0.3 V)\n- PITCH 3 0.58 · +7 st (0.6 V)\n- PITCH 4 0.75 · +9 st (0.8 V)\n- PITCH 5 1 · +12 st (1.0 V)\n- PITCH 6 0.75 · +9 st (0.8 V)\n- PITCH 7 0.58 · +7 st (0.6 V)\n- PITCH 8 0.17 · +2 st (0.2 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 7 · 3.5 V\n- VELOCITY 3 8 · 4.0 V\n- VELOCITY 4 7 · 3.5 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 7 · 3.5 V\n- VELOCITY 7 8 · 4.0 V\n- VELOCITY 8 6 · 3.0 V\n- Listen for: nothing new until RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.3333,
+            "seq.pitch3": 0.5833,
+            "seq.pitch4": 0.75,
+            "seq.pitch5": 1,
+            "seq.pitch6": 0.75,
+            "seq.pitch7": 0.5833,
+            "seq.pitch8": 0.1667,
+            "seq.vel1": 10,
+            "seq.vel2": 7,
+            "seq.vel3": 8,
+            "seq.vel4": 7,
+            "seq.vel5": 9,
+            "seq.vel6": 7,
+            "seq.vel7": 8,
+            "seq.vel8": 6
+          }
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in eighths.\n- TEMPO 2.2 · 3.20 Hz · 48 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a gentle, looping marimba figure.",
+          "set": {
+            "clock.tempo": 2.2,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "mix.vco2": "In this sound: the bar’s high overtone."
+      },
+      "tweaks": [
+        {
+          "id": "vca_eg.attack",
+          "try": "Set VCA EG to SLOW",
+          "hear": "A bowed vibraphone."
+        },
+        {
+          "id": "clock.tempo",
+          "try": "Turn TEMPO to 3.2",
+          "hear": "Sixteenths: a busy, minimalist pattern."
+        }
+      ]
+    },
+    {
+      "id": "dfam-velocity-fm",
+      "name": "Accent FM",
+      "ref": "An FM bell line where every accent is also brighter",
+      "artist": "Electronica",
+      "tags": ["pluck", "patch"],
+      "level": 3,
+      "blurb": "Bell tones whose FM follows the velocity row: the louder a step, the brighter it rings.",
+      "how": "VELOCITY OUT patched into 1→2 FM AMT adds each step’s velocity to the FM depth, so the velocity row now shapes tone as well as loudness. With 1→2 FM AMOUNT low, soft steps are pure and accents clang.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [[0, 60, 4]]
+      },
+      "steps": [
+        {
+          "title": "A carrier and its modulator",
+          "module": "osc",
+          "why": "VCO 2 triangle at C4 in the mix alone; VCO 1 out of the mix at C5 as the modulator.\n- VCO 1 LEVEL 0\n- VCO 2 LEVEL 8\n- VCO 2 FREQUENCY 6 · C4 · 262 Hz\n- VCO 1 FREQUENCY 7 · C5 · 523 Hz\n- Listen for: with a key, a pure tone.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.vco2": 8,
+            "vco2.freq": 6,
+            "vco1.freq": 7
+          }
+        },
+        {
+          "title": "A little FM, a bell envelope",
+          "module": "amp",
+          "why": "1→2 FM AMOUNT at 1, a 600 ms decay.\n- 1→2 FM AMOUNT 1\n- VCA DECAY 5.93 · 600 ms\n- Listen for: with a key, a soft bell.",
+          "set": {
+            "vco2.fm_amt": 1,
+            "vca_eg.decay": 5.93
+          }
+        },
+        {
+          "title": "Melody and accents",
+          "module": "mod",
+          "why": "SEQ PITCH MOD on VCO 1&2 so both move together and the ratio holds; a melody and a strongly varied velocity row.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0.58 · +7 st (0.6 V)\n- PITCH 3 0.25 · +3 st (0.3 V)\n- PITCH 4 0.83 · +10 st (0.8 V)\n- PITCH 5 1 · +12 st (1.0 V)\n- PITCH 6 0.58 · +7 st (0.6 V)\n- PITCH 7 0.42 · +5 st (0.4 V)\n- PITCH 8 0.25 · +3 st (0.3 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 3 · 1.5 V\n- VELOCITY 3 6 · 3.0 V\n- VELOCITY 4 2 · 1.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 4 · 2.0 V\n- VELOCITY 7 7 · 3.5 V\n- VELOCITY 8 3 · 1.5 V\n- Listen for: nothing new until the cable and RUN.",
+          "set": {
+            "seq.pitch_mod": "vco12",
+            "seq.pitch1": 0,
+            "seq.pitch2": 0.5833,
+            "seq.pitch3": 0.25,
+            "seq.pitch4": 0.8333,
+            "seq.pitch5": 1,
+            "seq.pitch6": 0.5833,
+            "seq.pitch7": 0.4167,
+            "seq.pitch8": 0.25,
+            "seq.vel1": 10,
+            "seq.vel2": 3,
+            "seq.vel3": 6,
+            "seq.vel4": 2,
+            "seq.vel5": 9,
+            "seq.vel6": 4,
+            "seq.vel7": 7,
+            "seq.vel8": 3
+          }
+        },
+        {
+          "title": "Velocity into FM",
+          "module": "patch",
+          "why": "VELOCITY OUT into 1→2 FM AMT.\n- Patch VELOCITY OUT to 1→2 FM AMT input\n- Listen for: nothing yet: the sequencer is stopped.",
+          "cables": [["j.velocity_out", "j.fm_amt"]]
+        },
+        {
+          "title": "Run",
+          "module": "mod",
+          "why": "RUN / STOP lit, in eighths.\n- TEMPO 2.32 · 3.48 Hz · 52 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a bell line whose loud notes clang and soft ones are pure.",
+          "set": {
+            "clock.tempo": 2.32,
+            "seq.run": true
+          }
+        }
+      ],
+      "context": {
+        "vco2.fm_amt": "In this sound: the FM the soft steps get; the velocity adds the rest."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fm_amt",
+          "try": "Turn 1→2 FM AMOUNT to 0",
+          "hear": "Pure soft notes, clanging accents."
+        },
+        {
+          "id": "vco1.freq",
+          "try": "Turn VCO 1 FREQUENCY to 6.58",
+          "hear": "An odd ratio: gongs."
+        }
+      ]
+    },
+    {
+      "id": "dfam-key-toms",
+      "name": "Tom Fill on the Keys",
+      "ref": "A tom fill played on the keys, each key a tom",
+      "artist": "Electro",
+      "tags": ["perc", "drums"],
+      "level": 1,
+      "blurb": "Play the DFAM like a drum pad: each key a tom at its own pitch, as hard as you hit it.",
+      "how": "With the sequencer stopped, a key strikes the envelopes at the key’s velocity and its pitch moves both VCOs. So the keys play toms. The VELOCITY knobs are all up, so how hard you press is the whole dynamic.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25, 1],
+          [0.25, 72, 0.25, 0.6],
+          [0.5, 67, 0.25, 0.9],
+          [0.75, 67, 0.25, 0.6],
+          [1, 63, 0.25, 0.9],
+          [1.25, 63, 0.25, 0.6],
+          [1.5, 60, 0.5, 1],
+          [3, 60, 0.5, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A tom",
+          "module": "osc",
+          "why": "VCO 1 triangle at E2 with an octave’s pitch drop.\n- VCO 1 FREQUENCY 4.33 · E2 · 82 Hz\n- VCO 1 EG AMOUNT 1.77 · +12 st at full velocity\n- VCO DECAY 3.6 · 120 ms\n- Listen for: with a key, a falling tom.",
+          "set": {
+            "vco1.freq": 4.3333,
+            "vco1.eg_amt": 1.77,
+            "vco_eg.decay": 3.6
+          }
+        },
+        {
+          "title": "Ring",
+          "module": "amp",
+          "why": "A 300 ms decay, the filter a little closed.\n- VCA DECAY 4.92 · 300 ms\n- CUTOFF 7.48 · 3.5 kHz\n- Listen for: play a fill down the keys: each key a tom, louder the harder you press.",
+          "set": {
+            "vca_eg.decay": 4.92,
+            "vcf.cutoff": 7.48
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: the tom’s pitch at C4; the keys move it from there."
+      },
+      "tweaks": [
+        {
+          "id": "vco_eg.decay",
+          "try": "Turn VCO DECAY to 6.34",
+          "hear": "Long, falling disco toms."
+        },
+        {
+          "id": "mix.noise",
+          "try": "Turn NOISE / EXT LEVEL to 3",
+          "hear": "A skin and a rattle on each tom."
+        }
+      ]
+    },
+    {
+      "id": "dfam-gong",
+      "name": "FM Gong",
+      "ref": "A slow, swelling metallic gong, struck from the keys",
+      "artist": "Ambient",
+      "tags": ["fx", "drone"],
+      "level": 2,
+      "blurb": "A huge, slowly swelling gong from two squares and linear FM.",
+      "how": "A gong is inharmonic and swells after it is struck. Linear FM at an awkward ratio gives the metal, the VCA EG on SLOW the swell, and a long decay the ring. The sequencer is stopped: each key strikes it.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 60, 2, 1],
+          [4, 55, 2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Metal",
+          "module": "osc",
+          "why": "VCO 2 square at C3 in the mix, VCO 1 out of the mix at F#4, 1→2 FM AMOUNT at 5.\n- VCO 1 LEVEL 0\n- VCO 2 LEVEL 8\n- VCO 2 WAVE Square\n- VCO 1 FREQUENCY 6.5 · F♯4 · 370 Hz\n- 1→2 FM AMOUNT 5\n- Listen for: with a key, a harsh, metallic tone.",
+          "set": {
+            "mix.vco1": 0,
+            "mix.vco2": 8,
+            "vco2.wave": "square",
+            "vco1.freq": 6.5,
+            "vco2.fm_amt": 5
+          }
+        },
+        {
+          "title": "Swell and ring",
+          "module": "amp",
+          "why": "The VCA EG on SLOW, a four-second decay, and the filter at 3 kHz.\n- VCA EG Slow (100 ms)\n- VCA DECAY 8.67 · 4.0 s\n- CUTOFF 7.25 · 3.0 kHz\n- Listen for: with a key, a gong that swells and rings on.",
+          "set": {
+            "vca_eg.attack": "slow",
+            "vca_eg.decay": 8.67,
+            "vcf.cutoff": 7.25
+          }
+        },
+        {
+          "title": "Shimmer",
+          "module": "filter",
+          "why": "NOISE / VCF MOD at 2: the noise shimmers in the cutoff.\n- NOISE / VCF MOD 2\n- Listen for: strike a few keys: a shimmering gong at each pitch.",
+          "set": {
+            "vcfmod.amt": 2
+          }
+        }
+      ],
+      "context": {
+        "vco1.freq": "In this sound: the modulator, a tritone over the gong."
+      },
+      "tweaks": [
+        {
+          "id": "vco2.fm_amt",
+          "try": "Turn 1→2 FM AMOUNT to 9",
+          "hear": "A crashing, trashy gong."
+        },
+        {
+          "id": "vca_eg.decay",
+          "try": "Turn VCA DECAY to 9",
+          "hear": "A ring that never seems to end."
+        }
+      ]
+    }
+  ]
+}

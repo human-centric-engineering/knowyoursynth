@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (45)
+## In the app (47)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -34,14 +34,16 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`cat`](./cat/README.md)                                   | Behringer CAT                                                                                                                                                    | 0.7.0       |
 | [`cs-80`](./cs-80/README.md)                               | Yamaha CS-80 Polyphonic Synthesizer                                                                                                                              | 0.13.0      |
 | [`deepmind-12d`](./deepmind-12d/README.md)                 | Behringer DeepMind 12D                                                                                                                                           | 0.7.0       |
+| [`dfam`](./dfam/README.md)                                 | Moog DFAM (Drummer From Another Mother)                                                                                                                          | 0.13.0      |
 | [`donner-b1`](./donner-b1/README.md)                       | Donner Essential B1 Analog Bass Sequencer                                                                                                                        | 0.11.0      |
 | [`e7`](./e7/README.md)                                     | GS Music e7 Polyphonic Analog Synthesizer                                                                                                                        | 0.12.0      |
+| [`edge`](./edge/README.md)                                 | Behringer EDGE                                                                                                                                                   | 0.13.0      |
 | [`ems-vcs3`](./ems-vcs3/README.md)                         | EMS (Electronic Music Studios, London) VCS3 Mk 1 (Voltage Controlled Studio Mk 3)                                                                                | 0.9.0       |
 | [`grandmother`](./grandmother/README.md)                   | Moog Music Grandmother                                                                                                                                           | 0.10.0      |
+| [`jp-8080`](./jp-8080/README.md)                           | Roland JP-8080                                                                                                                                                   | 0.13.0      |
 | [`jupiter-4`](./jupiter-4/README.md)                       | Roland Jupiter-4 Compuphonic (JP-4)                                                                                                                              | 0.10.0      |
 | [`jupiter-6`](./jupiter-6/README.md)                       | Roland Jupiter-6 (JP-6) Programmable Polyphonic Synthesizer                                                                                                      | 0.10.0      |
 | [`jupiter-8`](./jupiter-8/README.md)                       | Roland Jupiter-8 (JP-8) 8 Voice Polyphonic Synthesizer                                                                                                           | 0.10.0      |
-| [`jp-8080`](./jp-8080/README.md)                           | Roland JP-8080                                                                                                                                                   | 0.13.0      |
 | [`k2`](./k2/README.md)                                     | Behringer K-2                                                                                                                                                    | 0.5.0       |
 | [`kobol`](./kobol/README.md)                               | Behringer Kobol Expander                                                                                                                                         | 0.7.0       |
 | [`malevolent`](./malevolent/README.md)                     | PWM (Paul Whittington Group) Malevolent Modular Pure Analogue Synthesiser                                                                                        | 0.13.0      |
@@ -51,8 +53,8 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`model-d`](./model-d/README.md)                           | Behringer MODEL D                                                                                                                                                | 0.1.0       |
 | [`neutron`](./neutron/README.md)                           | Behringer NEUTRON                                                                                                                                                | 0.2.0       |
 | [`nymphes`](./nymphes/README.md)                           | Dreadbox Nymphes                                                                                                                                                 | 0.12.0      |
-| [`polivoks`](./polivoks/README.md)                         | Formanta Polivoks (Поливокс) electronic music synthesizer                                                                                                        | 0.13.0      |
 | [`pearl-syncussion`](./pearl-syncussion/README.md)         | Pearl Syncussion SY-1 (Syncussion-1) control board                                                                                                               | 0.10.0      |
+| [`polivoks`](./polivoks/README.md)                         | Formanta Polivoks (Поливокс) electronic music synthesizer                                                                                                        | 0.13.0      |
 | [`poly-d`](./poly-d/README.md)                             | Behringer Poly D                                                                                                                                                 | 0.7.0       |
 | [`pro-1`](./pro-1/README.md)                               | Behringer PRO-1                                                                                                                                                  | 0.5.0       |
 | [`pro-800`](./pro-800/README.md)                           | Behringer PRO-800                                                                                                                                                | 0.7.0       |

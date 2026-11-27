@@ -1,0 +1,37 @@
+{
+  "synth": "edge",
+  "title": "From the Moog DFAM to the Behringer EDGE",
+  "intro": "The EDGE is Behringer’s analogue recreation of the Moog DFAM, released in 2021 in a magenta desktop case. Its guide never names the DFAM, but the voice, the 8-step sequencer and the 24-jack patchbay are the DFAM’s, control for control and jack for jack, laid out differently with the patchbay along the top.",
+  "timeline": [
+    {
+      "year": "2015",
+      "name": "Moog Mother-32",
+      "text": "Moog’s first semi-modular desktop synth, the start of the family the DFAM joined."
+    },
+    {
+      "year": "2017",
+      "name": "Moog DFAM",
+      "tag": "The original",
+      "text": "Two VCOs, noise, a ladder filter and three decay envelopes played by an 8-step pitch and velocity sequencer: a percussion synth rather than a drum machine."
+    },
+    {
+      "year": "2021",
+      "name": "Behringer EDGE",
+      "tag": "This synth",
+      "text": "The DFAM’s voice, sequencer and patchbay, adding a NOISE COLOR switch for white or pink noise, a CLOCK switch that takes MIDI or USB clock divided by SCALE, MIDI notes that play the voice, a poly chain of up to 16 units, a headphone jack and a power switch."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Moog DFAM",
+      "years": "2017",
+      "text": "The instrument the EDGE recreates, also in the app. The differences: the DFAM has white noise only, takes a clock only at ADV / CLOCK, has no MIDI, and puts its headphones on the rear output."
+    },
+    {
+      "name": "Behringer Crave",
+      "years": "2019",
+      "text": "Behringer’s semi-modular after the Mother-32, which the EDGE sits beside as the DFAM sits beside the Mother-32."
+    }
+  ],
+  "note": "The EDGE’s guide gives an outline of its MIDI; how notes play the voice comes from owners’ reports. One owner hears less low-end roundness than on the DFAM; that is not modelled, as the two share one voice here."
+}

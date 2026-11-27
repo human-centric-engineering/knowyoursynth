@@ -32,6 +32,8 @@ const ALLOWED = (path: string) =>
   path === 'scripts/app/export-links.ts' ||
   // Dev-only: writes the Subharmonicon's sounds into their seed data file, which the seed then reads (t-289).
   path === 'scripts/app/sounds/subharmonicon/write.ts' ||
+  // Dev-only: writes the DFAM's and the EDGE's sounds into their seed data files, which the seed then reads (t-269, t-270).
+  path === 'scripts/app/sounds/dfam/write.ts' ||
   // Dev-only: writes the Model D's sounds played by their mod lanes, their batch and defaults into the seed data (t-301).
   path === 'scripts/app/sounds/model-d/write-lane-sounds.ts' ||
   path === 'scripts/app/sounds/model-d/write-livelier-songs.ts' ||

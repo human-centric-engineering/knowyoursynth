@@ -178,6 +178,7 @@ export function createDfam(
       }
     }
     P = p;
+    outs();
   }
 
   function off() {
@@ -200,15 +201,27 @@ export function createDfam(
     }
   }
 
+  /**
+   * PITCH and VELOCITY OUT for the step it is on, written as soon as the step moves: a cable from either back into
+   * the panel (PITCH into TEMPO, VELOCITY into VELOCITY) hears the new step on the sample it starts.
+   */
+  function outs() {
+    if (!P) return;
+    S[SI.dfmPitch] = clamp(P.pitch[st] || 0, -1, 1);
+    S[SI.dfmVel] = keyVelOut >= 0 ? keyVelOut : stepVel(P);
+  }
+
   function advance() {
     st = (st + 1) % DFAM_STEPS;
     keyVelOut = -1;
+    outs();
   }
 
   /** One clock of the sequencer: the step it is on if it has just started, else the next. Returns true (a trigger). */
   function tick(): boolean {
     if (armed) armed = false;
     else advance();
+    outs();
     return true;
   }
 
@@ -234,11 +247,15 @@ export function createDfam(
     // ── the app's master clock ──
     const le = lock.step();
     if (waits && le === 'start') {
-      // a run starts on step 1 at its first beat, which plays first, whether the panel or a cable says it runs
-      st = 0;
-      armed = true;
+      // a run that starts the sequencer (RUN / STOP lit, or its cable high) starts it on step 1 at its first beat,
+      // which plays first; with RUN / STOP unlit it stays on the step ADVANCE left it on, for TRIGGER and the keys
+      if (runCab ? ev(DI.dfmRun) > HIGH : p.run) {
+        st = 0;
+        armed = true;
+        keyVelOut = -1;
+        outs();
+      }
       gridLen = 0;
-      keyVelOut = -1;
       runAt = lock.beat();
       if (!runCab) {
         running = p.run;
@@ -277,7 +294,10 @@ export function createDfam(
     let seqFire = false;
     const advCab = !!cabled[DI.dfmAdv];
     const adv = ev(DI.dfmAdv) > HIGH;
-    const hz = Math.min(p.tempo * Math.exp(ev(DI.dfmTempo) * TEMPO_OCT * Math.LN2), sr * CLOCK_MAX);
+    // read again once the step moves, so a step patched into TEMPO sets its own length
+    const rate = (): number =>
+      Math.min(p.tempo * Math.exp(ev(DI.dfmTempo) * TEMPO_OCT * Math.LN2), sr * CLOCK_MAX);
+    let hz = rate();
     // on the EDGE's MIDI or USB clock (`perBeat`) a step is a fixed share of the beat, and nothing runs without it
     const per = p.perBeat && p.perBeat > 0 ? p.perBeat : 0;
     const len = (bps: number): number => (per ? 1 / per : snapStep(hz, bps));
@@ -319,7 +339,10 @@ export function createDfam(
           gridAt += Math.floor((b - gridAt) / gridLen - 1) * gridLen;
         while (gridLen > 0 && b >= gridAt + gridLen - 1e-9) {
           gridAt += gridLen;
-          if (running) seqFire = tick();
+          if (running) {
+            seqFire = tick();
+            hz = rate();
+          }
           gridLen = len(bps);
         }
       }
@@ -328,6 +351,7 @@ export function createDfam(
       if (ph >= 1) {
         ph -= Math.floor(ph);
         seqFire = tick();
+        hz = rate();
       }
       ph += hz / sr;
     }
@@ -377,14 +401,13 @@ export function createDfam(
       S[EG_OUT[k]] = lvl[k];
     }
 
-    // ── PITCH and VELOCITY ──
     // ── the NOISE / EXT channel: the voice's noise (last sample's), or EXT AUDIO once cabled, at the knob plus its CV ──
     const src = cabled[DI.dfmExt] ? ev(DI.dfmExt) : S[SI.noise] || 0;
     const nl = p.noise + ev(DI.dfmNzLvl);
     S[SI.dfmNz] = src * (nl > 0 ? (nl < NOISE_MAX ? nl : NOISE_MAX) : 0);
 
-    S[SI.dfmPitch] = clamp(p.pitch[st] || 0, -1, 1);
-    S[SI.dfmVel] = keyVelOut >= 0 ? keyVelOut : stepVel(p);
+    // ── PITCH and VELOCITY, a key's velocity now shown ──
+    outs();
   }
 
   function press(name: SubharmPress) {

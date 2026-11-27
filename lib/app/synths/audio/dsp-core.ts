@@ -2338,7 +2338,8 @@ function createVoice(
             ownClock('pulse');
           }
         } else if (phrase.clocked) {
-          // the voice no longer follows (it has left the Subharmonicon, or the 960 or DFAM is at FREE): its run ends, and a start
+          // the voice no longer follows (it has left the Subharmonicon, the 960 is at FREE, or it has left the DFAM, which always
+          // follows): its run ends, and a start
           // is owed if it comes back
           phrase.clocked = false;
           ownClock('stop');
@@ -2673,9 +2674,12 @@ function createVoice(
           // its peak noise does through `inc`, not the bare key
           oscNote[k] = nn;
           let hz = 440 * Math.exp((nn - 69) * LN2_12);
-          // linear FM (`fmLin`): the last sample of the oscillator it comes from swings the frequency in hertz
+          // linear FM (`fmLin`): the oscillator it comes from swings the frequency in hertz, at its last sample's output
+          // (the outputs are written in the waveform loop below, after every frequency is set)
           if (o.fmFrom >= 0 && o.fmFrom < nOsc) {
-            hz *= 1 + (o.fmDepth + ev(DI.fmLinAmt)) * S[OSC_SI[o.fmFrom]];
+            // the CV adds to the knob, and a negative sum shuts the FM rather than inverting it
+            const fd = o.fmDepth + ev(DI.fmLinAmt);
+            if (fd > 0) hz *= 1 + fd * S[OSC_SI[o.fmFrom]];
             if (hz < 0) hz = 0;
           }
           if (hz > sr * 0.45) hz = sr * 0.45;
