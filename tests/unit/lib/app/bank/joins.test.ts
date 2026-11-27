@@ -97,6 +97,8 @@ describe('heardFor for a native synth', () => {
       ['survive-floating-cube'],
     ],
     subharmonicon: [],
+    dfam: [],
+    edge: [],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));

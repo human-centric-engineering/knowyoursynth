@@ -106,6 +106,38 @@
     {
       "sound": "subharmonicon/shc-fm-snare",
       "reason": "It names a style, not one work. The patch is a snare made from VCO 1 patched into VCO 2’s pitch, played on the backbeat by its riff; the riff is the sound’s own hits, not a part from a record."
+    },
+    {
+      "sound": "dfam/dfam-snare",
+      "reason": "It names the drum machine’s snare, not one work, and the batch’s “Planet Rock” patterns are written for other sounds. The patch plays itself: the DFAM’s sequencer steps its eight steps on the app’s clock, under one held key. There is no part to write."
+    },
+    {
+      "sound": "dfam/dfam-cowbell",
+      "reason": "It names the drum machine’s cowbell, not one work. The patch plays itself: the DFAM’s sequencer steps its eight steps on the app’s clock, under one held key. There is no part to write."
+    },
+    {
+      "sound": "dfam/dfam-electro-toms",
+      "reason": "It names the drum machine’s toms, not one work, and the batch’s “Planet Rock” patterns are its bass, kick, snare and cowbell. The patch plays itself: the DFAM’s sequencer steps its eight steps on the app’s clock, under one held key. There is no part to write."
+    },
+    {
+      "sound": "dfam/dfam-laser",
+      "reason": "It names a style, not one work. The patch plays itself: the DFAM’s sequencer steps its eight steps on the app’s clock, under one held key. There is no part to write."
+    },
+    {
+      "sound": "dfam/dfam-sync-chirps",
+      "reason": "It names a style, not one work. The patch plays itself: the DFAM’s sequencer steps its eight steps on the app’s clock, under one held key. There is no part to write."
+    },
+    {
+      "sound": "dfam/dfam-sizzle",
+      "reason": "It names the drum machine’s noise cymbal, not one work. The patch plays itself: the DFAM’s sequencer steps its eight steps on the app’s clock, under one held key. There is no part to write."
+    },
+    {
+      "sound": "dfam/dfam-key-toms",
+      "reason": "It names a style, not one work. The fill is the lesson’s own, played from the keys, one tom a key, with the sequencer stopped; it is not a part from a record."
+    },
+    {
+      "sound": "dfam/dfam-acid",
+      "reason": "It names a style, not one work. The patch plays itself: the DFAM’s sequencer plays the line’s eight steps, their pitches on its PITCH row, on the app’s clock, under one held key. There is no part to write."
     }
   ],
   "patterns": [
