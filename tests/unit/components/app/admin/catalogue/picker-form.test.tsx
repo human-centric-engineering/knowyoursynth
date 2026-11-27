@@ -88,6 +88,28 @@ describe('PickerSettingsForm', () => {
     expect(mockRefresh).toHaveBeenCalledOnce();
   });
 
+  it('saves the order and every switch as set', async () => {
+    const user = userEvent.setup();
+    render(<PickerSettingsForm initial={FACTORY_PICKER} />);
+    await user.click(radio('Oldest first'));
+    await user.click(screen.getByRole('checkbox', { name: /Show panel thumbnails/ }));
+    await user.click(screen.getByRole('checkbox', { name: /Offer .All synths ever made./ }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    expect(put).toHaveBeenCalledWith('/api/v1/admin/synths/picker', {
+      body: { ...FACTORY_PICKER, order: 'old', thumbs: false, offerAll: false },
+    });
+  });
+
+  it('takes a kind back out of the list', async () => {
+    const user = userEvent.setup();
+    render(<PickerSettingsForm initial={SAVED} />);
+    await user.click(screen.getByRole('button', { name: 'modular' }));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+    expect(put).toHaveBeenCalledWith('/api/v1/admin/synths/picker', {
+      body: { ...SAVED, kinds: [] },
+    });
+  });
+
   it('shows a refused save by Save', async () => {
     const user = userEvent.setup();
     put.mockRejectedValue(new APIClientError('Invalid request body', 'VALIDATION_ERROR', 400));

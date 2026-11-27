@@ -436,6 +436,21 @@ describe('SynthPicker Advanced search (f-synth-picker t-329)', () => {
     expect(onPrefs).toHaveBeenLastCalledWith({});
   });
 
+  it('changes the order and the thumbnails, and takes a kind back out', () => {
+    const { onPrefs } = open({ prefs: { kinds: ['mono', 'poly'] } });
+    fireEvent.click(advancedButton());
+    fireEvent.click(
+      within(within(window_()).getByRole('group', { name: 'Order' })).getByRole('button', {
+        name: 'Newest',
+      })
+    );
+    expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['mono', 'poly'], order: 'new' });
+    fireEvent.click(within(window_()).getByRole('checkbox', { name: 'Panel thumbnails' }));
+    expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['mono', 'poly'], thumbs: false });
+    fireEvent.click(within(window_()).getByRole('button', { name: 'mono' }));
+    expect(onPrefs).toHaveBeenLastCalledWith({ kinds: ['poly'] });
+  });
+
   it('closes the window on Escape before the list', () => {
     open();
     fireEvent.click(advancedButton());
