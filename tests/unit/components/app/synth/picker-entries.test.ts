@@ -326,7 +326,7 @@ describe('every synth ever made (t-330)', () => {
       maker: 'Roland',
       year: '1981',
       kind: 'mono',
-      text: 'Bass line',
+      summary: 'Bass line',
       synths: ['tb-303'],
     },
     {
@@ -335,7 +335,7 @@ describe('every synth ever made (t-330)', () => {
       maker: 'Behringer',
       year: '2019',
       kind: 'mono',
-      text: 'A copy',
+      summary: 'A copy',
       synths: ['td-3'],
       recreationOf: 'roland-tb-303',
     },
@@ -345,7 +345,7 @@ describe('every synth ever made (t-330)', () => {
       maker: 'Moog Music',
       year: '1970',
       kind: 'mono',
-      text: 'The original',
+      summary: 'The original',
       synths: [],
     },
     {
@@ -354,7 +354,7 @@ describe('every synth ever made (t-330)', () => {
       maker: 'Behringer',
       year: '2018',
       kind: 'mono',
-      text: 'The copy',
+      summary: 'The copy',
       synths: ['model-d'],
       recreationOf: 'moog-minimoog',
     },
@@ -364,7 +364,7 @@ describe('every synth ever made (t-330)', () => {
       maker: 'Studio Electronics',
       year: '2014',
       kind: 'module',
-      text: 'A desktop mono',
+      summary: 'A desktop mono',
       synths: [],
       recreationOf: 'moog-minimoog',
     },
@@ -374,7 +374,7 @@ describe('every synth ever made (t-330)', () => {
       maker: 'Nobody',
       year: '1997',
       kind: 'mono',
-      text: 'Not modelled',
+      summary: 'Not modelled',
       synths: [],
     },
   ];
@@ -407,6 +407,16 @@ describe('every synth ever made (t-330)', () => {
       instrumentId: 'studio-boomstar',
       recreationOf: 'moog-minimoog',
     });
+  });
+
+  it('lists every other instrument even where no family member is listed', () => {
+    const rows = pickerRows(FAMILY_SYNTHS, [TB_303_FAMILY], {
+      unmodelled: false,
+      bank: BANK,
+      scope: 'all',
+    });
+    expect(rows.some((r) => r.key.startsWith('member:'))).toBe(false);
+    expect(rows.map((r) => r.key)).toContain('bank:studio-boomstar');
   });
 
   it('lists only the synths that play without it, though the databank is read', () => {
@@ -452,5 +462,22 @@ describe('every synth ever made (t-330)', () => {
       group: 'lineage',
     });
     expect(list.rows).toHaveLength(2);
+  });
+
+  it('puts a row that leads into a loop under the loop, not the loop under it', () => {
+    // "aaa" recreates the Minimoog, which loops with the Boomstar: "aaa" sorts first, but is not in the loop.
+    const lead = { ...BANK[5], id: 'aaa', recreationOf: 'moog-minimoog' };
+    const looped = [{ ...BANK[2], recreationOf: 'studio-boomstar' }, BANK[4], lead];
+    const [list] = pickerGroups([], [], '', {
+      unmodelled: true,
+      bank: looped,
+      scope: 'all',
+      group: 'lineage',
+    });
+    expect(list.rows.map((r) => [r.key, r.depth])).toEqual([
+      ['bank:moog-minimoog', 0],
+      ['bank:aaa', 1],
+      ['bank:studio-boomstar', 1],
+    ]);
   });
 });

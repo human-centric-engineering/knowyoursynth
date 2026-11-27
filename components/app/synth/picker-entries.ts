@@ -40,7 +40,8 @@ export const PickerInstrumentSchema = z.object({
   maker: z.string(),
   year: z.string(),
   kind: z.string(),
-  text: z.string(),
+  /** The first paragraph of its description. */
+  summary: z.string(),
   /** App synths that model it. */
   synths: z.array(z.string()),
   /** The instrument this one recreates. */
@@ -146,9 +147,10 @@ export function pickerRows(
       recreationOf: instrument?.recreationOf ?? null,
     };
   });
-  if (!unmodelled) return rows;
   const offered = new Set(synths.map((s) => s.id));
-  for (const family of families) {
+  // A family's unmodelled members only where the page can show their blank panel; the databank's other instruments
+  // below are listed either way.
+  for (const family of unmodelled ? families : []) {
     // A family none of whose members the picker offers has nothing to open its blank panels over.
     if (!family.members.some((m) => m.synthId && offered.has(m.synthId))) continue;
     for (const member of family.members) {
@@ -181,7 +183,7 @@ export function pickerRows(
       maker: i.maker,
       year: i.year,
       kind: i.kind,
-      text: i.text,
+      text: i.summary,
       synthId: null,
       family: null,
       instrumentId: i.id,
@@ -278,9 +280,12 @@ function lineage(
     const seen = new Set([row.key]);
     let at = row;
     for (let next = above(at); next; next = above(at)) {
-      // Data that recreates itself in a loop: every row in it takes the same one (the least key) as its original,
-      // so none is listed twice.
-      if (seen.has(next.key)) return path.reduce((a, b) => (b.key < a.key ? b : a));
+      // Data that recreates itself in a loop: every row in or leading into it takes the same one, the least key in
+      // the loop itself, as its original, so none is listed twice and none outside the loop is taken for it.
+      if (seen.has(next.key)) {
+        const loop = path.slice(path.findIndex((r) => r.key === next.key));
+        return loop.reduce((a, b) => (b.key < a.key ? b : a));
+      }
       seen.add(next.key);
       path.push(next);
       at = next;

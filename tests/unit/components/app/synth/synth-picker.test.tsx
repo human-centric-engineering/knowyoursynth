@@ -527,7 +527,7 @@ describe('SynthPicker with every synth ever made (f-synth-picker t-330)', () => 
       maker: 'Roland',
       year: '1981',
       kind: 'mono',
-      text: 'Bass line',
+      summary: 'Bass line',
       synths: ['tb-303'],
     },
     {
@@ -536,7 +536,7 @@ describe('SynthPicker with every synth ever made (f-synth-picker t-330)', () => 
       maker: 'Moog Music',
       year: '1970',
       kind: 'mono',
-      text: 'The original',
+      summary: 'The original',
       synths: [],
     },
   ];

@@ -26,7 +26,7 @@ const LIST = [
     maker: 'Moog Music',
     year: '1970',
     kind: 'mono',
-    text: '',
+    summary: '',
     synths: [],
   },
 ];

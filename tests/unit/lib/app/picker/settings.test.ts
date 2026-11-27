@@ -105,6 +105,11 @@ describe('changedChoices', () => {
     expect(changedChoices(SITE, { order: 'new' })).toBe(1);
   });
 
+  it('does not count what to show while every synth ever made is not offered', () => {
+    expect(changedChoices({ ...SITE, offerAll: false }, { scope: 'all', group: 'name' })).toBe(1);
+    expect(changedChoices(SITE, { scope: 'all', group: 'name' })).toBe(2);
+  });
+
   it('counts none while the site does not allow them', () => {
     expect(changedChoices({ ...SITE, visitorsMayChange: false }, { group: 'name' })).toBe(0);
   });

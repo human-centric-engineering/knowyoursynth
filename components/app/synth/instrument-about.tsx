@@ -101,19 +101,25 @@ export function InstrumentAbout({
   const id = instrument.id;
 
   const [own, setOwn] = useState<OwnState | null>(null);
+  // Whether it was on the wishlist when the user said they own it: taking that back puts it back there.
+  const [wasWished, setWasWished] = useState(false);
   const [request, setRequest] = useState<z.infer<typeof RequestSchema> | null>(null);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
 
-  // What the signed-in user has done with it already.
+  // What the signed-in user has done with it already: each read on its own, so one that fails leaves the other's
+  // button working, and says so.
   useEffect(() => {
     if (!userId) return undefined;
     let live = true;
-    Promise.all([
-      apiClient.get<unknown>('/api/v1/me/instruments'),
-      apiClient.get<unknown>(`/api/v1/me/model-requests/${encodeURIComponent(id)}`),
-    ])
-      .then(([lists, asked]) => {
+    const failed = (what: string) => (err: unknown) => {
+      logger.warn(`instrument page: could not read ${what}`, { err: String(err) });
+      if (live)
+        setProblem('Some of what you have done here could not be read. Reload to try again.');
+    };
+    apiClient
+      .get<unknown>('/api/v1/me/instruments')
+      .then((lists) => {
         if (!live) return;
         const l = OwnedListsSchema.parse(lists);
         setOwn(
@@ -123,13 +129,14 @@ export function InstrumentAbout({
               ? 'wishlist'
               : 'none'
         );
-        setRequest(RequestSchema.parse(asked));
       })
-      .catch((err: unknown) => {
-        logger.warn('instrument page: could not read what the user has done with it', {
-          err: String(err),
-        });
-      });
+      .catch(failed('your synths'));
+    apiClient
+      .get<unknown>(`/api/v1/me/model-requests/${encodeURIComponent(id)}`)
+      .then((asked) => {
+        if (live) setRequest(RequestSchema.parse(asked));
+      })
+      .catch(failed('your request'));
     return () => {
       live = false;
     };
@@ -151,13 +158,21 @@ export function InstrumentAbout({
   const toggleOwned = () =>
     act(async () => {
       const path = `/api/v1/me/instruments/${encodeURIComponent(id)}`;
-      if (own === 'owned') await apiClient.delete(path);
-      else if (own === 'wishlist') await apiClient.patch(path, { body: { kind: 'owned' } });
+      if (own === 'owned') {
+        // Taking it back: to the wishlist it came from, else off both lists.
+        if (wasWished) await apiClient.patch(path, { body: { kind: 'wishlist' } });
+        else await apiClient.delete(path);
+        setOwn(wasWished ? 'wishlist' : 'none');
+        setWasWished(false);
+        return;
+      }
+      if (own === 'wishlist') await apiClient.patch(path, { body: { kind: 'owned' } });
       else
         await apiClient.post('/api/v1/me/instruments', {
           body: { instrumentId: id, kind: 'owned' },
         });
-      setOwn(own === 'owned' ? 'none' : 'owned');
+      setWasWished(own === 'wishlist');
+      setOwn('owned');
     }, 'Your synths could not be changed. Try again.');
 
   const toggleRequest = () =>

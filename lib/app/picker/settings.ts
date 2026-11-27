@@ -138,11 +138,13 @@ export function pickerChoices(site: SitePickerSettings, mine: PickerPrefs): Pick
 
 /**
  * How many choices the visitor keeps as their own: 0 when they follow the site in everything, or may not change it.
- * A kept choice counts even while it matches the site's, since it still holds when the site's changes.
+ * A kept choice counts even while it matches the site's, since it still holds when the site's changes. What to show
+ * counts only while every synth ever made is offered: otherwise it is kept, unused, with nothing to show it by.
  */
 export function changedChoices(site: SitePickerSettings, mine: PickerPrefs): number {
   if (!site.visitorsMayChange) return 0;
-  return CHOICE_KEYS.filter((k) => mine[k] !== undefined).length;
+  return CHOICE_KEYS.filter((k) => mine[k] !== undefined && (k !== 'scope' || site.offerAll))
+    .length;
 }
 
 /**

@@ -52,7 +52,8 @@ export function memberHref(id: string, member: string, view: PanelView = DEFAULT
 
 /**
  * A databank instrument nobody has modelled, shown in the synth's place (`f-synth-picker` t-330): what the databank
- * knows about it, with the picker in its caption. No synth id can be `about`.
+ * knows about it, with the picker in its caption. Its `about` segment shadows a synth of that id, so none is given it
+ * (synths are added in code, `lib/app/synths/defs/`).
  */
 export function synthAboutHref(instrumentId: string): string {
   return `/synths/about/${encodeURIComponent(instrumentId)}`;

@@ -412,7 +412,6 @@ async function collectLibraryPatternComments(userId: string) {
   }));
 }
 
-/** Each names its instrument by the databank's id and name, which mean something outside this database. */
 /** The synths this subject asked to be modelled, oldest first, each named as the databank names it. */
 async function collectModelRequests(userId: string) {
   const rows = await prisma.modelRequest.findMany({
@@ -428,6 +427,7 @@ async function collectModelRequests(userId: string) {
   }));
 }
 
+/** Each names its instrument by the databank's id and name, which mean something outside this database. */
 async function collectOwnedSynths(userId: string) {
   const rows = await prisma.ownedInstrument.findMany({
     where: { userId },

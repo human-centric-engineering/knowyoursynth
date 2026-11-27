@@ -169,6 +169,34 @@ describe('InstrumentAbout', () => {
     });
   });
 
+  it('puts it back on the wishlist when the user takes back that they own it', async () => {
+    auth.user = { id: 'user-1' };
+    answer([], ['moog-minimoog'], false, 0);
+    const user = userEvent.setup();
+    page();
+    const own = await screen.findByRole('button', { name: 'I own this' });
+    await waitFor(() => expect(own).toHaveProperty('disabled', false));
+    await user.click(own);
+    await user.click(await screen.findByRole('button', { name: 'You own this' }));
+    expect(apiClient.patch).toHaveBeenLastCalledWith('/api/v1/me/instruments/moog-minimoog', {
+      body: { kind: 'wishlist' },
+    });
+    expect(apiClient.delete).not.toHaveBeenCalled();
+  });
+
+  it('leaves the other action working, and says so, when one read fails', async () => {
+    auth.user = { id: 'user-1' };
+    vi.mocked(apiClient.get).mockImplementation(async (path: string) => {
+      if (path === '/api/v1/me/instruments') throw new Error('offline');
+      return { asked: false, count: 0 };
+    });
+    page();
+    const ask = await screen.findByRole('button', { name: 'Ask for it to be modelled' });
+    await waitFor(() => expect(ask).toHaveProperty('disabled', false));
+    expect(screen.getByRole('button', { name: 'I own this' })).toHaveProperty('disabled', true);
+    expect((await screen.findByRole('alert')).textContent).toContain('could not be read');
+  });
+
   it('asks for it to be modelled, and withdraws, with how many have asked', async () => {
     auth.user = { id: 'user-1' };
     answer([], [], false, 0);

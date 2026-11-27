@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
+import { cache } from 'react';
 
 import '@/components/app/synth/synth.css';
 
@@ -24,13 +25,14 @@ import { logger } from '@/lib/logging';
 
 type Props = { params: Promise<{ instrument: string }> };
 
-async function read(param: string) {
+// Cached per request, so the page and its metadata share one read of the databank.
+const read = cache(async (param: string) => {
   const id = InstrumentIdSchema.safeParse(param);
   if (!id.success) return null;
   const bank = await loadBank();
   const detail = detailFrom(bank, 'instruments', id.data);
   return detail && { detail, instruments: listFrom(bank, 'instruments') };
-}
+});
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const found = await read((await params).instrument);
