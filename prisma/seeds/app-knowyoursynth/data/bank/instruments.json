@@ -952,6 +952,16 @@
       "source": "https://en.wikipedia.org/wiki/Moog_Sub_37"
     },
     {
+      "id": "moog-dfam",
+      "name": "Moog DFAM",
+      "maker": "Moog Music",
+      "year": "2017",
+      "kind": "semi-modular",
+      "app": ["dfam", "edge"],
+      "text": "The Drummer From Another Mother: a semi-modular analogue percussion synthesizer with two VCOs, white noise, a low- or high-pass ladder filter, three decay envelopes and an 8-step sequencer with a pitch and a velocity knob per step, made to sit beside the Mother-32.",
+      "source": "https://www.soundonsound.com/reviews/moog-dfam"
+    },
+    {
       "id": "moog-subharmonicon",
       "name": "Moog Subharmonicon",
       "maker": "Moog Music",

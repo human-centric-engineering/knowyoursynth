@@ -1,0 +1,54 @@
+{
+  "synth": "dfam",
+  "unusual": [
+    {
+      "target": "seq.vel1",
+      "text": "The velocity row is the rhythm. Every clock plays a step, so a rest is a step turned fully down, and a step half way up is a softer, less punchy hit, not only a quieter one: velocity sets the peak of all three envelopes, pitch and filter as well as loudness, and lengthens their decays a little."
+    },
+    {
+      "target": "seq.pitch1",
+      "text": "Each PITCH knob spans about ten octaves (±5 V), so a small turn is a big interval. With SEQ PITCH MOD on OFF the row still reaches the PITCH output, a second voltage per step to patch anywhere."
+    },
+    {
+      "target": "vco1.eg_amt",
+      "text": "The pitch envelope is bipolar per oscillator: right of centre the pitch spikes up and falls back, the attack of a kick; left of centre it dips and rises back. With both EG AMOUNT knobs at the centre, VCO DECAY seems to do nothing."
+    },
+    {
+      "target": "vco2.fm_amt",
+      "text": "Its FM is linear: VCO 1 swings VCO 2’s frequency in hertz around its pitch, so the pitch holds while the sidebands grow, where most synths’ FM bends the pitch."
+    },
+    {
+      "target": "vcfmod.amt",
+      "text": "Noise is wired into the cutoff as well as into the mixer: this knob shakes the filter with it, for dirt and sizzle. A cable in VCF MOD replaces the noise, and is the only direct way into the cutoff."
+    },
+    {
+      "target": "clock.tempo",
+      "text": "The clock is an oscillator, 0.7 to 700 Hz, and its TEMPO input is 1 V an octave: a voltage there can stretch single steps (Swing Time) or push the sequencer into audio rate, where it becomes a waveform."
+    },
+    {
+      "target": "vca_eg.attack",
+      "text": "There is no attack knob anywhere: every envelope opens in 1 ms, and only the VCA EG has a second choice, 100 ms, which softens the hit and smooths a sequenced bass line like glide."
+    },
+    {
+      "target": "j.adv_clock",
+      "text": "Chaining DFAMs is one cable: the first’s TRIGGER OUT into the next’s ADV / CLOCK, with the follower started first."
+    }
+  ],
+  "limits": {
+    "intro": "The whole panel is modelled: both VCOs with their waves, EG amounts, hard sync and linear FM; the three-channel mixer with EXT AUDIO; the ladder filter in LP and HP with its envelope and noise modulation; the three decay envelopes and the VCA; the 8-step sequencer with its clock, RUN / STOP, ADVANCE and TRIGGER; and all 24 patch points with the hardware’s normals.",
+    "items": [
+      {
+        "title": "Playing it from the keys",
+        "text": "The DFAM has no keyboard and no MIDI. Here the app’s keys stand in for its TRIGGER input and a VCO CV: with the sequencer stopped a key strikes the envelopes at the key’s velocity, and its pitch, from C4, moves both VCOs; while the sequencer runs a key only transposes it. RUN / STOP runs the sequencer on the app’s clock, with Play on the bar, from step 1 on its downbeat; TEMPO chooses how many steps a beat (from about 20 steps a second the clock runs free, as an oscillator)."
+      },
+      {
+        "title": "What is not modelled",
+        "text": "The rear 1/4-inch output’s headphone and line modes, the Eurorack mounting and the power. The way each analogue unit differs a little from the next. The HP filter’s own resonance scaling, which on the hardware only self-oscillates near 1 kHz: here HP and LP share one scale."
+      },
+      {
+        "title": "What the sources leave open",
+        "text": "The manual gives the VCF EG’s decay range, 10 ms to 10 s, but not the VCO and VCA EGs’: here they share it. It says velocity lengthens the decays slightly but not by how much: here full velocity lengthens them by 15 %. The pitch envelope’s and VCF EG’s depth at full, the 1→2 FM depth, the VCOs’ centre (C3 here) and the tapers are the app’s. The manual says both that velocity sets the envelopes’ amplitude and that it changes their decay; both are modelled. A clock into ADV / CLOCK moves the sequencer only while it runs, as the manual’s sync instructions start the follower first. Knob positions are read 7 o’clock = 0 to 5 o’clock = 10, and −5 to +5 for the bipolar ones."
+      }
+    ]
+  }
+}

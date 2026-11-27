@@ -555,6 +555,16 @@
       "source": "https://www.gearnews.com/behringer-pro-1-and-crave-are-on-their-way"
     },
     {
+      "id": "behringer-edge",
+      "name": "Behringer EDGE",
+      "maker": "Behringer",
+      "year": "2021",
+      "kind": "semi-modular",
+      "recreationOf": "moog-dfam",
+      "text": "An analogue recreation of the Moog DFAM with the same voice, 8-step sequencer and 24-jack patchbay, adding white or pink noise, MIDI or USB clock divided by a SCALE switch, MIDI notes, a poly chain of up to 16 units and a headphone jack.",
+      "source": "https://www.behringer.com/en/products/0718-ABM"
+    },
+    {
       "id": "behringer-syncussion-sy-1",
       "name": "Behringer SYNCUSSION SY-1",
       "maker": "Behringer",
