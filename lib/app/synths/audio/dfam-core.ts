@@ -98,6 +98,8 @@ export interface Dfam {
   clock: (at: ClockAt, from?: number) => void;
   /** The voice has left the DFAM: the next `set` starts afresh. */
   off: () => void;
+  /** Panic: the envelopes and TRIGGER OUT fall silent at once. A running sequencer runs on, as RUN / STOP says. */
+  panic: () => void;
   /** The sequencer is running, or an envelope is still moving: the voice must keep stepping. */
   busy: () => boolean;
   /** One sample, before the oscillators: whether a key was just struck, and its velocity (0..1). */
@@ -138,7 +140,9 @@ export function createDfam(
   let gridAt = 0,
     gridLen = 0,
     locked = false,
-    free = false;
+    free = false,
+    fromStart = false,
+    runAt = 0;
   // edges: ADV / CLOCK, TRIGGER and RUN / STOP last sample, and whether RUN / STOP was cabled
   let advPrev = false,
     trigPrev = false,
@@ -183,7 +187,8 @@ export function createDfam(
     running = false;
     ph = 0;
     gridAt = gridLen = 0;
-    locked = free = false;
+    locked = free = fromStart = false;
+    runAt = 0;
     advPrev = trigPrev = runPrev = runCab = false;
     pNext = pTrig = false;
     trigOut = 0;
@@ -228,19 +233,18 @@ export function createDfam(
 
     // ── the app's master clock ──
     const le = lock.step();
-    if (waits && !runCab) {
-      if (le === 'start') {
-        // a run starts on step 1 at its first beat, which plays first
-        st = 0;
-        armed = true;
-        gridLen = 0;
+    if (waits && le === 'start') {
+      // a run starts on step 1 at its first beat, which plays first, whether the panel or a cable says it runs
+      st = 0;
+      armed = true;
+      gridLen = 0;
+      keyVelOut = -1;
+      runAt = lock.beat();
+      if (!runCab) {
         running = p.run;
-        if (running) {
-          ph = 1;
-          keyVelOut = -1;
-        }
-      } else if (le === 'stop') running = false;
-    }
+        if (running) ph = 1;
+      }
+    } else if (waits && le === 'stop' && !runCab) running = false;
 
     // ── RUN / STOP ──
     const rc = !!cabled[DI.dfmRun];
@@ -292,7 +296,10 @@ export function createDfam(
       if (running && adv && !advPrev) seqFire = tick();
     } else if (nowLocked) {
       // a run's first step plays on its first beat, before the pulses have measured the beat
-      if (le === 'start' && running && armed) seqFire = tick();
+      if (le === 'start' && running && armed) {
+        seqFire = tick();
+        fromStart = true;
+      }
       if (lock.running()) {
         const bps = lock.bps(),
           b = lock.beat();
@@ -300,7 +307,10 @@ export function createDfam(
         if (!locked) gridLen = 0;
         if (gridLen === 0 && bps > 0) {
           gridLen = len(bps);
-          gridAt = Math.floor(b / gridLen + 1e-9) * gridLen;
+          // a run whose first step has played counts its grid from that beat, so a step one pulse long, due at the
+          // pulse that measures the beat, still plays; otherwise from the grid line it is on
+          gridAt = Math.floor((fromStart ? runAt : b) / gridLen + 1e-9) * gridLen;
+          fromStart = false;
           // lit inside a run, it plays on the next step of the grid (the loop below), unless it is on one now
           if (running && armed && b - gridAt < 1e-6) seqFire = tick();
         }
@@ -388,11 +398,20 @@ export function createDfam(
     lock.clock(at, from);
   }
 
+  function panic() {
+    trigOut = 0;
+    for (let k = 0; k < 3; k++) {
+      lvl[k] = peak[k] = 0;
+      rising[k] = false;
+    }
+  }
+
   return {
     set,
     press,
     clock,
     off,
+    panic,
     busy: () => running || lvl[0] > 0 || lvl[1] > 0 || lvl[2] > 0,
     step,
     stage: () => st,

@@ -2448,7 +2448,8 @@ export interface DfamParams {
   /**
    * The EDGE's CLOCK on MIDI or USB: the steps a beat its SCALE takes from the incoming clock (1/16 is 4, 1/16T is 6),
    * the app's transport here. Each step is exactly that share of the beat, whatever TEMPO says, and the sequencer
-   * stands still without the clock. Absent, the clock is TEMPO (INT/EXT, and the DFAM).
+   * stands still without the clock. The app sends its clock only to settings that follow, so a definition setting it
+   * sets `EngineParams.follow` too. Absent, the clock is TEMPO (INT/EXT, and the DFAM).
    */
   perBeat?: number;
 }

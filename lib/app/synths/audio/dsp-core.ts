@@ -1350,6 +1350,8 @@ function createVoice(
     held.length = 0;
     gate = 0;
     solar.panic();
+    dfam.panic();
+    keyStrike = false;
     phraseHeld.clear();
     slotKey.fill(-1);
     slotHeld.fill(0);
@@ -2523,6 +2525,9 @@ function createVoice(
 
       // ── gates & envelopes ──
       const hitKey = retrigFlag;
+      // read once a sample and cleared, whichever core the voice runs, so a key on another synth never reaches the DFAM
+      const struck = keyStrike;
+      keyStrike = false;
       const tr = p.trig;
       const rep = tr.repeat ? sqV > 0 : true;
       const g1 = trigSrc
@@ -2645,8 +2650,7 @@ function createVoice(
           break core;
         }
         // the DFAM's clock, sequencer and envelopes come first, so the oscillators hear this sample's step
-        if (p.dfam) dfam.step(keyStrike, vel);
-        keyStrike = false;
+        if (p.dfam) dfam.step(struck, vel);
         // ── oscillators ──
         const pmAll = ev(DI.pitchAll);
         if (dAmt > 0) {

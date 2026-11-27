@@ -20,7 +20,13 @@ import {
   VEL_DECAY,
 } from '@/lib/app/synths/audio/dfam-core';
 import { CLOCK_PPQ } from '@/lib/app/synths/audio/subharm-core';
-import { allFinite, monoParams, render, rms } from '@/tests/unit/lib/app/synths/audio/render';
+import {
+  allFinite,
+  monoParams,
+  render,
+  rms,
+  type Timed,
+} from '@/tests/unit/lib/app/synths/audio/render';
 
 const SR = 48000;
 
@@ -448,6 +454,43 @@ describe('dfam core: following the app’s clock', () => {
     expect(edges(r.run(100, ['dfmTrig'], 0.8).dfmTrig)).toEqual([0]);
   });
 
+  it('a step one pulse long plays from the run’s second pulse, the one that measures the beat', () => {
+    const r = rig(dfam({ run: true, tempo: 10, perBeat: 24 }), true);
+    const at = clocked(r, 120, 0.5);
+    // 120 BPM: a pulse every 1000 samples, a step on each from the first
+    expect(at).toHaveLength(12);
+    for (let k = 0; k < at.length; k++) expect(Math.abs(at[k] - k * 1000)).toBeLessThanOrEqual(1);
+  });
+
+  it('a transport start puts it on step 1 with a cable in RUN / STOP too, and VELOCITY OUT on step 1’s', () => {
+    const vel = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
+    const r = rig(dfam({ run: false, tempo: 2, vel }), true);
+    for (let k = 0; k < 4; k++) {
+      r.core.press('next');
+      r.run(1, []);
+    }
+    r.run(10, [], 0.95);
+    expect(r.S[r.SI.dfmVel]).toBeCloseTo(0.95, 6);
+    // RUN / STOP unlit: the start moves it to step 1 and shows step 1's velocity
+    r.core.clock('start');
+    r.run(1, []);
+    expect(r.core.stage()).toBe(0);
+    expect(r.S[r.SI.dfmVel]).toBe(0.1);
+    r.core.clock('stop');
+    r.run(1, []);
+    // a gate held high in RUN / STOP, left on step 5: the run starts on step 1
+    for (let k = 0; k < 4; k++) {
+      r.core.press('next');
+      r.run(1, []);
+    }
+    r.input('dfmRun', 1);
+    r.run(10, []);
+    // 2 Hz at 120 BPM: a step a beat, so step 2 at the second beat
+    const at = clocked(r, 120, 1.5);
+    expect(at).toEqual([0, 24000]);
+    expect(r.core.stage()).toBe(1);
+  });
+
   it('runs free above 20 Hz, within the run', () => {
     const r = rig(dfam({ run: true, tempo: 100 }), true);
     const at = clocked(r, 120, 1);
@@ -519,6 +562,35 @@ describe('dfam in the voice', () => {
     // the first hit has died away by the second key, which strikes it again
     expect(rms(out, 4000, 4864)).toBeLessThan(1e-4);
     expect(rms(out, 4864, 6000)).toBeGreaterThan(0.01);
+  });
+
+  it('a key on another synth does not fire the bus when the voice turns to the DFAM', () => {
+    const p = voice({ run: false });
+    const { out } = render(
+      monoParams({
+        osc: [{ level: 0.8, mix: { tri: 1 }, semi: 0 }],
+        vca: { envSrc: 'none', bias: 0 },
+      }),
+      {
+        len: 9600,
+        events: [
+          [0, { type: 'noteOn', n: 60, v: 0.9 }],
+          [4864, { type: 'params', p }],
+        ],
+      }
+    );
+    expect(rms(out, 4864)).toBe(0);
+  });
+
+  it('panic silences the envelopes at once', () => {
+    const long = { decay: 1, min: 0.01, max: 10, attack: 0.001 };
+    const p = voice({ run: false, eg: [long, long, long] });
+    const hit: Timed = [0, { type: 'press', name: 'trigger' }];
+    const rings = render(p, { len: 9600, events: [hit] }).out;
+    const { out } = render(p, { len: 9600, events: [hit, [4864, { type: 'panic' }]] });
+    expect(rms(out, 0, 4864)).toBeGreaterThan(0.01);
+    // past the VCA's smoothing, next to the hit left ringing
+    expect(rms(out, 6400)).toBeLessThan(0.02 * rms(rings, 6400));
   });
 
   it('ADVANCE and TRIGGER reach the core through press messages', () => {
