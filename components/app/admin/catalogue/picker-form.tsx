@@ -22,15 +22,21 @@ import {
   PICKER_GROUPS,
   PICKER_KINDS,
   PICKER_ORDERS,
+  PICKER_SCOPES,
   toggleKind,
   type PickerGroupBy,
   type PickerKind,
   type PickerOrder,
+  type PickerScope,
   SitePickerSettingsSchema,
   type SitePickerSettings,
 } from '@/lib/app/picker/settings';
 import { useSaveFailure } from '@/lib/hooks/use-save-failure';
 
+const SCOPE_LABELS: Record<PickerScope, string> = {
+  play: 'Synths that play',
+  all: 'All synths ever made',
+};
 const GROUP_LABELS: Record<PickerGroupBy, string> = {
   name: 'Name A–Z',
   maker: 'Maker',
@@ -122,6 +128,28 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
       onSubmit={(e) => void onSubmit(e)}
       className="max-w-2xl space-y-6"
     >
+      <div className="space-y-2">
+        <Label id="picker-scope">
+          Show by default{' '}
+          <FieldHelp title="Show by default">
+            <p>
+              <strong>Synths that play</strong> lists the synths in the catalogue and their
+              families. <strong>All synths ever made</strong> lists every instrument in the
+              databank, in a full-size browser over the page; one nobody has modelled opens a page
+              about it. It needs &ldquo;Offer All synths ever made&rdquo; below.
+            </p>
+          </FieldHelp>
+        </Label>
+        <Choice
+          id="picker-scope"
+          options={PICKER_SCOPES}
+          labels={SCOPE_LABELS}
+          value={draft.scope}
+          disabled={disabled}
+          onPick={(v) => set('scope', v)}
+        />
+      </div>
+
       <div className="space-y-2">
         <Label id="picker-group">
           Group by{' '}
@@ -233,7 +261,7 @@ export function PickerSettingsForm({ initial }: { initial: SitePickerSettings })
           <FieldHelp title="All synths ever made">
             <p>
               Whether visitors may browse every instrument in the databank, not only the synths that
-              play. It arrives with the next part of the picker; until then this has no effect.
+              play. Off, every visitor lists the synths that play, whatever is chosen above.
             </p>
           </FieldHelp>
         </label>

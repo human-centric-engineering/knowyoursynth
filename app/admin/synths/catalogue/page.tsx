@@ -60,6 +60,10 @@ export default async function SynthCataloguePage() {
           <Link href="/admin/synths/catalogue/picker" className="underline">
             set how the synth picker lists them
           </Link>
+          . See which synths visitors have{' '}
+          <Link href="/admin/synths/catalogue/model-requests" className="underline">
+            asked to be modelled
+          </Link>
           .
         </p>
       </header>
