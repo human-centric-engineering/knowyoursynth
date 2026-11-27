@@ -73,7 +73,7 @@ export const MANUAL: SoundSpec[] = [
         why: 'Every step’s pitch to both VCOs, with small offsets, and a velocity row with accents. RUN / STOP lit: Play on the bar runs it, in sixteenths.',
         set: {
           'seq.pitch_mod': 'vco12',
-          ...pitches([0, 0, 0.6, 0, 0, -0.6, 1.2, 0]),
+          ...pitches([0, 0, 3, 0, 0, -2, 7, 0]),
           ...vels([10, 3, 6, 4, 9, 3, 7, 5]),
           'clock.tempo': tempo(112, 4),
           ...run(),

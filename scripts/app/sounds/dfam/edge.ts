@@ -14,6 +14,7 @@ import {
   midi,
   pitches,
   run,
+  tempo,
   vcfEg,
   vels,
 } from '@/scripts/app/sounds/dfam/kit';
@@ -553,7 +554,11 @@ export const EDGE: SoundSpec[] = [
     ],
     context: { 'vco1.freq': 'In this sound: the drum’s pitch at C4; the keys move it.' },
     tweaks: [
-      { id: 'vca_eg.decay', try: 'Turn DECAY (VCA) to 4.5', hear: 'A ringing, tuned drum.' },
+      {
+        id: 'vca_eg.decay',
+        try: `Turn DECAY (VCA) to ${decay(0.6)}`,
+        hear: 'A ringing, tuned drum.',
+      },
       { id: 'mix.noise', try: 'Turn NOISE/EXT to 2', hear: 'A slap of skin on each hit.' },
     ],
   },
@@ -599,7 +604,7 @@ export const EDGE: SoundSpec[] = [
       },
       {
         id: 'clock.tempo',
-        try: 'Turn TEMPO to 4.1',
+        try: `Turn TEMPO to ${tempo(100, 4)}`,
         hear: 'Locked to the beat again, in sixteenths.',
       },
     ],

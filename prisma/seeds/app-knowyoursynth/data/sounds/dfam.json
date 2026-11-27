@@ -70,16 +70,16 @@
         {
           "title": "Sequence it",
           "module": "mod",
-          "why": "Every step’s pitch to both VCOs, with small offsets, and a velocity row with accents. RUN / STOP lit: Play on the bar runs it, in sixteenths.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0.05 · +0.6 st (0.1 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 -0.05 · -0.6 st (-0.1 V)\n- PITCH 7 0.1 · +1.2 st (0.1 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 3 · 1.5 V\n- VELOCITY 3 6 · 3.0 V\n- VELOCITY 4 4 · 2.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 3 · 1.5 V\n- VELOCITY 7 7 · 3.5 V\n- VELOCITY 8 5 · 2.5 V\n- TEMPO 3.43 · 7.48 Hz · 112 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a pattern of soft and hard hits, the pitch leaning on a few of them.",
+          "why": "Every step’s pitch to both VCOs, with small offsets, and a velocity row with accents. RUN / STOP lit: Play on the bar runs it, in sixteenths.\n- SEQ PITCH MOD VCO 1&2\n- PITCH 1 0 · 0 st (0.0 V)\n- PITCH 2 0 · 0 st (0.0 V)\n- PITCH 3 0.25 · +3 st (0.3 V)\n- PITCH 4 0 · 0 st (0.0 V)\n- PITCH 5 0 · 0 st (0.0 V)\n- PITCH 6 -0.17 · -2 st (-0.2 V)\n- PITCH 7 0.58 · +7 st (0.6 V)\n- PITCH 8 0 · 0 st (0.0 V)\n- VELOCITY 1 10 · 5.0 V\n- VELOCITY 2 3 · 1.5 V\n- VELOCITY 3 6 · 3.0 V\n- VELOCITY 4 4 · 2.0 V\n- VELOCITY 5 9 · 4.5 V\n- VELOCITY 6 3 · 1.5 V\n- VELOCITY 7 7 · 3.5 V\n- VELOCITY 8 5 · 2.5 V\n- TEMPO 3.43 · 7.48 Hz · 112 BPM in 16ths\n- RUN / STOP lit\n- Listen for: a pattern of soft and hard hits, the pitch leaning on a few of them.",
           "set": {
             "seq.pitch_mod": "vco12",
             "seq.pitch1": 0,
             "seq.pitch2": 0,
-            "seq.pitch3": 0.05,
+            "seq.pitch3": 0.25,
             "seq.pitch4": 0,
             "seq.pitch5": 0,
-            "seq.pitch6": -0.05,
-            "seq.pitch7": 0.1,
+            "seq.pitch6": -0.17,
+            "seq.pitch7": 0.58,
             "seq.pitch8": 0,
             "seq.vel1": 10,
             "seq.vel2": 3,
@@ -1611,7 +1611,7 @@
       "tweaks": [
         {
           "id": "vco_eg.decay",
-          "try": "Turn VCO DECAY to 4",
+          "try": "Turn VCO DECAY to 6.34",
           "hear": "Long, falling disco toms."
         },
         {
@@ -1775,7 +1775,7 @@
         },
         {
           "id": "vco1.freq",
-          "try": "Turn VCO 1 FREQUENCY to 6",
+          "try": "Turn VCO 1 FREQUENCY to 7",
           "hear": "Higher, sproingier boings."
         }
       ]
@@ -2092,7 +2092,7 @@
         },
         {
           "id": "clock.tempo",
-          "try": "Turn TEMPO to 4.2",
+          "try": "Turn TEMPO to 3.75",
           "hear": "Half the speed: sixteenths."
         }
       ]
@@ -2163,7 +2163,7 @@
       "tweaks": [
         {
           "id": "clock.tempo",
-          "try": "Turn TEMPO to 4.1",
+          "try": "Turn TEMPO to 3.2",
           "hear": "Sixteenths: the pattern lines up with the bar."
         },
         {
@@ -2250,7 +2250,7 @@
       "tweaks": [
         {
           "id": "vcf.cutoff",
-          "try": "Turn CUTOFF to 4",
+          "try": "Turn CUTOFF to 5.34",
           "hear": "Brighter, more aggressive."
         },
         {
@@ -2427,7 +2427,7 @@
         },
         {
           "id": "clock.tempo",
-          "try": "Turn TEMPO to 4.2",
+          "try": "Turn TEMPO to 3.2",
           "hear": "Sixteenths: a busy, minimalist pattern."
         }
       ]
@@ -2573,7 +2573,7 @@
       "tweaks": [
         {
           "id": "vco_eg.decay",
-          "try": "Turn VCO DECAY to 4",
+          "try": "Turn VCO DECAY to 6.34",
           "hear": "Long, falling disco toms."
         },
         {

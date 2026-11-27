@@ -86,7 +86,7 @@ mixer's `extIn`, which sounds only with `ext.level` set, and the voice's own noi
 | `dfmTrig`                          | TRIGGER OUT, a 1 ms pulse                                                | the TRIGGER jack                                             |
 | `dfmEgVco`, `dfmEgVcf`, `dfmEgVca` | The three envelopes, 0..1 for 0..8 V, each peaking at the bus's velocity | both pitches, `cutoff`, `amp` (the VCA's `envSrc` is `none`) |
 
-Its inputs are `dfmTempo`, `dfmRun`, `dfmAdv`, `dfmTrigIn`, `dfmVelIn` and the three decay CVs. A cable in TRIGGER or
+Its inputs are `dfmTempo`, `dfmRun`, `dfmAdv`, `dfmTrigIn`, `dfmVelIn`, the three decay CVs, `dfmExt` (EXT AUDIO, which replaces the noise once cabled) and `dfmNzLvl` (NOISE LEVEL, added to the knob). A cable in TRIGGER or
 VELOCITY breaks that bus's normal. ADV / CLOCK takes over from TEMPO. A cable in RUN / STOP takes over from the panel's
 RUN / STOP, which is the definition's `ownSequencer.run`. ADVANCE and TRIGGER are `press` buttons (`next`, `trigger`),
 and they act only while the sequencer is stopped, as on the hardware.

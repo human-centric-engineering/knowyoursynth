@@ -567,7 +567,7 @@ export function dfamJacks(variant: Variant): Record<string, JackSpec> {
       name: 'VCA OUT',
       signal: 'vca',
       gain: 5,
-      help: 'The whole sound after VOLUME, at modular level (±5 V).',
+      help: 'The whole sound, at modular level (±5 V). On the hardware it is after VOLUME; a cable from it here takes the sound before VOLUME.',
     },
     'j.velocity_in': {
       dir: 'in',

@@ -55,13 +55,14 @@ export function vels(row: number[]): ControlValues {
 }
 
 /** TEMPO's position for `perBeat` steps a beat at `bpm` (0.7 to 700 Hz over the turn). */
-export function tempo(bpm: number, perBeat: number): number {
-  const hz = (perBeat * bpm) / 60;
-  return r2((10 * Math.log(hz / 0.7)) / LN1000);
-}
+export const tempo = (bpm: number, perBeat: number): number => tempoHz((perBeat * bpm) / 60);
 
 /** TEMPO's position for a clock of `hz`, for a sound whose clock runs free (an oscillator). */
-export const tempoHz = (hz: number): number => r2((10 * Math.log(hz / 0.7)) / LN1000);
+export function tempoHz(hz: number): number {
+  const v = (10 * Math.log(hz / 0.7)) / LN1000;
+  if (!(v >= 0 && v <= 10)) throw new Error(`TEMPO does not reach ${hz} Hz`);
+  return r2(v);
+}
 
 /** A DECAY position for a decay of `s` seconds (10 ms to 10 s). */
 export function decay(s: number): number {
@@ -79,8 +80,8 @@ export function cutoff(hz: number): number {
 
 /** A VCO EG AMOUNT for a pitch jump of `st` semitones at full velocity (negative for a dip). */
 export function egAmt(st: number): number {
-  const v = Math.sign(st) * 5 * Math.sqrt(Math.abs(st) / EG_SEMI);
-  return r2(v);
+  if (Math.abs(st) > EG_SEMI) throw new Error(`VCO EG AMOUNT does not reach ${st} semitones`);
+  return r2(Math.sign(st) * 5 * Math.sqrt(Math.abs(st) / EG_SEMI));
 }
 
 /** A VCF EG AMOUNT for a cutoff jump of `oct` octaves at full velocity (negative to close it). */

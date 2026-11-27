@@ -394,7 +394,11 @@ export const DRUMS: SoundSpec[] = [
     ],
     context: { 'seq.pitch1': 'In this sound: the high tom.' },
     tweaks: [
-      { id: 'vco_eg.decay', try: 'Turn VCO DECAY to 4', hear: 'Long, falling disco toms.' },
+      {
+        id: 'vco_eg.decay',
+        try: `Turn VCO DECAY to ${decay(0.8)}`,
+        hear: 'Long, falling disco toms.',
+      },
       { id: 'seq.pitch_mod', try: 'Set SEQ PITCH MOD to OFF', hear: 'One tom, at one pitch.' },
     ],
   },
@@ -493,7 +497,11 @@ export const DRUMS: SoundSpec[] = [
     context: { 'vco1.eg_amt': 'In this sound: left of centre, so the pitch dips.' },
     tweaks: [
       { id: 'vco_eg.decay', try: 'Turn VCO DECAY to 5', hear: 'A slow, drunken wobble up.' },
-      { id: 'vco1.freq', try: 'Turn VCO 1 FREQUENCY to 6', hear: 'Higher, sproingier boings.' },
+      {
+        id: 'vco1.freq',
+        try: `Turn VCO 1 FREQUENCY to ${freq('C5')}`,
+        hear: 'Higher, sproingier boings.',
+      },
     ],
   },
   {
@@ -699,7 +707,11 @@ export const DRUMS: SoundSpec[] = [
     context: { 'clock.tempo': 'In this sound: eight steps a beat, thirty-second notes.' },
     tweaks: [
       { id: 'seq.vel3', try: 'Turn VELOCITY 3 to 5', hear: 'A second roll.' },
-      { id: 'clock.tempo', try: 'Turn TEMPO to 4.2', hear: 'Half the speed: sixteenths.' },
+      {
+        id: 'clock.tempo',
+        try: `Turn TEMPO to ${tempo(140, 4)}`,
+        hear: 'Half the speed: sixteenths.',
+      },
     ],
   },
   {
@@ -751,7 +763,7 @@ export const DRUMS: SoundSpec[] = [
     tweaks: [
       {
         id: 'clock.tempo',
-        try: 'Turn TEMPO to 4.1',
+        try: `Turn TEMPO to ${tempo(96, 4)}`,
         hear: 'Sixteenths: the pattern lines up with the bar.',
       },
       { id: 'seq.pitch7', try: 'Turn PITCH 7 to 3', hear: 'A high bongo on step 7.' },
@@ -815,7 +827,11 @@ export const MELODIC: SoundSpec[] = [
       'seq.vel4': 'In this sound: an accent.',
     },
     tweaks: [
-      { id: 'vcf.cutoff', try: 'Turn CUTOFF to 4', hear: 'Brighter, more aggressive.' },
+      {
+        id: 'vcf.cutoff',
+        try: `Turn CUTOFF to ${cutoff(800)}`,
+        hear: 'Brighter, more aggressive.',
+      },
       { id: 'vcf_eg.decay', try: 'Turn VCF DECAY to 4.5', hear: 'Longer, wah-like notes.' },
     ],
   },
@@ -929,7 +945,7 @@ export const MELODIC: SoundSpec[] = [
       { id: 'vca_eg.attack', try: 'Set VCA EG to SLOW', hear: 'A bowed vibraphone.' },
       {
         id: 'clock.tempo',
-        try: 'Turn TEMPO to 4.2',
+        try: `Turn TEMPO to ${tempo(96, 4)}`,
         hear: 'Sixteenths: a busy, minimalist pattern.',
       },
     ],
@@ -1040,7 +1056,11 @@ export const KEYS: SoundSpec[] = [
     ],
     context: { 'vco1.freq': 'In this sound: the tom’s pitch at C4; the keys move it from there.' },
     tweaks: [
-      { id: 'vco_eg.decay', try: 'Turn VCO DECAY to 4', hear: 'Long, falling disco toms.' },
+      {
+        id: 'vco_eg.decay',
+        try: `Turn VCO DECAY to ${decay(0.8)}`,
+        hear: 'Long, falling disco toms.',
+      },
       {
         id: 'mix.noise',
         try: 'Turn NOISE / EXT LEVEL to 3',

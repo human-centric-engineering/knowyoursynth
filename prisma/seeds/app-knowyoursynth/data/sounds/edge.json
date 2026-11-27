@@ -783,7 +783,7 @@
       "tweaks": [
         {
           "id": "vca_eg.decay",
-          "try": "Turn DECAY (VCA) to 4.5",
+          "try": "Turn DECAY (VCA) to 5.93",
           "hear": "A ringing, tuned drum."
         },
         {
@@ -855,7 +855,7 @@
         },
         {
           "id": "clock.tempo",
-          "try": "Turn TEMPO to 4.1",
+          "try": "Turn TEMPO to 3.26",
           "hear": "Locked to the beat again, in sixteenths."
         }
       ]

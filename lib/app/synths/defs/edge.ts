@@ -335,7 +335,7 @@ jacks.push({
   label: 'PHONES',
   labelPos: 'none',
   signal: 'out',
-  help: 'Headphones, 3.5 mm stereo, after VOLUME. Here it carries the whole sound, as the VCA output does.',
+  help: 'Headphones, 3.5 mm stereo, after VOLUME. A cable from it here carries the whole sound before VOLUME, as the VCA output does.',
 });
 decor.push({
   t: 'rect',
