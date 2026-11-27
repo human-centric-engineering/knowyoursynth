@@ -240,6 +240,31 @@ describe('the macro oscillator on its own', () => {
         }
   });
 
+  it.each(['pluck', 'modal'] as const)(
+    '%s stays under full scale with notes struck every 50 ms into a long ring',
+    (model) => {
+      for (const hz of [55, 440, 2000])
+        for (const w of [0, 1]) {
+          const o = createMacroOsc(SR);
+          const q = at(model, w, 1, 1);
+          o.set(q);
+          const inc = hz / SR;
+          let ph = 0,
+            pk = 0;
+          for (let i = 0; i < SR; i++) {
+            pk = Math.max(pk, Math.abs(o.step(inc, ph, w, 1, 1, i % 2400 === 0)));
+            ph += inc;
+            if (ph >= 1) ph -= 1;
+          }
+          expect(pk, `${model} ${hz} Hz wave ${w}`).toBeLessThan(1);
+        }
+    }
+  );
+
+  it('keeps the formant model sounding at TIMBRE 1 on high notes', () => {
+    for (const hz of [440, 2000]) expect(rms(raw(at('formant', 1, 1, 0.5), hz))).toBeGreaterThan(0.01);
+  });
+
   it('crossfades from one wavetable to the next rather than jumping', () => {
     // at each boundary between sixteenths of WAVE, the sound just below and just above it is all but the same
     for (let k = 1; k < 16; k++) {

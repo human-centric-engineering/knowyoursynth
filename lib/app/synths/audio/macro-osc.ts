@@ -22,7 +22,7 @@
 // vowel formants (textbook averages: Peterson and Barney, 1952), the ranges and the mode ratios. `formant`, `speech` and
 // `modal` follow the ideas of the Mutable Instruments Plaits models the MicroFreak uses (MIT licence), not their code.
 //
-// One instance per oscillator; `step()` makes no allocations. The wavetables (about 1 MB, built by FFT) are built once
+// One instance per oscillator; `step()` makes no allocations. The wavetables (about 4 MB, built by FFT) are built once
 // per audio thread, by the first `set()` that chooses `wavetable`: about 120 ms, measured on a laptop, so the first
 // wavetable patch loaded can drop a block of audio as it loads, and nothing after it does. WAVE and its modulation
 // never build anything while sound is being made.
@@ -63,6 +63,10 @@ type TableDef = { s: Spectral } | { t: Temporal };
 const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
 /** A component at `f` cycles per sample: full level up to 0.35, fading to nothing at 0.45, so none cuts off on a sample. */
 const nyq = (f: number): number => clamp01((0.45 - f) / 0.1);
+/** A soft limit for the models that ring on (`pluck`, `modal`): near-linear when quiet, never reaching ±1. */
+const soft = (y: number): number => y / Math.sqrt(1 + y * y);
+/** Samples between coefficient updates of `harmo` and `modal` while their pitch or settings move. */
+const COEF_EVERY = 16;
 /** A fixed pseudo-random level per harmonic and seed, 0..1. */
 const hash = (h: number, seed: number): number => {
   const v = Math.sin(h * 12.9898 + seed * 78.233) * 43758.5453;
@@ -230,12 +234,13 @@ export function buildWavetables(): void {
 }
 
 /**
- * Where a phase increment falls between the mip levels, 0..WT_LEVELS − 1: level `l` keeps WT_LEN / 2^(l+1) harmonics,
- * so at `inc` it is free of aliasing from log2(WT_LEN·inc) up. The two levels either side are crossfaded, the lower
- * (brighter) one only while it is still under Nyquist, so a glide changes brightness smoothly.
+ * The mip position for a phase increment, 0..WT_LEVELS − 1, read between its two neighbouring levels. Level `l` keeps
+ * WT_LEN / 2^(l+1) harmonics, so at `inc` it is free of aliasing while log2(WT_LEN·inc) ≤ l. The position is one level
+ * above that, so both levels read are always under Nyquist, and the crossfade between them changes brightness
+ * smoothly up a glide; the lowest notes read level 0 alone.
  */
 function mipPos(inc: number): number {
-  const lv = Math.log2(Math.max(1e-9, WT_LEN * inc));
+  const lv = Math.log2(Math.max(1e-9, WT_LEN * inc)) + 1;
   return lv < 0 ? 0 : lv > WT_LEVELS - 1 ? WT_LEVELS - 1 : lv;
 }
 
@@ -257,14 +262,11 @@ function readLevel(t: Float32Array, l: number, fpos: number, ph: number): number
 
 /** One sample of table `t` at mip position `mp` (see `mipPos`), crossfading the level below it into the one above. */
 function readTable(t: Float32Array, mp: number, fpos: number, ph: number): number {
-  const l1 = Math.ceil(mp);
-  if (l1 === 0) return readLevel(t, 0, fpos, ph);
-  const l0 = l1 - 1;
+  const l0 = Math.floor(mp);
   const fr = mp - l0;
-  const a = readLevel(t, l1, fpos, ph);
-  if (fr >= 1) return a;
-  // `l0` aliases only once mp passes l0, so it fades out as mp rises from l0 to l1
-  return a + (readLevel(t, l0, fpos, ph) - a) * (1 - fr);
+  const a = readLevel(t, l0, fpos, ph);
+  if (fr === 0 || l0 >= WT_LEVELS - 1) return a;
+  return a + (readLevel(t, l0 + 1, fpos, ph) - a) * fr;
 }
 
 // ─── harmo ───────────────────────────────────────────────────────────────────
@@ -399,6 +401,7 @@ export function createMacroOsc(sr: number): MacroOsc {
     mS = -1,
     mT = -1,
     mT60 = 1,
+    mWait = 0,
     mExcLp = 0;
 
   function clear() {
@@ -421,8 +424,8 @@ export function createMacroOsc(sr: number): MacroOsc {
   /**
    * The chorus copies are added at SHAPE and the sum divided by 1 + 2·SHAPE, so all three in step still peak at 1.
    *
-   * WAVE picks a table: each of the 16 holds the middle of its sixteenth of the knob, and the last fifth of the way to
-   * the next one is a crossfade into it, so sweeping WAVE never jumps between waveforms.
+   * WAVE picks a table: each of the 16 holds the middle of its sixteenth of the knob, and the middle fifth of the way
+   * from one table's centre to the next is a crossfade between them, so sweeping WAVE never jumps between waveforms.
    */
   function wtAt(ta: Float32Array, tb: Float32Array, x: number, mp: number, fpos: number, ph: number) {
     const a = readTable(ta, mp, fpos, ph);
@@ -454,9 +457,13 @@ export function createMacroOsc(sr: number): MacroOsc {
   let hW = -1,
     hT = -1,
     hInc = -1,
-    hGain = 0;
+    hGain = 0,
+    hWait = 0;
   function harmoLevels(w: number, t: number, inc: number): number {
     if (w === hW && t === hT && inc === hInc) return hGain;
+    // moving, the levels are worked out again only every COEF_EVERY samples
+    if (hWait-- > 0 && hW >= 0) return hGain;
+    hWait = COEF_EVERY - 1;
     hW = w;
     hT = t;
     hInc = inc;
@@ -546,7 +553,8 @@ export function createMacroOsc(sr: number): MacroOsc {
     buf[ksW] = y > 1.5 ? 1.5 : y < -1.5 ? -1.5 : y;
     ksW = (ksW + 1) & (KS_N - 1);
     // the strike and the string it starts can peak together, so the string comes out at a level that keeps it under 1
-    return y * KS_OUT;
+    // repeated strikes and the bow pile up in a string still ringing, so it ends in a soft limit
+    return soft(y * KS_OUT);
   }
 
   function formant(
@@ -558,8 +566,10 @@ export function createMacroOsc(sr: number): MacroOsc {
     wrapped: boolean
   ): number {
     // TIMBRE: the first formant from the note itself up six octaves; WAVE: the second 0.5 to 4 times the first
-    const r1 = Math.pow(2, 6 * t);
-    const r2 = r1 * (0.5 + 3.5 * w);
+    // each formant is held at 0.3 of the sample rate rather than let go silent above it on high notes
+    const cap = inc > 0 ? 0.3 / inc : 64;
+    const r1 = Math.min(Math.pow(2, 6 * t), cap);
+    const r2 = Math.min(r1 * (0.5 + 3.5 * w), cap);
     if (wrapped) {
       fp1 = phase * r1;
       fp2 = phase * r2;
@@ -643,7 +653,10 @@ export function createMacroOsc(sr: number): MacroOsc {
 
   function modal(inc: number, w: number, t: number, s: number, hit: boolean): number {
     // the modes' coefficients, worked out again when the pitch or a setting moves
-    if (Math.abs(inc - mInc) > inc * 1e-4 || w !== mW || s !== mS || t !== mT) {
+    const moved = Math.abs(inc - mInc) > inc * 1e-4 || w !== mW || s !== mS || t !== mT;
+    // moving, the modes are worked out again only every COEF_EVERY samples (a fresh start always works them out)
+    if (moved && (mInc < 0 || mWait-- <= 0)) {
+      mWait = COEF_EVERY - 1;
       mInc = inc;
       mW = w;
       mS = s;
@@ -693,7 +706,8 @@ export function createMacroOsc(sr: number): MacroOsc {
       mY1[k] = v;
       y += v;
     }
-    return y;
+    // notes struck into modes still ringing add up, so it ends in a soft limit
+    return soft(y);
   }
 
   let lastPhase = 0;
