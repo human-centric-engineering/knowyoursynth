@@ -274,6 +274,7 @@ describe('reserved fork tiers', () => {
       'enum LinkTargetKind {',
       'enum LinkSuggestionStatus {',
       'model LinkSuggestion {',
+      'model SynthPickerSettings {',
     ]);
   });
 

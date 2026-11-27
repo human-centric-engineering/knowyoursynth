@@ -45,6 +45,12 @@ vi.mock('@/lib/app/families/read', () => ({
   listFamilies: vi.fn(),
 }));
 
+// The site's picker settings (t-329): read in process, the defaults when that fails (its own test).
+const PICKER_SITE = vi.hoisted(() => ({ group: 'name' }));
+vi.mock('@/lib/app/picker/site-settings', () => ({
+  sitePickerForPage: vi.fn(async () => PICKER_SITE),
+}));
+
 const props = (id: string, view?: string | string[], sound?: string | string[]) => ({
   params: Promise.resolve({ id }),
   searchParams: Promise.resolve({
@@ -105,12 +111,13 @@ describe('/synths/[id]', () => {
     await expect(SynthRoute(props('model-d'))).rejects.toThrow('NEXT_NOT_FOUND');
   });
 
-  it('passes the detail, the listed synths, and the view to the page, keyed by synth', async () => {
+  it("passes the detail, the listed synths, the picker's site settings and the view to the page, keyed by synth", async () => {
     const el = await render('model-d', 'long,outline');
     expect(el.props).toEqual({
       detail: DETAIL,
       synths: LIST,
       families: FAMILIES,
+      pickerSite: PICKER_SITE,
       viewParam: 'long,outline',
       soundParam: null,
       mineParam: null,

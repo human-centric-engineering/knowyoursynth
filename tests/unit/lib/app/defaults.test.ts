@@ -559,6 +559,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
         'ExternalLink',
         'LinkSeedRecord',
         'HeldUsername',
+        'SynthPickerSettings',
       ]);
     },
   },
@@ -647,6 +648,7 @@ const SEAM_DEFAULTS: SeamDefault[] = [
             'BankRemoval',
             'ExternalLink',
             'LinkSeedRecord',
+            'SynthPickerSettings',
           ]),
           ...as('system', [
             'SynthSuggestion',

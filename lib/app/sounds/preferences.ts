@@ -15,6 +15,7 @@ import type { SynthPreference, UserPreference } from '@prisma/client';
 import { prisma } from '@/lib/db/client';
 import { getSynthDef } from '@/lib/app/synths/defs';
 import { normalizeFx } from '@/lib/app/synths/audio/fx';
+import { StoredPickerPrefsSchema } from '@/lib/app/picker/settings';
 import { sanitizeCables, sanitizeSet } from '@/lib/app/synths/lib/patch';
 import { checkPanel, playableSynth, toJson } from '@/lib/app/sounds/store';
 import type {
@@ -33,6 +34,9 @@ function toSettings(row: UserPreference | null): AccountSettings {
     harm: row?.harm ?? null,
     // Checked field by field on the way out, as the page checks the browser's copy.
     fx: row?.fx == null ? null : normalizeFx(row.fx),
+    // Checked on the way out: a value that is not one is read as none, so the site's choices apply.
+    picker:
+      row?.picker == null ? null : (StoredPickerPrefsSchema.safeParse(row.picker).data ?? null),
     updatedAt: row ? row.updatedAt.toISOString() : null,
     now: new Date().toISOString(),
   };
@@ -54,6 +58,7 @@ export async function updateSettings(
     ...(patch.heat !== undefined && { heat: patch.heat }),
     ...(patch.harm !== undefined && { harm: patch.harm }),
     ...(patch.fx !== undefined && { fx: toJson(patch.fx) }),
+    ...(patch.picker !== undefined && { picker: toJson(patch.picker) }),
   };
   const row = await prisma.userPreference.upsert({
     where: { userId },

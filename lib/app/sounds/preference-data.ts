@@ -3,13 +3,14 @@
  * `/api/v1/me/panels/:synthId` take and return. Shapes only, with no database client, so the synth page checks with the
  * same schemas the routes do.
  *
- * They are the browser's `kys.tips`, `dim`, `heat`, `harm`, `fx` and `kys.session.<id>`
+ * They are the browser's `kys.tips`, `dim`, `heat`, `harm`, `fx`, `picker` and `kys.session.<id>`
  * (`components/app/synth/storage.ts`), kept under the account. Screen-only keys stay in the browser (D4).
  */
 import { z } from 'zod';
 import { PanelInputSchema, SoundSlugSchema, UserSoundIdSchema } from '@/lib/app/sounds/data';
 import { normalizeFx, type RackFx } from '@/lib/app/synths/audio/fx';
 import type { CablePair, ControlValues } from '@/lib/app/synths/contract';
+import { PickerPrefsSchema, type PickerPrefs } from '@/lib/app/picker/settings';
 
 /** Whether `a` has exactly the fields and values of `b` (a plain object of objects, booleans and numbers). */
 function sameFx(a: unknown, b: unknown): boolean {
@@ -37,6 +38,8 @@ export const SettingsPatchSchema = z
     heat: z.boolean().optional(),
     harm: z.boolean().optional(),
     fx: RackFxSchema.optional(),
+    /** How the synth picker lists synths: only the choices changed from the site's. `{}` follows the site. */
+    picker: PickerPrefsSchema.optional(),
   })
   .strict()
   .refine((v) => Object.values(v).some((x) => x !== undefined), { message: 'Nothing to change' });
@@ -49,6 +52,7 @@ export interface AccountSettings {
   heat: boolean | null;
   harm: boolean | null;
   fx: RackFx | null;
+  picker: PickerPrefs | null;
   /** When they were last changed, or `null` when the account has none yet. */
   updatedAt: string | null;
   /** The server's time as it answered, so the page can weigh `updatedAt` against its own clock. */
@@ -62,12 +66,13 @@ export const AccountSettingsSchema = z.object({
   heat: z.boolean().nullable(),
   harm: z.boolean().nullable(),
   fx: RackFxSchema.nullable(),
+  picker: PickerPrefsSchema.nullable(),
   updatedAt: z.iso.datetime().nullable(),
   now: z.iso.datetime(),
 });
 
 /** The settings the account keeps, in the order the page reads them. */
-export const SETTING_KEYS = ['tips', 'dim', 'heat', 'harm', 'fx'] as const;
+export const SETTING_KEYS = ['tips', 'dim', 'heat', 'harm', 'fx', 'picker'] as const;
 export type SettingKey = (typeof SETTING_KEYS)[number];
 
 /** More lesson steps than any sound has. */

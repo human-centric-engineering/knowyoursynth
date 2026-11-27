@@ -160,6 +160,7 @@ describe('settings', () => {
       heat: null,
       harm: null,
       fx: null,
+      picker: null,
       updatedAt: null,
       now: expect.any(String),
     });
@@ -176,6 +177,7 @@ describe('settings', () => {
       heat: null,
       harm: null,
       fx,
+      picker: null,
       updatedAt: expect.any(String),
       now: expect.any(String),
     };
@@ -203,12 +205,57 @@ describe('settings', () => {
       { fx: { ...FX_DEFAULT, reverb: { ...FX_DEFAULT.reverb, mix: 2 } } },
       { fx: { on: true } },
       { fx: { ...FX_DEFAULT, flanger: { on: true } } },
+      { picker: { group: 'year' } },
+      { picker: { kinds: ['mono', 'mono'] } },
+      { picker: { scope: 'all' } },
     ];
     for (const body of bad) {
       const res = await changeSettings(request('PATCH', '/api/v1/me/settings', body));
       expect(res.status, JSON.stringify(body)).toBe(400);
     }
     expect(settings.client.upsert).not.toHaveBeenCalled();
+  });
+
+  it('keep how the picker lists synths, only the choices the user changed (t-329)', async () => {
+    const picker = { group: 'lineage', kinds: ['modular', 'module'] };
+    const res = await changeSettings(request('PATCH', '/api/v1/me/settings', { picker }));
+    expect(res.status).toBe(200);
+    expect((await json(res)).data).toMatchObject({ picker, tips: null });
+    // Back to the site's choices.
+    await changeSettings(request('PATCH', '/api/v1/me/settings', { picker: {} }));
+    expect(
+      (await json(await readSettings(request('GET', '/api/v1/me/settings')))).data
+    ).toMatchObject({ picker: {} });
+  });
+
+  it('read a stored picker setting that is not one as none, so the site’s choices apply (t-329)', async () => {
+    settings.rows.set('user-1', {
+      userId: 'user-1',
+      tips: null,
+      dim: null,
+      heat: null,
+      harm: null,
+      fx: null,
+      picker: { group: 'by colour' },
+      updatedAt: new Date('2026-11-27T08:00:00.000Z'),
+    });
+    const { data } = await json(await readSettings(request('GET', '/api/v1/me/settings')));
+    expect(data).toMatchObject({ picker: null });
+  });
+
+  it('read a stored picker setting without a kind the databank no longer lists (t-329)', async () => {
+    settings.rows.set('user-1', {
+      userId: 'user-1',
+      tips: null,
+      dim: null,
+      heat: null,
+      harm: null,
+      fx: null,
+      picker: { kinds: ['mono', 'theremin'] },
+      updatedAt: new Date('2026-11-27T08:00:00.000Z'),
+    });
+    const { data } = await json(await readSettings(request('GET', '/api/v1/me/settings')));
+    expect(data).toMatchObject({ picker: { kinds: ['mono'] } });
   });
 
   it('read a stored rack field by field, so a bad stored value falls back to its default', async () => {

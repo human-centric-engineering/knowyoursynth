@@ -162,7 +162,7 @@ export function initAppSubjectSources(): void {
         section: SETTINGS_SECTION,
         disposition: 'export',
         description:
-          'Your synth page settings: hover help, the sound map toggles, the harmonics strip and the effects rack.',
+          'Your synth page settings: hover help, the sound map toggles, the harmonics strip, the effects rack and how the synth picker lists synths.',
       },
       {
         model: 'LessonProgress',
@@ -223,6 +223,11 @@ export function initAppSubjectSources(): void {
         model: 'HeldUsername',
         reason:
           'A username given up by a change, held for 30 days so nobody else takes it. It records a name with no link to who gave it up: no user foreign key, nothing to find a subject by.',
+      },
+      {
+        model: 'SynthPickerSettings',
+        reason:
+          "How the synth picker lists synths for every visitor (`f-synth-picker` t-329): one row of admin config, the same for every user; no user foreign key, and who saved it is in the audit log, not here. A user's own picker choices are in UserPreference.",
       },
     ],
   });
@@ -501,7 +506,15 @@ function collectPanels(userId: string) {
 function collectSettings(userId: string) {
   return prisma.userPreference.findMany({
     where: { userId },
-    select: { tips: true, dim: true, heat: true, harm: true, fx: true, updatedAt: true },
+    select: {
+      tips: true,
+      dim: true,
+      heat: true,
+      harm: true,
+      fx: true,
+      picker: true,
+      updatedAt: true,
+    },
   });
 }
 

@@ -22,6 +22,7 @@ import { defaultPatchState } from '@/lib/app/synths/default-patch';
 import { tallScreen } from '@/tests/helpers/synth-side';
 import { comeBackTo } from '@/tests/helpers/synth-session';
 import { TB_303_FAMILY } from '@/tests/helpers/synth-family';
+import { FACTORY_PICKER } from '@/lib/app/picker/settings';
 
 const { router, engine } = vi.hoisted(() => ({
   router: { push: vi.fn(), replace: vi.fn() },
@@ -576,5 +577,45 @@ describe('the synth picker on a family member (f-synth-picker t-328)', () => {
     expect(router.push).toHaveBeenCalledOnce();
     expect(router.push.mock.calls[0][0]).toBe('/synths/tb-303?member=rebirth');
     expect(blankFace()).toBeNull();
+  });
+});
+
+describe('the picker’s settings on the page (f-synth-picker t-329)', () => {
+  const listbox = () => screen.getByRole('listbox', { name: 'Choose a synth' });
+  const openPicker = () => {
+    const trigger = document.querySelector<HTMLElement>('[aria-haspopup="listbox"]');
+    if (!trigger) throw new Error('no picker on the page');
+    fireEvent.click(trigger);
+  };
+
+  it("lists by the site's settings, and keeps a visitor's change in the browser", () => {
+    render(
+      <SynthPage
+        detail={detailOf(SYNTHS[0], TB_303_FAMILY)}
+        synths={SYNTHS}
+        families={[TB_303_FAMILY]}
+        pickerSite={{ ...FACTORY_PICKER, group: 'name' }}
+        viewParam={null}
+      />
+    );
+    openPicker();
+    // By name: one list, no brand headings.
+    expect(within(listbox()).getAllByRole('group')).toHaveLength(1);
+
+    fireEvent.click(screen.getByRole('button', { name: /^Advanced/ }));
+    const groupBy = (name: string) =>
+      fireEvent.click(
+        within(screen.getByRole('group', { name: 'Group by' })).getByRole('button', { name })
+      );
+    groupBy('Lineage');
+    expect(readStored('kys.picker')).toEqual({ group: 'lineage' });
+    expect(
+      within(listbox())
+        .getAllByRole('option')
+        .some((o) => o.textContent?.includes('Recreation'))
+    ).toBe(true);
+    // The site's again: nothing of the visitor's to keep.
+    groupBy('Name A–Z');
+    expect(readStored('kys.picker')).toEqual({});
   });
 });

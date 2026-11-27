@@ -125,8 +125,10 @@ so the plan's "scope" has no row.
   `preference-data.ts`, tested in `tests/unit/app/api/v1/me/route.test.ts`):
   - `GET`/`PATCH /api/v1/me/settings`. `PATCH` takes the settings that changed; its `fx` must be
     exactly what `normalizeFx` returns (every field, in range, nothing more), checked against
-    `normalizeFx` itself, so a field added to the rack needs no schema change. It is not
-    `/api/v1/users/me/preferences`, which is the platform's.
+    `normalizeFx` itself, so a field added to the rack needs no schema change. Its `picker` is
+    only the synth picker choices the user changed (`PickerPrefsSchema`, [`synth-picker.md`](./synth-picker.md));
+    a stored one that is not one reads as `null`. It is not `/api/v1/users/me/preferences`, which is
+    the platform's.
   - `GET`/`PUT /api/v1/me/panels/:synthId`. `GET` is `{ panel, now }`, `panel` being `null` when
     there is none. Both `GET`s carry `now`, the server's time as it answered. `PUT` is checked
     with `validateSound` and refused when anything is wrong, as a saved sound is; only a listed

@@ -56,6 +56,10 @@ export default async function SynthCataloguePage() {
           <Link href="/admin/synths/catalogue/families" className="underline">
             Edit the synth families
           </Link>
+          , or{' '}
+          <Link href="/admin/synths/catalogue/picker" className="underline">
+            set how the synth picker lists them
+          </Link>
           .
         </p>
       </header>
