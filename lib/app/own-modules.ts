@@ -64,6 +64,7 @@ export const appOwnModules: readonly string[] = [
   'lib/app/links/',
   'lib/app/midi/',
   'lib/app/patterns/',
+  'lib/app/picker/',
   'lib/app/profile/',
   'lib/app/sequencer/',
   'lib/app/sounds/',

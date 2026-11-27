@@ -224,6 +224,11 @@ export function initAppSubjectSources(): void {
         reason:
           'A username given up by a change, held for 30 days so nobody else takes it. It records a name with no link to who gave it up: no user foreign key, nothing to find a subject by.',
       },
+      {
+        model: 'SynthPickerSettings',
+        reason:
+          "How the synth picker lists synths for every visitor (`f-synth-picker` t-329): one row of admin config, the same for every user; no user foreign key, and who saved it is in the audit log, not here. A user's own picker choices are in UserPreference.",
+      },
     ],
   });
 }
