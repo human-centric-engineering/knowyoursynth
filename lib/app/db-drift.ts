@@ -118,6 +118,12 @@ export function registerAppDriftProbes(): void {
     probe: constraintExists('owned_instrument_userId_fkey', 'ON DELETE CASCADE'),
   });
   registerAppDriftProbe({
+    name: 'model_request_userId_fkey (hand-written FK → User)',
+    kind: 'FK constraint',
+    table: 'model_request',
+    probe: constraintExists('model_request_userId_fkey', 'ON DELETE CASCADE'),
+  });
+  registerAppDriftProbe({
     name: 'user_pattern_userId_fkey (hand-written FK → User)',
     kind: 'FK constraint',
     table: 'user_pattern',

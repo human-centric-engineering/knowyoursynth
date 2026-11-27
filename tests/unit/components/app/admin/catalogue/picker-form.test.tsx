@@ -39,6 +39,7 @@ vi.mock('@/lib/api/client', () => ({
 const put = vi.mocked(apiClient.put);
 
 const SAVED: SitePickerSettings = {
+  scope: 'all',
   group: 'lineage',
   order: 'old',
   kinds: ['modular'],

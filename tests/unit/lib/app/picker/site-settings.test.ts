@@ -30,6 +30,7 @@ import {
 import { FACTORY_PICKER, type SitePickerSettings } from '@/lib/app/picker/settings';
 
 const SAVED: SitePickerSettings = {
+  scope: 'all',
   group: 'lineage',
   order: 'old',
   kinds: ['modular'],
