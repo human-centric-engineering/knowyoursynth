@@ -335,6 +335,8 @@ jacks.push({
   label: 'PHONES',
   labelPos: 'none',
   signal: 'out',
+  // at modular level, as VCA OUT sends it
+  gain: 5,
   help: 'Headphones, 3.5 mm stereo, after VOLUME. A cable from it here carries the whole sound before VOLUME, as the VCA output does.',
 });
 decor.push({

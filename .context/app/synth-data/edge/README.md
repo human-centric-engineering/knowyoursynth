@@ -4,12 +4,11 @@ In the app as `edge` (`/synths/edge`).
 
 ## Committed
 
-| File                 | What                | Copied from                                                                          |
-| -------------------- | ------------------- | ------------------------------------------------------------------------------------ |
-| `edge.synth.json`    | spec, schema 0.13.0 | `~/Documents/Synth Models and raw data/Moog DFAM and Edge/behringer-edge_synth.json` |
-| `build_dfam_edge.py` | build script        | `~/Documents/Synth Models and raw data/Moog DFAM and Edge/build_dfam_edge.py`        |
+| File              | What                | Copied from                                                                          |
+| ----------------- | ------------------- | ------------------------------------------------------------------------------------ |
+| `edge.synth.json` | spec, schema 0.13.0 | `~/Documents/Synth Models and raw data/Moog DFAM and Edge/behringer-edge_synth.json` |
 
-The build script writes both this spec and the Moog DFAM's (`../dfam/`), which the EDGE recreates.
+The build script is committed once, with the Moog DFAM's spec (`../dfam/build_dfam_edge.py`): it writes both specs, the DFAM's and this one, since the EDGE recreates the DFAM.
 
 ## Local only (`raw/`, git-ignored)
 

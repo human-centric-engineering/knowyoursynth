@@ -347,7 +347,7 @@ export function dfamSpecs(variant: Variant): Record<string, Spec> {
       { v: 'hp', label: 'HP' },
       { v: 'lp', label: 'LP' },
     ],
-    label: variant === 'dfam' ? 'VCF' : 'VCF',
+    label: 'VCF',
     name: variant === 'dfam' ? 'VCF (LP / HP)' : 'VCF SELECT',
     help: 'The ladder filter’s mode. LP keeps the lows and takes away the highs above CUTOFF: thick, dark and natural. HP takes away the lows below CUTOFF: bright, thin and snappy.',
   };

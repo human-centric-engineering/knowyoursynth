@@ -68,7 +68,9 @@ describe('EDGE sockets', () => {
     expect(edge.jacks).toHaveLength(27);
     const ids = new Set(edge.jacks.map((j) => j.id));
     for (const j of dfam.jacks) expect(ids.has(j.id), j.id).toBe(true);
-    expect(jack('j.phones')).toMatchObject({ dir: 'out', signal: 'out' });
+    // at modular level, as VCA OUT sends the same sound
+    expect(jack('j.phones')).toMatchObject({ dir: 'out', signal: 'out', gain: 5 });
+    expect(jack('j.vca_out')).toMatchObject({ gain: 5 });
   });
 
   it('leaves MIDI IN and OUT unfollowed: the app’s keys and clock are its MIDI', () => {

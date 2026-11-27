@@ -700,6 +700,8 @@ describe('linear FM (fmLin)', () => {
     expect(some).toBeLessThan(0.4);
     expect(more).toBeGreaterThan(0.7);
     expect(allFinite(fm(2))).toBe(true);
+    // a CV below the knob shuts the FM, as the hardware's amount closes, rather than inverting it
+    expect(sidebandShare(fm(0.5, -1))).toBeLessThan(0.05);
   });
 
   it('ignores a source oscillator the voice does not have', () => {
