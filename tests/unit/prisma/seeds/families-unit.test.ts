@@ -81,6 +81,7 @@ describe('the 007-families seed unit', () => {
       'arp-2600',
       'cat',
       'cs-80',
+      'dfam',
       'grandmother',
       'jupiter-8',
       'kobol',
