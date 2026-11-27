@@ -50,6 +50,32 @@ describe('pickerGroups', () => {
     expect(listed(pickerGroups(moog, [], 'moog'))).toEqual(['Moog: m']);
   });
 
+  it('finds a row by its maker and name together, and by its full databank name', () => {
+    const family = {
+      ...TB_303_FAMILY,
+      members: TB_303_FAMILY.members.map((m) =>
+        m.synthId
+          ? m
+          : {
+              ...m,
+              instrument: {
+                id: 'arp-odyssey',
+                name: 'ARP Odyssey Mk II',
+                maker: 'ARP Instruments',
+                year: '1975',
+                kind: 'mono',
+              },
+            }
+      ),
+    };
+    const keys = (q: string) =>
+      pickerGroups(FAMILY_SYNTHS, [family], q).flatMap((g) => g.rows.map((r) => r.key));
+    // The row is "Odyssey Mk II" by ARP Instruments: neither field holds "arp odyssey" alone.
+    expect(keys('arp odyssey')).toEqual(['member:tb-303/rebirth']);
+    expect(keys('arp instruments odyssey')).toEqual(['member:tb-303/rebirth']);
+    expect(keys('behringer td-3')).toEqual(['td-3']);
+  });
+
   it('finds every member of a family by the family name', () => {
     const renamed = { ...TB_303_FAMILY, name: 'Acid bass line' };
     expect(listed(pickerGroups(FAMILY_SYNTHS, [renamed], 'acid'))).toEqual([

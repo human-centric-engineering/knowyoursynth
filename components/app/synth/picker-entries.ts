@@ -102,11 +102,21 @@ export function pickerRows(
   return rows;
 }
 
-/** Whether a row matches the box: by its name, maker, brand or family. */
+/**
+ * Whether a row matches the box: by its name, maker, brand or family, or by its maker or brand and name together, or
+ * its full databank name, so "arp 2600" finds the ARP 2600 the row calls "2600" under ARP Instruments.
+ */
 function matches(row: PickerRow, q: string): boolean {
-  return [row.name, row.maker, makerGroup(row.maker), row.family?.family.name ?? ''].some((s) =>
-    s.toLowerCase().includes(q)
-  );
+  const brand = makerGroup(row.maker);
+  return [
+    row.name,
+    row.maker,
+    brand,
+    row.family?.family.name ?? '',
+    `${row.maker} ${row.name}`,
+    `${brand} ${row.name}`,
+    row.family?.member.instrument.name ?? '',
+  ].some((s) => s.toLowerCase().includes(q));
 }
 
 /** The picker's list: the rows matching `query`, grouped by brand, brands and rows A to Z. */

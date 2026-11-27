@@ -73,9 +73,11 @@ export function SynthPicker({
   const search = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
   const current = synths.find((s) => s.id === synthId) || synths[0];
+  const listsMembers = !!onSelectMember;
   const groups = useMemo(
-    () => pickerGroups(synths, families, query, { unmodelled: !!onSelectMember }),
-    [synths, families, onSelectMember, query]
+    () => pickerGroups(synths, families, query, { unmodelled: listsMembers }),
+    // Whether there is a handler, not which: the page passes a new one each render.
+    [synths, families, listsMembers, query]
   );
   const rows = useMemo(() => groups.flatMap((g) => g.rows), [groups]);
 

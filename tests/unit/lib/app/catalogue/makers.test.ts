@@ -53,6 +53,11 @@ describe('nameWithoutMaker', () => {
     expect(nameWithoutMaker('Minimoog Model D', 'Moog Music')).toBe('Minimoog Model D');
   });
 
+  it('leaves a name whole that would be left without a letter', () => {
+    expect(nameWithoutMaker('ARP 2600', 'ARP Instruments')).toBe('ARP 2600');
+    expect(nameWithoutMaker('Roland 101', 'Roland')).toBe('Roland 101');
+  });
+
   it('leaves a name that is only its maker, and matches whole words only', () => {
     expect(nameWithoutMaker('Moog', 'Moog Music')).toBe('Moog');
     expect(nameWithoutMaker('Moogerfooger', 'Moog Music')).toBe('Moogerfooger');

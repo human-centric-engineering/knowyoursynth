@@ -26,7 +26,8 @@ family. A synth that plays has a thumbnail of its panel to the left; an unmodell
 
 A synth's kind is the databank's, from the first instrument it models (by id). A synth that models none has no kind,
 and its row shows the year alone. An unmodelled member's name is its databank instrument's without the maker it starts
-with ("ARP Odyssey Mk II" by ARP Instruments is "Odyssey Mk II"), as the catalogue names synths.
+with ("ARP Odyssey Mk II" by ARP Instruments is "Odyssey Mk II", "EDP Wasp" by Electronic Dream Plant is "Wasp"), as
+the catalogue names synths. A name that would be left without a letter keeps its maker ("ARP 2600").
 
 ## Grouped by brand
 
@@ -46,8 +47,9 @@ spelling of it appears.
   default (`familyOpens`). Its row shows as selected while its blank panel does.
 - A page that cannot show a blank panel (it passes no `onSelectMember`) lists no unmodelled members.
 
-The box finds a row by its name, maker, brand or family name, so "moog" finds every Moog and "tb-303" finds every
-member of the TB-303 family. Enter opens the first match; the arrow keys move through the rows of every group; typing
+The box finds a row by its name, maker, brand or family name, by its maker or brand and name together, or by its full
+databank name, so "moog" finds every Moog, "arp odyssey" finds the Odyssey Mk II and "tb-303" finds every member of
+the TB-303 family. Enter opens the first match; the arrow keys move through the rows of every group; typing
 on the list carries on in the box.
 
 ## Thumbnails

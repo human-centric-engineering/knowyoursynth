@@ -35,8 +35,8 @@ export function makerGroup(maker: string): string {
 /**
  * A databank instrument's name without the maker it starts with, as the catalogue names synths: "ARP Odyssey Mk II"
  * by ARP Instruments is "Odyssey Mk II", "Sequential Circuits Pro-One" is "Pro-One". The maker's first word is enough
- * ("ARP" of "ARP Instruments"), and so are its initials ("EDP Wasp" by Electronic Dream Plant is "Wasp"); a name that
- * is only its maker is left whole.
+ * ("ARP" of "ARP Instruments"), and so are its initials ("EDP Wasp" by Electronic Dream Plant is "Wasp"). A name
+ * that is only its maker, or would be left without a letter ("ARP 2600"), is left whole.
  */
 export function nameWithoutMaker(name: string, maker: string): string {
   const lower = name.toLowerCase();
@@ -44,8 +44,9 @@ export function nameWithoutMaker(name: string, maker: string): string {
   const initials = words.length > 1 ? words.map((w) => w[0]).join('') : '';
   for (const prefix of [maker, words[0], initials]) {
     const p = prefix.trim().toLowerCase();
-    if (p && lower.startsWith(`${p} `) && name.length > p.length + 1)
-      return name.slice(p.length + 1).trim();
+    const rest = lower.startsWith(`${p} `) ? name.slice(p.length + 1).trim() : '';
+    // A name that would be left without a letter ("ARP 2600" as "2600") keeps its maker: the model is the whole name.
+    if (p && /\p{L}/u.test(rest)) return rest;
   }
   return name;
 }
