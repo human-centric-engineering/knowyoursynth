@@ -529,7 +529,7 @@ const VELOCITY =
       {
         def: 8,
         fmt: pct,
-        help: 'The layer’s volume: the highest level its VCA reaches. At 0 it is very quiet but not silent.',
+        help: 'The layer’s volume: the highest level its VCA reaches. On the hardware 0 is very quiet but not silent; here it is silent.',
       },
     ],
   ];

@@ -33,7 +33,7 @@ import { sweepLibrary, sweepShard } from '@/scripts/soundkind-sweep';
  * Subharmonicon patchbay sounds; 2026-11-20 over 5,994: 2,746 (45.81%); 2026-11-14
  * over 5,829 sounds: 2,693 (46.20%); t-289's 98 Subharmonicon sounds, its own sequencers, agree on 9. At an earlier measure
  * (2,998 sounds), CI's Linux x64 read one fx sound as lead: renders are seeded, but the platforms' maths can differ in
- * the last bit. So the floor is one sound below, 2,795 (45.53%).
+ * the last bit. So the floor is one sound below, 2,795 (45.54%), cut to four places.
  */
 const MEASURED = 0.4553;
 
