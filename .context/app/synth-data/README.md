@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (48)
+## In the app (49)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -33,6 +33,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`buchla-easel`](./buchla-easel/README.md)                 | Buchla and Associates (Berkeley, California) Music Easel: Model 208 Stored Program Sound Source and Model 218 Touch Activated Voltage Source (original, 1973-74) | 0.10.0      |
 | [`cat`](./cat/README.md)                                   | Behringer CAT                                                                                                                                                    | 0.7.0       |
 | [`cs-80`](./cs-80/README.md)                               | Yamaha CS-80 Polyphonic Synthesizer                                                                                                                              | 0.13.0      |
+| [`deckards-dream`](./deckards-dream/README.md)             | Black Corporation Deckard's Dream MK2                                                                                                                            | 0.13.0      |
 | [`deepmind-12d`](./deepmind-12d/README.md)                 | Behringer DeepMind 12D                                                                                                                                           | 0.7.0       |
 | [`dfam`](./dfam/README.md)                                 | Moog DFAM (Drummer From Another Mother)                                                                                                                          | 0.13.0      |
 | [`donner-b1`](./donner-b1/README.md)                       | Donner Essential B1 Analog Bass Sequencer                                                                                                                        | 0.11.0      |
