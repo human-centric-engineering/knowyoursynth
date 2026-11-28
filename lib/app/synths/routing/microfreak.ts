@@ -11,7 +11,12 @@
  * to whichever destination their button picks (`c057`–`c090`). The keyboard's pressure is its velocity here, so Press
  * comes from the keyboard block.
  */
-import type { RoutingEdge, RoutingLevel, SynthRouting } from '@/lib/app/synths/contract';
+import type {
+  RoutingEdge,
+  RoutingLevel,
+  RoutingWhen,
+  SynthRouting,
+} from '@/lib/app/synths/contract';
 
 const SOURCES = ['cycenv', 'env', 'lfo', 'press', 'key'] as const;
 type Source = (typeof SOURCES)[number];
@@ -51,6 +56,26 @@ const FIXED: [string, Source, string, string, string][] = [
   ['c052', 'key', 'timbre', 'osc', 'Timbre'],
   ['c053', 'key', 'cutoff', 'vcf', 'cutoff'],
 ];
+/**
+ * The models whose Wave, Timbre or Shape a matrix route moves, as `paramDest()` in the definition has it: Wave and
+ * Shape only on the macro oscillator's models, Timbre on every model but Chords (on SuperWave only while Wave is on the
+ * saw, which a knob's position cannot gate). Elsewhere the engine drops the route, so the edge is not drawn live.
+ */
+const MACRO_MODELS = ['wavetable', 'harmo', 'karplusstr', 'formant', 'speech', 'modal'];
+const TIMBRE_MODELS = [
+  ...MACRO_MODELS,
+  'basicwaves',
+  'superwave',
+  'v_analog',
+  'waveshaper',
+  'two_op_fm',
+];
+const modelWhen = (d: string): RoutingWhen | undefined =>
+  d === 'wave' || d === 'osc_wave' || d === 'osc_shape'
+    ? { id: 'osc.type', in: MACRO_MODELS }
+    : d === 'timbre' || d === 'osc_timbre'
+      ? { id: 'osc.type', in: TIMBRE_MODELS }
+      : undefined;
 /** Each source into the Assign columns, scaled by the sum of its three Assign points. */
 const INTO_MX: [string, Source][] = [
   ['c035', 'cycenv'],
@@ -80,7 +105,7 @@ const edges: RoutingEdge[] = [
   { id: 'c001', from: 'kbd', to: 'voice', signal: 'gate', when: { id: 'arp.mode', eq: 'off' } },
   { id: 'c002', from: 'kbd', to: 'arp', signal: 'gate', when: { id: 'arp.mode', eq: 'arp' } },
   { id: 'c003', from: 'kbd', to: 'voice', signal: 'gate', when: { id: 'arp.mode', eq: 'seq' } },
-  { id: 'c008', from: 'arp', to: 'voice', signal: 'gate' },
+  { id: 'c008', from: 'arp', to: 'voice', signal: 'gate', when: { id: 'arp.mode', eq: 'arp' } },
   { id: 'c017', from: 'voice', to: 'glide', signal: 'cv', label: 'pitch' },
   { id: 'c018', from: 'glide', to: 'osc', signal: 'cv', label: 'pitch' },
   { id: 'c020', from: 'osc', to: 'vcf', signal: 'audio' },
@@ -105,14 +130,18 @@ const edges: RoutingEdge[] = [
     label: 'cutoff',
     levels: [{ id: 'env.filter_amt', off: 0 }],
   },
-  ...FIXED.map(([id, s, d, to, label]): RoutingEdge => ({
-    id,
-    from: FROM[s],
-    to,
-    signal: 'cv',
-    label,
-    levels: pointLevels(s, d),
-  })),
+  ...FIXED.map(([id, s, d, to, label]): RoutingEdge => {
+    const when = modelWhen(d);
+    return {
+      id,
+      from: FROM[s],
+      to,
+      signal: 'cv',
+      label,
+      ...(when ? { when } : {}),
+      levels: pointLevels(s, d),
+    };
+  }),
   ...INTO_MX.map(([id, s]): RoutingEdge => ({
     id,
     from: FROM[s],
@@ -124,15 +153,19 @@ const edges: RoutingEdge[] = [
     ],
   })),
   ...ASSIGN_FIRST.flatMap((first, col) =>
-    ASSIGN_DRAWN.map(([k, target, to, label]): RoutingEdge => ({
-      id: cid(first + k),
-      from: 'mx',
-      to,
-      signal: 'cv',
-      label,
-      when: { id: `mx.assign${col + 1}`, eq: target },
-      levels: [{ sum: SOURCES.map((s) => point(s, `assign${col + 1}`)) }],
-    }))
+    ASSIGN_DRAWN.map(([k, target, to, label]): RoutingEdge => {
+      const picked: RoutingWhen = { id: `mx.assign${col + 1}`, eq: target };
+      const model = modelWhen(target);
+      return {
+        id: cid(first + k),
+        from: 'mx',
+        to,
+        signal: 'cv',
+        label,
+        when: model ? { all: [picked, model] } : picked,
+        levels: [{ sum: SOURCES.map((s) => point(s, `assign${col + 1}`)) }],
+      };
+    })
   ),
 ];
 

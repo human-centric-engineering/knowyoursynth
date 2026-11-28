@@ -16,6 +16,8 @@ import type {
   TextDecor,
 } from '@/lib/app/synths/contract';
 import microfreak from '@/lib/app/synths/defs/microfreak';
+import { holds } from '@/lib/app/synths/lib/routing';
+import { routing } from '@/lib/app/synths/routing/microfreak';
 
 const run = (set: ControlValues = {}, bend?: number) =>
   microfreak.toEngine({ ...microfreak.init, ...set }, {
@@ -252,6 +254,34 @@ describe('MicroFreak switches', () => {
 });
 
 describe('MicroFreak matrix', () => {
+  it('draws a Wave, Timbre or Shape edge live on exactly the models whose engine takes the route', () => {
+    const typeCtl = microfreak.controls.find((c) => c.id === 'osc.type');
+    const models = (typeCtl?.options || []).map((o) => o.v);
+    expect(models).toHaveLength(12);
+    const edge = (id: string) => routing.edges.find((e) => e.id === id);
+    // LFO > Wave (c041), LFO > Timbre (c042), and Assign 1 on Shape (c059), each with SuperWave on its saw
+    const cases: [string, ControlValues][] = [
+      ['c041', { 'mx.lfo.wave': 80 }],
+      ['c042', { 'mx.lfo.timbre': 80 }],
+      ['c059', { 'mx.assign1': 'osc_shape', 'mx.lfo.assign1': 80 }],
+    ];
+    for (const [id, set] of cases) {
+      const when = edge(id)?.when;
+      expect(when, id).toBeDefined();
+      for (const model of models) {
+        const values = { ...microfreak.init, 'osc.type': model, 'osc.wave': 0, ...set };
+        const routed = (run(values).routes || []).some((r) => r.src === 'lfo');
+        expect(when && holds(when, values), `${id} on ${String(model)}`).toBe(routed);
+      }
+    }
+  });
+
+  it('draws the arpeggiator into the voice only while it is on', () => {
+    const when = routing.edges.find((e) => e.id === 'c008')?.when;
+    expect(when && holds(when, { ...microfreak.init, 'arp.mode': 'arp' })).toBe(true);
+    expect(when && holds(when, { ...microfreak.init, 'arp.mode': 'off' })).toBe(false);
+  });
+
   it('sends each source to the pitch, two octaves at full', () => {
     const p = run({
       'mx.cycenv.pitch': 50,
