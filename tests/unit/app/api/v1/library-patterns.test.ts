@@ -119,9 +119,7 @@ const real = loadCatalogueData();
 function sample(): CatalogueSeedData {
   const data = catalogueSlice(real, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
-  data.sounds = data.sounds
-    .filter((f) => f.synth === 'model-d')
-    .map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
+  data.sounds = data.sounds.map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
   data.lineage = [];
   data.notes = [];
   return data;

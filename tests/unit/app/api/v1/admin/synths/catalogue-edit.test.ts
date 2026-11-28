@@ -81,14 +81,11 @@ const real = loadCatalogueData();
 /** Model D with its first three sounds, its lineage and notes, plus TB-303 listed after it with no content. */
 function sample(): CatalogueSeedData {
   const data = catalogueSlice(real, ['model-d']);
-  const isModelD = (f: { synth: string }) => f.synth === 'model-d';
   data.listing.synths = [
     { id: 'model-d', order: 0, listed: true },
     { id: 'tb-303', order: 1, listed: true },
   ];
-  data.sounds = data.sounds.filter(isModelD).map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
-  data.lineage = data.lineage.filter(isModelD);
-  data.notes = data.notes.filter(isModelD);
+  data.sounds = data.sounds.map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
   return data;
 }
 

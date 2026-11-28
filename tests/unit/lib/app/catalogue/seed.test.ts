@@ -124,11 +124,7 @@ const realModelDSounds = (() => {
  */
 function sample(): CatalogueSeedData {
   const data = catalogueSlice(real, ['model-d']);
-  const isModelD = (f: { synth: string }) => f.synth === 'model-d';
-  data.listing.synths = data.listing.synths.filter((s) => s.id === 'model-d');
-  data.sounds = data.sounds.filter(isModelD).map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
-  data.lineage = data.lineage.filter(isModelD);
-  data.notes = data.notes.filter(isModelD);
+  data.sounds = data.sounds.map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));
   return data;
 }
 

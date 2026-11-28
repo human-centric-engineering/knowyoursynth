@@ -333,10 +333,13 @@ export function seedRecordTable() {
 
 /**
  * A copy of the seed data holding only these synths: their listing entries, sounds, lineage and notes, with the shared
- * notes as they are. Only the slice is copied. Copying the whole catalogue takes about half a second, which before every
- * test timed `beforeEach` out under a parallel run (t-335).
+ * notes as they are. An id the listing lacks throws, so a typo cannot seed an empty catalogue. Only the slice is
+ * copied: copying the whole catalogue takes about half a second, which before every test timed `beforeEach` out under a
+ * parallel run (t-335).
  */
 export function catalogueSlice(data: CatalogueSeedData, synthIds: string[]): CatalogueSeedData {
+  const missing = synthIds.filter((id) => !data.listing.synths.some((s) => s.id === id));
+  if (missing.length) throw new Error(`fixture: the seed data has no synth ${missing.join(', ')}`);
   const kept = (f: { synth: string }) => synthIds.includes(f.synth);
   return structuredClone({
     ...data,
