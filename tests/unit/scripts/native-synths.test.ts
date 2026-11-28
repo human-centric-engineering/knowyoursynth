@@ -56,6 +56,7 @@ describe('nativeSynthProblems', () => {
       'native synth subharmonicon is not registered',
       'native synth dfam is not registered',
       'native synth edge is not registered',
+      'native synth microfreak is not registered',
     ]);
   });
 

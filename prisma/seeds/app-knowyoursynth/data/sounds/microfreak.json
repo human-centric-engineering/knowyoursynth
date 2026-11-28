@@ -1,0 +1,1145 @@
+{
+  "synth": "microfreak",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "mf-filter-sweep",
+      "name": "Filter Sweep",
+      "ref": "The manual’s classic filter sweep: a closed, fully resonant filter opened slowly by the envelope",
+      "artist": "Arturia",
+      "tags": ["pad", "sweep"],
+      "level": 1,
+      "blurb": "Long notes that swell in and open from a dark rumble into a whistling, resonant sweep.",
+      "how": "The filter starts closed with Resonance at full, so on its own it lets almost nothing through. The envelope does two jobs: with Amp Mod lit it fades each note in over Attack, and through Filter Amt it opens the cutoff at the same time, so the resonance rides up through the harmonics as the note swells. The settings are the manual’s, its times found on this app’s knobs.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 48, 6],
+          [8, 43, 6]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Close the filter and turn the resonance up",
+          "module": "filter",
+          "why": "With the cutoff at the bottom the saw is shut out, and full Resonance leaves a quiet ring at the cutoff.\n- Cutoff 0 · 30 Hz\n- Resonance 100\n- Listen for: almost nothing: a faint, low rumble.",
+          "set": {
+            "vcf.cutoff": 0,
+            "vcf.resonance": 100
+          }
+        },
+        {
+          "title": "Let the envelope shape the loudness",
+          "module": "amp",
+          "why": "Amp Mod hands the amplifier to the envelope: a slow Attack fades each note in, a long Decay/Rel lets it fade out after you let go, and Sustain holds it near the top.\n- Amp Mod lit\n- Attack 81 · 1.7 s\n- Decay / Rel 94 · 7.9 s\n- Sustain 90\n- Listen for: still dark, but now each note fades in.",
+          "set": {
+            "env.amp_mod": true,
+            "env.attack": 81,
+            "env.decay": 94,
+            "env.sustain": 90
+          }
+        },
+        {
+          "title": "Open the filter with the envelope",
+          "module": "filter",
+          "why": "Filter Amt sends the same envelope to the cutoff, so the filter opens as the note swells.\n- Filter Amt 70\n- Listen for: each note rising out of the dark with a whistling sweep, then closing slowly after you let go.",
+          "set": {
+            "env.filter_amt": 70
+          }
+        }
+      ],
+      "context": {
+        "vcf.resonance": "In this sound: the ringing peak that makes the sweep whistle.",
+        "env.filter_amt": "In this sound: how far the envelope opens the closed filter.",
+        "env.attack": "In this sound: how slowly each note swells and the filter opens."
+      },
+      "tweaks": [
+        {
+          "id": "env.attack",
+          "try": "Turn Attack to 50",
+          "hear": "A quicker swell: the sweep opens in a fraction of a second."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn Resonance to 50",
+          "hear": "A smoother sweep, with less whistle."
+        }
+      ]
+    },
+    {
+      "id": "mf-sci-fi-computer",
+      "name": "Sci-Fi Computer",
+      "ref": "The manual’s random bleeps: the LFO’s random steps sent to the pitch, the computer of an old science-fiction film",
+      "artist": "Arturia",
+      "tags": ["fx", "random"],
+      "level": 1,
+      "blurb": "A held note that jumps to a new random pitch four times a second, like a film computer thinking.",
+      "how": "The LFO’s Random shape holds a new random value for each of its cycles, a sample and hold. The matrix point where the LFO row meets Pitch sends it to the oscillator, so every cycle lands the note on a new pitch. The manual gives the LFO at about 4 Hz and the point at about 30.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 72, 8]]
+      },
+      "steps": [
+        {
+          "title": "A random LFO at about 4 Hz",
+          "module": "lfo",
+          "why": "Random steps from one value to the next on each cycle.\n- LFO shape Random\n- Rate 57 · 4.12 Hz\n- Listen for: nothing yet: the LFO reaches the sound only through the matrix.",
+          "set": {
+            "lfo.shape": "sh",
+            "lfo.rate": 57
+          }
+        },
+        {
+          "title": "Send it to the pitch",
+          "module": "mod",
+          "why": "The point at LFO and Pitch sets how far the LFO moves the pitch.\n- LFO > Pitch 30\n- Listen for: the note jumping to a new pitch four times a second.",
+          "set": {
+            "mx.lfo.pitch": 30
+          }
+        }
+      ],
+      "context": {
+        "lfo.shape": "In this sound: the random steps that pick each new pitch.",
+        "mx.lfo.pitch": "In this sound: how wide the random jumps are."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.shape",
+          "try": "Step the LFO Shape to Random glide",
+          "hear": "The pitch slides between the random notes instead of jumping."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn the LFO Rate to 70",
+          "hear": "Faster, busier chatter."
+        }
+      ]
+    },
+    {
+      "id": "mf-pitch-blip",
+      "name": "Pitch Blip",
+      "ref": "The manual’s first cycling envelope patch: a quick rise in pitch at the start of each note",
+      "artist": "Arturia",
+      "tags": ["fx", "blip"],
+      "level": 1,
+      "blurb": "Short notes that each scoop up in pitch and drop back, a playful video-game blip.",
+      "how": "The cycling envelope rises once on each note in Env mode. With no hold and no fall it climbs over Rise and drops straight back, and the matrix point at CycEnv and Pitch sends that climb to the oscillator, scaled by Amount. The manual gives the point, the times and the amount; the short envelope on the loudness is this lesson’s, to make each note a blip.",
+      "phrase": {
+        "bpm": 130,
+        "loop": true,
+        "steps": [
+          [0, 72, 0.25],
+          [1, 76, 0.25],
+          [2, 79, 0.25],
+          [3, 84, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A quick rise and no fall",
+          "module": "env",
+          "why": "In Env mode the cycling envelope runs once per note: Rise sets how long it climbs, and with Hold/Sustain and Fall at 0 it drops straight back. Amount sets how much of it the matrix gets.\n- Rise 58 · 210 ms\n- Hold / Sustain 0 · sustain 0\n- Fall 0 · 1 ms\n- Amount 50\n- Listen for: nothing yet: the cycling envelope is not sent anywhere.",
+          "set": {
+            "cyc.rise": 58,
+            "cyc.hold": 0,
+            "cyc.fall": 0,
+            "cyc.amount": 50
+          }
+        },
+        {
+          "title": "Send it to the pitch",
+          "module": "mod",
+          "why": "The point at CycEnv and Pitch makes each note scoop upwards.\n- CycEnv > Pitch 20\n- Listen for: each note sliding up a couple of semitones as it starts.",
+          "set": {
+            "mx.cycenv.pitch": 20
+          }
+        },
+        {
+          "title": "Make each note a blip",
+          "module": "amp",
+          "why": "Amp Mod lets the envelope shape the loudness: no sustain and a short decay make a short note.\n- Amp Mod lit\n- Decay / Rel 40 · 85 ms\n- Sustain 0\n- Listen for: short, bouncing blips that chirp upwards.",
+          "set": {
+            "env.amp_mod": true,
+            "env.decay": 40,
+            "env.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "mx.cycenv.pitch": "In this sound: how far each note scoops up.",
+        "cyc.rise": "In this sound: how long the scoop takes."
+      },
+      "tweaks": [
+        {
+          "id": "mx.cycenv.pitch",
+          "try": "Turn CycEnv > Pitch to −40",
+          "hear": "The notes dive down instead."
+        },
+        {
+          "id": "cyc.mode",
+          "try": "Step the cycling envelope’s Mode to Loop",
+          "hear": "The scoop repeats over and over while the note sounds."
+        }
+      ]
+    },
+    {
+      "id": "mf-one-finger-chords",
+      "name": "One-Finger Chords",
+      "ref": "Minor-seventh stabs from one key at a time, the chord-memory sound of house music",
+      "artist": "House",
+      "tags": ["keys", "chords"],
+      "level": 1,
+      "blurb": "Short, punchy minor-seventh chords, each played with a single finger.",
+      "how": "The Chords model plays four oscillators at a chord’s notes over the key you press, so one finger plays the whole chord; Wave picks the chord. Paraphony is off in Chords, as on the hardware, and the chord moves with each key. A short envelope on the loudness and the filter makes each chord a stab.",
+      "phrase": {
+        "bpm": 122,
+        "loop": true,
+        "steps": [
+          [0.5, 57, 0.25],
+          [1.5, 57, 0.25],
+          [2.5, 60, 0.25],
+          [3.5, 55, 0.25]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Chords, on a minor seventh",
+          "module": "osc",
+          "why": "Type on Chords; Wave picks the chord, Timbre turns it over and Shape picks the wave.\n- Type Chords\n- Wave 40 · m7\n- Timbre 0 · Inv/Transp\n- Shape 0 · Waveform\n- Listen for: a whole minor-seventh chord from each key.",
+          "set": {
+            "osc.type": "chords",
+            "osc.wave": 40,
+            "osc.timbre": 0,
+            "osc.shape": 0
+          }
+        },
+        {
+          "title": "Darken the chord",
+          "module": "filter",
+          "why": "A lower cutoff takes the edge off four saws at once; Filter Amt lets each chord start brighter.\n- Cutoff 45 · 506 Hz\n- Resonance 20\n- Filter Amt 40\n- Listen for: a rounder chord.",
+          "set": {
+            "vcf.cutoff": 45,
+            "vcf.resonance": 20,
+            "env.filter_amt": 40
+          }
+        },
+        {
+          "title": "Make it a stab",
+          "module": "amp",
+          "why": "With Amp Mod lit, no Sustain and a short Decay/Rel, each chord is short and punchy.\n- Amp Mod lit\n- Decay / Rel 42 · 100 ms\n- Sustain 0\n- Listen for: short chord stabs on the off-beats.",
+          "set": {
+            "env.amp_mod": true,
+            "env.decay": 42,
+            "env.sustain": 0
+          }
+        }
+      ],
+      "context": {
+        "osc.wave": "In this sound: the chord, a minor seventh.",
+        "env.decay": "In this sound: how short each stab is."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 95",
+          "hear": "A bright major chord instead of the minor seventh."
+        },
+        {
+          "id": "osc.timbre",
+          "try": "Turn Timbre to 30",
+          "hear": "The same chord turned over: higher and closer."
+        }
+      ]
+    },
+    {
+      "id": "mf-talking-vowels",
+      "name": "Talking Vowels",
+      "ref": "A voice singing slowly through the vowels, the Speech model with the LFO on its vowel",
+      "artist": "Sound design",
+      "tags": ["fx", "voice"],
+      "level": 2,
+      "blurb": "A buzzing voice that sings “a, e, i, o, u” as the notes hold.",
+      "how": "The Speech model runs a buzz through three vowel formants. Its Shape picks the vowel, and the matrix has no fixed column for Shape, so an Assign column is set to it and the LFO’s point in that column sweeps it slowly. The hardware’s Speech also speaks whole words from its libraries; here it sings the vowels.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 52, 4],
+          [4, 55, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Speech",
+          "module": "osc",
+          "why": "Type on Speech. Wave picks the voice, Timbre shifts its formants and Shape picks the vowel.\n- Type Speech\n- Wave 10 · Type\n- Timbre 50 · Timbre\n- Shape 50 · Word\n- Listen for: a buzzing voice holding one vowel.",
+          "set": {
+            "osc.type": "speech",
+            "osc.wave": 10,
+            "osc.timbre": 50,
+            "osc.shape": 50
+          }
+        },
+        {
+          "title": "Point Assign 1 at Shape",
+          "module": "mod",
+          "why": "Each press of the Assign 1 button moves its column to the next destination; Shape is the vowel here.\n- Assign 1 (destination) Shape\n- Listen for: no change yet: nothing is in the column.",
+          "set": {
+            "mx.assign1": "osc_shape"
+          }
+        },
+        {
+          "title": "Sweep the vowels with the LFO",
+          "module": "lfo",
+          "why": "A slow triangle, sent through the LFO’s point in the Assign 1 column, moves the vowel back and forth.\n- LFO shape Triangle\n- Rate 20 · 0.26 Hz\n- LFO > Assign 1 50\n- Listen for: the voice slowly singing through its vowels.",
+          "set": {
+            "lfo.shape": "tri",
+            "lfo.rate": 20,
+            "mx.lfo.assign1": 50
+          }
+        }
+      ],
+      "context": {
+        "osc.shape": "In this sound: the vowel the LFO sweeps around.",
+        "mx.assign1": "In this sound: Shape, so the column moves the vowel.",
+        "mx.lfo.assign1": "In this sound: how far the LFO moves the vowel."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 50",
+          "hear": "A higher voice, like a child’s."
+        },
+        {
+          "id": "lfo.rate",
+          "try": "Turn the LFO Rate to 45",
+          "hear": "Quicker talking: the vowels change several times a second."
+        }
+      ]
+    },
+    {
+      "id": "mf-wavetable-drift",
+      "name": "Wavetable Drift",
+      "ref": "A slow paraphonic pad whose wavetable position drifts back and forth on the cycling envelope",
+      "artist": "Ambient",
+      "tags": ["pad", "wavetable"],
+      "level": 2,
+      "blurb": "Soft chords whose tone slowly shifts and shimmers as they hold.",
+      "how": "Wavetable plays one cycle from a table at a time: Wave picks the table, Timbre the place in it. The cycling envelope in Loop mode rises and falls over a few seconds and, through its point in the Timbre column, moves that place, so the tone keeps drifting. Paraphonic plays the chord; Shape adds a chorus.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 48, 7.5],
+          [0, 55, 7.5],
+          [0, 60, 7.5],
+          [0, 64, 7.5],
+          [8, 45, 7.5],
+          [8, 52, 7.5],
+          [8, 57, 7.5],
+          [8, 60, 7.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Four notes, on a wavetable",
+          "module": "osc",
+          "why": "Paraphonic lets you play chords. Type on Wavetable; Shape adds its chorus.\n- Paraphonic lit\n- Type Wavetable\n- Wave 30 · Table\n- Timbre 30 · Position\n- Shape 60 · Chorus\n- Listen for: a bright, glassy chord.",
+          "set": {
+            "voice.paraphonic": true,
+            "osc.type": "wavetable",
+            "osc.wave": 30,
+            "osc.timbre": 30,
+            "osc.shape": 60
+          }
+        },
+        {
+          "title": "Soften it",
+          "module": "amp",
+          "why": "A lower cutoff, and the envelope on the loudness: a slow Attack and a long Decay/Rel.\n- Cutoff 70 · 2.4 kHz\n- Amp Mod lit\n- Attack 68 · 520 ms\n- Decay / Rel 85 · 3.7 s\n- Sustain 100\n- Listen for: chords that fade in and out gently.",
+          "set": {
+            "vcf.cutoff": 70,
+            "env.amp_mod": true,
+            "env.attack": 68,
+            "env.decay": 85,
+            "env.sustain": 100
+          }
+        },
+        {
+          "title": "Let the cycling envelope drift the table",
+          "module": "env",
+          "why": "Loop mode cycles the envelope from each chord; long Rise and Fall make it a slow swell, and its point in the Timbre column moves the place in the table.\n- Cycling envelope mode Loop\n- Rise 85 · 2.5 s\n- Fall 85 · 2.5 s\n- CycEnv > Timbre 40\n- Listen for: the tone slowly shifting and coming back as the chord holds.",
+          "set": {
+            "cyc.mode": "loop",
+            "cyc.rise": 85,
+            "cyc.fall": 85,
+            "mx.cycenv.timbre": 40
+          }
+        }
+      ],
+      "context": {
+        "osc.timbre": "In this sound: where in the table the drift starts.",
+        "mx.cycenv.timbre": "In this sound: how far the drift moves through the table.",
+        "cyc.mode": "In this sound: Loop, so the drift repeats."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 70",
+          "hear": "Another table, with a different colour of drift."
+        },
+        {
+          "id": "cyc.rise",
+          "try": "Turn Rise to 60",
+          "hear": "A faster shimmer."
+        }
+      ]
+    },
+    {
+      "id": "mf-plucked-string",
+      "name": "Plucked String",
+      "ref": "A plucked string from the KarplusStr model, a Karplus–Strong string struck by each note",
+      "artist": "Various",
+      "tags": ["pluck", "string"],
+      "level": 1,
+      "blurb": "A bright plucked string that rings on after each note, like a nylon guitar.",
+      "how": "KarplusStr strikes a string on every note and lets it ring: Timbre sets how hard and bright the strike is, Shape how long it rings, and Wave would bow it. The envelope on the loudness, with a long Decay/Rel, lets the string ring after you let go, and Paraphonic lets notes overlap.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.5],
+          [0.5, 59, 0.5],
+          [1, 64, 0.5],
+          [1.5, 67, 0.5],
+          [2, 71, 1],
+          [3, 67, 0.5],
+          [3.5, 64, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose KarplusStr",
+          "module": "osc",
+          "why": "Type on KarplusStr. Wave at 0 is no bowing; Timbre at 60 a bright strike; Shape at 55 a medium ring.\n- Type KarplusStr\n- Wave 0 · Bow\n- Timbre 60 · Position\n- Shape 55 · Decay\n- Listen for: a plucked string, cut short when you let go.",
+          "set": {
+            "osc.type": "karplusstr",
+            "osc.wave": 0,
+            "osc.timbre": 60,
+            "osc.shape": 55
+          }
+        },
+        {
+          "title": "Let it ring on",
+          "module": "amp",
+          "why": "Amp Mod with full Sustain and a long Decay/Rel keeps the amplifier open after the key, and Paraphonic lets the notes overlap.\n- Amp Mod lit\n- Decay / Rel 75 · 1.6 s\n- Paraphonic lit\n- Listen for: the strings ringing into each other.",
+          "set": {
+            "env.amp_mod": true,
+            "env.decay": 75,
+            "voice.paraphonic": true
+          }
+        }
+      ],
+      "context": {
+        "osc.timbre": "In this sound: the strike, bright and firm.",
+        "osc.shape": "In this sound: how long the string rings."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 40",
+          "hear": "The string is bowed as well as struck, and sustains."
+        },
+        {
+          "id": "osc.timbre",
+          "try": "Turn Timbre to 20",
+          "hear": "A softer, duller pluck, like a thumb."
+        }
+      ]
+    },
+    {
+      "id": "mf-struck-bells",
+      "name": "Struck Bells",
+      "ref": "Metal bells from the Modal model, a resonator struck by each note",
+      "artist": "Various",
+      "tags": ["keys", "bell"],
+      "level": 1,
+      "blurb": "Clear, ringing bells with a slightly clangy, metallic overtone.",
+      "how": "Modal strikes a set of resonant modes on each note. Wave moves them from harmonic, like a string, to inharmonic, like metal; Timbre sets the strike; Shape how long they ring. The envelope keeps the amplifier open so the bells ring out after the key.",
+      "phrase": {
+        "bpm": 80,
+        "loop": true,
+        "steps": [
+          [0, 72, 1],
+          [1, 76, 1],
+          [2, 79, 1],
+          [3, 84, 2],
+          [6, 79, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Modal, towards metal",
+          "module": "osc",
+          "why": "Type on Modal. Wave past the middle makes the modes inharmonic, a bell; Shape at 70 a long ring.\n- Type Modal\n- Wave 65 · Inharm\n- Timbre 35 · Timbre\n- Shape 70 · Decay\n- Listen for: a bell on each key, cut short when you let go.",
+          "set": {
+            "osc.type": "modal",
+            "osc.wave": 65,
+            "osc.timbre": 35,
+            "osc.shape": 70
+          }
+        },
+        {
+          "title": "Let the bells ring",
+          "module": "amp",
+          "why": "Amp Mod with a long Decay/Rel lets each bell ring out, and Paraphonic lets them ring together.\n- Amp Mod lit\n- Decay / Rel 85 · 3.7 s\n- Paraphonic lit\n- Listen for: bells ringing on and over each other.",
+          "set": {
+            "env.amp_mod": true,
+            "env.decay": 85,
+            "voice.paraphonic": true
+          }
+        }
+      ],
+      "context": {
+        "osc.wave": "In this sound: how metallic the bell is.",
+        "osc.shape": "In this sound: how long each bell rings."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 20",
+          "hear": "Harmonic modes: more like a marimba or a glass than a bell."
+        },
+        {
+          "id": "osc.timbre",
+          "try": "Turn Timbre to 80",
+          "hear": "A harder strike with a dust of extra hits."
+        }
+      ]
+    },
+    {
+      "id": "mf-harmonic-organ",
+      "name": "Harmonic Organ",
+      "ref": "An organ from the Harmo model, its partials set like drawbars",
+      "artist": "Various",
+      "tags": ["keys", "organ"],
+      "level": 1,
+      "blurb": "A steady, hollow organ with a little chorus, for chords.",
+      "how": "Harmo adds sine partials together, as an organ’s drawbars do: Wave picks which partials and how loud, Timbre how many of them come in, and Shape adds a chorus. With the key gate on the amplifier the chords start and stop with the keys, like an organ’s.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 48, 2],
+          [0, 55, 2],
+          [0, 64, 2],
+          [2, 50, 2],
+          [2, 57, 2],
+          [2, 65, 2],
+          [4, 52, 4],
+          [4, 55, 4],
+          [4, 60, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Harmo, and play chords",
+          "module": "osc",
+          "why": "Paraphonic for chords; Type on Harmo, with a little chorus from Shape.\n- Paraphonic lit\n- Type Harmo\n- Wave 25 · Content\n- Timbre 65 · Sculpting\n- Shape 30 · Chorus\n- Listen for: a hollow, steady organ chord.",
+          "set": {
+            "voice.paraphonic": true,
+            "osc.type": "harmo",
+            "osc.wave": 25,
+            "osc.timbre": 65,
+            "osc.shape": 30
+          }
+        },
+        {
+          "title": "Take off the top",
+          "module": "filter",
+          "why": "A little less cutoff softens the highest partials.\n- Cutoff 82 · 5.2 kHz\n- Listen for: a warmer organ.",
+          "set": {
+            "vcf.cutoff": 82
+          }
+        }
+      ],
+      "context": {
+        "osc.wave": "In this sound: which partials, like an organ’s drawbar settings.",
+        "osc.shape": "In this sound: the chorus that gives the organ some movement."
+      },
+      "tweaks": [
+        {
+          "id": "osc.timbre",
+          "try": "Turn Timbre to 100",
+          "hear": "Every partial in: a brighter, fuller organ."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 70",
+          "hear": "Another set of partials: a reedier organ."
+        }
+      ]
+    },
+    {
+      "id": "mf-fm-bass",
+      "name": "FM Bass",
+      "ref": "A punchy two-operator FM bass whose brightness falls away on each note",
+      "artist": "Various",
+      "tags": ["bass", "fm"],
+      "level": 2,
+      "blurb": "A tight, rubbery bass that starts with a metallic snap and settles to a round tone.",
+      "how": "Two Op.FM is a sine whose phase another sine moves: Wave sets their ratio, Timbre how hard the second moves the first (the brightness) and Shape its feedback. The envelope’s point in the Timbre column raises that amount at the start of each note and lets it fall back, as an FM synth’s modulator envelope does.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 36, 0.4],
+          [0.5, 36, 0.4],
+          [1, 48, 0.4],
+          [1.5, 36, 0.4],
+          [2, 39, 0.4],
+          [2.5, 36, 0.4],
+          [3, 43, 0.4],
+          [3.5, 41, 0.4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Two Op.FM at a 1:1 ratio",
+          "module": "osc",
+          "why": "Type on Two Op.FM. Wave at 10 is a 1:1 ratio, Timbre a little FM and Shape a touch of feedback.\n- Type Two Op.FM\n- Wave 10 · ratio 1\n- Timbre 20 · Amount\n- Shape 15 · Feedback\n- Listen for: a round, slightly buzzy tone.",
+          "set": {
+            "osc.type": "two_op_fm",
+            "osc.wave": 10,
+            "osc.timbre": 20,
+            "osc.shape": 15
+          }
+        },
+        {
+          "title": "A snap on each note",
+          "module": "mod",
+          "why": "The envelope with a short Decay/Rel and some Sustain, sent through its point in the Timbre column, brightens each note’s start.\n- Decay / Rel 38 · 72 ms\n- Sustain 40\n- Env > Timbre 50\n- Listen for: a metallic snap at the start of each note.",
+          "set": {
+            "env.decay": 38,
+            "env.sustain": 40,
+            "mx.env.timbre": 50
+          }
+        },
+        {
+          "title": "Shape the loudness too",
+          "module": "amp",
+          "why": "Amp Mod lets the same envelope shape the loudness, so the notes are short and punchy.\n- Amp Mod lit\n- Listen for: a tight, rubbery bass line.",
+          "set": {
+            "env.amp_mod": true
+          }
+        }
+      ],
+      "context": {
+        "mx.env.timbre": "In this sound: how hard the snap is.",
+        "osc.timbre": "In this sound: the brightness the snap settles to."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 30",
+          "hear": "A 2:1 ratio: a hollower, more electric tone."
+        },
+        {
+          "id": "osc.shape",
+          "try": "Turn Shape to 60",
+          "hear": "More feedback: a grittier, noisier bass."
+        }
+      ]
+    },
+    {
+      "id": "mf-super-saw-lead",
+      "name": "Super Saw Lead",
+      "ref": "A wide, detuned super-saw lead, the trance lead sound",
+      "artist": "Trance",
+      "tags": ["lead", "supersaw"],
+      "level": 1,
+      "blurb": "A huge, shimmering lead made of many slightly detuned saws, with a little glide.",
+      "how": "SuperWave multiplies the saw into a stack of copies: Timbre detunes them and Shape sets how loud they are against the centre one. A touch of glide slides between notes, and the LFO’s point in the Pitch column adds a gentle vibrato.",
+      "phrase": {
+        "bpm": 136,
+        "loop": true,
+        "steps": [
+          [0, 76, 0.75],
+          [0.75, 74, 0.75],
+          [1.5, 72, 1],
+          [2.5, 71, 0.5],
+          [3, 72, 1],
+          [4, 79, 2],
+          [6, 76, 1.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose SuperWave on the saw",
+          "module": "osc",
+          "why": "Type on SuperWave. Wave at 0 multiplies the saw; Timbre detunes the copies and Shape brings them up.\n- Type SuperWave\n- Wave 0 · saw\n- Timbre 35 · Detune\n- Shape 75 · Volume\n- Listen for: a big, shimmering saw.",
+          "set": {
+            "osc.type": "superwave",
+            "osc.wave": 0,
+            "osc.timbre": 35,
+            "osc.shape": 75
+          }
+        },
+        {
+          "title": "A little glide and vibrato",
+          "module": "lfo",
+          "why": "Glide slides from note to note; a sine LFO at about 5 Hz, through a small point in the Pitch column, adds vibrato.\n- Glide 25 · 33 ms\n- LFO shape Sine\n- Rate 60 · 5.14 Hz\n- LFO > Pitch 2\n- Listen for: notes sliding into each other, with a gentle wobble.",
+          "set": {
+            "glide.amount": 25,
+            "lfo.shape": "sine",
+            "lfo.rate": 60,
+            "mx.lfo.pitch": 2
+          }
+        },
+        {
+          "title": "Give it a tail",
+          "module": "amp",
+          "why": "Amp Mod with a medium Decay/Rel lets each note fade out briefly after you let go.\n- Amp Mod lit\n- Decay / Rel 55 · 300 ms\n- Listen for: a lead that hangs on between notes.",
+          "set": {
+            "env.amp_mod": true,
+            "env.decay": 55
+          }
+        }
+      ],
+      "context": {
+        "osc.timbre": "In this sound: how far apart the copies are tuned.",
+        "osc.shape": "In this sound: how loud the copies are against the centre saw."
+      },
+      "tweaks": [
+        {
+          "id": "osc.timbre",
+          "try": "Turn Timbre to 80",
+          "hear": "Wider detuning: a wilder, more chorused lead."
+        },
+        {
+          "id": "glide.amount",
+          "try": "Turn Glide to 0",
+          "hear": "Each note lands at once."
+        }
+      ]
+    },
+    {
+      "id": "mf-pwm-strings",
+      "name": "PWM Strings",
+      "ref": "A slowly moving square wave played as chords, the pulse-width string sound of analog string machines",
+      "artist": "Various",
+      "tags": ["strings", "pwm"],
+      "level": 2,
+      "blurb": "Warm, moving string chords from a square wave whose width the LFO sweeps.",
+      "how": "BasicWaves with Wave at 0 is a square, and Timbre narrows it. A slow triangle LFO, through its point in the Timbre column, sweeps the width back and forth, which gives the chorused movement of an ensemble. Paraphonic plays the chords, with a soft attack and release.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 53, 4],
+          [0, 57, 4],
+          [0, 60, 4],
+          [0, 64, 4],
+          [4, 50, 4],
+          [4, 57, 4],
+          [4, 62, 4],
+          [4, 65, 4]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A square wave, for chords",
+          "module": "osc",
+          "why": "Paraphonic for chords; BasicWaves with Wave at 0 is the square, Timbre narrows it a little.\n- Paraphonic lit\n- Wave 0 · Morph\n- Timbre 25 · Sym\n- Listen for: a hollow, reedy chord.",
+          "set": {
+            "voice.paraphonic": true,
+            "osc.wave": 0,
+            "osc.timbre": 25
+          }
+        },
+        {
+          "title": "Sweep the width",
+          "module": "lfo",
+          "why": "A slow triangle through the LFO’s point in the Timbre column moves the width.\n- LFO shape Triangle\n- Rate 30 · 0.56 Hz\n- LFO > Timbre 45\n- Listen for: the chord swirling gently.",
+          "set": {
+            "lfo.shape": "tri",
+            "lfo.rate": 30,
+            "mx.lfo.timbre": 45
+          }
+        },
+        {
+          "title": "Soft strings",
+          "module": "amp",
+          "why": "A lower cutoff, and Amp Mod with a gentle Attack and Decay/Rel.\n- Cutoff 72 · 2.8 kHz\n- Amp Mod lit\n- Attack 60 · 250 ms\n- Decay / Rel 75 · 1.6 s\n- Listen for: warm string chords fading in and out.",
+          "set": {
+            "vcf.cutoff": 72,
+            "env.amp_mod": true,
+            "env.attack": 60,
+            "env.decay": 75
+          }
+        }
+      ],
+      "context": {
+        "mx.lfo.timbre": "In this sound: how wide the sweep of the pulse width is.",
+        "lfo.rate": "In this sound: how slowly the width moves."
+      },
+      "tweaks": [
+        {
+          "id": "lfo.rate",
+          "try": "Turn the LFO Rate to 50",
+          "hear": "Faster movement: more of a shimmer."
+        },
+        {
+          "id": "osc.shape",
+          "try": "Turn Shape to 40",
+          "hear": "The sub-oscillator adds weight under the strings."
+        }
+      ]
+    },
+    {
+      "id": "mf-sub-bass",
+      "name": "Sub Bass",
+      "ref": "A dark saw bass with its sub-oscillator an octave down",
+      "artist": "Various",
+      "tags": ["bass", "sub"],
+      "level": 1,
+      "blurb": "A deep, warm bass with a soft attack of brightness on each note.",
+      "how": "BasicWaves’ Shape adds a sub-oscillator an octave under the saw, for weight. The filter closes the saw down, and the envelope through Filter Amt opens it a little at each note’s start. The key gate opens the amplifier, so the notes are exactly as long as the keys.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 33, 0.75],
+          [1, 33, 0.25],
+          [1.5, 36, 0.5],
+          [2, 31, 1],
+          [3, 33, 0.5],
+          [3.5, 28, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Add the sub-oscillator",
+          "module": "osc",
+          "why": "BasicWaves’ Shape brings in the sub an octave down.\n- Shape 70 · Sub\n- Listen for: a heavier, deeper saw.",
+          "set": {
+            "osc.shape": 70
+          }
+        },
+        {
+          "title": "Close the filter, and pluck it open",
+          "module": "filter",
+          "why": "A low Cutoff darkens it; the envelope with a short Decay/Rel and no Sustain opens the filter at each note’s start.\n- Cutoff 30 · 197 Hz\n- Resonance 20\n- Decay / Rel 40 · 85 ms\n- Sustain 0\n- Filter Amt 45\n- Listen for: a round bass with a soft bite at the front of each note.",
+          "set": {
+            "vcf.cutoff": 30,
+            "vcf.resonance": 20,
+            "env.decay": 40,
+            "env.sustain": 0,
+            "env.filter_amt": 45
+          }
+        }
+      ],
+      "context": {
+        "osc.shape": "In this sound: the sub-oscillator’s weight.",
+        "env.filter_amt": "In this sound: the bite at the start of each note."
+      },
+      "tweaks": [
+        {
+          "id": "vcf.resonance",
+          "try": "Turn Resonance to 60",
+          "hear": "A rubbery, squelchy bass."
+        },
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 0",
+          "hear": "A square instead of the saw: hollower."
+        }
+      ]
+    },
+    {
+      "id": "mf-looping-wobble",
+      "name": "Looping Wobble",
+      "ref": "A bass whose filter wobbles from the cycling envelope in Loop mode, restarting with each note",
+      "artist": "Dubstep",
+      "tags": ["bass", "wobble"],
+      "level": 2,
+      "blurb": "A growling bass that wah-wahs in time, starting the wobble afresh on every note.",
+      "how": "In Loop mode the cycling envelope rises and falls over and over, restarting at each note, so the wobble always starts in the same place. Its point in the Cutoff column opens and closes the resonant filter with each cycle.",
+      "phrase": {
+        "bpm": 140,
+        "loop": true,
+        "steps": [
+          [0, 31, 1.5],
+          [2, 31, 0.5],
+          [2.5, 34, 1],
+          [3.5, 29, 0.5]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A dark, resonant saw",
+          "module": "filter",
+          "why": "Close the filter down and give it some Resonance.\n- Cutoff 22 · 119 Hz\n- Resonance 55\n- Listen for: a muffled, slightly honking bass.",
+          "set": {
+            "vcf.cutoff": 22,
+            "vcf.resonance": 55
+          }
+        },
+        {
+          "title": "Loop the cycling envelope",
+          "module": "env",
+          "why": "Loop mode with short Rise and Fall makes a fast, even cycle that starts again with each note.\n- Cycling envelope mode Loop\n- Rise 45 · 63 ms\n- Fall 45 · 63 ms\n- Listen for: no change yet: it is not sent anywhere.",
+          "set": {
+            "cyc.mode": "loop",
+            "cyc.rise": 45,
+            "cyc.fall": 45
+          }
+        },
+        {
+          "title": "Wobble the filter",
+          "module": "mod",
+          "why": "The cycling envelope’s point in the Cutoff column opens the filter on every cycle.\n- CycEnv > Cutoff 50\n- Listen for: the bass wobbling, starting the wobble with each note.",
+          "set": {
+            "mx.cycenv.cutoff": 50
+          }
+        }
+      ],
+      "context": {
+        "mx.cycenv.cutoff": "In this sound: how far each wobble opens the filter.",
+        "cyc.rise": "In this sound: half of each wobble’s length."
+      },
+      "tweaks": [
+        {
+          "id": "cyc.mode",
+          "try": "Step Mode to Run",
+          "hear": "The wobble runs on its own, no longer starting with each note."
+        },
+        {
+          "id": "cyc.fall",
+          "try": "Turn Fall to 60",
+          "hear": "Slower wobbles that close more gradually."
+        }
+      ]
+    },
+    {
+      "id": "mf-folded-arpeggio",
+      "name": "Folded Arpeggio",
+      "ref": "After the manual’s arpeggiated Waveshaper, without its Key/Arp moves of glide and attack, which the app does not model",
+      "artist": "Arturia",
+      "tags": ["seq", "arp"],
+      "level": 2,
+      "blurb": "A bubbling arpeggio through two octaves, its folded tone slowly growing brighter and darker.",
+      "how": "The arpeggiator plays the held chord upwards through two octaves. Waveshaper folds a triangle back on itself: more Timbre, more folds, more harmonics. A slow LFO, through its point in the Timbre column, moves the folding, and a short envelope on the loudness and the filter plucks every note. The manual’s version also moves glide and attack from Key/Arp and uses the Pattern order.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [
+          [0, 48, 8],
+          [0, 55, 8],
+          [0, 63, 8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Waveshaper",
+          "module": "osc",
+          "why": "Type on Waveshaper; Timbre sets the folding.\n- Type Waveshaper\n- Wave 20 · Wave\n- Timbre 30 · Amount\n- Shape 20 · Asym\n- Listen for: a bright, hollow tone.",
+          "set": {
+            "osc.type": "waveshaper",
+            "osc.wave": 20,
+            "osc.timbre": 30,
+            "osc.shape": 20
+          }
+        },
+        {
+          "title": "Pluck each note",
+          "module": "amp",
+          "why": "Amp Mod with a short Decay/Rel and a little Sustain, and the same envelope opening a lower cutoff through Filter Amt.\n- Amp Mod lit\n- Decay / Rel 35 · 56 ms\n- Sustain 30\n- Cutoff 40 · 370 Hz\n- Filter Amt 60\n- Listen for: short, plucked notes.",
+          "set": {
+            "env.amp_mod": true,
+            "env.decay": 35,
+            "env.sustain": 30,
+            "vcf.cutoff": 40,
+            "env.filter_amt": 60
+          }
+        },
+        {
+          "title": "Turn the arpeggiator on",
+          "module": "mode",
+          "why": "Arp | Seq on Arp plays the held keys one by one, Up through two octaves at 120 BPM.\n- Arp | Seq Arp\n- Arp order Up\n- Oct | Mod 2 oct\n- Rate 50 · 120 BPM\n- Listen for: a bubbling arpeggio climbing through the chord.",
+          "set": {
+            "arp.mode": "arp",
+            "arp.pattern": "up",
+            "arp.octave": 2,
+            "arp.rate": 50
+          }
+        },
+        {
+          "title": "Move the folding",
+          "module": "lfo",
+          "why": "A slow triangle LFO through its point in the Timbre column folds the wave more and less.\n- LFO shape Triangle\n- Rate 18 · 0.23 Hz\n- LFO > Timbre 35\n- Listen for: the arpeggio slowly growing brighter and darker.",
+          "set": {
+            "lfo.shape": "tri",
+            "lfo.rate": 18,
+            "mx.lfo.timbre": 35
+          }
+        }
+      ],
+      "context": {
+        "arp.octave": "In this sound: the arpeggio climbs through two octaves.",
+        "mx.lfo.timbre": "In this sound: how far the LFO moves the folding."
+      },
+      "tweaks": [
+        {
+          "id": "arp.pattern",
+          "try": "Choose Random",
+          "hear": "The same notes in a random order."
+        },
+        {
+          "id": "arp.octave",
+          "try": "Press Oct | Mod until 4 is lit",
+          "hear": "The arpeggio climbs four octaves before it starts again."
+        }
+      ]
+    },
+    {
+      "id": "mf-formant-lead",
+      "name": "Formant Lead",
+      "ref": "A vocal, nasal lead from the Formant model, its formant moving with the key played",
+      "artist": "Various",
+      "tags": ["lead", "formant"],
+      "level": 2,
+      "blurb": "A vocal, slightly nasal lead whose tone opens up the higher you play.",
+      "how": "Formant restarts a pair of resonances at each cycle of the note, so it sounds like a voice through a pipe. Timbre sets the first resonance, Wave the second against it, Shape their width. Key/Arp’s point in the Timbre column raises the formant as you play higher, which keeps the voice bright at the top.",
+      "phrase": {
+        "bpm": 90,
+        "loop": true,
+        "steps": [
+          [0, 60, 1],
+          [1, 63, 1],
+          [2, 67, 1.5],
+          [3.5, 70, 0.5],
+          [4, 72, 2],
+          [6, 67, 2]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose Formant",
+          "module": "osc",
+          "why": "Type on Formant: Timbre the first formant, Wave the second against it, Shape their width.\n- Type Formant\n- Wave 35 · Interval\n- Timbre 40 · Formant\n- Shape 35 · Shape\n- Listen for: a nasal, vocal tone.",
+          "set": {
+            "osc.type": "formant",
+            "osc.wave": 35,
+            "osc.timbre": 40,
+            "osc.shape": 35
+          }
+        },
+        {
+          "title": "Let the key move the formant",
+          "module": "mod",
+          "why": "Key/Arp’s point in the Timbre column raises the formant on higher keys.\n- Key/Arp > Timbre 40\n- Listen for: the higher notes brighter than the low ones.",
+          "set": {
+            "mx.key.timbre": 40
+          }
+        },
+        {
+          "title": "A softer start and end",
+          "module": "amp",
+          "why": "Amp Mod with a little Attack and a medium Decay/Rel.\n- Amp Mod lit\n- Attack 35 · 25 ms\n- Decay / Rel 55 · 300 ms\n- Listen for: a singing lead that swells into each note.",
+          "set": {
+            "env.amp_mod": true,
+            "env.attack": 35,
+            "env.decay": 55
+          }
+        }
+      ],
+      "context": {
+        "osc.timbre": "In this sound: the vowel-like formant.",
+        "mx.key.timbre": "In this sound: how much the formant rises with the key."
+      },
+      "tweaks": [
+        {
+          "id": "osc.wave",
+          "try": "Turn Wave to 70",
+          "hear": "The second formant further away: a different vowel."
+        },
+        {
+          "id": "osc.shape",
+          "try": "Turn Shape to 80",
+          "hear": "Wider formants: a buzzier, brassier voice."
+        }
+      ]
+    },
+    {
+      "id": "mf-analog-brass",
+      "name": "Analog Brass",
+      "ref": "A brassy swell from V.Analog, the filter opened by the envelope as each chord starts",
+      "artist": "Various",
+      "tags": ["brass"],
+      "level": 2,
+      "blurb": "Bright brass chords that swell open with a slight “blat” at the start.",
+      "how": "V.Analog blends a pulse with a wave that runs from triangle to saw: here Timbre makes the pulse a square and Shape makes the other wave a saw. The filter starts low and the envelope, through Filter Amt, opens it quickly and lets it settle, the brass swell; the same envelope shapes the loudness.",
+      "phrase": {
+        "bpm": 108,
+        "loop": true,
+        "steps": [
+          [0, 55, 1.5],
+          [0, 60, 1.5],
+          [0, 64, 1.5],
+          [2, 57, 1.5],
+          [2, 62, 1.5],
+          [2, 65, 1.5],
+          [4, 55, 3],
+          [4, 59, 3],
+          [4, 62, 3]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Choose V.Analog, square and saw",
+          "module": "osc",
+          "why": "Paraphonic for chords; Type on V.Analog, Timbre at 50 a square, Shape full a saw.\n- Paraphonic lit\n- Type V.Analog\n- Wave 0 · Detune\n- Timbre 50 · Shape\n- Shape 100 · Wave\n- Listen for: a bright, buzzy chord.",
+          "set": {
+            "voice.paraphonic": true,
+            "osc.type": "v_analog",
+            "osc.wave": 0,
+            "osc.timbre": 50,
+            "osc.shape": 100
+          }
+        },
+        {
+          "title": "The brass swell",
+          "module": "filter",
+          "why": "A low cutoff, opened by the envelope through Filter Amt: a short Attack, a Decay/Rel down to a high Sustain.\n- Cutoff 30 · 197 Hz\n- Filter Amt 55\n- Attack 35 · 25 ms\n- Decay / Rel 55 · 300 ms\n- Sustain 70\n- Amp Mod lit\n- Listen for: each chord opening with a brassy swell.",
+          "set": {
+            "vcf.cutoff": 30,
+            "env.filter_amt": 55,
+            "env.attack": 35,
+            "env.decay": 55,
+            "env.sustain": 70,
+            "env.amp_mod": true
+          }
+        }
+      ],
+      "context": {
+        "env.filter_amt": "In this sound: how bright the swell gets.",
+        "env.attack": "In this sound: how quickly each chord swells open."
+      },
+      "tweaks": [
+        {
+          "id": "env.attack",
+          "try": "Turn Attack to 55",
+          "hear": "A slower swell, like a horn section breathing in."
+        },
+        {
+          "id": "vcf.resonance",
+          "try": "Turn Resonance to 35",
+          "hear": "A sharper, more synthetic brass."
+        }
+      ]
+    }
+  ]
+}

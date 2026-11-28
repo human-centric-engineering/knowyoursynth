@@ -46,6 +46,7 @@
     { "id": "behringer-odyssey", "order": 43, "listed": true },
     { "id": "subharmonicon", "order": 44, "listed": true },
     { "id": "dfam", "order": 45, "listed": true },
-    { "id": "edge", "order": 46, "listed": true }
+    { "id": "edge", "order": 46, "listed": true },
+    { "id": "microfreak", "order": 47, "listed": true }
   ]
 }

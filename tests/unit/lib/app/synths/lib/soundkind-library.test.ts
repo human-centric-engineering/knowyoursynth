@@ -23,16 +23,18 @@ import { KIND_MODEL } from '@/lib/app/synths/lib/soundkind-model';
 import { sweepLibrary, sweepShard } from '@/scripts/soundkind-sweep';
 
 /**
- * Measured 2026-11-24 over the library's 6,064 sounds: 2,767 agree (45.63%) on macOS arm64, after t-291 put 79 System
+ * Measured 2026-11-28 over the library's 6,125 sounds: 2,792 agree (45.58%) on macOS arm64, after t-333's 17 MicroFreak
+ * sounds, which came with the DFAM's and EDGE's 44 since the last measure: the 61 agree on 25 (41%). Not refit: a refit
+ * read 2,778 right, fewer than the committed model. Before that, 2026-11-24 over 6,064 sounds: 2,767 agree (45.63%), after t-291 put 79 System
  * 55 sequences on the app's clock, which the probe's held notes do not run (8 of them agree, where 19 did). Before
  * that, 2026-11-21 over 6,054 sounds: 2,768 agree (45.72%), after t-301's 30
  * Model D sounds played by their mod lanes. Before that, 2026-11-20 over 6,024: 2,753 (45.70%), after t-290's 30
  * Subharmonicon patchbay sounds; 2026-11-20 over 5,994: 2,746 (45.81%); 2026-11-14
  * over 5,829 sounds: 2,693 (46.20%); t-289's 98 Subharmonicon sounds, its own sequencers, agree on 9. At an earlier measure
  * (2,998 sounds), CI's Linux x64 read one fx sound as lead: renders are seeded, but the platforms' maths can differ in
- * the last bit. So the floor is one sound below, 2,766 (45.61%).
+ * the last bit. So the floor is one sound below, 2,791 (45.56%).
  */
-const MEASURED = 0.4561;
+const MEASURED = 0.4556;
 
 /** Threads for the sweep (see above). */
 const SWEEP_THREADS = 2;

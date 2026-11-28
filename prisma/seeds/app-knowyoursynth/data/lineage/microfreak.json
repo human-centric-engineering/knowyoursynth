@@ -1,0 +1,50 @@
+{
+  "synth": "microfreak",
+  "title": "The MicroFreak: open-source oscillators and a MatrixBrute matrix in a small hybrid",
+  "intro": "Arturia released the MicroFreak in 2019: a small hybrid synth with one digital oscillator and an analog filter. Seven of its twelve oscillator models use code from Mutable Instruments’ Plaits, a Eurorack module whose code is published under the MIT licence, beside five of Arturia’s own. Its modulation matrix comes from Arturia’s MatrixBrute, and its keyboard is a flat capacitive plate that senses pressure. Firmware updates since have added ten more oscillator types.",
+  "timeline": [
+    {
+      "year": "2012",
+      "name": "Arturia MiniBrute",
+      "text": "A 25-key analogue monosynth with one oscillator and a Steiner-Parker filter, the start of Arturia’s analogue hardware after its software instruments."
+    },
+    {
+      "year": "2016",
+      "name": "Arturia MatrixBrute",
+      "text": "An analogue monosynth built around a modulation matrix of lit buttons, the idea the MicroFreak’s five-by-seven matrix comes from."
+    },
+    {
+      "year": "2018",
+      "name": "Mutable Instruments Plaits",
+      "text": "A Eurorack macro-oscillator whose models are each played by Harmonics, Timbre and Morph; seven of the MicroFreak’s models use its code, the three knobs becoming Wave, Timbre and Shape."
+    },
+    {
+      "year": "2019",
+      "name": "Arturia MicroFreak",
+      "tag": "This synth",
+      "text": "One digital oscillator in twelve models, an analog 12 dB filter, four-voice paraphony, a cycling envelope, a 5 × 7 matrix, an arpeggiator and sequencer, and a 25-key touch keyboard."
+    },
+    {
+      "year": "2020–23",
+      "name": "MicroFreak firmware 2 to 5",
+      "text": "New oscillator types (noise, a vocoder, three from Noise Engineering, user wavetables, samples and three granular ones, 22 in all), Chord Mode, scale quantising and four-voice unison."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Arturia MicroFreak Vocoder Edition",
+      "years": "2020",
+      "text": "The MicroFreak sold with a microphone, for the vocoder oscillator that firmware 2.1 added."
+    },
+    {
+      "name": "Arturia MiniFreak",
+      "years": "2022",
+      "text": "The follow-up: six voices of polyphony, more functions and a larger conventional keyboard."
+    },
+    {
+      "name": "Arturia MatrixBrute",
+      "years": "2016",
+      "text": "The analogue monosynth whose modulation matrix the MicroFreak’s is modelled on."
+    }
+  ]
+}

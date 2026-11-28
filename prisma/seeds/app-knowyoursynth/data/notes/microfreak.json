@@ -1,0 +1,62 @@
+{
+  "synth": "microfreak",
+  "unusual": [
+    {
+      "target": "osc",
+      "text": "Most synths have oscillators with fixed waveforms. The MicroFreak has one oscillator that is twelve different sound engines, from classic analog waves to wavetables, FM, a plucked string, struck metal, chords and speech, seven of them from Mutable Instruments’ Plaits module, each played by the same three knobs."
+    },
+    {
+      "target": "osc.wave",
+      "text": "Wave, Timbre and Shape are Plaits’ Harmonics, Timbre and Morph: three knobs that mean something different in each model, which the display names as you turn them. Learning one model teaches you nothing fixed about what Wave does in the next."
+    },
+    {
+      "target": "voice.paraphonic",
+      "text": "Paraphonic, not polyphonic: up to four notes each get their own loudness envelope, but they all go through the one analog filter. The Chords model turns it off and plays a whole chord from one key instead."
+    },
+    {
+      "target": "matrix",
+      "text": "There are no patch cables: modulation goes through a grid of five sources by seven destinations, each point an amount either way, an idea Arturia brought from its MatrixBrute. The LFO and the cycling envelope are not wired to anything until a point sends them somewhere."
+    },
+    {
+      "target": "mx.assign1",
+      "text": "The last three columns have no fixed destination. On the hardware you hold an Assign button and move a knob, and that knob becomes the column’s target for all five sources."
+    },
+    {
+      "target": "env.filter_amt",
+      "text": "Filter Amt is also the matrix’s Env > Cutoff point: turning it lights that point in the grid. It works both ways, so the envelope can close the filter as well as open it."
+    },
+    {
+      "target": "env.amp_mod",
+      "text": "With Amp Mod unlit the envelope does not shape the loudness at all: the key opens the amplifier as on an organ, and the envelope only moves the filter and the matrix. Most synths always put an envelope on the loudness."
+    },
+    {
+      "target": "env.decay",
+      "text": "One knob sets both the decay and the release: the envelope falls to Sustain at the same speed it falls away after you let go."
+    },
+    {
+      "target": "cyc.hold",
+      "text": "Hold/Sustain changes job with the Mode: in Env it is the level the cycling envelope holds while the key is down, in Run and Loop the time it waits at the top before it falls."
+    },
+    {
+      "target": "touch",
+      "text": "The keyboard is a flat, printed capacitive plate with no moving keys, which senses pressure; the icons above it and the strip are touch controls on the same plate."
+    }
+  ],
+  "limits": {
+    "intro": "The sound path is modelled: the twelve oscillator models, mono and four-voice paraphony with a loudness envelope for each note, the 12 dB low-, band- and high-pass filter, the envelope with Amp Mod and Filter Amt, the cycling envelope in Env, Run and Loop with Rise and Fall Shape, the six-shape LFO free or synced, every point of the matrix with seven of the Assign destinations, Glide, the arpeggiator’s Up, Order and Random through one to four octaves, Hold, and Bend on the app’s pitch wheel.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "The sequencer (two sequences of up to 64 steps, their four modulation tracks, record and play), Spice and Dice, the arpeggiator’s Pattern (it plays as Random here) and Swing, and the octave buttons (the app’s keyboard has its own). The presets, Save, Panel and the Utility menus: LFO retrigger, envelope legato, Press mode, Velo Amp Mod, Bend Range (12 here), the glide modes, the gate length (45 % here), the sequence length and preset volume. An Assign column on Glide, Type, the envelope’s Attack, Sustain or Filter Amt, the Arp/Seq rate, a cycling envelope knob or another point’s amount. MIDI, the clock, the rear CV, gate and pressure outputs, and every oscillator type the firmware has added since 1.1.2."
+      },
+      {
+        "title": "Where the app’s MicroFreak differs",
+        "text": "The app’s keyboard has no pressure, so Press is the key’s velocity, as with the hardware’s Press mode on Velocity. Modulation is one for the whole voice: in paraphonic mode the envelope, Press and Key/Arp follow the last note, where the hardware moves Wave, Timbre and Shape for each note. BasicWaves’ sub is a square here (the hardware’s is a sine); SuperWave multiplies only the saw; V.Analog has no detune between its two waves and no hard sync in Timbre’s top half; Speech sings vowels but does not say words; the matrix’s Wave and Shape move nothing on the six models built from the app’s own shapes, nor Timbre on Chords. In Run and Loop the cycling envelope’s curves are fixed."
+      },
+      {
+        "title": "The app’s readings of the manual",
+        "text": "Knobs run 0 to 100 and the matrix −100 to 100, the scales the manual’s examples imply. Its ranges are used where it gives them (cutoff about 30 Hz to above 15 kHz, attack to 10 s, decay to 13 s, glide to 10 s, the LFO 0.06 to 100 Hz). The cycling envelope’s 1 ms to 10 s, the arpeggiator’s 20 to 220 BPM, the 120 BPM clock Sync divides, the matrix’s depths (two octaves of pitch, the whole cutoff range, an octave per octave from Key/Arp), the chord voicings and the macro models’ tables and curves are this app’s: the manual describes each model’s settings in a line."
+      }
+    ]
+  }
+}

@@ -1698,15 +1698,15 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-24 over the library's 6,064 sounds:
+Measured on 2026-11-28 over the library's 6,125 sounds:
 
-- **The detector reads the sound's own category for 2,767 of them (45.6%).** Picking the commonest category, bass, every
+- **The detector reads the sound's own category for 2,792 of them (45.6%).** Picking the commonest category, bass, every
   time would get 16.3%.
 - **Cross-validated: 2,743 (45.3%)**, over the 6,054 of 2026-11-21 (not re-measured since). Each fifth of the library is measured on a model fitted to the other four fifths.
-- **14 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
+- **15 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
   `pro-1/filter-clave`, `nymphes/nym-filter-whistle`, `malevolent/mal-extreme`, `grandmother/gm-ringing-ladder-ping`, `buchla-easel/easel-rainforest-cross-feedback` and `buchla-easel/easel-sonar-ping`, and six System 55 sequences whose 960 follows the app's clock and so stands on
   stage 1 under a held note with no transport (`s55-hi-nrg`, `s55-moroder-gallop`, `s55-newcleus-dotted`,
-  `s55-boddy-three-rows`, `s55-santamaria-congas`, `s55-scruggs-banjo-roll`). `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
+  `s55-boddy-three-rows`, `s55-santamaria-congas`, `s55-scruggs-banjo-roll`), and the DFAM's `dfam/dfam-seq-osc`. `check:synths` hears each one play its riff, so they do make sound, but not on a held G3 within
   the probe's 0.85 s. The two filter pings (the clave and the Grandmother's) have no oscillator in the mixer, only a
   filter struck by a short envelope. The two Easel effects play themselves and first speak about 1 s and 1.5 s in, after the probe's note has ended. Why the pings and the Nymphes' whistle are silent has not been looked into. They count as disagreements.
 
@@ -1715,6 +1715,10 @@ sequences on the app's clock: like the Subharmonicon's, their 960 now waits for 
 not press, so the detector agrees on 8 of the 79 where it agreed on 19, and six of them joined the silent sounds. Not
 refit: that would fit the model to sequences heard standing still. Running the clock in the probe for a sound that
 follows it is the fix, for both synths, and a change to the features.
+
+The 61 sounds since 6,064 are the DFAM's 32, the EDGE's 12 and the MicroFreak's 17 (t-333). They agree on 25 (41%),
+the MicroFreak's on 5, so the figure moved from 45.63% to 45.58%. Not refit: a refit to the 6,125 read 2,778 right,
+fewer than the committed model's 2,792.
 
 When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are

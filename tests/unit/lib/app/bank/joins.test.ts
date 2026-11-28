@@ -99,6 +99,7 @@ describe('heardFor for a native synth', () => {
     subharmonicon: [],
     dfam: [],
     edge: [],
+    microfreak: [],
   };
   const records = (list: HeardEntry[]): [string, string?][] =>
     list.map((e) => (e.sound === undefined ? [e.song ?? ''] : [e.song ?? '', e.sound]));

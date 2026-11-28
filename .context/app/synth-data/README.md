@@ -21,7 +21,7 @@ python3 validate_synth.py --schema synth-blueprint.schema.json */*.synth.json
 
 Without `jsonschema` installed it runs the referential checks only.
 
-## In the app (47)
+## In the app (48)
 
 | Folder                                                     | Synth                                                                                                                                                            | Spec schema |
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -48,6 +48,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`kobol`](./kobol/README.md)                               | Behringer Kobol Expander                                                                                                                                         | 0.7.0       |
 | [`malevolent`](./malevolent/README.md)                     | PWM (Paul Whittington Group) Malevolent Modular Pure Analogue Synthesiser                                                                                        | 0.13.0      |
 | [`mantis`](./mantis/README.md)                             | PWM (Paul Whittington Group) Mantis Hybrid-Analogue Synthesiser                                                                                                  | 0.13.0      |
+| [`microfreak`](./microfreak/README.md)                     | Arturia MicroFreak                                                                                                                                               | 0.13.0      |
 | [`minilogue-xd`](./minilogue-xd/README.md)                 | Korg minilogue xd                                                                                                                                                | 0.12.0      |
 | [`model-15`](./model-15/README.md)                         | Behringer MODEL 15 Analog Semi-Modular Synthesizer                                                                                                               | 0.10.0      |
 | [`model-d`](./model-d/README.md)                           | Behringer MODEL D                                                                                                                                                | 0.1.0       |

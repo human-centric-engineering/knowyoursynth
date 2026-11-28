@@ -970,6 +970,16 @@
       "app": ["subharmonicon"],
       "text": "A semi-modular polyrhythmic synthesizer with two VCOs, four subharmonic oscillators, two four-step sequencers and four rhythm generators, playing six-tone subharmonic chords.",
       "source": "https://www.musicincmag.com/news/detail/moog-commercially-releases-subharmonicon"
+    },
+    {
+      "id": "arturia-microfreak",
+      "name": "Arturia MicroFreak",
+      "maker": "Arturia",
+      "year": "2019",
+      "kind": "paraphonic",
+      "app": ["microfreak"],
+      "text": "A four-voice paraphonic hybrid synthesiser with digital oscillators, an analogue filter and a touch-capacitive keyboard.",
+      "source": "https://en.wikipedia.org/wiki/Arturia"
     }
   ]
 }

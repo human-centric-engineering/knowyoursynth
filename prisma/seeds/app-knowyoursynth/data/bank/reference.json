@@ -406,15 +406,6 @@
       "source": "https://musictech.com/news/arturia-reveal-minibrute-2s/"
     },
     {
-      "id": "arturia-microfreak",
-      "name": "Arturia MicroFreak",
-      "maker": "Arturia",
-      "year": "2019",
-      "kind": "paraphonic",
-      "text": "A four-voice paraphonic hybrid synthesiser with digital oscillators, an analogue filter and a touch-capacitive keyboard.",
-      "source": "https://en.wikipedia.org/wiki/Arturia"
-    },
-    {
       "id": "arturia-polybrute",
       "name": "Arturia PolyBrute",
       "maker": "Arturia",
