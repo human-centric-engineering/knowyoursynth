@@ -284,7 +284,7 @@
         {
           "id": "ch2.feet",
           "try": "Set FEET II to 5 1/3'",
-          "hear": "A twelfth instead of an octave: a hollower, quinty organ."
+          "hear": "A fifth instead of an octave: a hollower, quinty organ."
         },
         {
           "id": "sub.vco",
@@ -803,12 +803,12 @@
     {
       "id": "dd-fifth-stack",
       "name": "Fifth Stack",
-      "ref": "Each key a note and the twelfth above it, from layer II’s 5⅓′ footage, for parallel-fifth leads and stabs",
+      "ref": "Each key a note and the fifth above it, from layer II’s 5⅓′ footage, for parallel-fifth leads and stabs",
       "artist": "Synth lead",
       "tags": ["lead", "brass"],
       "level": 1,
-      "blurb": "A bold lead where every key plays two notes a twelfth apart.",
-      "how": "FEET sets each layer’s footage on its own. Layer I stays at 8′ while layer II goes to 5⅓′, a fifth above 8′’s octave, so every key plays a power interval. The filter envelope gives it a brassy attack.",
+      "blurb": "A bold lead where every key plays two notes a fifth apart.",
+      "how": "FEET sets each layer’s footage on its own. Layer I stays at 8′ while layer II goes to 5⅓′, a fifth above it, so every key plays a power interval. The filter envelope gives it a brassy attack.",
       "phrase": {
         "bpm": 110,
         "loop": true,
@@ -826,7 +826,7 @@
         {
           "title": "Layer II on 5⅓′",
           "module": "osc",
-          "why": "Each layer has its own FEET.\n- FEET II 5⅓': a twelfth above layer I\n- MIX I-II I 55 : II 45\n- Listen for: two notes on every key, a bold open interval.",
+          "why": "Each layer has its own FEET.\n- FEET II 5⅓': a fifth above layer I\n- MIX I-II I 55 : II 45\n- Listen for: two notes on every key, a bold open interval.",
           "set": {
             "ch2.feet": "5.33",
             "mix.mix": 4.5
@@ -858,12 +858,12 @@
         {
           "id": "ch2.feet",
           "try": "Set FEET II to 4'",
-          "hear": "An octave instead of a twelfth: a plainer, fuller lead."
+          "hear": "An octave instead of a fifth: a plainer, fuller lead."
         },
         {
           "id": "ch2.feet",
           "try": "Set FEET II to 2 2/3'",
-          "hear": "A twelfth an octave higher: thinner and more organ-like."
+          "hear": "The fifth an octave higher, a twelfth: thinner and more organ-like."
         }
       ]
     },

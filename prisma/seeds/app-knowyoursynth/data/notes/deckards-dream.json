@@ -43,7 +43,7 @@
       },
       {
         "title": "Where the app’s Deckard’s Dream differs",
-        "text": "Glide here takes the same time whatever the interval, up to about 4 s; on the hardware it grows with the distance between the notes, about 10 s from the lowest note to the highest at the top of PORT/GLISS. TOUCH SPEED answers to velocity, as the manual’s Touch Response section says; the panel prints it under SUB OSC AFTER, and the spec records the doubt. INITIAL BRILLIANCE and P.BEND act on both filters and on the pitch as the app’s CS-80 does. The high-pass filter here is the engine’s 24 dB one, where the hardware’s is 12 dB."
+        "text": "Glide here takes the same time whatever the interval, up to about 4 s; on the hardware it grows with the distance between the notes, about 10 s from the lowest note to the highest at the top of PORT/GLISS. TOUCH SPEED answers to velocity, as the manual’s Touch Response section says; the panel prints it under SUB OSC AFTER, and the spec records the doubt. BRIL., INITIAL BRILLIANCE and KEYBOARD CONTROL BRILLIANCE open the band from both sides here, the low-pass up and the high-pass down, as HPF MOD NORMAL moves the filter envelope; the manual says only that a hard note is fuller and a soft one thinner. The high-pass filter here is the engine’s 24 dB one, where the hardware’s is 12 dB."
       },
       {
         "title": "Ranges",

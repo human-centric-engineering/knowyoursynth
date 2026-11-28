@@ -1307,25 +1307,25 @@
     "ch1.initBrill=2.5": {
       "routes": [
         { "amt": 0.75, "dst": "cutoff", "src": "vel" },
-        { "amt": 0.75, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -0.75, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "ch1.initBrill=5": {
       "routes": [
         { "amt": 1.5, "dst": "cutoff", "src": "vel" },
-        { "amt": 1.5, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -1.5, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "ch1.initBrill=7.5": {
       "routes": [
         { "amt": 2.25, "dst": "cutoff", "src": "vel" },
-        { "amt": 2.25, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -2.25, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "ch1.initBrill=10": {
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "vel" },
-        { "amt": 3, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -3, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "ch1.initLevel=2.5": { "routes": [{ "amt": 0.25, "by": "env2", "dst": "amp", "src": "vel" }] },
@@ -4859,7 +4859,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 0.75, "dst": "cutoff", "src": "vel" },
-          { "amt": 0.75, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -0.75, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -4906,7 +4906,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 1.5, "dst": "cutoff", "src": "vel" },
-          { "amt": 1.5, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -1.5, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -4953,7 +4953,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 2.25, "dst": "cutoff", "src": "vel" },
-          { "amt": 2.25, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -2.25, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -5000,7 +5000,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 3, "dst": "cutoff", "src": "vel" },
-          { "amt": 3, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -3, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -7174,7 +7174,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -7191,7 +7191,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -7228,7 +7228,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -7245,7 +7245,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -7282,7 +7282,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -7299,7 +7299,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -7336,7 +7336,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -7353,7 +7353,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -8012,7 +8012,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -3, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8022,7 +8022,7 @@
       },
       "routes": [
         { "amt": -3, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "kbd.brillLow=-2.5": {
@@ -8063,7 +8063,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -1.5, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8073,7 +8073,7 @@
       },
       "routes": [
         { "amt": -1.5, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "kbd.brillLow=2.5": {
@@ -8114,7 +8114,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 1.5, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8124,7 +8124,7 @@
       },
       "routes": [
         { "amt": 1.5, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "kbd.brillLow=5": {
@@ -8165,7 +8165,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 3, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8175,7 +8175,7 @@
       },
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "kbd.brillHigh=-5": {
@@ -8216,7 +8216,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -3, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8226,7 +8226,7 @@
       },
       "routes": [
         { "amt": -3, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "kbd.brillHigh=-2.5": {
@@ -8267,7 +8267,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -1.5, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8277,7 +8277,7 @@
       },
       "routes": [
         { "amt": -1.5, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "kbd.brillHigh=2.5": {
@@ -8318,7 +8318,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 1.5, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8328,7 +8328,7 @@
       },
       "routes": [
         { "amt": 1.5, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "kbd.brillHigh=5": {
@@ -8369,7 +8369,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 3, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -8379,7 +8379,7 @@
       },
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "kbd.levelLow=-5": {
@@ -9547,25 +9547,25 @@
     "patched:* ch1.initBrill=2.5": {
       "routes": [
         { "amt": 0.75, "dst": "cutoff", "src": "vel" },
-        { "amt": 0.75, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -0.75, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "patched:* ch1.initBrill=5": {
       "routes": [
         { "amt": 1.5, "dst": "cutoff", "src": "vel" },
-        { "amt": 1.5, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -1.5, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "patched:* ch1.initBrill=7.5": {
       "routes": [
         { "amt": 2.25, "dst": "cutoff", "src": "vel" },
-        { "amt": 2.25, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -2.25, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "patched:* ch1.initBrill=10": {
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "vel" },
-        { "amt": 3, "dst": "cutoffHp", "src": "vel" }
+        { "amt": -3, "dst": "cutoffHp", "src": "vel" }
       ]
     },
     "patched:* ch1.initLevel=2.5": {
@@ -13107,7 +13107,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 0.75, "dst": "cutoff", "src": "vel" },
-          { "amt": 0.75, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -0.75, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -13154,7 +13154,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 1.5, "dst": "cutoff", "src": "vel" },
-          { "amt": 1.5, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -1.5, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -13201,7 +13201,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 2.25, "dst": "cutoff", "src": "vel" },
-          { "amt": 2.25, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -2.25, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -13248,7 +13248,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 3, "dst": "cutoff", "src": "vel" },
-          { "amt": 3, "dst": "cutoffHp", "src": "vel" }
+          { "amt": -3, "dst": "cutoffHp", "src": "vel" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -15422,7 +15422,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -15439,7 +15439,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -15476,7 +15476,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -15493,7 +15493,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -15530,7 +15530,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -15547,7 +15547,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 56.568542494923804, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 7.0710678118654755, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -15584,7 +15584,7 @@
         "res": 0,
         "type": "svf"
       },
-      "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+      "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
       "layer": {
         "att": [1, 1],
         "delay": { "on": false },
@@ -15601,7 +15601,7 @@
           "type": "svf"
         },
         "glide": { "legato": false, "steps": false, "time": 0 },
-        "hpf": { "cutoff": 160, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "hpf": { "cutoff": 2.5, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
         "keyEnds": { "mid": 66, "span": 30 },
         "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
         "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
@@ -16260,7 +16260,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -3, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16270,7 +16270,7 @@
       },
       "routes": [
         { "amt": -3, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "patched:* kbd.brillLow=-2.5": {
@@ -16311,7 +16311,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -1.5, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16321,7 +16321,7 @@
       },
       "routes": [
         { "amt": -1.5, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "patched:* kbd.brillLow=2.5": {
@@ -16362,7 +16362,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 1.5, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16372,7 +16372,7 @@
       },
       "routes": [
         { "amt": 1.5, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "patched:* kbd.brillLow=5": {
@@ -16413,7 +16413,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 3, "dst": "cutoff", "src": "kbdLo" },
-          { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
+          { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16423,7 +16423,7 @@
       },
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "kbdLo" },
-        { "amt": 3, "dst": "cutoffHp", "src": "kbdLo" }
+        { "amt": -3, "dst": "cutoffHp", "src": "kbdLo" }
       ]
     },
     "patched:* kbd.brillHigh=-5": {
@@ -16464,7 +16464,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -3, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16474,7 +16474,7 @@
       },
       "routes": [
         { "amt": -3, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "patched:* kbd.brillHigh=-2.5": {
@@ -16515,7 +16515,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": -1.5, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16525,7 +16525,7 @@
       },
       "routes": [
         { "amt": -1.5, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "patched:* kbd.brillHigh=2.5": {
@@ -16566,7 +16566,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 1.5, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16576,7 +16576,7 @@
       },
       "routes": [
         { "amt": 1.5, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": 1.5, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": -1.5, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "patched:* kbd.brillHigh=5": {
@@ -16617,7 +16617,7 @@
         "pulse": { "time": 0.25 },
         "routes": [
           { "amt": 3, "dst": "cutoff", "src": "kbdHi" },
-          { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
+          { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
         ],
         "sh": { "glide": 0, "rate": 5 },
         "slew": { "time": 0.1 },
@@ -16627,7 +16627,7 @@
       },
       "routes": [
         { "amt": 3, "dst": "cutoff", "src": "kbdHi" },
-        { "amt": 3, "dst": "cutoffHp", "src": "kbdHi" }
+        { "amt": -3, "dst": "cutoffHp", "src": "kbdHi" }
       ]
     },
     "patched:* kbd.levelLow=-5": {

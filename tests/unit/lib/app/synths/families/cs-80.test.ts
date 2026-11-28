@@ -50,6 +50,12 @@ describe('CS-80 → Deckard’s Dream', () => {
     ]);
   });
 
+  it('brings TOUCH SPEED across at 0, since it answers to pressure there and velocity here', () => {
+    const t = translate({ 'touch.speed': 8 }, [], cs80, dd);
+    expect(t.values).toEqual({ 'touch.speed': 0 });
+    expect(t.changed[0].reason).toMatch(/pressure/);
+  });
+
   it('clamps COARSE to the Deckard’s Dream’s five semitones', () => {
     const t = translate({ 'tune.coarse': -6 }, [], cs80, dd);
     expect(t.values).toEqual({ 'tune.coarse': -5 });
@@ -71,6 +77,15 @@ describe('Deckard’s Dream → CS-80', () => {
     const t = translate({ 'porta.mode': 'off', 'porta.time': 8 }, [], dd, cs80);
     expect(t.values).toEqual({ 'porta.mode': 'porta', 'porta.time': 0 });
     expect(t.changed.map((c) => c.id).sort()).toEqual(['porta.mode', 'porta.time']);
+  });
+
+  it('says a velocity TOUCH SPEED is lost on the CS-80', () => {
+    const t = translate({ 'touch.speed': 8 }, [], dd, cs80);
+    expect(t.values).toEqual({ 'touch.speed': 0 });
+    expect(t.dropped[0]).toMatchObject({
+      id: 'touch.speed',
+      reason: expect.stringMatching(/pressure/),
+    });
   });
 
   it('carries a glide on P or G as it is', () => {

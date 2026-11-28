@@ -14,6 +14,15 @@ const silentOnExt: ControlRule = {
   dropWhen: { when: { id: 'sub.function', eq: 'ext' }, reason: NO_EXT, set: 0 },
 };
 
+/**
+ * TOUCH SPEED is the same lever on both, but the CS-80's answers to pressure, which the app cannot play, and the
+ * Deckard's Dream's to velocity. So it never carries as a value: the condition holds on every FUNCTION, which makes
+ * the drop unconditional (a rule drops only on a condition), and the lever arrives at 0 with the reason.
+ */
+const touchSpeed = (functions: string[], reason: string): ControlRule => ({
+  dropWhen: { when: { id: 'sub.function', in: functions }, reason, set: 0 },
+});
+
 export const CS_80_FAMILY: FamilyMap = {
   family: 'cs-80',
   links: [
@@ -25,6 +34,10 @@ export const CS_80_FAMILY: FamilyMap = {
         'sub.vco': silentOnExt,
         'sub.vcf': silentOnExt,
         'sub.vca': silentOnExt,
+        'touch.speed': touchSpeed(
+          ['sine', 'saw', 'rsaw', 'square', 'noise', 'ext'],
+          'The CS-80’s TOUCH SPEED answers to pressure, which the app cannot play; the Deckard’s Dream’s answers to velocity, so it starts at 0'
+        ),
       },
       lacks: {
         'ch*.tone':
@@ -54,6 +67,10 @@ export const CS_80_FAMILY: FamilyMap = {
             },
           },
         },
+        'touch.speed': touchSpeed(
+          ['sine', 'saw', 'rsaw', 'square', 'rnd', 'sh'],
+          'The CS-80’s TOUCH SPEED answers to pressure, which the app cannot play, so a harder note no longer speeds the sub oscillator'
+        ),
         'porta.time': {
           dropWhen: {
             when: { id: 'porta.mode', eq: 'off' },

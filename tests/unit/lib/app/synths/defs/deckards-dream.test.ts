@@ -140,10 +140,10 @@ describe('Deckard’s Dream VCF and its IL-AL-A-D-R envelope', () => {
     expect(p.hpf?.res).toBeCloseTo(0.98, 10);
   });
 
-  it('moves every filter of both layers by BRIL.', () => {
+  it('opens the band of both layers by BRIL., the low-pass up and the high-pass down', () => {
     const p = run({ 'global.brilliance': 5 });
     expect(p.filter.cutoff).toBeCloseTo(16000 * Math.pow(2, 3), 4);
-    expect(l2(p).hpf?.cutoff).toBeCloseTo(20 * Math.pow(2, 3), 6);
+    expect(l2(p).hpf?.cutoff).toBeCloseTo(20 * Math.pow(2, -3), 6);
   });
 });
 
@@ -151,8 +151,9 @@ describe('Deckard’s Dream touch response', () => {
   it('opens the filters and raises the level by velocity, for the whole note', () => {
     const p = run({ 'ch1.initBrill': 10, 'ch1.initLevel': 5 });
     expect(routesTo(p.routes, 'vel', 'cutoff')).toEqual([{ src: 'vel', dst: 'cutoff', amt: 3 }]);
+    // the band opens from both sides: the high-pass goes down as the low-pass goes up
     expect(routesTo(p.routes, 'vel', 'cutoffHp')).toEqual([
-      { src: 'vel', dst: 'cutoffHp', amt: 3 },
+      { src: 'vel', dst: 'cutoffHp', amt: -3 },
     ]);
     expect(routesTo(p.routes, 'vel', 'amp')).toEqual([
       { src: 'vel', dst: 'amp', amt: 0.5, by: 'env2' },
@@ -256,6 +257,7 @@ describe('Deckard’s Dream mix, glide and sustain', () => {
   it('tilts brightness and level across the keys by KEYBOARD CONTROL', () => {
     const p = run({ 'kbd.brillLow': 5, 'kbd.levelHigh': -5 });
     expect(routesTo(p.routes, 'kbdLo', 'cutoff')[0].amt).toBeCloseTo(3, 10);
+    expect(routesTo(p.routes, 'kbdLo', 'cutoffHp')[0].amt).toBeCloseTo(-3, 10);
     expect(routesTo(p.routes, 'kbdHi', 'amp')[0].amt).toBeCloseTo(-0.8, 10);
     expect(p.keyEnds).toEqual({ mid: 66, span: 30 });
   });

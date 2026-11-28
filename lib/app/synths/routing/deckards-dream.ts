@@ -91,7 +91,10 @@ function layer(c: 1 | 2): { blocks: RoutingBlock[]; edges: RoutingEdge[] } {
         description:
           'A 12 dB high-pass then a 12 dB low-pass filter, each with its own resonance, their cutoffs moved by the filter envelope, velocity and the keys.',
         specs: [
-          { label: 'Stages', value: 'High-pass, then low-pass, 12 dB each' },
+          {
+            label: 'Stages',
+            value: 'High-pass, then low-pass, 12 dB each (the app’s high-pass is 24 dB)',
+          },
           { label: 'Resonance', value: 'No self-oscillation' },
         ],
       },

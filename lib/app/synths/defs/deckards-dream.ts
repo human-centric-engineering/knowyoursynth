@@ -568,8 +568,8 @@ const VELOCITY =
       fmt: pct,
       ...(after ? { ui: true } : {}),
       help: after
-        ? `${NOT_PRESSURE} makes the layer ${brill ? 'brighter (both filters open)' : 'louder'}.`
-        : `How much a harder key makes the layer ${brill ? 'brighter (both filters open)' : 'louder'}, for as long as the note sounds. At 0 velocity changes nothing. ${VELOCITY}`,
+        ? `${NOT_PRESSURE} makes the layer ${brill ? 'brighter (the band between the filters opens)' : 'louder'}.`
+        : `How much a harder key makes the layer ${brill ? 'brighter and fuller (the band between the filters opens)' : 'louder'}, for as long as the note sounds. At 0 velocity changes nothing. ${VELOCITY}`,
     });
   });
   text((TCH_X[0] + TCH_X[1]) / 2, y - 87, 'INITIAL', 8);
@@ -777,7 +777,7 @@ lever('global.brilliance', 902, LY, 'green', {
   label: 'BRIL.',
   name: 'BRILLIANCE',
   fmt: signed,
-  help: 'Moves every filter of both layers together: pulled down the sound is brighter, pushed up more mellow. Centred, it changes nothing.',
+  help: 'Opens or closes the band between every filter of both layers: pulled down the sound is brighter and fuller (the low-pass opens and the high-pass lets more bass through), pushed up more mellow and thinner. Centred, it changes nothing.',
 });
 lever('global.resonance', 948, LY, 'red', {
   min: 0,
@@ -1172,8 +1172,10 @@ function layer(v: ControlValues, c: number, gain: number): LayerParams {
   const resL = clamp((n('resL') / 10) * 0.88 + resAdd, 0, 0.98);
   // resonance piles level onto the cutoff; the filtered path is turned down to match, as a player would
   const resComp = 1 / (1 + 1.4 * resL + 0.6 * resH);
-  // HPF MOD NORMAL: the high-pass envelope moves the other way in frequency, so the band narrows and widens together
-  const hp = hpfHz(n('hpf')) * Math.pow(2, -il + bright);
+  // HPF MOD NORMAL: the high-pass moves the other way in frequency, so the band narrows and widens together. Its
+  // envelope does, and so does everything that brightens (BRIL., INITIAL BRILLIANCE, KEYBOARD CONTROL BRILLIANCE):
+  // brighter is fuller, the low-pass opening up and the high-pass down, as the manual's soft-thin, hard-full says.
+  const hp = hpfHz(n('hpf')) * Math.pow(2, -il - bright);
   const lp = lpfHz(n('lpf')) * Math.pow(2, il + bright);
   // PWM: the layer's own LFO sweeps the pulse width
   route('lfo', 'pw1', (n('pwm') / 10) * 0.35);
@@ -1182,7 +1184,7 @@ function layer(v: ControlValues, c: number, gain: number): LayerParams {
   // INITIAL touch: velocity, for the whole note
   const ib = (n('initBrill') / 10) * 3;
   route('vel', 'cutoff', ib);
-  route('vel', 'cutoffHp', ib);
+  route('vel', 'cutoffHp', -ib);
   route('vel', 'amp', n('initLevel') / 10, 'env2');
   // TOUCH P.BEND (shared): a hard key starts flat by up to TR PITCHBEND RANGE
   route('velp', 'pitchAll', -(num(v, 'touch.pitchbend') / 10) * TR_BEND);
@@ -1190,9 +1192,9 @@ function layer(v: ControlValues, c: number, gain: number): LayerParams {
   const bl = num(v, 'kbd.brillLow') * 0.6,
     bh = num(v, 'kbd.brillHigh') * 0.6;
   route('kbdLo', 'cutoff', bl);
-  route('kbdLo', 'cutoffHp', bl);
+  route('kbdLo', 'cutoffHp', -bl);
   route('kbdHi', 'cutoff', bh);
-  route('kbdHi', 'cutoffHp', bh);
+  route('kbdHi', 'cutoffHp', -bh);
   route('kbdLo', 'amp', num(v, 'kbd.levelLow') * 0.16, 'env2');
   route('kbdHi', 'amp', num(v, 'kbd.levelHigh') * 0.16, 'env2');
   // the SUB OSCILLATOR (shared): RND moves things with the noise generator, as the CS-80's NOISE position does
