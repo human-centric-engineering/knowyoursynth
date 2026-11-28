@@ -73,7 +73,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`ub-xa-d`](./ub-xa-d/README.md)                           | Behringer UB-Xa D                                                                                                                                                | 0.7.0       |
 | [`wasp-deluxe`](./wasp-deluxe/README.md)                   | Behringer WASP Deluxe                                                                                                                                            | 0.7.0       |
 
-## Not in the app yet (12)
+## Not in the app yet (13)
 
 | Folder                                                                                 | Synth                                                                                                      | Spec schema |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------- |
@@ -81,6 +81,7 @@ Without `jsonschema` installed it runs the referential checks only.
 | [`behringer-jn-80`](./behringer-jn-80/README.md)                                       | Behringer JN-80 Classic Analog 8-Voice Programmable Polyphonic Synth                                       | 0.12.0      |
 | [`behringer-wave`](./behringer-wave/README.md)                                         | Behringer WAVE Legendary 8-Voice Multi-Timbral Hybrid Synthesizer                                          | 0.13.0      |
 | [`gamechanger-audio-motor-synth-mkii`](./gamechanger-audio-motor-synth-mkii/README.md) | Gamechanger Audio MOTOR Synth MKII                                                                         | 0.13.0      |
+| [`microfreak`](./microfreak/README.md)                                                 | Arturia MicroFreak                                                                                         | 0.13.0      |
 | [`moog-matriarch`](./moog-matriarch/README.md)                                         | Moog Music Matriarch                                                                                       | 0.12.0      |
 | [`morphor-echon-6`](./morphor-echon-6/README.md)                                       | Morphor ECHON 6                                                                                            | 0.12.0      |
 | [`novation-bass-station-ii`](./novation-bass-station-ii/README.md)                     | Novation Bass Station II                                                                                   | 0.11.0      |

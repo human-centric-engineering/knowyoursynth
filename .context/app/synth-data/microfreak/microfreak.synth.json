@@ -1,0 +1,5047 @@
+{
+  "schema_version": "0.13.0",
+  "device": {
+    "id": "arturia-microfreak",
+    "manufacturer": "Arturia",
+    "model": "MicroFreak",
+    "category": "hybrid synthesiser: digital oscillator, analog filter, 4-voice paraphonic, 25-key capacitive touch keyboard, mod matrix, arpeggiator, sequencer",
+    "based_on": "Arturia design (2019). Seven of the twelve oscillator models use Mutable Instruments Plaits code (MIT licence). Matrix concept from Arturia's MatrixBrute.",
+    "sources": [
+      {
+        "id": "manual",
+        "title": "Arturia MicroFreak User Manual, product version 1.1.2",
+        "kind": "user_manual",
+        "file": "MicroFreak_User_Manual_1.1.2.pdf",
+        "pages": 104,
+        "note": "Revision date 20 May 2019. Covers panel, rear panel, signal flow, presets, matrix, the 12 oscillator models, filter, LFO, envelopes, keyboard, icon strip, arpeggiator, sequencer, Utility and MIDI Control Center settings, CV/gate, cheat sheet. No MIDI CC chart, no specification table."
+      },
+      {
+        "id": "manual_v5",
+        "title": "Arturia MicroFreak User Manual, product version 5.0.0 (6 July 2023), retailer copy",
+        "kind": "other",
+        "url": "https://www.adorama.com/col/productManuals/AR570101.pdf",
+        "note": "Appendix D default CC table; Utility tables for firmware 5; parameters of the oscillator types added since 1.1.2. Used for the CC map and for firmware notes only."
+      },
+      {
+        "id": "arturia_faq",
+        "title": "Arturia support, 'MicroFreak Allgemeine Fragen' (German FAQ)",
+        "kind": "other",
+        "url": "https://support.arturia.com/hc/de/articles/4405748052626-MicroFreak-Allgemeine-Fragen",
+        "note": "Same CC map with ranges (Type 10-127, free Arp/Seq rate 0-123); program change banks of 128; paraphonic per-voice envelopes; grounding."
+      },
+      {
+        "id": "arturia_fw",
+        "title": "Arturia press releases and support notes for firmware 2.0 (Jan 2020), 2.1 (Aug 2020), 3.0 (Jan 2021), 4.0 (Oct 2021), 5.0 (2023)",
+        "kind": "other",
+        "url": "https://support.arturia.com/hc/en-us/articles/9002305582108-MicroFreak-Firmware-V5",
+        "note": "Also: arturia.com/company/press/press-releases/microfreak-receives-firmware-update-2; MusicRadar, Engadget and Synthtopia reports."
+      },
+      {
+        "id": "forum_cc9",
+        "title": "Arturia forum, 'Transmitted vs received MIDI CC values for Digital Oscillator Type parameter don't match'",
+        "kind": "other",
+        "url": "https://forum.arturia.com/t/transmitted-vs-received-midi-cc-values-for-digital-oscillator-type-parameter-dont-match/6268",
+        "note": "User-measured CC 9 values per type on firmware 5 (22 types)."
+      },
+      {
+        "id": "thomann",
+        "title": "Thomann UK, Arturia MicroFreak product page",
+        "kind": "other",
+        "url": "https://www.thomann.co.uk/arturia_microfreak.htm",
+        "note": "311 x 233 x 55 mm, 1.02 kg; CV/gate/pressure and clock on 3.5 mm jacks; filter described as an analog state-variable design inspired by the SEM."
+      }
+    ]
+  },
+  "architecture": {
+    "synthesis": "subtractive",
+    "synthesis_note": "One digital oscillator running one of 12 models (wavetable, virtual analogue, FM, granular formant, chords, speech, physical models) with three macro parameters Wave, Timbre and Shape, into an analog filter and VCA.",
+    "signal_path": "digital",
+    "signal_path_note": "Hybrid: digital oscillator; analog multimode filter and analog VCA; extra digital VCAs per voice in paraphonic mode. All controls are digitally scanned and saved.",
+    "voices": 4,
+    "polyphony_mode": "Mono, or paraphonic up to 4 voices sharing one filter (Paraphonic button). Per-voice amplitude via internal digital VCA envelopes ('extended paraphony'). The Chords model disables paraphony.",
+    "poly_chain_max_units": null,
+    "patch_memory": true,
+    "patch_memory_note": "256 presets: 1-128 factory, 129-160 templates, the rest empty (Init/Bass). A preset stores knob values, matrix, both sequences with modulation tracks and Utility>Preset settings. Hold, Spice/Dice and arp patterns are not saved.",
+    "semi_modular": false,
+    "panel_counts": {
+      "knobs": 18,
+      "encoders": 2,
+      "buttons": 16,
+      "touch_icons": 8,
+      "touch_strips": 1,
+      "keys": 25,
+      "matrix_leds": 35,
+      "display": "OLED"
+    },
+    "panel_counts_note": "Counted from the panel images. Knobs: Master, Glide, Type, Wave, Timbre, Shape, Cutoff, Resonance, Rise, Fall, Hold, Amount, Arp/Seq Rate, LFO Rate, Attack, Decay/Rel, Sustain, Filter Amt; encoders: Matrix, Preset. Buttons: Assign1-3, Paraphonic, Panel, Save, Utility, Filter Type, Cycling Env Mode, Octave left/right, Shift, Arp|Seq, Oct|Mod, LFO Shape, Amp Mod. Touch icons: Hold, Up|A, Order|B, Rand|O (record), Pattern|> (play), Spice, Dice, Bend.",
+    "summary": "Keyboard, arpeggiator, sequencer or MIDI notes go through glide to the digital oscillator; its Type, Wave, Timbre and Shape set the model and sound. The analog filter (LP/BP/HP, cutoff, resonance) is swept by the main envelope via Filter Amt; the VCA follows the key gate or, with Amp Mod on, the envelope. Five sources (cycling envelope, envelope, LFO, pressure, key/arp) reach Pitch, Wave, Timbre and Cutoff plus three assignable destinations through a 35-point bipolar matrix."
+  },
+  "modules": [
+    {
+      "id": "kbd",
+      "type": "manual_controller",
+      "name": "Capacitive keyboard",
+      "panel_section": "keyboard / OCTAVE",
+      "scope": "common",
+      "description": "25-key touch capacitive keyboard (2 octaves) generating gate, pitch and pressure (aftertouch or velocity per preset). Octave buttons shift +/-3 octaves; Key Hold latches notes.",
+      "properties": {
+        "keys": 25,
+        "pressure": "aftertouch or velocity (per preset)",
+        "octave_shift": [-3, 3]
+      },
+      "inputs": [],
+      "outputs": ["kbd.notes", "kbd.pressure"]
+    },
+    {
+      "id": "strip",
+      "type": "manual_controller",
+      "name": "Touch strip",
+      "panel_section": "icon strip [Spice, Dice, Bend]",
+      "scope": "common",
+      "description": "Touch strip in three modes: Bend (pitch, absolute or relative), Spice (amount of gate/trigger variation), Dice (re-roll the variation).",
+      "inputs": [],
+      "outputs": ["strip.bend"]
+    },
+    {
+      "id": "midi",
+      "type": "midi_to_cv",
+      "name": "MIDI and USB interface",
+      "panel_section": "rear panel",
+      "scope": "common",
+      "description": "MIDI on 3.5 mm TRS jacks (DIN adapters supplied) and class-compliant USB. Receives notes, CCs, program change, clock, start/stop and sustain; transmits keyboard notes (fully polyphonic), aftertouch, velocity, knob CCs, arp/seq notes and clock.",
+      "inputs": ["midi.din_in", "midi.usb", "midi.tx"],
+      "outputs": ["midi.notes", "midi.clock", "midi.din_out"]
+    },
+    {
+      "id": "clock",
+      "type": "gate_logic",
+      "name": "Tempo clock and sync",
+      "panel_section": "ARP / SEQ [Rate] / rear CLOCK",
+      "scope": "common",
+      "description": "Internal tempo (default 120 BPM) or USB, MIDI or analog clock (One step, 2, 24 or 48 PPQ). Clock out sends clock while playing; a TRS lead also carries start.",
+      "inputs": ["clock.ext_in", "clock.midi"],
+      "outputs": ["clock.out", "clock.ext_out"]
+    },
+    {
+      "id": "arp",
+      "type": "arpeggiator",
+      "name": "Arpeggiator",
+      "panel_section": "ARP / SEQ + icon strip",
+      "scope": "common",
+      "description": "Up, Order, Random or Pattern (generated semi-random patterns), range 1-4 octaves, free BPM or synced divisions, swing 50-75%. Patterns can be copied to sequence A or B.",
+      "inputs": ["arp.in", "arp.clock", "arp.mod"],
+      "outputs": ["arp.out"]
+    },
+    {
+      "id": "seq",
+      "type": "sequencer",
+      "name": "Sequencer",
+      "panel_section": "ARP / SEQ + icon strip",
+      "scope": "common",
+      "description": "Two paraphonic sequences (A, B) per preset, 4-64 steps (shared length), up to 4 notes, velocity and tie/rest per step, step or real-time recording, four modulation tracks recording knob values.",
+      "properties": {
+        "sequences": 2,
+        "steps": [4, 64],
+        "notes_per_step": 4,
+        "mod_tracks": 4
+      },
+      "inputs": ["seq.in", "seq.clock"],
+      "outputs": ["seq.notes"]
+    },
+    {
+      "id": "voice",
+      "type": "voice_allocator",
+      "name": "Voice assignment",
+      "panel_section": "Paraphonic",
+      "scope": "common",
+      "description": "Assigns keyboard, MIDI, arpeggiator and sequencer notes to 1 or 4 paraphonic voices. Keyboard and MIDI notes have priority over the sequencer; in mono a held key pauses the sequence.",
+      "properties": {
+        "voices": 4
+      },
+      "inputs": ["voice.kbd", "voice.midi", "voice.arp", "voice.seq"],
+      "outputs": ["voice.pitch", "voice.gate", "voice.key", "voice.cv"]
+    },
+    {
+      "id": "glide",
+      "type": "slew_limiter",
+      "name": "Glide",
+      "panel_section": "Glide",
+      "scope": "per_voice",
+      "description": "Portamento: time (0 to about 10 s), synced divisions, or rate per octave (Utility Glide mode).",
+      "inputs": ["glide.in", "glide.mod"],
+      "outputs": ["glide.out"]
+    },
+    {
+      "id": "osc",
+      "type": "oscillator",
+      "name": "Digital oscillator",
+      "panel_section": "DIGITAL OSCILLATOR",
+      "scope": "per_voice",
+      "description": "One oscillator running one of 12 models; Wave, Timbre and Shape are the model's three parameters. Range C-2 to G8. Wave, Timbre and Shape modulation are per voice; Type changes for all voices.",
+      "properties": {
+        "models": 12,
+        "pitch_range": "C-2 to G8"
+      },
+      "inputs": ["osc.pitch", "osc.type_mod", "osc.wave_mod", "osc.timbre_mod", "osc.shape_mod"],
+      "outputs": ["osc.out"]
+    },
+    {
+      "id": "vcf",
+      "type": "filter",
+      "name": "Analog filter",
+      "panel_section": "ANALOG FILTER",
+      "scope": "common",
+      "description": "Analog 12 dB/octave multimode filter: low pass, band pass, high pass. Cutoff about 30 Hz to above 15 kHz; self-oscillates at full resonance. One filter shared by all voices.",
+      "properties": {
+        "slope_db_per_oct": 12,
+        "modes": ["LPF", "BPF", "HPF"],
+        "cutoff_hz": [30, 15000],
+        "design": "state variable, described by retailers as Oberheim SEM-inspired (not stated in the manual)"
+      },
+      "inputs": ["vcf.in", "vcf.env", "vcf.cutoff_mod", "vcf.res_mod"],
+      "outputs": ["vcf.out"]
+    },
+    {
+      "id": "vca",
+      "type": "vca",
+      "name": "VCA",
+      "panel_section": "ENVELOPE [Amp Mod]",
+      "scope": "common",
+      "description": "Analog VCA controlled by the key gate (Amp Mod off) or the envelope (Amp Mod on); in paraphonic mode, internal digital VCAs give each voice its own envelope copy.",
+      "inputs": ["vca.in", "vca.cv"],
+      "outputs": ["vca.out"]
+    },
+    {
+      "id": "env",
+      "type": "envelope",
+      "name": "Envelope",
+      "panel_section": "ENVELOPE",
+      "scope": "per_voice",
+      "description": "ADS envelope (Decay/Release on one knob): attack 0-10 s, decay/release 0-13 s, sustain level. Hardwired to cutoff through bipolar Filter Amt and, with Amp Mod, to the VCA. Polyphonic as a matrix source.",
+      "properties": {
+        "stages": "ADS (decay = release)",
+        "attack_s": [0, 10],
+        "decay_release_s": [0, 13]
+      },
+      "inputs": ["env.gate", "env.mod"],
+      "outputs": ["env.out"]
+    },
+    {
+      "id": "cyc",
+      "type": "envelope",
+      "name": "Cycling envelope",
+      "panel_section": "CYCLING ENVELOPE",
+      "scope": "common",
+      "description": "Rise, Fall and Hold/Sustain with shapeable Rise and Fall curves (Shift; log-linear-exp) and output Amount. Modes: Env (one-shot, sustains while held), Run (free-running, reset by MIDI start), Loop (cycling, reset by each trigger).",
+      "properties": {
+        "modes": ["env", "run", "loop"]
+      },
+      "inputs": ["cyc.trig", "cyc.mod"],
+      "outputs": ["cyc.out"]
+    },
+    {
+      "id": "lfo",
+      "type": "lfo",
+      "name": "LFO",
+      "panel_section": "LFO",
+      "scope": "common",
+      "description": "Six shapes (sine, triangle, saw up, square, random stepped, random gliding). Free 0.06-100 Hz or synced 8/1 to 1/32. Optional retrigger per preset.",
+      "properties": {
+        "shapes": 6,
+        "rate_hz": [0.06, 100]
+      },
+      "inputs": ["lfo.clock", "lfo.retrig", "lfo.mod"],
+      "outputs": ["lfo.out"]
+    },
+    {
+      "id": "mx",
+      "type": "modulation_bus",
+      "name": "Matrix assignable columns",
+      "panel_section": "Matrix [Assign1-3]",
+      "scope": "common",
+      "description": "The three assignable matrix columns: each sums its five source points and drives the parameter chosen for that column (almost any knob, or another matrix point's amount).",
+      "properties": {
+        "points": 15,
+        "columns": 3
+      },
+      "inputs": ["mx.cycenv", "mx.env", "mx.lfo", "mx.press", "mx.key", "mx.amount_mod"],
+      "outputs": ["mx.assign1", "mx.assign2", "mx.assign3"]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Output",
+      "panel_section": "Master / rear OUTPUT",
+      "scope": "common",
+      "description": "Mono line output (balanced TRS) and headphone output, both after Master volume; per-preset relative volume.",
+      "inputs": ["out.in"],
+      "outputs": ["out.line", "out.phones"]
+    },
+    {
+      "id": "cvout",
+      "type": "midi_to_cv",
+      "name": "CV/Gate/Pressure outputs",
+      "panel_section": "rear CV / GATE OUT",
+      "scope": "common",
+      "description": "Pitch (1 V/oct, Hz/V or 1.2 V/oct), gate (S-trig, V-trig 5 V or 12 V) and pressure or velocity (1-10 V range). Sequencer: a step's lowest note; keyboard: the last note played.",
+      "inputs": ["cvout.notes", "cvout.pressure"],
+      "outputs": ["cvout.pitch", "cvout.gate", "cvout.press"]
+    },
+    {
+      "id": "ui",
+      "type": "manual_controller",
+      "name": "Display, presets and global controls",
+      "panel_section": "display / Preset / Save / Utility / Panel / Shift",
+      "scope": "common",
+      "description": "OLED display, Preset encoder, Save, Utility menus, Panel (apply current knob positions), Shift.",
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "parameters": [
+    {
+      "id": "osc.type",
+      "module": "osc",
+      "label": "Type",
+      "kind": "enum",
+      "manual_ref": 36,
+      "values": [
+        {
+          "value": "basicwaves",
+          "label": "BasicWaves",
+          "meaning": "Arturia. Wave = Morph: square to saw to two saws; Timbre = Sym: pulse width or phase between the two saws (no effect at saw, Wave 50); Shape = Sub: sine sub-oscillator."
+        },
+        {
+          "value": "superwave",
+          "label": "SuperWave",
+          "meaning": "Arturia. Wave: waveform to multiply (saw, square, triangle, sine); Timbre = Detune; Shape = Volume of the detuned copies."
+        },
+        {
+          "value": "wavetable",
+          "label": "Wavetable",
+          "meaning": "Arturia. Wave = Table (16 tables); Timbre = Position (32 cycles of 256 samples); Shape = Chorus."
+        },
+        {
+          "value": "harmo",
+          "label": "Harmo",
+          "meaning": "Arturia harmonic oscillator. Wave = Content (harmonic amplitude tables); Timbre = Sculpting (sine to triangle partials); Shape = Chorus."
+        },
+        {
+          "value": "karplusstr",
+          "label": "KarplusStr",
+          "meaning": "Arturia Karplus-Strong. Wave = Bow (continuous excitation); Timbre = Position (strike position/strength); Shape = Decay."
+        },
+        {
+          "value": "v_analog",
+          "label": "V.Analog",
+          "meaning": "Plaits. Wave = Detune between two waves; Timbre = Shape (narrow pulse to square to hard-sync formants); Shape = Wave (triangle to saw with widening notch)."
+        },
+        {
+          "value": "waveshaper",
+          "label": "Waveshaper",
+          "meaning": "Plaits. Wave = waveshaper waveform; Timbre = wavefolder Amount; Shape = Asym (asymmetry)."
+        },
+        {
+          "value": "two_op_fm",
+          "label": "Two Op.FM",
+          "meaning": "Plaits. Wave = Ratio; Timbre = Amount (modulation index); Shape = feedback (operator 2 self-modulation)."
+        },
+        {
+          "value": "formant",
+          "label": "Formant",
+          "meaning": "Plaits granular formant. Wave = Interval (formant 1:2 ratio); Timbre = Formant frequency; Shape = formant width and shape."
+        },
+        {
+          "value": "chords",
+          "label": "Chords",
+          "meaning": "Plaits, four-voice chord oscillator (disables paraphony; last key is the root). Wave = Type (octave, 5th, sus4, m, m7, m9, m11, 6/9, M9, M7, M); Timbre = Inv/Transp; Shape = Waveform (string-machine waves, then a 16-wave table)."
+        },
+        {
+          "value": "speech",
+          "label": "Speech",
+          "meaning": "Plaits vowel and speech. Wave = Type (formants up to about 100, then libraries of colours, numbers, letters, words); Timbre = formant shift; Shape = Word within the library."
+        },
+        {
+          "value": "modal",
+          "label": "Modal",
+          "meaning": "Plaits modal resonator. Wave = Inharm (inharmonicity / material); Timbre = excitation brightness and dust density; Shape = Decay (damping)."
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 9"
+        }
+      ],
+      "function": "Oscillator model; each value lists what Wave, Timbre and Shape do. Can be modulated (all voices change together).",
+      "note": "Order follows the manual's list; whether it matches the knob order is not stated."
+    },
+    {
+      "id": "osc.wave",
+      "module": "osc",
+      "label": "Wave",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 10"
+        }
+      ],
+      "function": "First model parameter (Plaits 'Harmonics'). Meaning depends on Type (see osc.type values)."
+    },
+    {
+      "id": "osc.timbre",
+      "module": "osc",
+      "label": "Timbre",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 12"
+        }
+      ],
+      "function": "Second model parameter (Plaits 'Timbre'). Meaning depends on Type (see osc.type values)."
+    },
+    {
+      "id": "osc.shape",
+      "module": "osc",
+      "label": "Shape",
+      "kind": "continuous",
+      "manual_ref": 36,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 13"
+        }
+      ],
+      "function": "Third model parameter (Plaits 'Morph'). Meaning depends on Type (see osc.type values)."
+    },
+    {
+      "id": "glide.amount",
+      "module": "glide",
+      "label": "Glide",
+      "kind": "continuous",
+      "manual_ref": 60,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 5"
+        }
+      ],
+      "function": "Glide amount: time (off to about 10 s), synced division (1/32T to 1/1) or rate per octave, per Utility Glide mode."
+    },
+    {
+      "id": "vcf.type",
+      "module": "vcf",
+      "label": "Type",
+      "kind": "enum",
+      "manual_ref": 45,
+      "values": [
+        {
+          "value": "lpf",
+          "label": "LPF",
+          "meaning": "removes frequencies above cutoff"
+        },
+        {
+          "value": "bpf",
+          "label": "BPF",
+          "meaning": "removes frequencies above and below cutoff"
+        },
+        {
+          "value": "hpf",
+          "label": "HPF",
+          "meaning": "removes frequencies below cutoff"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Type button, press to cycle"
+        }
+      ],
+      "function": "Filter mode (LED shows LPF, BPF or HPF)."
+    },
+    {
+      "id": "vcf.cutoff",
+      "module": "vcf",
+      "label": "Cutoff",
+      "kind": "continuous",
+      "manual_ref": 47,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 23"
+        }
+      ],
+      "function": "Cutoff frequency, about 30 Hz (fully anticlockwise) to above 15 kHz."
+    },
+    {
+      "id": "vcf.resonance",
+      "module": "vcf",
+      "label": "Resonance",
+      "kind": "continuous",
+      "manual_ref": 47,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 83"
+        }
+      ],
+      "function": "Resonance; self-oscillation (sine) at maximum."
+    },
+    {
+      "id": "cyc.mode",
+      "module": "cyc",
+      "label": "Mode",
+      "kind": "enum",
+      "manual_ref": 54,
+      "values": [
+        {
+          "value": "env",
+          "label": "Env",
+          "meaning": "one-shot: rise, sustain at the Hold/Sustain level while the gate is held, then fall"
+        },
+        {
+          "value": "run",
+          "label": "Run",
+          "meaning": "free-running cycle; resets on MIDI start"
+        },
+        {
+          "value": "loop",
+          "label": "Loop",
+          "meaning": "cycles, resetting on each keyboard, arp or sequencer trigger"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Mode button, press to cycle"
+        }
+      ],
+      "function": "Cycling envelope mode (LEDs Env, Run, Loop)."
+    },
+    {
+      "id": "cyc.rise",
+      "module": "cyc",
+      "label": "Rise",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 102"
+        }
+      ],
+      "function": "Time to reach maximum."
+    },
+    {
+      "id": "cyc.rise_shape",
+      "module": "cyc",
+      "label": "Rise Shape",
+      "kind": "continuous",
+      "manual_ref": 55,
+      "range": {
+        "min": -50,
+        "max": 50,
+        "note": "display range not stated"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Shift + Rise"
+        }
+      ],
+      "function": "Rise curve: left more logarithmic, centre linear (dead zone, 'LINEAR'), right more exponential.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "cyc.fall",
+      "module": "cyc",
+      "label": "Fall",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 103"
+        }
+      ],
+      "function": "Time to fall to zero."
+    },
+    {
+      "id": "cyc.fall_shape",
+      "module": "cyc",
+      "label": "Fall Shape",
+      "kind": "continuous",
+      "manual_ref": 55,
+      "range": {
+        "min": -50,
+        "max": 50,
+        "note": "display range not stated"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Shift + Fall"
+        }
+      ],
+      "function": "Fall curve, as Rise Shape.",
+      "confidence": "inferred"
+    },
+    {
+      "id": "cyc.hold",
+      "module": "cyc",
+      "label": "Hold / Sustain",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 28"
+        }
+      ],
+      "function": "Env mode: sustain level. Run and Loop: time held at the top before Fall."
+    },
+    {
+      "id": "cyc.amount",
+      "module": "cyc",
+      "label": "Amount",
+      "kind": "continuous",
+      "manual_ref": 54,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 24"
+        }
+      ],
+      "function": "Output level of the cycling envelope into the matrix."
+    },
+    {
+      "id": "lfo.shape",
+      "module": "lfo",
+      "label": "Shape",
+      "kind": "enum",
+      "manual_ref": 49,
+      "values": [
+        {
+          "value": "sine",
+          "label": "Sine"
+        },
+        {
+          "value": "triangle",
+          "label": "Triangle"
+        },
+        {
+          "value": "saw",
+          "label": "Sawtooth (rising)"
+        },
+        {
+          "value": "square",
+          "label": "Square (50% duty)"
+        },
+        {
+          "value": "random",
+          "label": "Random (stepped, S&H)"
+        },
+        {
+          "value": "random_glide",
+          "label": "Random gliding (smoothed)"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Shape button, press to cycle; six LEDs"
+        }
+      ],
+      "function": "LFO waveform."
+    },
+    {
+      "id": "lfo.rate",
+      "module": "lfo",
+      "label": "Rate",
+      "kind": "continuous",
+      "manual_ref": 50,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 93 (free)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 94 (synced)"
+        }
+      ],
+      "function": "LFO speed: 0.06-100 Hz free, or synced division 8/1, 4/1, 2/1, 1/1, 1/2, 1/2t, 1/4, 1/4t, 1/8, 1/8t, 1/16, 1/16t, 1/32."
+    },
+    {
+      "id": "lfo.sync",
+      "module": "lfo",
+      "label": "Sync",
+      "kind": "boolean",
+      "manual_ref": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press the Rate knob"
+        }
+      ],
+      "function": "Locks the LFO rate to the arp/seq clock (Sync LED)."
+    },
+    {
+      "id": "lfo.retrig",
+      "module": "lfo",
+      "label": "LFO retrig",
+      "kind": "enum",
+      "manual_ref": 50,
+      "values": [
+        {
+          "value": "off",
+          "label": "OFF"
+        },
+        {
+          "value": "on",
+          "label": "ON",
+          "meaning": "restart on each keyboard, arp or sequencer trigger"
+        },
+        {
+          "value": "legato",
+          "label": "Legato",
+          "meaning": "no restart when playing legato"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > LFO retrig"
+        }
+      ],
+      "function": "LFO restart on note triggers."
+    },
+    {
+      "id": "env.attack",
+      "module": "env",
+      "label": "Attack",
+      "kind": "continuous",
+      "manual_ref": 53,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 105"
+        }
+      ],
+      "function": "Attack time, 0 ms to 10 s."
+    },
+    {
+      "id": "env.decay",
+      "module": "env",
+      "label": "Decay / Rel",
+      "kind": "continuous",
+      "manual_ref": 53,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 106"
+        }
+      ],
+      "function": "Decay to sustain and release after key-up, 0 ms to 13 s."
+    },
+    {
+      "id": "env.sustain",
+      "module": "env",
+      "label": "Sustain",
+      "kind": "continuous",
+      "manual_ref": 53,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 29"
+        }
+      ],
+      "function": "Sustain level."
+    },
+    {
+      "id": "env.filter_amt",
+      "module": "env",
+      "label": "Filter Amt",
+      "kind": "continuous",
+      "manual_ref": 53,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "menu",
+          "note": "Matrix point Env > Cutoff"
+        },
+        {
+          "type": "midi",
+          "message": "CC 26"
+        }
+      ],
+      "function": "Bipolar envelope amount on cutoff; this is the Env > Cutoff matrix point (it lights when the knob moves)."
+    },
+    {
+      "id": "env.amp_mod",
+      "module": "env",
+      "label": "Amp Mod",
+      "kind": "boolean",
+      "manual_ref": 54,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "On: the envelope controls the VCA (and per-voice VCAs in paraphonic mode). Off: the key gate opens the VCA."
+    },
+    {
+      "id": "env.reset",
+      "module": "env",
+      "label": "Envelope legato / reset",
+      "kind": "boolean",
+      "manual_ref": 55,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Envelope reset (or 'Envelope legato')"
+        }
+      ],
+      "function": "Whether the envelopes restart on each new note when playing legato (applies to both envelopes, mono and paraphonic).",
+      "note": "Named 'Envelope legato' in the p.24 table and the p.55 text, 'Envelope reset' in the p.83 table and p.54 note."
+    },
+    {
+      "id": "mx.cycenv.pitch",
+      "module": "mx",
+      "label": "CycEnv > Pitch",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to Pitch."
+    },
+    {
+      "id": "mx.cycenv.wave",
+      "module": "mx",
+      "label": "CycEnv > Wave",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to Wave."
+    },
+    {
+      "id": "mx.cycenv.timbre",
+      "module": "mx",
+      "label": "CycEnv > Timbre",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to Timbre."
+    },
+    {
+      "id": "mx.cycenv.cutoff",
+      "module": "mx",
+      "label": "CycEnv > Cutoff",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to Cutoff."
+    },
+    {
+      "id": "mx.cycenv.assign1",
+      "module": "mx",
+      "label": "CycEnv > Assign1",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to the Assign1 destination."
+    },
+    {
+      "id": "mx.cycenv.assign2",
+      "module": "mx",
+      "label": "CycEnv > Assign2",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to the Assign2 destination."
+    },
+    {
+      "id": "mx.cycenv.assign3",
+      "module": "mx",
+      "label": "CycEnv > Assign3",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: CycEnv to the Assign3 destination."
+    },
+    {
+      "id": "mx.env.pitch",
+      "module": "mx",
+      "label": "Env > Pitch",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Env to Pitch."
+    },
+    {
+      "id": "mx.env.wave",
+      "module": "mx",
+      "label": "Env > Wave",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Env to Wave."
+    },
+    {
+      "id": "mx.env.timbre",
+      "module": "mx",
+      "label": "Env > Timbre",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Env to Timbre."
+    },
+    {
+      "id": "mx.env.assign1",
+      "module": "mx",
+      "label": "Env > Assign1",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Env to the Assign1 destination."
+    },
+    {
+      "id": "mx.env.assign2",
+      "module": "mx",
+      "label": "Env > Assign2",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Env to the Assign2 destination."
+    },
+    {
+      "id": "mx.env.assign3",
+      "module": "mx",
+      "label": "Env > Assign3",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Env to the Assign3 destination."
+    },
+    {
+      "id": "mx.lfo.pitch",
+      "module": "mx",
+      "label": "LFO > Pitch",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to Pitch."
+    },
+    {
+      "id": "mx.lfo.wave",
+      "module": "mx",
+      "label": "LFO > Wave",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to Wave."
+    },
+    {
+      "id": "mx.lfo.timbre",
+      "module": "mx",
+      "label": "LFO > Timbre",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to Timbre."
+    },
+    {
+      "id": "mx.lfo.cutoff",
+      "module": "mx",
+      "label": "LFO > Cutoff",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to Cutoff."
+    },
+    {
+      "id": "mx.lfo.assign1",
+      "module": "mx",
+      "label": "LFO > Assign1",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to the Assign1 destination."
+    },
+    {
+      "id": "mx.lfo.assign2",
+      "module": "mx",
+      "label": "LFO > Assign2",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to the Assign2 destination."
+    },
+    {
+      "id": "mx.lfo.assign3",
+      "module": "mx",
+      "label": "LFO > Assign3",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: LFO to the Assign3 destination."
+    },
+    {
+      "id": "mx.press.pitch",
+      "module": "mx",
+      "label": "Press > Pitch",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to Pitch."
+    },
+    {
+      "id": "mx.press.wave",
+      "module": "mx",
+      "label": "Press > Wave",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to Wave."
+    },
+    {
+      "id": "mx.press.timbre",
+      "module": "mx",
+      "label": "Press > Timbre",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to Timbre."
+    },
+    {
+      "id": "mx.press.cutoff",
+      "module": "mx",
+      "label": "Press > Cutoff",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to Cutoff."
+    },
+    {
+      "id": "mx.press.assign1",
+      "module": "mx",
+      "label": "Press > Assign1",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to the Assign1 destination."
+    },
+    {
+      "id": "mx.press.assign2",
+      "module": "mx",
+      "label": "Press > Assign2",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to the Assign2 destination."
+    },
+    {
+      "id": "mx.press.assign3",
+      "module": "mx",
+      "label": "Press > Assign3",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Press to the Assign3 destination."
+    },
+    {
+      "id": "mx.key.pitch",
+      "module": "mx",
+      "label": "Key/Arp > Pitch",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to Pitch."
+    },
+    {
+      "id": "mx.key.wave",
+      "module": "mx",
+      "label": "Key/Arp > Wave",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to Wave."
+    },
+    {
+      "id": "mx.key.timbre",
+      "module": "mx",
+      "label": "Key/Arp > Timbre",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to Timbre."
+    },
+    {
+      "id": "mx.key.cutoff",
+      "module": "mx",
+      "label": "Key/Arp > Cutoff",
+      "kind": "continuous",
+      "manual_ref": 30,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to Cutoff."
+    },
+    {
+      "id": "mx.key.assign1",
+      "module": "mx",
+      "label": "Key/Arp > Assign1",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to the Assign1 destination."
+    },
+    {
+      "id": "mx.key.assign2",
+      "module": "mx",
+      "label": "Key/Arp > Assign2",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to the Assign2 destination."
+    },
+    {
+      "id": "mx.key.assign3",
+      "module": "mx",
+      "label": "Key/Arp > Assign3",
+      "kind": "continuous",
+      "manual_ref": 31,
+      "range": {
+        "min": -100,
+        "max": 100,
+        "note": "percent, bipolar"
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Select with the Matrix encoder, press to edit (-100 to +100); hold the encoder 0.5 s to clear."
+        }
+      ],
+      "function": "Matrix point: Key/Arp to the Assign3 destination."
+    },
+    {
+      "id": "mx.assign1.target",
+      "module": "mx",
+      "label": "Assign1",
+      "kind": "enum",
+      "manual_ref": 31,
+      "values": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "glide",
+          "label": "Glide"
+        },
+        {
+          "value": "osc_type",
+          "label": "Oscillator Type"
+        },
+        {
+          "value": "osc_wave",
+          "label": "Oscillator Wave"
+        },
+        {
+          "value": "osc_timbre",
+          "label": "Oscillator Timbre"
+        },
+        {
+          "value": "osc_shape",
+          "label": "Oscillator Shape"
+        },
+        {
+          "value": "cutoff",
+          "label": "Filter Cutoff"
+        },
+        {
+          "value": "resonance",
+          "label": "Filter Resonance"
+        },
+        {
+          "value": "env_attack",
+          "label": "Envelope Attack"
+        },
+        {
+          "value": "env_decay",
+          "label": "Envelope Decay"
+        },
+        {
+          "value": "env_sustain",
+          "label": "Envelope Sustain"
+        },
+        {
+          "value": "env_filter_amt",
+          "label": "Envelope Filter Amount"
+        },
+        {
+          "value": "lfo_rate",
+          "label": "LFO Rate"
+        },
+        {
+          "value": "arp_rate",
+          "label": "Arp&Seq Rate"
+        },
+        {
+          "value": "cyc_rise",
+          "label": "Cycling Env Rise"
+        },
+        {
+          "value": "cyc_fall",
+          "label": "Cycling Env Fall"
+        },
+        {
+          "value": "cyc_hold",
+          "label": "Cycling Env Hold"
+        },
+        {
+          "value": "cyc_amount",
+          "label": "Cycling Env Amount"
+        },
+        {
+          "value": "matrix_point",
+          "label": "Matrix Modulation Amount (another point's amount)"
+        }
+      ],
+      "default": "none",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "hold Assign1 + move a knob or the Matrix encoder"
+        }
+      ],
+      "function": "Destination of matrix column 1: hold Assign1 and move a knob (or select a matrix point to modulate its amount).",
+      "note": "Not assignable: Master Volume, Preset encoder, Shift-layer parameters (e.g. cycling envelope shapes), buttons and icons."
+    },
+    {
+      "id": "mx.assign2.target",
+      "module": "mx",
+      "label": "Assign2",
+      "kind": "enum",
+      "manual_ref": 31,
+      "values": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "glide",
+          "label": "Glide"
+        },
+        {
+          "value": "osc_type",
+          "label": "Oscillator Type"
+        },
+        {
+          "value": "osc_wave",
+          "label": "Oscillator Wave"
+        },
+        {
+          "value": "osc_timbre",
+          "label": "Oscillator Timbre"
+        },
+        {
+          "value": "osc_shape",
+          "label": "Oscillator Shape"
+        },
+        {
+          "value": "cutoff",
+          "label": "Filter Cutoff"
+        },
+        {
+          "value": "resonance",
+          "label": "Filter Resonance"
+        },
+        {
+          "value": "env_attack",
+          "label": "Envelope Attack"
+        },
+        {
+          "value": "env_decay",
+          "label": "Envelope Decay"
+        },
+        {
+          "value": "env_sustain",
+          "label": "Envelope Sustain"
+        },
+        {
+          "value": "env_filter_amt",
+          "label": "Envelope Filter Amount"
+        },
+        {
+          "value": "lfo_rate",
+          "label": "LFO Rate"
+        },
+        {
+          "value": "arp_rate",
+          "label": "Arp&Seq Rate"
+        },
+        {
+          "value": "cyc_rise",
+          "label": "Cycling Env Rise"
+        },
+        {
+          "value": "cyc_fall",
+          "label": "Cycling Env Fall"
+        },
+        {
+          "value": "cyc_hold",
+          "label": "Cycling Env Hold"
+        },
+        {
+          "value": "cyc_amount",
+          "label": "Cycling Env Amount"
+        },
+        {
+          "value": "matrix_point",
+          "label": "Matrix Modulation Amount (another point's amount)"
+        }
+      ],
+      "default": "none",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "hold Assign2 + move a knob or the Matrix encoder"
+        }
+      ],
+      "function": "Destination of matrix column 2: hold Assign2 and move a knob (or select a matrix point to modulate its amount).",
+      "note": "Not assignable: Master Volume, Preset encoder, Shift-layer parameters (e.g. cycling envelope shapes), buttons and icons."
+    },
+    {
+      "id": "mx.assign3.target",
+      "module": "mx",
+      "label": "Assign3",
+      "kind": "enum",
+      "manual_ref": 31,
+      "values": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "glide",
+          "label": "Glide"
+        },
+        {
+          "value": "osc_type",
+          "label": "Oscillator Type"
+        },
+        {
+          "value": "osc_wave",
+          "label": "Oscillator Wave"
+        },
+        {
+          "value": "osc_timbre",
+          "label": "Oscillator Timbre"
+        },
+        {
+          "value": "osc_shape",
+          "label": "Oscillator Shape"
+        },
+        {
+          "value": "cutoff",
+          "label": "Filter Cutoff"
+        },
+        {
+          "value": "resonance",
+          "label": "Filter Resonance"
+        },
+        {
+          "value": "env_attack",
+          "label": "Envelope Attack"
+        },
+        {
+          "value": "env_decay",
+          "label": "Envelope Decay"
+        },
+        {
+          "value": "env_sustain",
+          "label": "Envelope Sustain"
+        },
+        {
+          "value": "env_filter_amt",
+          "label": "Envelope Filter Amount"
+        },
+        {
+          "value": "lfo_rate",
+          "label": "LFO Rate"
+        },
+        {
+          "value": "arp_rate",
+          "label": "Arp&Seq Rate"
+        },
+        {
+          "value": "cyc_rise",
+          "label": "Cycling Env Rise"
+        },
+        {
+          "value": "cyc_fall",
+          "label": "Cycling Env Fall"
+        },
+        {
+          "value": "cyc_hold",
+          "label": "Cycling Env Hold"
+        },
+        {
+          "value": "cyc_amount",
+          "label": "Cycling Env Amount"
+        },
+        {
+          "value": "matrix_point",
+          "label": "Matrix Modulation Amount (another point's amount)"
+        }
+      ],
+      "default": "none",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "hold Assign3 + move a knob or the Matrix encoder"
+        }
+      ],
+      "function": "Destination of matrix column 3: hold Assign3 and move a knob (or select a matrix point to modulate its amount).",
+      "note": "Not assignable: Master Volume, Preset encoder, Shift-layer parameters (e.g. cycling envelope shapes), buttons and icons."
+    },
+    {
+      "id": "voice.paraphonic",
+      "module": "voice",
+      "label": "Paraphonic",
+      "kind": "boolean",
+      "manual_ref": 9,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Four-voice paraphony (button lit) or mono."
+    },
+    {
+      "id": "kbd.octave",
+      "module": "kbd",
+      "label": "Octave",
+      "kind": "integer",
+      "manual_ref": 61,
+      "range": {
+        "min": -3,
+        "max": 3
+      },
+      "default": 0,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Octave left/right buttons"
+        }
+      ],
+      "function": "Keyboard octave shift; LEDs blink faster further from 0. Saved with the preset."
+    },
+    {
+      "id": "kbd.hold",
+      "module": "kbd",
+      "label": "Hold",
+      "kind": "boolean",
+      "manual_ref": 63,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Hold touch icon"
+        },
+        {
+          "type": "midi",
+          "message": "CC 64 (toggle)"
+        }
+      ],
+      "function": "Key Hold: latches held notes (adds notes in paraphonic mode; keeps the arp running). Not saved. In sequencer mode the icon is Tie/Rest and clear."
+    },
+    {
+      "id": "kbd.press_mode",
+      "module": "kbd",
+      "label": "Press mode",
+      "kind": "enum",
+      "manual_ref": 58,
+      "values": [
+        {
+          "value": "aftertouch"
+        },
+        {
+          "value": "velocity"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Press mode"
+        }
+      ],
+      "function": "Keyboard pressure output: aftertouch or velocity."
+    },
+    {
+      "id": "kbd.velo_amp_mod",
+      "module": "kbd",
+      "label": "Velo Amp Mod",
+      "kind": "integer",
+      "manual_ref": 58,
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Velo Amp Mod"
+        }
+      ],
+      "function": "How much velocity affects volume."
+    },
+    {
+      "id": "strip.mode",
+      "module": "strip",
+      "label": "Spice / Dice / Bend",
+      "kind": "enum",
+      "manual_ref": 65,
+      "values": [
+        {
+          "value": "spice"
+        },
+        {
+          "value": "dice"
+        },
+        {
+          "value": "bend"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Spice, Dice and Bend touch icons"
+        }
+      ],
+      "function": "Touch strip function, chosen by its icons."
+    },
+    {
+      "id": "strip.bend",
+      "module": "strip",
+      "label": "Bend",
+      "kind": "continuous",
+      "manual_ref": 66,
+      "range": {
+        "min": -1,
+        "max": 1,
+        "note": "scaled by Bend Range"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "touch or slide on the strip in Bend mode",
+          "when": "any_time"
+        }
+      ],
+      "function": "Pitch bend: centre is neutral; touch elsewhere to jump, slide to bend; returns to centre on release. Relative mode adds movement to the current pitch."
+    },
+    {
+      "id": "strip.bend_range",
+      "module": "strip",
+      "label": "Bend Range",
+      "kind": "integer",
+      "manual_ref": 66,
+      "range": {
+        "min": 0,
+        "max": 24
+      },
+      "default": 12,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Bend Range"
+        }
+      ],
+      "function": "Bend range in semitones each side.",
+      "note": "Table: 0-24, 'zero to two octaves'. Text: default 24 steps (12 each side), maximum 48 steps (four octaves). Modelled as semitones per side."
+    },
+    {
+      "id": "strip.relative",
+      "module": "strip",
+      "label": "Relative bend",
+      "kind": "boolean",
+      "manual_ref": 66,
+      "default": false,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > Relative bend"
+        }
+      ],
+      "function": "Relative bend mode."
+    },
+    {
+      "id": "strip.spice",
+      "module": "strip",
+      "label": "Spice",
+      "kind": "continuous",
+      "manual_ref": 65,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "strip position"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Spice icon, then touch the strip",
+          "when": "any_time"
+        },
+        {
+          "type": "midi",
+          "message": "CC 2"
+        }
+      ],
+      "function": "Amount of deviation of arp/seq gates (and subtly octave, velocity and amp release) from the default gate length towards the current random status."
+    },
+    {
+      "id": "strip.dice",
+      "module": "strip",
+      "label": "Dice",
+      "kind": "continuous",
+      "manual_ref": 65,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "strip position"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "gesture",
+          "gesture": "Dice icon, then tap the strip",
+          "when": "any_time"
+        }
+      ],
+      "function": "Rolls a new bipolar random change to each step's gate length; touch further right for a bigger reshuffle."
+    },
+    {
+      "id": "arp.mode",
+      "module": "arp",
+      "label": "Arp | Seq",
+      "kind": "enum",
+      "manual_ref": 15,
+      "values": [
+        {
+          "value": "off",
+          "label": "Off"
+        },
+        {
+          "value": "arp",
+          "label": "Arp"
+        },
+        {
+          "value": "seq",
+          "label": "Seq"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Arp|Seq toggles the arpeggiator; Shift + Arp|Seq the sequencer"
+        }
+      ],
+      "function": "Arpeggiator on, sequencer on, or off.",
+      "confidence": "inferred",
+      "note": "Whether the Arp/Seq state is saved with the preset is not stated."
+    },
+    {
+      "id": "arp.pattern",
+      "module": "arp",
+      "label": "Up / Order / Random / Pattern",
+      "kind": "enum",
+      "manual_ref": 67,
+      "values": [
+        {
+          "value": "up",
+          "label": "Up",
+          "meaning": "low to high"
+        },
+        {
+          "value": "order",
+          "label": "Order",
+          "meaning": "order played"
+        },
+        {
+          "value": "random",
+          "label": "Random"
+        },
+        {
+          "value": "pattern",
+          "label": "Pattern",
+          "meaning": "generated semi-random pattern; lowest note twice as often; new pattern per key change"
+        }
+      ],
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Up|A, Order|B, Rand|O, Pattern|> touch icons in Arp mode"
+        }
+      ],
+      "function": "Arpeggiator note order.",
+      "confidence": "inferred",
+      "note": "Memory not stated."
+    },
+    {
+      "id": "arp.octave",
+      "module": "arp",
+      "label": "Oct | Mod",
+      "kind": "integer",
+      "manual_ref": 70,
+      "range": {
+        "min": 1,
+        "max": 4
+      },
+      "default": 1,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Oct|Mod button"
+        }
+      ],
+      "function": "Arpeggiator range 1-4 octaves (LEDs 1-4). In sequencer mode the button selects modulation track 1-4.",
+      "confidence": "inferred",
+      "note": "Memory not stated."
+    },
+    {
+      "id": "arp.rate",
+      "module": "arp",
+      "label": "Rate",
+      "kind": "continuous",
+      "manual_ref": 69,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        },
+        {
+          "type": "midi",
+          "message": "CC 91 (free)"
+        },
+        {
+          "type": "midi",
+          "message": "CC 92 (synced)"
+        }
+      ],
+      "function": "Arp/seq speed: BPM (default 120) when free, or division (1/1, 1/2, 1/2T, 1/4, 1/4T, 1/8, 1/8T, 1/16, 1/16T, 1/32, 1/32T) when synced. In step record it scrubs steps."
+    },
+    {
+      "id": "arp.sync",
+      "module": "arp",
+      "label": "Sync",
+      "kind": "boolean",
+      "manual_ref": 69,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "press the Rate knob"
+        }
+      ],
+      "function": "Locks the arp/seq rate to the clock (Sync LED)."
+    },
+    {
+      "id": "arp.swing",
+      "module": "arp",
+      "label": "Swing",
+      "kind": "continuous",
+      "manual_ref": 70,
+      "range": {
+        "min": 50,
+        "max": 75,
+        "note": "percent"
+      },
+      "default": 50,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Shift + Rate"
+        }
+      ],
+      "function": "Swing 50% (straight) to 75%."
+    },
+    {
+      "id": "seq.select",
+      "module": "seq",
+      "label": "A / B",
+      "kind": "enum",
+      "manual_ref": 74,
+      "values": [
+        {
+          "value": "a"
+        },
+        {
+          "value": "b"
+        }
+      ],
+      "memory": "patch",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Up|A and Order|B icons in Seq mode"
+        }
+      ],
+      "function": "Selects sequence A or B; switching during play is allowed. Shift + A/B reloads the saved pattern; A/B + Hold clears it.",
+      "confidence": "inferred",
+      "note": "Memory of the selected sequence not stated."
+    },
+    {
+      "id": "seq.record",
+      "module": "seq",
+      "label": "Record (O)",
+      "kind": "boolean",
+      "manual_ref": 73,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Rand|O icon in Seq mode"
+        }
+      ],
+      "function": "Step record when stopped; real-time record when playing."
+    },
+    {
+      "id": "seq.play",
+      "module": "seq",
+      "label": "Play (>)",
+      "kind": "boolean",
+      "manual_ref": 73,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button",
+          "note": "Pattern|> icon in Seq mode"
+        }
+      ],
+      "function": "Play/stop; sends MIDI start/stop and clock."
+    },
+    {
+      "id": "seq.length",
+      "module": "seq",
+      "label": "Seq Length",
+      "kind": "integer",
+      "manual_ref": 72,
+      "range": {
+        "min": 4,
+        "max": 64
+      },
+      "default": 16,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Seq Length"
+        },
+        {
+          "type": "panel",
+          "control": "knob",
+          "note": "Shift + Rate in step record"
+        }
+      ],
+      "function": "Steps for both sequences, their mod tracks and Pattern/Spice & Dice length."
+    },
+    {
+      "id": "seq.gate_length",
+      "module": "seq",
+      "label": "Default gate length",
+      "kind": "integer",
+      "manual_ref": 65,
+      "range": {
+        "min": 5,
+        "max": 85,
+        "note": "percent"
+      },
+      "default": 45,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Default gate length"
+        }
+      ],
+      "function": "Default arp/seq gate length (Spice at 0)."
+    },
+    {
+      "id": "seq.smooth1",
+      "module": "seq",
+      "label": "Seq 1 smooth",
+      "kind": "boolean",
+      "manual_ref": 79,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Seq 1 smooth"
+        }
+      ],
+      "function": "Smoothing (slew) for modulation track 1. New step-recorded tracks start Off, real-time tracks On."
+    },
+    {
+      "id": "seq.smooth2",
+      "module": "seq",
+      "label": "Seq 2 smooth",
+      "kind": "boolean",
+      "manual_ref": 79,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Seq 2 smooth"
+        }
+      ],
+      "function": "Smoothing (slew) for modulation track 2. New step-recorded tracks start Off, real-time tracks On."
+    },
+    {
+      "id": "seq.smooth3",
+      "module": "seq",
+      "label": "Seq 3 smooth",
+      "kind": "boolean",
+      "manual_ref": 79,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Seq 3 smooth"
+        }
+      ],
+      "function": "Smoothing (slew) for modulation track 3. New step-recorded tracks start Off, real-time tracks On."
+    },
+    {
+      "id": "seq.smooth4",
+      "module": "seq",
+      "label": "Seq 4 smooth",
+      "kind": "boolean",
+      "manual_ref": 79,
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Seq 4 smooth"
+        }
+      ],
+      "function": "Smoothing (slew) for modulation track 4. New step-recorded tracks start Off, real-time tracks On."
+    },
+    {
+      "id": "glide.mode",
+      "module": "glide",
+      "label": "Glide mode",
+      "kind": "enum",
+      "manual_ref": 60,
+      "values": [
+        {
+          "value": "time",
+          "label": "Time",
+          "meaning": "fixed time, 0 to 10 s"
+        },
+        {
+          "value": "sync",
+          "label": "Sync",
+          "meaning": "1/32T to 1/1 of the clock"
+        },
+        {
+          "value": "rate",
+          "label": "Rate",
+          "meaning": "rate per octave"
+        }
+      ],
+      "default": "time",
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Glide mode"
+        }
+      ],
+      "function": "What the Glide knob sets."
+    },
+    {
+      "id": "out.preset_volume",
+      "module": "out",
+      "label": "Preset Volume",
+      "kind": "integer",
+      "manual_ref": 24,
+      "range": {
+        "min": -12,
+        "max": 12
+      },
+      "memory": "patch",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Preset > Preset Volume"
+        }
+      ],
+      "function": "Relative preset volume."
+    },
+    {
+      "id": "out.master",
+      "module": "out",
+      "label": "Master",
+      "kind": "continuous",
+      "manual_ref": 11,
+      "range": {
+        "min": 0,
+        "max": 100,
+        "note": "display value; scale inferred from the manual's examples (e.g. 'timbre 40')"
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "knob"
+        }
+      ],
+      "function": "Global volume for line and headphone outputs."
+    },
+    {
+      "id": "ui.preset",
+      "module": "ui",
+      "label": "Preset",
+      "kind": "integer",
+      "manual_ref": 22,
+      "range": {
+        "min": 1,
+        "max": 256
+      },
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "encoder",
+          "note": "Preset encoder"
+        },
+        {
+          "type": "midi",
+          "message": "program change"
+        }
+      ],
+      "function": "Preset slot: 1-128 factory, 129-160 templates, rest user. Turn to load (or click with Click to Load); triple-click resets to Init."
+    },
+    {
+      "id": "ui.save",
+      "module": "ui",
+      "label": "Save",
+      "kind": "boolean",
+      "manual_ref": 22,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Save: choose slot, one of 11 categories (bass, brass, keys, lead, organ, pad, percussion, sequence, sfx, strings, template) and name; long press saves in place."
+    },
+    {
+      "id": "ui.panel",
+      "module": "ui",
+      "label": "Panel",
+      "kind": "boolean",
+      "manual_ref": 26,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Applies all current knob positions to the loaded preset."
+    },
+    {
+      "id": "ui.shift",
+      "module": "ui",
+      "label": "Shift",
+      "kind": "boolean",
+      "manual_ref": 14,
+      "memory": "none",
+      "access": [
+        {
+          "type": "panel",
+          "control": "push_button"
+        }
+      ],
+      "function": "Second functions (blue legends) and hidden combinations."
+    },
+    {
+      "id": "midi.in_chan",
+      "module": "midi",
+      "label": "Input chan",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "all"
+        },
+        {
+          "value": "1"
+        },
+        {
+          "value": "2"
+        },
+        {
+          "value": "3"
+        },
+        {
+          "value": "4"
+        },
+        {
+          "value": "5"
+        },
+        {
+          "value": "6"
+        },
+        {
+          "value": "7"
+        },
+        {
+          "value": "8"
+        },
+        {
+          "value": "9"
+        },
+        {
+          "value": "10"
+        },
+        {
+          "value": "11"
+        },
+        {
+          "value": "12"
+        },
+        {
+          "value": "13"
+        },
+        {
+          "value": "14"
+        },
+        {
+          "value": "15"
+        },
+        {
+          "value": "16"
+        },
+        {
+          "value": "none"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Input chan"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "MIDI receive channel."
+    },
+    {
+      "id": "midi.out_chan",
+      "module": "midi",
+      "label": "Output chan",
+      "kind": "integer",
+      "manual_ref": 83,
+      "range": {
+        "min": 1,
+        "max": 16
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Output chan"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "MIDI transmit channel."
+    },
+    {
+      "id": "midi.out_dest",
+      "module": "midi",
+      "label": "Output dest",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "none"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "both"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Output dest"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Where MIDI is sent."
+    },
+    {
+      "id": "midi.local",
+      "module": "midi",
+      "label": "Local",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Local"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Local control of keyboard and knobs (default on)."
+    },
+    {
+      "id": "midi.arpseq_out",
+      "module": "midi",
+      "label": "Arp/Seq MIDI out",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Arp/Seq MIDI out"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Send arp/seq notes over MIDI."
+    },
+    {
+      "id": "midi.thru",
+      "module": "midi",
+      "label": "Thru",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Thru"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Echo MIDI In to MIDI Out."
+    },
+    {
+      "id": "midi.knob_cc",
+      "module": "midi",
+      "label": "Knob send CCs",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Knob send CCs"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Knobs send CCs."
+    },
+    {
+      "id": "midi.merge",
+      "module": "midi",
+      "label": "Merge",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "usb_kbd"
+        },
+        {
+          "value": "midi_kbd"
+        },
+        {
+          "value": "both_kbd"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > MIDI > Merge"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "How keyboard data merges into the MIDI output."
+    },
+    {
+      "id": "midi.pc_receive",
+      "module": "midi",
+      "label": "Program Change Receive",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "MIDI Control Center only"
+        }
+      ],
+      "function": "Respond to program change."
+    },
+    {
+      "id": "clock.source",
+      "module": "clock",
+      "label": "Sync Source",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "int"
+        },
+        {
+          "value": "usb"
+        },
+        {
+          "value": "midi"
+        },
+        {
+          "value": "clock"
+        },
+        {
+          "value": "auto"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Sync > Source"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Tempo source."
+    },
+    {
+      "id": "clock.type",
+      "module": "clock",
+      "label": "Clock",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "one_step"
+        },
+        {
+          "value": "2ppq"
+        },
+        {
+          "value": "24ppq"
+        },
+        {
+          "value": "48ppq"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Sync > Clock"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Analog clock in/out resolution."
+    },
+    {
+      "id": "clock.global_tempo",
+      "module": "clock",
+      "label": "Global Tempo",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Sync > Global Tempo"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Ignore preset tempos; keep the last tempo."
+    },
+    {
+      "id": "cvout.pitch_format",
+      "module": "cvout",
+      "label": "Pitch format",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "1v_oct"
+        },
+        {
+          "value": "hz_v"
+        },
+        {
+          "value": "1.2v_oct"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > CV/Gate > Pitch format"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "CV pitch standard."
+    },
+    {
+      "id": "cvout.gate_format",
+      "module": "cvout",
+      "label": "Gate format",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "s_trig"
+        },
+        {
+          "value": "v_trig_5v"
+        },
+        {
+          "value": "v_trig_12v"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > CV/Gate > Gate format"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Gate voltage type."
+    },
+    {
+      "id": "cvout.pressure_range",
+      "module": "cvout",
+      "label": "Pressure range",
+      "kind": "integer",
+      "manual_ref": 83,
+      "range": {
+        "min": 1,
+        "max": 10,
+        "note": "volts"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > CV/Gate > Pressure range"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Pressure output maximum voltage."
+    },
+    {
+      "id": "cvout.zero_ref",
+      "module": "cvout",
+      "label": "0V reference",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "C-1 ... G8"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > CV/Gate > 0V reference"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Note giving 0 V (1 V/oct and 1.2 V/oct)."
+    },
+    {
+      "id": "cvout.one_ref",
+      "module": "cvout",
+      "label": "1V reference",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "C-1 ... G8"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > CV/Gate > 1V reference"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Note giving 1 V (Hz/V)."
+    },
+    {
+      "id": "ui.knob_catch",
+      "module": "ui",
+      "label": "Knob catch",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "jump",
+          "label": "Jump"
+        },
+        {
+          "value": "hook",
+          "label": "Hook"
+        },
+        {
+          "value": "scaled",
+          "label": "Scaled",
+          "meaning": "default per the MCC section"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Browsing > Knob catch"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "How knobs pick up stored values."
+    },
+    {
+      "id": "ui.click_to_load",
+      "module": "ui",
+      "label": "Click to load",
+      "kind": "boolean",
+      "manual_ref": 83,
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Browsing > Click to load"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Browsing needs a click to load."
+    },
+    {
+      "id": "ui.cent_offset",
+      "module": "ui",
+      "label": "Cent offset",
+      "kind": "integer",
+      "manual_ref": 83,
+      "range": {
+        "min": -50,
+        "max": 50,
+        "note": "cents"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Master tuning > Cent offset"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Master tuning offset."
+    },
+    {
+      "id": "ui.a_reference",
+      "module": "ui",
+      "label": "A Reference",
+      "kind": "continuous",
+      "manual_ref": 83,
+      "range": {
+        "min": 427.4,
+        "max": 452.89,
+        "note": "Hz"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Master tuning > A Reference"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Tuning reference for A."
+    },
+    {
+      "id": "ui.mem_protect",
+      "module": "ui",
+      "label": "Mem protect",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "off"
+        },
+        {
+          "value": "factory_only"
+        },
+        {
+          "value": "on"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > Mem Protect"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Preset overwrite protection (default protects factory presets)."
+    },
+    {
+      "id": "kbd.sensitivity",
+      "module": "kbd",
+      "label": "KBD sensitivity",
+      "kind": "integer",
+      "manual_ref": 83,
+      "range": {
+        "min": 10,
+        "max": 100,
+        "note": "percent"
+      },
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > KBD sensitivity"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Keyboard response for pressure and velocity."
+    },
+    {
+      "id": "kbd.at_curve",
+      "module": "kbd",
+      "label": "Aftertouch curve",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "lin"
+        },
+        {
+          "value": "log"
+        },
+        {
+          "value": "exp"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > Aftertouch curve"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Aftertouch response."
+    },
+    {
+      "id": "kbd.vel_curve",
+      "module": "kbd",
+      "label": "Velocity curve",
+      "kind": "enum",
+      "manual_ref": 83,
+      "values": [
+        {
+          "value": "lin"
+        },
+        {
+          "value": "log"
+        },
+        {
+          "value": "exp"
+        }
+      ],
+      "memory": "global",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > Velocity curve"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Velocity response (Lin default)."
+    },
+    {
+      "id": "ui.factory_reset",
+      "module": "ui",
+      "label": "Factory reset",
+      "kind": "boolean",
+      "manual_ref": 85,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > Factory reset"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Restores factory settings and erases presets."
+    },
+    {
+      "id": "ui.user_erase",
+      "module": "ui",
+      "label": "User preset erase",
+      "kind": "boolean",
+      "manual_ref": 85,
+      "memory": "none",
+      "access": [
+        {
+          "type": "menu",
+          "note": "Utility > Misc > User preset erase"
+        },
+        {
+          "type": "app",
+          "note": "MIDI Control Center"
+        }
+      ],
+      "function": "Erases user presets only."
+    },
+    {
+      "id": "power",
+      "module": "ui",
+      "label": "Power",
+      "kind": "boolean",
+      "manual_ref": 20,
+      "memory": "none",
+      "access": [
+        {
+          "type": "rear_panel",
+          "control": "slide_switch"
+        }
+      ],
+      "function": "Recessed power switch: off or USB/DC power (DC preferred when both connected)."
+    }
+  ],
+  "ports": [
+    {
+      "id": "jack.out",
+      "label": "OUTPUT",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "6.35 mm TRS",
+      "node": "out.line",
+      "function": "Mono line output, balanced (symmetrised) TRS.",
+      "manual_ref": 18
+    },
+    {
+      "id": "jack.phones",
+      "label": "Headphones",
+      "location": "rear",
+      "direction": "out",
+      "signal": "audio",
+      "connector": "3.5 mm TRS",
+      "node": "out.phones",
+      "function": "Headphone output, mono signal on both sides. From firmware 2.1 the socket also takes a TRRS headset mic for the vocoder.",
+      "manual_ref": 18
+    },
+    {
+      "id": "jack.cv",
+      "label": "CV",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm",
+      "node": "cvout.pitch",
+      "function": "Pitch CV (format per Utility).",
+      "manual_ref": 18,
+      "note": "Size from the Thomann specification; not stated in the manual."
+    },
+    {
+      "id": "jack.gate",
+      "label": "Gate",
+      "location": "rear",
+      "direction": "out",
+      "signal": "gate",
+      "connector": "3.5 mm",
+      "node": "cvout.gate",
+      "function": "Gate (S-trig or V-trig 5/12 V).",
+      "manual_ref": 18,
+      "note": "Size from Thomann."
+    },
+    {
+      "id": "jack.pressure",
+      "label": "Pressure",
+      "location": "rear",
+      "direction": "out",
+      "signal": "cv",
+      "connector": "3.5 mm",
+      "node": "cvout.press",
+      "function": "Pressure or velocity voltage, 0 to the set range (up to 10 V).",
+      "manual_ref": 18,
+      "note": "Size from Thomann."
+    },
+    {
+      "id": "jack.clock_in",
+      "label": "CLOCK In",
+      "location": "rear",
+      "direction": "in",
+      "signal": "clock",
+      "connector": "3.5 mm TRS",
+      "node": "clock.ext_in",
+      "function": "Analog clock in; TRS carries clock and start, TS clock only.",
+      "manual_ref": 19,
+      "note": "3.5 mm from Thomann; TRS/TS behaviour from the manual."
+    },
+    {
+      "id": "jack.clock_out",
+      "label": "CLOCK Out",
+      "location": "rear",
+      "direction": "out",
+      "signal": "clock",
+      "connector": "3.5 mm TRS",
+      "node": "clock.ext_out",
+      "function": "Analog clock out (and start on TRS).",
+      "manual_ref": 19,
+      "note": "3.5 mm from Thomann."
+    },
+    {
+      "id": "midi.in",
+      "label": "MIDI In",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "3.5 mm TRS",
+      "node": "midi.din_in",
+      "function": "MIDI in via the supplied TRS-to-DIN adapter.",
+      "manual_ref": 19
+    },
+    {
+      "id": "midi.out",
+      "label": "MIDI Out",
+      "location": "rear",
+      "direction": "out",
+      "signal": "midi",
+      "connector": "3.5 mm TRS",
+      "node": "midi.din_out",
+      "function": "MIDI out via the supplied TRS-to-DIN adapter.",
+      "manual_ref": 19
+    },
+    {
+      "id": "usb",
+      "label": "USB",
+      "location": "rear",
+      "direction": "in",
+      "signal": "midi",
+      "connector": "USB-B",
+      "node": "midi.usb",
+      "function": "Class-compliant USB MIDI and 5 V power (500 mA phone charger or power bank works); MIDI Control Center and firmware.",
+      "manual_ref": 19
+    },
+    {
+      "id": "power.dc",
+      "label": "12V DC 1A",
+      "location": "rear",
+      "direction": "in",
+      "signal": "power",
+      "connector": "DC barrel (2.1 mm pin, 5.5 mm)",
+      "node": null,
+      "function": "External supply, centre positive; the supplied adapter provides the ground the capacitive keyboard needs.",
+      "manual_ref": 20
+    }
+  ],
+  "connections": [
+    {
+      "id": "c001",
+      "from": "kbd.notes",
+      "to": "voice.kbd",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "arp.mode",
+            "equals": "off"
+          },
+          {
+            "param": "midi.local",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c002",
+      "from": "kbd.notes",
+      "to": "arp.in",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "arp.mode",
+            "equals": "arp"
+          },
+          {
+            "param": "midi.local",
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "c003",
+      "from": "kbd.notes",
+      "to": "voice.kbd",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "all": [
+          {
+            "param": "arp.mode",
+            "equals": "seq"
+          },
+          {
+            "param": "midi.local",
+            "equals": true
+          }
+        ]
+      },
+      "note": "keyboard plays over (and in mono pauses) the sequence; Shift + key transposes it"
+    },
+    {
+      "id": "c004",
+      "from": "kbd.notes",
+      "to": "seq.in",
+      "signal": "notes",
+      "kind": "fixed",
+      "note": "step and real-time recording"
+    },
+    {
+      "id": "c005",
+      "from": "midi.notes",
+      "to": "voice.midi",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.mode",
+        "not_equals": "arp"
+      }
+    },
+    {
+      "id": "c006",
+      "from": "midi.notes",
+      "to": "arp.in",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.mode",
+        "equals": "arp"
+      }
+    },
+    {
+      "id": "c007",
+      "from": "midi.notes",
+      "to": "seq.in",
+      "signal": "notes",
+      "kind": "fixed",
+      "note": "step and real-time recording from MIDI"
+    },
+    {
+      "id": "c008",
+      "from": "arp.out",
+      "to": "voice.arp",
+      "signal": "notes",
+      "kind": "fixed"
+    },
+    {
+      "id": "c009",
+      "from": "seq.notes",
+      "to": "voice.seq",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "arp.mode",
+        "equals": "seq"
+      }
+    },
+    {
+      "id": "c010",
+      "from": "kbd.notes",
+      "to": "midi.tx",
+      "signal": "notes",
+      "kind": "fixed"
+    },
+    {
+      "id": "c011",
+      "from": "arp.out",
+      "to": "midi.tx",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "midi.arpseq_out",
+        "equals": true
+      }
+    },
+    {
+      "id": "c012",
+      "from": "seq.notes",
+      "to": "midi.tx",
+      "signal": "notes",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "midi.arpseq_out",
+        "equals": true
+      }
+    },
+    {
+      "id": "c013",
+      "from": "midi.clock",
+      "to": "clock.midi",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c014",
+      "from": "clock.out",
+      "to": "arp.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c015",
+      "from": "clock.out",
+      "to": "seq.clock",
+      "signal": "clock",
+      "kind": "fixed"
+    },
+    {
+      "id": "c016",
+      "from": "clock.out",
+      "to": "lfo.clock",
+      "signal": "clock",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo.sync",
+        "equals": true
+      }
+    },
+    {
+      "id": "c017",
+      "from": "voice.pitch",
+      "to": "glide.in",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c018",
+      "from": "glide.out",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "1 V/oct-equivalent key tracking is hardwired"
+    },
+    {
+      "id": "c019",
+      "from": "strip.bend",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "strip.mode",
+        "equals": "bend"
+      },
+      "amount": "strip.bend_range"
+    },
+    {
+      "id": "c020",
+      "from": "osc.out",
+      "to": "vcf.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c021",
+      "from": "vcf.out",
+      "to": "vca.in",
+      "signal": "audio",
+      "kind": "fixed"
+    },
+    {
+      "id": "c022",
+      "from": "vca.out",
+      "to": "out.in",
+      "signal": "audio",
+      "kind": "fixed",
+      "amount": "out.preset_volume"
+    },
+    {
+      "id": "c023",
+      "from": "voice.gate",
+      "to": "env.gate",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c024",
+      "from": "voice.gate",
+      "to": "cyc.trig",
+      "signal": "gate",
+      "kind": "fixed"
+    },
+    {
+      "id": "c025",
+      "from": "voice.gate",
+      "to": "lfo.retrig",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "lfo.retrig",
+        "not_equals": "off"
+      }
+    },
+    {
+      "id": "c026",
+      "from": "voice.gate",
+      "to": "vca.cv",
+      "signal": "gate",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env.amp_mod",
+        "equals": false
+      }
+    },
+    {
+      "id": "c027",
+      "from": "env.out",
+      "to": "vca.cv",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "env.amp_mod",
+        "equals": true
+      }
+    },
+    {
+      "id": "c028",
+      "from": "env.out",
+      "to": "vcf.env",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "env.filter_amt",
+      "note": "the Env > Cutoff matrix point"
+    },
+    {
+      "id": "c029",
+      "from": "voice.cv",
+      "to": "cvout.notes",
+      "signal": "notes",
+      "kind": "fixed"
+    },
+    {
+      "id": "c030",
+      "from": "kbd.pressure",
+      "to": "cvout.pressure",
+      "signal": "cv",
+      "kind": "fixed"
+    },
+    {
+      "id": "c031",
+      "from": "cyc.out",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.cycenv.pitch",
+      "note": "matrix CycEnv > Pitch"
+    },
+    {
+      "id": "c032",
+      "from": "cyc.out",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.cycenv.wave",
+      "note": "matrix CycEnv > Wave"
+    },
+    {
+      "id": "c033",
+      "from": "cyc.out",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.cycenv.timbre",
+      "note": "matrix CycEnv > Timbre"
+    },
+    {
+      "id": "c034",
+      "from": "cyc.out",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.cycenv.cutoff",
+      "note": "matrix CycEnv > Cutoff"
+    },
+    {
+      "id": "c035",
+      "from": "cyc.out",
+      "to": "mx.cycenv",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "to the Assign columns (amounts per point)"
+    },
+    {
+      "id": "c036",
+      "from": "env.out",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.env.pitch",
+      "note": "matrix Env > Pitch"
+    },
+    {
+      "id": "c037",
+      "from": "env.out",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.env.wave",
+      "note": "matrix Env > Wave"
+    },
+    {
+      "id": "c038",
+      "from": "env.out",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.env.timbre",
+      "note": "matrix Env > Timbre"
+    },
+    {
+      "id": "c039",
+      "from": "env.out",
+      "to": "mx.env",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "to the Assign columns (amounts per point)"
+    },
+    {
+      "id": "c040",
+      "from": "lfo.out",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.lfo.pitch",
+      "note": "matrix LFO > Pitch"
+    },
+    {
+      "id": "c041",
+      "from": "lfo.out",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.lfo.wave",
+      "note": "matrix LFO > Wave"
+    },
+    {
+      "id": "c042",
+      "from": "lfo.out",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.lfo.timbre",
+      "note": "matrix LFO > Timbre"
+    },
+    {
+      "id": "c043",
+      "from": "lfo.out",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.lfo.cutoff",
+      "note": "matrix LFO > Cutoff"
+    },
+    {
+      "id": "c044",
+      "from": "lfo.out",
+      "to": "mx.lfo",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "to the Assign columns (amounts per point)"
+    },
+    {
+      "id": "c045",
+      "from": "kbd.pressure",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.press.pitch",
+      "note": "matrix Press > Pitch"
+    },
+    {
+      "id": "c046",
+      "from": "kbd.pressure",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.press.wave",
+      "note": "matrix Press > Wave"
+    },
+    {
+      "id": "c047",
+      "from": "kbd.pressure",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.press.timbre",
+      "note": "matrix Press > Timbre"
+    },
+    {
+      "id": "c048",
+      "from": "kbd.pressure",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.press.cutoff",
+      "note": "matrix Press > Cutoff"
+    },
+    {
+      "id": "c049",
+      "from": "kbd.pressure",
+      "to": "mx.press",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "to the Assign columns (amounts per point)"
+    },
+    {
+      "id": "c050",
+      "from": "voice.key",
+      "to": "osc.pitch",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.key.pitch",
+      "note": "matrix Key/Arp > Pitch"
+    },
+    {
+      "id": "c051",
+      "from": "voice.key",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.key.wave",
+      "note": "matrix Key/Arp > Wave"
+    },
+    {
+      "id": "c052",
+      "from": "voice.key",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.key.timbre",
+      "note": "matrix Key/Arp > Timbre"
+    },
+    {
+      "id": "c053",
+      "from": "voice.key",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "fixed",
+      "amount": "mx.key.cutoff",
+      "note": "matrix Key/Arp > Cutoff"
+    },
+    {
+      "id": "c054",
+      "from": "voice.key",
+      "to": "mx.key",
+      "signal": "cv",
+      "kind": "fixed",
+      "note": "to the Assign columns (amounts per point)"
+    },
+    {
+      "id": "c055",
+      "from": "mx.assign1",
+      "to": "glide.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "glide"
+      }
+    },
+    {
+      "id": "c056",
+      "from": "mx.assign1",
+      "to": "osc.type_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "osc_type"
+      }
+    },
+    {
+      "id": "c057",
+      "from": "mx.assign1",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "osc_wave"
+      }
+    },
+    {
+      "id": "c058",
+      "from": "mx.assign1",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "osc_timbre"
+      }
+    },
+    {
+      "id": "c059",
+      "from": "mx.assign1",
+      "to": "osc.shape_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "osc_shape"
+      }
+    },
+    {
+      "id": "c060",
+      "from": "mx.assign1",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "cutoff"
+      }
+    },
+    {
+      "id": "c061",
+      "from": "mx.assign1",
+      "to": "vcf.res_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "resonance"
+      }
+    },
+    {
+      "id": "c062",
+      "from": "mx.assign1",
+      "to": "env.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mx.assign1.target",
+            "equals": "env_attack"
+          },
+          {
+            "param": "mx.assign1.target",
+            "equals": "env_decay"
+          },
+          {
+            "param": "mx.assign1.target",
+            "equals": "env_sustain"
+          },
+          {
+            "param": "mx.assign1.target",
+            "equals": "env_filter_amt"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c063",
+      "from": "mx.assign1",
+      "to": "lfo.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "lfo_rate"
+      }
+    },
+    {
+      "id": "c064",
+      "from": "mx.assign1",
+      "to": "arp.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "arp_rate"
+      }
+    },
+    {
+      "id": "c065",
+      "from": "mx.assign1",
+      "to": "cyc.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mx.assign1.target",
+            "equals": "cyc_rise"
+          },
+          {
+            "param": "mx.assign1.target",
+            "equals": "cyc_fall"
+          },
+          {
+            "param": "mx.assign1.target",
+            "equals": "cyc_hold"
+          },
+          {
+            "param": "mx.assign1.target",
+            "equals": "cyc_amount"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c066",
+      "from": "mx.assign1",
+      "to": "mx.amount_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign1.target",
+        "equals": "matrix_point"
+      }
+    },
+    {
+      "id": "c067",
+      "from": "mx.assign2",
+      "to": "glide.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "glide"
+      }
+    },
+    {
+      "id": "c068",
+      "from": "mx.assign2",
+      "to": "osc.type_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "osc_type"
+      }
+    },
+    {
+      "id": "c069",
+      "from": "mx.assign2",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "osc_wave"
+      }
+    },
+    {
+      "id": "c070",
+      "from": "mx.assign2",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "osc_timbre"
+      }
+    },
+    {
+      "id": "c071",
+      "from": "mx.assign2",
+      "to": "osc.shape_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "osc_shape"
+      }
+    },
+    {
+      "id": "c072",
+      "from": "mx.assign2",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "cutoff"
+      }
+    },
+    {
+      "id": "c073",
+      "from": "mx.assign2",
+      "to": "vcf.res_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "resonance"
+      }
+    },
+    {
+      "id": "c074",
+      "from": "mx.assign2",
+      "to": "env.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mx.assign2.target",
+            "equals": "env_attack"
+          },
+          {
+            "param": "mx.assign2.target",
+            "equals": "env_decay"
+          },
+          {
+            "param": "mx.assign2.target",
+            "equals": "env_sustain"
+          },
+          {
+            "param": "mx.assign2.target",
+            "equals": "env_filter_amt"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c075",
+      "from": "mx.assign2",
+      "to": "lfo.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "lfo_rate"
+      }
+    },
+    {
+      "id": "c076",
+      "from": "mx.assign2",
+      "to": "arp.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "arp_rate"
+      }
+    },
+    {
+      "id": "c077",
+      "from": "mx.assign2",
+      "to": "cyc.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mx.assign2.target",
+            "equals": "cyc_rise"
+          },
+          {
+            "param": "mx.assign2.target",
+            "equals": "cyc_fall"
+          },
+          {
+            "param": "mx.assign2.target",
+            "equals": "cyc_hold"
+          },
+          {
+            "param": "mx.assign2.target",
+            "equals": "cyc_amount"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c078",
+      "from": "mx.assign2",
+      "to": "mx.amount_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign2.target",
+        "equals": "matrix_point"
+      }
+    },
+    {
+      "id": "c079",
+      "from": "mx.assign3",
+      "to": "glide.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "glide"
+      }
+    },
+    {
+      "id": "c080",
+      "from": "mx.assign3",
+      "to": "osc.type_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "osc_type"
+      }
+    },
+    {
+      "id": "c081",
+      "from": "mx.assign3",
+      "to": "osc.wave_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "osc_wave"
+      }
+    },
+    {
+      "id": "c082",
+      "from": "mx.assign3",
+      "to": "osc.timbre_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "osc_timbre"
+      }
+    },
+    {
+      "id": "c083",
+      "from": "mx.assign3",
+      "to": "osc.shape_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "osc_shape"
+      }
+    },
+    {
+      "id": "c084",
+      "from": "mx.assign3",
+      "to": "vcf.cutoff_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "cutoff"
+      }
+    },
+    {
+      "id": "c085",
+      "from": "mx.assign3",
+      "to": "vcf.res_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "resonance"
+      }
+    },
+    {
+      "id": "c086",
+      "from": "mx.assign3",
+      "to": "env.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mx.assign3.target",
+            "equals": "env_attack"
+          },
+          {
+            "param": "mx.assign3.target",
+            "equals": "env_decay"
+          },
+          {
+            "param": "mx.assign3.target",
+            "equals": "env_sustain"
+          },
+          {
+            "param": "mx.assign3.target",
+            "equals": "env_filter_amt"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c087",
+      "from": "mx.assign3",
+      "to": "lfo.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "lfo_rate"
+      }
+    },
+    {
+      "id": "c088",
+      "from": "mx.assign3",
+      "to": "arp.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "arp_rate"
+      }
+    },
+    {
+      "id": "c089",
+      "from": "mx.assign3",
+      "to": "cyc.mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "any": [
+          {
+            "param": "mx.assign3.target",
+            "equals": "cyc_rise"
+          },
+          {
+            "param": "mx.assign3.target",
+            "equals": "cyc_fall"
+          },
+          {
+            "param": "mx.assign3.target",
+            "equals": "cyc_hold"
+          },
+          {
+            "param": "mx.assign3.target",
+            "equals": "cyc_amount"
+          }
+        ]
+      }
+    },
+    {
+      "id": "c090",
+      "from": "mx.assign3",
+      "to": "mx.amount_mod",
+      "signal": "cv",
+      "kind": "switched",
+      "enabled_when": {
+        "param": "mx.assign3.target",
+        "equals": "matrix_point"
+      }
+    }
+  ],
+  "indicators": [
+    {
+      "id": "oled",
+      "module": "ui",
+      "label": "OLED display",
+      "kind": "display",
+      "function": "Preset name and category, parameter values and graphics, matrix point and amount (inverted while editing), Utility menus, sequencer steps."
+    },
+    {
+      "id": "matrix_leds",
+      "module": "mx",
+      "label": "matrix LEDs (35)",
+      "kind": "led",
+      "function": "Lit = routed with a non-zero amount; blinking = selected for editing; while editing only the edited point is lit."
+    },
+    {
+      "id": "filter_leds",
+      "module": "vcf",
+      "label": "LPF / BPF / HPF LEDs",
+      "kind": "led",
+      "function": "Show the filter type."
+    },
+    {
+      "id": "cyc_leds",
+      "module": "cyc",
+      "label": "Env / Run / Loop LEDs",
+      "kind": "led",
+      "function": "Show the cycling envelope mode."
+    },
+    {
+      "id": "lfo_leds",
+      "module": "lfo",
+      "label": "LFO shape LEDs (6)",
+      "kind": "led",
+      "function": "Show the LFO shape."
+    },
+    {
+      "id": "sync_leds",
+      "module": "clock",
+      "label": "Sync LEDs (Arp/Seq and LFO)",
+      "kind": "led",
+      "function": "Lit when the rate is synced."
+    },
+    {
+      "id": "octmod_leds",
+      "module": "arp",
+      "label": "Oct | Mod LEDs 1-4",
+      "kind": "led",
+      "function": "Arp octave range, or the selected sequencer modulation track."
+    },
+    {
+      "id": "octave_leds",
+      "module": "kbd",
+      "label": "Octave buttons",
+      "kind": "led",
+      "function": "Blink faster the further from 0 (fastest at -3 and +3)."
+    },
+    {
+      "id": "button_leds",
+      "module": "ui",
+      "label": "button and icon lights",
+      "kind": "led",
+      "function": "Paraphonic, Amp Mod, Arp|Seq (white = arp), Shift, Save (blinks in final save stage), record and play icons, Spice/Dice/Bend icons."
+    }
+  ],
+  "behaviours": [
+    {
+      "id": "b01",
+      "name": "Preset vs knob position",
+      "applies_to": ["ui"],
+      "rule": "After loading, knob positions don't match the sound; a moved knob joins the preset per Knob catch (Jump, Hook, Scaled). Panel applies all current positions at once."
+    },
+    {
+      "id": "b02",
+      "name": "Matrix sums",
+      "applies_to": ["mx"],
+      "rule": "Several sources on one destination add; all points are bipolar (-100 to +100); negative cutoff modulation can silence the sound."
+    },
+    {
+      "id": "b03",
+      "name": "Hardwired routes",
+      "applies_to": ["osc", "vcf", "vca"],
+      "rule": "Key pitch to oscillator, envelope to cutoff (Filter Amt = the Env > Cutoff point) and envelope or gate to the VCA are built in; Key/Arp > Pitch scales the existing tracking (larger or microtonal steps)."
+    },
+    {
+      "id": "b04",
+      "name": "Assign columns",
+      "applies_to": ["mx"],
+      "rule": "Hold Assign1-3 and move a knob to set the column's destination for all five sources; hold Assign and pick a matrix point to modulate that point's amount."
+    },
+    {
+      "id": "b05",
+      "name": "Paraphony",
+      "applies_to": ["voice", "vca", "osc"],
+      "rule": "Up to 4 voices share the analog filter; each has its own internal VCA envelope copy. Polyphonic sources (envelope, pressure, key/arp, arpeggiator) modulate Wave, Timbre and Shape per voice; Type changes for all voices."
+    },
+    {
+      "id": "b06",
+      "name": "Chords model",
+      "applies_to": ["osc", "voice"],
+      "rule": "Selecting Chords disables paraphony: the last key is the root and one chord plays."
+    },
+    {
+      "id": "b07",
+      "name": "Note priority",
+      "applies_to": ["voice", "seq"],
+      "rule": "Keyboard and MIDI notes take voices before the sequencer; with paraphony off only a step's lowest note plays; in mono a held key pauses the sequence."
+    },
+    {
+      "id": "b08",
+      "name": "Amp Mod",
+      "applies_to": ["env", "vca"],
+      "rule": "Amp Mod off: the VCA follows the gate (arp/seq gate length is audible). On: the envelope shapes the volume."
+    },
+    {
+      "id": "b09",
+      "name": "Cycling envelope modes",
+      "applies_to": ["cyc"],
+      "rule": "Env runs once; Run free-runs (reset by MIDI start); Loop cycles and resets on each trigger. In Run and Loop, Hold is a hold time; in Env it is a sustain level."
+    },
+    {
+      "id": "b10",
+      "name": "Spice and Dice",
+      "applies_to": ["strip", "arp", "seq"],
+      "rule": "Spice morphs each step's gate from the default length to a random 'status'; Dice rolls a new status. They also nudge octave, velocity and amp release. Not saved."
+    },
+    {
+      "id": "b11",
+      "name": "Arp octave buttons",
+      "applies_to": ["arp", "kbd"],
+      "rule": "Octave buttons during an arpeggio add new notes in the new range rather than transposing the running arpeggio."
+    },
+    {
+      "id": "b12",
+      "name": "Arp to sequence",
+      "applies_to": ["arp", "seq"],
+      "rule": "Shift + Up|A or Order|B copies the current arpeggio to sequence A or B, extended to the sequence length."
+    },
+    {
+      "id": "b13",
+      "name": "Mod tracks",
+      "applies_to": ["seq"],
+      "rule": "Up to four knobs per preset; touching a knob in step record assigns it to the next free track; a fifth shows 'Memory full'. Tracks are shared by sequences A and B."
+    },
+    {
+      "id": "b14",
+      "name": "Sequence auto-play",
+      "applies_to": ["seq"],
+      "rule": "With a recorded sequence, pressing a key starts it without pressing play."
+    },
+    {
+      "id": "b15",
+      "name": "CV output note",
+      "applies_to": ["cvout"],
+      "rule": "Only one pitch CV: a sequence step sends its lowest note, the keyboard the last note played. MIDI carries all notes, including chords beyond four."
+    },
+    {
+      "id": "b16",
+      "name": "Clock out",
+      "applies_to": ["clock", "seq"],
+      "rule": "While playing, MIDI clock and analog clock are sent; play/stop sends MIDI start/stop."
+    },
+    {
+      "id": "b17",
+      "name": "Hold and MIDI",
+      "applies_to": ["kbd"],
+      "rule": "Key Hold does not latch external MIDI notes; send sustain instead."
+    },
+    {
+      "id": "b18",
+      "name": "Power",
+      "applies_to": ["ui"],
+      "rule": "USB (5 V 500 mA) or 12 V DC; plugging in DC resets the unit; the keyboard needs the grounded supplied adapter to work properly."
+    }
+  ],
+  "example_patches": [
+    {
+      "id": "filter_sweep",
+      "name": "Classic filter sweep",
+      "source": "manual p.52",
+      "settings": {
+        "vcf.cutoff": 0,
+        "vcf.resonance": 100,
+        "env.amp_mod": true,
+        "env.attack": "1.7 s",
+        "env.decay": "7.7 s",
+        "env.sustain": 90,
+        "env.filter_amt": 70
+      },
+      "description": "Cutoff minimum, resonance maximum, Amp Mod on, attack 1.7 s, decay 7.7 s, sustain 90%, Filter Amt 70.",
+      "confidence": "stated"
+    },
+    {
+      "id": "speech_filter",
+      "name": "Speech: the word 'Filter'",
+      "source": "manual p.43",
+      "settings": {
+        "osc.type": "speech",
+        "osc.wave": 100,
+        "osc.timbre": 40,
+        "osc.shape": 30
+      },
+      "description": "Wave at maximum, Timbre 40, Shape 30, play middle C; press Paraphonic for four voices.",
+      "confidence": "stated"
+    },
+    {
+      "id": "speech_one",
+      "name": "Speech: the word 'One'",
+      "source": "manual p.43",
+      "settings": {
+        "osc.type": "speech",
+        "osc.wave": 60,
+        "osc.timbre": 46,
+        "osc.shape": 17
+      },
+      "description": "Wave 60, Timbre 46, Shape 17, play middle C.",
+      "confidence": "stated"
+    },
+    {
+      "id": "computer",
+      "name": "Sci-fi computer bleeps",
+      "source": "manual p.49",
+      "settings": {
+        "lfo.shape": "random",
+        "lfo.rate": "4 Hz",
+        "mx.lfo.pitch": 30
+      },
+      "description": "Random LFO at about 4 Hz to Pitch at about 30.",
+      "confidence": "stated"
+    },
+    {
+      "id": "cyc_pitch",
+      "name": "Cycling envelope pitch blip",
+      "source": "manual p.54",
+      "settings": {
+        "mx.cycenv.pitch": 20,
+        "cyc.rise": "200 ms",
+        "cyc.hold": 0,
+        "cyc.fall": 0,
+        "cyc.amount": 50
+      },
+      "description": "CycEnv > Pitch about 20; rise about 200 ms, hold 0, fall 0, amount 50%.",
+      "confidence": "stated"
+    },
+    {
+      "id": "random_chords",
+      "name": "Random chord changes",
+      "source": "manual p.42",
+      "settings": {
+        "osc.type": "chords",
+        "lfo.shape": "random",
+        "mx.lfo.wave": 75
+      },
+      "description": "LFO random stepped wave to Wave (chord type) at 50-100.",
+      "confidence": "stated"
+    },
+    {
+      "id": "waveshaper_arp",
+      "name": "Arpeggiated waveshaper with modulated glide and attack",
+      "source": "manual p.71",
+      "settings": {
+        "osc.type": "waveshaper",
+        "env.amp_mod": true,
+        "env.attack": 0,
+        "env.decay": "100 ms",
+        "env.sustain": 30,
+        "env.filter_amt": 100,
+        "mx.assign1.target": "glide",
+        "mx.key.assign1": 0.2,
+        "mx.assign2.target": "env_attack",
+        "mx.key.assign2": 10,
+        "arp.mode": "arp",
+        "arp.pattern": "pattern"
+      },
+      "description": "Key/Arp to Glide (about 0.2) and to envelope attack (10), Pattern mode; add Spice and Dice.",
+      "confidence": "stated"
+    }
+  ],
+  "midi": {
+    "receives": [
+      {
+        "message": "note_on"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "control_change"
+      },
+      {
+        "message": "program_change",
+        "note": "if Program Change Receive is on"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "clock"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      },
+      {
+        "message": "sustain",
+        "note": "CC 64; use instead of Hold for external notes"
+      }
+    ],
+    "transmits": [
+      {
+        "message": "note_on",
+        "note": "keyboard fully polyphonic; arp/seq if enabled"
+      },
+      {
+        "message": "note_off"
+      },
+      {
+        "message": "control_change",
+        "note": "knobs, if Knob send CCs"
+      },
+      {
+        "message": "channel_pressure"
+      },
+      {
+        "message": "clock",
+        "note": "while playing"
+      },
+      {
+        "message": "start"
+      },
+      {
+        "message": "stop"
+      }
+    ],
+    "cc_map": {
+      "2": "strip.spice",
+      "5": "glide.amount",
+      "9": "osc.type",
+      "10": "osc.wave",
+      "12": "osc.timbre",
+      "13": "osc.shape",
+      "23": "vcf.cutoff",
+      "24": "cyc.amount",
+      "26": "env.filter_amt",
+      "28": "cyc.hold",
+      "29": "env.sustain",
+      "64": "kbd.hold",
+      "83": "vcf.resonance",
+      "91": "arp.rate",
+      "92": "arp.rate",
+      "93": "lfo.rate",
+      "94": "lfo.rate",
+      "102": "cyc.rise",
+      "103": "cyc.fall",
+      "105": "env.attack",
+      "106": "env.decay"
+    },
+    "channel_note": "Separate input (All, 1-16, None) and output (1-16) channels.",
+    "note": "The 1.1.2 manual has no CC chart. CC numbers come from the default CC table in the v5.0 manual (Appendix D) and Arturia's support FAQ, which agree; they are assumed to apply to earlier firmware. All CCs 0-127 except Type (10-127) and free Arp/Seq rate (0-123). Free and synced rates have separate CCs: 91/92 Arp/Seq, 93/94 LFO. On firmware 5, Type values per model are spread across 0-127 for 22 models (forum measurements); the 12-model ranges for 1.1.2 are not published. Matrix amounts, buttons and Utility settings have no CCs. Program change: bank of 128 presets per bank select (1-128, 129-256)."
+  },
+  "specifications": {
+    "voices": "mono or 4-voice paraphonic",
+    "oscillator_models": 12,
+    "oscillator_range": "C-2 to G8",
+    "filter": "analog 12 dB/oct LP/BP/HP, about 30 Hz to above 15 kHz, self-oscillating",
+    "envelope_times_s": {
+      "attack": [0, 10],
+      "decay_release": [0, 13]
+    },
+    "lfo_rate_hz": [0.06, 100],
+    "lfo_shapes": 6,
+    "glide_s": [0, 10],
+    "matrix": "5 sources x 7 destinations (4 fixed, 3 assignable), 35 points",
+    "keyboard": "25 capacitive touch keys, pressure or velocity, octave shift +/-3",
+    "presets": {
+      "total": 256,
+      "factory": 128,
+      "templates": "129-160",
+      "categories": 11
+    },
+    "sequencer": "2 sequences per preset, 4-64 steps, 4 notes per step, 4 modulation tracks",
+    "arpeggiator": "Up, Order, Random, Pattern; 1-4 octaves; swing 50-75%",
+    "outputs": "6.35 mm balanced TRS line (mono), 3.5 mm headphones (mono)",
+    "cv_gate": "Pitch (1 V/oct, Hz/V, 1.2 V/oct), Gate (S-trig, V-trig 5 V, 12 V), Pressure (1-10 V)",
+    "clock": "in/out, One step, 2, 24, 48 PPQ",
+    "midi": "3.5 mm TRS in/out with DIN adapters, USB-B class compliant",
+    "power": "12 V DC 1 A centre positive, or USB 5 V 500 mA",
+    "tuning": "A 427.4-452.89 Hz, +/-50 cents",
+    "firmware": "manual for product version 1.1.2 (May 2019)",
+    "dimensions_mm": [311, 233, 55],
+    "weight_kg": 1.02,
+    "dimensions_note": "From Thomann; Arturia's manual gives none.",
+    "firmware_history": {
+      "2.0": "January 2020: Noise oscillator (particle, white, metallic); Chord Mode (hold Paraphonic and play a chord); scale quantise; copy sequence A to B; Shift + long press Matrix clears all routings; 64 presets",
+      "2.1": "August 2020: Vocoder oscillator (16-band; mic via TRRS headset in the headphone socket); Vocoder Edition hardware",
+      "3.0": "January 2021: Noise Engineering Bass, Harm and SawX oscillators; 4-voice unison (spread up to 12 semitones, modulatable); 384 presets; last preset recalled at power-on",
+      "4.0": "October 2021: WaveUser oscillator (user wavetables via MIDI Control Center); 64 presets",
+      "5.0": "May-July 2023: Sample, Scan Grains, Cloud Grains and Hit Grains oscillators; 512 presets; Key/Arp Random mode; Envelope Snap; reorganised Utility (Unison Count 2-4, Unison Spread, Scale and Root, Osc Knob Speed, mic settings)",
+      "note": "This file models the 12 oscillator types and settings of 1.1.2. Firmware 5 has 22 types: those here plus Noise, Bass, SawX, Harm, WaveUser, Sample, Scan Grains, Cloud Grains, Hit Grains and Vocoder."
+    }
+  },
+  "omitted_from_source": [
+    "safety precautions",
+    "registration",
+    "tutorial and 'freaky idea' prose beyond the examples kept",
+    "software licence and declaration of conformity",
+    "general synthesis background"
+  ],
+  "not_in_source": [
+    "Research filled: MIDI CC map, program change banks, dimensions and weight, rear jack sizes, filter design description, firmware history to 5.0. Searched without result: cycling envelope times, arp/seq BPM range, display ranges, DAC details.",
+    "knob display ranges (0-100 inferred from examples; CCs are 0-127)",
+    "cycling envelope stage times",
+    "arp/seq BPM range",
+    "number of paraphonic voices setting (mentioned, not listed; the v5 Utility has Unison Count 2-4 but still no paraphonic voice count)",
+    "DAC/sample rate",
+    "whether Arp/Seq state, arp pattern mode, Oct|Mod and selected sequence are saved"
+  ],
+  "source_inconsistencies": [
+    "LFO range: '0.05Hz up to 100Hz' (p.15) versus 0.06 Hz to 100 Hz (p.50, twice).",
+    "Bend range: Utility table 0-24, 'zero to two octaves' (p.24, p.83) versus default 24 steps (12 each side) with a maximum of 48 steps, four octaves (p.66).",
+    "The envelope reset setting is 'Envelope legato' (p.24 table, p.82 text) and 'Envelope reset' (p.54 note, p.83 table).",
+    "Envelope Filter Amount is described in the destination and mod-track tables as 'the amount of signal sent from Envelope to AMP'; everywhere else it sets envelope to cutoff.",
+    "Gate format: 'V-Trig 12V' in the Utility and MCC tables (p.84, p.87) versus 'V-Trig 10V' in the CV chapter (p.92).",
+    "Headphones: '3.5 mm TRS jack' (p.7) versus 'standard 3.5 mm TS or TRS jack' (p.18).",
+    "Mem protect options: 'Off / Factory only / On' (Utility table) versus 'Off, Factory only, All' (MCC section).",
+    "Knob catch: the MCC section says the knobs are '360-degree encoders', while Hook and Jump modes and the rest of the manual treat them as absolute knobs.",
+    "Paraphonic: 'depending on the number of voices you have specified in Utility' (p.21), but no voice-count setting appears in the Utility tables.",
+    "Swing: 'Hold SHIFT and turn the Rate encoder' versus 'hold the blue SHIFT button and press Rate' (both p.70).",
+    "LFO sync: '8/1 ... completes in 8 pulses, which is 1/4 of a quarter note' (p.50) contradicts 8/1 being its slowest (eight-bar) rate.",
+    "Pitch range: 'the whole pitch range is eight octaves' (p.61) versus the oscillator range C-2 to G8 (p.35).",
+    "Cross references: the Shift section points to the arpeggiator as chapter 12 [p.72] and the sequencer as chapter 13 [p.67]; the page numbers are swapped.",
+    "Sequencer mode is said to change 'the first five icons'; the strip has Hold plus four arp/seq icons, and the Arp list names 'Hold' where Up is meant (p.73).",
+    "The CV 0 V reference text says 'when pitch format is set to 0V/Oct' (p.87); the table says 1 V/Oct or 1.2 V/Oct.",
+    "Assignable destinations list Arp&Seq Rate; the modulation-track table omits it (otherwise the lists match).",
+    "Between sources: A reference range 427.4-452.89 Hz (1.1.2) versus 427.47-453.89 Hz (v5 manual).",
+    "Between sources: the v5 manual repeats the LFO inconsistency with three values (0.05 Hz, 0.1 Hz, 0.06 Hz); 0.06 Hz is used.",
+    "Between sources: the cheat sheet in circulation gives default gate length 10-90% (default 50%); both manuals say 5-85% (default 45%).",
+    "Between sources: on firmware 5 the CC 9 value the MicroFreak transmits for several oscillator types falls outside the range it accepts for that type (forum report)."
+  ],
+  "modelling_gaps": [
+    {
+      "topic": "Matrix representation",
+      "detail": "The fixed 5 x 7 grid is modelled as one amount parameter per point and connections, not the slot-based mod_matrix section (which assumes selectable sources). Assign columns route through module 'mx' with switched connections by target."
+    },
+    {
+      "topic": "Modulating a matrix point",
+      "detail": "An Assign column can target another point's amount; the chosen point is not representable, only the 'matrix_point' target value."
+    },
+    {
+      "topic": "Paraphonic scope",
+      "detail": "Per-voice modulation of Wave/Timbre/Shape by polyphonic sources versus common Type and filter is described in module scope and behaviours only."
+    },
+    {
+      "topic": "Knob values",
+      "detail": "The manual gives display scales only through examples; ranges marked 0-100 are inferred."
+    },
+    {
+      "topic": "Sequencer content and mod tracks",
+      "detail": "Notes, ties, velocities and the four recorded knob tracks are sequence content, not parameters; only settings are modelled."
+    },
+    {
+      "topic": "Hybrid signal path",
+      "detail": "The schema has only analogue or digital; recorded as digital with a hybrid note (digital oscillator, analog filter and VCA). A hybrid value is worth adding in 0.14.0."
+    }
+  ]
+}
