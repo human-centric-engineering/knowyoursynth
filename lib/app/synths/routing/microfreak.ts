@@ -362,7 +362,7 @@ export const routing: SynthRouting = {
       'The touch strip: its Bend is the app’s pitch wheel, and Spice and Dice are not modelled.',
     midi: 'MIDI in and out: the app’s keyboard and MIDI input stand in for it, drawn as the keyboard.',
     clock:
-      'The tempo clock: the arpeggiator’s and LFO’s Rate set their own speeds here (Sync divides 120 BPM).',
+      'The tempo clock: the arpeggiator’s and LFO’s Rate set their own speeds here. LFO Sync divides the arpeggiator’s Rate tempo, or 120 BPM with Arp Sync lit; a synced arpeggiator divides 120 BPM.',
     seq: 'The sequencer: its sequences and modulation tracks are not modelled.',
     cvout: 'The rear CV, gate and pressure outputs: not on the panel, and not modelled.',
     ui: 'The display, presets, Save, Utility and Panel: not modelled; the display shows the Type.',
