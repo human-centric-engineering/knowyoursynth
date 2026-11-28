@@ -62,6 +62,7 @@ vi.mock('@/lib/security/rate-limit', async (importOriginal) => ({
 import { POST } from '@/app/api/v1/admin/synths/[id]/content/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   type CatalogueTables,
@@ -85,7 +86,7 @@ const isModelD = (f: { synth: string }) => f.synth === 'model-d';
 const modelDSounds = real.sounds.find(isModelD)!;
 
 function sample(): CatalogueSeedData {
-  const data = structuredClone(real);
+  const data = catalogueSlice(real, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
   data.sounds = [{ ...modelDSounds, sounds: modelDSounds.sounds.slice(0, 2) }];
   data.lineage = [];
