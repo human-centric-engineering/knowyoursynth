@@ -122,7 +122,8 @@ row 9.
   `lib/app/account-sections.ts` (the synth profile and the synths owned and wanted, on settings
   only), `lib/app/jobs.ts` (the prune of lapsed held usernames, the databank's projection into the
   knowledge base, t-58, and the links' YouTube counts, t-180), `lib/app/eslint.config.mjs` (two
-  ignores: the social card's generated panel renderer, t-50, and `prototype/**`, t-235), `lib/app/capabilities.ts`,
+  ignores: the social card's generated panel renderer, t-50, and `prototype/**`, t-235; and our
+  `app/(public)` pages taken off Sunrise's catalogue-text rule, `react/jsx-no-literals`, t-325), `lib/app/capabilities.ts`,
   `lib/app/context-contributors.ts` and `lib/app/platform-agents.ts` (the tutor's tools, synth
   context and agent, t-53), `lib/app/env.ts` (`TUTOR_DAILY_TURNS`, `BRAVE_SEARCH_API_KEY`,
   `YOUTUBE_API_KEY`), `lib/app/evaluations.ts` (the tutor's four eval graders, t-61),

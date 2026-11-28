@@ -771,12 +771,16 @@ const SEAM_DEFAULTS: SeamDefault[] = [
     // The root eslint.config.mjs spreads this array last; that spread itself is
     // exercised by every `npm run lint` run.
     // FORK (Know Your Synth): pinned to the two ignores, the social card's generated panel renderer (t-50) and the
-    // prototype (t-235), rather than deleted, so a stray rule block still fails. Ledger:
-    // .context/app/platform-divergences.md.
+    // prototype (t-235), and the block taking our own public pages off Sunrise's catalogue-text rule (t-325), rather
+    // than deleted, so a stray rule block still fails. Ledger: .context/app/platform-divergences.md.
     assert: () =>
       expect(appEslintConfig).toEqual([
         { ignores: ['components/app/sharing/generated/panel-render.mjs'] },
         { ignores: ['prototype/**'] },
+        {
+          files: ['app/(public)/{bank,explore,patterns,u}/**/*.tsx'],
+          rules: { 'react/jsx-no-literals': 'off' },
+        },
       ]),
   },
   {
