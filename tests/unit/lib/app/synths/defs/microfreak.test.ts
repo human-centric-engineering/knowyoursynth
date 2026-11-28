@@ -256,7 +256,7 @@ describe('MicroFreak switches', () => {
 describe('MicroFreak matrix', () => {
   it('draws a Wave, Timbre or Shape edge live on exactly the models whose engine takes the route', () => {
     const typeCtl = microfreak.controls.find((c) => c.id === 'osc.type');
-    const models = (typeCtl?.options || []).map((o) => o.v);
+    const models = typeCtl && 'options' in typeCtl ? (typeCtl.options || []).map((o) => o.v) : [];
     expect(models).toHaveLength(12);
     const edge = (id: string) => routing.edges.find((e) => e.id === id);
     // LFO > Wave (c041), LFO > Timbre (c042), and Assign 1 on Shape (c059), each with SuperWave on its saw
