@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { Control, SelectControl } from '@/lib/app/synths/contract';
-import { matrixClick, pointToShow } from '@/lib/app/synths/lib/matrix-points';
+import { matrixClick, pointToShow, withPick } from '@/lib/app/synths/lib/matrix-points';
 import microfreak from '@/lib/app/synths/defs/microfreak';
 
 const found = microfreak.controls.find((c) => c.id === 'mx.sel');
@@ -102,6 +102,19 @@ describe('pointToShow', () => {
     const list: Control = { ...page, id: 'listed', show: [{ id: 'mx.sel', eq: 'lfo.pitch' }] };
     expect(pointToShow([page, deep], ['deep'], { 'ui.page': 'a' })).toBeNull();
     expect(pointToShow([...microfreak.controls, list], ['listed'], values)).toBeNull();
+  });
+});
+
+describe('withPick', () => {
+  it('draws the pick over the values, and keeps the same values when there is nothing to change', () => {
+    const values = { 'mx.sel': 'cycenv.pitch', 'mx.lfo.pitch': 30 };
+    expect(withPick(values, { id: 'mx.sel', value: 'lfo.pitch' })).toEqual({
+      'mx.sel': 'lfo.pitch',
+      'mx.lfo.pitch': 30,
+    });
+    expect(values['mx.sel']).toBe('cycenv.pitch');
+    expect(withPick(values, null)).toBe(values);
+    expect(withPick(values, { id: 'mx.sel', value: 'cycenv.pitch' })).toBe(values);
   });
 });
 

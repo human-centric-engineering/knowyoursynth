@@ -1372,7 +1372,8 @@ export const Select = memo(function Select({
   const hover = useHover('control', c.id);
   const hl = useStore(highlightStore, (ids) => ids.includes(c.id));
   const col = moduleOf(c.module).color;
-  if (c.matrix)
+  // a matrix without the panel's values would read every point as off: drawn as plain buttons instead
+  if (c.matrix && values)
     return (
       <MatrixPoints
         c={c}
@@ -1380,7 +1381,7 @@ export const Select = memo(function Select({
         target={target}
         ctx={ctx}
         onChange={onChange}
-        values={values ?? {}}
+        values={values}
         hover={hover}
         hl={hl ? col : null}
       />

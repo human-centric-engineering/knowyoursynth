@@ -32,6 +32,11 @@ export function pointToShow(
   return null;
 }
 
+/** `values` with `pick` applied, for drawing: the same object when there is nothing to change. */
+export function withPick(values: ControlValues, pick: MatrixSet | null): ControlValues {
+  return pick && values[pick.id] !== pick.value ? { ...values, [pick.id]: pick.value } : values;
+}
+
 /**
  * What a click on one point of a modulation matrix (`SelectControl.matrix`, the MicroFreak) sets, in order. A point at 0
  * is switched on at `matrix.on` and chosen; a point that is on is chosen, so the Matrix encoder sets its amount; the

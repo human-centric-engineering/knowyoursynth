@@ -336,6 +336,21 @@ describe('the MicroFreak page’s matrix', () => {
     expect(screen.queryByRole('slider', { name: 'CycEnv > Pitch' })).toBeNull();
   });
 
+  it('only draws the find’s point as picked, and gives way to a point picked by hand', async () => {
+    const { detail } = await loadPage('microfreak');
+    render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
+    act(() => findStore.set({ kind: 'control', id: 'mx.lfo.pitch' }));
+    expect(screen.getByRole('slider', { name: 'LFO > Pitch' })).toBeTruthy();
+    // the same find lit again leaves it showing
+    act(() => findStore.set({ kind: 'control', id: 'mx.lfo.pitch' }));
+    act(() => highlightStore.set([]));
+    expect(screen.getByRole('slider', { name: 'LFO > Pitch' })).toBeTruthy();
+    // the sound's own pick is CycEnv > Pitch: picking it by hand shows it, though its value does not change
+    fireEvent.click(screen.getByRole('button', { name: 'Matrix point: CycEnv > Pitch, off' }));
+    expect(screen.getByRole('slider', { name: 'CycEnv > Pitch' })).toBeTruthy();
+    expect(screen.queryByRole('slider', { name: 'LFO > Pitch' })).toBeNull();
+  });
+
   it('picks the point a lesson or tweak lights', async () => {
     const { detail } = await loadPage('microfreak');
     render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);

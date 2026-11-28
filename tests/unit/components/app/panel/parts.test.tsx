@@ -560,6 +560,14 @@ describe('a matrix select', () => {
     expect(container.querySelectorAll('.kys-pulse').length - before).toBe(2);
   });
 
+  it('decides on the panel’s own amount and sets it outright while a lane moves it', () => {
+    const onChange = vi.fn();
+    draw({ mx: 'a', a: 40 }, onChange, { moved: { a: 60 } });
+    fireEvent.click(screen.getByRole('button', { name: 'Point: A > Pitch, on 40' }));
+    // not rebased by the lane's move (40 + (0 - 60))
+    expect(onChange.mock.calls).toEqual([['a', 0]]);
+  });
+
   it('draws the picked ring in ink in the outline view', () => {
     const { container } = draw({ mx: 'a' }, vi.fn(), { outline: true });
     expect(container.querySelector('.kys-blink')?.getAttribute('stroke')).not.toBe('#f6a63a');

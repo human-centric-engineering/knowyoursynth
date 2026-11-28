@@ -626,8 +626,9 @@ export function SynthPanel({
                 value={value}
                 target={t}
                 ctx={ctx}
-                onChange={turn}
-                // only a matrix reads the other controls; the rest keep their memo
+                // A matrix reads the other controls (the rest keep their memo). Its lamps show the panel's own amounts,
+                // so a click decides on those and sets them outright, never by how far a lane has moved them.
+                onChange={c.matrix ? onChange : turn}
                 values={c.matrix ? values : undefined}
               />
             );
