@@ -57,6 +57,9 @@ npm run check:synths -- model-d --compare      # one synth
 npm run check:synths -- model-d funk --compare # only sounds whose id contains "funk"
 ```
 
+A run of every synth renders half as many synths at once as the machine has cores, and never more than four, so it
+leaves the machine usable; `--jobs=N` changes that.
+
 For a ported synth it reads these files and never writes them, and under
 `--compare` a different `hash` is an error, not a note: the port has to be exact. Until the
 definitions are ported (m1) it takes them from the prototype's source, bundled when it runs.

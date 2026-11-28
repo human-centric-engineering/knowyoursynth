@@ -55,7 +55,7 @@
  * Flags (anywhere on the line, after npm's `--`):
  *   --seed=N            seed for Math.random, reset before every sound (default 20240919, as the sound-map probe)
  *   --compare           compare each synth's fingerprints with .context/app/check/<synth>.json; any difference is an error
- *   --jobs=N            how many synths to render at once when checking more than one (default: all cores)
+ *   --jobs=N            how many synths to render at once when checking more than one (default: half the cores, at most 4)
  * Exit code 1 if anything is wrong (unknown control, value out of range, bad cable, NaN, silent sound, baseline mismatch).
  *
  * Printing goes through `console`, not `logger` — see the `scripts/**` override in `eslint.config.mjs`.
@@ -102,6 +102,13 @@ import {
 } from '@/lib/app/synths/lib/patch';
 
 const ROOT = resolve(import.meta.dirname, '..');
+
+/**
+ * How many synths a full run renders at once, unless `--jobs=N` says otherwise: half the cores, and never more than
+ * four. The same cap as the test suite's workers (`maxWorkers` in `vitest.config.ts`, where the reasoning is
+ * measured), so the machine keeps half its cores for the dev server and whatever else is running.
+ */
+const DEFAULT_JOBS = Math.min(4, Math.max(1, Math.floor(availableParallelism() / 2)));
 
 /** One baseline fingerprint (see `.context/app/check/README.md`). */
 interface Fingerprint {
@@ -424,11 +431,12 @@ async function main(): Promise<void> {
       process.exit(1);
     }
   }
-  // Every synth at once: one process per synth, as many at a time as there are cores. A full run is about 1,100 sounds of
-  // 3 s each, roughly half an hour on one core and about ten minutes on eight. Each synth's report is printed whole, in
+  // Every synth at once: one process per synth, `DEFAULT_JOBS` at a time unless `--jobs` says otherwise. Each process
+  // holds a core flat out, and one per core locked the machine up while the dev server and tests ran beside it. A full
+  // run is about 1,100 sounds of 3 s each, roughly half an hour on one core. Each synth's report is printed whole, in
   // catalogue order.
   if (!onlySynth) {
-    const jobs = Math.max(1, Number(optValue('jobs')) || availableParallelism());
+    const jobs = Math.max(1, Number(optValue('jobs')) || DEFAULT_JOBS);
     const self = fileURLToPath(import.meta.url);
     const results = new Array<{ out: string; code: number | null } | undefined>(SYNTHS.length);
     const t0 = Date.now();
