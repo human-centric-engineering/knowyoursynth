@@ -17,6 +17,28 @@ const def = (id: string): SynthDef => {
 const cs80 = def('cs-80');
 const dd = def('deckards-dream');
 
+describe('the TOUCH SPEED rule', () => {
+  it('lists every FUNCTION each synth has, so it drops on all of them', () => {
+    const options = (d: SynthDef): string[] => {
+      const c = d.controls.find((x) => x.id === 'sub.function');
+      if (c?.kind !== 'enum') throw new Error('sub.function is an enum');
+      return c.options.map((o) => String(o.v));
+    };
+    expect(options(cs80)).toEqual(['sine', 'saw', 'rsaw', 'square', 'noise', 'ext']);
+    expect(options(dd)).toEqual(['sine', 'saw', 'rsaw', 'square', 'rnd', 'sh']);
+    for (const f of options(cs80))
+      expect(
+        translate({ 'sub.function': f, 'touch.speed': 8 }, [], cs80, dd).values['touch.speed'],
+        f
+      ).toBe(0);
+    for (const f of options(dd))
+      expect(
+        translate({ 'sub.function': f, 'touch.speed': 8 }, [], dd, cs80).values['touch.speed'],
+        f
+      ).toBe(0);
+  });
+});
+
 describe('CS-80 → Deckard’s Dream', () => {
   it('carries the shared sliders under the same ids', () => {
     const t = translate({ 'ch1.lpf': 3.5, 'ch2.feet': '5.33', 'mix.mix': 5 }, [], cs80, dd);

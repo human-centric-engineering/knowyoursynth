@@ -1197,7 +1197,9 @@ function layer(v: ControlValues, c: number, gain: number): LayerParams {
   route('kbdHi', 'cutoffHp', -bh);
   route('kbdLo', 'amp', num(v, 'kbd.levelLow') * 0.16, 'env2');
   route('kbdHi', 'amp', num(v, 'kbd.levelHigh') * 0.16, 'env2');
-  // the SUB OSCILLATOR (shared): RND moves things with the noise generator, as the CS-80's NOISE position does
+  // the SUB OSCILLATOR (shared): RND moves things with the noise generator, as the CS-80's NOISE position does. Its VCF
+  // moves both cutoffs the same way, the exception to the band opening above: HPF MOD inverts only the envelope, and a
+  // wah shifts the band rather than widening it.
   const fn = String(v['sub.function']);
   const src = fn === 'rnd' ? 'noise' : 'lfo2';
   const k = fn === 'rnd' ? 0.3 : 1;

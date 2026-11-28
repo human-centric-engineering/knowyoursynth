@@ -57,7 +57,8 @@ describe('Deckard’s Dream toEngine at the init patch (the Default Saw)', () =>
   it('sounds the sawtooth at 8′ through open filters, with no resonance and the sine silent', () => {
     expect(p.osc[0]).toMatchObject({ mix: { saw: 1, pulse: 0 }, pw: 0.5, semi: 0, kbd: true });
     expect(routesTo(p.routes, 'osc2', 'vcaIn')).toEqual([]);
-    expect(p.hpf).toMatchObject({ cutoff: 20, envAmt: -0, res: 0, kbd: 1 });
+    expect(p.hpf).toMatchObject({ cutoff: 20, res: 0, kbd: 1 });
+    expect(p.hpf?.envAmt).toBeCloseTo(0, 10);
     expect(p.filter).toMatchObject({ cutoff: 16000, envAmt: 0, res: 0, mode: 'lp' });
     expect(p.noise.level).toBe(0);
   });
