@@ -284,7 +284,7 @@ export const routing: SynthRouting = {
         hold: { id: 'cyc.hold', when: { id: 'cyc.mode', in: ['run', 'loop'] } },
         decay: 'cyc.fall',
         sustain: { id: 'cyc.hold', when: { id: 'cyc.mode', eq: 'env' } },
-        release: 'cyc.fall',
+        release: { id: 'cyc.fall', when: { id: 'cyc.mode', eq: 'env' } },
       },
       description:
         'Rise, Hold/Sustain and Fall, once per note (Env), free-running (Run) or cycling from each note (Loop). It reaches the sound only through the matrix, at Amount.',

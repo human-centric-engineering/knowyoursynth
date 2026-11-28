@@ -140,7 +140,7 @@
         {
           "title": "A quick rise and no fall",
           "module": "env",
-          "why": "In Env mode the cycling envelope runs once per note: Rise sets how long it climbs, and with Hold/Sustain and Fall at 0 it drops straight back. Amount sets how much of it the matrix gets.\n- Rise 58 · 210 ms\n- Hold / Sustain 0 · sustain level\n- Fall 0 · 1 ms\n- Amount 50\n- Listen for: nothing yet: the cycling envelope is not sent anywhere.",
+          "why": "In Env mode the cycling envelope runs once per note: Rise sets how long it climbs, and with Hold/Sustain and Fall at 0 it drops straight back. Amount sets how much of it the matrix gets.\n- Rise 58 · 210 ms\n- Hold / Sustain 0 · sustain 0\n- Fall 0 · 1 ms\n- Amount 50\n- Listen for: nothing yet: the cycling envelope is not sent anywhere.",
           "set": {
             "cyc.rise": 58,
             "cyc.hold": 0,

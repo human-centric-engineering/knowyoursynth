@@ -95,17 +95,17 @@
       "exp"
     ],
     "cyc.hold": [
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level",
-      "sustain level"
+      "sustain 0",
+      "sustain 10",
+      "sustain 20",
+      "sustain 30",
+      "sustain 40",
+      "sustain 50",
+      "sustain 60",
+      "sustain 70",
+      "sustain 80",
+      "sustain 90",
+      "sustain 100"
     ],
     "arp.rate": [
       "20 BPM",

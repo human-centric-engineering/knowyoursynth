@@ -99,7 +99,8 @@ const MX_LFO_OCT = 5;
 const MX_DECAY_OCT = 4;
 /**
  * Key/Arp is the key's distance from middle C. At 100 it adds an octave per octave to the pitch (b03: it scales the
- * built-in tracking), tracks the cutoff an octave per octave, and moves anything else half its range per octave.
+ * built-in tracking), tracks the cutoff and the LFO rate an octave per octave, and moves anything else half its range
+ * per octave.
  */
 const KEY_PER_OCT = 0.5;
 
@@ -841,7 +842,7 @@ knob('cyc.hold', 1099, 265, 22, 'Hold / Sustain', {
       ? holdTime(v)
         ? `hold ${fmtTime(holdTime(v))}`
         : 'no hold'
-      : 'sustain level',
+      : `sustain ${Math.round(v)}`,
   help: 'In Env mode the level the cycling envelope sustains at while the key is held. In Run and Loop how long it stays at the top before it falls.',
 });
 label(1099, 311.5, 'Hold / Sustain');
