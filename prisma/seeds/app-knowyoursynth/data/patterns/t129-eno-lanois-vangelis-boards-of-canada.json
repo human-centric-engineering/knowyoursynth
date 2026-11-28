@@ -1092,7 +1092,7 @@
         ],
         "chain": [0]
       },
-      "sounds": ["jupiter-8/jp8-vangelis-brass"],
+      "sounds": ["jupiter-8/jp8-vangelis-brass", "deckards-dream/dd-dream-brass"],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
         "part": "The held chords under the first eight bars of the theme: C minor for four bars, B♭ for two, D minor over A for two: the same part an octave down.",
@@ -19997,10 +19997,10 @@
         ],
         "chain": [0]
       },
-      "sounds": ["mantis/mantis-blade-runner-brass"],
+      "sounds": ["mantis/mantis-blade-runner-brass", "deckards-dream/dd-dream-brass"],
       "research": {
         "work": "Vangelis, “End Titles”, Blade Runner, 1982 (released 1994)",
-        "part": "The first eight bars of the theme: C falling through B♭ and A♭ to a held G, then B♭ through A and G to a held F: the same part an octave down, where the Mantis’s “Rain Brass” plays.",
+        "part": "The first eight bars of the theme: C falling through B♭ and A♭ to a held G, then B♭ through A and G to a held F: the same part an octave down, where the Mantis’s “Rain Brass” and the Deckard’s Dream’s “Dream Brass” play.",
         "originalKey": "C minor",
         "originalBpm": 110,
         "leads": [

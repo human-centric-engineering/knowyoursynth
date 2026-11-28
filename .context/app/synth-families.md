@@ -81,6 +81,10 @@ modelled synth and its unmodelled original or clone.
   databank instrument (`arp-odyssey`, `arp-odyssey-mk-ii`, `arp-odyssey-mk-iii`), so the picker and the
   toggle show each one's year, and the family lists all three as its originals. A revision is not a
   recreation, so it is not marked as one.
+- **An instrument built on another's design, but not a copy of it, is an original too.** The Deckard's Dream
+  (t-338) is built on the CS-80's voice, but its maker calls it a revival, not a clone. So it is not marked as a
+  recreation of the CS-80, which would make its bank page say something false. The CS-80 family lists both as its
+  originals, as the Moog one does.
 - **Only what a source says.** Each differences text was checked against the research document's
   cited pages (and Wikipedia where those said nothing of the original). Where no source supported a
   member, it was left out: the MS-20's rev1 and rev2 filters are named in the K-2's text but are not
@@ -89,7 +93,8 @@ modelled synth and its unmodelled original or clone.
   label, and their differences open "Announced, not yet on sale." Both were added to `reference.json`
   with a source.
 - **The default** is the member most people are likely to own where it is modelled: the clone,
-  except where only the original is in the app (Polivoks, CS-80, Jupiter-8, Music Easel).
+  except where only the original is in the app (Polivoks, Jupiter-8, Music Easel). The CS-80 family stays on the
+  CS-80 now the Deckard's Dream is beside it: neither is a clone of the other.
 
 ## What is served
 

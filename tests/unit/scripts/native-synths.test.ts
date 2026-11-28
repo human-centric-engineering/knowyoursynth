@@ -57,6 +57,7 @@ describe('nativeSynthProblems', () => {
       'native synth dfam is not registered',
       'native synth edge is not registered',
       'native synth microfreak is not registered',
+      'native synth deckards-dream is not registered',
     ]);
   });
 

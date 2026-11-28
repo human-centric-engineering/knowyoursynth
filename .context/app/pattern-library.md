@@ -1698,9 +1698,9 @@ octave above its key, or is thin at the bottom (the low note 9 dB or more below 
 
 #### Agreement with the library
 
-Measured on 2026-11-28 over the library's 6,125 sounds:
+Measured on 2026-11-28 over the library's 6,138 sounds:
 
-- **The detector reads the sound's own category for 2,792 of them (45.6%).** Picking the commonest category, bass, every
+- **The detector reads the sound's own category for 2,796 of them (45.6%).** Picking the commonest category, bass, every
   time would get 16.3%.
 - **Cross-validated: 2,743 (45.3%)**, over the 6,054 of 2026-11-21 (not re-measured since). Each fifth of the library is measured on a model fitted to the other four fifths.
 - **15 sounds are silent on the probe notes**: `model-d/just-intonation-drone`, `model-d/slow-breaking-waves`,
@@ -1719,6 +1719,9 @@ follows it is the fix, for both synths, and a change to the features.
 The 61 sounds since 6,064 are the DFAM's 32, the EDGE's 12 and the MicroFreak's 17 (t-333). They agree on 25 (41%),
 the MicroFreak's on 5, so the figure moved from 45.63% to 45.58%. Not refit: a refit to the 6,125 read 2,778 right,
 fewer than the committed model's 2,792.
+
+The 13 since are the Deckard's Dream's (t-338). They agree on 4, so the figure moved from 45.58% to 45.55%. Not refit:
+a refit to the 6,138 read 2,784 right, fewer than the committed model's 2,796.
 
 When it was last measured there (t-191), CI's Linux x64 read one fx sound as lead instead: the renders are seeded, but
 the platforms' maths can differ in the last bit, and a sound near a feature's threshold can tip. The figures here are

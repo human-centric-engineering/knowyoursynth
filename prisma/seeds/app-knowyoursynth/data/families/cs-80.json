@@ -2,6 +2,7 @@
   "id": "cs-80",
   "name": "CS-80",
   "defaultMember": "cs-80",
+  "originals": ["yamaha-cs-80", "black-corporation-deckards-dream"],
   "members": [
     {
       "slug": "cs-80",
@@ -15,6 +16,13 @@
       "label": "DS-80 (announced)",
       "instrument": "behringer-ds-80",
       "differences": "Announced, not yet on sale. Behringer's planned copy of the CS-80, first mentioned in July 2020. A prototype board shown in April 2022 held two voices and the digital control section, and nothing more had been said by January 2025."
+    },
+    {
+      "slug": "deckards-dream",
+      "label": "Deckard’s Dream",
+      "instrument": "black-corporation-deckards-dream",
+      "synth": "deckards-dream",
+      "differences": "Black Corporation’s analogue module built on the CS-80’s voice, which its maker calls a revival rather than a clone: the same two layers per note, IL-AL-A-D-R filter envelope and sine past the filters, with no keyboard, ribbon, ring modulator, chorus or preset rows. Its P/G switch has a centre where nothing glides. It is played over MIDI with polyphonic aftertouch and MPE and stores presets, and the MK2 adds a master SUSTAIN slider and puts sample and hold where the MK1 had an external input."
     }
   ]
 }

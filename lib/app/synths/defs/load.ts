@@ -71,6 +71,7 @@ const LOADERS: Record<string, () => Promise<{ default: AppSynthDef }>> = {
   dfam: () => import('@/lib/app/synths/defs/dfam'),
   edge: () => import('@/lib/app/synths/defs/edge'),
   microfreak: () => import('@/lib/app/synths/defs/microfreak'),
+  'deckards-dream': () => import('@/lib/app/synths/defs/deckards-dream'),
 };
 
 /** Every id a loader exists for. */

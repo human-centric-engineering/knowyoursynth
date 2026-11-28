@@ -33,6 +33,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'dfam',
   'edge',
   'microfreak',
+  'deckards-dream',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);

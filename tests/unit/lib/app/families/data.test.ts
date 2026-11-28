@@ -253,7 +253,7 @@ describe('the committed family seed data', () => {
     ).toEqual({
       'arp-2600': ['b2600', null, null],
       cat: ['cat', null],
-      'cs-80': ['cs-80', null],
+      'cs-80': ['cs-80', null, 'deckards-dream'],
       dfam: ['edge', 'dfam'],
       grandmother: ['model-15', 'grandmother'],
       'jupiter-8': ['jupiter-8', null],
@@ -274,8 +274,9 @@ describe('the committed family seed data', () => {
     });
   });
 
-  it('lists its originals only where the members do not share one: the Moog systems and the Odyssey revisions (t-324)', () => {
+  it('lists its originals only where the members do not share one: the CS-80 and the Deckard’s Dream, the Moog systems and the Odyssey revisions (t-324, t-338)', () => {
     expect(families.filter((f) => f.originals).map((f) => [f.id, f.originals])).toEqual([
+      ['cs-80', ['yamaha-cs-80', 'black-corporation-deckards-dream']],
       [
         'moog-modular-systems',
         ['moog-modular', 'moog-model-15', 'moog-system-35', 'moog-system-55'],
