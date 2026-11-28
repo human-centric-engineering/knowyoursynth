@@ -9,6 +9,7 @@ import type { CSSProperties, KeyboardEvent, MouseEvent, PointerEvent, ReactNode 
 import { focusStore, highlightStore, meterStore, useStore } from '@/components/app/synth/stores';
 import type { ItemFocus } from '@/components/app/synth/stores';
 import { moduleOf } from '@/lib/app/synths/lib/modules';
+import { matrixClick } from '@/lib/app/synths/lib/matrix-points';
 import { formatValue, luminance } from '@/lib/app/synths/lib/patch';
 import type {
   ButtonControl,
@@ -1366,10 +1367,24 @@ export const Select = memo(function Select({
   target,
   ctx,
   onChange,
-}: ControlPartProps<SelectControl>) {
+  values,
+}: ControlPartProps<SelectControl> & { values?: ControlValues }) {
   const hover = useHover('control', c.id);
   const hl = useStore(highlightStore, (ids) => ids.includes(c.id));
   const col = moduleOf(c.module).color;
+  if (c.matrix)
+    return (
+      <MatrixPoints
+        c={c}
+        value={value}
+        target={target}
+        ctx={ctx}
+        onChange={onChange}
+        values={values ?? {}}
+        hover={hover}
+        hl={hl ? col : null}
+      />
+    );
   return (
     <g>
       {c.options.map((o) => {
@@ -1485,6 +1500,110 @@ export const Select = memo(function Select({
     </g>
   );
 });
+
+/**
+ * A modulation matrix's points (`SelectControl.matrix`, the MicroFreak). The lamps are the definition's `led` decor;
+ * this draws a blinking ring round the chosen point and a click target on every point, and a click sets what
+ * `matrixClick` says: on, chosen, or off.
+ */
+function MatrixPoints({
+  c,
+  value,
+  target,
+  ctx,
+  onChange,
+  values,
+  hover,
+  hl,
+}: ControlPartProps<SelectControl> & {
+  values: ControlValues;
+  hover: HoverHandlers;
+  hl: string | null;
+}) {
+  const r = c.w / 2;
+  const click = (o: ControlOption) => {
+    for (const s of matrixClick(c, o, values)) onChange(s.id, s.value);
+  };
+  return (
+    <g>
+      {c.options.map((o) => {
+        if (o.hide) return null;
+        const ox = o.x ?? c.x;
+        const oy = o.y ?? c.y;
+        const chosen = o.v === value;
+        const amount = o.point ? values[o.point] : undefined;
+        const on = typeof amount === 'number' && amount !== 0;
+        return (
+          <g key={String(o.v)}>
+            {hl && (
+              <circle
+                className="kys-pulse"
+                cx={ox}
+                cy={oy}
+                r={r + 6}
+                fill="none"
+                stroke={hl}
+                strokeWidth="3"
+                pointerEvents="none"
+              />
+            )}
+            {chosen && (
+              <circle
+                className="kys-blink"
+                cx={ox}
+                cy={oy}
+                r={r}
+                fill="none"
+                stroke={ctx.outline ? INK : ACCENT}
+                strokeWidth="2.5"
+                pointerEvents="none"
+              />
+            )}
+            {target === o.v && target !== value && (
+              <circle
+                cx={ox + r}
+                cy={oy - r}
+                r="5"
+                fill={ACCENT}
+                stroke="#0008"
+                pointerEvents="none"
+              />
+            )}
+            <circle
+              cx={ox}
+              cy={oy}
+              r={r}
+              fill="transparent"
+              tabIndex={0}
+              role="switch"
+              aria-checked={on}
+              aria-label={`${cleanName(c)}: ${o.label}, ${on ? `on ${String(amount)}` : 'off'}${chosen ? ', picked' : ''}`}
+              className="kys-hit"
+              style={{ cursor: 'pointer' }}
+              {...hover}
+              onClick={(e) => {
+                focusStore.set({
+                  kind: 'control',
+                  id: c.id,
+                  x: e.clientX,
+                  y: e.clientY,
+                  tip: false,
+                });
+                click(o);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  click(o);
+                }
+              }}
+            />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
 
 /** The option a push on a select's sprung lever picks: the one before (`dir` −1) or after (+1), stopping at the ends. */
 export function leverStep(c: SelectControl, value: ControlValue, dir: -1 | 1): ControlValue {

@@ -500,6 +500,8 @@ export interface ControlOption {
   lamp?: LampColor;
   /** `select`: no button for this option. */
   hide?: boolean;
+  /** `select` with `matrix`: the `cont` control that holds this point's amount. */
+  point?: string;
 }
 
 /** A control with named positions. An enum knob prints each option's `label` at its angle (`''` suppresses it). */
@@ -684,6 +686,13 @@ export type SelectControl = ControlCommon & {
    * the bottom (right) the one after, stopping at either end, and it springs back. `len` is how far the bat leans.
    */
   lever?: { x: number; y: number; len: number; orient?: 'h' };
+  /**
+   * A modulation matrix's points (the MicroFreak): each option is a point at its own x, y and names the `cont` control
+   * that holds its amount in `point`. No buttons are drawn (the points' lamps are `led` decor), only a blinking ring
+   * round the chosen point. A click on a point at 0 sets it to `on` and chooses it; on a point that is not at 0 it
+   * chooses it; on the chosen point, when not at 0, it sets it back to 0. `w` is the size of each point's target.
+   */
+  matrix?: { on: number };
 } & EnumValue;
 
 /** One row of a display page: `label` on the left, the value in an inverted box on the right. Pair with `lcd` decor. */

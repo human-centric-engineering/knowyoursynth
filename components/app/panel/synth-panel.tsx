@@ -619,7 +619,17 @@ export function SynthPanel({
           if (c.type === 'fader')
             return <Fader key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           if (c.type === 'select')
-            return <Select key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
+            return (
+              <Select
+                key={c.id}
+                c={c}
+                value={value}
+                target={t}
+                ctx={ctx}
+                onChange={turn}
+                values={values}
+              />
+            );
           if (c.type === 'menu')
             return <MenuRow key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           return <Switch key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;

@@ -84,6 +84,16 @@ svg .kys-hit:focus-visible {
   animation: kys-pulse 1.3s ease-in-out infinite;
 }
 
+/* The MicroFreak's chosen matrix point: the hardware's blinking cursor LED. */
+@keyframes kys-blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+.kys-blink {
+  animation: kys-blink 0.8s steps(1, end) infinite;
+}
+
 @keyframes kys-fade {
   from {
     opacity: 0;
@@ -95,6 +105,7 @@ svg .kys-hit:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .kys-pulse,
+  .kys-blink,
   .kys-fade {
     animation: none;
   }

@@ -514,21 +514,54 @@ for (const d of DESTS) {
 }
 line(386, 124, 386, 184, 2.5, '#bdbcc3');
 line(386, 136, 432, 136, 2.5, '#bdbcc3');
+// The grid is lamps, as on the hardware: a point lights while its amount is not 0. The Env > Cutoff point is Filter
+// Amt, so its lamp lights while that knob is off the centre.
+const pointId = (s: SourceKey, d: DestKey): string =>
+  s === 'env' && d === 'cutoff' ? 'env.filter_amt' : `mx.${s}.${d}`;
+const POINTS: ControlOption[] = [];
 for (const s of SOURCES)
   for (const d of DESTS) {
-    if (s.k === 'env' && d.k === 'cutoff') {
-      // the Env > Cutoff point is Filter Amt: its lamp lights while that knob is off the centre
-      led(d.x, s.y, 'white', { id: 'env.filter_amt', eq: 0, not: true }, 7);
-      continue;
-    }
+    led(d.x, s.y, 'white', { id: pointId(s.k, d.k), eq: 0, not: true }, 7);
+    POINTS.push({
+      v: `${s.k}.${d.k}`,
+      label: `${s.name} > ${d.label}`,
+      x: X(d.x),
+      y: Y(s.y),
+      point: pointId(s.k, d.k),
+    });
+  }
+// Which point the Matrix encoder sets: the hardware's blinking cursor. A click on a point picks it, and switches it on
+// (at +50) when it is off or off when it is already picked and on.
+controls.push({
+  id: 'mx.sel',
+  type: 'select',
+  x: X(257.7),
+  y: Y(154),
+  w: 26,
+  h: 26,
+  kind: 'enum',
+  options: POINTS,
+  def: 'cycenv.pitch',
+  matrix: { on: 50 },
+  ui: true,
+  label: 'Matrix point',
+  labelPos: 'none',
+  module: 'mod',
+  help: 'The 35 points of the matrix, each linking a source on the left to a destination along the top; a lit point is in use. Click an unlit point to switch it on at +50, click a lit one to pick it, and click the picked one again to switch it off. The Matrix encoder sets the picked point’s amount.',
+});
+// The Matrix encoder: the picked point's amount, from −100 to +100. Each point's amount is its own control, shown
+// on the encoder while that point is picked. Env > Cutoff is Filter Amt, which keeps its own knob.
+for (const s of SOURCES)
+  for (const d of DESTS) {
+    if (s.k === 'env' && d.k === 'cutoff') continue;
     controls.push({
       id: `mx.${s.k}.${d.k}`,
       type: 'knob',
-      x: X(d.x),
-      y: Y(s.y),
-      r: 11,
+      x: X(465),
+      y: Y(133),
+      r: 25 * K,
       style: 'solar',
-      cap: DARK_CAP,
+      cap: '#e4e3ea',
       kind: 'cont',
       min: -100,
       max: 100,
@@ -537,7 +570,8 @@ for (const s of SOURCES)
       label: `${s.name} > ${d.label}`,
       labelPos: 'none',
       module: 'mod',
-      help: `How far ${SOURCE_SAYS[s.k]} moves ${DEST_SAYS[d.k]}: up for a positive amount, down for a negative one. On the hardware you pick this point with the Matrix encoder and set it on the display; here it is a knob of its own.`,
+      show: { id: 'mx.sel', eq: `${s.k}.${d.k}` },
+      help: `How far ${SOURCE_SAYS[s.k]} moves ${DEST_SAYS[d.k]}: up for a positive amount, down for a negative one. Pick the ${s.name} > ${d.label} point in the grid and turn the Matrix encoder; its lamp lights while the amount is not 0.`,
     });
   }
 // The Assign columns: each sends its five points to one destination.
@@ -565,7 +599,7 @@ const ASSIGN_TARGETS: ControlOption[] = [
     help: `Picks where the matrix’s Assign ${i + 1} column sends its five sources: each press moves on to the next. On the hardware you hold Assign ${i + 1} and move a knob; it can also reach Glide, Type, the envelope’s other knobs, the Arp/Seq rate, the cycling envelope’s knobs or another point’s amount, which the app does not model.`,
   });
 });
-// the Matrix encoder: on the hardware it picks a point and sets its amount
+// the Matrix encoder's ring and face, under the picked point's amount knob
 decor.push(
   { t: 'circle', x: X(465), y: Y(133), r: 33 * K, fill: 'none', stroke: INK, sw: 3 },
   { t: 'circle', x: X(465), y: Y(133), r: 25 * K, fill: '#e4e3ea', stroke: '#8d8c93', sw: 2 }
@@ -575,7 +609,7 @@ marks.push({
   id: 'mx.encoder',
   name: 'Matrix encoder',
   module: 'mod',
-  help: 'On the hardware you turn it to pick one of the 35 points, press it, and turn again to set the amount, which the display shows; holding it clears the point. Here every point has its own small knob in the grid, so the encoder has nothing to do.',
+  help: 'Sets the amount of the matrix point picked in the grid, from −100 to +100. On the hardware you turn it to move to a point, press it and turn again to set the amount, and hold it to clear the point; here you click the point instead. Env > Cutoff is the Filter Amt knob, so with that point picked the encoder has nothing to set.',
   rect: { x: X(430), y: Y(98), w: 70 * K, h: 90 * K },
 });
 
@@ -1264,7 +1298,7 @@ const areas: Area[] = [
     keywords:
       'matrix mod matrix modulation routing sources destinations assign cycenv env lfo press key arp',
     rects: [R(OX, OY, 520, 200)],
-    help: 'The modulation matrix: five sources down the side (the cycling envelope, the envelope, the LFO, Press and Key/Arp) and seven destinations across the top. Each point sets how far its source moves its destination, either way. The three Assign columns go wherever their button sets.',
+    help: 'The modulation matrix: five sources down the side (the cycling envelope, the envelope, the LFO, Press and Key/Arp) and seven destinations across the top. Each point sets how far its source moves its destination, either way, and lights while it is in use. Click a point to pick it (an unlit one switches on at +50) and set its amount on the Matrix encoder. The three Assign columns go wherever their button sets.',
   },
   {
     id: 'voice',
