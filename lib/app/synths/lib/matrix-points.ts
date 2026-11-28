@@ -1,4 +1,5 @@
 import type {
+  Control,
   ControlOption,
   ControlValue,
   ControlValues,
@@ -9,6 +10,26 @@ import type {
 export interface MatrixSet {
   id: string;
   value: ControlValue;
+}
+
+/**
+ * The matrix point to pick so a pointed-at control can be seen: the first of `ids` that is hidden only because a
+ * modulation matrix (`SelectControl.matrix`) has another point picked. Search, the tour or a lesson pointing at the
+ * MicroFreak's LFO > Pitch amount picks LFO > Pitch, so its knob is the one on the Matrix encoder. Null when none is.
+ */
+export function pointToShow(
+  controls: readonly Control[],
+  ids: readonly string[],
+  values: ControlValues
+): MatrixSet | null {
+  for (const id of ids) {
+    const c = controls.find((x) => x.id === id);
+    const show = c?.show;
+    if (!show || Array.isArray(show) || !('eq' in show) || values[show.id] === show.eq) continue;
+    const mode = controls.find((x) => x.id === show.id);
+    if (mode?.type === 'select' && mode.matrix) return { id: mode.id, value: show.eq };
+  }
+  return null;
 }
 
 /**

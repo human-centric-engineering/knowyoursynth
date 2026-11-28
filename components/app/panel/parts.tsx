@@ -1521,8 +1521,9 @@ function MatrixPoints({
   hl: string | null;
 }) {
   const r = c.w / 2;
+  // decided on the pick the panel draws (a lane's, while one plays it)
   const click = (o: ControlOption) => {
-    for (const s of matrixClick(c, o, values)) onChange(s.id, s.value);
+    for (const s of matrixClick(c, o, { ...values, [c.id]: value })) onChange(s.id, s.value);
   };
   return (
     <g>
@@ -1576,7 +1577,7 @@ function MatrixPoints({
               fill="transparent"
               tabIndex={0}
               role="button"
-              aria-pressed={chosen}
+              aria-current={chosen ? 'true' : undefined}
               aria-label={`${cleanName(c)}: ${o.label}, ${on ? `on ${String(amount)}` : 'off'}`}
               className="kys-hit"
               style={{ cursor: 'pointer' }}
@@ -1594,7 +1595,8 @@ function MatrixPoints({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  click(o);
+                  // a held key repeats: each press is one click, not a run of on, off, on
+                  if (!e.repeat) click(o);
                 }
               }}
             />

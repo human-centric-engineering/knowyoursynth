@@ -532,6 +532,10 @@ describe('a matrix select', () => {
       ['mx', 'b'],
     ]);
     fireEvent.keyDown(screen.getByRole('button', { name: 'Point: B > Pitch, off' }), { key: 'q' });
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Point: B > Pitch, off' }), {
+      key: 'Enter',
+      repeat: true,
+    });
     expect(onChange).toHaveBeenCalledTimes(2);
   });
 
@@ -539,10 +543,10 @@ describe('a matrix select', () => {
     const onChange = vi.fn();
     const { container } = draw({ mx: 'a', a: -30, b: 0 }, onChange);
     const picked = screen.getByRole('button', { name: 'Point: A > Pitch, on -30' });
-    expect(picked.getAttribute('aria-pressed')).toBe('true');
+    expect(picked.getAttribute('aria-current')).toBe('true');
     expect(
-      screen.getByRole('button', { name: 'Point: B > Pitch, off' }).getAttribute('aria-pressed')
-    ).toBe('false');
+      screen.getByRole('button', { name: 'Point: B > Pitch, off' }).getAttribute('aria-current')
+    ).toBeNull();
     expect(container.querySelectorAll('.kys-blink')).toHaveLength(1);
     fireEvent.click(picked);
     expect(onChange.mock.calls).toEqual([['a', 0]]);

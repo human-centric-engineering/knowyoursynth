@@ -13,6 +13,7 @@
 import { describe, it, expect, vi, afterEach, beforeAll, beforeEach } from 'vitest';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { SynthPage } from '@/components/app/synth/synth-page';
+import { findStore, highlightStore } from '@/components/app/synth/stores';
 import { getSynthDetail } from '@/lib/app/catalogue/read';
 import type { SynthDetail } from '@/lib/app/catalogue/read';
 import { getSynthDef } from '@/lib/app/synths/defs';
@@ -316,5 +317,29 @@ describe('the VCS3 page’s pin matrix', () => {
 
     const after = lastParams(engine.send)?.cables;
     expect(after).toEqual([...(Array.isArray(before) ? before : []), route]);
+  });
+});
+
+describe('the MicroFreak page’s matrix', () => {
+  afterEach(() => {
+    findStore.set(null);
+    highlightStore.set([]);
+  });
+
+  it('picks a point whose amount a find points at, so its knob is the one on the Matrix encoder', async () => {
+    const { detail } = await loadPage('microfreak');
+    render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
+    expect(screen.getByRole('slider', { name: 'CycEnv > Pitch' })).toBeTruthy();
+    expect(screen.queryByRole('slider', { name: 'LFO > Pitch' })).toBeNull();
+    act(() => findStore.set({ kind: 'control', id: 'mx.lfo.pitch' }));
+    expect(screen.getByRole('slider', { name: 'LFO > Pitch' })).toBeTruthy();
+    expect(screen.queryByRole('slider', { name: 'CycEnv > Pitch' })).toBeNull();
+  });
+
+  it('picks the point a lesson or tweak lights', async () => {
+    const { detail } = await loadPage('microfreak');
+    render(<SynthPage detail={detail} synths={[detail.synth]} viewParam={null} />);
+    act(() => highlightStore.set(['mx.key.timbre']));
+    expect(screen.getByRole('slider', { name: 'Key/Arp > Timbre' })).toBeTruthy();
   });
 });

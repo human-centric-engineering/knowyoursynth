@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { SelectControl } from '@/lib/app/synths/contract';
-import { matrixClick } from '@/lib/app/synths/lib/matrix-points';
+import type { Control, SelectControl } from '@/lib/app/synths/contract';
+import { matrixClick, pointToShow } from '@/lib/app/synths/lib/matrix-points';
 import microfreak from '@/lib/app/synths/defs/microfreak';
 
 const found = microfreak.controls.find((c) => c.id === 'mx.sel');
@@ -56,6 +56,52 @@ describe('matrixClick on the MicroFreak matrix', () => {
     expect(matrixClick(plain, option('lfo.pitch'), { 'mx.lfo.pitch': 0 })).toEqual([
       { id: 'mx.sel', value: 'lfo.pitch' },
     ]);
+  });
+});
+
+describe('pointToShow', () => {
+  const values = { ...microfreak.init, 'mx.sel': 'cycenv.pitch' };
+
+  it('picks the point whose amount is pointed at while another point is picked', () => {
+    expect(pointToShow(microfreak.controls, ['mx.lfo.pitch'], values)).toEqual({
+      id: 'mx.sel',
+      value: 'lfo.pitch',
+    });
+  });
+
+  it('picks for the first hidden amount in a list, past controls on show', () => {
+    expect(
+      pointToShow(microfreak.controls, ['vcf.cutoff', 'mx.cycenv.pitch', 'mx.key.timbre'], values)
+    ).toEqual({ id: 'mx.sel', value: 'key.timbre' });
+  });
+
+  it('picks nothing when the amount is already on show, or nothing is a matrix amount', () => {
+    expect(pointToShow(microfreak.controls, ['mx.cycenv.pitch'], values)).toBeNull();
+    expect(pointToShow(microfreak.controls, ['vcf.cutoff', 'no.such'], values)).toBeNull();
+  });
+
+  it('leaves a control hidden by a panel mode that is not a matrix alone', () => {
+    const page: Control = {
+      id: 'ui.page',
+      type: 'select',
+      x: 0,
+      y: 0,
+      w: 10,
+      h: 10,
+      kind: 'enum',
+      options: [
+        { v: 'a', label: 'A' },
+        { v: 'b', label: 'B' },
+      ],
+      def: 'a',
+      ui: true,
+      module: 'mod',
+      help: 'A page.',
+    };
+    const deep: Control = { ...page, id: 'deep', show: { id: 'ui.page', eq: 'b' } };
+    const list: Control = { ...page, id: 'listed', show: [{ id: 'mx.sel', eq: 'lfo.pitch' }] };
+    expect(pointToShow([page, deep], ['deep'], { 'ui.page': 'a' })).toBeNull();
+    expect(pointToShow([...microfreak.controls, list], ['listed'], values)).toBeNull();
   });
 });
 

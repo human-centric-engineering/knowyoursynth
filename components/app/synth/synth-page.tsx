@@ -73,6 +73,7 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { layoutDef, layoutKind } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
+import { pointToShow } from '@/lib/app/synths/lib/matrix-points';
 import {
   cablesToEngine,
   faceView,
@@ -707,6 +708,16 @@ function Synth({
   useEffect(() => {
     storedRef.current = stored;
   });
+  // A find, the tour or a lesson pointing at a matrix point's amount picks that point, so its knob is the one on the
+  // MicroFreak's Matrix encoder (`pointToShow`). Only when the pointing changes: a point picked by hand afterwards stays.
+  const pointedAt = useStore(findStore, (f) => (f && f.kind === 'control' ? f.id : null));
+  const litIds = useStore(highlightStore);
+  useEffect(() => {
+    const ids = pointedAt ? [pointedAt, ...litIds] : litIds;
+    if (!ids.length) return;
+    const pick = pointToShow(synthDef.controls, ids, storedRef.current.values);
+    if (pick) patch((s) => ({ ...s, values: { ...s.values, [pick.id]: pick.value } }));
+  }, [pointedAt, litIds, synthDef, patch]);
   // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
