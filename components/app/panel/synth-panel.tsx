@@ -627,7 +627,8 @@ export function SynthPanel({
                 target={t}
                 ctx={ctx}
                 onChange={turn}
-                values={values}
+                // only a matrix reads the other controls; the rest keep their memo
+                values={c.matrix ? values : undefined}
               />
             );
           if (c.type === 'menu')

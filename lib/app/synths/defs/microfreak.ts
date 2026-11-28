@@ -547,7 +547,7 @@ controls.push({
   label: 'Matrix point',
   labelPos: 'none',
   module: 'mod',
-  help: 'The 35 points of the matrix, each linking a source on the left to a destination along the top; a lit point is in use. Click an unlit point to switch it on at +50, click a lit one to pick it, and click the picked one again to switch it off. The Matrix encoder sets the picked point’s amount.',
+  help: 'The 35 points of the matrix, each linking a source on the left to a destination along the top; a lit point is in use. Click an unlit point to switch it on at +50, click a lit one to pick it, and click the picked one again to switch it off. The Matrix encoder sets the picked point’s amount. Env > Cutoff is the Filter Amt knob, so switching that point on or off moves Filter Amt.',
 });
 // The Matrix encoder: the picked point's amount, from −100 to +100. Each point's amount is its own control, shown
 // on the encoder while that point is picked. Env > Cutoff is Filter Amt, which keeps its own knob.

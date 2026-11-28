@@ -1575,9 +1575,9 @@ function MatrixPoints({
               r={r}
               fill="transparent"
               tabIndex={0}
-              role="switch"
-              aria-checked={on}
-              aria-label={`${cleanName(c)}: ${o.label}, ${on ? `on ${String(amount)}` : 'off'}${chosen ? ', picked' : ''}`}
+              role="button"
+              aria-pressed={chosen}
+              aria-label={`${cleanName(c)}: ${o.label}, ${on ? `on ${String(amount)}` : 'off'}`}
               className="kys-hit"
               style={{ cursor: 'pointer' }}
               {...hover}
