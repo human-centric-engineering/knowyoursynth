@@ -79,6 +79,7 @@ const EXPORTED: {
   { id: 'subharmonicon', sounds: 128, timeline: 5, relatives: 3, unusual: 9, limits: 3 },
   { id: 'dfam', sounds: 32, timeline: 6, relatives: 3, unusual: 8, limits: 3 },
   { id: 'edge', sounds: 12, timeline: 3, relatives: 2, unusual: 9, limits: 3 },
+  { id: 'microfreak', sounds: 17, timeline: 5, relatives: 3, unusual: 10, limits: 3 },
   { id: 'jupiter-4', sounds: 150, timeline: 5, relatives: 3, unusual: 12, limits: 8 },
   { id: 'jupiter-6', sounds: 150, timeline: 5, relatives: 3, unusual: 25, limits: 10 },
   { id: 'jupiter-8', sounds: 150, timeline: 5, relatives: 3, unusual: 15, limits: 6 },
@@ -153,6 +154,7 @@ describe('the exported content', () => {
       { id: 'subharmonicon', order: 44, listed: true },
       { id: 'dfam', order: 45, listed: true },
       { id: 'edge', order: 46, listed: true },
+      { id: 'microfreak', order: 47, listed: true },
     ]);
   });
 
