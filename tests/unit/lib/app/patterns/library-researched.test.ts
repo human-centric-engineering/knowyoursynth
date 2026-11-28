@@ -129,7 +129,7 @@ describe('the research batches', () => {
   const rosters: [string, string[], number][] = [
     ['t-127', ['Kraftwerk', 'Depeche Mode'], 66],
     ['t-128', ['Daft Punk', 'Jean-Michel Jarre', 'Tangerine Dream'], 115],
-    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 108],
+    ['t-129', ['Brian Eno', 'Daniel Lanois', 'Vangelis', 'Boards of Canada'], 109],
     [
       't-160',
       [
