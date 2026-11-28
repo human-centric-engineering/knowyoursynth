@@ -32,6 +32,7 @@ export const NATIVE_SYNTHS: readonly string[] = [
   'subharmonicon',
   'dfam',
   'edge',
+  'microfreak',
 ];
 
 export const isNativeSynth = (id: string): boolean => NATIVE_SYNTHS.includes(id);

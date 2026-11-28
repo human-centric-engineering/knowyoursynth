@@ -60,6 +60,7 @@ import behringerOdyssey from '@/lib/app/synths/defs/behringer-odyssey';
 import subharmonicon from '@/lib/app/synths/defs/subharmonicon';
 import dfam from '@/lib/app/synths/defs/dfam';
 import edge from '@/lib/app/synths/defs/edge';
+import microfreak from '@/lib/app/synths/defs/microfreak';
 
 /** A definition as the app holds it: always versioned. */
 export type AppSynthDef = SynthDef & { version: number };
@@ -113,6 +114,7 @@ export const SYNTH_DEFS: readonly AppSynthDef[] = [
   subharmonicon,
   dfam,
   edge,
+  microfreak,
 ];
 
 const byId = new Map(SYNTH_DEFS.map((d) => [d.id, d]));
