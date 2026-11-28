@@ -1,0 +1,43 @@
+{
+  "synth": "deckards-dream",
+  "title": "From the CS-80 to the Deckard’s Dream",
+  "intro": "The Deckard’s Dream is Black Corporation’s analogue polysynth built around the Yamaha CS-80’s voice. Its name points to Blade Runner, whose score Vangelis played on a CS-80. Its maker calls it not a clone but a revival of the CS-80’s sound design: the same two layers per note, IL-AL-A-D-R filter envelope and sine past the filters, in a keyless module played over MIDI with polyphonic aftertouch.",
+  "timeline": [
+    {
+      "year": "1977",
+      "name": "Yamaha CS-80",
+      "tag": "The model",
+      "text": "Yamaha’s eight-voice flagship: two channels per note, each a VCO, high-pass and low-pass filters with the IL-AL-A-D-R envelope and a VCA, a keyboard that senses velocity and pressure on each key, a ribbon, a ring modulator and a tremolo/chorus. About 100 kg."
+    },
+    {
+      "year": "2018",
+      "name": "Black Corporation Deckard’s Dream",
+      "tag": "The first version",
+      "text": "The CS-80’s voice without the keyboard, ribbon, ring modulator or chorus, as an eight-voice module with two layers per voice, 16 VCOs, stored presets, MIDI with polyphonic aftertouch and MPE, and an external input for the sub oscillator. Sold built or as a kit; a separate Expander added ring modulation, chorus and a master sustain."
+    },
+    {
+      "year": "2020",
+      "name": "Black Corporation Deckard’s Dream MK2",
+      "tag": "This synth",
+      "text": "A slimmer, lighter version with the same engine, adding the master SUSTAIN slider, the SUSTAIN I/II switch and a PANEL button, with sample and hold in place of the external input."
+    }
+  ],
+  "relatives": [
+    {
+      "name": "Yamaha CS-80",
+      "years": "1977",
+      "text": "The synth it is modelled on, in the app beside it: switch between the two from the version toggle."
+    },
+    {
+      "name": "Black Corporation Kijimi",
+      "years": "2018",
+      "text": "Black Corporation’s other eight-voice analogue polysynth in the same rack-style case, inspired by the RSF PolyKobol II."
+    },
+    {
+      "name": "Behringer DS-80",
+      "years": "announced",
+      "text": "Behringer’s planned copy of the CS-80, first mentioned in 2020 and not on sale."
+    }
+  ],
+  "note": "Which records used a Deckard’s Dream is rarely documented, so no players are listed. Where a sound credits Vangelis, it is the CS-80 sound he made, which the Deckard’s Dream was built to revive."
+}

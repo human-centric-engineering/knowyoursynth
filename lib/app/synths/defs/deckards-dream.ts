@@ -925,7 +925,7 @@ controls.push({
     { v: 'off', label: 'Off' },
     { v: 'gliss', label: 'G' },
   ],
-  def: 'off',
+  def: 'porta',
   module: 'glide',
   label: 'P/G',
   name: 'P / G',
@@ -1322,7 +1322,7 @@ const deckardsDream: SynthDef & { version: number } = {
       {
         title: 'Hear layer I alone, with nothing on top',
         module: 'mixer',
-        why: 'Every note plays two layers, I and II, each a whole synth voice. MIX pushed all the way up plays layer I alone. DETUNE CH II at the centre keeps layer II in tune for later. P/G at its centre, PORT/GLISS and SUSTAIN all the way down, and the sub oscillator’s depths and the touch response levers all the way up, so there is no slide, no hold and no wobble.',
+        why: 'Every note plays two layers, I and II, each a whole synth voice. MIX pushed all the way up plays layer I alone. DETUNE CH II at the centre keeps layer II in tune for later. P/G on P with PORT/GLISS all the way down, SUSTAIN all the way down, and the sub oscillator’s depths and the touch response levers all the way up, so there is no slide, no hold and no wobble.',
         controls: ['mix.*', 'tune.detune', 'sustain.*', 'porta.*', 'sub.*', 'touch.*'],
       },
       {

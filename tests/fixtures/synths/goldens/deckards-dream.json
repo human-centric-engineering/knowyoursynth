@@ -8742,10 +8742,186 @@
       },
       "routes": [{ "amt": 0.8, "by": "env2", "dst": "amp", "src": "kbdHi" }]
     },
-    "porta.time=2.5": {},
-    "porta.time=5": {},
-    "porta.time=7.5": {},
-    "porta.time=10": {},
+    "porta.time=2.5": {
+      "glide": { "legato": false, "steps": false, "time": 0.25 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 0.25 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
+    "porta.time=5": {
+      "glide": { "legato": false, "steps": false, "time": 1 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 1 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
+    "porta.time=7.5": {
+      "glide": { "legato": false, "steps": false, "time": 2.25 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 2.25 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
+    "porta.time=10": {
+      "glide": { "legato": false, "steps": false, "time": 4 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 4 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
     "sustain.time=2.5": {
       "env1": { "a": 0.001, "d": 0.01, "r": 0.9375, "s": 0 },
       "env2": { "a": 0.001, "d": 0.01, "r": 0.9375, "s": 1 },
@@ -8930,7 +9106,7 @@
         "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
       }
     },
-    "porta.mode=\"porta\"": {},
+    "porta.mode=\"off\"": {},
     "porta.mode=\"gliss\"": {
       "glide": { "legato": false, "steps": true, "time": 0 },
       "layer": {
@@ -16814,10 +16990,186 @@
       },
       "routes": [{ "amt": 0.8, "by": "env2", "dst": "amp", "src": "kbdHi" }]
     },
-    "patched:* porta.time=2.5": {},
-    "patched:* porta.time=5": {},
-    "patched:* porta.time=7.5": {},
-    "patched:* porta.time=10": {},
+    "patched:* porta.time=2.5": {
+      "glide": { "legato": false, "steps": false, "time": 0.25 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 0.25 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
+    "patched:* porta.time=5": {
+      "glide": { "legato": false, "steps": false, "time": 1 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 1 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
+    "patched:* porta.time=7.5": {
+      "glide": { "legato": false, "steps": false, "time": 2.25 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 2.25 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
+    "patched:* porta.time=10": {
+      "glide": { "legato": false, "steps": false, "time": 4 },
+      "layer": {
+        "att": [1, 1],
+        "delay": { "on": false },
+        "env1": { "a": 0.001, "d": 0.01, "r": 0.01, "s": 0 },
+        "env2": { "a": 0.001, "d": 0.01, "r": 0.04317359883766555, "s": 1 },
+        "ext": { "level": 0 },
+        "filter": {
+          "cutoff": 16000,
+          "envAmt": 0,
+          "envSrc": "env1",
+          "kbd": 1,
+          "mode": "lp",
+          "res": 0,
+          "type": "svf"
+        },
+        "glide": { "legato": false, "steps": false, "time": 4 },
+        "hpf": { "cutoff": 20, "envAmt": 0, "envSrc": "env1", "kbd": 1, "res": 0 },
+        "keyEnds": { "mid": 66, "span": 30 },
+        "lfo": { "keySync": false, "mix": { "tri": 1 }, "rate": 0.7 },
+        "lfo2": { "keySync": false, "mix": { "sine": 1 }, "rate": 2.0462120158140875 },
+        "noise": { "color": "white", "level": 0 },
+        "normals": { "vcaIn": ["od", 1] },
+        "od": { "on": false },
+        "osc": [
+          {
+            "kbd": true,
+            "level": 0.36,
+            "mix": { "pulse": 0, "saw": 1 },
+            "pw": 0.5,
+            "semi": 0,
+            "syncTo": -1
+          },
+          { "kbd": true, "level": 0, "mix": { "sine": 1 }, "semi": 0, "syncTo": -1 }
+        ],
+        "pulse": { "time": 0.25 },
+        "routes": [],
+        "sh": { "glide": 0, "rate": 5 },
+        "slew": { "time": 0.1 },
+        "trig": { "drone": false, "repeat": false, "retrig": true },
+        "tune": 0,
+        "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
+      }
+    },
     "patched:* sustain.time=2.5": {
       "env1": { "a": 0.001, "d": 0.01, "r": 0.9375, "s": 0 },
       "env2": { "a": 0.001, "d": 0.01, "r": 0.9375, "s": 1 },
@@ -17002,7 +17354,7 @@
         "vca": { "bias": 0, "envSrc": "env2", "gain": 0 }
       }
     },
-    "patched:* porta.mode=\"porta\"": {},
+    "patched:* porta.mode=\"off\"": {},
     "patched:* porta.mode=\"gliss\"": {
       "glide": { "legato": false, "steps": true, "time": 0 },
       "layer": {

@@ -980,6 +980,16 @@
       "app": ["microfreak"],
       "text": "A four-voice paraphonic hybrid synthesiser with digital oscillators, an analogue filter and a touch-capacitive keyboard.",
       "source": "https://en.wikipedia.org/wiki/Arturia"
+    },
+    {
+      "id": "black-corporation-deckards-dream",
+      "name": "Black Corporation Deckard's Dream",
+      "maker": "Black Corporation",
+      "year": "2018",
+      "kind": "module",
+      "app": ["deckards-dream"],
+      "text": "An eight-voice analogue polysynth module modelled on the Yamaha CS-80, with two layers per voice, 16 VCOs, polyphonic aftertouch and MPE, sold built or as a DIY kit. The MK2 of 2020 added a master sustain slider and the SUSTAIN I/II switch.",
+      "source": "https://www.synthtopia.com/?p=92926"
     }
   ]
 }

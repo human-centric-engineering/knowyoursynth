@@ -1,0 +1,54 @@
+{
+  "synth": "deckards-dream",
+  "unusual": [
+    {
+      "target": "mix.mix",
+      "text": "Every note plays two complete voices at once, layer I and layer II, each with its own oscillator, filters and envelopes, the CS-80’s design. MIX crossfades them, so a patch is often two different sounds played as one."
+    },
+    {
+      "target": "vcf",
+      "text": "The filter envelope is the CS-80’s IL-AL-A-D-R. Instead of starting at the cutoffs you set and rising from them, each note starts thinner (IL), opens past them (AL) and settles back on them, with no sustain slider of its own."
+    },
+    {
+      "target": "ch1.il",
+      "text": "With HPF MOD on NORMAL, its default, the high-pass filter’s envelope moves the opposite way in frequency to the low-pass’s, so IL narrows the band from both sides and AL widens it. INVERTED in the VOICE menu makes the two move together."
+    },
+    {
+      "target": "ch1.sine",
+      "text": "The sine wave skips the filters and goes straight to the VCA, so a pure fundamental can sit under a filtered sound however the filters are set."
+    },
+    {
+      "target": "sub",
+      "text": "Many sliders of the master section give most at the bottom, as the CS-80’s levers do pulled towards the player: the sub oscillator’s, the touch response’s and RESO. The sliders that tune or balance (PITCH, DETUNE, MIX, BRIL. and KEYBOARD CONTROL) are neutral at their centre detent."
+    },
+    {
+      "target": "feet",
+      "text": "Octaves are set in organ footages, 16′ to 2′, including the fifths 5⅓′ and 2⅔′, separately for each layer on stepped sliders. The manual suggests a footage an octave lower to match a CS-80’s pitch from a standard 61-key MIDI keyboard."
+    },
+    {
+      "target": "performance",
+      "text": "The P/G switch has three positions: portamento, nothing, and glissando, which steps through every semitone on the way to the next note. The MK2’s SUSTAIN slider lengthens every note’s release at once, separately from each layer’s VCA R."
+    },
+    {
+      "target": "tone",
+      "text": "There is no keyboard: it is a module played over MIDI, with polyphonic aftertouch and MPE, so one note of a chord can be made brighter, louder or wobblier than the others from a controller that sends them."
+    }
+  ],
+  "limits": {
+    "intro": "The voice is modelled: both layers on every note, each with the square and sawtooth with PW and PWM, noise, the sine past the filters, the high-pass and low-pass filters with their resonance and the IL-AL-A-D-R envelope, and the VCA with its ADSR and LEVEL. FEET, MIX, DETUNE CH II, COARSE and FINE, BRIL., RESO., KEYBOARD CONTROL, INITIAL BRILLIANCE and LEVEL, TOUCH P.BEND and SPEED, the sub oscillator with all six functions, portamento and glissando with the P/G switch’s centre, and the master SUSTAIN all work. The app’s keyboard plays every key at one velocity; the sequencer plays softer and harder notes.",
+    "items": [
+      {
+        "title": "What is not modelled",
+        "text": "Anything that needs aftertouch: the AFTER BRILLIANCE and AFTER LEVEL sliders of each layer and the sub oscillator’s VCO and VCF AFTER sliders, because the app’s keyboard senses no pressure. SUSTAIN II (new notes cutting off released ones). The TONE SELECTOR’s presets and buttons, which are printed: the library keeps sounds and the panel always plays as PANEL. The settings menu: voice mode (always eight-voice poly here), unison, cards per voice, drift, HPF MOD (always NORMAL), the TIME menu’s ranges (always their defaults), the LFO’s MONO mode and depth, the mod wheel’s destinations, MIDI pitch bend, MPE, microtuning, TRACKING WIDTH and MIDDLE OCTAVE, and the AMOUNT of KEYBOARD CONTROL. The MIDI, USB, audio and headphone sockets, and the power switch."
+      },
+      {
+        "title": "Where the app’s Deckard’s Dream differs",
+        "text": "Glide here takes the same time whatever the interval, up to about 4 s; on the hardware it grows with the distance between the notes, about 10 s from the lowest note to the highest at the top of PORT/GLISS. TOUCH SPEED answers to velocity, as the manual’s Touch Response section says; the panel prints it under SUB OSC AFTER, and the spec records the doubt. INITIAL BRILLIANCE and P.BEND act on both filters and on the pitch as the app’s CS-80 does. The high-pass filter here is the engine’s 24 dB one, where the hardware’s is 12 dB."
+      },
+      {
+        "title": "Ranges",
+        "text": "The manual gives the PWM LFO 0.7–70 Hz and the sub oscillator 0.7–25 Hz, attack up to 1 s and decay and release up to 15 s (each the TIME menu’s default), pulse width 50–90 %, COARSE about five semitones, FINE and DETUNE CH II about one, and P.BEND one semitone (TR PITCHBEND RANGE’s default). It does not give the VCO’s range, the shortest envelope times, the filter ranges, how far IL and AL move the filters, the keyboard control’s curve or how RND differs from S/H: those are this app’s estimates. Here RND moves things with the noise generator, as the app’s CS-80 does on NOISE, and S/H steps at SPEED; SUSTAIN reaches about 15 s. Resonance stops short of self-oscillation, as on the hardware, and the filtered sound is turned down as it rises."
+      }
+    ]
+  }
+}

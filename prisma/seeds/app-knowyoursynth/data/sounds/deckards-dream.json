@@ -1,0 +1,1019 @@
+{
+  "synth": "deckards-dream",
+  "version": 1,
+  "sounds": [
+    {
+      "id": "dd-dream-brass",
+      "name": "Dream Brass",
+      "ref": "The slow, swelling brass of Vangelis’s \"Blade Runner\" end titles, which he played on the CS-80 this synth is modelled on",
+      "artist": "Vangelis",
+      "tags": ["brass", "film", "80s"],
+      "level": 2,
+      "blurb": "A huge brass chord that swells, glows and hangs in the air.",
+      "how": "Both layers play the same sawtooth patch, layer II a little sharp, so every note is two voices beating against each other. The IL-AL filter envelope starts each note thin, swells it fuller than its resting tone and lets it settle: the brass blare. A slow sub-oscillator vibrato keeps it moving. The CS-80’s chorus, heard on the record, is not on the Deckard’s Dream.",
+      "phrase": {
+        "bpm": 56,
+        "loop": true,
+        "steps": [
+          [0, 46, 3.8, 0.75],
+          [0, 53, 3.8, 0.75],
+          [0, 58, 3.8, 0.75],
+          [0, 61, 3.8, 0.75],
+          [0, 65, 3.8, 0.75],
+          [4, 42, 3.8, 0.8],
+          [4, 49, 3.8, 0.8],
+          [4, 54, 3.8, 0.8],
+          [4, 58, 3.8, 0.8],
+          [4, 61, 3.8, 0.8],
+          [8, 44, 3.8, 0.75],
+          [8, 51, 3.8, 0.75],
+          [8, 56, 3.8, 0.75],
+          [8, 60, 3.8, 0.75],
+          [8, 63, 3.8, 0.75],
+          [12, 41, 3.8, 0.85],
+          [12, 48, 3.8, 0.85],
+          [12, 53, 3.8, 0.85],
+          [12, 57, 3.8, 0.85],
+          [12, 60, 3.8, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two layers on every note",
+          "module": "mixer",
+          "why": "Every note plays both layers; MIX crossfades them.\n- MIX I-II I 50 : II 50: both layers together, each a sawtooth at 8′\n- DETUNE CH II +0.1 st: layer II a shade sharp, so the two voices of each note beat slowly\n- Listen for: one sawtooth, then a thicker, slowly swirling one.",
+          "set": {
+            "mix.mix": 5,
+            "tune.detune": 0.6
+          }
+        },
+        {
+          "title": "The brass swell in the filter envelope",
+          "module": "env",
+          "why": "The filter envelope starts thinner than the cutoffs you set (IL), opens past them (AL) and settles on them. Set the same on both layers.\n- LPF I and II 326 Hz: a dark resting tone\n- IL I and II −2.0\n- AL I and II +3.0: each note starts darker still, then swells brighter\n- VCF A I and II 500 ms: a slow swell\n- VCF D I and II 1.7 s\n- VCF R I and II 1.7 s\n- RESL I 20 %\n- Listen for: each chord opening up into a bright blare, then mellowing.",
+          "set": {
+            "ch1.lpf": 3.5,
+            "ch2.lpf": 3.5,
+            "ch1.il": 4,
+            "ch2.il": 4,
+            "ch1.al": 6,
+            "ch2.al": 6,
+            "ch1.fa": 9,
+            "ch2.fa": 9,
+            "ch1.fd": 7,
+            "ch2.fd": 7,
+            "ch1.fr": 7,
+            "ch2.fr": 7,
+            "ch1.resL": 2
+          }
+        },
+        {
+          "title": "Let the level breathe",
+          "module": "env",
+          "why": "The VCA envelope, on both layers, shapes the loudness to match the swell.\n- VCA A I and II 500 ms: each chord fades in\n- VCA D I and II 1.7 s\n- VCA S I and II 80 %: a slight dip after the peak\n- VCA R I and II 1.7 s: a long tail, so one chord melts into the next\n- Listen for: soft beginnings and long, overlapping endings.",
+          "set": {
+            "ch1.a": 9,
+            "ch2.a": 9,
+            "ch1.d": 7,
+            "ch2.d": 7,
+            "ch1.s": 8,
+            "ch2.s": 8,
+            "ch1.r": 7,
+            "ch2.r": 7
+          }
+        },
+        {
+          "title": "Vibrato and touch",
+          "module": "lfo",
+          "why": "The finishing touches make it move.\n- SUB OSCILLATOR SPEED 4.18 Hz: a gentle vibrato rate\n- SUB OSCILLATOR VCO 25 %: pulled down a quarter: a little vibrato on every note\n- INITIAL BRILLIANCE I and II 30 %: a harder chord is brighter\n- Listen for: a wide, shimmering chord that seems to breathe.",
+          "set": {
+            "sub.speed": 5,
+            "sub.vco": 2.5,
+            "ch1.initBrill": 3,
+            "ch2.initBrill": 3
+          }
+        }
+      ],
+      "context": {
+        "tune.detune": "How far layer II sits from layer I: the slow beating inside each note.",
+        "ch1.al": "How far past its resting tone the filter swells: the blare.",
+        "ch1.fa": "How slowly the swell comes in.",
+        "sub.vco": "The depth of the vibrato."
+      },
+      "tweaks": [
+        {
+          "id": "tune.detune",
+          "try": "Pull down to 2",
+          "hear": "A wider, more unsettled beating inside every chord."
+        },
+        {
+          "id": "ch1.al",
+          "try": "Raise to 10",
+          "hear": "A brighter, more aggressive blare at the top of each swell."
+        },
+        {
+          "id": "mix.mix",
+          "try": "Push to the top (layer I only)",
+          "hear": "One voice per note: thinner and steadier."
+        }
+      ]
+    },
+    {
+      "id": "dd-strings",
+      "name": "Layered Strings",
+      "ref": "A bowed-string ensemble from two layers: a sawtooth on one and a slowly sweeping pulse on the other, the string sound of late-1970s polysynths",
+      "artist": "Late-1970s polysynth strings",
+      "tags": ["strings", "pad", "70s"],
+      "level": 1,
+      "blurb": "A full, gently moving string section.",
+      "how": "Layer I is a bright sawtooth. Layer II is a pulse whose width its own PWM LFO sweeps, which shimmers like a section of players slightly out of step. MIX blends the two, a slow attack and release make them bow, and a touch of sub-oscillator vibrato keeps them alive.",
+      "phrase": {
+        "bpm": 72,
+        "loop": true,
+        "steps": [
+          [0, 48, 3.8, 0.7],
+          [0, 55, 3.8, 0.7],
+          [0, 60, 3.8, 0.7],
+          [0, 64, 3.8, 0.7],
+          [4, 45, 3.8, 0.7],
+          [4, 52, 3.8, 0.7],
+          [4, 57, 3.8, 0.7],
+          [4, 60, 3.8, 0.7],
+          [8, 41, 3.8, 0.7],
+          [8, 48, 3.8, 0.7],
+          [8, 53, 3.8, 0.7],
+          [8, 57, 3.8, 0.7],
+          [12, 43, 3.8, 0.75],
+          [12, 50, 3.8, 0.75],
+          [12, 55, 3.8, 0.75],
+          [12, 59, 3.8, 0.75]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A sweeping pulse on layer II",
+          "module": "osc",
+          "why": "Layer II takes a pulse wave in place of its sawtooth, its width swept by its own LFO.\n- SAW II Off\n- SQUARE II On\n- PW II 62 %: a slightly narrow pulse\n- PWM II 50 %: the width sweeps around it\n- PWM SPEED II 2.79 Hz: slowly\n- Listen for: nothing yet: layer II is silent while MIX is at the top.",
+          "set": {
+            "ch2.saw": "off",
+            "ch2.square": "on",
+            "ch2.pw": 3,
+            "ch2.pwm": 5,
+            "ch2.speed": 3
+          }
+        },
+        {
+          "title": "Blend the layers",
+          "module": "mixer",
+          "why": "Bring layer II in beside layer I’s sawtooth.\n- MIX I-II I 50 : II 50: both layers equally\n- Listen for: a shimmering, chorus-like thickness on every note.",
+          "set": {
+            "mix.mix": 5
+          }
+        },
+        {
+          "title": "Soften the tone",
+          "module": "filter",
+          "why": "Take the edge off both layers and lift out a little of the bass.\n- LPF I and II 2.0 kHz\n- HPF I and II 63 Hz: a lighter low end, as strings have\n- Listen for: a smoother, airier sound.",
+          "set": {
+            "ch1.lpf": 6.5,
+            "ch2.lpf": 6.5,
+            "ch1.hpf": 2,
+            "ch2.hpf": 2
+          }
+        },
+        {
+          "title": "Bow it",
+          "module": "env",
+          "why": "Strings swell in and ring out.\n- VCA A I and II 180 ms: each chord fades in\n- VCA R I and II 1.2 s: and hangs on after you let go\n- SUB OSCILLATOR VCO 15 %: a faint vibrato\n- SUB OSCILLATOR SPEED 4.18 Hz\n- Listen for: a section that bows in and breathes.",
+          "set": {
+            "ch1.a": 7.5,
+            "ch2.a": 7.5,
+            "ch1.r": 6.5,
+            "ch2.r": 6.5,
+            "sub.vco": 1.5,
+            "sub.speed": 5
+          }
+        }
+      ],
+      "context": {
+        "ch2.pwm": "How far layer II’s pulse width sweeps: the shimmer.",
+        "mix.mix": "The balance of the bright sawtooth and the shimmering pulse.",
+        "ch1.a": "How slowly the strings bow in."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.speed",
+          "try": "Raise to 7",
+          "hear": "A faster, more nervous shimmer."
+        },
+        {
+          "id": "mix.mix",
+          "try": "Pull down to 8",
+          "hear": "Mostly the pulse: hollower and more chorused."
+        },
+        {
+          "id": "ch1.lpf",
+          "try": "Lower to 4",
+          "hear": "A darker, more distant section."
+        }
+      ]
+    },
+    {
+      "id": "dd-sine-organ",
+      "name": "Sine Organ",
+      "ref": "Pure sine tones at two footages, the way an organ’s drawbars stack pipes",
+      "artist": "Drawbar organ",
+      "tags": ["keys", "organ"],
+      "level": 1,
+      "blurb": "A round, pure organ of two stacked sine tones.",
+      "how": "Each layer’s sine skips the filters and goes straight to its VCA. With VCF LEVEL down, the sine is all each layer plays. Layer II plays an octave up, at 4′, as a second drawbar would, and the VCA opens and closes at once like an organ’s key contact.",
+      "phrase": {
+        "bpm": 96,
+        "loop": true,
+        "steps": [
+          [0, 60, 1.8, 0.8],
+          [0, 64, 1.8, 0.8],
+          [0, 67, 1.8, 0.8],
+          [2, 62, 1.8, 0.8],
+          [2, 65, 1.8, 0.8],
+          [2, 69, 1.8, 0.8],
+          [4, 64, 1.8, 0.8],
+          [4, 67, 1.8, 0.8],
+          [4, 72, 1.8, 0.8],
+          [6, 62, 1.8, 0.8],
+          [6, 65, 1.8, 0.8],
+          [6, 69, 1.8, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Sines only, past the filters",
+          "module": "amp",
+          "why": "Turn the filtered sound off and the sine up, on both layers.\n- VCF LEVEL I and II 0 %: no sawtooth\n- SINE LEVEL I and II 100 %: the pure sine, straight into the VCA\n- Listen for: a soft, flute-like tone.",
+          "set": {
+            "ch1.vcfLevel": 0,
+            "ch2.vcfLevel": 0,
+            "ch1.sine": 10,
+            "ch2.sine": 10
+          }
+        },
+        {
+          "title": "A second drawbar an octave up",
+          "module": "osc",
+          "why": "Layer II plays the octave above and joins in.\n- FEET II 4': an octave above layer I\n- MIX I-II I 60 : II 40: layer I a little louder than layer II\n- Listen for: a fuller, organ-like tone with a ring an octave up.",
+          "set": {
+            "ch2.feet": "4",
+            "mix.mix": 4
+          }
+        },
+        {
+          "title": "An organ’s key",
+          "module": "env",
+          "why": "Notes start and stop at once.\n- VCA R I and II 21 ms: a very short tail\n- Listen for: clean, clicky starts and stops, like an organ.",
+          "set": {
+            "ch1.r": 1,
+            "ch2.r": 1
+          }
+        }
+      ],
+      "context": {
+        "ch1.sine": "The pure sine: the whole sound of each layer here.",
+        "ch2.feet": "Which octave layer II plays: the second drawbar."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.feet",
+          "try": "Set FEET II to 5 1/3'",
+          "hear": "A twelfth instead of an octave: a hollower, quinty organ."
+        },
+        {
+          "id": "sub.vco",
+          "try": "Pull down to 2",
+          "hear": "A gentle vibrato, like a slow rotary speaker."
+        }
+      ]
+    },
+    {
+      "id": "dd-glide-lead",
+      "name": "Portamento Lead",
+      "ref": "A singing polysynth lead that slides from note to note, as keyboard soloists played the big analogue polysynths of the late 1970s",
+      "artist": "Late-1970s synth lead",
+      "tags": ["lead", "70s"],
+      "level": 2,
+      "blurb": "A vocal, sliding lead line with a filter bloom on every note.",
+      "how": "P/G on P makes every note glide from the last one, PORT/GLISS setting how long. Layer I alone plays a sawtooth and a square together through a resonant low-pass filter that blooms open at the start of each note, and the sub oscillator adds vibrato.",
+      "phrase": {
+        "bpm": 92,
+        "loop": true,
+        "steps": [
+          [0, 64, 1.5, 0.85],
+          [1.5, 67, 0.5, 0.8],
+          [2, 72, 2, 0.9],
+          [4, 71, 1, 0.8],
+          [5, 67, 1, 0.8],
+          [6, 69, 2, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Glide between notes",
+          "module": "glide",
+          "why": "The P/G switch to P, and a short glide time.\n- P / G P: a smooth slide\n- PORTAMENTO / GLISSANDO 640 ms: long enough to hear\n- Listen for: each note sliding up or down into the next.",
+          "set": {
+            "porta.mode": "porta",
+            "porta.time": 4
+          }
+        },
+        {
+          "title": "A thicker tone on layer I",
+          "module": "osc",
+          "why": "Add the square to the sawtooth.\n- SQUARE I On\n- PW I 62 %\n- Listen for: a fuller, hollower lead.",
+          "set": {
+            "ch1.square": "on",
+            "ch1.pw": 3
+          }
+        },
+        {
+          "title": "A resonant bloom",
+          "module": "filter",
+          "why": "Close the low-pass a little, add resonance, and let the filter envelope open it at each note.\n- LPF I 800 Hz\n- RESL I 50 %\n- AL I +2.5: each note opens past the set cutoff\n- VCF D I 800 ms: and closes back slowly\n- Listen for: a vocal “wow” at the start of every note.",
+          "set": {
+            "ch1.lpf": 5,
+            "ch1.resL": 5,
+            "ch1.al": 5,
+            "ch1.fd": 6
+          }
+        },
+        {
+          "title": "Vibrato",
+          "module": "lfo",
+          "why": "The sub oscillator’s sine on the pitch.\n- SUB OSCILLATOR SPEED 5.98 Hz\n- SUB OSCILLATOR VCO 20 %\n- Listen for: a singing vibrato on held notes.",
+          "set": {
+            "sub.speed": 6,
+            "sub.vco": 2
+          }
+        }
+      ],
+      "context": {
+        "porta.time": "How long each slide takes.",
+        "ch1.resL": "The vocal peak in the filter.",
+        "ch1.al": "How far the filter blooms at each note."
+      },
+      "tweaks": [
+        {
+          "id": "porta.mode",
+          "try": "Move P/G to G",
+          "hear": "The slides become quick chromatic runs."
+        },
+        {
+          "id": "porta.time",
+          "try": "Raise to 7",
+          "hear": "Long, lazy swoops between notes."
+        },
+        {
+          "id": "ch1.resL",
+          "try": "Raise to 8",
+          "hear": "A sharper, more whistling peak."
+        }
+      ]
+    },
+    {
+      "id": "dd-glissando-harp",
+      "name": "Glissando Harp",
+      "ref": "A harp’s glissando: wide leaps filled in with runs through every semitone between",
+      "artist": "Harp",
+      "tags": ["pluck", "harp", "fx"],
+      "level": 2,
+      "blurb": "Plucked notes that run up and down through every semitone to reach each new one.",
+      "how": "With the P/G switch on G, a note does not slide to the next: it steps through each semitone between, like a finger dragged across harp strings, at the speed PORT/GLISS sets. A plucked envelope with no sustain makes each step ring and fade.",
+      "phrase": {
+        "bpm": 70,
+        "loop": true,
+        "steps": [
+          [0, 48, 1, 0.8],
+          [1, 67, 1, 0.8],
+          [2, 55, 1, 0.8],
+          [3, 72, 1, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A plucked, harp-like tone",
+          "module": "env",
+          "why": "No sustain: each note rings and fades.\n- VCA D I 800 ms\n- VCA S I 0 %\n- VCA R I 800 ms\n- LPF I 1.5 kHz\n- AL I +2.0: a bright pluck\n- VCF D I 390 ms\n- Listen for: a plucked tone that dies away.",
+          "set": {
+            "ch1.d": 6,
+            "ch1.s": 0,
+            "ch1.r": 6,
+            "ch1.lpf": 6,
+            "ch1.al": 4,
+            "ch1.fd": 5
+          }
+        },
+        {
+          "title": "Glissando",
+          "module": "glide",
+          "why": "The P/G switch to G, and time for the runs.\n- P / G G: semitone steps\n- PORTAMENTO / GLISSANDO 1.4 s\n- Listen for: each leap filled in with a quick chromatic run.",
+          "set": {
+            "porta.mode": "gliss",
+            "porta.time": 6
+          }
+        }
+      ],
+      "context": {
+        "porta.mode": "G makes the glide step through every semitone.",
+        "porta.time": "How long each run takes."
+      },
+      "tweaks": [
+        {
+          "id": "porta.mode",
+          "try": "Move P/G to P",
+          "hear": "A smooth swoop instead of steps."
+        },
+        {
+          "id": "porta.time",
+          "try": "Lower to 3",
+          "hear": "Fast, tight runs."
+        }
+      ]
+    },
+    {
+      "id": "dd-touch-keys",
+      "name": "Touch Keys",
+      "ref": "A plucky electric-piano-like tone that is mellow when played softly and bites when played hard",
+      "artist": "Electric piano",
+      "tags": ["keys", "pluck"],
+      "level": 2,
+      "blurb": "A keyboard tone that brightens and swells the harder you play.",
+      "how": "INITIAL BRILLIANCE opens the filters by velocity and INITIAL LEVEL raises the volume, for the whole note, so the riff’s soft and hard notes sound different. A square with a little sine underneath gives a rounded body, and a decaying envelope a piano’s fade.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 60, 0.9, 0.4],
+          [1, 64, 0.9, 0.6],
+          [2, 67, 0.9, 0.8],
+          [3, 72, 0.9, 1],
+          [4, 67, 0.9, 0.5],
+          [5, 64, 0.9, 0.7],
+          [6, 60, 1.8, 0.9]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A rounded key tone",
+          "module": "osc",
+          "why": "A square in place of the sawtooth, with the sine under it.\n- SAW I Off\n- SQUARE I On\n- PW I 66 %\n- SINE LEVEL I 40 %: a round fundamental\n- LPF I 241 Hz: quite dark at rest\n- Listen for: a mellow, hollow tone.",
+          "set": {
+            "ch1.saw": "off",
+            "ch1.square": "on",
+            "ch1.pw": 4,
+            "ch1.sine": 4,
+            "ch1.lpf": 3
+          }
+        },
+        {
+          "title": "A piano’s fade",
+          "module": "env",
+          "why": "No sustain, a moderate decay.\n- VCA D I 1.7 s\n- VCA S I 0 %\n- VCA R I 390 ms\n- Listen for: each note fading as it is held.",
+          "set": {
+            "ch1.d": 7,
+            "ch1.s": 0,
+            "ch1.r": 5
+          }
+        },
+        {
+          "title": "Play it harder",
+          "module": "mod",
+          "why": "Velocity opens the filters and raises the level.\n- INITIAL BRILLIANCE I 80 %\n- INITIAL LEVEL I 50 %\n- Listen for: the soft notes of the riff mellow and the hard ones bright and loud.",
+          "set": {
+            "ch1.initBrill": 8,
+            "ch1.initLevel": 5
+          }
+        }
+      ],
+      "context": {
+        "ch1.initBrill": "How much brighter a harder note is.",
+        "ch1.initLevel": "How much louder a harder note is."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.initBrill",
+          "try": "Lower to 0",
+          "hear": "Every note the same tone, however hard."
+        },
+        {
+          "id": "ch1.lpf",
+          "try": "Raise to 6",
+          "hear": "A brighter piano overall."
+        }
+      ]
+    },
+    {
+      "id": "dd-random-steps",
+      "name": "Random Steps",
+      "ref": "A note that leaps to a new random pitch several times a second, the computer bleeps of science-fiction films",
+      "artist": "Science-fiction sound effects",
+      "tags": ["fx", "random"],
+      "level": 1,
+      "blurb": "A held note that chatters between random pitches.",
+      "how": "The sub oscillator’s S/H position holds a new random value at each tick of SPEED. Sent to the pitch of both layers by VCO, and to the filters by VCF, it makes the note jump to a new pitch and brightness each time.",
+      "phrase": {
+        "bpm": 120,
+        "loop": true,
+        "steps": [[0, 72, 8, 0.8]]
+      },
+      "steps": [
+        {
+          "title": "Random steps from the sub oscillator",
+          "module": "lfo",
+          "why": "FUNCTION to S/H, at a lively speed.\n- SUB OSCILLATOR FUNCTION S/H\n- SUB OSCILLATOR SPEED 5.98 Hz\n- Listen for: nothing yet: the sub oscillator reaches the sound only through its depth sliders.",
+          "set": {
+            "sub.function": "sh",
+            "sub.speed": 6
+          }
+        },
+        {
+          "title": "Send it to the pitch and the filter",
+          "module": "lfo",
+          "why": "Pull down VCO and VCF.\n- SUB OSCILLATOR VCO 60 %: wide pitch jumps\n- SUB OSCILLATOR VCF 40 %: and a new brightness each time\n- LPF I 1.5 kHz\n- RESL I 50 %\n- Listen for: the note leaping to a new pitch several times a second.",
+          "set": {
+            "sub.vco": 6,
+            "sub.vcf": 4,
+            "ch1.lpf": 6,
+            "ch1.resL": 5
+          }
+        }
+      ],
+      "context": {
+        "sub.function": "S/H: a new random value at each tick.",
+        "sub.vco": "How wide the random jumps are.",
+        "sub.speed": "How often a new jump comes."
+      },
+      "tweaks": [
+        {
+          "id": "sub.speed",
+          "try": "Pull down to 9",
+          "hear": "Faster, busier chatter."
+        },
+        {
+          "id": "sub.function",
+          "try": "Set FUNCTION to square",
+          "hear": "A steady two-note trill instead."
+        }
+      ]
+    },
+    {
+      "id": "dd-long-pad",
+      "name": "Long Release Pad",
+      "ref": "A pad whose chords ring on for seconds after the keys are let go, from the master SUSTAIN slider",
+      "artist": "Ambient",
+      "tags": ["pad", "ambient"],
+      "level": 1,
+      "blurb": "Soft chords that fade in and keep ringing long after you let go.",
+      "how": "The MK2’s SUSTAIN slider lengthens the release of both layers at once, whatever their own R sliders say, so one move turns a short patch into a long wash. Here layer II plays an octave down under layer I, both pulses with a slow PWM, through a soft filter.",
+      "phrase": {
+        "bpm": 60,
+        "loop": true,
+        "steps": [
+          [0, 52, 2, 0.7],
+          [0, 59, 2, 0.7],
+          [0, 64, 2, 0.7],
+          [0, 67, 2, 0.7],
+          [4, 48, 2, 0.7],
+          [4, 55, 2, 0.7],
+          [4, 60, 2, 0.7],
+          [4, 64, 2, 0.7]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Two pulses, an octave apart",
+          "module": "osc",
+          "why": "Both layers on a slowly sweeping pulse, layer II an octave down.\n- SAW I and II Off\n- SQUARE I and II On\n- PWM I and II 40 %\n- PWM SPEED I and II 1.76 Hz\n- FEET II 16'\n- MIX I-II I 50 : II 50\n- Listen for: a deep, hollow, gently moving tone.",
+          "set": {
+            "ch1.saw": "off",
+            "ch2.saw": "off",
+            "ch1.square": "on",
+            "ch2.square": "on",
+            "ch1.pwm": 4,
+            "ch2.pwm": 4,
+            "ch1.speed": 2,
+            "ch2.speed": 2,
+            "ch2.feet": "16",
+            "mix.mix": 5
+          }
+        },
+        {
+          "title": "Soft and slow",
+          "module": "env",
+          "why": "A dark filter and a slow fade in.\n- LPF I and II 593 Hz\n- VCA A I and II 250 ms\n- Listen for: chords that swell in softly.",
+          "set": {
+            "ch1.lpf": 4.5,
+            "ch2.lpf": 4.5,
+            "ch1.a": 8,
+            "ch2.a": 8
+          }
+        },
+        {
+          "title": "The master SUSTAIN",
+          "module": "env",
+          "why": "Raise SUSTAIN: every note now rings on after its key is let go.\n- SUSTAIN 9.6 s: pushed up towards LONG\n- Listen for: each chord hanging in the air under the next.",
+          "set": {
+            "sustain.time": 8
+          }
+        }
+      ],
+      "context": {
+        "sustain.time": "How long every note rings on after you let go, for both layers at once.",
+        "ch2.feet": "Layer II an octave below layer I."
+      },
+      "tweaks": [
+        {
+          "id": "sustain.time",
+          "try": "Pull down to 0",
+          "hear": "The chords stop soon after you let go: the VCA R sliders alone."
+        },
+        {
+          "id": "ch1.pwm",
+          "try": "Raise to 8",
+          "hear": "A deeper, more watery shimmer."
+        }
+      ]
+    },
+    {
+      "id": "dd-wah-chords",
+      "name": "Wah Chords",
+      "ref": "Chords with an automatic wah-wah, the sub oscillator sweeping a resonant filter, as on 1970s funk keyboard parts",
+      "artist": "1970s funk",
+      "tags": ["keys", "funk", "70s"],
+      "level": 2,
+      "blurb": "Short, funky chords with a filter that wah-wahs by itself.",
+      "how": "The sub oscillator’s sine moves the filters of both layers back and forth through VCF, and the low-pass resonance makes the sweep vocal: an automatic wah-wah. A short envelope makes the chords stab.",
+      "phrase": {
+        "bpm": 100,
+        "loop": true,
+        "steps": [
+          [0, 55, 0.4, 0.85],
+          [0, 60, 0.4, 0.85],
+          [0, 64, 0.4, 0.85],
+          [0, 67, 0.4, 0.85],
+          [0.75, 55, 0.4, 0.75],
+          [0.75, 60, 0.4, 0.75],
+          [0.75, 64, 0.4, 0.75],
+          [0.75, 67, 0.4, 0.75],
+          [1.5, 55, 0.6, 0.85],
+          [1.5, 60, 0.6, 0.85],
+          [1.5, 64, 0.6, 0.85],
+          [1.5, 67, 0.6, 0.85],
+          [2.5, 57, 0.4, 0.8],
+          [2.5, 62, 0.4, 0.8],
+          [2.5, 65, 0.4, 0.8],
+          [2.5, 69, 0.4, 0.8],
+          [3, 57, 0.8, 0.85],
+          [3, 62, 0.8, 0.85],
+          [3, 65, 0.8, 0.85],
+          [3, 69, 0.8, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A resonant filter",
+          "module": "filter",
+          "why": "Close the low-pass and add resonance.\n- LPF I 439 Hz\n- RESL I 60 %\n- Listen for: a nasal, peaky tone.",
+          "set": {
+            "ch1.lpf": 4,
+            "ch1.resL": 6
+          }
+        },
+        {
+          "title": "The sub oscillator sweeps it",
+          "module": "lfo",
+          "why": "A sine at a funky speed, pulled down on VCF.\n- SUB OSCILLATOR SPEED 2.93 Hz\n- SUB OSCILLATOR VCF 60 %: a wide sweep\n- Listen for: the tone wah-wahing by itself.",
+          "set": {
+            "sub.speed": 4,
+            "sub.vcf": 6
+          }
+        },
+        {
+          "title": "Short stabs",
+          "module": "env",
+          "why": "A quick decay to a low sustain.\n- VCA D I 270 ms\n- VCA S I 30 %\n- VCA R I 62 ms\n- Listen for: tight, punchy chord stabs.",
+          "set": {
+            "ch1.d": 4.5,
+            "ch1.s": 3,
+            "ch1.r": 2.5
+          }
+        }
+      ],
+      "context": {
+        "sub.vcf": "How far the sub oscillator sweeps the filters: the wah.",
+        "sub.speed": "How fast the wah moves.",
+        "ch1.resL": "How vocal the wah is."
+      },
+      "tweaks": [
+        {
+          "id": "sub.function",
+          "try": "Set FUNCTION to square",
+          "hear": "The wah jumps between two tones instead of sweeping."
+        },
+        {
+          "id": "global.resonance",
+          "try": "Pull down to 5",
+          "hear": "An even more pronounced, quacking wah."
+        }
+      ]
+    },
+    {
+      "id": "dd-round-bass",
+      "name": "Round Bass",
+      "ref": "A round, punchy bass with a quick filter snap, as on late-1970s funk and soul records",
+      "artist": "Synth bass",
+      "tags": ["bass", "funk", "70s"],
+      "level": 1,
+      "blurb": "A deep bass with a bright snap at the start of every note.",
+      "how": "Layer I plays a sawtooth at 16′ whose filter snaps open and shut with each note. Layer II adds a pure sine at 16′, straight to its VCA, for weight that the filter cannot take away.",
+      "phrase": {
+        "bpm": 104,
+        "loop": true,
+        "steps": [
+          [0, 52, 0.5, 0.9],
+          [0.75, 52, 0.25, 0.7],
+          [1, 55, 0.5, 0.85],
+          [2, 57, 0.75, 0.9],
+          [3, 55, 0.25, 0.7],
+          [3.5, 50, 0.5, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Down an octave, with a snap",
+          "module": "filter",
+          "why": "Layer I at 16′, its filter closed down and opened by AL at each note.\n- FEET I 16'\n- LPF I 241 Hz\n- RESL I 30 %\n- AL I +2.5: the snap\n- VCF D I 130 ms: closing quickly\n- Listen for: a bright pluck that quickly darkens.",
+          "set": {
+            "ch1.feet": "16",
+            "ch1.lpf": 3,
+            "ch1.resL": 3,
+            "ch1.al": 5,
+            "ch1.fd": 3.5
+          }
+        },
+        {
+          "title": "A sine underneath",
+          "module": "amp",
+          "why": "Layer II only its sine, also at 16′.\n- FEET II 16'\n- VCF LEVEL II 0 %\n- SINE LEVEL II 100 %\n- MIX I-II I 60 : II 40: mostly layer I, with the sine under it\n- Listen for: more weight and roundness in the low end.",
+          "set": {
+            "ch2.feet": "16",
+            "ch2.vcfLevel": 0,
+            "ch2.sine": 10,
+            "mix.mix": 4
+          }
+        },
+        {
+          "title": "A bass envelope",
+          "module": "env",
+          "why": "Both layers fall to a lower sustain and stop quickly.\n- VCA D I and II 390 ms\n- VCA S I and II 60 %\n- VCA R I and II 30 ms\n- Listen for: punchy, separate bass notes.",
+          "set": {
+            "ch1.d": 5,
+            "ch2.d": 5,
+            "ch1.s": 6,
+            "ch2.s": 6,
+            "ch1.r": 1.5,
+            "ch2.r": 1.5
+          }
+        }
+      ],
+      "context": {
+        "ch1.al": "How bright the snap at each note is.",
+        "ch2.sine": "The round sine under the bass."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.resL",
+          "try": "Raise to 7",
+          "hear": "A rubbery, squelchy snap."
+        },
+        {
+          "id": "mix.mix",
+          "try": "Pull down to 8",
+          "hear": "Mostly the sine: a soft sub bass."
+        }
+      ]
+    },
+    {
+      "id": "dd-fifth-stack",
+      "name": "Fifth Stack",
+      "ref": "Each key a note and the twelfth above it, from layer II’s 5⅓′ footage, for parallel-fifth leads and stabs",
+      "artist": "Synth lead",
+      "tags": ["lead", "brass"],
+      "level": 1,
+      "blurb": "A bold lead where every key plays two notes a twelfth apart.",
+      "how": "FEET sets each layer’s footage on its own. Layer I stays at 8′ while layer II goes to 5⅓′, a fifth above 8′’s octave, so every key plays a power interval. The filter envelope gives it a brassy attack.",
+      "phrase": {
+        "bpm": 110,
+        "loop": true,
+        "steps": [
+          [0, 57, 1, 0.85],
+          [1, 60, 0.5, 0.8],
+          [1.5, 62, 0.5, 0.8],
+          [2, 64, 1.5, 0.9],
+          [4, 62, 1, 0.8],
+          [5, 60, 1, 0.8],
+          [6, 57, 2, 0.85]
+        ]
+      },
+      "steps": [
+        {
+          "title": "Layer II on 5⅓′",
+          "module": "osc",
+          "why": "Each layer has its own FEET.\n- FEET II 5⅓': a twelfth above layer I\n- MIX I-II I 55 : II 45\n- Listen for: two notes on every key, a bold open interval.",
+          "set": {
+            "ch2.feet": "5.33",
+            "mix.mix": 4.5
+          }
+        },
+        {
+          "title": "A brassy attack",
+          "module": "env",
+          "why": "Both layers’ filters open at each note and settle back.\n- LPF I and II 800 Hz\n- AL I and II +1.5\n- VCF A I and II 16 ms\n- VCF D I and II 800 ms\n- VCA A I and II 8 ms\n- Listen for: a slight swell into every note.",
+          "set": {
+            "ch1.lpf": 5,
+            "ch2.lpf": 5,
+            "ch1.al": 3,
+            "ch2.al": 3,
+            "ch1.fa": 4,
+            "ch2.fa": 4,
+            "ch1.fd": 6,
+            "ch2.fd": 6,
+            "ch1.a": 3,
+            "ch2.a": 3
+          }
+        }
+      ],
+      "context": {
+        "ch2.feet": "Layer II’s footage: the second note on every key.",
+        "ch1.al": "How far the filter opens at each note."
+      },
+      "tweaks": [
+        {
+          "id": "ch2.feet",
+          "try": "Set FEET II to 4'",
+          "hear": "An octave instead of a twelfth: a plainer, fuller lead."
+        },
+        {
+          "id": "ch2.feet",
+          "try": "Set FEET II to 2 2/3'",
+          "hear": "A twelfth an octave higher: thinner and more organ-like."
+        }
+      ]
+    },
+    {
+      "id": "dd-scoop-stabs",
+      "name": "Scooping Stabs",
+      "ref": "Brass stabs that start a little flat and scoop up into pitch on the hardest notes, as a brass section does",
+      "artist": "Brass section",
+      "tags": ["brass", "stab"],
+      "level": 2,
+      "blurb": "Short brass chords that scoop up into pitch when hit hard.",
+      "how": "TOUCH P.BEND makes a hard note start up to a semitone flat and slide quickly up, as a brass player lips up into a note. INITIAL BRILLIANCE makes the same hard notes brighter. The riff alternates soft and hard chords, so you hear the difference.",
+      "phrase": {
+        "bpm": 112,
+        "loop": true,
+        "steps": [
+          [0, 58, 0.5, 0.5],
+          [0, 62, 0.5, 0.5],
+          [0, 65, 0.5, 0.5],
+          [1, 58, 0.5, 1],
+          [1, 62, 0.5, 1],
+          [1, 65, 0.5, 1],
+          [2.5, 60, 0.5, 0.5],
+          [2.5, 63, 0.5, 0.5],
+          [2.5, 67, 0.5, 0.5],
+          [3, 60, 0.75, 1],
+          [3, 63, 0.75, 1],
+          [3, 67, 0.75, 1]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A brass chord",
+          "module": "filter",
+          "why": "Two detuned layers through a filter that opens at each chord.\n- MIX I-II I 50 : II 50\n- DETUNE CH II +0.1 st\n- LPF I and II 439 Hz\n- AL I and II +2.5\n- VCF A I and II 8 ms\n- VCF D I and II 390 ms\n- Listen for: a bright, brassy blare on each chord.",
+          "set": {
+            "mix.mix": 5,
+            "tune.detune": 0.5,
+            "ch1.lpf": 4,
+            "ch2.lpf": 4,
+            "ch1.al": 5,
+            "ch2.al": 5,
+            "ch1.fa": 3,
+            "ch2.fa": 3,
+            "ch1.fd": 5,
+            "ch2.fd": 5
+          }
+        },
+        {
+          "title": "Short stabs",
+          "module": "env",
+          "why": "A quick fall and short release on both layers.\n- VCA D I and II 390 ms\n- VCA S I and II 40 %\n- VCA R I and II 90 ms\n- Listen for: clipped, punchy chords.",
+          "set": {
+            "ch1.d": 5,
+            "ch2.d": 5,
+            "ch1.s": 4,
+            "ch2.s": 4,
+            "ch1.r": 3,
+            "ch2.r": 3
+          }
+        },
+        {
+          "title": "Scoop the hard ones",
+          "module": "mod",
+          "why": "Velocity bends the pitch up into the note, and opens the filter.\n- TOUCH P.BEND 100 %: pulled all the way down\n- INITIAL BRILLIANCE I and II 50 %\n- Listen for: the hard chords of the riff scooping up and brighter than the soft ones.",
+          "set": {
+            "touch.pitchbend": 10,
+            "ch1.initBrill": 5,
+            "ch2.initBrill": 5
+          }
+        }
+      ],
+      "context": {
+        "touch.pitchbend": "How far below pitch a hard note starts.",
+        "ch1.initBrill": "How much brighter a hard note is."
+      },
+      "tweaks": [
+        {
+          "id": "touch.pitchbend",
+          "try": "Push up to 0",
+          "hear": "Every chord lands straight on pitch."
+        },
+        {
+          "id": "tune.detune",
+          "try": "Pull down to 2",
+          "hear": "A wider, more out-of-tune section."
+        }
+      ]
+    },
+    {
+      "id": "dd-reed",
+      "name": "Band-pass Reed",
+      "ref": "A thin, nasal reed tone like an oboe’s, from the high-pass and low-pass filters set close together",
+      "artist": "Oboe",
+      "tags": ["wind", "reed"],
+      "level": 2,
+      "blurb": "A nasal, woody lead from a narrow band of the sawtooth.",
+      "how": "The high-pass filter takes away the bottom and the low-pass the top, so only a band of harmonics is left: a nasal, reedy tone. Resonance on both filters gives it its edge, and a slow attack and vibrato a player’s breath.",
+      "phrase": {
+        "bpm": 76,
+        "loop": true,
+        "steps": [
+          [0, 69, 1.5, 0.8],
+          [1.5, 71, 0.5, 0.75],
+          [2, 72, 2, 0.85],
+          [4, 74, 1, 0.8],
+          [5, 72, 1, 0.75],
+          [6, 71, 2, 0.8]
+        ]
+      },
+      "steps": [
+        {
+          "title": "A narrow band",
+          "module": "filter",
+          "why": "Raise the high-pass and lower the low-pass until they nearly meet.\n- HPF I 346 Hz\n- RESH I 50 %\n- LPF I 800 Hz\n- RESL I 50 %\n- Listen for: a thin, nasal tone with no bass.",
+          "set": {
+            "ch1.hpf": 5,
+            "ch1.resH": 5,
+            "ch1.lpf": 5,
+            "ch1.resL": 5
+          }
+        },
+        {
+          "title": "Breath",
+          "module": "env",
+          "why": "A gentle attack and a little vibrato.\n- VCA A I 22 ms\n- VCA R I 130 ms\n- SUB OSCILLATOR SPEED 5.98 Hz\n- SUB OSCILLATOR VCO 15 %\n- Listen for: notes that breathe in, with a player’s vibrato.",
+          "set": {
+            "ch1.a": 4.5,
+            "ch1.r": 3.5,
+            "sub.speed": 6,
+            "sub.vco": 1.5
+          }
+        }
+      ],
+      "context": {
+        "ch1.hpf": "The bottom of the band.",
+        "ch1.lpf": "The top of the band."
+      },
+      "tweaks": [
+        {
+          "id": "ch1.hpf",
+          "try": "Raise to 6.5",
+          "hear": "An even thinner, more piercing tone."
+        },
+        {
+          "id": "ch1.noise",
+          "try": "Raise to 2",
+          "hear": "Breath noise in the tone."
+        }
+      ]
+    }
+  ]
+}
