@@ -35,6 +35,7 @@ import { seedCatalogue } from '@/lib/app/catalogue/seed';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   type CatalogueTables,
@@ -271,7 +272,7 @@ const lib = () => db as unknown as LibraryDb;
 
 /** Model D with its first four sounds. */
 function sample(): CatalogueSeedData {
-  const data = structuredClone(real);
+  const data = catalogueSlice(real, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
   data.sounds = data.sounds
     .filter((f) => f.synth === 'model-d')

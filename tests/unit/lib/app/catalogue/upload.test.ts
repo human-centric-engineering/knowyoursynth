@@ -17,6 +17,7 @@ const mockPrisma = vi.hoisted(() => ({}));
 vi.mock('@/lib/db/client', () => ({ prisma: mockPrisma }));
 
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   type CatalogueTables,
@@ -48,7 +49,7 @@ const modelDNotes = real.notes.find(isModelD)!;
 
 /** Model D seeded with its first three sounds, lineage and notes. */
 function sample(): CatalogueSeedData {
-  const data = structuredClone(real);
+  const data = catalogueSlice(real, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
   data.sounds = [{ ...modelDSounds, sounds: modelDSounds.sounds.slice(0, 3) }];
   data.lineage = [modelDLineage];

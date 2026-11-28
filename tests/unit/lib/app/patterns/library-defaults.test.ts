@@ -38,6 +38,7 @@ import {
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   type CatalogueTables,
@@ -112,7 +113,7 @@ let records: ReturnType<typeof seedRecordTable>;
 
 /** Model D with its first three sounds. */
 function sample(): CatalogueSeedData {
-  const data = structuredClone(catalogue);
+  const data = catalogueSlice(catalogue, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
   data.sounds = data.sounds
     .filter((f) => f.synth === 'model-d')

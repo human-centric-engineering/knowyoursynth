@@ -17,6 +17,7 @@ import {
 } from '@/lib/app/catalogue/seed';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import { getSynthDef } from '@/lib/app/synths/defs';
+import { catalogueSlice } from '@/tests/helpers/catalogue-db';
 import { loadCatalogueData } from '@/prisma/seeds/app-knowyoursynth/catalogue-data';
 
 type Row = Record<string, unknown>;
@@ -122,7 +123,7 @@ const realModelDSounds = (() => {
  * so every count below is Model D's.
  */
 function sample(): CatalogueSeedData {
-  const data = structuredClone(real);
+  const data = catalogueSlice(real, ['model-d']);
   const isModelD = (f: { synth: string }) => f.synth === 'model-d';
   data.listing.synths = data.listing.synths.filter((s) => s.id === 'model-d');
   data.sounds = data.sounds.filter(isModelD).map((f) => ({ ...f, sounds: f.sounds.slice(0, 3) }));

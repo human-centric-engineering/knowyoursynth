@@ -72,6 +72,7 @@ import { listAllPublicPatterns } from '@/lib/app/patterns/library-read';
 import { PATCH as patchSound } from '@/app/api/v1/admin/synths/[id]/sounds/[slug]/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   table,
@@ -116,7 +117,7 @@ function comments() {
 const real = loadCatalogueData();
 
 function sample(): CatalogueSeedData {
-  const data = structuredClone(real);
+  const data = catalogueSlice(real, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
   data.sounds = data.sounds
     .filter((f) => f.synth === 'model-d')

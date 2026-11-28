@@ -38,6 +38,7 @@ import { seedCatalogue } from '@/lib/app/catalogue/seed';
 import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 import type { TenancyClient } from '@/lib/db/tenancy-extension';
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   type CatalogueTables,
@@ -1270,7 +1271,7 @@ const lib = () => db as unknown as LibraryDb;
 
 /** Model D with its first three sounds, and the databank rows the test batch links to. */
 function sample(): CatalogueSeedData {
-  const data = structuredClone(catalogue);
+  const data = catalogueSlice(catalogue, ['model-d']);
   data.listing.synths = [{ id: 'model-d', order: 0, listed: true }];
   data.sounds = data.sounds
     .filter((f) => f.synth === 'model-d')

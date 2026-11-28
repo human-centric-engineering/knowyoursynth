@@ -8,6 +8,7 @@
  * creates in bulk, updates by `table_key` and removes by an `OR` of keys.
  */
 import { vi, type Mock } from 'vitest';
+import type { CatalogueSeedData } from '@/lib/app/catalogue/data';
 
 type Row = Record<string, unknown>;
 type Where = Record<string, unknown>;
@@ -328,4 +329,23 @@ export function seedRecordTable() {
       return { count: where.OR.length };
     }),
   };
+}
+
+/**
+ * A copy of the seed data holding only these synths: their listing entries, sounds, lineage and notes, with the shared
+ * notes as they are. Only the slice is copied. Copying the whole catalogue takes about half a second, which before every
+ * test timed `beforeEach` out under a parallel run (t-335).
+ */
+export function catalogueSlice(data: CatalogueSeedData, synthIds: string[]): CatalogueSeedData {
+  const kept = (f: { synth: string }) => synthIds.includes(f.synth);
+  return structuredClone({
+    ...data,
+    listing: {
+      ...data.listing,
+      synths: data.listing.synths.filter((s) => synthIds.includes(s.id)),
+    },
+    sounds: data.sounds.filter(kept),
+    lineage: data.lineage.filter(kept),
+    notes: data.notes.filter(kept),
+  });
 }

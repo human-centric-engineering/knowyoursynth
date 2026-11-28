@@ -55,6 +55,7 @@ import { POST as postNote } from '@/app/api/v1/admin/synths/[id]/notes/route';
 import { PATCH as patchNote } from '@/app/api/v1/admin/synth-notes/[noteId]/route';
 import { createMockAuthSession } from '@/tests/helpers/auth';
 import {
+  catalogueSlice,
   catalogueTables,
   seedRecordTable,
   sortRows,
@@ -79,7 +80,7 @@ const real = loadCatalogueData();
 
 /** Model D with its first three sounds, its lineage and notes, plus TB-303 listed after it with no content. */
 function sample(): CatalogueSeedData {
-  const data = structuredClone(real);
+  const data = catalogueSlice(real, ['model-d']);
   const isModelD = (f: { synth: string }) => f.synth === 'model-d';
   data.listing.synths = [
     { id: 'model-d', order: 0, listed: true },
