@@ -55,6 +55,7 @@ import { routing as subharmonicon } from '@/lib/app/synths/routing/subharmonicon
 import { routing as dfam } from '@/lib/app/synths/routing/dfam';
 import { routing as edge } from '@/lib/app/synths/routing/edge';
 import { routing as microfreak } from '@/lib/app/synths/routing/microfreak';
+import { routing as deckardsDream } from '@/lib/app/synths/routing/deckards-dream';
 
 export const SYNTH_ROUTINGS: SynthRouting[] = [
   modelD,
@@ -102,6 +103,7 @@ export const SYNTH_ROUTINGS: SynthRouting[] = [
   dfam,
   edge,
   microfreak,
+  deckardsDream,
 ];
 
 /** The routings built from their definition, by synth id. */
