@@ -473,6 +473,107 @@ describe('select buttons', () => {
   });
 });
 
+describe('a matrix select', () => {
+  const amount = (id: string): Control => ({
+    id,
+    type: 'knob',
+    x: 900,
+    y: 900,
+    r: 10,
+    style: 'solar',
+    kind: 'cont',
+    min: -100,
+    max: 100,
+    def: 0,
+    module: 'mod',
+    help: 'A point’s amount.',
+    show: { id: 'mx', eq: id },
+  });
+  const matrix: SelectControl = {
+    id: 'mx',
+    type: 'select',
+    x: 700,
+    y: 700,
+    w: 20,
+    h: 20,
+    kind: 'enum',
+    def: 'a',
+    options: [
+      { v: 'a', label: 'A > Pitch', x: 700, y: 700, point: 'a' },
+      { v: 'b', label: 'B > Pitch', x: 740, y: 700, point: 'b' },
+    ],
+    matrix: { on: 50 },
+    ui: true,
+    label: 'Point',
+    module: 'mod',
+    help: 'The matrix.',
+  };
+  const def = {
+    ...allPartsDef,
+    controls: [...allPartsDef.controls, matrix, amount('a'), amount('b')],
+  };
+  const draw = (values: ControlValues, onChange = vi.fn(), over: Partial<SynthPanelProps> = {}) =>
+    render(
+      <SynthPanel {...props({ def, onChange, values: { ...def.init, ...values }, ...over })} />
+    );
+
+  it('switches an unlit point on and picks it, by click or key', () => {
+    const onChange = vi.fn();
+    draw({ mx: 'a', a: 0, b: 0 }, onChange);
+    fireEvent.click(screen.getByRole('button', { name: 'Point: B > Pitch, off' }));
+    expect(onChange.mock.calls).toEqual([
+      ['b', 50],
+      ['mx', 'b'],
+    ]);
+    onChange.mockClear();
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Point: B > Pitch, off' }), { key: ' ' });
+    expect(onChange.mock.calls).toEqual([
+      ['b', 50],
+      ['mx', 'b'],
+    ]);
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Point: B > Pitch, off' }), { key: 'q' });
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Point: B > Pitch, off' }), {
+      key: 'Enter',
+      repeat: true,
+    });
+    expect(onChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('switches the picked lit point off, and says which point is on and picked', () => {
+    const onChange = vi.fn();
+    const { container } = draw({ mx: 'a', a: -30, b: 0 }, onChange);
+    const picked = screen.getByRole('button', { name: 'Point: A > Pitch, on -30' });
+    expect(picked.getAttribute('aria-current')).toBe('true');
+    expect(
+      screen.getByRole('button', { name: 'Point: B > Pitch, off' }).getAttribute('aria-current')
+    ).toBeNull();
+    expect(container.querySelectorAll('.kys-blink')).toHaveLength(1);
+    fireEvent.click(picked);
+    expect(onChange.mock.calls).toEqual([['a', 0]]);
+  });
+
+  it('marks a lesson target and pulses while highlighted', () => {
+    const { container } = draw({ mx: 'a' }, vi.fn(), { target: { ...def.init, mx: 'b' } });
+    expect(container.querySelector('circle[r="5"][fill="#f6a63a"]')).not.toBeNull();
+    const before = container.querySelectorAll('.kys-pulse').length;
+    act(() => highlightStore.set(['mx']));
+    expect(container.querySelectorAll('.kys-pulse').length - before).toBe(2);
+  });
+
+  it('decides on the panel’s own amount and sets it outright while a lane moves it', () => {
+    const onChange = vi.fn();
+    draw({ mx: 'a', a: 40 }, onChange, { moved: { a: 60 } });
+    fireEvent.click(screen.getByRole('button', { name: 'Point: A > Pitch, on 40' }));
+    // not rebased by the lane's move (40 + (0 - 60))
+    expect(onChange.mock.calls).toEqual([['a', 0]]);
+  });
+
+  it('draws the picked ring in ink in the outline view', () => {
+    const { container } = draw({ mx: 'a' }, vi.fn(), { outline: true });
+    expect(container.querySelector('.kys-blink')?.getAttribute('stroke')).not.toBe('#f6a63a');
+  });
+});
+
 describe('a select’s sprung lever', () => {
   it('steps the choice the way it is pushed, stopping at the ends', () => {
     const onChange = vi.fn();

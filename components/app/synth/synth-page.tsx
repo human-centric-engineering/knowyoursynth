@@ -73,6 +73,7 @@ import type { AppSynthDef } from '@/lib/app/synths/defs';
 import { loadSynthDef, loadedSynthDef } from '@/lib/app/synths/defs/load';
 import { layoutDef, layoutKind } from '@/lib/app/synths/lib/layout';
 import { CABLE_COLORS } from '@/lib/app/synths/lib/modules';
+import { pointToShow, withPick } from '@/lib/app/synths/lib/matrix-points';
 import {
   cablesToEngine,
   faceView,
@@ -707,6 +708,25 @@ function Synth({
   useEffect(() => {
     storedRef.current = stored;
   });
+  // A find, the tour or a lesson pointing at a matrix point's amount shows that point as picked, so its knob is the one on
+  // the MicroFreak's Matrix encoder (`pointToShow`). Only the drawing changes: the sound's own pick, the history and the
+  // save are left alone. It is worked out when what is pointed at changes, not each time the same ids are lit again, and
+  // it gives way as soon as the visitor picks a point themselves.
+  const findPointKey = useStore(findStore, (f) => (f && f.kind === 'control' ? f.id : ''));
+  const pointLitKey = useStore(highlightStore, (ids) => ids.join('|'));
+  const [pointing, setPointing] = useState<{
+    key: string;
+    pick: ReturnType<typeof pointToShow>;
+    was: ControlValue | undefined;
+  }>({ key: '|', pick: null, was: undefined });
+  const pointingKey = `${findPointKey}|${pointLitKey}`;
+  if (pointing.key !== pointingKey) {
+    const ids = [findPointKey, ...pointLitKey.split('|')].filter(Boolean);
+    const pick = pointToShow(synthDef.controls, ids, stored.values);
+    setPointing({ key: pointingKey, pick, was: pick ? stored.values[pick.id] : undefined });
+  }
+  const shownPick =
+    pointing.pick && stored.values[pointing.pick.id] === pointing.was ? pointing.pick : null;
   // A synth chosen over another opens on its Default patch, whatever panel it was left with (owner ruling, 2026-11-03).
   // Set as a change the visitor made, so it is what the browser and the account keep: a refresh comes back to it, and
   // the account's older panel does not replace it. Declared after the stored session, so it lands after the restore,
@@ -2368,6 +2388,15 @@ function Synth({
   );
   const [panelValues, setPanelValues] = useState(lampsNow);
   if (panelValues !== lampsNow && !sameValues(panelValues, lampsNow)) setPanelValues(lampsNow);
+  // what the panel draws: with the point a find or lesson is showing picked (above)
+  const drawnBase = synthDef.seqButtons ? panelValues : sess.values;
+  const drawnValues = useMemo(() => withPick(drawnBase, shownPick), [drawnBase, shownPick]);
+  const panelChange = synthDef.seqButtons || synthDef.ownSequencer ? onPanelChange : onChange;
+  // a pick by hand ends the one being shown, even when it picks the point the sound had picked all along
+  const onPickedChange = (id: string, v: ControlValue | null) => {
+    if (shownPick && id === shownPick.id) setPointing((p) => ({ ...p, pick: null }));
+    panelChange(id, v);
+  };
   const onConnect = useCallback(
     (from: string, to: string) =>
       patch((s) =>
@@ -3625,7 +3654,7 @@ function Synth({
                         >
                           <SynthPanel
                             def={def}
-                            values={synthDef.seqButtons ? panelValues : sess.values}
+                            values={drawnValues}
                             moved={modShown}
                             target={step == null ? target : null}
                             cables={sess.cables}
@@ -3637,11 +3666,7 @@ function Synth({
                             liveGlow={liveGlow}
                             wheelUp={wheelUp}
                             heatOn={heatOn}
-                            onChange={
-                              synthDef.seqButtons || synthDef.ownSequencer
-                                ? onPanelChange
-                                : onChange
-                            }
+                            onChange={shownPick ? onPickedChange : panelChange}
                             onConnect={onConnect}
                             onRemoveCable={onRemoveCable}
                             onMoveCable={onMoveCable}

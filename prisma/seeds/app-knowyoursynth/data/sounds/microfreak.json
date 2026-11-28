@@ -96,7 +96,8 @@
           "module": "mod",
           "why": "The point at LFO and Pitch sets how far the LFO moves the pitch.\n- LFO > Pitch 30\n- Listen for: the note jumping to a new pitch four times a second.",
           "set": {
-            "mx.lfo.pitch": 30
+            "mx.lfo.pitch": 30,
+            "mx.sel": "lfo.pitch"
           }
         }
       ],
@@ -153,7 +154,8 @@
           "module": "mod",
           "why": "The point at CycEnv and Pitch makes each note scoop upwards.\n- CycEnv > Pitch 20\n- Listen for: each note sliding up a couple of semitones as it starts.",
           "set": {
-            "mx.cycenv.pitch": 20
+            "mx.cycenv.pitch": 20,
+            "mx.sel": "cycenv.pitch"
           }
         },
         {
@@ -174,7 +176,7 @@
       "tweaks": [
         {
           "id": "mx.cycenv.pitch",
-          "try": "Turn CycEnv > Pitch to −40",
+          "try": "Pick the CycEnv > Pitch point and turn the Matrix encoder to −40",
           "hear": "The notes dive down instead."
         },
         {
@@ -297,7 +299,8 @@
           "set": {
             "lfo.shape": "tri",
             "lfo.rate": 20,
-            "mx.lfo.assign1": 50
+            "mx.lfo.assign1": 50,
+            "mx.sel": "lfo.assign1"
           }
         }
       ],
@@ -375,7 +378,8 @@
             "cyc.mode": "loop",
             "cyc.rise": 85,
             "cyc.fall": 85,
-            "mx.cycenv.timbre": 40
+            "mx.cycenv.timbre": 40,
+            "mx.sel": "cycenv.timbre"
           }
         }
       ],
@@ -624,7 +628,8 @@
           "set": {
             "env.decay": 38,
             "env.sustain": 40,
-            "mx.env.timbre": 50
+            "mx.env.timbre": 50,
+            "mx.sel": "env.timbre"
           }
         },
         {
@@ -695,7 +700,8 @@
             "glide.amount": 25,
             "lfo.shape": "sine",
             "lfo.rate": 60,
-            "mx.lfo.pitch": 2
+            "mx.lfo.pitch": 2,
+            "mx.sel": "lfo.pitch"
           }
         },
         {
@@ -766,7 +772,8 @@
           "set": {
             "lfo.shape": "tri",
             "lfo.rate": 30,
-            "mx.lfo.timbre": 45
+            "mx.lfo.timbre": 45,
+            "mx.sel": "lfo.timbre"
           }
         },
         {
@@ -902,7 +909,8 @@
           "module": "mod",
           "why": "The cycling envelope’s point in the Cutoff column opens the filter on every cycle.\n- CycEnv > Cutoff 50\n- Listen for: the bass wobbling, starting the wobble with each note.",
           "set": {
-            "mx.cycenv.cutoff": 50
+            "mx.cycenv.cutoff": 50,
+            "mx.sel": "cycenv.cutoff"
           }
         }
       ],
@@ -983,7 +991,8 @@
           "set": {
             "lfo.shape": "tri",
             "lfo.rate": 18,
-            "mx.lfo.timbre": 35
+            "mx.lfo.timbre": 35,
+            "mx.sel": "lfo.timbre"
           }
         }
       ],
@@ -1042,7 +1051,8 @@
           "module": "mod",
           "why": "Key/Arp’s point in the Timbre column raises the formant on higher keys.\n- Key/Arp > Timbre 40\n- Listen for: the higher notes brighter than the low ones.",
           "set": {
-            "mx.key.timbre": 40
+            "mx.key.timbre": 40,
+            "mx.sel": "key.timbre"
           }
         },
         {

@@ -619,7 +619,19 @@ export function SynthPanel({
           if (c.type === 'fader')
             return <Fader key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           if (c.type === 'select')
-            return <Select key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
+            return (
+              <Select
+                key={c.id}
+                c={c}
+                value={value}
+                target={t}
+                ctx={ctx}
+                // A matrix reads the other controls (the rest keep their memo). Its lamps show the panel's own amounts,
+                // so a click decides on those and sets them outright, never by how far a lane has moved them.
+                onChange={c.matrix ? onChange : turn}
+                values={c.matrix ? values : undefined}
+              />
+            );
           if (c.type === 'menu')
             return <MenuRow key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;
           return <Switch key={c.id} c={c} value={value} target={t} ctx={ctx} onChange={turn} />;

@@ -179,6 +179,14 @@ position. A hidden control keeps its value and stays in the sound. A lesson step
 hidden control should also set the mode that shows it. `deep: true` lists a menu parameter on
 a card only while it is on screen; `find: false` keeps a duplicate out of search.
 
+**A modulation matrix of lamps** (MicroFreak): a `select` with `matrix: { on }` and `ui: true`
+draws no buttons, only a click target on each option and a blinking ring round the chosen one.
+Each option names the `cont` control holding its amount in `point`, and its lamp is `led` decor
+lit while that control is not 0. A click on a point at 0 sets it to `on` and chooses it, a click
+on a lit point chooses it, and a click on the chosen lit point sets it to 0 (`matrixClick` in
+`lib/app/synths/lib/matrix-points.ts`). The amount knobs share the encoder's position, each
+shown while its point is chosen, so lesson steps set the select along with the amount.
+
 ### Jacks
 
 `Jack` is a union on `dir`. An input names an engine **destination** (`dest`), an output an
